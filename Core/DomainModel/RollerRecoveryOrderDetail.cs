@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.DomainModel
+{
+    public partial class RollerRecoveryOrderDetail
+    {
+        public int Id { get; set; }
+        public int RollerRecoveryOrderId { get; set; }
+        public int CoreIdentificationDetailId { get; set; }
+        public int RollerBuilderId { get; set; }
+
+        public string CoreTypeCase { get; set; }
+        public string Acc { get; set; }
+        public string RepairRequestCase { get; set; }
+        public bool IsDisassembled { get; set; }
+        public bool IsStrippedAndGlued { get; set; }
+        public bool IsWrapped { get; set; }
+        public bool IsVulcanized { get; set; }
+        public bool IsFacedOff { get; set; }
+        public bool IsConventionalGrinded { get; set; }
+        public bool IsCWCGrinded { get; set; }
+        public bool IsPolishedAndQC { get; set; }
+        public bool IsPackaged { get; set; }
+        public bool IsRejected { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public Nullable<DateTime> UpdatedAt { get; set; }
+        public Nullable<DateTime> DeletedAt { get; set; }
+        public Dictionary<string, string> Errors { get; set; }
+        public virtual CoreIdentificationDetail CoreIdentificationDetail { get; set; }
+        public virtual RollerRecoveryOrder RollerRecoveryOrder { get; set; }
+        public virtual RollerBuilder RollerBuilder { get; set; }
+    }
+}
