@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.DomainModel
 {
-    public partial class RollerRecoveryOrderDetail
+    public partial class RecoveryOrderDetail
     {
         public int Id { get; set; }
-        public int RollerRecoveryOrderId { get; set; }
+        public int RecoveryOrderId { get; set; }
         public int CoreIdentificationDetailId { get; set; }
         public int RollerBuilderId { get; set; }
 
@@ -33,7 +33,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
         public virtual CoreIdentificationDetail CoreIdentificationDetail { get; set; }
-        public virtual RollerRecoveryOrder RollerRecoveryOrder { get; set; }
+        public virtual RecoveryOrder RecoveryOrder { get; set; }
         public virtual RollerBuilder RollerBuilder { get; set; }
     }
 }
