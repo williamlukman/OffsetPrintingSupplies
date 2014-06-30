@@ -16,6 +16,8 @@ namespace Core.Interface.Repository
         CoreIdentification CreateObject(CoreIdentification coreIdentification);
         CoreIdentification UpdateObject(CoreIdentification coreIdentification);
         CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification);
+        CoreIdentification ConfirmObject(CoreIdentification coreIdentification);
+        CoreIdentification UnconfirmObject(CoreIdentification coreIdentification);
         bool DeleteObject(int Id);
     }
 }

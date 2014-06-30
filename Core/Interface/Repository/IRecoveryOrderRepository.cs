@@ -13,9 +13,13 @@ namespace Core.Interface.Repository
         IList<RecoveryOrder> GetAllObjectsInHouse();
         IList<RecoveryOrder> GetAllObjectsByCustomerId(int CustomerId);
         RecoveryOrder GetObjectById(int Id);
-        RecoveryOrder CreateObject(RecoveryOrder coreIdentification);
-        RecoveryOrder UpdateObject(RecoveryOrder coreIdentification);
-        RecoveryOrder SoftDeleteObject(RecoveryOrder coreIdentification);
+        RecoveryOrder CreateObject(RecoveryOrder recoveryOrder);
+        RecoveryOrder UpdateObject(RecoveryOrder recoveryOrder);
+        RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder);
+        RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder);
+        RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder);
+        RecoveryOrder FinishObject(RecoveryOrder recoveryOrder);
+        RecoveryOrder UnfinishObject(RecoveryOrder recoveryOrder);
         bool DeleteObject(int Id);
     }
 }
