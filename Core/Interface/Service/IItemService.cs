@@ -12,7 +12,9 @@ namespace Core.Interface.Service
     {
         IItemValidator GetValidator();
         IList<Item> GetAll();
+        IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
+        int GetQuantityById(int Id);
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);
         Item CreateObject(Item item, IItemTypeService _itemTypeService);

@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
     {
         IList<Item> GetAll();
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
+        int GetQuantityById(int Id);
         Item GetObjectById(int Id);
         Item CreateObject(Item item);
         Item UpdateObject(Item item);

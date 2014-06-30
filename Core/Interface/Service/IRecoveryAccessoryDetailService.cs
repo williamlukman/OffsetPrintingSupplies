@@ -13,12 +13,12 @@ namespace Core.Interface.Service
         IRecoveryAccessoryDetailValidator GetValidator();
         IList<RecoveryAccessoryDetail> GetAll();
         IList<RecoveryAccessoryDetail> GetObjectsByRecoveryOrderDetailId(int recoveryOrderDetailId);
-        IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         RecoveryAccessoryDetail GetObjectById(int Id);
         RecoveryAccessoryDetail CreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService);
         RecoveryAccessoryDetail CreateObject(int RecoveryOrderDetailId, int AccessoryId, string Description, IItemService _itemService, IItemTypeService _itemTypeService);
         RecoveryAccessoryDetail UpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService);
         RecoveryAccessoryDetail SoftDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        RecoveryAccessoryDetail AdjustAmount(
         bool DeleteObject(int Id);
     }
 }
