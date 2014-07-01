@@ -39,6 +39,17 @@ namespace Data.Repository
 
         public RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail)
         {
+            recoveryOrderDetail.HasAccessory = false;
+            recoveryOrderDetail.IsDisassembled = false;
+            recoveryOrderDetail.IsStrippedAndGlued = false;
+            recoveryOrderDetail.IsWrapped = false;
+            recoveryOrderDetail.IsVulcanized = false;
+            recoveryOrderDetail.IsFacedOff = false;
+            recoveryOrderDetail.IsConventionalGrinded = false;
+            recoveryOrderDetail.IsCWCGrinded = false;
+            recoveryOrderDetail.IsPolishedAndQC = false;
+            recoveryOrderDetail.IsPackaged = false;
+            recoveryOrderDetail.IsRejected = false;
             recoveryOrderDetail.IsDeleted = false;
             recoveryOrderDetail.CreatedAt = DateTime.Now;
             return Create(recoveryOrderDetail);
