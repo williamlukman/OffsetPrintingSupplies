@@ -12,9 +12,11 @@ namespace Core.Interface.Repository
         IList<RecoveryAccessoryDetail> GetAll();
         IList<RecoveryAccessoryDetail> GetObjectsByRecoveryOrderDetailId(int recoveryOrderDetailId);
         RecoveryAccessoryDetail GetObjectById(int Id);
-        RecoveryAccessoryDetail CreateObject(RecoveryAccessoryDetail rollerRecoveryAccessoryDetail);
-        RecoveryAccessoryDetail UpdateObject(RecoveryAccessoryDetail rollerRecoveryAccessoryDetail);
-        RecoveryAccessoryDetail SoftDeleteObject(RecoveryAccessoryDetail rollerRecoveryAccessoryDetail);
+        RecoveryAccessoryDetail CreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
+        RecoveryAccessoryDetail UpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
+        RecoveryAccessoryDetail SoftDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
+        RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
+        RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
         bool DeleteObject(int Id);
     }
 }
