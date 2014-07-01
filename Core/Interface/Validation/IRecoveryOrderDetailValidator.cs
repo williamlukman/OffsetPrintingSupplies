@@ -12,7 +12,7 @@ namespace Core.Interface.Validation
     {
         RecoveryOrderDetail VHasRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VHasCoreIdentificationDetail(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService);
-        RecoveryOrderDetail VHasRollerBuilder(RecoveryOrderDetail recoveryOrderDetail, ICoreBuilderService _rollerBuilderService);
+        RecoveryOrderDetail VHasRollerBuilder(RecoveryOrderDetail recoveryOrderDetail, IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail VHasCoreTypeCase(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasAcc(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasRequestTypeCase(RecoveryOrderDetail recoveryOrderDetail);
@@ -34,21 +34,25 @@ namespace Core.Interface.Validation
 
         RecoveryOrderDetail VHasAccessories(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VHasConfirmedAccessories(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail VIsConfirmedRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
+        RecoveryOrderDetail VRecoveryOrderConfirmDetail(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
-        RecoveryOrderDetail VCreateObject();
-        RecoveryOrderDetail VUpdateObject();
-        RecoveryOrderDetail VDeleteObject();
-        RecoveryOrderDetail VAssembleObject();
-        RecoveryOrderDetail VStripAndGlueObject();
-        RecoveryOrderDetail VWrapObject();
-        RecoveryOrderDetail VVulcanizeObject();
-        RecoveryOrderDetail VFaceOffObject();
-        RecoveryOrderDetail VConventionalGrindObject();
-        RecoveryOrderDetail VCWCGrindObject();
-        RecoveryOrderDetail VPolishAndQCObject();
-        RecoveryOrderDetail VPackageObject();
-        RecoveryOrderDetail VRejectObject();
+        RecoveryOrderDetail VCreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                          IRollerBuilderService _rollerBuilderService);
+        RecoveryOrderDetail VUpdateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                          IRollerBuilderService _rollerBuilderService);
+        RecoveryOrderDetail VDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryAccessoryDetailService);
 
+        RecoveryOrderDetail VAssembleObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VFaceOffObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VConventionalGrindObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VCWCGrindObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VPolishAndQCObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VPackageObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VRejectObject(RecoveryOrderDetail recoveryOrderDetail);
         bool isValid(RecoveryOrderDetail recoveryOrderDetail);
         string PrintError(RecoveryOrderDetail recoveryOrderDetail);
     }
