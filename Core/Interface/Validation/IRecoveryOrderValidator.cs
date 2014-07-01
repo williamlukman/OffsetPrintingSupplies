@@ -10,14 +10,15 @@ namespace Core.Interface.Validation
 {
     public interface IRecoveryOrderValidator
     {
+        RecoveryOrder VHasUniqueCode(RecoveryOrder recoveryOrder);
         RecoveryOrder VHasCoreIdentification(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService);
         RecoveryOrder VHasRecoveryOrderDetails(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RecoveryOrder VIsConfirmedRecoveryAccessoryDetails(RecoveryOrder recoveryOrder, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrder VIsPackedRecoveryOrderDetails(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RecoveryOrder VIsAssembledRecoveryOrderDetails(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RecoveryOrder VHasQuantityReceived(RecoveryOrder recoveryOrder);
-        RecoveryOrder VQuantityEqualNoOfDetail(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        RecoveryOrder VQuantityEqualNoOfReceived(RecoveryOrder recoveryOrder);
+        RecoveryOrder VQuantityReceivedLessThanCoreIdentification(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService);
+        RecoveryOrder VQuantityReceivedEqualDetails(RecoveryOrder recoveryOrder);
         RecoveryOrder VIsConfirmed(RecoveryOrder recoveryOrder);
         RecoveryOrder VIsNotConfirmed(RecoveryOrder recoveryOrder);
         RecoveryOrder VIsFinished(RecoveryOrder recoveryOrder);

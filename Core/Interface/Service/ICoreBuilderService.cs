@@ -15,7 +15,7 @@ namespace Core.Interface.Service
         CoreBuilder GetObjectById(int Id);
         Item GetUsedCore(int id, IItemService _itemService);
         Item GetNewCore(int id, IItemService _itemService);
-        CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService);
+        CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
         CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService);
         CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool DeleteObject(int Id, IItemService _itemService);

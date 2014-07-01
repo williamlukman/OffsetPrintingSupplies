@@ -8,23 +8,18 @@ using System.Threading.Tasks;
 
 namespace Core.Interface.Validation
 {
-    public interface IItemValidator
+    public interface IRollerTypeValidator
     {
-        Item VHasItemType(Item item, IItemTypeService _itemTypeService);
-        Item VHasUniqueSku(Item item, IItemService _itemService);
-        Item VHasUoM(Item item);
-        Item VQuantity(Item item);
-        Item VCreateObject(Item item, IItemTypeService _itemTypeService);
-        Item VUpdateObject(Item item, IItemService _itemService);
-        Item VDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                               ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService);
-        Item VAdjustQuantity(Item item);
-        bool ValidCreateObject(Item item, IItemTypeService _itemTypeService, IItemService _itemService);
-        bool ValidUpdateObject(Item item, IItemTypeService _itemTypeService, IItemService _itemService);
-        bool ValidDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                               ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService);
-        bool ValidAdjustQuantity(Item item);
-        bool isValid(Item item);
-        string PrintError(Item item);
+        RollerType VHasUniqueName(RollerType rollerType);
+        RollerType VHasRollerBuilder(RollerType rollerType, IRollerBuilderService _rollerBuilderService);
+        RollerType VHasCoreIdentificationDetail(RollerType rollerType, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        RollerType VCreateObject(RollerType RollerType);
+        RollerType VUpdateObject(RollerType RollerType);
+        RollerType VDeleteObject(RollerType RollerType, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        bool ValidCreateObject(RollerType RollerType);
+        bool ValidUpdateObject(RollerType RollerType);
+        bool ValidDeleteObject(RollerType RollerType, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        bool isValid(RollerType RollerType);
+        string PrintError(RollerType RollerType);
     }
 }

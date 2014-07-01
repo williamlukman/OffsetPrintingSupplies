@@ -18,7 +18,8 @@ namespace Core.Interface.Service
         RecoveryAccessoryDetail CreateObject(int RecoveryOrderDetailId, int AccessoryId, string Description, IItemService _itemService, IItemTypeService _itemTypeService);
         RecoveryAccessoryDetail UpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService);
         RecoveryAccessoryDetail SoftDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        RecoveryAccessoryDetail AdjustAmount(
+        RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService);
+        RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService);
         bool DeleteObject(int Id);
     }
 }

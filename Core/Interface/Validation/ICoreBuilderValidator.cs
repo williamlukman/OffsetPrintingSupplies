@@ -14,6 +14,7 @@ namespace Core.Interface.Validation
         CoreBuilder VNameNotEmpty(CoreBuilder coreBuilder);
         CoreBuilder VHasUsedCoreItem(CoreBuilder coreBuilder, IItemService _itemService);
         CoreBuilder VHasNewCoreItem(CoreBuilder coreBuilder, IItemService _itemService);
+        CoreBuilder VHasCoreIdentificationDetail(CoreBuilder coreBuilder, ICoreIdentificationDetailService _coreIdentificationDetailService);
         CoreBuilder VCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService);
         CoreBuilder VUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService);
         CoreBuilder VDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService);

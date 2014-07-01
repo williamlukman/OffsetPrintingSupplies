@@ -22,6 +22,7 @@ namespace Core.Interface.Service
         Item SoftDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                          IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
                                          IRollerBuilderService _rollerBuilderService);
+        Item AdjustQuantity(Item item);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Item item);
     }

@@ -10,7 +10,7 @@ namespace Core.Interface.Validation
 {
     public interface ICustomerValidator
     {
-        Customer VUniqueName(Customer customer, ICustomerService _customerService);
+        Customer VHasUniqueName(Customer customer, ICustomerService _customerService);
         Customer VHasAddress(Customer customer);
         Customer VHasContactNo(Customer customer);
         Customer VHasPIC(Customer customer);
