@@ -17,7 +17,7 @@ namespace Core.Interface.Service
         Machine GetObjectByName(string Name);
         Machine CreateObject(Machine machine);
         Machine UpdateObject(Machine machine);
-        Machine SoftDeleteObject(Machine machine, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        Machine SoftDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(Machine machine);
     }

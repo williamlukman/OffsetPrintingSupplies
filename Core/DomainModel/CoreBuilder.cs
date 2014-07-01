@@ -10,6 +10,8 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string BaseSku { get; set; }
+        public string SkuUsedCore { get; set; }
+        public string SkuNewCore { get; set; }
         public int UsedCoreItemId { get; set; }
         public int NewCoreItemId { get; set; }
         

@@ -10,14 +10,14 @@ namespace Core.Interface.Validation
 {
     public interface IRollerTypeValidator
     {
-        RollerType VHasUniqueName(RollerType rollerType);
+        RollerType VHasUniqueName(RollerType rollerType, IRollerTypeService _rollerTypeService);
         RollerType VHasRollerBuilder(RollerType rollerType, IRollerBuilderService _rollerBuilderService);
         RollerType VHasCoreIdentificationDetail(RollerType rollerType, ICoreIdentificationDetailService _coreIdentificationDetailService);
-        RollerType VCreateObject(RollerType RollerType);
-        RollerType VUpdateObject(RollerType RollerType);
+        RollerType VCreateObject(RollerType RollerType, IRollerTypeService _rollerTypeService);
+        RollerType VUpdateObject(RollerType RollerType, IRollerTypeService _rollerTypeService);
         RollerType VDeleteObject(RollerType RollerType, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);
-        bool ValidCreateObject(RollerType RollerType);
-        bool ValidUpdateObject(RollerType RollerType);
+        bool ValidCreateObject(RollerType RollerType, IRollerTypeService _rollerTypeService);
+        bool ValidUpdateObject(RollerType RollerType, IRollerTypeService _rollerTypeService);
         bool ValidDeleteObject(RollerType RollerType, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool isValid(RollerType RollerType);
         string PrintError(RollerType RollerType);

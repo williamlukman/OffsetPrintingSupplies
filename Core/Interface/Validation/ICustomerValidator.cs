@@ -18,10 +18,10 @@ namespace Core.Interface.Validation
         Customer VHasEmail(Customer customer);
         Customer VCreateObject(Customer customer, ICustomerService _customerService);
         Customer VUpdateObject(Customer customer, ICustomerService _customerService);
-        Customer VDeleteObject(Customer customer, IRecoveryOrderService _recoveryOrderService);
+        Customer VDeleteObject(Customer customer, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool ValidCreateObject(Customer customer, ICustomerService _customerService);
         bool ValidUpdateObject(Customer customer, ICustomerService _customerService);
-        bool ValidDeleteObject(Customer customer, IRecoveryOrderService _recoveryOrderService);
+        bool ValidDeleteObject(Customer customer, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool isValid(Customer customer);
         string PrintError(Customer customer);
     }

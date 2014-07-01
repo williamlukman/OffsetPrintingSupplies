@@ -14,6 +14,8 @@ namespace Core.DomainModel
         public int CompoundId { get; set; }
         public int CoreBuilderId { get; set; }
         public string BaseSku { get; set; }
+        public string SkuUsedRoller { get; set; }
+        public string SkuNewRoller { get; set; }
         public int UsedRollerItemId { get; set; }
         public int NewRollerItemId { get; set; }
 
