@@ -16,6 +16,8 @@ namespace Core.Interface.Service
         IList<CoreIdentificationDetail> GetAll();
         IList<CoreIdentificationDetail> GetObjectsByCoreIdentificationId(int CoreIdentificationId);
         IList<CoreIdentificationDetail> GetObjectsByCoreBuilderId(int CoreBuilderId);
+        IList<CoreIdentificationDetail> GetObjectsByRollerTypeId(int rollerTypeId);
+        IList<CoreIdentificationDetail> GetObjectsByMachineId(int machineId);
         CoreIdentificationDetail GetObjectById(int Id);
         CoreIdentificationDetail GetObjectByDetailId(int CoreIdentificationId, int DetailId);
         CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,

@@ -35,9 +35,19 @@ namespace Service.Service
             return _repository.GetObjectsByItemId(ItemId);
         }
 
+        public IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId)
+        {
+            return _repository.GetObjectsByRollerTypeId(rollerTypeId);
+        }
+
         public IList<RollerBuilder> GetObjectsByCoreBuilderId(int CoreBuilderId)
         {
             return _repository.GetObjectsByCoreBuilderId(CoreBuilderId);
+        }
+
+        public IList<RollerBuilder> GetObjectsByMachineId(int machineId)
+        {
+            return _repository.GetObjectsByMachineId(machineId);
         }
 
         public RollerBuilder GetObjectById(int Id)

@@ -11,7 +11,9 @@ namespace Core.Interface.Repository
     {
         IList<RollerBuilder> GetAll();
         IList<RollerBuilder> GetObjectsByItemId(int ItemId);
+        IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId);
         IList<RollerBuilder> GetObjectsByCoreBuilderId(int coreBuilderId);
+        IList<RollerBuilder> GetObjectsByMachineId(int machineId);
         RollerBuilder GetObjectById(int Id);
         Item GetUsedRoller(int Id);
         Item GetNewRoller(int Id);

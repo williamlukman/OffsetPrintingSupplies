@@ -11,8 +11,8 @@ namespace Core.Interface.Validation
     public interface IRollerTypeValidator
     {
         RollerType VHasUniqueName(RollerType rollerType, IRollerTypeService _rollerTypeService);
-        RollerType VHasRollerBuilder(RollerType rollerType, IRollerBuilderService _rollerBuilderService);
-        RollerType VHasCoreIdentificationDetail(RollerType rollerType, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        RollerType VIsInRollerBuilder(RollerType rollerType, IRollerBuilderService _rollerBuilderService);
+        RollerType VIsInCoreIdentificationDetail(RollerType rollerType, ICoreIdentificationDetailService _coreIdentificationDetailService);
         RollerType VCreateObject(RollerType RollerType, IRollerTypeService _rollerTypeService);
         RollerType VUpdateObject(RollerType RollerType, IRollerTypeService _rollerTypeService);
         RollerType VDeleteObject(RollerType RollerType, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);

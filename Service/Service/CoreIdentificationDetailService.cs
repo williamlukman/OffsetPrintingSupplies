@@ -45,6 +45,16 @@ namespace Service.Service
             return _repository.GetObjectsByCoreBuilderId(CoreBuilderId);
         }
 
+        public IList<CoreIdentificationDetail> GetObjectsByRollerTypeId(int rollerTypeId)
+        {
+            return _repository.GetObjectsByRollerTypeId(rollerTypeId);
+        }
+
+        public IList<CoreIdentificationDetail> GetObjectsByMachineId(int machineId)
+        {
+            return _repository.GetObjectsByMachineId(machineId);
+        }
+
         public CoreIdentificationDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

@@ -35,6 +35,15 @@ namespace Data.Repository
             return FindAll(x => x.CoreBuilderId == CoreBuilderId && !x.IsDeleted).ToList();
         }
 
+        public IList<CoreIdentificationDetail> GetObjectsByRollerTypeId(int rollerTypeId)
+        {
+            return FindAll(x => x.RollerTypeId == rollerTypeId && !x.IsDeleted).ToList();
+        }
+
+        public IList<CoreIdentificationDetail> GetObjectsByMachineId(int machineId)
+        {
+            return FindAll(x => x.MachineId == machineId && !x.IsDeleted).ToList();
+        }
 
         public CoreIdentificationDetail GetObjectById(int Id)
         {
