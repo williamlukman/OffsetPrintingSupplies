@@ -12,6 +12,7 @@ namespace Core.Interface.Repository
         IList<RecoveryOrder> GetAll();
         IList<RecoveryOrder> GetAllObjectsInHouse();
         IList<RecoveryOrder> GetAllObjectsByCustomerId(int CustomerId);
+        IList<RecoveryOrder> GetObjectsByCoreIdentificationId(int coreIdentificationId);
         RecoveryOrder GetObjectById(int Id);
         RecoveryOrder CreateObject(RecoveryOrder recoveryOrder);
         RecoveryOrder UpdateObject(RecoveryOrder recoveryOrder);

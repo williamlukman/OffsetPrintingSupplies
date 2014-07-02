@@ -15,35 +15,41 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasRollerBuilder(RecoveryOrderDetail recoveryOrderDetail, IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail VHasCoreTypeCase(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasAcc(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VHasRequestTypeCase(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasRepairRequestCase(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail VIsNotDissembled(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsStrippedAndGlued(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsWrapped(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsVulcanized(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsFacedOff(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsConventionalGrinded (RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsCWCGrinded(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsPolishedAndQC(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsPackaged(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsRejected(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenDisassembled(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenStrippedAndGlued(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenWrapped(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenFacedOff(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenConventionalGrinded (RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenCWCGrinded(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenPolishedAndQC(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenPackaged(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail VIsDisassembled(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsNotPackaged(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VIsNotRejected(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenDissembled(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenStrippedAndGlued(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenWrapped(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenFacedOff(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenConventionalGrinded(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenCWCGrinded(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenPolishedAndQC(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenPackaged(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail VHasAccessories(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        RecoveryOrderDetail VHasConfirmedAccessories(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        RecoveryOrderDetail VIsConfirmedRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
-        RecoveryOrderDetail VRecoveryOrderConfirmDetail(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail VNoAccessoriesOrAccessoriesHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
+        RecoveryOrderDetail VRecoveryOrderHasNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
 
         RecoveryOrderDetail VCreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                           IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail VUpdateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                           IRollerBuilderService _rollerBuilderService);
-        RecoveryOrderDetail VDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryAccessoryDetailService);
+        RecoveryOrderDetail VDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
-        RecoveryOrderDetail VAssembleObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
@@ -59,7 +65,7 @@ namespace Core.Interface.Validation
                                           IRollerBuilderService _rollerBuilderService);
         bool ValidUpdateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                           IRollerBuilderService _rollerBuilderService);
-        bool ValidDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryAccessoryDetailService);
+        bool ValidDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
         bool ValidDisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);

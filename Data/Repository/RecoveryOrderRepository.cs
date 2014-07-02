@@ -63,6 +63,11 @@ namespace Data.Repository
             }
         }
 
+        public IList<RecoveryOrder> GetObjectsByCoreIdentificationId(int coreIdentificationId)
+        {
+            return FindAll(x => x.CoreIdentificationId == coreIdentificationId && !x.IsDeleted).ToList();
+        }
+
         public RecoveryOrder GetObjectById(int Id)
         {
             RecoveryOrder recoveryOrder = Find(x => x.Id == Id && !x.IsDeleted);

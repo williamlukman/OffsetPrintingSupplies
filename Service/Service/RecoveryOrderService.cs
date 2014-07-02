@@ -41,6 +41,11 @@ namespace Service.Service
             return _repository.GetAllObjectsByCustomerId(CustomerId);
         }
 
+        public IList<RecoveryOrder> GetObjectsByCoreIdentificationId(int coreIdentificationId)
+        {
+            return _repository.GetObjectsByCoreIdentificationId(coreIdentificationId);
+        }
+
         public RecoveryOrder GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

@@ -40,11 +40,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\RecoveryAccessoryDetailValidator.cs" />
+    <Compile Include="Validation\RecoveryOrderDetailValidator.cs" />
+    <Compile Include="Validation\RecoveryOrderValidator.cs" />
+    <Compile Include="Validation\CoreIdentificationValidator.cs" />
+    <Compile Include="Validation\CoreIdentificationDetailValidator.cs" />
+    <Compile Include="Validation\MachineValidator.cs" />
+    <Compile Include="Validation\RollerTypeValidator.cs" />
+    <Compile Include="Validation\CoreBuilderValidator.cs" />
+    <Compile Include="Validation\RollerBuilderValidator.cs" />
     <Compile Include="Validation\CustomerValidator.cs" />
     <Compile Include="Validation\ItemTypeValidator.cs" />
     <Compile Include="Validation\ItemValidator.cs" />
-    <Compile Include="Validation\MaintenanceValidator.cs" />
-    <Compile Include="Validation\UserValidator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{8e08d94c-1e43-4a28-9b69-ca7172cf5b76}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{518749be-3ea1-4db9-a03f-4b2d2923e659}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Service\Service.csproj">
+      <Project>{c73dd4b2-38fd-4fb1-82ac-2744a491acd5}</Project>
+      <Name>Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
