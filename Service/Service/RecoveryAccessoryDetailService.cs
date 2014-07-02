@@ -40,6 +40,11 @@ namespace Service.Service
             return _repository.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetailId);
         }
 
+        public IList<RecoveryAccessoryDetail> GetObjectsByAccessoryId(int ItemId)
+        {
+            return _repository.GetObjectsByAccessoryId(ItemId);
+        }
+
         public RecoveryAccessoryDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

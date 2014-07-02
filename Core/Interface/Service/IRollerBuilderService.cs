@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IRollerBuilderValidator GetValidator();
         IList<RollerBuilder> GetAll();
+        IList<RollerBuilder> GetObjectsByItemId(int ItemId);
         IList<RollerBuilder> GetObjectsByCoreBuilderId(int coreBuilderId);
         RollerBuilder GetObjectById(int Id);
         Item GetUsedRoller(int id, IItemService _itemService);

@@ -16,9 +16,10 @@ namespace Core.Interface.Validation
         Customer VHasPIC(Customer customer);
         Customer VHasPICContactNo(Customer customer);
         Customer VHasEmail(Customer customer);
+        Customer VHasCoreIdentificationDetail(Customer customer, ICoreIdentificationService _coreIdentificationService);
         Customer VCreateObject(Customer customer, ICustomerService _customerService);
         Customer VUpdateObject(Customer customer, ICustomerService _customerService);
-        Customer VDeleteObject(Customer customer, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        Customer VDeleteObject(Customer customer, ICoreIdentificationDetailService _coreIdentificationService);
         bool ValidCreateObject(Customer customer, ICustomerService _customerService);
         bool ValidUpdateObject(Customer customer, ICustomerService _customerService);
         bool ValidDeleteObject(Customer customer, ICoreIdentificationDetailService _coreIdentificationDetailService);

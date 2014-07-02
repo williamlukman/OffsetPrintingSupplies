@@ -25,6 +25,11 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
+        public IList<CoreBuilder> GetObjectsByItemId(int ItemId)
+        {
+            return FindAll(x => !x.IsDeleted && (x.UsedCoreItemId == ItemId || x.NewCoreItemId == ItemId)).ToList();
+        }
+
         public Item GetUsedCore(int id)
         {
             using (var db = GetContext())

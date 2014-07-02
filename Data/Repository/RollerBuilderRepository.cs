@@ -25,6 +25,16 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
+        public IList<RollerBuilder> GetObjectsByItemId(int ItemId)
+        {
+            return FindAll(x => !x.IsDeleted && (x.CompoundId == ItemId || x.UsedRollerItemId == ItemId || x.NewRollerItemId == ItemId)).ToList();
+        }
+
+        public IList<RollerBuilder> GetObjectsByCoreBuilderId(int CoreBuilderId)
+        {
+            return FindAll(x => x.CoreBuilderId == CoreBuilderId && !x.IsDeleted).ToList();
+        }
+
         public Item GetUsedRoller(int id)
         {
             using (var db = GetContext())

@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         ICoreBuilderValidator GetValidator();
         IList<CoreBuilder> GetAll();
+        IList<CoreBuilder> GetObjectsByItemId(int ItemId);
         CoreBuilder GetObjectById(int Id);
         Item GetUsedCore(int id);
         Item GetNewCore(int id);

@@ -30,6 +30,11 @@ namespace Data.Repository
             return FindAll(x => x.RecoveryOrderDetailId == recoveryOrderDetailId && !x.IsDeleted).ToList();
         }
 
+        public IList<RecoveryAccessoryDetail> GetObjectsByAccessoryId(int ItemId)
+        {
+            return FindAll(x => x.AccessoryId == ItemId && !x.IsDeleted).ToList();
+        }
+
         public RecoveryAccessoryDetail GetObjectById(int Id)
         {
             RecoveryAccessoryDetail recoveryAccessoryDetail = Find(x => x.Id == Id && !x.IsDeleted);

@@ -10,6 +10,8 @@ namespace Core.Interface.Repository
     public interface IRollerBuilderRepository : IRepository<RollerBuilder>
     {
         IList<RollerBuilder> GetAll();
+        IList<RollerBuilder> GetObjectsByItemId(int ItemId);
+        IList<RollerBuilder> GetObjectsByCoreBuilderId(int coreBuilderId);
         RollerBuilder GetObjectById(int Id);
         Item GetUsedRoller(int Id);
         Item GetNewRoller(int Id);

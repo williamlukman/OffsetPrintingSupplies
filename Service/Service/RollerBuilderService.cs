@@ -30,9 +30,14 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<RollerBuilder> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public IList<RollerBuilder> GetObjectsByCoreBuilderId(int CoreBuilderId)
         {
-            return _repository.FindAll(x => x.CoreBuilderId == CoreBuilderId && !x.IsDeleted).ToList();
+            return _repository.GetObjectsByCoreBuilderId(CoreBuilderId);
         }
 
         public RollerBuilder GetObjectById(int Id)

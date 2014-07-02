@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
     {
         IList<RecoveryAccessoryDetail> GetAll();
         IList<RecoveryAccessoryDetail> GetObjectsByRecoveryOrderDetailId(int recoveryOrderDetailId);
+        IList<RecoveryAccessoryDetail> GetObjectsByAccessoryId(int ItemId);
         RecoveryAccessoryDetail GetObjectById(int Id);
         RecoveryAccessoryDetail CreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
         RecoveryAccessoryDetail UpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail);

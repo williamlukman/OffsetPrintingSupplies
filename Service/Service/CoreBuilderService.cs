@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<CoreBuilder> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public CoreBuilder GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
