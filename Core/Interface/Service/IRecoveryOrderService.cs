@@ -29,5 +29,6 @@ namespace Core.Interface.Service
         RecoveryOrder UnfinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
         bool DeleteObject(int Id);
+        bool IsCodeDuplicated(RecoveryOrder recoveryOrder);
     }
 }

@@ -127,5 +127,12 @@ namespace Service.Service
         {
             return _repository.DeleteObject(Id);
         }
+
+        public bool IsCodeDuplicated(RecoveryOrder recoveryOrder)
+        {
+            IQueryable<RecoveryOrder> recoveryOrders = _repository.FindAll(x => x.Code == recoveryOrder.Code && !x.IsDeleted && x.Id != recoveryOrders.Id);
+            return (recoveryOrders.Count() > 0 ? true : false);
+        }
+
     }
 }
