@@ -92,7 +92,7 @@ namespace Service.Service
                 coreBuilder.UsedCoreItemId = UsedCore.Id;
                 coreBuilder.NewCoreItemId = NewCore.Id;
 
-                if (_validator.ValidCreateObject(coreBuilder, this, _itemService, _itemTypeService))
+                if (_validator.ValidCreateObject(coreBuilder, this, _itemService))
                 {
                     UsedCore = _itemService.GetRepository().CreateObject(UsedCore);
                     UsedCore.Id = UsedCore.Id;
@@ -108,7 +108,7 @@ namespace Service.Service
             return coreBuilder;
         }
 
-        public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService)
+        public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             UsedCore.Name = coreBuilder.Name;
@@ -120,7 +120,7 @@ namespace Service.Service
             if (_itemService.GetValidator().ValidUpdateObject(UsedCore, _itemTypeService, _itemService) &&
                 _itemService.GetValidator().ValidUpdateObject(NewCore, _itemTypeService, _itemService))
             {
-                if (_validator.ValidUpdateObject(coreBuilder, this, _itemService, _itemTypeService))
+                if (_validator.ValidUpdateObject(coreBuilder, this, _itemService))
                 {
                     _itemService.GetRepository().UpdateObject(UsedCore);
                     _itemService.GetRepository().UpdateObject(NewCore);
@@ -143,7 +143,7 @@ namespace Service.Service
             if (_itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService) &&
                 _itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService))
             {
-                if (_validator.ValidDeleteObject(coreBuilder, _itemService, _rollerBuilderService, _coreIdentificationDetailService))
+                if (_validator.ValidDeleteObject(coreBuilder, _coreIdentificationDetailService, _rollerBuilderService))
                 {
                     _itemService.GetRepository().SoftDeleteObject(UsedCore);
                     _itemService.GetRepository().SoftDeleteObject(NewCore);

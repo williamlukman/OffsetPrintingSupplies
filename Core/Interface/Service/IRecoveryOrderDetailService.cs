@@ -15,6 +15,8 @@ namespace Core.Interface.Service
         IRecoveryOrderDetailRepository GetRepository();
         IList<RecoveryOrderDetail> GetAll();
         IList<RecoveryOrderDetail> GetObjectsByRecoveryOrderId(int recoveryOrderId);
+        IList<RecoveryOrderDetail> GetObjectsByCoreIdentificationDetailId(int coreIdentificationDetailId);
+        IList<RecoveryOrderDetail> GetObjectsByRollerBuilderId(int rollerBuilderId);
         RecoveryOrderDetail GetObjectById(int Id);
         RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                 ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService);

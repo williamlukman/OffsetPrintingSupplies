@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         ICoreIdentificationDetailRepository GetRepository();
         IList<CoreIdentificationDetail> GetAll();
         IList<CoreIdentificationDetail> GetObjectsByCoreIdentificationId(int CoreIdentificationId);
+        IList<CoreIdentificationDetail> GetObjectsByCoreBuilderId(int CoreBuilderId);
         CoreIdentificationDetail GetObjectById(int Id);
         CoreIdentificationDetail GetObjectByDetailId(int CoreIdentificationId, int DetailId);
         CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,

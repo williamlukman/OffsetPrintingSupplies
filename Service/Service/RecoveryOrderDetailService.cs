@@ -35,6 +35,16 @@ namespace Service.Service
             return _repository.GetObjectsByRecoveryOrderId(recoveryOrderId);
         }
 
+        public IList<RecoveryOrderDetail> GetObjectsByCoreIdentificationDetailId(int coreIdentificationDetailId)
+        {
+            return _repository.GetObjectsByCoreIdentificationDetailId(coreIdentificationDetailId);
+        }
+
+        public IList<RecoveryOrderDetail> GetObjectsByRollerBuilderId(int rollerBuilderId)
+        {
+            return _repository.GetObjectsByRollerBuilderId(rollerBuilderId);
+        }
+
         public RecoveryOrderDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

@@ -40,9 +40,9 @@ namespace Service.Service
             return _repository.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetailId);
         }
 
-        public IList<RecoveryAccessoryDetail> GetObjectsByAccessoryId(int ItemId)
+        public IList<RecoveryAccessoryDetail> GetObjectsByItemId(int ItemId)
         {
-            return _repository.GetObjectsByAccessoryId(ItemId);
+            return _repository.GetObjectsByItemId(ItemId);
         }
 
         public RecoveryAccessoryDetail GetObjectById(int Id)
@@ -50,13 +50,13 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public RecoveryAccessoryDetail CreateObject(int RecoveryOrderDetailId, int AccessoryId, int Quantity, IRecoveryOrderDetailService _recoveryOrderDetailService, 
+        public RecoveryAccessoryDetail CreateObject(int RecoveryOrderDetailId, int ItemId, int Quantity, IRecoveryOrderDetailService _recoveryOrderDetailService, 
                                                     IItemService _itemService, IItemTypeService _itemTypeService)
         {
             RecoveryAccessoryDetail recoveryAccessoryDetail = new RecoveryAccessoryDetail
             {
                 RecoveryOrderDetailId = RecoveryOrderDetailId,
-                AccessoryId = AccessoryId,
+                ItemId = ItemId,
                 Quantity = Quantity
             };
             return this.CreateObject(recoveryAccessoryDetail, _recoveryOrderDetailService, _itemService, _itemTypeService);

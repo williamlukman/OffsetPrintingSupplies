@@ -11,6 +11,8 @@ namespace Core.Interface.Repository
     {
         IList<RecoveryOrderDetail> GetAll();
         IList<RecoveryOrderDetail> GetObjectsByRecoveryOrderId(int recoveryOrderId);
+        IList<RecoveryOrderDetail> GetObjectsByCoreIdentificationDetailId(int coreIdentificationDetailId);
+        IList<RecoveryOrderDetail> GetObjectsByRollerBuilderId(int rollerBuilderId);
         RecoveryOrderDetail GetObjectById(int Id);
         RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail UpdateObject(RecoveryOrderDetail recoveryOrderDetail);

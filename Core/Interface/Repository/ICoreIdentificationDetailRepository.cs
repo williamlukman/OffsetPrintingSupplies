@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
     {
         IList<CoreIdentificationDetail> GetAll();
         IList<CoreIdentificationDetail> GetObjectsByCoreIdentificationId(int CoreIdentificationId);
+        IList<CoreIdentificationDetail> GetObjectsByCoreBuilderId(int CoreBuilderId);
         CoreIdentificationDetail GetObjectById(int Id);
         CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UpdateObject(CoreIdentificationDetail coreIdentificationDetail);

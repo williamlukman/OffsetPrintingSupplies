@@ -74,7 +74,7 @@ namespace Validation.Validation
 
         public Item VIsInRecoveryAccessoryDetail(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
-            IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByAccessoryId(item.Id);
+            IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByItemId(item.Id);
             if (accessories.Any())
             {
                 item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan Recovery Accessory Detail");

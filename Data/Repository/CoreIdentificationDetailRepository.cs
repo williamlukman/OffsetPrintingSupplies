@@ -30,6 +30,12 @@ namespace Data.Repository
             return FindAll(x => x.CoreIdentificationId == CoreIdentificationId && !x.IsDeleted).ToList();
         }
 
+        public IList<CoreIdentificationDetail> GetObjectsByCoreBuilderId(int CoreBuilderId)
+        {
+            return FindAll(x => x.CoreBuilderId == CoreBuilderId && !x.IsDeleted).ToList();
+        }
+
+
         public CoreIdentificationDetail GetObjectById(int Id)
         {
             CoreIdentificationDetail coreIdentificationDetail = Find(x => x.Id == Id && !x.IsDeleted);

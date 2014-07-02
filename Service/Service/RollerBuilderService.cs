@@ -111,7 +111,7 @@ namespace Service.Service
                 rollerBuilder.UsedRollerItemId = UsedRoller.Id;
                 rollerBuilder.NewRollerItemId = NewRoller.Id;
 
-                if (_validator.ValidCreateObject(rollerBuilder, this, _machineService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService))
+                if (_validator.ValidCreateObject(rollerBuilder, this, _machineService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
                     UsedRoller = _itemService.GetRepository().CreateObject(UsedRoller);
                     UsedRoller.Id = UsedRoller.Id;
@@ -140,7 +140,7 @@ namespace Service.Service
             if (_itemService.GetValidator().ValidUpdateObject(UsedRoller, _itemTypeService, _itemService) &&
                 _itemService.GetValidator().ValidUpdateObject(NewRoller, _itemTypeService, _itemService))
             {
-                if (_validator.ValidUpdateObject(rollerBuilder, this, _machineService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService))
+                if (_validator.ValidUpdateObject(rollerBuilder, this, _machineService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
                     _itemService.GetRepository().UpdateObject(UsedRoller);
                     _itemService.GetRepository().UpdateObject(NewRoller);
@@ -168,7 +168,7 @@ namespace Service.Service
             if (_itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, this) &&
                 _itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, this))
             {
-                if (_validator.ValidDeleteObject(rollerBuilder, _itemService, _recoveryOrderDetailService, _recoveryAccessoryDetailService))
+                if (_validator.ValidDeleteObject(rollerBuilder, _recoveryOrderDetailService))
                 {
                     _itemService.GetRepository().SoftDeleteObject(UsedRoller);
                     _itemService.GetRepository().SoftDeleteObject(NewRoller);

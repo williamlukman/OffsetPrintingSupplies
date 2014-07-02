@@ -19,7 +19,7 @@ namespace Core.Interface.Service
         CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
         CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category,
                                  IItemService _itemService, IItemTypeService _itemTypeService);
-        CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
+        CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService);
         CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool DeleteObject(int Id, IItemService _itemService);
         bool IsBaseSkuDuplicated(CoreBuilder coreBuilder);
