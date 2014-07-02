@@ -15,11 +15,14 @@ namespace Core.Interface.Service
         IList<RecoveryOrder> GetAllObjectsInHouse();
         IList<RecoveryOrder> GetAllObjectsByCustomerId(int CustomerId);
         RecoveryOrder GetObjectById(int Id);
-        RecoveryOrder CreateObject(RecoveryOrder recoveryOrder);
-        RecoveryOrder UpdateObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService);
-        RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService);
-        RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService);
+        RecoveryOrder CreateObject(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService);
+        RecoveryOrder UpdateObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreIdentificationService _coreIdentificationService);
+        RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
+                                       ICoreIdentificationDetailService _coreIdentificationDetailService);
+        RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
+        RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
         RecoveryOrder FinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
         RecoveryOrder UnfinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,

@@ -27,6 +27,7 @@ namespace Core.Interface.Repository
         RecoveryOrderDetail PolishAndQCObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail PackageObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail);
         bool DeleteObject(int Id);
     }
 }

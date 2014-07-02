@@ -157,6 +157,14 @@ namespace Data.Repository
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail)
+        {
+            recoveryOrderDetail.IsRejected = false;
+            recoveryOrderDetail.UpdatedAt = DateTime.Now;
+            Update(recoveryOrderDetail);
+            return recoveryOrderDetail;
+        }
+
         public bool DeleteObject(int Id)
         {
             RecoveryOrderDetail recoveryOrderDetail = Find(x => x.Id == Id);

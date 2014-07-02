@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8E08D94C-1E43-4A28-9B69-CA7172CF5B76}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Core</RootNamespace>
+    <AssemblyName>Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Constants\Constant.cs" />
+    <Compile Include="DomainModel\CoreIdentification.cs" />
+    <Compile Include="DomainModel\CoreIdentificationDetail.cs" />
+    <Compile Include="DomainModel\RecoveryOrder.cs" />
+    <Compile Include="DomainModel\RecoveryOrderDetail.cs" />
+    <Compile Include="DomainModel\RollerType.cs" />
+    <Compile Include="DomainModel\CoreBuilder.cs" />
+    <Compile Include="DomainModel\RollerBuilder.cs" />
+    <Compile Include="DomainModel\Machine.cs" />
+    <Compile Include="DomainModel\Customer.cs" />
+    <Compile Include="DomainModel\RecoveryAccessoryDetail.cs" />
+    <Compile Include="DomainModel\Item.cs" />
+    <Compile Include="DomainModel\ItemType.cs" />
+    <Compile Include="Interface\Repository\IRecoveryOrderDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IRecoveryOrderRepository.cs" />
+    <Compile Include="Interface\Repository\ICoreIdentificationRepository.cs" />
+    <Compile Include="Interface\Repository\ICoreIdentificationDetailRepository.cs" />
+    <Compile Include="Interface\Repository\ICoreBuilderRepository.cs" />
+    <Compile Include="Interface\Repository\IMachineRepository.cs" />
+    <Compile Include="Interface\Repository\IRollerTypeRepository.cs" />
+    <Compile Include="Interface\Repository\IRecoveryAccessoryDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IRollerBuilderRepository.cs" />
+    <Compile Include="Interface\Repository\ICustomerRepository.cs" />
+    <Compile Include="Interface\Repository\IItemRepository.cs" />
+    <Compile Include="Interface\Repository\IItemTypeRepository.cs" />
+    <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Repository\ItemService.cs" />
+    <Compile Include="Interface\Service\IRecoveryOrderService.cs" />
+    <Compile Include="Interface\Service\IRecoveryOrderDetailService.cs" />
+    <Compile Include="Interface\Service\IRecoveryAccessoryDetailService.cs" />
+    <Compile Include="Interface\Service\ICoreIdentificationDetailService.cs" />
+    <Compile Include="Interface\Service\ICoreIdentificationService.cs" />
+    <Compile Include="Interface\Service\IRollerTypeService.cs" />
+    <Compile Include="Interface\Service\IRollerBuilderService.cs" />
+    <Compile Include="Interface\Service\IMachineService.cs" />
+    <Compile Include="Interface\Service\ICoreBuilderService.cs" />
+    <Compile Include="Interface\Service\ICustomerService.cs" />
+    <Compile Include="Interface\Service\IItemService.cs" />
+    <Compile Include="Interface\Service\IItemTypeService.cs" />
+    <Compile Include="Interface\Validation\IRecoveryAccessoryDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IRecoveryOrderDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IRecoveryOrderValidator.cs" />
+    <Compile Include="Interface\Validation\ICoreIdentificationDetailValidator.cs" />
+    <Compile Include="Interface\Validation\ICoreIdentificationValidator.cs" />
+    <Compile Include="Interface\Validation\IRollerBuilderValidator.cs" />
+    <Compile Include="Interface\Validation\ICoreBuilderValidator.cs" />
+    <Compile Include="Interface\Validation\IMachineValidator.cs" />
+    <Compile Include="Interface\Validation\IRollerTypeValidator.cs" />
+    <Compile Include="Interface\Validation\ICustomerValidator.cs" />
+    <Compile Include="Interface\Validation\IItemTypeValidator.cs" />
+    <Compile Include="Interface\Validation\IItemValidator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

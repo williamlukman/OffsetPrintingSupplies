@@ -30,40 +30,114 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<CoreIdentification> GetAllObjectsInHouse()
+        {
+            return _repository.GetAllObjectsInHouse();
+        }
+
+        public IList<CoreIdentification> GetAllObjectsByCustomerId(int CustomerId)
+        {
+            return _repository.GetAllObjectsByCustomerId(CustomerId);
+        }
+
         public CoreIdentification GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
         }
 
-        public CoreIdentification GetObjectByName(string name)
-        {
-            return _repository.FindAll(c => c.Name == name && !c.IsDeleted).FirstOrDefault();
-        }
-
-        public CoreIdentification CreateObject(string Name, string Description)
+        public CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService)
         {
             CoreIdentification coreIdentification = new CoreIdentification
             {
-                Name = Name,
-                Description = Description
+                CustomerId = CustomerId,
+                IsInHouse = false,
+                Code = Code,
+                Quantity = Quantity,
+                IdentifiedDate = IdentifiedDate
             };
-            return this.CreateObject(coreIdentification);
+            return this.CreateObject(coreIdentification, _customerService);
         }
 
-        public CoreIdentification CreateObject(CoreIdentification coreIdentification)
+        public CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService)
+        {
+            CoreIdentification coreIdentification = new CoreIdentification
+            {
+                CustomerId = null,
+                IsInHouse = true,
+                Code = Code,
+                Quantity = Quantity,
+                IdentifiedDate = IdentifiedDate
+            };
+            return this.CreateObject(coreIdentification, _customerService);
+        }
+
+        public CoreIdentification CreateObject(CoreIdentification coreIdentification, ICustomerService _customerService)
         {
             coreIdentification.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(coreIdentification, this) ? _repository.CreateObject(coreIdentification) : coreIdentification);
+            return (coreIdentification = _validator.ValidCreateObject(coreIdentification, this, _customerService) ? _repository.CreateObject(coreIdentification) : coreIdentification);
         }
 
-        public CoreIdentification UpdateObject(CoreIdentification coreIdentification)
+        public CoreIdentification UpdateObject(CoreIdentification coreIdentification, ICustomerService _customerService)
         {
-            return (coreIdentification = _validator.ValidUpdateObject(coreIdentification, this) ? _repository.UpdateObject(coreIdentification) : coreIdentification);
+            return (coreIdentification = _validator.ValidUpdateObject(coreIdentification, this, _customerService) ? _repository.UpdateObject(coreIdentification) : coreIdentification);
         }
 
-        public CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, IItemService _itemService)
+        public CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderService _recoveryOrderService)
         {
-            return (coreIdentification = _validator.ValidDeleteObject(coreIdentification, _itemService) ? _repository.SoftDeleteObject(coreIdentification) : coreIdentification);
+            if (_validator.ValidDeleteObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService))
+            {
+                IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+                foreach (var detail in details)
+                {
+                    _coreIdentificationDetailService.GetRepository().SoftDeleteObject(detail);
+                }
+                _repository.SoftDeleteObject(coreIdentification);
+            }
+            return coreIdentification;
+        }
+
+        public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService)
+        {
+            if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService))
+            {
+                if (coreIdentification.CustomerId != null)
+                {
+                    IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+                    foreach (var detail in details)
+                    {
+                        int MaterialCase = detail.MaterialCase;
+                        Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
+                                        _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
+                                        _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
+                        item.Quantity += 1;
+                    }
+                }
+                _repository.ConfirmObject(coreIdentification);
+            }
+            return coreIdentification;
+        }
+
+        public CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService)
+        {
+            if (_validator.ValidUnconfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService))
+            {
+                if (coreIdentification.CustomerId != null)
+                {
+                    IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+                    foreach (var detail in details)
+                    {
+                        int MaterialCase = detail.MaterialCase;
+                        Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
+                                        _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
+                                        _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
+                        item.Quantity -= 1;
+                    }
+                }
+                _repository.UnconfirmObject(coreIdentification);
+            }
+            return coreIdentification;
         }
 
         public bool DeleteObject(int Id)
@@ -71,10 +145,10 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public bool IsNameDuplicated(CoreIdentification coreIdentification)
+        public bool IsCodeDuplicated(CoreIdentification coreIdentification)
         {
-            IQueryable<CoreIdentification> types = _repository.FindAll(x => x.Name == coreIdentification.Name && !x.IsDeleted && x.Id != coreIdentification.Id);
-            return (types.Count() > 0 ? true : false);
+            IQueryable<CoreIdentification> coreIdentifications = _repository.FindAll(x => x.Code == coreIdentification.Code && !x.IsDeleted && x.Id != coreIdentification.Id);
+            return (coreIdentifications.Count() > 0 ? true : false);
         }
 
     }

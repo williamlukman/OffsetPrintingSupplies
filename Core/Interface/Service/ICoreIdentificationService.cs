@@ -15,14 +15,15 @@ namespace Core.Interface.Service
         IList<CoreIdentification> GetAllObjectsInHouse();
         IList<CoreIdentification> GetAllObjectsByCustomerId(int CustomerId);
         CoreIdentification GetObjectById(int Id);
-        CoreIdentification CreateObject(CoreIdentification coreIdentification);
-        CoreIdentification CreateObjectForCustomer(int customerId, int Quantity, DateTime IdentifiedDate);
-        CoreIdentification CreateObjectForInHouse(int Quantity, DateTime IdentifiedDate);
-        CoreIdentification UpdateObject(CoreIdentification coreIdentification);
+        CoreIdentification CreateObject(CoreIdentification coreIdentification, ICustomerService _customerService);
+        CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService);
+        CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService);
+        CoreIdentification UpdateObject(CoreIdentification coreIdentification, ICustomerService _customerService);
         CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                             IRecoveryOrderService _recoveryOrderService);
-        CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService);
-        CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);
+        CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                         IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService);
+        CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService, IItemService _itemService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(CoreIdentification coreIdentification);
     }
