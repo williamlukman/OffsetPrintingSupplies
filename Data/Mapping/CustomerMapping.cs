@@ -14,7 +14,7 @@ namespace Data.Mapping
         {
             HasKey(c => c.Id);
             HasMany(c => c.CoreIdentifications)
-                .WithRequired(ci => ci.Customer)
+                .WithOptional(ci => ci.Customer)
                 .HasForeignKey(ci => ci.CustomerId);
             Ignore(c => c.Errors);
         }

@@ -15,10 +15,11 @@ using Validation.Validation;
 namespace TestValidation
 {
 
-    public class SpecItem: nspec
+    public class SpecMachine: nspec
     {
         Item item;
-        
+        Machine machine;
+
         ICoreBuilderService _coreBuilderService;
         ICoreIdentificationService _coreIdentificationService;
         ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -85,82 +86,57 @@ namespace TestValidation
                     Quantity = 0
                 };
                 item = _itemService.CreateObject(item, _itemTypeService);
-            }
-        }
 
-        /*
-         * STEPS:
-         * 1. Create valid item
-         * 2. Create invalid item with no name
-         * 3. Create invalid items with same SKU
-         * 4a. Delete item
-         * 4b. Delete item with stock mutations
-         */
-        void item_validation()
-        {
-        
-            it["validates_item"] = () =>
-            {
-                item.Errors.Count().should_be(0);
-            };
-
-            it["item_with_no_name"] = () =>
-            {
-                Item nonameitem = new Item()
-                {
-                    ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1002",
-                    Name = "     ",
-                    Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
-                };
-                nonameitem = _itemService.CreateObject(nonameitem, _itemTypeService);
-                nonameitem.Errors.Count().should_not_be(0);
-            };
-
-            it["item_with_same_sku"] = () =>
-            {
-                Item sameskuitem = new Item()
-                {
-                    ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1001",
-                    Name = "BBC",
-                    Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
-                };
-                sameskuitem = _itemService.CreateObject(sameskuitem, _itemTypeService);
-                sameskuitem.Errors.Count().should_not_be(0);
-            };
-
-            it["adjust_quantity_valid"] = () =>
-            {
-                item = _itemService.AdjustQuantity(item, 10);
-                item.Errors.Count().should_be(0);
-            };
-
-            it["adjust_quantity_invalid"] = () =>
-            {
-                item = _itemService.AdjustQuantity(item, -10);
-                item.Errors.Count().should_not_be(0);
-            };
-
-            it["delete_item"] = () =>
-            {
-                item = _itemService.SoftDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService);
-                item.Errors.Count().should_be(0);
-            };
-
-            it["delete_item_with_core_builder"] = () =>
-            {
-                Machine machine = new Machine()
+                machine = new Machine()
                 {
                     Code = "M00001",
                     Name = "Machine 00001",
                     Description = "Machine"
                 };
                 machine = _machineService.CreateObject(machine);
+            }
+        }
+
+        void machine_validation()
+        {
+        
+            it["validates_machine"] = () =>
+            {
+                machine.Errors.Count().should_be(0);
+            };
+
+            it["machine_with_no_name"] = () =>
+            {
+                Machine machine2 = new Machine()
+                {
+                    Code = "M00002",
+                    Name = " ",
+                    Description = "Machine"
+                };
+                machine2 = _machineService.CreateObject(machine2);
+                machine2.Errors.Count().should_not_be(0);
+            };
+
+            it["machine_with_same_code"] = () =>
+            {
+                Machine machine2 = new Machine()
+                {
+                    Code = "M00001",
+                    Name = "Machine 00002",
+                    Description = "Machine"
+                };
+                machine2 = _machineService.CreateObject(machine2);
+                machine2.Errors.Count().should_not_be(0);
+            };
+
+            it["delete_machine"] = () =>
+            {
+                machine = _machineService.SoftDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService);
+                machine.Errors.Count().should_be(0);
+            };
+
+            it["delete_machine_in_coreidentification"] = () =>
+            {
                 CoreBuilder coreBuilder = new CoreBuilder()
                 {
                     BaseSku = "CB00001",
@@ -172,8 +148,11 @@ namespace TestValidation
                 coreBuilder = _coreBuilderService.CreateObject(coreBuilder, _itemService, _itemTypeService);
                 CoreIdentification coreIdentification = new CoreIdentification()
                 {
+                    CustomerId = null,
                     Code = "CI0001",
-                    Quantity = 1
+                    Quantity = 1,
+                    IsInHouse = true,
+                    IdentifiedDate = DateTime.Now
                 };
                 coreIdentification = _coreIdentificationService.CreateObject(coreIdentification, _customerService);
                 CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail()
@@ -190,9 +169,10 @@ namespace TestValidation
                     WL = 12,
                     TL = 12
                 };
-                Item core = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
-                core = _itemService.SoftDeleteObject(core, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService);
-                core.Errors.Count().should_not_be(0);
+                coreIdentificationDetail = _coreIdentificationDetailService.CreateObject(coreIdentificationDetail,
+                           _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService);
+                machine = _machineService.SoftDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService);
+                machine.Errors.Count().should_not_be(0);
             };
         }
     }

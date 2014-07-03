@@ -104,6 +104,7 @@ namespace Service.Service
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
                 Sku = rollerBuilder.SkuUsedRoller
             };
+            UsedRoller.Errors = new Dictionary<string, string>();
 
             Item NewRoller = new Item()
             {
@@ -114,19 +115,19 @@ namespace Service.Service
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
                 Sku = rollerBuilder.SkuNewRoller
             };
+            NewRoller.Errors = new Dictionary<string, string>();
 
             if (_itemService.GetValidator().ValidCreateObject(UsedRoller, _itemService, _itemTypeService) &&
                 _itemService.GetValidator().ValidCreateObject(NewRoller, _itemService, _itemTypeService))
             {
-                rollerBuilder.UsedRollerItemId = UsedRoller.Id;
-                rollerBuilder.NewRollerItemId = NewRoller.Id;
-
                 if (_validator.ValidCreateObject(rollerBuilder, this, _machineService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
                     UsedRoller = _itemService.GetRepository().CreateObject(UsedRoller);
                     UsedRoller.Id = UsedRoller.Id;
                     NewRoller = _itemService.GetRepository().CreateObject(NewRoller);
                     NewRoller.Id = NewRoller.Id;
+                    rollerBuilder.UsedRollerItemId = UsedRoller.Id;
+                    rollerBuilder.NewRollerItemId = NewRoller.Id;
                     rollerBuilder = _repository.CreateObject(rollerBuilder);
                 }
             }

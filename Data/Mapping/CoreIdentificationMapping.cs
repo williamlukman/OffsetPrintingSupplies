@@ -13,7 +13,7 @@ namespace Data.Mapping
         public CoreIdentificationMapping()
         {
             HasKey(ci => ci.Id);
-            HasRequired(ci => ci.Customer)
+            HasOptional(ci => ci.Customer)
                 .WithMany(c => c.CoreIdentifications)
                 .HasForeignKey(ci => ci.CustomerId);
             HasMany(ci => ci.CoreIdentificationDetails)

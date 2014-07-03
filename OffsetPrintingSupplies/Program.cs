@@ -1,39 +1,34 @@
+﻿using Core.DomainModel;
+using Core.Interface.Service;
+using Data.Context;
+using Data.Repository;
+using Service.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Core.DomainModel;
-using NSpec;
-using Service.Service;
-using Core.Interface.Service;
-using Data.Context;
-using System.Data.Entity;
-using Data.Repository;
 using Validation.Validation;
 
-namespace TestValidation
+namespace OffsetPrintingSupplies
 {
-
-    public class SpecItem: nspec
+    public class Program
     {
-        Item item;
-        
-        ICoreBuilderService _coreBuilderService;
-        ICoreIdentificationService _coreIdentificationService;
-        ICoreIdentificationDetailService _coreIdentificationDetailService;
-        ICustomerService _customerService;
-        IItemService _itemService;
-        IItemTypeService _itemTypeService;
-        IMachineService _machineService;
-        IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
-        IRecoveryOrderDetailService _recoveryOrderDetailService;
-        IRecoveryOrderService _recoveryOrderService;
-        IRollerBuilderService _rollerBuilderService;
-        IRollerTypeService _rollerTypeService;
-        
-        void before_each()
+        public static void Main(string[] args)
         {
+            ICoreBuilderService _coreBuilderService;
+            ICoreIdentificationService _coreIdentificationService;
+            ICoreIdentificationDetailService _coreIdentificationDetailService;
+            ICustomerService _customerService;
+            IItemService _itemService;
+            IItemTypeService _itemTypeService;
+            IMachineService _machineService;
+            IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
+            IRecoveryOrderDetailService _recoveryOrderDetailService;
+            IRecoveryOrderService _recoveryOrderService;
+            IRollerBuilderService _rollerBuilderService;
+            IRollerTypeService _rollerTypeService;
+        
             var db = new OffsetPrintingSuppliesEntities();
             using (db)
             {
@@ -75,7 +70,7 @@ namespace TestValidation
                 _rollerTypeService.CreateObject("Damp Form DQ", "Damp Form DQ");
                 _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
 
-                item = new Item()
+                Item item = new Item()
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
@@ -85,75 +80,7 @@ namespace TestValidation
                     Quantity = 0
                 };
                 item = _itemService.CreateObject(item, _itemTypeService);
-            }
-        }
 
-        /*
-         * STEPS:
-         * 1. Create valid item
-         * 2. Create invalid item with no name
-         * 3. Create invalid items with same SKU
-         * 4a. Delete item
-         * 4b. Delete item with stock mutations
-         */
-        void item_validation()
-        {
-        
-            it["validates_item"] = () =>
-            {
-                item.Errors.Count().should_be(0);
-            };
-
-            it["item_with_no_name"] = () =>
-            {
-                Item nonameitem = new Item()
-                {
-                    ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1002",
-                    Name = "     ",
-                    Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
-                };
-                nonameitem = _itemService.CreateObject(nonameitem, _itemTypeService);
-                nonameitem.Errors.Count().should_not_be(0);
-            };
-
-            it["item_with_same_sku"] = () =>
-            {
-                Item sameskuitem = new Item()
-                {
-                    ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1001",
-                    Name = "BBC",
-                    Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
-                };
-                sameskuitem = _itemService.CreateObject(sameskuitem, _itemTypeService);
-                sameskuitem.Errors.Count().should_not_be(0);
-            };
-
-            it["adjust_quantity_valid"] = () =>
-            {
-                item = _itemService.AdjustQuantity(item, 10);
-                item.Errors.Count().should_be(0);
-            };
-
-            it["adjust_quantity_invalid"] = () =>
-            {
-                item = _itemService.AdjustQuantity(item, -10);
-                item.Errors.Count().should_not_be(0);
-            };
-
-            it["delete_item"] = () =>
-            {
-                item = _itemService.SoftDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService);
-                item.Errors.Count().should_be(0);
-            };
-
-            it["delete_item_with_core_builder"] = () =>
-            {
                 Machine machine = new Machine()
                 {
                     Code = "M00001",
@@ -172,8 +99,11 @@ namespace TestValidation
                 coreBuilder = _coreBuilderService.CreateObject(coreBuilder, _itemService, _itemTypeService);
                 CoreIdentification coreIdentification = new CoreIdentification()
                 {
+                    CustomerId = null,
                     Code = "CI0001",
-                    Quantity = 1
+                    Quantity = 1,
+                    IsInHouse = true,
+                    IdentifiedDate = DateTime.Now
                 };
                 coreIdentification = _coreIdentificationService.CreateObject(coreIdentification, _customerService);
                 CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail()
@@ -190,10 +120,34 @@ namespace TestValidation
                     WL = 12,
                     TL = 12
                 };
-                Item core = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
-                core = _itemService.SoftDeleteObject(core, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService);
-                core.Errors.Count().should_not_be(0);
-            };
+                coreIdentificationDetail = _coreIdentificationDetailService.CreateObject(coreIdentificationDetail,
+                                           _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService);
+
+                Machine machine2 = new Machine()
+                {
+                    Code = "M00002",
+                    Name = " ",
+                    Description = "Machine"
+                };
+                machine2 = _machineService.CreateObject(machine2);
+                if (!_machineService.GetValidator().isValid(machine2)) { Console.WriteLine( _machineService.GetValidator().PrintError(machine2) ); }
+
+                Machine machine3 = new Machine()
+                {
+                    Code = "M00001",
+                    Name = "Copycopycopy",
+                    Description = "Machine"
+                };
+                machine2 = _machineService.CreateObject(machine3);
+                if (!_machineService.GetValidator().isValid(machine3)) { Console.WriteLine( _machineService.GetValidator().PrintError(machine3) ); }
+
+                machine = _machineService.SoftDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService);
+
+
+                Console.WriteLine("Press any key to stop...");
+                Console.ReadKey();
+            }
+
         }
     }
 }

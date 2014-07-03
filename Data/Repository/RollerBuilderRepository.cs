@@ -80,6 +80,7 @@ namespace Data.Repository
 
         public RollerBuilder CreateObject(RollerBuilder rollerBuilder)
         {
+            rollerBuilder.Errors = new Dictionary<string, string>();
             rollerBuilder.IsDeleted = false;
             rollerBuilder.CreatedAt = DateTime.Now;
             return Create(rollerBuilder);

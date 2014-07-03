@@ -80,10 +80,6 @@ namespace Validation.Validation
         {
             VHasUniqueBaseSku(coreBuilder, _coreBuilderService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
-            VHasUsedCoreItem(coreBuilder, _itemService);
-            if (!isValid(coreBuilder)) { return coreBuilder; }
-            VHasNewCoreItem(coreBuilder, _itemService);
-            if (!isValid(coreBuilder)) { return coreBuilder; }
             VNameNotEmpty(coreBuilder);
             return coreBuilder;
         }
@@ -91,6 +87,10 @@ namespace Validation.Validation
         public CoreBuilder VUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService)
         {
             VCreateObject(coreBuilder, _coreBuilderService, _itemService);
+            if (!isValid(coreBuilder)) { return coreBuilder; }
+            VHasUsedCoreItem(coreBuilder, _itemService);
+            if (!isValid(coreBuilder)) { return coreBuilder; }
+            VHasNewCoreItem(coreBuilder, _itemService);
             return coreBuilder;
         }
 

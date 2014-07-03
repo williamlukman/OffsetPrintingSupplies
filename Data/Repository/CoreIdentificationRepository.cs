@@ -44,6 +44,7 @@ namespace Data.Repository
 
         public CoreIdentification CreateObject(CoreIdentification coreIdentification)
         {
+            coreIdentification.Errors = new Dictionary<string, string>();
             coreIdentification.IsConfirmed = false;
             coreIdentification.IsDeleted = false;
             coreIdentification.CreatedAt = DateTime.Now;

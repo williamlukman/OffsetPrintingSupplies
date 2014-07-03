@@ -15,10 +15,10 @@ namespace Validation.Validation
 
         public CoreIdentificationDetail VHasCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService)
         {
-            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.Id);
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
             if (coreIdentification == null)
             {
-                coreIdentificationDetail.Errors.Add("Generic", "CoreIdentificationDetail masih memiliki Core Identification");
+                coreIdentificationDetail.Errors.Add("Generic", "CoreIdentificationDetail harus memiliki Core Identification");
             }
             return coreIdentificationDetail;
         }
