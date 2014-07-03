@@ -13,6 +13,12 @@ namespace Data.Mapping
         public CoreIdentificationDetailMapping()
         {
             HasKey(cid => cid.Id);
+            HasRequired(cid => cid.CoreIdentification)
+                .WithMany(ci => ci.CoreIdentificationDetails)
+                .HasForeignKey(cid => cid.CoreIdentificationId);
+            HasRequired(cid => cid.CoreBuilder)
+                .WithMany(cb => cb.CoreIdentificationDetails)
+                .HasForeignKey(cid => cid.CoreBuilderId);
             Ignore(cid => cid.Errors);
         }
     }

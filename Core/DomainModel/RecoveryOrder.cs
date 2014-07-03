@@ -26,5 +26,6 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
         public virtual CoreIdentification CoreIdentification { get; set; }
+        public virtual ICollection<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
     }
 }

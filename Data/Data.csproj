@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="Context\OffsetPrintingSuppliesEntities.cs" />
     <Compile Include="Mapping\CoreIdentificationMapping.cs" />
-    <Compile Include="Mapping\CoreIdentificationDetail.cs" />
+    <Compile Include="Mapping\CoreIdentificationDetailMapping.cs" />
     <Compile Include="Mapping\MachineMapping.cs" />
     <Compile Include="Mapping\RecoveryAccessoryDetailMapping.cs" />
     <Compile Include="Mapping\RecoveryOrderMapping.cs" />

@@ -13,6 +13,12 @@ namespace Data.Mapping
         public RecoveryAccessoryDetailMapping()
         {
             HasKey(rad => rad.Id);
+            HasRequired(rad => rad.RecoveryOrderDetail)
+                .WithMany(rod => rod.RecoveryAccessoryDetails)
+                .HasForeignKey(rad => rad.RecoveryOrderDetailId);
+            HasRequired(rad => rad.Item)
+                .WithMany(i => i.RecoveryAccessoryDetails)
+                .HasForeignKey(rad => rad.ItemId);
             Ignore(rad => rad.Errors);
         }
     }

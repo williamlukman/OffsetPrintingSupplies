@@ -36,5 +36,6 @@ namespace Core.DomainModel
         public virtual CoreIdentificationDetail CoreIdentificationDetail { get; set; }
         public virtual RecoveryOrder RecoveryOrder { get; set; }
         public virtual RollerBuilder RollerBuilder { get; set; }
+        public virtual ICollection<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
     }
 }

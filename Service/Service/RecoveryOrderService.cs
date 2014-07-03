@@ -99,7 +99,7 @@ namespace Service.Service
         public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                            IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
         {
-            if (_validator.ValidConfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService))
+            if (_validator.ValidConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService))
             {
                 IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
                 IDictionary<int, int> ValuePairItemIdQuantity = new Dictionary<int, int>();

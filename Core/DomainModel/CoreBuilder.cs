@@ -24,5 +24,6 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
         public ICollection<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
+        public ICollection<RollerBuilder> RollerBuilders { get; set; }
     }
 }

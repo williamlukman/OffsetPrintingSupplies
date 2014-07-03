@@ -13,6 +13,9 @@ namespace Data.Mapping
         public RollerTypeMapping()
         {
             HasKey(rt => rt.Id);
+            HasMany(rt => rt.RollerBuilders)
+                .WithRequired(rb => rb.RollerType)
+                .HasForeignKey(rb => rb.RollerTypeId);
             Ignore(rt => rt.Errors);
         }
     }

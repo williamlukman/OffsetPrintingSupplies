@@ -13,6 +13,9 @@ namespace Data.Mapping
         public MachineMapping()
         {
             HasKey(m => m.Id);
+            HasMany(m => m.RollerBuilders)
+                .WithRequired(rb => rb.Machine)
+                .HasForeignKey(rb => rb.MachineId);
             Ignore(m => m.Errors);
         }
     }
