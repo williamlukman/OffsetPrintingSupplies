@@ -25,16 +25,6 @@ namespace Validation.Validation
             return coreIdentification;
         }
 
-        public CoreIdentification VHasCoreIdentification(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService)
-        {
-            IList<CoreIdentification> coreIdentifications = _coreIdentificationService.GetAllObjectsByCoreIdentificationId(coreIdentification.Id).ToList();
-            if (coreIdentifications.Any())
-            {
-                coreIdentification.Errors.Add("Generic", "CoreIdentification masih memiliki Core Identification");
-            }
-            return coreIdentification;
-        }
-
         public CoreIdentification VInHouseOrHasCustomer(CoreIdentification coreIdentification, ICustomerService _customerService)
         {
             if ((coreIdentification.IsInHouse && coreIdentification.CustomerId != null) ||

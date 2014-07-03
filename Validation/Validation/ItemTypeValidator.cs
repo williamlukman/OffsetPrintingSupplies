@@ -12,8 +12,7 @@ namespace Validation.Validation
 {
     public class ItemTypeValidator : IItemTypeValidator
     {
-
-        public ItemType VName(ItemType itemType, IItemTypeService _itemTypeService)
+        public ItemType VHasUniqueName(ItemType itemType, IItemTypeService _itemTypeService)
         {
             if (String.IsNullOrEmpty(itemType.Name) || itemType.Name.Trim() == "")
             {
@@ -38,13 +37,13 @@ namespace Validation.Validation
 
         public ItemType VCreateObject(ItemType itemType, IItemTypeService _itemTypeService)
         {
-            VName(itemType, _itemTypeService);
+            VHasUniqueName(itemType, _itemTypeService);
             return itemType;
         }
 
         public ItemType VUpdateObject(ItemType itemType, IItemTypeService _itemTypeService)
         {
-            VName(itemType, _itemTypeService);
+            VHasUniqueName(itemType, _itemTypeService);
             return itemType;
         }
 

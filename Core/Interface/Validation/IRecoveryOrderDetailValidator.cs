@@ -39,7 +39,8 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasNotBeenPackaged(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail VNoAccessoriesOrAccessoriesHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail VAccessoriesAtLeastOneHasBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail VNoAccessoriesOrAccessoriesHaveNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
 
@@ -49,6 +50,8 @@ namespace Core.Interface.Validation
                                           IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail VDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
+        RecoveryOrderDetail VAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail);
@@ -67,6 +70,8 @@ namespace Core.Interface.Validation
                                           IRollerBuilderService _rollerBuilderService);
         bool ValidDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
+        bool ValidAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        bool ValidRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         bool ValidDisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidWrapObject(RecoveryOrderDetail recoveryOrderDetail);

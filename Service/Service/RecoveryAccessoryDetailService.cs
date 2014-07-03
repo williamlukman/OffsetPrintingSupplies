@@ -82,16 +82,32 @@ namespace Service.Service
             return (recoveryAccessoryDetail = _validator.ValidDeleteObject(recoveryAccessoryDetail) ? _repository.SoftDeleteObject(recoveryAccessoryDetail) : recoveryAccessoryDetail);
         }
 
-        public RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
+        public RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
+                                                     IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
         {
-            return (recoveryAccessoryDetail = _validator.ValidConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService) ?
-                                              _repository.UpdateObject(recoveryAccessoryDetail) : recoveryAccessoryDetail);
+            if (_validator.ValidConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService))
+            {
+                RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
+                _recoveryOrderDetailService.AddAccessory(recoveryOrderDetail, this);
+                Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
+                _itemService.AdjustQuantity(item, -1);
+                _repository.ConfirmObject(recoveryAccessoryDetail);
+            }
+            return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
+        public RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
+                                                       IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
         {
-            return (recoveryAccessoryDetail = _validator.ValidUnconfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService) ?
-                                              _repository.UpdateObject(recoveryAccessoryDetail) : recoveryAccessoryDetail);
+            if (_validator.ValidUnconfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService))
+            {
+                RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
+                _recoveryOrderDetailService.RemoveAccessory(recoveryOrderDetail, this);
+                Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
+                _itemService.AdjustQuantity(item, 1);
+                _repository.UnconfirmObject(recoveryAccessoryDetail);
+            }
+            return recoveryAccessoryDetail;
         }
 
         public bool DeleteObject(int Id)

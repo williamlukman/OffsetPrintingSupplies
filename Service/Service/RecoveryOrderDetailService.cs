@@ -25,6 +25,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IRecoveryOrderDetailRepository GetRepository()
+        {
+            return _repository;
+        }
+
         public IList<RecoveryOrderDetail> GetAll()
         {
             return _repository.GetAll();
@@ -50,7 +55,7 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public RecoveryOrderDetail CreateObject(int CoreIdentificationDetailId, int RollerBuilderId, string CoreTypeCase, string Acc, string RepairRequestCase,
+        public RecoveryOrderDetail CreateObject(int CoreIdentificationDetailId, int RollerBuilderId, string CoreTypeCase, string Acc, int RepairRequestCase,
                                                 IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRollerBuilderService _rollerBuilderService)
         {
@@ -84,6 +89,16 @@ namespace Service.Service
         {
             return (recoveryOrderDetail = _validator.ValidDeleteObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService) ?
                                           _repository.SoftDeleteObject(recoveryOrderDetail) : recoveryOrderDetail);
+        }
+
+        public RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            return (recoveryOrderDetail = _validator.ValidAddAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService) ? _repository.AddAccessory(recoveryOrderDetail) : recoveryOrderDetail);
+        }
+
+        public RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            return (recoveryOrderDetail = _validator.ValidRemoveAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService) ? _repository.RemoveAccessory(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
         public RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail)

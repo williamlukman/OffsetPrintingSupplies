@@ -18,7 +18,8 @@ namespace Core.Interface.Repository
         RecoveryOrderDetail UpdateObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail SoftDeleteObject(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail AddAccessory(RecoveryAccessoryDetail recoveryOrderDetail);
+        RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail StripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail);

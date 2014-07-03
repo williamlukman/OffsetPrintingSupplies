@@ -153,7 +153,7 @@ namespace Validation.Validation
         public bool ValidCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
                                     IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
         {
-            VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _itemService, _coreBuilderService, _rollerTypeService);`
+            VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _itemService, _coreBuilderService, _rollerTypeService);
             return isValid(rollerBuilder);
         }
 

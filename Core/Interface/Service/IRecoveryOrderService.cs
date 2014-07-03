@@ -18,16 +18,18 @@ namespace Core.Interface.Service
         RecoveryOrder GetObjectById(int Id);
         RecoveryOrder CreateObject(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService);
         RecoveryOrder UpdateObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreIdentificationService _coreIdentificationService);
-        RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                       ICoreIdentificationDetailService _coreIdentificationDetailService);
+        RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                       IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
+                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService);
         RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
+                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService);
         RecoveryOrder FinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                   IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
+                                   IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, 
+                                   IRollerBuilderService _rollerBuilderService, IItemService _itemService);
         RecoveryOrder UnfinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                   IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemService _itemService);
+                                   IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService,
+                                   IRollerBuilderService _rollerBuilderService, IItemService _itemService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(RecoveryOrder recoveryOrder);
     }

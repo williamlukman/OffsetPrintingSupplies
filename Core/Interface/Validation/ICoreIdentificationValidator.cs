@@ -19,8 +19,8 @@ namespace Core.Interface.Validation
         CoreIdentification VIsInRecoveryOrder(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);
         CoreIdentification VHasCoreIdentificationDetails(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService);
         CoreIdentification VQuantityEqualNumberOfDetails(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService);
-        CoreIdentification VQuantityIsInStock(CoreIdentification coreIdentification, ICoreBuilderService _coreBuilderService,
-                                              ICoreIdentificationDetailService _coreIdentificationDetailService);
+        CoreIdentification VQuantityIsInStock(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                              ICoreBuilderService _coreBuilderService);
         CoreIdentification VCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, ICustomerService _customerService);
         CoreIdentification VUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, ICustomerService _customerService);
         CoreIdentification VDeleteObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);

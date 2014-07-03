@@ -84,7 +84,7 @@ namespace Service.Service
 
         public CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderService _recoveryOrderService)
         {
-            if (_validator.ValidDeleteObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService))
+            if (_validator.ValidDeleteObject(coreIdentification, _recoveryOrderService))
             {
                 IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
                 foreach (var detail in details)
@@ -99,7 +99,7 @@ namespace Service.Service
         public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService)
         {
-            if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService))
+            if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService))
             {
                 if (coreIdentification.CustomerId != null)
                 {
@@ -119,9 +119,9 @@ namespace Service.Service
         }
 
         public CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService)
+                                                  IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService)
         {
-            if (_validator.ValidUnconfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService))
+            if (_validator.ValidUnconfirmObject(coreIdentification, _recoveryOrderService))
             {
                 if (coreIdentification.CustomerId != null)
                 {
@@ -150,6 +150,5 @@ namespace Service.Service
             IQueryable<CoreIdentification> coreIdentifications = _repository.FindAll(x => x.Code == coreIdentification.Code && !x.IsDeleted && x.Id != coreIdentification.Id);
             return (coreIdentifications.Count() > 0 ? true : false);
         }
-
     }
 }

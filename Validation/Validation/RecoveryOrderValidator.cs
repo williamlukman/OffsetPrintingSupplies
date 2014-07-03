@@ -78,7 +78,11 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VQuantityIsInStock(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRollerBuilderService _rollerBuilderService);
+        // TODO
+        public RecoveryOrder VQuantityIsInStock(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService)
+        {
+            return recoveryOrder;
+        }
         
         public RecoveryOrder VHasBeenConfirmed(RecoveryOrder recoveryOrder)
         {
@@ -116,11 +120,31 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VAllAccessoriesHaveNotBeenConfirmed(RecoveryOrder recoveryOrder, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        public RecoveryOrder VAllAccessoriesHaveBeenConfirmed(RecoveryOrder recoveryOrder, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        public RecoveryOrder VAllDetailsHaveBeenPackagedOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        public RecoveryOrder VAllDetailsHaveBeenAssembledOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        public RecoveryOrder VAllDetailsHaveNotBeenAssembledNorRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        // TODO
+        public RecoveryOrder VAllAccessoriesHaveNotBeenConfirmed(RecoveryOrder recoveryOrder, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            return recoveryOrder;
+        }
+
+        public RecoveryOrder VAllAccessoriesHaveBeenConfirmed(RecoveryOrder recoveryOrder, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            return recoveryOrder;
+        }
+
+        public RecoveryOrder VAllDetailsHaveBeenPackagedOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            return recoveryOrder;
+        }
+
+        public RecoveryOrder VAllDetailsHaveBeenAssembledOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            return recoveryOrder;
+        }
+
+        public RecoveryOrder VAllDetailsHaveNotBeenAssembledNorRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            return recoveryOrder;
+        }
 
         public RecoveryOrder VCreateObject(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService, IRecoveryOrderService _recoveryOrderService)
         {
@@ -152,7 +176,7 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IRollerBuilderService _rollerBuilderService)
+        public RecoveryOrder VConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService)
         {
             VHasNotBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
@@ -162,7 +186,7 @@ namespace Validation.Validation
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VHasNotBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VQuantityIsInStock(recoveryOrder, _recoveryOrderDetailService, _rollerBuilderService);
+            VQuantityIsInStock(recoveryOrder, _recoveryOrderDetailService, _coreBuilderService);
             return recoveryOrder;
         }
 
@@ -216,10 +240,10 @@ namespace Validation.Validation
             return isValid(recoveryOrder);
         }
 
-        public bool ValidConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IRollerBuilderService _rollerBuilderService)
+        public bool ValidConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService)
         {
             recoveryOrder.Errors.Clear();
-            VConfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService);
+            VConfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService);
             return isValid(recoveryOrder);
         }
 

@@ -65,7 +65,6 @@
     <Compile Include="Interface\Repository\IItemRepository.cs" />
     <Compile Include="Interface\Repository\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
-    <Compile Include="Interface\Repository\ItemService.cs" />
     <Compile Include="Interface\Service\IRecoveryOrderService.cs" />
     <Compile Include="Interface\Service\IRecoveryOrderDetailService.cs" />
     <Compile Include="Interface\Service\IRecoveryAccessoryDetailService.cs" />

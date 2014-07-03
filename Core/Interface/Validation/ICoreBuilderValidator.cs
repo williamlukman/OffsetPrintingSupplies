@@ -12,8 +12,8 @@ namespace Core.Interface.Validation
     {
         CoreBuilder VHasUniqueBaseSku(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService);
         CoreBuilder VNameNotEmpty(CoreBuilder coreBuilder);
-        CoreBuilder VHasUsedCoreItem(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
-        CoreBuilder VHasNewCoreItem(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
+        CoreBuilder VHasUsedCoreItem(CoreBuilder coreBuilder, IItemService _itemService);
+        CoreBuilder VHasNewCoreItem(CoreBuilder coreBuilder, IItemService _itemService);
         CoreBuilder VIsInCoreIdentificationDetail(CoreBuilder coreBuilder, ICoreIdentificationDetailService _coreIdentificationDetailService);
         CoreBuilder VIsInRollerBuilder(CoreBuilder coreBuilder, IRollerBuilderService _rollerBuilderService);
         CoreBuilder VCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService);

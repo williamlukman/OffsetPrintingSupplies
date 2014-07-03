@@ -86,8 +86,8 @@ namespace Service.Service
                 Sku = coreBuilder.SkuNewCore
             };
 
-            if (_itemService.GetValidator().ValidCreateObject(UsedCore, _itemTypeService, _itemService) &&
-                _itemService.GetValidator().ValidCreateObject(NewCore, _itemTypeService, _itemService))
+            if (_itemService.GetValidator().ValidCreateObject(UsedCore, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidCreateObject(NewCore, _itemService, _itemTypeService))
             {
                 coreBuilder.UsedCoreItemId = UsedCore.Id;
                 coreBuilder.NewCoreItemId = NewCore.Id;
@@ -108,7 +108,7 @@ namespace Service.Service
             return coreBuilder;
         }
 
-        public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService)
+        public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             UsedCore.Name = coreBuilder.Name;
@@ -117,8 +117,8 @@ namespace Service.Service
             NewCore.Name = coreBuilder.Name;
             NewCore.Category = coreBuilder.Category;
 
-            if (_itemService.GetValidator().ValidUpdateObject(UsedCore, _itemTypeService, _itemService) &&
-                _itemService.GetValidator().ValidUpdateObject(NewCore, _itemTypeService, _itemService))
+            if (_itemService.GetValidator().ValidUpdateObject(UsedCore, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidUpdateObject(NewCore, _itemService, _itemTypeService))
             {
                 if (_validator.ValidUpdateObject(coreBuilder, this, _itemService))
                 {

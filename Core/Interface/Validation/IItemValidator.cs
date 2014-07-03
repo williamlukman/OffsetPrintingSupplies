@@ -18,15 +18,15 @@ namespace Core.Interface.Validation
         Item VQuantity(Item item);
         Item VIsInRecoveryAccessoryDetail(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         Item VIsInCoreBuilder(Item item, ICoreBuilderService _coreBuilderService);
-        Item VIsInRollerBuilder(Item item, ICoreBuilderService _rollerBuilderService);
+        Item VIsInRollerBuilder(Item item, IRollerBuilderService _rollerBuilderService);
 
         Item VCreateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
                                ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService);
         Item VAdjustQuantity(Item item);
-        bool ValidCreateObject(Item item, IItemTypeService _itemTypeService, IItemService _itemService);
-        bool ValidUpdateObject(Item item, IItemTypeService _itemTypeService, IItemService _itemService);
+        bool ValidCreateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
+        bool ValidUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
                                ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService);
         bool ValidAdjustQuantity(Item item);

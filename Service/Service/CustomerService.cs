@@ -65,9 +65,9 @@ namespace Service.Service
             return (customer = _validator.ValidUpdateObject(customer, this) ? _repository.UpdateObject(customer) : customer);
         }
 
-        public Customer SoftDeleteObject(Customer customer, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        public Customer SoftDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService)
         {
-            return (customer = _validator.ValidDeleteObject(customer, _coreIdentificationDetailService) ? _repository.SoftDeleteObject(customer) : customer);
+            return (customer = _validator.ValidDeleteObject(customer, _coreIdentificationService) ? _repository.SoftDeleteObject(customer) : customer);
         }
 
         public bool DeleteObject(int Id)

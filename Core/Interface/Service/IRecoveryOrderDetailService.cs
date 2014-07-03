@@ -20,7 +20,7 @@ namespace Core.Interface.Service
         RecoveryOrderDetail GetObjectById(int Id);
         RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                 ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService);
-        RecoveryOrderDetail CreateObject(int CoreIdentificationDetailId, int RollerBuilderId, string CoreTypeCase, string Acc, string RepairRequestCase,
+        RecoveryOrderDetail CreateObject(int CoreIdentificationDetailId, int RollerBuilderId, string CoreTypeCase, string Acc, int RepairRequestCase,
                                          IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                          IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail UpdateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
@@ -28,6 +28,8 @@ namespace Core.Interface.Service
         RecoveryOrderDetail SoftDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                              IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
+        RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail StripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail);
@@ -39,6 +41,6 @@ namespace Core.Interface.Service
         RecoveryOrderDetail PackageObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
-        bool DeleteObject(int Id, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        bool DeleteObject(int Id);
     }
 }

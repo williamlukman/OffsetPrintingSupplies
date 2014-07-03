@@ -57,15 +57,20 @@ namespace Service.Service
             return _repository.FindAll(i => i.Sku == Sku && !i.IsDeleted).FirstOrDefault();
         }
 
+        public int GetQuantityById(int Id)
+        {
+            return _repository.GetQuantityById(Id);
+        }
+
         public Item CreateObject(Item item, IItemTypeService _itemTypeService)
         {
             item.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(item, _itemTypeService, this) ? _repository.CreateObject(item) : item);
+            return (_validator.ValidCreateObject(item, this, _itemTypeService) ? _repository.CreateObject(item) : item);
         }
 
         public Item UpdateObject(Item item, IItemTypeService _itemTypeService)
         {
-            return (item = _validator.ValidUpdateObject(item, _itemTypeService, this) ? _repository.UpdateObject(item) : item);
+            return (item = _validator.ValidUpdateObject(item, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
         }
 
         public Item SoftDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
@@ -83,6 +88,12 @@ namespace Service.Service
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
+        }
+
+        public bool IsSkuDuplicated(Item item)
+        {
+            IQueryable<Item> items = _repository.FindAll(x => x.Sku == item.Sku && !x.IsDeleted && x.Id != item.Id);
+            return (items.Count() > 0 ? true : false);
         }
     }
 }

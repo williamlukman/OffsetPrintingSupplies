@@ -21,7 +21,7 @@ namespace Data.Context
         {
             IList<String> tableNames = new List<String>() { "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
-                                                            "CoreBuilder", "RollerType", "Item", "ItemType", "Customer", "RollerType" };
+                                                            "CoreBuilder", "Item", "ItemType", "Customer", "RollerType", "Machine"};
 
             foreach (var tableName in tableNames)
             {

@@ -65,12 +65,12 @@ namespace Service.Service
         public RecoveryOrder CreateObject(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService)
         {
             recoveryOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(recoveryOrder, _coreIdentificationService) ? _repository.CreateObject(recoveryOrder) : recoveryOrder);
+            return (_validator.ValidCreateObject(recoveryOrder, _coreIdentificationService, this) ? _repository.CreateObject(recoveryOrder) : recoveryOrder);
         }
 
         public RecoveryOrder UpdateObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreIdentificationService _coreIdentificationService)
         {
-            return (recoveryOrder = _validator.ValidUpdateObject(recoveryOrder, _recoveryOrderDetailService, _coreIdentificationService) ? _repository.UpdateObject(recoveryOrder) : recoveryOrder);
+            return (recoveryOrder = _validator.ValidUpdateObject(recoveryOrder, _recoveryOrderDetailService, _coreIdentificationService, this) ? _repository.UpdateObject(recoveryOrder) : recoveryOrder);
         }
 
         public RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
@@ -96,30 +96,32 @@ namespace Service.Service
             return recoveryOrder;
         }
 
-        public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailRepository _recoveryAccessoryDetailService, IItemService _itemService)
+        // TODO
+        public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                           IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
         {
-            return (recoveryOrder = _validator.ValidConfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _itemService) ?
+            return (recoveryOrder = _validator.ValidConfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService) ?
                                     _repository.UpdateObject(recoveryOrder) : recoveryOrder);
         }
 
-        public RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                             IItemService _itemService)
+        public RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
         {
-            return (recoveryOrder = _validator.ValidUnconfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _itemService ) ?
+            return (recoveryOrder = _validator.ValidUnconfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService) ?
                                     _repository.UnconfirmObject(recoveryOrder) : recoveryOrder);
         }
 
         public RecoveryOrder FinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                          IItemService _itemService)
+                                          ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService, IItemService _itemService)
         {
-            return (recoveryOrder = _validator.ValidFinishObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _itemService) ?
+            return (recoveryOrder = _validator.ValidFinishObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService) ?
                                     _repository.FinishObject(recoveryOrder) : recoveryOrder);
         }
 
         public RecoveryOrder UnfinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                            IItemService _itemService)
+                                            ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService, IItemService _itemService)
         {
-            return (recoveryOrder = _validator.ValidUnfinishObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _itemService) ?
+            return (recoveryOrder = _validator.ValidUnfinishObject(recoveryOrder) ?
                                     _repository.UnfinishObject(recoveryOrder) : recoveryOrder);
         }
 
@@ -130,7 +132,7 @@ namespace Service.Service
 
         public bool IsCodeDuplicated(RecoveryOrder recoveryOrder)
         {
-            IQueryable<RecoveryOrder> recoveryOrders = _repository.FindAll(x => x.Code == recoveryOrder.Code && !x.IsDeleted && x.Id != recoveryOrders.Id);
+            IQueryable<RecoveryOrder> recoveryOrders = _repository.FindAll(x => x.Code == recoveryOrder.Code && !x.IsDeleted && x.Id != recoveryOrder.Id);
             return (recoveryOrders.Count() > 0 ? true : false);
         }
 

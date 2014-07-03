@@ -35,7 +35,7 @@ namespace Data.Repository
             return FindAll(x => x.CoreIdentificationDetailId == coreIdentificationDetailId && !x.IsDeleted).ToList();
         }
 
-        IList<RecoveryOrderDetail> GetObjectsByRollerBuilderId(int rollerBuilderId)
+        public IList<RecoveryOrderDetail> GetObjectsByRollerBuilderId(int rollerBuilderId)
         {
             return FindAll(x => x.RollerBuilderId == rollerBuilderId && !x.IsDeleted).ToList();
         }
@@ -83,6 +83,13 @@ namespace Data.Repository
         public RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail)
         {
             recoveryOrderDetail.HasAccessory = true;
+            Update(recoveryOrderDetail);
+            return recoveryOrderDetail;
+        }
+
+        public RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail)
+        {
+            recoveryOrderDetail.HasAccessory = false;
             Update(recoveryOrderDetail);
             return recoveryOrderDetail;
         }

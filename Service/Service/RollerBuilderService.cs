@@ -115,8 +115,8 @@ namespace Service.Service
                 Sku = rollerBuilder.SkuNewRoller
             };
 
-            if (_itemService.GetValidator().ValidCreateObject(UsedRoller, _itemTypeService, _itemService) &&
-                _itemService.GetValidator().ValidCreateObject(NewRoller, _itemTypeService, _itemService))
+            if (_itemService.GetValidator().ValidCreateObject(UsedRoller, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidCreateObject(NewRoller, _itemService, _itemTypeService))
             {
                 rollerBuilder.UsedRollerItemId = UsedRoller.Id;
                 rollerBuilder.NewRollerItemId = NewRoller.Id;
@@ -147,8 +147,8 @@ namespace Service.Service
             NewRoller.Name = rollerBuilder.Name;
             NewRoller.Category = rollerBuilder.Category;
 
-            if (_itemService.GetValidator().ValidUpdateObject(UsedRoller, _itemTypeService, _itemService) &&
-                _itemService.GetValidator().ValidUpdateObject(NewRoller, _itemTypeService, _itemService))
+            if (_itemService.GetValidator().ValidUpdateObject(UsedRoller, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidUpdateObject(NewRoller, _itemService, _itemTypeService))
             {
                 if (_validator.ValidUpdateObject(rollerBuilder, this, _machineService, _itemService, _coreBuilderService, _rollerTypeService))
                 {

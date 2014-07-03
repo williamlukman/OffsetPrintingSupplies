@@ -251,7 +251,29 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VNoAccessoriesOrAccessoriesHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public RecoveryOrderDetail VAccessoriesAtLeastOneHasBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
+            if (!accessories.Any())
+            {
+                recoveryOrderDetail.Errors.Add("Generic", "Tidak ditemukan asosiasi dengan recovery accessory detail");
+            }
+            else
+            {
+                foreach (var accessory in accessories)
+                {
+                    if (accessory.IsConfirmed)
+                    {
+                        return recoveryOrderDetail;
+                    }
+                }
+                // if none is confirmed
+                recoveryOrderDetail.Errors.Add("Generic", "Tidak ada accessory yang sudah terkonfirmasi");
+            }
+            return recoveryOrderDetail;
+        }
+
+        public RecoveryOrderDetail VNoAccessoriesOrAccessoriesHaveNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
             if (recoveryOrderDetail.HasAccessory)
             {
@@ -325,7 +347,19 @@ namespace Validation.Validation
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VRecoveryOrderHasNotBeenConfirmed(recoveryOrderDetail, _recoveryOrderService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VNoAccessoriesOrAccessoriesHasNotBeenConfirmed(recoveryOrderDetail, _recoveryAccessoryDetailService);
+            VNoAccessoriesOrAccessoriesHaveNotBeenConfirmed(recoveryOrderDetail, _recoveryAccessoryDetailService);
+            return recoveryOrderDetail;
+        }
+
+        public RecoveryOrderDetail VAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            VAccessoriesAtLeastOneHasBeenConfirmed(recoveryOrderDetail, _recoveryAccessoryDetailService);
+            return recoveryOrderDetail;
+        }
+
+        public RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            VNoAccessoriesOrAccessoriesHaveNotBeenConfirmed(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 
@@ -452,6 +486,20 @@ namespace Validation.Validation
         {
             recoveryOrderDetail.Errors.Clear();
             VDeleteObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService);
+            return isValid(recoveryOrderDetail);
+        }
+
+        public bool ValidAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            recoveryOrderDetail.Errors.Clear();
+            VAddAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService);
+            return isValid(recoveryOrderDetail);
+        }
+
+        public bool ValidRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            recoveryOrderDetail.Errors.Clear();
+            VRemoveAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return isValid(recoveryOrderDetail);
         }
 
