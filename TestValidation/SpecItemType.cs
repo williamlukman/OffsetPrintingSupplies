@@ -17,17 +17,6 @@ namespace TestValidation
 
     public class SpecItemType: nspec
     {
-        Item item;
-        ItemType typeAccessory;
-        ItemType typeBearing;
-        ItemType typeBlanket;
-        ItemType typeCore;
-        ItemType typeCompound;
-        ItemType typeChemical;
-        ItemType typeConsumable;
-        ItemType typeGlue;
-        ItemType typeUnderpacking;
-        ItemType typeRoller;
         ICoreBuilderService _coreBuilderService;
         ICoreIdentificationService _coreIdentificationService;
         ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -40,6 +29,17 @@ namespace TestValidation
         IRecoveryOrderService _recoveryOrderService;
         IRollerBuilderService _rollerBuilderService;
         IRollerTypeService _rollerTypeService;
+        Item item;
+        ItemType typeAccessory;
+        ItemType typeBearing;
+        ItemType typeBlanket;
+        ItemType typeCore;
+        ItemType typeCompound;
+        ItemType typeChemical;
+        ItemType typeConsumable;
+        ItemType typeGlue;
+        ItemType typeUnderpacking;
+        ItemType typeRoller;
         
         void before_each()
         {
