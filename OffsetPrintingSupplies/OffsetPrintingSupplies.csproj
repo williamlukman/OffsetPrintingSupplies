@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -64,6 +63,10 @@
     <ProjectReference Include="..\Service\Service.csproj">
       <Project>{c73dd4b2-38fd-4fb1-82ac-2744a491acd5}</Project>
       <Name>Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestValidation\TestValidation.csproj">
+      <Project>{6a18ed05-6179-4697-8648-b44594203dcc}</Project>
+      <Name>TestValidation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Validation\Validation.csproj">
       <Project>{5fce3a19-3b1d-4bd3-9752-274d5efe7f2f}</Project>

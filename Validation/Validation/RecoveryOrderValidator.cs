@@ -91,11 +91,12 @@ namespace Validation.Validation
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                 if (ValuePairItemIdQuantity.ContainsKey(item.Id))
                 {
-                    ValuePairItemIdQuantity.Add(item.Id, 1);
+                    ValuePairItemIdQuantity[item.Id] += 1;
                 }
                 else
                 {
-                    ValuePairItemIdQuantity[item.Id] += 1;
+                    ValuePairItemIdQuantity.Add(item.Id, 1);
+
                 }
             }
 
