@@ -22,7 +22,7 @@ namespace Core.Interface.Service
         Item CreateObject(Item item, IItemTypeService _itemTypeService);
         Item UpdateObject(Item item, IItemTypeService _itemTypeService);
         Item SoftDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                               ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService);
+                              IRollerBuilderService _rollerBuilderService);
         Item AdjustQuantity(Item item, int Quantity);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Item item);

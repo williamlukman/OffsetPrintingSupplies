@@ -125,13 +125,29 @@ namespace Data.Repository
         public int Update(T t)
         {
             var entry = Context.Entry(t);
+            var pkey = Context.Set<T>().Create().GetType().GetProperty("Id").GetValue(t);
 
-            DbSet.Attach(t);
+            if (entry.State == System.Data.EntityState.Detached)
+            {
+                T attachedEntity = Context.Set<T>().Find(pkey);
 
-            entry.State = System.Data.EntityState.Modified;
+                if (attachedEntity != null)
+                {
+                    var attachedEntry = Context.Entry(attachedEntity);
 
+                    attachedEntry.CurrentValues.SetValues(t);
+
+                }
+                else
+                {
+                    DbSet.Attach(t);
+
+                    entry.State = System.Data.EntityState.Modified;
+                }
+            }
             return Context.SaveChanges();
         }
+
 
         public void Dispose()
         {

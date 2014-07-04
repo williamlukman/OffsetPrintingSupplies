@@ -1,43 +1,46 @@
-﻿using Core.DomainModel;
-using Core.Interface.Service;
-using Data.Context;
-using Data.Repository;
-using Service.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.DomainModel;
+using NSpec;
+using Service.Service;
+using Core.Interface.Service;
+using Data.Context;
+using System.Data.Entity;
+using Data.Repository;
 using Validation.Validation;
 
-namespace OffsetPrintingSupplies
+namespace TestValidation
 {
-    public class Program
+
+    public class SpecRollerBuilder: nspec
     {
-        public static void Main(string[] args)
+        ICoreBuilderService _coreBuilderService;
+        ICoreIdentificationService _coreIdentificationService;
+        ICoreIdentificationDetailService _coreIdentificationDetailService;
+        ICustomerService _customerService;
+        IItemService _itemService;
+        IItemTypeService _itemTypeService;
+        IMachineService _machineService;
+        IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
+        IRecoveryOrderDetailService _recoveryOrderDetailService;
+        IRecoveryOrderService _recoveryOrderService;
+        IRollerBuilderService _rollerBuilderService;
+        IRollerTypeService _rollerTypeService;
+
+        Item item;
+        Item itemCompound;
+        Customer customer;
+        Machine machine;
+        CoreBuilder coreBuilder;
+        CoreIdentification coreIdentification;
+        CoreIdentificationDetail coreIdentificationDetail;
+        RollerBuilder rollerBuilder;
+
+        void before_each()
         {
-            ICoreBuilderService _coreBuilderService;
-            ICoreIdentificationService _coreIdentificationService;
-            ICoreIdentificationDetailService _coreIdentificationDetailService;
-            ICustomerService _customerService;
-            IItemService _itemService;
-            IItemTypeService _itemTypeService;
-            IMachineService _machineService;
-            IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
-            IRecoveryOrderDetailService _recoveryOrderDetailService;
-            IRecoveryOrderService _recoveryOrderService;
-            IRollerBuilderService _rollerBuilderService;
-            IRollerTypeService _rollerTypeService;
-
-            Item item;
-            Item itemCompound;
-            Customer customer;
-            Machine machine;
-            CoreBuilder coreBuilder;
-            CoreIdentification coreIdentification;
-            CoreIdentificationDetail coreIdentificationDetail;
-            RollerBuilder rollerBuilder;
-
             var db = new OffsetPrintingSuppliesEntities();
             using (db)
             {
@@ -160,11 +163,44 @@ namespace OffsetPrintingSupplies
                     RollerTypeId = _rollerTypeService.GetObjectByName("Damp").Id
                 };
                 rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+            }
+        }
 
+        /*
+         * STEPS:
+         * 1. Create valid item
+         * 2. Create invalid item with no name
+         * 3. Create invalid items with same SKU
+         * 4a. Delete item
+         * 4b. Delete item with stock mutations
+         */
+        void rollerbuilder_validation()
+        {
+        
+            it["validates_rollerbuilder"] = () =>
+            {
+                item.Errors.Count().should_be(0);
+                itemCompound.Errors.Count().should_be(0);
+                machine.Errors.Count().should_be(0);
+                coreBuilder.Errors.Count().should_be(0);
+                coreIdentification.Errors.Count().should_be(0);
+                coreIdentificationDetail.Errors.Count().should_be(0);
+                rollerBuilder.Errors.Count().should_be(0);
+            };
+
+            it["delete_rollerbuilder"] = () =>
+            {
+                rollerBuilder = _rollerBuilderService.SoftDeleteObject(rollerBuilder, _itemService, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService);
+                rollerBuilder.Errors.Count().should_be(0);
+            };
+
+            it["delete_rollerbuilder_with_recoveryorderdetail"] = () =>
+            {
                 _itemService.AdjustQuantity(_coreBuilderService.GetNewCore(coreBuilder.Id), 1);
                 _itemService.AdjustQuantity(_coreBuilderService.GetUsedCore(coreBuilder.Id), 1);
 
                 coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService);
+                coreIdentification.Errors.Count().should_be(0);
 
                 RecoveryOrder recoveryOrder = new RecoveryOrder()
                 {
@@ -173,6 +209,7 @@ namespace OffsetPrintingSupplies
                     QuantityReceived = 1,
                 };
                 recoveryOrder = _recoveryOrderService.CreateObject(recoveryOrder, _coreIdentificationService);
+                recoveryOrder.Errors.Count().should_be(0);
 
                 RecoveryOrderDetail recoveryOrderDetail = new RecoveryOrderDetail()
                 {
@@ -184,13 +221,11 @@ namespace OffsetPrintingSupplies
                     Acc = "Y",
                 };
                 recoveryOrderDetail = _recoveryOrderDetailService.CreateObject(recoveryOrderDetail, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
+                recoveryOrderDetail.Errors.Count().should_be(0);
 
                 rollerBuilder = _rollerBuilderService.SoftDeleteObject(rollerBuilder, _itemService, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService);
-
-                Console.WriteLine("Press any key to stop...");
-                Console.ReadKey();
-            }
-
+                rollerBuilder.Errors.Count().should_not_be(0);
+            };
         }
     }
 }

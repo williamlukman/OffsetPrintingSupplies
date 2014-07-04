@@ -30,14 +30,9 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
-        public IList<RollerBuilder> GetObjectsByItemId(int ItemId)
+        public IList<RollerBuilder> GetObjectsByCompoundId(int compoundId)
         {
-            return _repository.GetObjectsByItemId(ItemId);
-        }
-
-        public IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId)
-        {
-            return _repository.GetObjectsByRollerTypeId(rollerTypeId);
+            return _repository.GetObjectsByCompoundId(compoundId);
         }
 
         public IList<RollerBuilder> GetObjectsByCoreBuilderId(int CoreBuilderId)
@@ -45,9 +40,19 @@ namespace Service.Service
             return _repository.GetObjectsByCoreBuilderId(CoreBuilderId);
         }
 
+        public IList<RollerBuilder> GetObjectsByItemId(int ItemId)
+        {
+            return _repository.GetObjectsByItemId(ItemId);
+        }
+
         public IList<RollerBuilder> GetObjectsByMachineId(int machineId)
         {
             return _repository.GetObjectsByMachineId(machineId);
+        }
+
+        public IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId)
+        {
+            return _repository.GetObjectsByRollerTypeId(rollerTypeId);
         }
 
         public RollerBuilder GetObjectById(int Id)
@@ -176,8 +181,8 @@ namespace Service.Service
             Item UsedRoller = _itemService.GetObjectById(rollerBuilder.UsedRollerItemId);
             Item NewRoller = _itemService.GetObjectById(rollerBuilder.NewRollerItemId);
 
-            if (_itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, this) &&
-                _itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, this))
+            if (_itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, this) &&
+                _itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, this))
             {
                 if (_validator.ValidDeleteObject(rollerBuilder, _recoveryOrderDetailService))
                 {
@@ -203,6 +208,5 @@ namespace Service.Service
             IQueryable<RollerBuilder> builders = _repository.FindAll(x => x.BaseSku == rollerBuilder.BaseSku && !x.IsDeleted && x.Id != rollerBuilder.Id);
             return (builders.Count() > 0 ? true : false);
         }
-
     }
 }

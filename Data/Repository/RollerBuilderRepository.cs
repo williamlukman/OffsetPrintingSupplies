@@ -25,14 +25,9 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
-        public IList<RollerBuilder> GetObjectsByItemId(int ItemId)
+        public IList<RollerBuilder> GetObjectsByCompoundId(int compoundId)
         {
-            return FindAll(x => !x.IsDeleted && (x.CompoundId == ItemId || x.UsedRollerItemId == ItemId || x.NewRollerItemId == ItemId)).ToList();
-        }
-
-        public IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId)
-        {
-            return FindAll(x => x.RollerTypeId == rollerTypeId && !x.IsDeleted).ToList();
+            return FindAll(x => x.CompoundId == compoundId && !x.IsDeleted).ToList();
         }
 
         public IList<RollerBuilder> GetObjectsByCoreBuilderId(int CoreBuilderId)
@@ -40,9 +35,19 @@ namespace Data.Repository
             return FindAll(x => x.CoreBuilderId == CoreBuilderId && !x.IsDeleted).ToList();
         }
 
+        public IList<RollerBuilder> GetObjectsByItemId(int ItemId)
+        {
+            return FindAll(x => !x.IsDeleted && (x.CompoundId == ItemId || x.UsedRollerItemId == ItemId || x.NewRollerItemId == ItemId)).ToList();
+        }
+
         public IList<RollerBuilder> GetObjectsByMachineId(int machineId)
         {
             return FindAll(x => x.MachineId == machineId && !x.IsDeleted).ToList();
+        }
+
+        public IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId)
+        {
+            return FindAll(x => x.RollerTypeId == rollerTypeId && !x.IsDeleted).ToList();
         }
 
         public Item GetUsedRoller(int id)

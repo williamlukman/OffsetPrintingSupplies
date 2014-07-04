@@ -74,9 +74,9 @@ namespace Service.Service
         }
 
         public Item SoftDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                     ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService)
+                                     IRollerBuilderService _rollerBuilderService)
         {
-            return (item = _validator.ValidDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService) ? _repository.SoftDeleteObject(item) : item);
+            return (item = _validator.ValidDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService) ? _repository.SoftDeleteObject(item) : item);
         }
 
         public Item AdjustQuantity(Item item, int quantity)

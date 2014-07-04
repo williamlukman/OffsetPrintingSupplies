@@ -130,10 +130,6 @@ namespace Validation.Validation
             VHasMachine(rollerBuilder, _machineService);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
             VHasMeasurement(rollerBuilder);
-            if (!isValid(rollerBuilder)) { return rollerBuilder; }
-            VHasUsedRollerItem(rollerBuilder, _itemService);
-            if (!isValid(rollerBuilder)) { return rollerBuilder; }
-            VHasNewRollerItem(rollerBuilder, _itemService);
             return rollerBuilder;
         }
 
@@ -141,6 +137,10 @@ namespace Validation.Validation
                                     IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
         {
             VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _itemService, _coreBuilderService, _rollerTypeService);
+            if (!isValid(rollerBuilder)) { return rollerBuilder; }
+            VHasUsedRollerItem(rollerBuilder, _itemService);
+            if (!isValid(rollerBuilder)) { return rollerBuilder; }
+            VHasNewRollerItem(rollerBuilder, _itemService);
             return rollerBuilder;
         }
 

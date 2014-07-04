@@ -72,6 +72,15 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VQuantityMustBeZero(Item item)
+        {
+            if (item.Quantity != 0)
+            {
+                item.Errors.Add("Quantity", "Harus 0");
+            }
+            return item;
+        }
+
         public Item VIsInRecoveryAccessoryDetail(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
             IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByItemId(item.Id);
@@ -82,17 +91,7 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VIsInCoreBuilder(Item item, ICoreBuilderService _coreBuilderService)
-        {
-            IList<CoreBuilder> coreBuilders = _coreBuilderService.GetObjectsByItemId(item.Id);
-            if (coreBuilders.Any())
-            {
-                item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan Core Builder");
-            }
-            return item;
-        }
-
-        public Item VIsInRollerBuilder(Item item, IRollerBuilderService _rollerBuilderService)
+        public Item VIsInRollerBuilderCompound(Item item, IRollerBuilderService _rollerBuilderService)
         {
             IList<RollerBuilder> rollerBuilders = _rollerBuilderService.GetObjectsByItemId(item.Id);
             if (rollerBuilders.Any())
@@ -124,13 +123,11 @@ namespace Validation.Validation
         }
 
         public Item VDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                               ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService)
+                                  IRollerBuilderService _rollerBuilderService)
         {
             VIsInRecoveryAccessoryDetail(item, _recoveryAccessoryDetailService);
             if (!isValid(item)) { return item; }
-            VIsInCoreBuilder(item, _coreBuilderService);
-            if (!isValid(item)) { return item; }
-            VIsInRollerBuilder(item, _rollerBuilderService);
+            VQuantityMustBeZero(item);
             return item;
         }
 
@@ -154,10 +151,10 @@ namespace Validation.Validation
         }
 
         public bool ValidDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                      ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService)
+                                      IRollerBuilderService _rollerBuilderService)
         {
             item.Errors.Clear();
-            VDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService);
+            VDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService);
             return isValid(item);
         }
 

@@ -35,9 +35,10 @@ namespace Data.Repository
             using (var db = GetContext())
             {
                 CoreBuilder coreBuilder = GetObjectById(id);
-                Item item = (from obj in db.Items
-                                  where obj.Id == coreBuilder.UsedCoreItemId
-                                  select obj).FirstOrDefault();
+                Item item =
+                    (from obj in db.Items
+                     where obj.Id == coreBuilder.UsedCoreItemId
+                     select obj).First();
                 if (item != null) { item.Errors = new Dictionary<string, string>(); }
                 return item;
             }

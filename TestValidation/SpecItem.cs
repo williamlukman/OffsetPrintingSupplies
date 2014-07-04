@@ -148,12 +148,13 @@ namespace TestValidation
 
             it["delete_item"] = () =>
             {
-                item = _itemService.SoftDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService);
+                item = _itemService.SoftDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService);
                 item.Errors.Count().should_be(0);
             };
 
-            it["delete_item_with_core_builder"] = () =>
+            it["delete_item_with_compound_inrollerbuilder"] = () =>
             {
+                // TODO
                 Machine machine = new Machine()
                 {
                     Code = "M00001",
@@ -173,7 +174,8 @@ namespace TestValidation
                 CoreIdentification coreIdentification = new CoreIdentification()
                 {
                     Code = "CI0001",
-                    Quantity = 1
+                    Quantity = 1,
+                    IdentifiedDate = DateTime.Now
                 };
                 coreIdentification = _coreIdentificationService.CreateObject(coreIdentification, _customerService);
                 CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail()
@@ -190,9 +192,38 @@ namespace TestValidation
                     WL = 12,
                     TL = 12
                 };
-                Item core = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
-                core = _itemService.SoftDeleteObject(core, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService);
-                core.Errors.Count().should_not_be(0);
+                coreIdentificationDetail = _coreIdentificationDetailService.CreateObject(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService);
+                Item compound = new Item()
+                {
+                    ItemTypeId = _itemTypeService.GetObjectByName("Compound").Id,
+                    Name = "Compound",
+                    Category = "Compound",
+                    Quantity = 2,
+                    Sku = "CMP0001",
+                    UoM = "Pcs"
+                };
+                compound = _itemService.CreateObject(compound, _itemTypeService);
+                RollerBuilder rollerBuilder = new RollerBuilder()
+                {
+                    CoreBuilderId = coreBuilder.Id,
+                    RollerTypeId = _rollerTypeService.GetObjectByName("Found DT").Id,
+                    MachineId = machine.Id,
+                    RD = 13,
+                    CD = 13,
+                    RL = 13,
+                    WL = 13,
+                    TL = 13,
+                    BaseSku = "RB0001",
+                    SkuUsedRoller = "RB0001U",
+                    SkuNewRoller = "RB0001N",
+                    Name = "Roller Builder",
+                    Category = "RB",
+                    CompoundId = compound.Id
+                };
+                rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+
+                compound = _itemService.SoftDeleteObject(compound, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService);
+                compound.Errors.Count().should_not_be(0);
             };
         }
     }

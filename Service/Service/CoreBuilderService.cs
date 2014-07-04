@@ -136,13 +136,13 @@ namespace Service.Service
         }
 
         public CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService)                                            
+                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             Item NewCore = _itemService.GetObjectById(coreBuilder.NewCoreItemId);
 
-            if (_itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService) &&
-                _itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService))
+            if (_itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService) &&
+                _itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService))
             {
                 if (_validator.ValidDeleteObject(coreBuilder, _coreIdentificationDetailService, _rollerBuilderService))
                 {

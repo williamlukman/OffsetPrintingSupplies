@@ -21,7 +21,7 @@ namespace Core.Interface.Service
                                  IItemService _itemService, IItemTypeService _itemTypeService);
         CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
         CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService);
+                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         bool DeleteObject(int Id);
         bool IsBaseSkuDuplicated(CoreBuilder coreBuilder);
     }

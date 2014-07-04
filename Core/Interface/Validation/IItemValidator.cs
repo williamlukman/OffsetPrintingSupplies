@@ -16,19 +16,19 @@ namespace Core.Interface.Validation
         Item VHasCategory(Item item);
         Item VHasUoM(Item item);
         Item VQuantity(Item item);
+        Item VQuantityMustBeZero(Item item);
         Item VIsInRecoveryAccessoryDetail(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        Item VIsInCoreBuilder(Item item, ICoreBuilderService _coreBuilderService);
-        Item VIsInRollerBuilder(Item item, IRollerBuilderService _rollerBuilderService);
+        Item VIsInRollerBuilderCompound(Item item, IRollerBuilderService _rollerBuilderService);
 
         Item VCreateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                               ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService);
+                           IRollerBuilderService _rollerBuilderService);
         Item VAdjustQuantity(Item item);
         bool ValidCreateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                               ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService);
+                               IRollerBuilderService _rollerBuilderService);
         bool ValidAdjustQuantity(Item item);
         bool isValid(Item item);
         string PrintError(Item item);

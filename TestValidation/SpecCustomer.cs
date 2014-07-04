@@ -1,43 +1,40 @@
-﻿using Core.DomainModel;
-using Core.Interface.Service;
-using Data.Context;
-using Data.Repository;
-using Service.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.DomainModel;
+using NSpec;
+using Service.Service;
+using Core.Interface.Service;
+using Data.Context;
+using System.Data.Entity;
+using Data.Repository;
 using Validation.Validation;
 
-namespace OffsetPrintingSupplies
+namespace TestValidation
 {
-    public class Program
+
+    public class SpecCustomer: nspec
     {
-        public static void Main(string[] args)
+        Item item;
+        
+        ICoreBuilderService _coreBuilderService;
+        ICoreIdentificationService _coreIdentificationService;
+        ICoreIdentificationDetailService _coreIdentificationDetailService;
+        ICustomerService _customerService;
+        IItemService _itemService;
+        IItemTypeService _itemTypeService;
+        IMachineService _machineService;
+        IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
+        IRecoveryOrderDetailService _recoveryOrderDetailService;
+        IRecoveryOrderService _recoveryOrderService;
+        IRollerBuilderService _rollerBuilderService;
+        IRollerTypeService _rollerTypeService;
+        Customer customer;
+
+        void before_each()
         {
-            ICoreBuilderService _coreBuilderService;
-            ICoreIdentificationService _coreIdentificationService;
-            ICoreIdentificationDetailService _coreIdentificationDetailService;
-            ICustomerService _customerService;
-            IItemService _itemService;
-            IItemTypeService _itemTypeService;
-            IMachineService _machineService;
-            IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
-            IRecoveryOrderDetailService _recoveryOrderDetailService;
-            IRecoveryOrderService _recoveryOrderService;
-            IRollerBuilderService _rollerBuilderService;
-            IRollerTypeService _rollerTypeService;
-
-            Item item;
-            Item itemCompound;
-            Customer customer;
-            Machine machine;
-            CoreBuilder coreBuilder;
-            CoreIdentification coreIdentification;
-            CoreIdentificationDetail coreIdentificationDetail;
-            RollerBuilder rollerBuilder;
-
             var db = new OffsetPrintingSuppliesEntities();
             using (db)
             {
@@ -89,27 +86,123 @@ namespace OffsetPrintingSupplies
                     Quantity = 0
                 };
                 item = _itemService.CreateObject(item, _itemTypeService);
-                itemCompound = new Item()
-                {
-                    ItemTypeId = _itemTypeService.GetObjectByName("Compound").Id,
-                    Sku = "Cmp10001",
-                    Name = "Cmp 10001",
-                    Category = "cmp",
-                    UoM = "Pcs",
-                    Quantity = 2
-                };
-                itemCompound = _itemService.CreateObject(itemCompound, _itemTypeService);
-
                 customer = _customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+            }
+        }
 
-                machine = new Machine()
+        /*
+         * STEPS:
+         * 1. Create valid item
+         * 2. Create invalid item with no name
+         * 3. Create invalid items with same SKU
+         * 4a. Delete item
+         * 4b. Delete item with stock mutations
+         */
+        void customer_validation()
+        {
+        
+            it["validates_customer"] = () =>
+            {
+                customer.Errors.Count().should_be(0);
+            };
+
+            it["customer_with_no_name"] = () =>
+            {
+                Customer noname = new Customer()
+                {
+                    Name = "     ",
+                    Address = "I have no name",
+                    ContactNo = "0000123",
+                    PIC = "Who are you?",
+                    PICContactNo = "001234",
+                    Email = "empty@noname.com"
+                };
+                noname = _customerService.CreateObject(noname);
+                noname.Errors.Count().should_not_be(0);
+            };
+
+            it["item_with_same_name"] = () =>
+            {
+                Customer samename = new Customer()
+                {
+                    Name = "Abbey",
+                    Address = "I am a copy",
+                    ContactNo = "0000123",
+                    PIC = "Who are you?",
+                    PICContactNo = "001234",
+                    Email = "empty@noname.com"
+                }; 
+                samename = _customerService.CreateObject(samename);
+                samename.Errors.Count().should_not_be(0);
+            };
+
+            it["withemptyaddress"] = () =>
+            {
+                Customer emptyaddress = new Customer()
+                {
+                    Name = "Abbey12",
+                    Address = " ",
+                    ContactNo = "0000123",
+                    PIC = "Who are you?",
+                    PICContactNo = "001234",
+                    Email = "empty@noname.com"
+                };
+                emptyaddress = _customerService.CreateObject(emptyaddress);
+                emptyaddress.Errors.Count().should_not_be(0);
+            };
+
+            it["withemptycontact"] = () =>
+            {
+                Customer emptycontact = new Customer()
+                {
+                    Name = "Abbey123",
+                    Address = "Ada isi",
+                    ContactNo = "   ",
+                    PIC = "Who are you?",
+                    PICContactNo = "001234",
+                    Email = "empty@noname.com"
+                };
+                emptycontact = _customerService.CreateObject(emptycontact);
+                emptycontact.Errors.Count().should_not_be(0);
+            };
+
+            it["update_with_empty_pic"] = () =>
+            {
+                customer.PIC = "   ";
+                customer = _customerService.UpdateObject(customer);
+                customer.Errors.Count().should_not_be(0);
+            };
+
+            it["update_with_empty_pic_contactno"] = () =>
+            {
+                customer.PICContactNo = "   ";
+                customer = _customerService.UpdateObject(customer);
+                customer.Errors.Count().should_not_be(0);
+            };
+
+            it["update_with_empty_email"] = () =>
+            {
+                customer.Email = "   ";
+                customer = _customerService.UpdateObject(customer);
+                customer.Errors.Count().should_not_be(0);
+            };
+
+            it["delete_customer"] = () =>
+            {
+                customer = _customerService.SoftDeleteObject(customer, _coreIdentificationService);
+                customer.Errors.Count().should_be(0);
+            };
+
+            it["delete_customer_with_core_identification"] = () =>
+            {
+                Machine machine = new Machine()
                 {
                     Code = "M00001",
                     Name = "Machine 00001",
                     Description = "Machine"
                 };
                 machine = _machineService.CreateObject(machine);
-                coreBuilder = new CoreBuilder()
+                CoreBuilder coreBuilder = new CoreBuilder()
                 {
                     BaseSku = "CB00001",
                     SkuNewCore = "CB00001N",
@@ -118,7 +211,7 @@ namespace OffsetPrintingSupplies
                     Category = "X"
                 };
                 coreBuilder = _coreBuilderService.CreateObject(coreBuilder, _itemService, _itemTypeService);
-                coreIdentification = new CoreIdentification()
+                CoreIdentification coreIdentification = new CoreIdentification()
                 {
                     CustomerId = customer.Id,
                     Code = "CI0001",
@@ -126,7 +219,7 @@ namespace OffsetPrintingSupplies
                     IdentifiedDate = DateTime.Now
                 };
                 coreIdentification = _coreIdentificationService.CreateObject(coreIdentification, _customerService);
-                coreIdentificationDetail = new CoreIdentificationDetail()
+                CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail()
                 {
                     CoreIdentificationId = coreIdentification.Id,
                     DetailId = 1,
@@ -140,57 +233,9 @@ namespace OffsetPrintingSupplies
                     WL = 12,
                     TL = 12
                 };
-                coreIdentificationDetail = _coreIdentificationDetailService.CreateObject(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService);
-
-                rollerBuilder = new RollerBuilder()
-                {
-                    BaseSku = "RB0001",
-                    SkuNewRoller = "RB0001N",
-                    SkuUsedRoller = "RB0001U",
-                    Name = "Roller 0001",
-                    Category = "0001",
-                    RD = 12,
-                    CD = 13,
-                    RL = 14,
-                    TL = 15,
-                    WL = 16,
-                    CompoundId = itemCompound.Id,
-                    CoreBuilderId = coreBuilder.Id,
-                    MachineId = machine.Id,
-                    RollerTypeId = _rollerTypeService.GetObjectByName("Damp").Id
-                };
-                rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
-
-                _itemService.AdjustQuantity(_coreBuilderService.GetNewCore(coreBuilder.Id), 1);
-                _itemService.AdjustQuantity(_coreBuilderService.GetUsedCore(coreBuilder.Id), 1);
-
-                coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService);
-
-                RecoveryOrder recoveryOrder = new RecoveryOrder()
-                {
-                    Code = "RO0001",
-                    CoreIdentificationId = coreIdentification.Id,
-                    QuantityReceived = 1,
-                };
-                recoveryOrder = _recoveryOrderService.CreateObject(recoveryOrder, _coreIdentificationService);
-
-                RecoveryOrderDetail recoveryOrderDetail = new RecoveryOrderDetail()
-                {
-                    RecoveryOrderId = recoveryOrder.Id,
-                    CoreIdentificationDetailId = coreIdentificationDetail.Id,
-                    RollerBuilderId = rollerBuilder.Id,
-                    CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                    RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                    Acc = "Y",
-                };
-                recoveryOrderDetail = _recoveryOrderDetailService.CreateObject(recoveryOrderDetail, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
-
-                rollerBuilder = _rollerBuilderService.SoftDeleteObject(rollerBuilder, _itemService, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _coreBuilderService);
-
-                Console.WriteLine("Press any key to stop...");
-                Console.ReadKey();
-            }
-
+                customer = _customerService.SoftDeleteObject(customer, _coreIdentificationService);
+                customer.Errors.Count().should_not_be(0);
+            };
         }
     }
 }
