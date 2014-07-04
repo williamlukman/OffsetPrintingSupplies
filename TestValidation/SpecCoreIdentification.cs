@@ -15,9 +15,10 @@ using Validation.Validation;
 namespace TestValidation
 {
 
-    public class SpecItem: nspec
+    public class SpecCoreIdentification: nspec
     {
         DataBuilder d;
+        
         void before_each()
         {
             var db = new OffsetPrintingSuppliesEntities();
@@ -25,6 +26,7 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
+
                 d.item = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
@@ -38,6 +40,14 @@ namespace TestValidation
             }
         }
 
+        /*
+         * STEPS:
+         * 1. Create valid d.item
+         * 2. Create invalid d.item with no name
+         * 3. Create invalid items with same SKU
+         * 4a. Delete d.item
+         * 4b. Delete d.item with stock mutations
+         */
         void item_validation()
         {
         
@@ -96,6 +106,7 @@ namespace TestValidation
 
             it["delete_item_with_compound_inrollerbuilder"] = () =>
             {
+                // TODO
                 d.machine = new Machine()
                 {
                     Code = "M00001",
@@ -119,7 +130,7 @@ namespace TestValidation
                     IdentifiedDate = DateTime.Now
                 };
                 d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
-                d.coreIdentificationDetail = new CoreIdentificationDetail()
+                CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail()
                 {
                     CoreIdentificationId = d.coreIdentification.Id,
                     DetailId = 1,
@@ -133,7 +144,7 @@ namespace TestValidation
                     WL = 12,
                     TL = 12
                 };
-                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
+                coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
                 Item compound = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
@@ -144,7 +155,7 @@ namespace TestValidation
                     UoM = "Pcs"
                 };
                 compound = d._itemService.CreateObject(compound, d._itemTypeService);
-                d.rollerBuilder = new RollerBuilder()
+                RollerBuilder rollerBuilder = new RollerBuilder()
                 {
                     CoreBuilderId = d.coreBuilder.Id,
                     RollerTypeId = d._rollerTypeService.GetObjectByName("Found DT").Id,
@@ -161,7 +172,7 @@ namespace TestValidation
                     Category = "RB",
                     CompoundId = compound.Id
                 };
-                d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService);
+                rollerBuilder = d._rollerBuilderService.CreateObject(rollerBuilder, d._machineService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService);
 
                 compound = d._itemService.SoftDeleteObject(compound, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._rollerBuilderService);
                 compound.Errors.Count().should_not_be(0);
