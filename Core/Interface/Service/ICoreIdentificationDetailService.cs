@@ -20,6 +20,7 @@ namespace Core.Interface.Service
         IList<CoreIdentificationDetail> GetObjectsByMachineId(int machineId);
         CoreIdentificationDetail GetObjectById(int Id);
         CoreIdentificationDetail GetObjectByDetailId(int CoreIdentificationId, int DetailId);
+        Item GetCore(CoreIdentificationDetail coreIdentificationDetail, ICoreBuilderService _coreBuilderService);
         CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                               ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService);
         CoreIdentificationDetail CreateObject(int CoreIdentificationId, int DetailId, int MaterialCase, int CoreBuilderId, int RollerTypeId,

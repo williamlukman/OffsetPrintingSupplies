@@ -65,6 +65,14 @@ namespace Service.Service
             return _repository.Find(x => x.CoreIdentificationId == CoreIdentificationId && x.DetailId == DetailId && !x.IsDeleted);
         }
 
+        public Item GetCore(CoreIdentificationDetail coreIdentificationDetail, ICoreBuilderService _coreBuilderService)
+        {
+            Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
+                        _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
+                        _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId);
+            return core;
+        }
+
         public CoreIdentificationDetail CreateObject(int CoreIdentificationId, int DetailId, int MaterialCase, int CoreBuilderId, int RollerTypeId,
                                                      int MachineId, decimal RD, decimal CD, decimal RL, decimal WL, decimal TL, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService)

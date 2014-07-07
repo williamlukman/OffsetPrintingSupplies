@@ -496,9 +496,9 @@ namespace TestValidation
         
         public void PopulateRecoveryOrders()
         {
-            coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService);
-            coreIdentificationCustomer = _coreIdentificationService.ConfirmObject(coreIdentificationCustomer, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService);
-            coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService); 
+            coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService);
+            coreIdentificationCustomer = _coreIdentificationService.ConfirmObject(coreIdentificationCustomer, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService);
+            coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService); 
 
             recoveryOrder = new RecoveryOrder()
             {

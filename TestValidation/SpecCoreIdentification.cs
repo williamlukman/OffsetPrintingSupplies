@@ -26,156 +26,113 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
-
-                d.item = new Item()
-                {
-                    ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1001",
-                    Name = "ABC",
-                    Category = "ABC123",
-                    UoM = "Pcs",
-                    Quantity = 0
-                };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService);
+                d.PopulateItem();
+                d.PopulateSingles();
+                d.PopulateBuilders();
+                d.PopulateCoreIdentifications();
             }
         }
 
-        /*
-         * STEPS:
-         * 1. Create valid d.item
-         * 2. Create invalid d.item with no name
-         * 3. Create invalid items with same SKU
-         * 4a. Delete d.item
-         * 4b. Delete d.item with stock mutations
-         */
-        void item_validation()
+        void data_validation()
         {
         
-            it["validates_item"] = () =>
+            it["validates_data"] = () =>
             {
-                d.item.Errors.Count().should_be(0);
+                d.itemCompound.Errors.Count().should_be(0);
+                d.itemCompound1.Errors.Count().should_be(0);
+                d.itemCompound2.Errors.Count().should_be(0);
+                d.itemAccessory1.Errors.Count().should_be(0);
+                d.itemAccessory2.Errors.Count().should_be(0);
+                d.customer.Errors.Count().should_be(0);
+                d.machine.Errors.Count().should_be(0);
+                d.coreBuilder.Errors.Count().should_be(0);
+                d.coreBuilder1.Errors.Count().should_be(0);
+                d.coreBuilder2.Errors.Count().should_be(0);
+                d.coreBuilder3.Errors.Count().should_be(0);
+                d.coreBuilder4.Errors.Count().should_be(0);
+                d.coreIdentification.Errors.Count().should_be(0);
+                d.coreIdentificationCustomer.Errors.Count().should_be(0);
+                d.coreIDCustomer1.Errors.Count().should_be(0);
+                d.coreIDCustomer2.Errors.Count().should_be(0);
+                d.coreIDCustomer3.Errors.Count().should_be(0);
+                d.coreIdentificationDetail.Errors.Count().should_be(0);
+                d.coreIdentificationInHouse.Errors.Count().should_be(0);
+                d.coreIDInHouse1.Errors.Count().should_be(0);
+                d.coreIDInHouse2.Errors.Count().should_be(0);
+                d.coreIDInHouse3.Errors.Count().should_be(0);
             };
 
-            it["item_with_no_name"] = () =>
+            it["deletes_coreidentification"] = () =>
             {
-                Item nonameitem = new Item()
-                {
-                    ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1002",
-                    Name = "     ",
-                    Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
-                };
-                nonameitem = d._itemService.CreateObject(nonameitem, d._itemTypeService);
-                nonameitem.Errors.Count().should_not_be(0);
+                d.coreIdentificationCustomer = d._coreIdentificationService.SoftDeleteObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService);
+                d.coreIdentificationCustomer.Errors.Count().should_be(0);
             };
 
-            it["item_with_same_sku"] = () =>
+            it["confirms_coreidentificationcustomer"] = () =>
             {
-                Item sameskuitem = new Item()
-                {
-                    ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1001",
-                    Name = "BBC",
-                    Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
-                };
-                sameskuitem = d._itemService.CreateObject(sameskuitem, d._itemTypeService);
-                sameskuitem.Errors.Count().should_not_be(0);
+                int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService,
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                d.coreIdentificationCustomer.IsConfirmed.should_be(true);
+                d.coreIdentificationCustomer.Errors.Count().should_be(0);
+                int usedCoreBuilder3AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                usedCoreBuilder3AfterConfirmed.should_be(usedCoreBuilder3Quantity + 2);
+                usedCoreBuilder4AfterConfirmed.should_be(usedCoreBuilder4Quantity + 1);
             };
 
-            it["adjust_quantity_valid"] = () =>
+            it["unconfirms_coreidentificationcustomer"] = () =>
             {
-                d.item = d._itemService.AdjustQuantity(d.item, 10);
-                d.item.Errors.Count().should_be(0);
+                d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService,
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                d.coreIdentificationCustomer = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService,
+                                               d._recoveryOrderService, d._coreBuilderService, d._itemService);
+                int usedCoreBuilder3AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                d.coreIdentificationCustomer.IsConfirmed.should_be(false);
+                d.coreIdentificationCustomer.Errors.Count().should_be(0);
+                usedCoreBuilder3AfterUnconfirmed.should_be(usedCoreBuilder3Quantity - 2);
+                usedCoreBuilder4AfterUnconfirmed.should_be(usedCoreBuilder4Quantity - 1);
             };
 
-            it["adjust_quantity_invalid"] = () =>
+            it["confirms_coreidentificationinhouse"] = () =>
             {
-                d.item = d._itemService.AdjustQuantity(d.item, -10);
-                d.item.Errors.Count().should_not_be(0);
+                int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
+                d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._recoveryOrderService,
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                d.coreIdentificationInHouse.IsConfirmed.should_be(true);
+                d.coreIdentificationInHouse.Errors.Count().should_be(0);
+                int usedCoreBuilder3AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
+                usedCoreBuilder3AfterConfirmed.should_be(usedCoreBuilder3Quantity);
+                usedCoreBuilder4AfterConfirmed.should_be(usedCoreBuilder4Quantity);
             };
 
-            it["delete_item"] = () =>
+            it["unconfirms_coreidentificationinhouse"] = () =>
             {
-                d.item = d._itemService.SoftDeleteObject(d.item, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._rollerBuilderService);
-                d.item.Errors.Count().should_be(0);
+                d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._recoveryOrderService,
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
+                d.coreIdentificationInHouse = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService,
+                                               d._recoveryOrderService, d._coreBuilderService, d._itemService);
+                int usedCoreBuilder3AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
+                int usedCoreBuilder4AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
+                d.coreIdentificationInHouse.IsConfirmed.should_be(false);
+                d.coreIdentificationInHouse.Errors.Count().should_be(0);
+                usedCoreBuilder3AfterUnconfirmed.should_be(usedCoreBuilder3Quantity);
+                usedCoreBuilder4AfterUnconfirmed.should_be(usedCoreBuilder4Quantity);
             };
 
-            it["delete_item_with_compound_inrollerbuilder"] = () =>
+            it["deletes_coreidentificationcustomer_with_recoveryorder"] = () =>
             {
-                // TODO
-                d.machine = new Machine()
-                {
-                    Code = "M00001",
-                    Name = "Machine 00001",
-                    Description = "Machine"
-                };
-                d.machine = d._machineService.CreateObject(d.machine);
-                d.coreBuilder = new CoreBuilder()
-                {
-                    BaseSku = "CB00001",
-                    SkuNewCore = "CB00001N",
-                    SkuUsedCore = "CB00001U",
-                    Name = "CoreBuilder00001",
-                    Category = "X"
-                };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService);
-                d.coreIdentification = new CoreIdentification()
-                {
-                    Code = "CI0001",
-                    Quantity = 1,
-                    IdentifiedDate = DateTime.Now
-                };
-                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
-                CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail()
-                {
-                    CoreIdentificationId = d.coreIdentification.Id,
-                    DetailId = 1,
-                    MaterialCase = 2,
-                    CoreBuilderId = d.coreBuilder.Id,
-                    RollerTypeId = d._rollerTypeService.GetObjectByName("Found DT").Id,
-                    MachineId = d.machine.Id,
-                    RD = 12,
-                    CD = 12,
-                    RL = 12,
-                    WL = 12,
-                    TL = 12
-                };
-                coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
-                Item compound = new Item()
-                {
-                    ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
-                    Name = "Compound",
-                    Category = "Compound",
-                    Quantity = 2,
-                    Sku = "CMP0001",
-                    UoM = "Pcs"
-                };
-                compound = d._itemService.CreateObject(compound, d._itemTypeService);
-                RollerBuilder rollerBuilder = new RollerBuilder()
-                {
-                    CoreBuilderId = d.coreBuilder.Id,
-                    RollerTypeId = d._rollerTypeService.GetObjectByName("Found DT").Id,
-                    MachineId = d.machine.Id,
-                    RD = 13,
-                    CD = 13,
-                    RL = 13,
-                    WL = 13,
-                    TL = 13,
-                    BaseSku = "RB0001",
-                    SkuUsedRoller = "RB0001U",
-                    SkuNewRoller = "RB0001N",
-                    Name = "Roller Builder",
-                    Category = "RB",
-                    CompoundId = compound.Id
-                };
-                rollerBuilder = d._rollerBuilderService.CreateObject(rollerBuilder, d._machineService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService);
-
-                compound = d._itemService.SoftDeleteObject(compound, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._rollerBuilderService);
-                compound.Errors.Count().should_not_be(0);
+                d.PopulateRecoveryOrders();
+                d.coreIdentificationCustomer = d._coreIdentificationService.SoftDeleteObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService);
+                d.coreIdentificationCustomer.Errors.Count().should_not_be(0);
             };
         }
     }

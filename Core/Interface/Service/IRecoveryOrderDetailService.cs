@@ -18,6 +18,10 @@ namespace Core.Interface.Service
         IList<RecoveryOrderDetail> GetObjectsByCoreIdentificationDetailId(int coreIdentificationDetailId);
         IList<RecoveryOrderDetail> GetObjectsByRollerBuilderId(int rollerBuilderId);
         RecoveryOrderDetail GetObjectById(int Id);
+        Item GetCore(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                     ICoreBuilderService _coreBuilderService, IItemService _itemService);
+        Item GetRoller(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                       IRollerBuilderService _rollerBuilderService, IItemService _itemService);
         RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                 ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail CreateObject(int CoreIdentificationDetailId, int RollerBuilderId, string CoreTypeCase, string Acc, int RepairRequestCase,

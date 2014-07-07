@@ -37,7 +37,7 @@ namespace Service.Service
 
         public IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService)
         {
-            ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessories);
+            ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessory);
             IList<Item> items = _repository.GetObjectsByItemTypeId(itemType.Id);
             return items.ToList();
         }

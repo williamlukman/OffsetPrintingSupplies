@@ -143,7 +143,8 @@ namespace TestValidation
                 d._itemService.AdjustQuantity(d._coreBuilderService.GetNewCore(d.coreBuilder.Id), 1);
                 d._itemService.AdjustQuantity(d._coreBuilderService.GetUsedCore(d.coreBuilder.Id), 1);
 
-                d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, d._coreIdentificationDetailService, d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService);
+                d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, d._coreIdentificationDetailService, d._recoveryOrderService, d._recoveryOrderDetailService,
+                                       d._coreBuilderService, d._itemService);
                 d.coreIdentification.Errors.Count().should_be(0);
 
                 RecoveryOrder recoveryOrder = new RecoveryOrder()

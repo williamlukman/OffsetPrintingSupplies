@@ -25,7 +25,7 @@ namespace Validation.Validation
         public RecoveryAccessoryDetail VIsAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
-            ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessories);
+            ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessory);
             if (item.ItemTypeId != itemType.Id)
             {
                 recoveryAccessoryDetail.Errors.Add("ItemId", "Bukan sebuah accessory");
@@ -73,7 +73,7 @@ namespace Validation.Validation
         public RecoveryAccessoryDetail VRecoveryOrderHasNotBeenFinished(RecoveryAccessoryDetail recoveryAccessoryDetail,
                             IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
-            RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.Id);
+            RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
             RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
             if (recoveryOrder.IsFinished)
             {

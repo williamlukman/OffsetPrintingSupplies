@@ -55,6 +55,24 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
+        public Item GetCore(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                            ICoreBuilderService _coreBuilderService, IItemService _itemService)
+        {
+            CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+            Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
+                          _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) : _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId);
+            return core;
+        }
+
+        public Item GetRoller(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                              IRollerBuilderService _rollerBuilderService, IItemService _itemService)
+        {
+            CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+            Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
+                          _rollerBuilderService.GetNewRoller(recoveryOrderDetail.RollerBuilderId) : _rollerBuilderService.GetUsedRoller(recoveryOrderDetail.RollerBuilderId);
+            return roller;
+        }
+
         public RecoveryOrderDetail CreateObject(int CoreIdentificationDetailId, int RollerBuilderId, string CoreTypeCase, string Acc, int RepairRequestCase,
                                                 IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRollerBuilderService _rollerBuilderService)

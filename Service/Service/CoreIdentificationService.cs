@@ -97,7 +97,8 @@ namespace Service.Service
         }
 
         public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService)
+                                                IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
+                                                IItemService _itemService)
         {
             if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService))
             {
@@ -110,7 +111,7 @@ namespace Service.Service
                         Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                         _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
                                         _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
-                        item.Quantity += 1;
+                        _itemService.AdjustQuantity(item, 1);
                     }
                 }
                 _repository.ConfirmObject(coreIdentification);
@@ -119,7 +120,7 @@ namespace Service.Service
         }
 
         public CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                  IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService)
+                                                  IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
         {
             if (_validator.ValidUnconfirmObject(coreIdentification, _recoveryOrderService))
             {
@@ -132,7 +133,7 @@ namespace Service.Service
                         Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                         _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
                                         _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
-                        item.Quantity -= 1;
+                        _itemService.AdjustQuantity(item, -1);
                     }
                 }
                 _repository.UnconfirmObject(coreIdentification);

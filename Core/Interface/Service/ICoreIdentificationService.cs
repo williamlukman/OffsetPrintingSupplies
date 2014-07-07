@@ -22,9 +22,10 @@ namespace Core.Interface.Service
         CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                             IRecoveryOrderService _recoveryOrderService);
         CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                         IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService);
+                                         IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
+                                         IItemService _itemService);
         CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                  IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService);
+                                           IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(CoreIdentification coreIdentification);
     }

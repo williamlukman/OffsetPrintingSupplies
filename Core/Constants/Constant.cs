@@ -28,7 +28,7 @@ namespace Core.Constants
 
         public class ItemTypeCase
         {
-            public static string Accessories = "Accessories";
+            public static string Accessory = "Accessory";
             public static string Bearing = "Bearing";
             public static string Blanket = "Blanket";
             public static string Chemical = "Chemical";
@@ -54,6 +54,19 @@ namespace Core.Constants
             public static string InkDuctB = "Ink Duct B";
             public static string InkFormW = "Ink Form W";
             public static string InkFormY = "Ink Form Y";
+        }
+
+        public class RecoveryOrderDetailProcessCase
+        {
+            public static int Disassemble = 1;
+            public static int StripAndGlue = 2;
+            public static int Wrap = 3;
+            public static int Vulcanize = 4;
+            public static int FaceOff = 5;
+            public static int ConventionalGrind = 6;
+            public static int CWCGrind = 7;
+            public static int PolishAndQC = 8;
+            public static int Package = 9;
         }
     }
 }
