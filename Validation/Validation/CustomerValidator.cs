@@ -81,6 +81,16 @@ namespace Validation.Validation
             return customer;
         }
 
+        public Customer VHasBarring(Customer customer, IBarringService _barringService)
+        {
+            IList<Barring> barrings = _barringService.GetObjectsByCustomerId(customer.Id);
+            if (barrings.Any())
+            {
+                customer.Errors.Add("Generic", "Customer masih memiliki asosiasi dengan Barring");
+            }
+            return customer;
+        }
+
         public Customer VCreateObject(Customer customer, ICustomerService _customerService)
         {
             VHasUniqueName(customer, _customerService);
@@ -103,9 +113,11 @@ namespace Validation.Validation
             return customer;
         }
 
-        public Customer VDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService)
+        public Customer VDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService)
         {
             VHasCoreIdentification(customer, _coreIdentificationService);
+            if (!isValid(customer)) { return customer; }
+            VHasBarring(customer, _barringService);
             return customer;
         }
 
@@ -122,10 +134,10 @@ namespace Validation.Validation
             return isValid(customer);
         }
 
-        public bool ValidDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService)
+        public bool ValidDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService)
         {
             customer.Errors.Clear();
-            VDeleteObject(customer, _coreIdentificationService);
+            VDeleteObject(customer, _coreIdentificationService, _barringService);
             return isValid(customer);
         }
 

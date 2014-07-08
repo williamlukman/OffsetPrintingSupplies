@@ -54,7 +54,7 @@ namespace Service.Service
 
         public Item GetObjectBySku(string Sku)
         {
-            return _repository.FindAll(i => i.Sku == Sku && !i.IsDeleted).FirstOrDefault();
+            return _repository.GetObjectBySku(Sku);
         }
 
         public int GetQuantityById(int Id)
@@ -92,8 +92,7 @@ namespace Service.Service
 
         public bool IsSkuDuplicated(Item item)
         {
-            IQueryable<Item> items = _repository.FindAll(x => x.Sku == item.Sku && !x.IsDeleted && x.Id != item.Id);
-            return (items.Count() > 0 ? true : false);
+            return _repository.IsSkuDuplicated(item);
         }
     }
 }

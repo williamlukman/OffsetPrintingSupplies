@@ -23,38 +23,62 @@ namespace OffsetPrintingSupplies
             {
                 db.DeleteAllTables();
                 DataBuilder d = new DataBuilder();
-                d.PopulateItem();
-                d.PopulateSingles();
-                d.PopulateBuilders();
-                d.PopulateCoreIdentifications();
+                d.PopulateData();
+                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
 
-                int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
-                int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
-                d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService,
-                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
-                int usedCoreBuilder3AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
-                int usedCoreBuilder4AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                d._barringOrderDetailService.CutObject(d.barringODCustomer1);
+                d._barringOrderDetailService.CutObject(d.barringODCustomer2);
+                d._barringOrderDetailService.CutObject(d.barringODCustomer3);
+                d._barringOrderDetailService.CutObject(d.barringODCustomer4);
 
-                d.coreIdentificationCustomer = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService,
-                               d._recoveryOrderService, d._coreBuilderService, d._itemService);
-                int usedCoreBuilder3AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
-                int usedCoreBuilder4AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                d._barringOrderDetailService.SideSealObject(d.barringODCustomer1);
+                d._barringOrderDetailService.PrepareObject(d.barringODCustomer1);
+                d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODCustomer1);
+                d._barringOrderDetailService.MountObject(d.barringODCustomer1);
+                d._barringOrderDetailService.HeatPressObject(d.barringODCustomer1);
+                d._barringOrderDetailService.PullOffTestObject(d.barringODCustomer1);
+                d._barringOrderDetailService.QCAndMarkObject(d.barringODCustomer1);
+                d._barringOrderDetailService.PackageObject(d.barringODCustomer1);
+                d._barringOrderDetailService.AddLeftBar(d.barringODCustomer1, d._barringService);
+                d._barringOrderDetailService.AddRightBar(d.barringODCustomer1, d._barringService);
 
-                int usedCoreBuilder3IHQuantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
-                int usedCoreBuilder4IHQuantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
+                d._barringOrderDetailService.SideSealObject(d.barringODCustomer2);
+                d._barringOrderDetailService.PrepareObject(d.barringODCustomer2);
+                d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODCustomer2);
+                d._barringOrderDetailService.MountObject(d.barringODCustomer2);
+                d._barringOrderDetailService.HeatPressObject(d.barringODCustomer2);
+                d._barringOrderDetailService.PullOffTestObject(d.barringODCustomer2);
+                d._barringOrderDetailService.QCAndMarkObject(d.barringODCustomer2);
+                d._barringOrderDetailService.PackageObject(d.barringODCustomer2);
+                d._barringOrderDetailService.AddLeftBar(d.barringODCustomer2, d._barringService);
+                d._barringOrderDetailService.AddRightBar(d.barringODCustomer2, d._barringService);
 
-                d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._recoveryOrderService,
-                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                d._barringOrderDetailService.SideSealObject(d.barringODCustomer3);
+                d._barringOrderDetailService.PrepareObject(d.barringODCustomer3);
+                d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODCustomer3);
+                d._barringOrderDetailService.MountObject(d.barringODCustomer3);
+                d._barringOrderDetailService.HeatPressObject(d.barringODCustomer3);
+                d._barringOrderDetailService.PullOffTestObject(d.barringODCustomer3);
+                d._barringOrderDetailService.QCAndMarkObject(d.barringODCustomer3);
+                d._barringOrderDetailService.PackageObject(d.barringODCustomer3);
+                d._barringOrderDetailService.AddLeftBar(d.barringODCustomer3, d._barringService);
+                d._barringOrderDetailService.AddRightBar(d.barringODCustomer3, d._barringService);
 
-                int usedCoreBuilder3IHAfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
-                int usedCoreBuilder4IHAfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
-            
-                d.coreIdentificationInHouse = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService,
-                               d._recoveryOrderService, d._coreBuilderService, d._itemService);
+                d._barringOrderDetailService.SideSealObject(d.barringODCustomer4);
+                d._barringOrderDetailService.PrepareObject(d.barringODCustomer4);
+                d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODCustomer4);
+                d._barringOrderDetailService.MountObject(d.barringODCustomer4);
+                d._barringOrderDetailService.HeatPressObject(d.barringODCustomer4);
+                d._barringOrderDetailService.PullOffTestObject(d.barringODCustomer4);
+                d._barringOrderDetailService.QCAndMarkObject(d.barringODCustomer4);
+                d._barringOrderDetailService.RejectObject(d.barringODCustomer4, d._barringOrderService);
 
-                int usedCoreBuilder3IHAfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
-                int usedCoreBuilder4IHAfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
-            
+                int barring1quantity = d.barring1.Quantity;
+                int barring2quantity = d.barring2.Quantity;
+                d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                int barring1quantityfinal = d.barring1.Quantity;
+                int barring2quantityfinal = d.barring2.Quantity;
+
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();
             }

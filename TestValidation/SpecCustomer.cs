@@ -140,7 +140,7 @@ namespace TestValidation
 
             it["delete_customer"] = () =>
             {
-                d.customer = d._customerService.SoftDeleteObject(d.customer, d._coreIdentificationService);
+                d.customer = d._customerService.SoftDeleteObject(d.customer, d._coreIdentificationService, d._barringService);
                 d.customer.Errors.Count().should_be(0);
             };
 
@@ -185,7 +185,7 @@ namespace TestValidation
                     TL = 12
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
-                d.customer = d._customerService.SoftDeleteObject(d.customer, d._coreIdentificationService);
+                d.customer = d._customerService.SoftDeleteObject(d.customer, d._coreIdentificationService, d._barringService);
                 d.customer.Errors.Count().should_not_be(0);
             };
         }

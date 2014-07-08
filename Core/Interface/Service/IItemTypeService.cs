@@ -17,7 +17,7 @@ namespace Core.Interface.Service
         ItemType CreateObject(ItemType itemType);
         ItemType CreateObject(string Name, string Description);
         ItemType UpdateObject(ItemType itemType);
-        ItemType SoftDeleteObject(ItemType itemType, IItemService _itemService);
+        ItemType SoftDeleteObject(ItemType itemType, IAbstractItemService _abstractItemService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(ItemType itemType);
     }

@@ -40,6 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants\Constant.cs" />
+    <Compile Include="DomainModel\Barring.cs" />
+    <Compile Include="DomainModel\BarringOrder.cs" />
+    <Compile Include="DomainModel\BarringOrderDetail.cs" />
+    <Compile Include="DomainModel\AbstractItem.cs" />
     <Compile Include="DomainModel\CoreIdentification.cs" />
     <Compile Include="DomainModel\CoreIdentificationDetail.cs" />
     <Compile Include="DomainModel\RecoveryOrder.cs" />
@@ -52,6 +56,10 @@
     <Compile Include="DomainModel\RecoveryAccessoryDetail.cs" />
     <Compile Include="DomainModel\Item.cs" />
     <Compile Include="DomainModel\ItemType.cs" />
+    <Compile Include="Interface\Repository\IAbstractItemRepository.cs" />
+    <Compile Include="Interface\Repository\IBarringOrderDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IBarringOrderRepository.cs" />
+    <Compile Include="Interface\Repository\IBarringRepository.cs" />
     <Compile Include="Interface\Repository\IRecoveryOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\IRecoveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\ICoreIdentificationRepository.cs" />
@@ -65,6 +73,10 @@
     <Compile Include="Interface\Repository\IItemRepository.cs" />
     <Compile Include="Interface\Repository\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Service\IAbstractItemService.cs" />
+    <Compile Include="Interface\Service\IBarringService.cs" />
+    <Compile Include="Interface\Service\IBarringOrderDetailService.cs" />
+    <Compile Include="Interface\Service\IBarringOrderService.cs" />
     <Compile Include="Interface\Service\IRecoveryOrderService.cs" />
     <Compile Include="Interface\Service\IRecoveryOrderDetailService.cs" />
     <Compile Include="Interface\Service\IRecoveryAccessoryDetailService.cs" />
@@ -77,6 +89,10 @@
     <Compile Include="Interface\Service\ICustomerService.cs" />
     <Compile Include="Interface\Service\IItemService.cs" />
     <Compile Include="Interface\Service\IItemTypeService.cs" />
+    <Compile Include="Interface\Validation\IAbstractItemValidator.cs" />
+    <Compile Include="Interface\Validation\IBarringOrderDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IBarringOrderValidator.cs" />
+    <Compile Include="Interface\Validation\IBarringValidator.cs" />
     <Compile Include="Interface\Validation\IRecoveryAccessoryDetailValidator.cs" />
     <Compile Include="Interface\Validation\IRecoveryOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\IRecoveryOrderValidator.cs" />

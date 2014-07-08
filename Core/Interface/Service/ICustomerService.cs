@@ -17,7 +17,7 @@ namespace Core.Interface.Service
         Customer CreateObject(Customer customer);
         Customer CreateObject(string Name, string Address, string ContactNo, string PIC, string PICContactNo, string Email);
         Customer UpdateObject(Customer customer);
-        Customer SoftDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService);
+        Customer SoftDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(Customer customer);
     }

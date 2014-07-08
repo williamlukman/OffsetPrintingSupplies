@@ -213,7 +213,7 @@ namespace Service.Service
                 foreach (var ValuePairRejected in ValuePairRejectedItemIdQuantity)
                 {
                     Item item = _itemService.GetObjectById(ValuePairRejected.Key);
-                    _itemService.AdjustQuantity(item, ValuePairRejected.Value);
+                    // _itemService.AdjustQuantity(item, ValuePairRejected.Value);
                 }
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
@@ -275,7 +275,7 @@ namespace Service.Service
                 foreach (var ValuePairRejected in ValuePairRejectedItemIdQuantity)
                 {
                     Item item = _itemService.GetObjectById(ValuePairRejected.Key);
-                    _itemService.AdjustQuantity(item, ValuePairRejected.Value);
+                    // _itemService.AdjustQuantity(item, ValuePairRejected.Value);
                 }
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)

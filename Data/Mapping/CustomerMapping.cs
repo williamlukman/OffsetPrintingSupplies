@@ -16,6 +16,12 @@ namespace Data.Mapping
             HasMany(c => c.CoreIdentifications)
                 .WithOptional(ci => ci.Customer)
                 .HasForeignKey(ci => ci.CustomerId);
+            HasMany(c => c.BarringOrders)
+                .WithRequired(bo => bo.Customer)
+                .HasForeignKey(bo => bo.CustomerId);
+            HasMany(c => c.Barrings)
+                .WithRequired(b => b.Customer)
+                .HasForeignKey(c => c.CustomerId);
             Ignore(c => c.Errors);
         }
     }

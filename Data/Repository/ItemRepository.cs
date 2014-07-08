@@ -42,6 +42,11 @@ namespace Data.Repository
             return item;
         }
 
+        public Item GetObjectBySku(string Sku)
+        {
+            return FindAll(i => i.Sku == Sku && !i.IsDeleted).FirstOrDefault();
+        }
+
         public Item CreateObject(Item item)
         {
             item.IsDeleted = false;
@@ -68,6 +73,12 @@ namespace Data.Repository
         {
             Item item = Find(x => x.Id == Id);
             return (Delete(item) == 1) ? true : false;
+        }
+
+        public bool IsSkuDuplicated(Item item)
+        {
+            IQueryable<Item> items = FindAll(x => x.Sku == item.Sku && !x.IsDeleted && x.Id != item.Id);
+            return (items.Count() > 0 ? true : false);
         }
     }
 }

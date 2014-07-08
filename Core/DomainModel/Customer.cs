@@ -22,6 +22,8 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+        public ICollection<Barring> Barrings { get; set; }
         public ICollection<CoreIdentification> CoreIdentifications { get; set; }
+        public ICollection<BarringOrder> BarringOrders { get; set; }
     }
 }

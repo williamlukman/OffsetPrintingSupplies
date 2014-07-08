@@ -17,12 +17,13 @@ namespace Core.Interface.Validation
         Customer VHasPICContactNo(Customer customer);
         Customer VHasEmail(Customer customer);
         Customer VHasCoreIdentification(Customer customer, ICoreIdentificationService _coreIdentificationService);
+        Customer VHasBarring(Customer customer, IBarringService _barringService);
         Customer VCreateObject(Customer customer, ICustomerService _customerService);
         Customer VUpdateObject(Customer customer, ICustomerService _customerService);
-        Customer VDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService);
+        Customer VDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService);
         bool ValidCreateObject(Customer customer, ICustomerService _customerService);
         bool ValidUpdateObject(Customer customer, ICustomerService _customerService);
-        bool ValidDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService);
+        bool ValidDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService);
         bool isValid(Customer customer);
         string PrintError(Customer customer);
     }

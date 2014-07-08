@@ -269,8 +269,6 @@ namespace Validation.Validation
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VQuantityReceivedEqualDetails(recoveryOrder, _recoveryOrderDetailService);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VHasNotBeenConfirmed(recoveryOrder);
-            if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VQuantityIsInStock(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService);
             return recoveryOrder;
         }

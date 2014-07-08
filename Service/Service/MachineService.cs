@@ -67,9 +67,9 @@ namespace Service.Service
             return (machine = _validator.ValidUpdateObject(machine, this) ? _repository.UpdateObject(machine) : machine);
         }
 
-        public Machine SoftDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        public Machine SoftDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService)
         {
-            return (machine = _validator.ValidDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService) ? _repository.SoftDeleteObject(machine) : machine);
+            return (machine = _validator.ValidDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService, _barringService) ? _repository.SoftDeleteObject(machine) : machine);
         }
 
         public bool DeleteObject(int Id)

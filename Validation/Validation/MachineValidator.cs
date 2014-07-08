@@ -54,6 +54,16 @@ namespace Validation.Validation
             return machine;
         }
 
+        public Machine VHasBarring(Machine machine, IBarringService _barringService)
+        {
+            IList<Barring> barrings = _barringService.GetObjectsByMachineId(machine.Id);
+            if (barrings.Any())
+            {
+                machine.Errors.Add("Generic", "Machine masih memiliki asosiasi dengan Barring");
+            }
+            return machine;
+        }
+
         public Machine VCreateObject(Machine machine, IMachineService _machineService)
         {
             VNameNotEmpty(machine);
@@ -68,10 +78,14 @@ namespace Validation.Validation
             return machine;
         }
 
-        public Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        public Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService,
+                                     ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService)
         {
             VIsInCoreIdentificationDetail(machine, _coreIdentificationDetailService);
+            if (!isValid(machine)) { return machine; }
             VIsInRollerBuilder(machine, _rollerBuilderService);
+            if (!isValid(machine)) { return machine; }
+            VHasBarring(machine, _barringService);
             return machine;
         }
 
@@ -88,10 +102,11 @@ namespace Validation.Validation
             return isValid(machine);
         }
 
-        public bool ValidDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        public bool ValidDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService,
+                                      ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService)
         {
             machine.Errors.Clear();
-            VDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService);
+            VDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService, _barringService);
             return isValid(machine);
         }
 

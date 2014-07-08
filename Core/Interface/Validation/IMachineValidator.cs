@@ -12,12 +12,13 @@ namespace Core.Interface.Validation
     {
         Machine VHasUniqueCode(Machine machine, IMachineService _machineService);
         Machine VNameNotEmpty(Machine machine);
+        Machine VHasBarring(Machine machine, IBarringService _barringService);
         Machine VCreateObject(Machine machine, IMachineService _machineService);
         Machine VUpdateObject(Machine machine, IMachineService _machineService);
-        Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService);
         bool ValidCreateObject(Machine machine, IMachineService _machineService);
         bool ValidUpdateObject(Machine machine, IMachineService _machineService);
-        bool ValidDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        bool ValidDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService);
         bool isValid(Machine machine);
         string PrintError(Machine machine);
     }

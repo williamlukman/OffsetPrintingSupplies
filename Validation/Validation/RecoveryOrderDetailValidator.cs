@@ -161,7 +161,7 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VHasNotBeenDissembled(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail VHasNotBeenDisassembled(RecoveryOrderDetail recoveryOrderDetail)
         {
             if (recoveryOrderDetail.IsDisassembled)
             {
@@ -330,7 +330,7 @@ namespace Validation.Validation
         public RecoveryOrderDetail VUpdateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService)
         {
-            VHasNotBeenDissembled(recoveryOrderDetail);
+            VHasNotBeenDisassembled(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
@@ -341,7 +341,7 @@ namespace Validation.Validation
         public RecoveryOrderDetail VDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
-            VHasNotBeenDissembled(recoveryOrderDetail);
+            VHasNotBeenDisassembled(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
@@ -365,7 +365,7 @@ namespace Validation.Validation
 
         public RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail)
         {
-            VHasNotBeenDissembled(recoveryOrderDetail);
+            VHasNotBeenDisassembled(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             return recoveryOrderDetail;

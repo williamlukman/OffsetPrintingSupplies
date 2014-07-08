@@ -83,7 +83,7 @@ namespace TestValidation
 
             it["delete_machine"] = () =>
             {
-                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService);
+                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService, d._barringService);
                 d.machine.Errors.Count().should_be(0);
             };
 
@@ -123,7 +123,7 @@ namespace TestValidation
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail,
                            d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
-                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService);
+                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService, d._barringService);
                 d.machine.Errors.Count().should_not_be(0);
             };
         }

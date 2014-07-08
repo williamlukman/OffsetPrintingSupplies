@@ -80,7 +80,7 @@ namespace TestValidation
 
             it["delete_itemtype"] = () =>
             {
-                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
+                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._abstractItemService);
                 d.typeGlue.Errors.Count().should_be(0);
             };
 
@@ -96,7 +96,7 @@ namespace TestValidation
                     UoM = "Pcs"
                 };
                 glue101 = d._itemService.CreateObject(glue101, d._itemTypeService);
-                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
+                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._abstractItemService);
                 d.typeGlue.Errors.Count().should_not_be(0);
             };
         }

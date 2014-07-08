@@ -13,9 +13,11 @@ namespace Core.Interface.Repository
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
         int GetQuantityById(int Id);
         Item GetObjectById(int Id);
+        Item GetObjectBySku(string Sku);
         Item CreateObject(Item item);
         Item UpdateObject(Item item);
         Item SoftDeleteObject(Item item);
         bool DeleteObject(int Id);
+        bool IsSkuDuplicated(Item item);
     }
 }

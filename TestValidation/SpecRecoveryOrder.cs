@@ -263,10 +263,10 @@ namespace TestValidation
                         int usedCoreBuilder4Final = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                         int usedRollerBuilder3Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                         int usedRollerBuilder4Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
-                        usedCoreBuilder3Final.should_be(usedCoreBuilder3Quantity + 1);
+                        usedCoreBuilder3Final.should_be(usedCoreBuilder3Quantity);
                         usedRollerBuilder3Final.should_be(usedRollerBuilder3Quantity + 1);
                         usedCoreBuilder4Final.should_be(usedCoreBuilder4Quantity);
-                        usedRollerBuilder4Final.should_be(usedRollerBuilder4Quantity + 1);                        
+                        usedRollerBuilder4Final.should_be(usedRollerBuilder4Quantity + 1);
                     };
                 };
             };

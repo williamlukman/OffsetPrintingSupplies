@@ -28,7 +28,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasBeenPackaged(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail VHasNotBeenDissembled(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenDisassembled(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenStrippedAndGlued(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenWrapped(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail);

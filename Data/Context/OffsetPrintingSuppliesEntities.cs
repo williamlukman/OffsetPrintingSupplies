@@ -21,7 +21,10 @@ namespace Data.Context
         {
             IList<String> tableNames = new List<String>() { "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
-                                                            "CoreBuilder", "Item", "ItemType", "Customer", "RollerType", "Machine"};
+                                                            "BarringOrderDetail", "BarringOrder", "Barring",
+                                                            "CoreBuilder", "Item", "ItemType", "Customer", "RollerType", "Machine",
+                                                            "AbstractItem"
+                                                            };
 
             foreach (var tableName in tableNames)
             {
@@ -33,6 +36,10 @@ namespace Data.Context
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
+            modelBuilder.Configurations.Add(new AbstractItemMapping());
+            modelBuilder.Configurations.Add(new BarringMapping());
+            modelBuilder.Configurations.Add(new BarringOrderMapping());
+            modelBuilder.Configurations.Add(new BarringOrderDetailMapping());
             modelBuilder.Configurations.Add(new CoreBuilderMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationDetailMapping());
@@ -45,10 +52,13 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new RecoveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new RollerBuilderMapping());
             modelBuilder.Configurations.Add(new RollerTypeMapping());
-
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<AbstractItem> AbstractItems { get; set; }
+        public DbSet<Barring> Barrings { get; set; }
+        public DbSet<BarringOrder> BarringOrders { get; set; }
+        public DbSet<BarringOrderDetail> BarringOrderDetails { get; set; }
         public DbSet<CoreBuilder> CoreBuilders { get; set; }
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }

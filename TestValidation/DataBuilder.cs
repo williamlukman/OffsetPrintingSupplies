@@ -16,6 +16,10 @@ namespace TestValidation
 {
     public class DataBuilder
     {
+        public IAbstractItemService _abstractItemService;
+        public IBarringService _barringService;
+        public IBarringOrderService _barringOrderService;
+        public IBarringOrderDetailService _barringOrderDetailService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -29,7 +33,7 @@ namespace TestValidation
         public IRollerBuilderService _rollerBuilderService;
         public IRollerTypeService _rollerTypeService;
 
-        public ItemType typeAccessory, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
+        public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
@@ -45,9 +49,18 @@ namespace TestValidation
         public RecoveryOrderDetail recoveryODCustomer1, recoveryODCustomer2, recoveryODCustomer3,
                                    recoveryODInHouse1, recoveryODInHouse2, recoveryODInHouse3;
         public RecoveryAccessoryDetail accessory1, accessory2, accessory3, accessory4;
+        public Item bargeneric, barleft1, barleft2, barright1, barright2;
+        public Item blanket1, blanket2, blanket3;
+        public Barring barring1, barring2, barring3;
+        public BarringOrder barringOrderCustomer;
+        public BarringOrderDetail barringODCustomer1, barringODCustomer2, barringODCustomer3, barringODCustomer4; 
 
         public DataBuilder()
         {
+            _abstractItemService = new AbstractItemService(new AbstractItemRepository(), new AbstractItemValidator());
+            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
+            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -62,6 +75,8 @@ namespace TestValidation
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
+            typeBar = _itemTypeService.CreateObject("Bar", "Bar");
+            typeBarring = _itemTypeService.CreateObject("Barring", "Barring");
             typeBearing = _itemTypeService.CreateObject("Bearing", "Bearing");
             typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket");
             typeChemical = _itemTypeService.CreateObject("Chemical", "Chemical");
@@ -93,6 +108,7 @@ namespace TestValidation
             PopulateBuilders();
             PopulateCoreIdentifications();
             PopulateRecoveryOrders();
+            PopulateBarringOrders();
         }
 
         public void PopulateItem()
@@ -590,6 +606,199 @@ namespace TestValidation
             };
             recoveryODCustomer3 = _recoveryOrderDetailService.CreateObject(recoveryODCustomer3, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
 
+        }
+
+        public void PopulateBarringOrders()
+        {
+            bargeneric = new Item()
+            {
+                ItemTypeId = typeBar.Id,
+                Category = "bar",
+                Name = "Bar Generic",
+                Description = "This is an item",
+                UoM = "Pcs",
+                Sku = "BGEN",
+                Quantity = 5
+            };
+            _itemService.CreateObject(bargeneric, _itemTypeService);
+
+            barleft1 = new Item()
+            {
+                ItemTypeId = typeBar.Id,
+                Category = "bar",
+                Name = "Bar Left 1",
+                Description = "This is a bar left",
+                UoM = "Pcs",
+                Sku = "BL1",
+                Quantity = 2
+            };
+            _itemService.CreateObject(barleft1, _itemTypeService);
+
+            barleft2 = new Item()
+            {
+                ItemTypeId = typeBar.Id,
+                Category = "bar",
+                Name = "Bar Left 2",
+                UoM = "Pcs",
+                Sku = "BL2",
+                Quantity = 2
+            };
+            _itemService.CreateObject(barleft2, _itemTypeService);
+
+            barright1 = new Item()
+            {
+                ItemTypeId = typeBar.Id,
+                Category = "bar",
+                Name = "Bar Right 1",
+                Description = "This is a bar right",
+                UoM = "Pcs",
+                Sku = "BR1",
+                Quantity = 2
+            };
+            _itemService.CreateObject(barright1, _itemTypeService);
+
+            barright2 = new Item()
+            {
+                ItemTypeId = typeBar.Id,
+                Category = "bar",
+                Name = "Bar Right 2",
+                UoM = "Pcs",
+                Sku = "BR2",
+                Quantity = 2
+            };
+            _itemService.CreateObject(barright2, _itemTypeService);
+
+            blanket1 = new Item()
+            {
+                ItemTypeId = typeBlanket.Id,
+                Category = "Blanket",
+                Name = "Blanket1",
+                UoM = "Pcs",
+                Sku = "BLK1",
+                Quantity = 10
+            };
+            _itemService.CreateObject(blanket1, _itemTypeService);
+
+            blanket2 = new Item()
+            {
+                ItemTypeId = typeBlanket.Id,
+                Category = "Blanket",
+                Name = "Blanket2",
+                UoM = "Pcs",
+                Sku = "BLK2",
+                Quantity = 4
+            };
+            _itemService.CreateObject(blanket2, _itemTypeService);
+
+            blanket3 = new Item()
+            {
+                ItemTypeId = typeBlanket.Id,
+                Category = "Blanket",
+                Name = "Blanket3",
+                UoM = "Pcs",
+                Sku = "BLK3",
+                Quantity = 3
+            };
+            _itemService.CreateObject(blanket3, _itemTypeService);
+
+            barring1 = new Barring()
+            {
+                ItemTypeId = typeBarring.Id,
+                Category = "Barring",
+                Name = "Barring1",
+                UoM = "Pcs",
+                Sku = "BRG1",
+                Quantity = 2,
+                RollNo = "BRG1_123",
+                AC = 10,
+                AR = 15,
+                BlanketItemId = blanket1.Id,
+                LeftBarItemId = bargeneric.Id,
+                RightBarItemId = bargeneric.Id,
+                CustomerId = customer.Id,
+                KS = 1,
+                thickness = 1,
+                MachineId = machine.Id
+            };
+            _barringService.CreateObject(barring1, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+
+            barring2 = new Barring()
+            {
+                ItemTypeId = typeBarring.Id,
+                Category = "Barring",
+                Name = "Barring2",
+                UoM = "Pcs",
+                Sku = "BRG2",
+                Quantity = 2,
+                RollNo = "BRG2_123",
+                AC = 3,
+                AR = 5,
+                BlanketItemId = blanket2.Id,
+                LeftBarItemId = barleft1.Id,
+                RightBarItemId = barright1.Id,
+                CustomerId = customer.Id,
+                KS = 1,
+                thickness = 1,
+                MachineId = machine.Id
+            };
+            _barringService.CreateObject(barring2, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+            
+            barring3 = new Barring()
+            {
+                ItemTypeId = typeBarring.Id,
+                Category = "Barring",
+                Name = "Barring3",
+                UoM = "Pcs",
+                Sku = "BRG3",
+                Quantity = 3,
+                RollNo = "BRG3_123",
+                AC = 7,
+                AR = 10,
+                BlanketItemId = blanket3.Id,
+                LeftBarItemId = barleft2.Id,
+                RightBarItemId = barright2.Id,
+                CustomerId = customer.Id,
+                KS = 1,
+                thickness = 1,
+                MachineId = machine.Id
+            };
+            _barringService.CreateObject(barring3, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+
+            barringOrderCustomer = new BarringOrder()
+            {
+                CustomerId = customer.Id,
+                QuantityOrdered = 4,
+                Code = "BO0001",
+            };
+            _barringOrderService.CreateObject(barringOrderCustomer);
+
+            barringODCustomer1 = new BarringOrderDetail()
+            {
+                BarringId = barring1.Id,
+                BarringOrderId = barringOrderCustomer.Id,
+            };
+            _barringOrderDetailService.CreateObject(barringODCustomer1, _barringOrderService, _barringService);
+
+            barringODCustomer2 = new BarringOrderDetail()
+            {
+                BarringId = barring1.Id,
+                BarringOrderId = barringOrderCustomer.Id,
+            };
+            _barringOrderDetailService.CreateObject(barringODCustomer2, _barringOrderService, _barringService);
+
+            barringODCustomer3 = new BarringOrderDetail()
+            {
+                BarringId = barring2.Id,
+                BarringOrderId = barringOrderCustomer.Id,
+            };
+            _barringOrderDetailService.CreateObject(barringODCustomer3, _barringOrderService, _barringService);
+
+            barringODCustomer4 = new BarringOrderDetail()
+            {
+                BarringId = barring2.Id,
+                BarringOrderId = barringOrderCustomer.Id,
+            };
+            _barringOrderDetailService.CreateObject(barringODCustomer4, _barringOrderService, _barringService);
         }
     }
 }

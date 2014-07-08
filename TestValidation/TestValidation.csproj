@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecBarringOrder.cs" />
     <Compile Include="SpecCoreIdentification.cs" />
     <Compile Include="SpecRecoveryOrder.cs" />
     <Compile Include="DataBuilder.cs" />

@@ -13,7 +13,7 @@ namespace Data.Mapping
         public ItemTypeMapping()
         {
             HasKey(it => it.Id);
-            HasMany(it => it.Items)
+            HasMany(it => it.AbstractItems)
                 .WithRequired(i => i.ItemType)
                 .HasForeignKey(i => i.ItemTypeId);
             Ignore(it => it.Errors);
