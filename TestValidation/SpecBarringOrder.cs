@@ -203,6 +203,27 @@ namespace TestValidation
                         int barring2quantityfinal = d.barring2.Quantity;
                         barring1quantityfinal.should_be(barring1quantity + 2);
                         barring2quantityfinal.should_be(barring2quantity + 1);
+                        d.barringOrderCustomer.QuantityFinal.should_be(d.barringOrderCustomer.QuantityOrdered - d.barringOrderCustomer.QuantityRejected);
+                    };
+
+                    it["validates_unfinishrecoveryorder"] = () =>
+                    {
+                        int barring1quantity = d.barring1.Quantity;
+                        int barring2quantity = d.barring2.Quantity;
+                        d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                        d.barringOrderCustomer.Errors.Count().should_be(0);
+                        int barring1quantityfinal = d.barring1.Quantity;
+                        int barring2quantityfinal = d.barring2.Quantity;
+                        barring1quantityfinal.should_be(barring1quantity + 2);
+                        barring2quantityfinal.should_be(barring2quantity + 1);
+                        d.barringOrderCustomer = d._barringOrderService.UnfinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService);
+                        d.barringOrderCustomer.Errors.Count().should_be(0);
+                        int barring1quantityunconfirm = d.barring1.Quantity;
+                        int barring2quantityunconfirm = d.barring2.Quantity;
+                        barring1quantityunconfirm.should_be(barring1quantity);
+                        barring2quantityunconfirm.should_be(barring2quantity);
+                        d.barringOrderCustomer.QuantityFinal.should_be(0);
+                        d.barringOrderCustomer.QuantityRejected.should_be(0);
                     };
                 };
             };
