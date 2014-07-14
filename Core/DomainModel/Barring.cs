@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.DomainModel
 {
-    public partial class Barring : AbstractItem
+    public partial class Barring : Item
     {
         public string RollNo { get; set; }
         public int CustomerId { get; set; }

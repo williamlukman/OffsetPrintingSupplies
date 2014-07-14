@@ -13,9 +13,14 @@ namespace Data.Mapping
         public ItemMapping()
         {
             ToTable("Item");
+            HasKey(i => i.Id);
+            HasRequired(i => i.ItemType)
+                .WithMany(it => it.Items)
+                .HasForeignKey(i => i.ItemTypeId);
             HasMany(i => i.RecoveryAccessoryDetails)
                 .WithRequired(rad => rad.Item)
                 .HasForeignKey(rad => rad.ItemId);
+            Ignore(i => i.Errors);
         }
     }
 }

@@ -25,9 +25,9 @@ namespace Validation.Validation
             return itemType;
         }
 
-        public ItemType VHasItem(ItemType itemType, IAbstractItemService _abstractItemService)
+        public ItemType VHasItem(ItemType itemType, IItemService _itemService)
         {
-            IList<AbstractItem> list = _abstractItemService.GetObjectsByItemTypeId(itemType.Id);
+            IList<Item> list = _itemService.GetObjectsByItemTypeId(itemType.Id);
             if (list.Any())
             {
                 itemType.Errors.Add("Generic", "Item tidak boleh ada yang terasosiakan dengan itemType");
@@ -47,9 +47,9 @@ namespace Validation.Validation
             return itemType;
         }
 
-        public ItemType VDeleteObject(ItemType itemType, IAbstractItemService _abstractItemService)
+        public ItemType VDeleteObject(ItemType itemType, IItemService _itemService)
         {
-            VHasItem(itemType, _abstractItemService);
+            VHasItem(itemType, _itemService);
             return itemType;
         }
 
@@ -66,10 +66,10 @@ namespace Validation.Validation
             return isValid(itemType);
         }
 
-        public bool ValidDeleteObject(ItemType itemType, IAbstractItemService _abstractItemService)
+        public bool ValidDeleteObject(ItemType itemType, IItemService _itemService)
         {
             itemType.Errors.Clear();
-            VDeleteObject(itemType, _abstractItemService);
+            VDeleteObject(itemType, _itemService);
             return isValid(itemType);
         }
 

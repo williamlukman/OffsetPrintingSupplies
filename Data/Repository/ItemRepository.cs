@@ -30,11 +30,6 @@ namespace Data.Repository
             return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted).ToList();
         }
 
-        public int GetQuantityById(int Id)
-        {
-            return Find(x => x.Id == Id && !x.IsDeleted).Quantity;
-        }
-
         public Item GetObjectById(int Id)
         {
             Item item = Find(x => x.Id == Id && !x.IsDeleted);

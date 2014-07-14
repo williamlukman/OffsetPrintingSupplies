@@ -37,7 +37,7 @@ namespace Data.Repository
 
         public IList<RollerBuilder> GetObjectsByItemId(int ItemId)
         {
-            return FindAll(x => !x.IsDeleted && (x.CompoundId == ItemId || x.UsedRollerItemId == ItemId || x.NewRollerItemId == ItemId)).ToList();
+            return FindAll(x => !x.IsDeleted && (x.CompoundId == ItemId || x.RollerUsedCoreItemId == ItemId || x.RollerNewCoreItemId == ItemId)).ToList();
         }
 
         public IList<RollerBuilder> GetObjectsByMachineId(int machineId)
@@ -50,26 +50,26 @@ namespace Data.Repository
             return FindAll(x => x.RollerTypeId == rollerTypeId && !x.IsDeleted).ToList();
         }
 
-        public Item GetUsedRoller(int id)
+        public Item GetRollerUsedCore(int id)
         {
             using (var db = GetContext())
             {
                 RollerBuilder rollerBuilder = GetObjectById(id);
                 Item item = (from obj in db.Items
-                             where obj.Id == rollerBuilder.UsedRollerItemId
+                             where obj.Id == rollerBuilder.RollerUsedCoreItemId
                              select obj).FirstOrDefault();
                 if (item != null) { item.Errors = new Dictionary<string, string>(); }
                 return item;
             }
         }
 
-        public Item GetNewRoller(int id)
+        public Item GetRollerNewCore(int id)
         {
             using (var db = GetContext())
             {
                 RollerBuilder rollerBuilder = GetObjectById(id);
                 Item item = (from obj in db.Items
-                             where obj.Id == rollerBuilder.NewRollerItemId
+                             where obj.Id == rollerBuilder.RollerNewCoreItemId
                              select obj).FirstOrDefault();
                 if (item != null) { item.Errors = new Dictionary<string, string>(); }
                 return item;

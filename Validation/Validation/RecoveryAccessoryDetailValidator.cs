@@ -42,10 +42,12 @@ namespace Validation.Validation
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VQuantityInStock(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService)
+        public RecoveryAccessoryDetail VQuantityInStock(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
-            if (item.Quantity < recoveryAccessoryDetail.Quantity)
+            RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
+            RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, recoveryAccessoryDetail.ItemId);
+            if (warehouseItem.Quantity < recoveryAccessoryDetail.Quantity)
             {
                 recoveryAccessoryDetail.Errors.Add("Quantity", "Tidak boleh lebih dari jumlah stock barang");
             }
@@ -119,13 +121,13 @@ namespace Validation.Validation
         }
 
         public RecoveryAccessoryDetail VConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                      IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
+                                                      IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VRecoveryOrderHasNotBeenFinished(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
             VHasNotBeenConfirmed(recoveryAccessoryDetail);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
-            VQuantityInStock(recoveryAccessoryDetail, _itemService);
+            VQuantityInStock(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
             return recoveryAccessoryDetail;
         }
 
@@ -161,10 +163,11 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                      IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
+                                       IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService,
+                                       IWarehouseItemService _warehouseItemService)
         {
             recoveryAccessoryDetail.Errors.Clear();
-            VConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService);
+            VConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
             return isValid(recoveryAccessoryDetail);
         }
 

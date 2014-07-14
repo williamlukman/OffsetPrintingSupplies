@@ -79,7 +79,8 @@ namespace Validation.Validation
         }
 
         public RecoveryOrder VQuantityIsInStock(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+                                                IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService,
+                                                IWarehouseItemService _warehouseItemService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
             IDictionary<int, int> ValuePairItemIdQuantity = new Dictionary<int, int>();
@@ -89,21 +90,22 @@ namespace Validation.Validation
                 CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
                 Item item = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
-                if (ValuePairItemIdQuantity.ContainsKey(item.Id))
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
+                if (ValuePairItemIdQuantity.ContainsKey(warehouseItem.Id))
                 {
-                    ValuePairItemIdQuantity[item.Id] += 1;
+                    ValuePairItemIdQuantity[warehouseItem.Id] += 1;
                 }
                 else
                 {
-                    ValuePairItemIdQuantity.Add(item.Id, 1);
+                    ValuePairItemIdQuantity.Add(warehouseItem.Id, 1);
 
                 }
             }
 
             foreach (var ValuePair in ValuePairItemIdQuantity)
             {
-                Item item = _itemService.GetObjectById(ValuePair.Key);
-                if (item.Quantity < ValuePair.Value)
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePair.Key);
+                if (warehouseItem.Quantity < ValuePair.Value)
                 {
                     recoveryOrder.Errors.Add("Generic", "Stock quantity core item tidak boleh kurang dari jumlah di dalam recovery order");
                     return recoveryOrder;
@@ -261,7 +263,7 @@ namespace Validation.Validation
         }
 
         public RecoveryOrder VConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                            IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+                                            IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasNotBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
@@ -269,7 +271,7 @@ namespace Validation.Validation
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VQuantityReceivedEqualDetails(recoveryOrder, _recoveryOrderDetailService);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VQuantityIsInStock(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService);
+            VQuantityIsInStock(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
             return recoveryOrder;
         }
 
@@ -324,10 +326,10 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                       IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+                                       IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryOrder.Errors.Clear();
-            VConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService);
+            VConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
             return isValid(recoveryOrder);
         }
 

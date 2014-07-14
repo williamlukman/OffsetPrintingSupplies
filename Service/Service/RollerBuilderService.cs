@@ -60,14 +60,14 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public Item GetUsedRoller(int Id)
+        public Item GetRollerUsedCore(int Id)
         {
-            return _repository.GetUsedRoller(Id);
+            return _repository.GetRollerUsedCore(Id);
         }
 
-        public Item GetNewRoller(int Id)
+        public Item GetRollerNewCore(int Id)
         {
-            return _repository.GetNewRoller(Id);
+            return _repository.GetRollerNewCore(Id);
         }
 
         public RollerBuilder GetObjectByName(string name)
@@ -75,16 +75,17 @@ namespace Service.Service
             return _repository.FindAll(x => x.Name == name && !x.IsDeleted).FirstOrDefault();
         }
 
-        public RollerBuilder CreateObject(string BaseSku, string SkuNewRoller, string SkuUsedRoller, string Name, string Category,
+        public RollerBuilder CreateObject(string BaseSku, string SkuRollerNewCore, string SkuRollerUsedCore, string Name, string Category,
                                           int CD, int RD, int RL, int WL, int TL,
                                           IMachineService _machineService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                          ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
+                                          ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
+                                          IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             RollerBuilder rollerBuilder = new RollerBuilder
             {
                 BaseSku = BaseSku,
-                SkuNewRoller = SkuNewRoller,
-                SkuUsedRoller = SkuUsedRoller,
+                SkuRollerNewCore = SkuRollerNewCore,
+                SkuRollerUsedCore = SkuRollerUsedCore,
                 Name = Name,
                 Category = Category,
                 CD = CD,
@@ -93,46 +94,46 @@ namespace Service.Service
                 WL = WL,
                 TL = TL
             };
-            return this.CreateObject(rollerBuilder, _machineService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+            return this.CreateObject(rollerBuilder, _machineService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService,
+                                     _warehouseItemService, _warehouseService);
         }
 
         public RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                          ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
+                                          ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
+                                          IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             rollerBuilder.Errors = new Dictionary<String, String>();
-            Item UsedRoller = new Item()
+            Item RollerUsedCore = new Item()
             {
                 Name = rollerBuilder.Name,
                 Category = rollerBuilder.Category,
                 UoM = "pcs",
-                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
-                Sku = rollerBuilder.SkuUsedRoller
+                Sku = rollerBuilder.SkuRollerUsedCore
             };
-            UsedRoller.Errors = new Dictionary<string, string>();
+            RollerUsedCore.Errors = new Dictionary<string, string>();
 
-            Item NewRoller = new Item()
+            Item RollerNewCore = new Item()
             {
                 Name = rollerBuilder.Name,
                 Category = rollerBuilder.Category,
                 UoM = "pcs",
-                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
-                Sku = rollerBuilder.SkuNewRoller
+                Sku = rollerBuilder.SkuRollerNewCore
             };
-            NewRoller.Errors = new Dictionary<string, string>();
+            RollerNewCore.Errors = new Dictionary<string, string>();
 
-            if (_itemService.GetValidator().ValidCreateObject(UsedRoller, _itemService, _itemTypeService) &&
-                _itemService.GetValidator().ValidCreateObject(NewRoller, _itemService, _itemTypeService))
+            if (_itemService.GetValidator().ValidCreateObject(RollerUsedCore, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidCreateObject(RollerNewCore, _itemService, _itemTypeService))
             {
                 if (_validator.ValidCreateObject(rollerBuilder, this, _machineService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
-                    UsedRoller = _itemService.GetRepository().CreateObject(UsedRoller);
-                    UsedRoller.Id = UsedRoller.Id;
-                    NewRoller = _itemService.GetRepository().CreateObject(NewRoller);
-                    NewRoller.Id = NewRoller.Id;
-                    rollerBuilder.UsedRollerItemId = UsedRoller.Id;
-                    rollerBuilder.NewRollerItemId = NewRoller.Id;
+                    RollerUsedCore = _itemService.CreateObject(RollerUsedCore, _itemTypeService, _warehouseItemService, _warehouseService);
+                    RollerUsedCore.Id = RollerUsedCore.Id;
+                    RollerNewCore = _itemService.CreateObject(RollerNewCore, _itemTypeService, _warehouseItemService, _warehouseService);
+                    RollerNewCore.Id = RollerNewCore.Id;
+                    rollerBuilder.RollerUsedCoreItemId = RollerUsedCore.Id;
+                    rollerBuilder.RollerNewCoreItemId = RollerNewCore.Id;
                     rollerBuilder = _repository.CreateObject(rollerBuilder);
                 }
             }
@@ -146,20 +147,20 @@ namespace Service.Service
         public RollerBuilder UpdateNameAndCategory(RollerBuilder rollerBuilder, IMachineService _machineService, IItemService _itemService, IItemTypeService _itemTypeService,
                                           ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
         {
-            Item UsedRoller = _itemService.GetObjectById(rollerBuilder.UsedRollerItemId);
-            UsedRoller.Name = rollerBuilder.Name;
-            UsedRoller.Category = rollerBuilder.Category;
-            Item NewRoller = _itemService.GetObjectById(rollerBuilder.NewRollerItemId);
-            NewRoller.Name = rollerBuilder.Name;
-            NewRoller.Category = rollerBuilder.Category;
+            Item RollerUsedCore = _itemService.GetObjectById(rollerBuilder.RollerUsedCoreItemId);
+            RollerUsedCore.Name = rollerBuilder.Name;
+            RollerUsedCore.Category = rollerBuilder.Category;
+            Item RollerNewCore = _itemService.GetObjectById(rollerBuilder.RollerNewCoreItemId);
+            RollerNewCore.Name = rollerBuilder.Name;
+            RollerNewCore.Category = rollerBuilder.Category;
 
-            if (_itemService.GetValidator().ValidUpdateObject(UsedRoller, _itemService, _itemTypeService) &&
-                _itemService.GetValidator().ValidUpdateObject(NewRoller, _itemService, _itemTypeService))
+            if (_itemService.GetValidator().ValidUpdateObject(RollerUsedCore, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidUpdateObject(RollerNewCore, _itemService, _itemTypeService))
             {
                 if (_validator.ValidUpdateObject(rollerBuilder, this, _machineService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
-                    _itemService.GetRepository().UpdateObject(UsedRoller);
-                    _itemService.GetRepository().UpdateObject(NewRoller);
+                    _itemService.GetRepository().UpdateObject(RollerUsedCore);
+                    _itemService.GetRepository().UpdateObject(RollerNewCore);
                     rollerBuilder = _repository.UpdateObject(rollerBuilder);
                 }
             }
@@ -175,19 +176,19 @@ namespace Service.Service
             return _repository.UpdateObject(rollerBuilder);
         }
 
-        public RollerBuilder SoftDeleteObject(RollerBuilder rollerBuilder, IItemService _itemService, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                              ICoreBuilderService _coreBuilderService)
+        public RollerBuilder SoftDeleteObject(RollerBuilder rollerBuilder, IItemService _itemService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
+                                              IWarehouseItemService _warehouseItemService)
         {
-            Item UsedRoller = _itemService.GetObjectById(rollerBuilder.UsedRollerItemId);
-            Item NewRoller = _itemService.GetObjectById(rollerBuilder.NewRollerItemId);
+            Item RollerUsedCore = _itemService.GetObjectById(rollerBuilder.RollerUsedCoreItemId);
+            Item RollerNewCore = _itemService.GetObjectById(rollerBuilder.RollerNewCoreItemId);
 
-            if (_itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, this) &&
-                _itemService.GetValidator().ValidDeleteObject(UsedRoller, _recoveryOrderDetailService, _recoveryAccessoryDetailService, this))
+            if (_itemService.GetValidator().ValidDeleteCoreOrRoller(RollerUsedCore, _warehouseItemService) &&
+                _itemService.GetValidator().ValidDeleteCoreOrRoller(RollerUsedCore, _warehouseItemService))
             {
                 if (_validator.ValidDeleteObject(rollerBuilder, _recoveryOrderDetailService))
                 {
-                    _itemService.GetRepository().SoftDeleteObject(UsedRoller);
-                    _itemService.GetRepository().SoftDeleteObject(NewRoller);
+                    _itemService.GetRepository().SoftDeleteObject(RollerUsedCore);
+                    _itemService.GetRepository().SoftDeleteObject(RollerNewCore);
                     _repository.SoftDeleteObject(rollerBuilder);
                 }
             }

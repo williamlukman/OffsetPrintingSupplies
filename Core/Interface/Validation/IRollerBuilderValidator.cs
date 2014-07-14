@@ -16,8 +16,8 @@ namespace Core.Interface.Validation
         RollerBuilder VHasCompound(RollerBuilder rollerBuilder, IItemService _itemService);
         RollerBuilder VHasCoreBuilder(RollerBuilder rollerBuilder, ICoreBuilderService _coreBuilderService);
         RollerBuilder VHasRollerType(RollerBuilder rollerBuilder, IRollerTypeService _rollerTypeService);
-        RollerBuilder VHasUsedRollerItem(RollerBuilder rollerBuilder, IItemService _itemService);
-        RollerBuilder VHasNewRollerItem(RollerBuilder rollerBuilder, IItemService _itemService);
+        RollerBuilder VHasRollerUsedCoreItem(RollerBuilder rollerBuilder, IItemService _itemService);
+        RollerBuilder VHasRollerNewCoreItem(RollerBuilder rollerBuilder, IItemService _itemService);
         RollerBuilder VHasMeasurement(RollerBuilder rollerBuilder);
         RollerBuilder VIsInRecoveryOrderDetails(RollerBuilder rollerBuilder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RollerBuilder VCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,

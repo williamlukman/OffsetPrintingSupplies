@@ -74,22 +74,22 @@ namespace Validation.Validation
             return rollerBuilder;
         }
 
-        public RollerBuilder VHasUsedRollerItem(RollerBuilder rollerBuilder, IItemService _itemService)
+        public RollerBuilder VHasRollerUsedCoreItem(RollerBuilder rollerBuilder, IItemService _itemService)
         {
-            Item UsedRollerItem = _itemService.GetObjectById(rollerBuilder.UsedRollerItemId);
-            if (UsedRollerItem == null)
+            Item RollerUsedCoreItem = _itemService.GetObjectById(rollerBuilder.RollerUsedCoreItemId);
+            if (RollerUsedCoreItem == null)
             {
-                rollerBuilder.Errors.Add("UsedRollerItemId", "Tidak terasosiasi dengan Item");
+                rollerBuilder.Errors.Add("RollerUsedCoreItemId", "Tidak terasosiasi dengan Item");
             }
             return rollerBuilder;
         }
 
-        public RollerBuilder VHasNewRollerItem(RollerBuilder rollerBuilder, IItemService _itemService)
+        public RollerBuilder VHasRollerNewCoreItem(RollerBuilder rollerBuilder, IItemService _itemService)
         {
-            Item NewRollerItem = _itemService.GetObjectById(rollerBuilder.NewRollerItemId);
-            if (NewRollerItem == null)
+            Item RollerNewCoreItem = _itemService.GetObjectById(rollerBuilder.RollerNewCoreItemId);
+            if (RollerNewCoreItem == null)
             {
-                rollerBuilder.Errors.Add("NewRollerItemId", "Tidak terasosiasi dengan Item");
+                rollerBuilder.Errors.Add("RollerNewCoreItemId", "Tidak terasosiasi dengan Item");
             }
             return rollerBuilder;
         }
@@ -138,9 +138,9 @@ namespace Validation.Validation
         {
             VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _itemService, _coreBuilderService, _rollerTypeService);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
-            VHasUsedRollerItem(rollerBuilder, _itemService);
+            VHasRollerUsedCoreItem(rollerBuilder, _itemService);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
-            VHasNewRollerItem(rollerBuilder, _itemService);
+            VHasRollerNewCoreItem(rollerBuilder, _itemService);
             return rollerBuilder;
         }
 

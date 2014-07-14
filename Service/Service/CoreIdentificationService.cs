@@ -98,9 +98,9 @@ namespace Service.Service
 
         public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
-                                                IItemService _itemService)
+                                                IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService))
+            if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService))
             {
                 if (coreIdentification.CustomerId != null)
                 {
@@ -111,7 +111,8 @@ namespace Service.Service
                         Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                         _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
                                         _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
-                        _itemService.AdjustQuantity(item, 1);
+                        WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
+                        _warehouseItemService.AdjustQuantity(warehouseItem, 1);
                     }
                 }
                 _repository.ConfirmObject(coreIdentification);
@@ -120,7 +121,8 @@ namespace Service.Service
         }
 
         public CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                  IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+                                                  IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService,
+                                                  IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(coreIdentification, _recoveryOrderService))
             {
@@ -133,7 +135,9 @@ namespace Service.Service
                         Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                         _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
                                         _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
-                        _itemService.AdjustQuantity(item, -1);
+                        WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
+                        _warehouseItemService.AdjustQuantity(warehouseItem, -1);
+                        //_itemService.AdjustQuantity(item, -1);
                     }
                 }
                 _repository.UnconfirmObject(coreIdentification);

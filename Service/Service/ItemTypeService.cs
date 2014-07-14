@@ -61,9 +61,9 @@ namespace Service.Service
             return (itemType = _validator.ValidUpdateObject(itemType, this) ? _repository.UpdateObject(itemType) : itemType);
         }
 
-        public ItemType SoftDeleteObject(ItemType itemType, IAbstractItemService _abstractItemService)
+        public ItemType SoftDeleteObject(ItemType itemType, IItemService _itemService)
         {
-            return (itemType = _validator.ValidDeleteObject(itemType, _abstractItemService) ? _repository.SoftDeleteObject(itemType) : itemType);
+            return (itemType = _validator.ValidDeleteObject(itemType, _itemService) ? _repository.SoftDeleteObject(itemType) : itemType);
         }
 
         public bool DeleteObject(int Id)

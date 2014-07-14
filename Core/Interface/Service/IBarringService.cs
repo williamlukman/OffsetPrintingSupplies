@@ -17,15 +17,15 @@ namespace Core.Interface.Service
         IList<Barring> GetObjectsByItemTypeId(int ItemTypeId);
         IList<Barring> GetObjectsByMachineId(int machineId);
         IList<Barring> GetObjectsByCustomerId(int customerId);
-        int GetQuantityById(int Id);
         Barring GetObjectById(int Id);
         Barring GetObjectBySku(string Sku);
         Barring CreateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService);
+                             ICustomerService _customerService, IMachineService _machineService, 
+                             IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
         Barring UpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService);
-        Barring SoftDeleteObject(Barring barring);
-        Barring AdjustQuantity(Barring barring, int Quantity);
+                             ICustomerService _customerService, IMachineService _machineService,
+                             IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
+        Barring SoftDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Barring barring);
     }

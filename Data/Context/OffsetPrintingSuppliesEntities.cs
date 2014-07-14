@@ -23,7 +23,6 @@ namespace Data.Context
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
                                                             "BarringOrderDetail", "BarringOrder", "Barring",
                                                             "CoreBuilder", "Item", "ItemType", "Customer", "RollerType", "Machine",
-                                                            "AbstractItem"
                                                             };
 
             foreach (var tableName in tableNames)
@@ -36,7 +35,6 @@ namespace Data.Context
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            modelBuilder.Configurations.Add(new AbstractItemMapping());
             modelBuilder.Configurations.Add(new BarringMapping());
             modelBuilder.Configurations.Add(new BarringOrderMapping());
             modelBuilder.Configurations.Add(new BarringOrderDetailMapping());
@@ -55,7 +53,6 @@ namespace Data.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<AbstractItem> AbstractItems { get; set; }
         public DbSet<Barring> Barrings { get; set; }
         public DbSet<BarringOrder> BarringOrders { get; set; }
         public DbSet<BarringOrderDetail> BarringOrderDetails { get; set; }
@@ -71,5 +68,9 @@ namespace Data.Context
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
         public DbSet<RollerBuilder> RollerBuilders { get; set; }
         public DbSet<RollerType> RollerTypes { get; set; }
+        public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<WarehouseItem> WarehouseItems { get; set; }
+        public DbSet<WarehouseMutationOrder> WarehouseMutationOrders { get; set; }
+        public DbSet<WarehouseMutationOrderDetail> WarehouseMutationOrderDetails { get; set; }
     }
 }

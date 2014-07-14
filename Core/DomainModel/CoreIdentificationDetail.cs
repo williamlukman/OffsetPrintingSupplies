@@ -22,6 +22,9 @@ namespace Core.DomainModel
         public decimal WL { get; set; }
         public decimal TL { get; set; }
 
+        public bool IsFinished { get; set; }
+        public bool FinishDate { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }

@@ -22,32 +22,27 @@ namespace Data.Repository
 
         public IList<Barring> GetAll()
         {
-            return (from x in Context.AbstractItems.OfType<Barring>() where !x.IsDeleted select x).ToList();
+            return (from x in Context.Items.OfType<Barring>() where !x.IsDeleted select x).ToList();
         }
 
         public IList<Barring> GetObjectsByItemTypeId(int ItemTypeId)
         {
-            return (from x in Context.AbstractItems.OfType<Barring>() where x.ItemTypeId == ItemTypeId && !x.IsDeleted select x).ToList();
+            return (from x in Context.Items.OfType<Barring>() where x.ItemTypeId == ItemTypeId && !x.IsDeleted select x).ToList();
         }
 
         public IList<Barring> GetObjectsByCustomerId(int CustomerId)
         {
-            return (from x in Context.AbstractItems.OfType<Barring>() where x.CustomerId == CustomerId && !x.IsDeleted select x).ToList();
+            return (from x in Context.Items.OfType<Barring>() where x.CustomerId == CustomerId && !x.IsDeleted select x).ToList();
         }
 
         public IList<Barring> GetObjectsByMachineId(int MachineId)
         {
-            return (from x in Context.AbstractItems.OfType<Barring>() where x.MachineId == MachineId && !x.IsDeleted select x).ToList();
-        }
-
-        public int GetQuantityById(int Id)
-        {
-            return (from x in Context.AbstractItems.OfType<Barring>() where x.Id == Id && !x.IsDeleted select x).FirstOrDefault().Quantity;
+            return (from x in Context.Items.OfType<Barring>() where x.MachineId == MachineId && !x.IsDeleted select x).ToList();
         }
 
         public Barring GetObjectById(int Id)
         {
-            Barring barring = (from x in Context.AbstractItems.OfType<Barring>() where x.Id == Id && !x.IsDeleted select x).FirstOrDefault();
+            Barring barring = (from x in Context.Items.OfType<Barring>() where x.Id == Id && !x.IsDeleted select x).FirstOrDefault();
             if (barring != null) { barring.Errors = new Dictionary<string, string>(); }
             return barring;
         }
@@ -76,18 +71,18 @@ namespace Data.Repository
 
         public bool DeleteObject(int Id)
         {
-            Barring barring = (from x in Context.AbstractItems.OfType<Barring>() where x.Id == Id select x).FirstOrDefault();
+            Barring barring = (from x in Context.Items.OfType<Barring>() where x.Id == Id select x).FirstOrDefault();
             return (Delete(barring) == 1) ? true : false;
         }
 
         public Barring GetObjectBySku(string Sku)
         {
-            return (from x in Context.AbstractItems.OfType<Barring>() where x.Sku == Sku && !x.IsDeleted select x).FirstOrDefault();
+            return (from x in Context.Items.OfType<Barring>() where x.Sku == Sku && !x.IsDeleted select x).FirstOrDefault();
         }
 
         public bool IsSkuDuplicated(Barring barring)
         {
-            IQueryable<Barring> items = (from x in Context.AbstractItems.OfType<Barring>() where x.Sku == barring.Sku && !x.IsDeleted && x.Id != barring.Id select x);
+            IQueryable<Barring> items = (from x in Context.Items.OfType<Barring>() where x.Sku == barring.Sku && !x.IsDeleted && x.Id != barring.Id select x);
             return (items.Count() > 0 ? true : false);
         }
     }

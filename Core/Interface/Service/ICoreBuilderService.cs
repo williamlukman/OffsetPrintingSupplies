@@ -16,12 +16,14 @@ namespace Core.Interface.Service
         CoreBuilder GetObjectById(int Id);
         Item GetUsedCore(int id);
         Item GetNewCore(int id);
-        CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
+        CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService,
+                                 IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
         CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category,
-                                 IItemService _itemService, IItemTypeService _itemTypeService);
+                                 IItemService _itemService, IItemTypeService _itemTypeService,
+                                 IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
         CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService);
         CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
         bool IsBaseSkuDuplicated(CoreBuilder coreBuilder);
     }

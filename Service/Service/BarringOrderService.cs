@@ -67,9 +67,10 @@ namespace Service.Service
             return barringOrder;
         }
 
-        public BarringOrder ConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService)
+        public BarringOrder ConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService,
+                                          IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService))
+            if (_validator.ValidConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService))
             {
                 IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
                 // itemId contains Id of the blanket, leftbar, and rightbar
@@ -104,8 +105,8 @@ namespace Service.Service
 
                 foreach (var ValuePair in ValuePairItemIdQuantity)
                 {
-                    Item item = _itemService.GetObjectById(ValuePair.Key);
-                    _itemService.AdjustQuantity(item, ValuePair.Value);
+                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
+                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
                 } 
                 _repository.ConfirmObject(barringOrder);
             }
@@ -150,7 +151,8 @@ namespace Service.Service
                 foreach (var ValuePair in ValuePairItemIdQuantity)
                 {
                     Item item = _itemService.GetObjectById(ValuePair.Key);
-                    _itemService.AdjustQuantity(item, ValuePair.Value);
+                    // TODO
+                    // _itemService.AdjustQuantity(item, ValuePair.Value);
                 }
                 _repository.UnconfirmObject(barringOrder);
             }
@@ -201,7 +203,8 @@ namespace Service.Service
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
                     Barring barring = _barringService.GetObjectById(ValuePairPackaged.Key);
-                    _barringService.AdjustQuantity(barring, ValuePairPackaged.Value);
+                    // TODO
+                    // _barringService.AdjustQuantity(barring, ValuePairPackaged.Value, barringOrder.WarehouseId);
                 }
                 barringOrder.QuantityRejected = QuantityRejected;
                 barringOrder.QuantityFinal = QuantityFinal;
@@ -250,7 +253,8 @@ namespace Service.Service
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
                     Barring barring = _barringService.GetObjectById(ValuePairPackaged.Key);
-                    _barringService.AdjustQuantity(barring, ValuePairPackaged.Value);
+                    // TODO
+                    // _barringService.AdjustQuantity(barring, ValuePairPackaged.Value, barringOrder.WarehouseId);
                 }
                 barringOrder.QuantityRejected = 0;
                 barringOrder.QuantityFinal = 0;

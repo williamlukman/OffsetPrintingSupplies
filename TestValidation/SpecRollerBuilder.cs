@@ -92,8 +92,8 @@ namespace TestValidation
                 d.rollerBuilder = new RollerBuilder()
                 {
                     BaseSku = "RB0001",
-                    SkuNewRoller = "RB0001N",
-                    SkuUsedRoller = "RB0001U",
+                    SkuRollerNewCore = "RB0001N",
+                    SkuRollerUsedCore = "RB0001U",
                     Name = "Roller 0001",
                     Category = "0001",
                     RD = 12,
@@ -134,7 +134,7 @@ namespace TestValidation
 
             it["delete_rollerbuilder"] = () =>
             {
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._coreBuilderService);
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService);
                 d.rollerBuilder.Errors.Count().should_be(0);
             };
 
@@ -168,7 +168,7 @@ namespace TestValidation
                 recoveryOrderDetail = d._recoveryOrderDetailService.CreateObject(recoveryOrderDetail, d._recoveryOrderService, d._coreIdentificationDetailService, d._rollerBuilderService);
                 recoveryOrderDetail.Errors.Count().should_be(0);
 
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._coreBuilderService);
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService);
                 d.rollerBuilder.Errors.Count().should_not_be(0);
             };
         }

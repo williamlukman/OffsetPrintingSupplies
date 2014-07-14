@@ -62,20 +62,16 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VQuantity(Barring barring)
+        public Barring VQuantityMustBeZero(Barring barring, IWarehouseItemService _warehouseItemService)
         {
-            if (barring.Quantity < 0)
+            IList<WarehouseItem> warehouseItems = _warehouseItemService.GetObjectsByItemId(barring.Id);
+            foreach (var warehouseitem in warehouseItems)
             {
-                barring.Errors.Add("Quantity", "Tidak boleh negatif");
-            }
-            return barring;
-        }
-
-        public Barring VQuantityMustBeZero(Barring barring)
-        {
-            if (barring.Quantity != 0)
-            {
-                barring.Errors.Add("Quantity", "Harus 0");
+                if (warehouseitem.Quantity > 0)
+                {
+                    barring.Errors.Add("Generic", "Quantity di setiap warehouse harus 0");
+                    return barring;
+                }
             }
             return barring;
         }
@@ -155,8 +151,6 @@ namespace Validation.Validation
             if (!isValid(barring)) { return barring; }
             VHasUoM(barring);
             if (!isValid(barring)) { return barring; }
-            VQuantity(barring);
-            if (!isValid(barring)) { return barring; }
 
             // Bar Validation
             VHasBlanket(barring, _itemService);
@@ -175,15 +169,9 @@ namespace Validation.Validation
             return VCreateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
         }
 
-        public Barring VDeleteObject(Barring barring)
+        public Barring VDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)
         {
-            VQuantityMustBeZero(barring);
-            return barring;
-        }
-
-        public Barring VAdjustQuantity(Barring barring)
-        {
-            VQuantity(barring);
+            VQuantityMustBeZero(barring, _warehouseItemService);
             return barring;
         }
 
@@ -226,17 +214,10 @@ namespace Validation.Validation
             return isValid(barring);
         }
 
-        public bool ValidDeleteObject(Barring barring)
+        public bool ValidDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)
         {
             barring.Errors.Clear();
-            VDeleteObject(barring);
-            return isValid(barring);
-        }
-
-        public bool ValidAdjustQuantity(Barring barring)
-        {
-            barring.Errors.Clear();
-            VAdjustQuantity(barring);
+            VDeleteObject(barring, _warehouseItemService);
             return isValid(barring);
         }
 

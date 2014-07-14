@@ -57,15 +57,27 @@ namespace Service.Service
             return _repository.GetObjectBySku(Sku);
         }
 
-        public int GetQuantityById(int Id)
-        {
-            return _repository.GetQuantityById(Id);
-        }
-
-        public Item CreateObject(Item item, IItemTypeService _itemTypeService)
+        public Item CreateObject(Item item, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             item.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(item, this, _itemTypeService) ? _repository.CreateObject(item) : item);
+            if (_validator.ValidCreateObject(item, this, _itemTypeService))
+            {
+                item = _repository.CreateObject(item);
+                IList<Warehouse> allWarehouses = _warehouseService.GetAll();
+                foreach (var warehouse in allWarehouses)
+                {
+                    WarehouseItem warehouseItem = new WarehouseItem()
+                    {
+                        WarehouseId = warehouse.Id,
+                        ItemId = item.Id,
+                        Quantity = 0,
+                        Warehouse = warehouse,
+                        Item = item
+                    };
+                    _warehouseItemService.GetRepository().CreateObject(warehouseItem);
+                }
+            }
+            return item;
         }
 
         public Item UpdateObject(Item item, IItemTypeService _itemTypeService)
@@ -73,16 +85,35 @@ namespace Service.Service
             return (item = _validator.ValidUpdateObject(item, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item SoftDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                     IRollerBuilderService _rollerBuilderService)
+        public Item SoftDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                     IBarringService _barringService)
         {
-            return (item = _validator.ValidDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService) ? _repository.SoftDeleteObject(item) : item);
-        }
-
-        public Item AdjustQuantity(Item item, int quantity)
-        {
-            item.Quantity += quantity;
-            return (item = _validator.ValidAdjustQuantity(item) ? _repository.UpdateObject(item) : item);  
+            if (item.GetType() == typeof(Barring))
+            {
+                _barringService.SoftDeleteObject((Barring)item, _warehouseItemService);
+            }
+            else
+            {
+                if (_validator.ValidDeleteObject(item, _recoveryAccessoryDetailService, _itemTypeService, _warehouseItemService))
+                {
+                    IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
+                    foreach (var warehouseitem in allwarehouseitems)
+                    {
+                        IWarehouseItemValidator warehouseItemValidator = _warehouseItemService.GetValidator();
+                        if (!warehouseItemValidator.ValidDeleteObject(warehouseitem))
+                        {
+                            item.Errors.Add("Generic", "Tidak bisa menghapus item yang berhubungan dengan warehouse");
+                            return item;
+                        }
+                    }
+                    foreach (var warehouseitem in allwarehouseitems)
+                    {
+                        _warehouseItemService.SoftDeleteObject(warehouseitem);
+                    }
+                    _repository.SoftDeleteObject(item);
+                }
+            }
+            return item;
         }
 
         public bool DeleteObject(int Id)

@@ -242,10 +242,10 @@ namespace TestValidation
 
                     it["validates_confirm_accessory"] = () =>
                     {
-                        int itemquantitybefore = d._itemService.GetQuantityById(d.itemAccessory1.Id);
+                        int itemquantitybefore = d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity;
                         d._recoveryAccessoryDetailService.ConfirmObject(d.accessory1, d._recoveryOrderService, d._recoveryOrderDetailService, d._itemService);
                         d.accessory1.Errors.Count().should_be(0);
-                        itemquantitybefore.should_be(d._itemService.GetQuantityById(d.itemAccessory1.Id) + 1);
+                        itemquantitybefore.should_be(d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity + 1);
                     };
 
                     it["validates_finishrecoveryorder"] = () =>

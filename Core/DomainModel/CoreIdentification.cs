@@ -10,6 +10,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public int WarehouseId { get; set; }
 
         public Nullable<int> CustomerId { get; set; }
         public bool IsInHouse { get; set; }
@@ -17,6 +18,13 @@ namespace Core.DomainModel
         public DateTime IdentifiedDate { get; set; }
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
+
+        public bool IsCompleted { get; set; }
+        public bool IsJobScheduled { get; set; }
+        public bool IsFinished { get; set; }
+        public Nullable<DateTime> LastFinishDate { get; set; }
+        public bool IsDelivered { get; set; }
+        public Nullable<DateTime> LastDeliveryDate { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

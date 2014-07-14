@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\OffsetPrintingSuppliesEntities.cs" />
-    <Compile Include="Mapping\AbstractItemMapping.cs" />
+    <Compile Include="Mapping\ItemMapping.cs" />
     <Compile Include="Mapping\BarringMapping.cs" />
     <Compile Include="Mapping\BarringOrderDetailMapping.cs" />
     <Compile Include="Mapping\BarringOrderMapping.cs" />
@@ -58,13 +58,15 @@
     <Compile Include="Mapping\RollerTypeMapping.cs" />
     <Compile Include="Mapping\CoreBuilderMapping.cs" />
     <Compile Include="Mapping\CustomerMapping.cs" />
-    <Compile Include="Mapping\ItemMapping.cs" />
     <Compile Include="Mapping\ItemTypeMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\AbstractItemRepository.cs" />
     <Compile Include="Repository\BarringOrderDetailRepository.cs" />
     <Compile Include="Repository\BarringOrderRepository.cs" />
     <Compile Include="Repository\BarringRepository.cs" />
+    <Compile Include="Repository\WarehouseMutationOrderDetailRepository.cs" />
+    <Compile Include="Repository\WarehouseMutationOrderRepository.cs" />
+    <Compile Include="Repository\WarehouseItemRepository.cs" />
+    <Compile Include="Repository\WarehouseRepository.cs" />
     <Compile Include="Repository\CoreBuilderRepository.cs" />
     <Compile Include="Repository\CoreIdentificationRepository.cs" />
     <Compile Include="Repository\CoreIdentificationDetailRepository.cs" />

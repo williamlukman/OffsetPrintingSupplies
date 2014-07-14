@@ -90,7 +90,7 @@ namespace TestValidation
 
             it["delete_item"] = () =>
             {
-                d.item = d._itemService.SoftDeleteObject(d.item, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._rollerBuilderService);
+                d.item = d._itemService.SoftDeleteObject(d.item, d._recoveryAccessoryDetailService, d._itemTypeService);
                 d.item.Errors.Count().should_be(0);
             };
 
@@ -155,15 +155,15 @@ namespace TestValidation
                     WL = 13,
                     TL = 13,
                     BaseSku = "RB0001",
-                    SkuUsedRoller = "RB0001U",
-                    SkuNewRoller = "RB0001N",
+                    SkuRollerUsedCore = "RB0001U",
+                    SkuRollerNewCore = "RB0001N",
                     Name = "Roller Builder",
                     Category = "RB",
                     CompoundId = compound.Id
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService);
 
-                compound = d._itemService.SoftDeleteObject(compound, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._rollerBuilderService);
+                compound = d._itemService.SoftDeleteObject(compound, d._recoveryAccessoryDetailService, d._itemTypeService);
                 compound.Errors.Count().should_not_be(0);
             };
         }

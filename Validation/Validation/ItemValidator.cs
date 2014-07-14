@@ -63,20 +63,16 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VQuantity(Item item)
+        public Item VQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService)
         {
-            if (item.Quantity < 0)
+            IList<WarehouseItem> warehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
+            foreach (var warehouseitem in warehouseitems)
             {
-                item.Errors.Add("Quantity", "Tidak boleh negatif");
-            }
-            return item;
-        }
-
-        public Item VQuantityMustBeZero(Item item)
-        {
-            if (item.Quantity != 0)
-            {
-                item.Errors.Add("Quantity", "Harus 0");
+                if (warehouseitem.Quantity > 0)
+                {
+                    item.Errors.Add("Generic", "quantity di semua warehouse harus 0");
+                    return item;
+                }
             }
             return item;
         }
@@ -101,6 +97,17 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VIsNotCoreNorRoller(Item item, IItemTypeService _itemTypeService)
+        {
+            ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+            if (itemType.Name == Core.Constants.Constant.ItemTypeCase.Core ||
+                itemType.Name == Core.Constants.Constant.ItemTypeCase.Roller)
+            {
+                item.Errors.Add("Generic", "Tidak boleh menghapus Core atau Roller dari class Item");
+            }
+            return item;
+        }
+
         public Item VCreateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             VHasItemType(item, _itemTypeService);
@@ -110,10 +117,6 @@ namespace Validation.Validation
             VHasName(item);
             if (!isValid(item)) { return item; }
             VHasCategory(item);
-            if (!isValid(item)) { return item; }
-            VHasUoM(item);
-            if (!isValid(item)) { return item; }
-            VQuantity(item);
             return item;
         }
 
@@ -122,18 +125,19 @@ namespace Validation.Validation
             return VCreateObject(item, _itemService, _itemTypeService);
         }
 
-        public Item VDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                  IRollerBuilderService _rollerBuilderService)
+        public Item VDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService)
         {
-            VIsInRecoveryAccessoryDetail(item, _recoveryAccessoryDetailService);
-            if (!isValid(item)) { return item; }
-            VQuantityMustBeZero(item);
+            VQuantityMustBeZero(item, _warehouseItemService);
             return item;
         }
 
-        public Item VAdjustQuantity(Item item)
+        public Item VDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
-            VQuantity(item);
+            VIsNotCoreNorRoller(item, _itemTypeService);
+            if (!isValid(item)) { return item; }
+            VIsInRecoveryAccessoryDetail(item, _recoveryAccessoryDetailService);
+            if (!isValid(item)) { return item; }
+            VQuantityMustBeZero(item, _warehouseItemService);
             return item;
         }
 
@@ -150,20 +154,20 @@ namespace Validation.Validation
             return isValid(item);
         }
 
-        public bool ValidDeleteObject(Item item, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                      IRollerBuilderService _rollerBuilderService)
+        public bool ValidDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
             item.Errors.Clear();
-            VDeleteObject(item, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService);
+            VDeleteObject(item, _recoveryAccessoryDetailService, _itemTypeService, _warehouseItemService);
             return isValid(item);
         }
 
-        public bool ValidAdjustQuantity(Item item)
+        public bool ValidDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService)
         {
             item.Errors.Clear();
-            VAdjustQuantity(item);
+            VDeleteCoreOrRoller(item, _warehouseItemService);
             return isValid(item);
         }
+
         public bool isValid(Item obj)
         {
             bool isValid = !obj.Errors.Any();

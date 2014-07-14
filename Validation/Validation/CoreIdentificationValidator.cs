@@ -108,7 +108,7 @@ namespace Validation.Validation
 
         // Hanya untuk InHouse Production
         public CoreIdentification VQuantityIsInStock(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                     ICoreBuilderService _coreBuilderService)
+                                                     ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             if (!coreIdentification.IsInHouse) { return coreIdentification; }
 
@@ -120,13 +120,14 @@ namespace Validation.Validation
                 CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(detail.CoreBuilderId);
                 Item item = (detail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
-                if (temporaryItemQuantity.ContainsKey(item.Id))
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
+                if (temporaryItemQuantity.ContainsKey(warehouseItem.Id))
                 {
-                    temporaryItemQuantity[item.Id] -= 1;
+                    temporaryItemQuantity[warehouseItem.Id] -= 1;
                 }
                 else
                 {
-                    temporaryItemQuantity.Add(item.Id, item.Quantity - 1);
+                    temporaryItemQuantity.Add(warehouseItem.Id, warehouseItem.Quantity - 1);
                 }
             }
 
@@ -168,7 +169,7 @@ namespace Validation.Validation
         }
 
         public CoreIdentification VConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                 ICoreBuilderService _coreBuilderService)
+                                                 ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             VHasCoreIdentificationDetails(coreIdentification, _coreIdentificationDetailService);
             if (!isValid(coreIdentification)) { return coreIdentification; }
@@ -176,7 +177,7 @@ namespace Validation.Validation
             if (!isValid(coreIdentification)) { return coreIdentification; }
             VHasNotBeenConfirmed(coreIdentification);
             if (!isValid(coreIdentification)) { return coreIdentification; }
-            VQuantityIsInStock(coreIdentification, _coreIdentificationDetailService, _coreBuilderService);
+            VQuantityIsInStock(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService);
             return coreIdentification;
         }
 
@@ -208,10 +209,10 @@ namespace Validation.Validation
             return isValid(coreIdentification);
         }
 
-        public bool ValidConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService)
+        public bool ValidConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             coreIdentification.Errors.Clear();
-            VConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService);
+            VConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService);
             return isValid(coreIdentification);
         }
 

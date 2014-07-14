@@ -50,7 +50,8 @@ namespace Service.Service
             return _repository.GetNewCore(Id);
         }
 
-        public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category, IItemService _itemService, IItemTypeService _itemTypeService)
+        public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category, IItemService _itemService, IItemTypeService _itemTypeService,
+                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             CoreBuilder coreBuilder = new CoreBuilder
             {
@@ -60,10 +61,11 @@ namespace Service.Service
                 Name = Name,
                 Category = Category
             };
-            return this.CreateObject(coreBuilder, _itemService, _itemTypeService);
+            return this.CreateObject(coreBuilder, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
         }
 
-        public CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService)
+        public CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService,
+                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             coreBuilder.Errors = new Dictionary<String, String>();
             Item UsedCore = new Item()
@@ -71,7 +73,6 @@ namespace Service.Service
                 Name = coreBuilder.Name,
                 Category = coreBuilder.Category,
                 UoM = "pcs",
-                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
                 Sku = coreBuilder.SkuUsedCore
             };
@@ -82,7 +83,6 @@ namespace Service.Service
                 Name = coreBuilder.Name,
                 Category = coreBuilder.Category,
                 UoM = "pcs",
-                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
                 Sku = coreBuilder.SkuNewCore
             };
@@ -93,9 +93,9 @@ namespace Service.Service
             {
                 if (_validator.ValidCreateObject(coreBuilder, this, _itemService))
                 {
-                    UsedCore = _itemService.GetRepository().CreateObject(UsedCore);
+                    UsedCore = _itemService.CreateObject(UsedCore, _itemTypeService, _warehouseItemService, _warehouseService);
                     UsedCore.Id = UsedCore.Id;
-                    NewCore = _itemService.GetRepository().CreateObject(NewCore);
+                    NewCore = _itemService.CreateObject(NewCore, _itemTypeService, _warehouseItemService, _warehouseService);
                     NewCore.Id = NewCore.Id;
                     coreBuilder.UsedCoreItemId = UsedCore.Id;
                     coreBuilder.NewCoreItemId = NewCore.Id;
@@ -136,13 +136,13 @@ namespace Service.Service
         }
 
         public CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             Item NewCore = _itemService.GetObjectById(coreBuilder.NewCoreItemId);
 
-            if (_itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService) &&
-                _itemService.GetValidator().ValidDeleteObject(UsedCore, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _rollerBuilderService))
+            if (_itemService.GetValidator().ValidDeleteCoreOrRoller(UsedCore, _warehouseItemService) &&
+                _itemService.GetValidator().ValidDeleteCoreOrRoller(UsedCore, _warehouseItemService))
             {
                 if (_validator.ValidDeleteObject(coreBuilder, _coreIdentificationDetailService, _rollerBuilderService))
                 {

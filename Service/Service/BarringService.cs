@@ -60,33 +60,42 @@ namespace Service.Service
             return _repository.GetObjectBySku(Sku);
         }
 
-        public int GetQuantityById(int Id)
-        {
-            return _repository.GetQuantityById(Id);
-        }
-
         public Barring CreateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService)
+                                    ICustomerService _customerService, IMachineService _machineService,
+                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             barring.Errors = new Dictionary<String, String>();
             return (_validator.ValidCreateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService) ? _repository.CreateObject(barring) : barring);
         }
 
         public Barring UpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService)
+                                    ICustomerService _customerService, IMachineService _machineService,
+                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {        
             return (barring = _validator.ValidUpdateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService) ? _repository.UpdateObject(barring) : barring);
         }
 
-        public Barring SoftDeleteObject(Barring barring)
+        public Barring SoftDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)
         {
-            return (barring = _validator.ValidDeleteObject(barring) ? _repository.SoftDeleteObject(barring) : barring);
-        }
-
-        public Barring AdjustQuantity(Barring barring, int quantity)
-        {
-            barring.Quantity += quantity;
-            return (barring = _validator.ValidAdjustQuantity(barring) ? _repository.UpdateObject(barring) : barring);  
+            if (_validator.ValidDeleteObject(barring, _warehouseItemService))
+            {
+                IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(barring.Id);
+                foreach (var warehouseitem in allwarehouseitems)
+                {
+                    IWarehouseItemValidator warehouseItemValidator = _warehouseItemService.GetValidator();
+                    if (!warehouseItemValidator.ValidDeleteObject(warehouseitem))
+                    {
+                        barring.Errors.Add("Generic", "Tidak bisa menghapus item yang berhubungan dengan warehouse");
+                        return barring;
+                    }
+                }
+                foreach (var warehouseitem in allwarehouseitems)
+                {
+                    _warehouseItemService.SoftDeleteObject(warehouseitem);
+                }
+                _repository.SoftDeleteObject(barring);
+            }
+            return barring;
         }
 
         public bool DeleteObject(int Id)

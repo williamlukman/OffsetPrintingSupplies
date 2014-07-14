@@ -18,15 +18,16 @@ namespace Core.Interface.Service
         IList<RollerBuilder> GetObjectsByMachineId(int machineId);
         IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId);
         RollerBuilder GetObjectById(int Id);
-        Item GetUsedRoller(int id);
-        Item GetNewRoller(int id);
+        Item GetRollerUsedCore(int id);
+        Item GetRollerNewCore(int id);
         RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IItemService _itemService,
-                                   IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
+                                   IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
+                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
         RollerBuilder UpdateNameAndCategory(RollerBuilder rollerBuilder, IMachineService _machineService, IItemService _itemService,
                                    IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
         RollerBuilder UpdateMeasurement(RollerBuilder rollerBuilder);
         RollerBuilder SoftDeleteObject(RollerBuilder rollerBuilder, IItemService _itemService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                       IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService);
+                                        ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
         bool IsBaseSkuDuplicated(RollerBuilder rollerBuilder);
     }

@@ -69,7 +69,7 @@ namespace Service.Service
         {
             CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
             Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
-                          _rollerBuilderService.GetNewRoller(recoveryOrderDetail.RollerBuilderId) : _rollerBuilderService.GetUsedRoller(recoveryOrderDetail.RollerBuilderId);
+                          _rollerBuilderService.GetRollerNewCore(recoveryOrderDetail.RollerBuilderId) : _rollerBuilderService.GetRollerUsedCore(recoveryOrderDetail.RollerBuilderId);
             return roller;
         }
 

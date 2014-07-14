@@ -83,28 +83,34 @@ namespace Service.Service
         }
 
         public RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                     IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
+                                                     IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService))
+            if (_validator.ValidConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService))
             {
                 RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
+                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 _recoveryOrderDetailService.AddAccessory(recoveryOrderDetail, this);
                 Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
-                _itemService.AdjustQuantity(item, -1);
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
+                _warehouseItemService.AdjustQuantity(warehouseItem, -1);
+                //_itemService.AdjustQuantity(item, -1);
                 _repository.ConfirmObject(recoveryAccessoryDetail);
             }
             return recoveryAccessoryDetail;
         }
 
         public RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                       IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService)
+                                                       IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService))
             {
                 RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
+                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 _recoveryOrderDetailService.RemoveAccessory(recoveryOrderDetail, this);
                 Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
-                _itemService.AdjustQuantity(item, 1);
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
+                _warehouseItemService.AdjustQuantity(warehouseItem, 1);
+                // _itemService.AdjustQuantity(item, 1);
                 _repository.UnconfirmObject(recoveryAccessoryDetail);
             }
             return recoveryAccessoryDetail;

@@ -246,8 +246,8 @@ namespace TestValidation
             rollerBuilder = new RollerBuilder()
             {
                 BaseSku = "RBX",
-                SkuNewRoller = "RBXN",
-                SkuUsedRoller = "RBXU",
+                SkuRollerNewCore = "RBXN",
+                SkuRollerUsedCore = "RBXU",
                 RD = 12,
                 CD = 12,
                 TL = 12,
@@ -266,8 +266,8 @@ namespace TestValidation
             rollerBuilder1 = new RollerBuilder()
             {
                 BaseSku = "RBA001",
-                SkuNewRoller = "RBA001N",
-                SkuUsedRoller = "RBA001U",
+                SkuRollerNewCore = "RBA001N",
+                SkuRollerUsedCore = "RBA001U",
                 RD = 11,
                 CD = 11,
                 TL = 11,
@@ -286,8 +286,8 @@ namespace TestValidation
             rollerBuilder2 = new RollerBuilder()
             {
                 BaseSku = "RBA002",
-                SkuNewRoller = "RBA002N",
-                SkuUsedRoller = "RBA002U",
+                SkuRollerNewCore = "RBA002N",
+                SkuRollerUsedCore = "RBA002U",
                 RD = 13,
                 CD = 13,
                 TL = 13,
@@ -306,8 +306,8 @@ namespace TestValidation
             rollerBuilder3 = new RollerBuilder()
             {
                 BaseSku = "RBA003",
-                SkuNewRoller = "RBA003N",
-                SkuUsedRoller = "RBA003U",
+                SkuRollerNewCore = "RBA003N",
+                SkuRollerUsedCore = "RBA003U",
                 RD = 13,
                 CD = 13,
                 TL = 13,
@@ -326,8 +326,8 @@ namespace TestValidation
             rollerBuilder4 = new RollerBuilder()
             {
                 BaseSku = "RBA004",
-                SkuNewRoller = "RBA004N",
-                SkuUsedRoller = "RBA004U",
+                SkuRollerNewCore = "RBA004N",
+                SkuRollerUsedCore = "RBA004U",
                 RD = 14,
                 CD = 14,
                 TL = 14,
@@ -355,17 +355,17 @@ namespace TestValidation
             _itemService.AdjustQuantity(_coreBuilderService.GetUsedCore(coreBuilder3.Id), 5);
             _itemService.AdjustQuantity(_coreBuilderService.GetUsedCore(coreBuilder4.Id), 5);
 
-            _itemService.AdjustQuantity(_rollerBuilderService.GetNewRoller(rollerBuilder.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetNewRoller(rollerBuilder1.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetNewRoller(rollerBuilder2.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetNewRoller(rollerBuilder3.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetNewRoller(rollerBuilder4.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerNewCore(rollerBuilder.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerNewCore(rollerBuilder1.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerNewCore(rollerBuilder2.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerNewCore(rollerBuilder3.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerNewCore(rollerBuilder4.Id), 5);
 
-            _itemService.AdjustQuantity(_rollerBuilderService.GetUsedRoller(rollerBuilder.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetUsedRoller(rollerBuilder1.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetUsedRoller(rollerBuilder2.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetUsedRoller(rollerBuilder3.Id), 5);
-            _itemService.AdjustQuantity(_rollerBuilderService.GetUsedRoller(rollerBuilder4.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerUsedCore(rollerBuilder1.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerUsedCore(rollerBuilder2.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerUsedCore(rollerBuilder3.Id), 5);
+            _itemService.AdjustQuantity(_rollerBuilderService.GetRollerUsedCore(rollerBuilder4.Id), 5);
         }
 
         public void PopulateCoreIdentifications()

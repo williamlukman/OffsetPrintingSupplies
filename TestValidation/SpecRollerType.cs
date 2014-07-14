@@ -140,8 +140,8 @@ namespace TestValidation
                     d.rollerBuilder = new RollerBuilder()
                     {
                         BaseSku = "RB0001",
-                        SkuNewRoller = "RB0001N",
-                        SkuUsedRoller = "RB0001U",
+                        SkuRollerNewCore = "RB0001N",
+                        SkuRollerUsedCore = "RB0001U",
                         Name = "Roller 0001",
                         Category = "0001",
                         RD = 12,

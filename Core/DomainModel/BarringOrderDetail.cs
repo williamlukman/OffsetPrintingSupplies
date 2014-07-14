@@ -12,6 +12,8 @@ namespace Core.DomainModel
         public int BarringOrderId { get; set; }
         public int BarringId { get; set; }
 
+        // TODO
+        // public bool IsBarRequired { get; set; }
         public bool HasLeftBar { get; set; }
         public bool HasRightBar { get; set; }
         public bool IsCut { get; set; }

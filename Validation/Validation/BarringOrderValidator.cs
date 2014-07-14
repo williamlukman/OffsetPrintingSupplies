@@ -55,9 +55,10 @@ namespace Validation.Validation
         }
 
         public BarringOrder VQuantityIsInStock(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService,
-                                               IItemService _itemService)
+                                               IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
+
             // itemId contains Id of the blanket, leftbar, and rightbar
             IDictionary<int, int> ValuePairItemIdQuantity = new Dictionary<int, int>();
             foreach (var detail in details)
@@ -102,8 +103,8 @@ namespace Validation.Validation
 
             foreach (var ValuePair in ValuePairItemIdQuantity)
             {
-                Item item = _itemService.GetObjectById(ValuePair.Key);
-                if (item.Quantity < ValuePair.Value)
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
+                if (warehouseItem.Quantity < ValuePair.Value)
                 {
                     barringOrder.Errors.Add("Generic", "Stock quantity BoM untuk barring tidak boleh kurang dari jumlah di dalam barring order");
                     return barringOrder;
@@ -228,7 +229,7 @@ namespace Validation.Validation
             return barringOrder;
         }
 
-        public BarringOrder VConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService)
+        public BarringOrder VConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasNotBeenConfirmed(barringOrder);
             if (!isValid(barringOrder)) { return barringOrder; }
@@ -236,7 +237,7 @@ namespace Validation.Validation
             if (!isValid(barringOrder)) { return barringOrder; }
             VQuantityOrderedEqualDetails(barringOrder, _barringOrderDetailService);
             if (!isValid(barringOrder)) { return barringOrder; }
-            VQuantityIsInStock(barringOrder, _barringOrderDetailService, _barringService, _itemService);
+            VQuantityIsInStock(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService);
             return barringOrder;
         }
 
@@ -289,10 +290,10 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService,
-                                       IBarringService _barringService, IItemService _itemService)
+                                       IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             barringOrder.Errors.Clear();
-            VConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService);
+            VConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService);
             return isValid(barringOrder);
         }
 

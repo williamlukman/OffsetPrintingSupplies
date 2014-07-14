@@ -13,7 +13,6 @@ namespace Core.Interface.Repository
         IList<Barring> GetObjectsByItemTypeId(int ItemTypeId);
         IList<Barring> GetObjectsByMachineId(int machineId);
         IList<Barring> GetObjectsByCustomerId(int customerId);
-        int GetQuantityById(int Id);
         Barring GetObjectById(int Id);
         Barring GetObjectBySku(string Sku);
         Barring CreateObject(Barring barring);
