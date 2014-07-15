@@ -26,6 +26,9 @@ namespace Core.DomainModel
         public bool IsPackaged { get; set; }
         public bool IsRejected { get; set; }
 
+        public bool IsFinished { get; set; }
+        public Nullable<DateTime> FinishDate { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }

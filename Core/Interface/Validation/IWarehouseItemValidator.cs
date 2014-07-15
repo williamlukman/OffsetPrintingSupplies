@@ -14,8 +14,8 @@ namespace Core.Interface.Validation
         WarehouseItem VHasWarehouse(WarehouseItem warehouseItem, IWarehouseService _warehouseService);
         WarehouseItem VNonNegativeQuantity(WarehouseItem warehouseItem);
         WarehouseItem VQuantityMustBeZero(WarehouseItem warehouseItem);
-        WarehouseItem VCreateObject(WarehouseItem warehouseItem);
-        WarehouseItem VUpdateObject(WarehouseItem warehouseItem);
+        WarehouseItem VCreateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
+        WarehouseItem VUpdateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         WarehouseItem VDeleteObject(WarehouseItem warehouseItem);
         WarehouseItem VAdjustQuantity(WarehouseItem warehouseItem);
         bool ValidCreateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);

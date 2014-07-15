@@ -43,6 +43,8 @@
     <Compile Include="Validation\BarringOrderDetailValidator.cs" />
     <Compile Include="Validation\BarringOrderValidator.cs" />
     <Compile Include="Validation\BarringValidator.cs" />
+    <Compile Include="Validation\WarehouseItemValidator.cs" />
+    <Compile Include="Validation\WarehouseValidator.cs" />
     <Compile Include="Validation\RecoveryAccessoryDetailValidator.cs" />
     <Compile Include="Validation\RecoveryOrderDetailValidator.cs" />
     <Compile Include="Validation\RecoveryOrderValidator.cs" />

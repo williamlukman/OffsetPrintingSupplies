@@ -40,6 +40,11 @@ namespace Service.Service
             return _repository.GetAllObjectsByCustomerId(CustomerId);
         }
 
+        public IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId)
+        {
+            return _repository.GetAllObjectsByWarehouseId(WarehouseId);
+        }
+
         public CoreIdentification GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

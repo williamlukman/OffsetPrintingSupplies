@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
     {
         IList<BarringOrder> GetAll();
         IList<BarringOrder> GetAllObjectsByCustomerId(int CustomerId);
+        IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId);
         BarringOrder GetObjectById(int Id);
         BarringOrder CreateObject(BarringOrder barringOrder);
         BarringOrder UpdateObject(BarringOrder barringOrder);

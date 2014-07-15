@@ -23,7 +23,7 @@ namespace Core.DomainModel
         public decimal TL { get; set; }
 
         public bool IsFinished { get; set; }
-        public bool FinishDate { get; set; }
+        public Nullable<DateTime> FinishDate { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

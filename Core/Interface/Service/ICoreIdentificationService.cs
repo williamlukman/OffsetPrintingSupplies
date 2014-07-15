@@ -14,6 +14,7 @@ namespace Core.Interface.Service
         IList<CoreIdentification> GetAll();
         IList<CoreIdentification> GetAllObjectsInHouse();
         IList<CoreIdentification> GetAllObjectsByCustomerId(int CustomerId);
+        IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId);
         CoreIdentification GetObjectById(int Id);
         CoreIdentification CreateObject(CoreIdentification coreIdentification, ICustomerService _customerService);
         CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService);

@@ -30,6 +30,11 @@ namespace Data.Repository
             return FindAll(x => x.CustomerId == CustomerId && !x.IsDeleted).ToList();
         }
 
+        public IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId)
+        {
+            return FindAll(x => x.WarehouseId == WarehouseId && !x.IsDeleted).ToList();
+        }
+
         public BarringOrder GetObjectById(int Id)
         {
             BarringOrder barringOrder = Find(x => x.Id == Id && !x.IsDeleted);
@@ -82,7 +87,7 @@ namespace Data.Repository
         public BarringOrder FinishObject(BarringOrder barringOrder)
         {
             barringOrder.IsFinished = true;
-            barringOrder.FinishedDate = DateTime.Now;
+            barringOrder.LastFinishDate = DateTime.Now;
             Update(barringOrder);
             return barringOrder;
         }
@@ -90,7 +95,6 @@ namespace Data.Repository
         public BarringOrder UnfinishObject(BarringOrder barringOrder)
         {
             barringOrder.IsFinished = false;
-            barringOrder.FinishedDate = null;
             Update(barringOrder);
             return barringOrder;
         }

@@ -18,7 +18,8 @@ namespace Core.Interface.Service
         Warehouse GetObjectByName(string Name);
         Warehouse CreateObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, IItemService _itemService);
         Warehouse UpdateObject(Warehouse warehouse);
-        Warehouse SoftDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, IWarehouseMutationOrderService _warehouseMutationOrderService);
+        Warehouse SoftDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService,
+                                   ICoreIdentificationService _coreIdentificationService, IBarringOrderService _barringOrderService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(Warehouse warehouse);
     }

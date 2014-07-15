@@ -12,6 +12,7 @@ namespace Core.Interface.Repository
         IList<CoreIdentification> GetAll();
         IList<CoreIdentification> GetAllObjectsInHouse();
         IList<CoreIdentification> GetAllObjectsByCustomerId(int CustomerId);
+        IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId);
         CoreIdentification GetObjectById(int Id);
         CoreIdentification CreateObject(CoreIdentification coreIdentification);
         CoreIdentification UpdateObject(CoreIdentification coreIdentification);

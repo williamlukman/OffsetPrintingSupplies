@@ -75,8 +75,8 @@ namespace TestValidation
             _recoveryAccessoryDetailService = new RecoveryAccessoryDetailService(new RecoveryAccessoryDetailRepository(), new RecoveryAccessoryDetailValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
-            //_warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
-            //_warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
+            _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
+            _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             //_warehouseMutationOrderService = new _warehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
             //_warehouseMutationOrderDetailService = new _warehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
 

@@ -12,9 +12,9 @@ namespace Validation.Validation
 {
     public class BarringValidator : IBarringValidator
     {
-        public Barring VHasItemType(Barring barring, IItemTypeService _barringTypeService)
+        public Barring VHasItemType(Barring barring, IItemTypeService _itemTypeService)
         {
-            ItemType itemType = _barringTypeService.GetObjectById(barring.ItemTypeId);
+            ItemType itemType = _itemTypeService.GetObjectById(barring.ItemTypeId);
             if (itemType == null)
             {
                 barring.Errors.Add("itemType", "Tidak boleh tidak ada");

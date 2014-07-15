@@ -36,6 +36,11 @@ namespace Service.Service
             return _repository.GetAllObjectsByCustomerId(CustomerId);
         }
 
+        public IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId)
+        {
+            return _repository.GetAllObjectsByWarehouseId(WarehouseId);
+        }
+
         public BarringOrder GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
