@@ -63,7 +63,16 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService)
+        public Item VNonNegativeQuantity(Item item)
+        {
+            if (item.Quantity < 0)
+            {
+                item.Errors.Add("Quantity", "Tidak boleh negatif");
+            }
+            return item;
+        }
+
+        public Item VWarehouseQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService)
         {
             IList<WarehouseItem> warehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
             foreach (var warehouseitem in warehouseitems)
@@ -127,7 +136,7 @@ namespace Validation.Validation
 
         public Item VDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService)
         {
-            VQuantityMustBeZero(item, _warehouseItemService);
+            VWarehouseQuantityMustBeZero(item, _warehouseItemService);
             return item;
         }
 
@@ -137,7 +146,13 @@ namespace Validation.Validation
             if (!isValid(item)) { return item; }
             VIsInRecoveryAccessoryDetail(item, _recoveryAccessoryDetailService);
             if (!isValid(item)) { return item; }
-            VQuantityMustBeZero(item, _warehouseItemService);
+            VWarehouseQuantityMustBeZero(item, _warehouseItemService);
+            return item;
+        }
+
+        public Item VAdjustQuantity(Item item)
+        {
+            VNonNegativeQuantity(item);
             return item;
         }
 
@@ -165,6 +180,13 @@ namespace Validation.Validation
         {
             item.Errors.Clear();
             VDeleteCoreOrRoller(item, _warehouseItemService);
+            return isValid(item);
+        }
+
+        public bool ValidAdjustQuantity(Item item)
+        {
+            item.Errors.Clear();
+            VAdjustQuantity(item);
             return isValid(item);
         }
 

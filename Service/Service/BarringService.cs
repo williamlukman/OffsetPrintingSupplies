@@ -98,6 +98,12 @@ namespace Service.Service
             return barring;
         }
 
+        public Barring AdjustQuantity(Barring barring, int quantity)
+        {
+            barring.Quantity += quantity;
+            return (barring = _validator.ValidAdjustQuantity(barring) ? _repository.UpdateObject(barring) : barring);
+        }
+
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);

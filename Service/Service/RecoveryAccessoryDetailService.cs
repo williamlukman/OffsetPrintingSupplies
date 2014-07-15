@@ -91,9 +91,9 @@ namespace Service.Service
                 RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 _recoveryOrderDetailService.AddAccessory(recoveryOrderDetail, this);
                 Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
+                _itemService.AdjustQuantity(item, -1);
                 WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
                 _warehouseItemService.AdjustQuantity(warehouseItem, -1);
-                //_itemService.AdjustQuantity(item, -1);
                 _repository.ConfirmObject(recoveryAccessoryDetail);
             }
             return recoveryAccessoryDetail;
@@ -108,9 +108,9 @@ namespace Service.Service
                 RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 _recoveryOrderDetailService.RemoveAccessory(recoveryOrderDetail, this);
                 Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
+                _itemService.AdjustQuantity(item, 1);
                 WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
                 _warehouseItemService.AdjustQuantity(warehouseItem, 1);
-                // _itemService.AdjustQuantity(item, 1);
                 _repository.UnconfirmObject(recoveryAccessoryDetail);
             }
             return recoveryAccessoryDetail;

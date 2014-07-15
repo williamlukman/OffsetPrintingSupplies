@@ -16,7 +16,6 @@ namespace TestValidation
 {
     public class DataBuilder
     {
-        public IAbstractItemService _abstractItemService;
         public IBarringService _barringService;
         public IBarringOrderService _barringOrderService;
         public IBarringOrderDetailService _barringOrderDetailService;
@@ -32,6 +31,10 @@ namespace TestValidation
         public IRecoveryOrderService _recoveryOrderService;
         public IRollerBuilderService _rollerBuilderService;
         public IRollerTypeService _rollerTypeService;
+        public IWarehouseItemService _warehouseItemService;
+        public IWarehouseService _warehouseService;
+        public IWarehouseMutationOrderService _warehouseMutationOrderService;
+        public IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService;
 
         public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
@@ -57,7 +60,6 @@ namespace TestValidation
 
         public DataBuilder()
         {
-            _abstractItemService = new AbstractItemService(new AbstractItemRepository(), new AbstractItemValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
             _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
             _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
@@ -73,6 +75,10 @@ namespace TestValidation
             _recoveryAccessoryDetailService = new RecoveryAccessoryDetailService(new RecoveryAccessoryDetailRepository(), new RecoveryAccessoryDetailValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
+            //_warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
+            //_warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
+            //_warehouseMutationOrderService = new _warehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
+            //_warehouseMutationOrderDetailService = new _warehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
@@ -122,7 +128,7 @@ namespace TestValidation
                 UoM = "Tub",
                 Quantity = 5
             };
-            itemCompound = _itemService.CreateObject(itemCompound, _itemTypeService);
+            itemCompound = _itemService.CreateObject(itemCompound, _itemTypeService, _warehouseItemService, _warehouseService);
 
             itemCompound1 = new Item()
             {
@@ -133,7 +139,7 @@ namespace TestValidation
                 UoM = "Tub",
                 Quantity = 2
             };
-            itemCompound1 = _itemService.CreateObject(itemCompound1, _itemTypeService);
+            itemCompound1 = _itemService.CreateObject(itemCompound1, _itemTypeService, _warehouseItemService, _warehouseService);
 
             itemCompound2 = new Item()
             {
@@ -144,7 +150,7 @@ namespace TestValidation
                 UoM = "Tub",
                 Quantity = 2
             };
-            itemCompound2 = _itemService.CreateObject(itemCompound2, _itemTypeService);
+            itemCompound2 = _itemService.CreateObject(itemCompound2, _itemTypeService, _warehouseItemService, _warehouseService);
 
             itemAccessory1 = new Item()
             {
@@ -155,7 +161,7 @@ namespace TestValidation
                 UoM = "Tub",
                 Quantity = 5
             };
-            itemAccessory1 = _itemService.CreateObject(itemAccessory1, _itemTypeService);
+            itemAccessory1 = _itemService.CreateObject(itemAccessory1, _itemTypeService, _warehouseItemService, _warehouseService);
 
             itemAccessory2 = new Item()
             {
@@ -166,7 +172,7 @@ namespace TestValidation
                 UoM = "Tub",
                 Quantity = 5
             };
-            itemAccessory2 = _itemService.CreateObject(itemAccessory2, _itemTypeService);
+            itemAccessory2 = _itemService.CreateObject(itemAccessory2, _itemTypeService, _warehouseItemService, _warehouseService);
         }
 
         public void PopulateSingles()
@@ -201,7 +207,7 @@ namespace TestValidation
                 Name = "Core X",
                 Category = "X"
             };
-            coreBuilder = _coreBuilderService.CreateObject(coreBuilder, _itemService, _itemTypeService);
+            coreBuilder = _coreBuilderService.CreateObject(coreBuilder, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
 
             coreBuilder1 = new CoreBuilder()
             {
@@ -211,7 +217,7 @@ namespace TestValidation
                 Name = "Core A 001",
                 Category = "A"
             };
-            coreBuilder1 = _coreBuilderService.CreateObject(coreBuilder1, _itemService, _itemTypeService);
+            coreBuilder1 = _coreBuilderService.CreateObject(coreBuilder1, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
 
             coreBuilder2 = new CoreBuilder()
             {
@@ -221,7 +227,7 @@ namespace TestValidation
                 Name = "Core A 002",
                 Category = "A"
             };
-            coreBuilder2 = _coreBuilderService.CreateObject(coreBuilder2, _itemService, _itemTypeService);
+            coreBuilder2 = _coreBuilderService.CreateObject(coreBuilder2, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
 
             coreBuilder3 = new CoreBuilder()
             {
@@ -231,7 +237,7 @@ namespace TestValidation
                 Name = "Core A 003",
                 Category = "A"
             };
-            coreBuilder3 = _coreBuilderService.CreateObject(coreBuilder3, _itemService, _itemTypeService);
+            coreBuilder3 = _coreBuilderService.CreateObject(coreBuilder3, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
 
             coreBuilder4 = new CoreBuilder()
             {
@@ -241,7 +247,7 @@ namespace TestValidation
                 Name = "Core A 004",
                 Category = "A"
             };
-            coreBuilder4 = _coreBuilderService.CreateObject(coreBuilder4, _itemService, _itemTypeService);
+            coreBuilder4 = _coreBuilderService.CreateObject(coreBuilder4, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
 
             rollerBuilder = new RollerBuilder()
             {
@@ -260,8 +266,8 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeDamp.Id
             };
-            rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService,
-                                                               _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+            rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService, _itemService, _itemTypeService,
+                                                               _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService);
 
             rollerBuilder1 = new RollerBuilder()
             {
@@ -280,8 +286,8 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeFoundDT.Id
             };
-            rollerBuilder1 = _rollerBuilderService.CreateObject(rollerBuilder1, _machineService,
-                                                               _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+            rollerBuilder1 = _rollerBuilderService.CreateObject(rollerBuilder1, _machineService, _itemService, _itemTypeService,
+                                                                _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService);
 
             rollerBuilder2 = new RollerBuilder()
             {
@@ -300,8 +306,8 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeDampFormDQ.Id
             };
-            rollerBuilder2 = _rollerBuilderService.CreateObject(rollerBuilder2, _machineService,
-                                                               _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+            rollerBuilder2 = _rollerBuilderService.CreateObject(rollerBuilder2, _machineService, _itemService, _itemTypeService,
+                                                                _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService);
 
             rollerBuilder3 = new RollerBuilder()
             {
@@ -320,8 +326,8 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeInkDistD.Id
             };
-            rollerBuilder3 = _rollerBuilderService.CreateObject(rollerBuilder3, _machineService,
-                                                               _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+            rollerBuilder3 = _rollerBuilderService.CreateObject(rollerBuilder3, _machineService, _itemService, _itemTypeService,
+                                                                _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService);
 
             rollerBuilder4 = new RollerBuilder()
             {
@@ -340,8 +346,8 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeInkDistH.Id
             };
-            rollerBuilder4 = _rollerBuilderService.CreateObject(rollerBuilder4, _machineService,
-                                                               _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService);
+            rollerBuilder4 = _rollerBuilderService.CreateObject(rollerBuilder4, _machineService, _itemService, _itemTypeService,
+                                                                _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService);
 
             _itemService.AdjustQuantity(_coreBuilderService.GetNewCore(coreBuilder.Id), 5);
             _itemService.AdjustQuantity(_coreBuilderService.GetNewCore(coreBuilder1.Id), 5);
@@ -512,9 +518,9 @@ namespace TestValidation
         
         public void PopulateRecoveryOrders()
         {
-            coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService);
-            coreIdentificationCustomer = _coreIdentificationService.ConfirmObject(coreIdentificationCustomer, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService);
-            coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService); 
+            coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
+            coreIdentificationCustomer = _coreIdentificationService.ConfirmObject(coreIdentificationCustomer, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
+            coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, _coreIdentificationDetailService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService); 
 
             recoveryOrder = new RecoveryOrder()
             {
@@ -615,24 +621,22 @@ namespace TestValidation
                 ItemTypeId = typeBar.Id,
                 Category = "bar",
                 Name = "Bar Generic",
-                Description = "This is an item",
                 UoM = "Pcs",
                 Sku = "BGEN",
                 Quantity = 5
             };
-            _itemService.CreateObject(bargeneric, _itemTypeService);
+            _itemService.CreateObject(bargeneric, _itemTypeService, _warehouseItemService, _warehouseService);
 
             barleft1 = new Item()
             {
                 ItemTypeId = typeBar.Id,
                 Category = "bar",
                 Name = "Bar Left 1",
-                Description = "This is a bar left",
                 UoM = "Pcs",
                 Sku = "BL1",
                 Quantity = 2
             };
-            _itemService.CreateObject(barleft1, _itemTypeService);
+            _itemService.CreateObject(barleft1, _itemTypeService, _warehouseItemService, _warehouseService);
 
             barleft2 = new Item()
             {
@@ -643,19 +647,18 @@ namespace TestValidation
                 Sku = "BL2",
                 Quantity = 2
             };
-            _itemService.CreateObject(barleft2, _itemTypeService);
+            _itemService.CreateObject(barleft2, _itemTypeService, _warehouseItemService, _warehouseService);
 
             barright1 = new Item()
             {
                 ItemTypeId = typeBar.Id,
                 Category = "bar",
                 Name = "Bar Right 1",
-                Description = "This is a bar right",
                 UoM = "Pcs",
                 Sku = "BR1",
                 Quantity = 2
             };
-            _itemService.CreateObject(barright1, _itemTypeService);
+            _itemService.CreateObject(barright1, _itemTypeService, _warehouseItemService, _warehouseService);
 
             barright2 = new Item()
             {
@@ -666,7 +669,7 @@ namespace TestValidation
                 Sku = "BR2",
                 Quantity = 2
             };
-            _itemService.CreateObject(barright2, _itemTypeService);
+            _itemService.CreateObject(barright2, _itemTypeService, _warehouseItemService, _warehouseService);
 
             blanket1 = new Item()
             {
@@ -677,7 +680,7 @@ namespace TestValidation
                 Sku = "BLK1",
                 Quantity = 10
             };
-            _itemService.CreateObject(blanket1, _itemTypeService);
+            _itemService.CreateObject(blanket1, _itemTypeService, _warehouseItemService, _warehouseService);
 
             blanket2 = new Item()
             {
@@ -688,7 +691,7 @@ namespace TestValidation
                 Sku = "BLK2",
                 Quantity = 4
             };
-            _itemService.CreateObject(blanket2, _itemTypeService);
+            _itemService.CreateObject(blanket2, _itemTypeService, _warehouseItemService, _warehouseService);
 
             blanket3 = new Item()
             {
@@ -699,7 +702,7 @@ namespace TestValidation
                 Sku = "BLK3",
                 Quantity = 3
             };
-            _itemService.CreateObject(blanket3, _itemTypeService);
+            _itemService.CreateObject(blanket3, _itemTypeService, _warehouseItemService, _warehouseService);
 
             barring1 = new Barring()
             {
@@ -720,7 +723,7 @@ namespace TestValidation
                 thickness = 1,
                 MachineId = machine.Id
             };
-            _barringService.CreateObject(barring1, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+            _barringService.CreateObject(barring1, _barringService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
 
             barring2 = new Barring()
             {
@@ -741,7 +744,7 @@ namespace TestValidation
                 thickness = 1,
                 MachineId = machine.Id
             };
-            _barringService.CreateObject(barring2, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+            _barringService.CreateObject(barring2, _barringService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
             
             barring3 = new Barring()
             {
@@ -762,7 +765,7 @@ namespace TestValidation
                 thickness = 1,
                 MachineId = machine.Id
             };
-            _barringService.CreateObject(barring3, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+            _barringService.CreateObject(barring3, _barringService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
 
             barringOrderCustomer = new BarringOrder()
             {

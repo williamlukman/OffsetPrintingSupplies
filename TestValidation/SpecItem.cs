@@ -34,7 +34,7 @@ namespace TestValidation
                     UoM = "Pcs",
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService);
+                d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
             }
         }
 
@@ -57,7 +57,7 @@ namespace TestValidation
                     UoM = "Pcs",
                     Quantity = 0
                 };
-                nonameitem = d._itemService.CreateObject(nonameitem, d._itemTypeService);
+                nonameitem = d._itemService.CreateObject(nonameitem, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 nonameitem.Errors.Count().should_not_be(0);
             };
 
@@ -72,7 +72,7 @@ namespace TestValidation
                     UoM = "Pcs",
                     Quantity = 0
                 };
-                sameskuitem = d._itemService.CreateObject(sameskuitem, d._itemTypeService);
+                sameskuitem = d._itemService.CreateObject(sameskuitem, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 sameskuitem.Errors.Count().should_not_be(0);
             };
 
@@ -90,7 +90,7 @@ namespace TestValidation
 
             it["delete_item"] = () =>
             {
-                d.item = d._itemService.SoftDeleteObject(d.item, d._recoveryAccessoryDetailService, d._itemTypeService);
+                d.item = d._itemService.SoftDeleteObject(d.item, d._recoveryAccessoryDetailService, d._itemTypeService, d._warehouseItemService, d._barringService);
                 d.item.Errors.Count().should_be(0);
             };
 
@@ -111,7 +111,7 @@ namespace TestValidation
                     Name = "CoreBuilder00001",
                     Category = "X"
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     Code = "CI0001",
@@ -143,7 +143,7 @@ namespace TestValidation
                     Sku = "CMP0001",
                     UoM = "Pcs"
                 };
-                compound = d._itemService.CreateObject(compound, d._itemTypeService);
+                compound = d._itemService.CreateObject(compound, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.rollerBuilder = new RollerBuilder()
                 {
                     CoreBuilderId = d.coreBuilder.Id,
@@ -161,9 +161,9 @@ namespace TestValidation
                     Category = "RB",
                     CompoundId = compound.Id
                 };
-                d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService);
+                d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService);
 
-                compound = d._itemService.SoftDeleteObject(compound, d._recoveryAccessoryDetailService, d._itemTypeService);
+                compound = d._itemService.SoftDeleteObject(compound, d._recoveryAccessoryDetailService, d._itemTypeService, d._warehouseItemService, d._barringService);
                 compound.Errors.Count().should_not_be(0);
             };
         }

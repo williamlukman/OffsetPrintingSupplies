@@ -32,6 +32,15 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
+        public BarringOrderDetail VIsBarRequiredMustBeFalse(BarringOrderDetail barringOrderDetail)
+        {
+            if (barringOrderDetail.IsBarRequired == true)
+            {
+                barringOrderDetail.Errors.Add("Generic", "Tidak bisa menambahkan bar untuk Barring Order yang tidak memerlukan bar");
+            }
+            return barringOrderDetail;
+        }
+
         public BarringOrderDetail VHasLeftBar(BarringOrderDetail barringOrderDetail)
         {
             if (!barringOrderDetail.HasLeftBar)
@@ -298,6 +307,8 @@ namespace Validation.Validation
 
         public BarringOrderDetail VAddLeftBar(BarringOrderDetail barringOrderDetail)
         {
+            VIsBarRequiredMustBeFalse(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VHasNoLeftBar(barringOrderDetail);
             return barringOrderDetail;
         }
@@ -310,6 +321,8 @@ namespace Validation.Validation
 
         public BarringOrderDetail VAddRightBar(BarringOrderDetail barringOrderDetail)
         {
+            VIsBarRequiredMustBeFalse(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VHasNoRightBar(barringOrderDetail);
             return barringOrderDetail;
         }

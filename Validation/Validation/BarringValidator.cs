@@ -62,7 +62,16 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VQuantityMustBeZero(Barring barring, IWarehouseItemService _warehouseItemService)
+        public Barring VNonNegativeQuantity(Barring barring)
+        {
+            if (barring.Quantity < 0)
+            {
+                barring.Errors.Add("Quantity", "Tidak boleh negatif");
+            }
+            return barring;
+        }
+
+        public Barring VWarehouseQuantityMustBeZero(Barring barring, IWarehouseItemService _warehouseItemService)
         {
             IList<WarehouseItem> warehouseItems = _warehouseItemService.GetObjectsByItemId(barring.Id);
             foreach (var warehouseitem in warehouseItems)
@@ -151,7 +160,9 @@ namespace Validation.Validation
             if (!isValid(barring)) { return barring; }
             VHasUoM(barring);
             if (!isValid(barring)) { return barring; }
-
+            VNonNegativeQuantity(barring);
+            if (!isValid(barring)) { return barring; }
+            
             // Bar Validation
             VHasBlanket(barring, _itemService);
             if (!isValid(barring)) { return barring; }
@@ -171,7 +182,13 @@ namespace Validation.Validation
 
         public Barring VDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)
         {
-            VQuantityMustBeZero(barring, _warehouseItemService);
+            VWarehouseQuantityMustBeZero(barring, _warehouseItemService);
+            return barring;
+        }
+
+        public Barring VAdjustQuantity(Barring barring)
+        {
+            VNonNegativeQuantity(barring);
             return barring;
         }
 
@@ -218,6 +235,13 @@ namespace Validation.Validation
         {
             barring.Errors.Clear();
             VDeleteObject(barring, _warehouseItemService);
+            return isValid(barring);
+        }
+
+        public bool ValidAdjustQuantity(Barring barring)
+        {
+            barring.Errors.Clear();
+            VAdjustQuantity(barring);
             return isValid(barring);
         }
 

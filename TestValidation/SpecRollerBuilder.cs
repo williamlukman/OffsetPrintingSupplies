@@ -35,7 +35,7 @@ namespace TestValidation
                     UoM = "Pcs",
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService);
+                d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.itemCompound = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
@@ -45,7 +45,7 @@ namespace TestValidation
                     UoM = "Pcs",
                     Quantity = 2
                 };
-                d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._itemTypeService);
+                d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._itemTypeService, d._warehouseItemService, d._warehouseService);
 
                 d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
@@ -64,7 +64,7 @@ namespace TestValidation
                     Name = "CoreBuilder00001",
                     Category = "X"
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     CustomerId = d.customer.Id,
@@ -106,7 +106,8 @@ namespace TestValidation
                     MachineId = d.machine.Id,
                     RollerTypeId = d._rollerTypeService.GetObjectByName("Damp").Id
                 };
-                d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService);
+                d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._itemService, d._itemTypeService,
+                                                                       d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService);
             }
         }
 
@@ -134,7 +135,7 @@ namespace TestValidation
 
             it["delete_rollerbuilder"] = () =>
             {
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService);
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService);
                 d.rollerBuilder.Errors.Count().should_be(0);
             };
 
@@ -144,7 +145,7 @@ namespace TestValidation
                 d._itemService.AdjustQuantity(d._coreBuilderService.GetUsedCore(d.coreBuilder.Id), 1);
 
                 d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, d._coreIdentificationDetailService, d._recoveryOrderService, d._recoveryOrderDetailService,
-                                       d._coreBuilderService, d._itemService);
+                                       d._coreBuilderService, d._itemService, d._warehouseItemService);
                 d.coreIdentification.Errors.Count().should_be(0);
 
                 RecoveryOrder recoveryOrder = new RecoveryOrder()
@@ -168,7 +169,7 @@ namespace TestValidation
                 recoveryOrderDetail = d._recoveryOrderDetailService.CreateObject(recoveryOrderDetail, d._recoveryOrderService, d._coreIdentificationDetailService, d._rollerBuilderService);
                 recoveryOrderDetail.Errors.Count().should_be(0);
 
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService);
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService);
                 d.rollerBuilder.Errors.Count().should_not_be(0);
             };
         }

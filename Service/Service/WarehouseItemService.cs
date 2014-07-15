@@ -71,6 +71,12 @@ namespace Service.Service
             return (warehouseItem = _validator.ValidDeleteObject(warehouseItem) ? _repository.SoftDeleteObject(warehouseItem) : warehouseItem);
         }
 
+        public WarehouseItem AdjustQuantity(WarehouseItem warehouseItem, int quantity)
+        {
+            warehouseItem.Quantity += quantity;
+            return (warehouseItem = _validator.ValidAdjustQuantity(warehouseItem) ? _repository.UpdateObject(warehouseItem) : warehouseItem);            
+        }
+
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);

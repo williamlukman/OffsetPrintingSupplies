@@ -15,7 +15,8 @@ namespace Core.Interface.Validation
         Barring VHasName(Barring barring);
         Barring VHasCategory(Barring barring);
         Barring VHasUoM(Barring barring);
-        Barring VQuantityMustBeZero(Barring barring, IWarehouseItemService _warehouseItemService);
+        Barring VWarehouseQuantityMustBeZero(Barring barring, IWarehouseItemService _warehouseItemService);
+        Barring VNonNegativeQuantity(Barring barring);
 
         Barring VHasBlanket(Barring barring, IItemService _itemService);
         Barring VHasCustomer(Barring barring, ICustomerService _customerService);
@@ -27,6 +28,7 @@ namespace Core.Interface.Validation
         Barring VUpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
                               ICustomerService _customerService, IMachineService _machineService);
         Barring VDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService);
+        Barring VAdjustQuantity(Barring barring);
         Barring VAddLeftBar(Barring barring, IItemService _itemService);
         Barring VRemoveLeftBar(Barring barring, IItemService _itemService);
         Barring VAddRightBar(Barring barring, IItemService _itemService);
@@ -37,6 +39,7 @@ namespace Core.Interface.Validation
         bool ValidUpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      ICustomerService _customerService, IMachineService _machineService);
         bool ValidDeleteObject(Barring barring, IWarehouseItemService _warehouseItemSerrvice);
+        bool ValidAdjustQuantity(Barring barring);
         bool ValidAddLeftBar(Barring barring, IItemService _itemService);
         bool ValidRemoveLeftBar(Barring barring, IItemService _itemService);
         bool ValidAddRightBar(Barring barring, IItemService _itemService);

@@ -109,20 +109,21 @@ namespace Service.Service
                     CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
                     Item item = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                                 _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
-                    if (ValuePairItemIdQuantity.ContainsKey(warehouseItem.Id))
+                    if (ValuePairItemIdQuantity.ContainsKey(item.Id))
                     {
-                        ValuePairItemIdQuantity[warehouseItem.Id] -= 1;
+                        ValuePairItemIdQuantity[item.Id] -= 1;
                     }
                     else
                     {
-                        ValuePairItemIdQuantity.Add(warehouseItem.Id, -1);
+                        ValuePairItemIdQuantity.Add(item.Id, -1);
                     }
                 }
 
                 foreach (var ValuePair in ValuePairItemIdQuantity)
                 {
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePair.Key);
+                    Item item = _itemService.GetObjectById(ValuePair.Key);
+                    _itemService.AdjustQuantity(item, ValuePair.Value);
+                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePair.Key);
                     _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
                 }
                 _repository.ConfirmObject(recoveryOrder);
@@ -143,20 +144,21 @@ namespace Service.Service
                     CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
                     Item item = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                                 _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
-                    if (ValuePairItemIdQuantity.ContainsKey(warehouseItem.Id))
+                    if (ValuePairItemIdQuantity.ContainsKey(item.Id))
                     {
-                        ValuePairItemIdQuantity[warehouseItem.Id] += 1;
+                        ValuePairItemIdQuantity[item.Id] += 1;
                     }
                     else
                     {
-                        ValuePairItemIdQuantity.Add(warehouseItem.Id, 1);
+                        ValuePairItemIdQuantity.Add(item.Id, 1);
                     }
                 }
 
                 foreach (var ValuePair in ValuePairItemIdQuantity)
                 {
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePair.Key);
+                    Item item = _itemService.GetObjectById(ValuePair.Key);
+                    _itemService.AdjustQuantity(item, ValuePair.Value);
+                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePair.Key);
                     _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
                 }
                 _repository.UnconfirmObject(recoveryOrder);
@@ -183,42 +185,44 @@ namespace Service.Service
                                 _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                     Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                                 _rollerBuilderService.GetRollerNewCore(rollerBuilder.Id) : _rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id);
-                    WarehouseItem warehouseCore = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, core.Id);
-                    WarehouseItem warehouseRoller = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, roller.Id);
                     QuantityRejected += detail.IsRejected ? 1 : 0;
                     QuantityFinal += (detail.IsPackaged && !detail.IsRejected) ? 1 : 0;
                     if (detail.IsRejected)
                     {
                         // Core quantity increases
-                        if (ValuePairRejectedItemIdQuantity.ContainsKey(warehouseCore.Id))
+                        if (ValuePairRejectedItemIdQuantity.ContainsKey(core.Id))
                         {
-                            ValuePairRejectedItemIdQuantity[warehouseCore.Id] += 1;
+                            ValuePairRejectedItemIdQuantity[core.Id] += 1;
                         }
                         else
                         {
-                            ValuePairRejectedItemIdQuantity.Add(warehouseCore.Id, 1);
+                            ValuePairRejectedItemIdQuantity.Add(core.Id, 1);
                         }
-
                     }
                     else if (detail.IsPackaged && !detail.IsRejected)
                     {
                         // Roller quantity increases
-                        if (ValuePairPackagedItemIdQuantity.ContainsKey(warehouseRoller.Id))
+                        if (ValuePairPackagedItemIdQuantity.ContainsKey(roller.Id))
                         {
-                            ValuePairPackagedItemIdQuantity[warehouseRoller.Id] += 1;
+                            ValuePairPackagedItemIdQuantity[roller.Id] += 1;
                         }
                         else
                         {
-                            ValuePairPackagedItemIdQuantity.Add(warehouseRoller.Id, 1);
+                            ValuePairPackagedItemIdQuantity.Add(roller.Id, 1);
                         }
                     }
                 }
 
-                // do nothing for rejected items
+                foreach (var ValuePairRejected in ValuePairRejectedItemIdQuantity)
+                {
+                    WarehouseItem warehouseCore = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePairRejected.Key);
+                }
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
-                    WarehouseItem warehouseRoller = _warehouseItemService.GetObjectById(ValuePairPackaged.Key);
+                    Item roller = _itemService.GetObjectById(ValuePairPackaged.Key);
+                    _itemService.AdjustQuantity(roller, ValuePairPackaged.Value);
+                    WarehouseItem warehouseRoller = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePairPackaged.Key);
                     _warehouseItemService.AdjustQuantity(warehouseRoller, ValuePairPackaged.Value);
                 }
                 recoveryOrder.QuantityRejected = QuantityRejected;
@@ -245,41 +249,44 @@ namespace Service.Service
                                 _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                     Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                                 _rollerBuilderService.GetRollerNewCore(rollerBuilder.Id) : _rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id);
-                    WarehouseItem warehouseCore = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, core.Id);
-                    WarehouseItem warehouseRoller = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, roller.Id);
                     if (detail.IsRejected)
                     {
                         // Core quantity increases
-                        if (ValuePairRejectedItemIdQuantity.ContainsKey(warehouseCore.Id))
+                        if (ValuePairRejectedItemIdQuantity.ContainsKey(core.Id))
                         {
-                            ValuePairRejectedItemIdQuantity[warehouseCore.Id] -= 1;
+                            ValuePairRejectedItemIdQuantity[core.Id] -= 1;
                         }
                         else
                         {
-                            ValuePairRejectedItemIdQuantity.Add(warehouseCore.Id, -1);
+                            ValuePairRejectedItemIdQuantity.Add(core.Id, -1);
                         }
 
                     }
                     else if (detail.IsPackaged && !detail.IsRejected)
                     {
                         // Roller quantity increases
-                        if (ValuePairPackagedItemIdQuantity.ContainsKey(warehouseRoller.Id))
+                        if (ValuePairPackagedItemIdQuantity.ContainsKey(roller.Id))
                         {
-                            ValuePairPackagedItemIdQuantity[warehouseRoller.Id] -= 1;
+                            ValuePairPackagedItemIdQuantity[roller.Id] -= 1;
                         }
                         else
                         {
-                            ValuePairPackagedItemIdQuantity.Add(warehouseRoller.Id, -1);
+                            ValuePairPackagedItemIdQuantity.Add(roller.Id, -1);
                         }
                     }
                 }
 
-                // rejected items are ignored
+                foreach (var ValuePairRejected in ValuePairRejectedItemIdQuantity)
+                {
+                    WarehouseItem warehouseCore = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePairRejected.Key);
+                }
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePairPackaged.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePairPackaged.Value);
+                    Item roller = _itemService.GetObjectById(ValuePairPackaged.Key);
+                    _itemService.AdjustQuantity(roller, ValuePairPackaged.Value);
+                    WarehouseItem warehouseRoller = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePairPackaged.Key);
+                    _warehouseItemService.AdjustQuantity(warehouseRoller, ValuePairPackaged.Value);
                 }
                 recoveryOrder.QuantityRejected = 0;
                 recoveryOrder.QuantityFinal = 0;

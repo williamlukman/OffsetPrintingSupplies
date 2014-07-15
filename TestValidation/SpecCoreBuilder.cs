@@ -36,7 +36,7 @@ namespace TestValidation
                     UoM = "Pcs",
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService);
+                d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
                 d.coreBuilder = new CoreBuilder()
@@ -47,7 +47,7 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Category = "X 1001"
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
             }
         }
 
@@ -69,7 +69,7 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Category = "X 1001"
                 };
-                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._itemService, d._itemTypeService);
+                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 coreBuilderCopySku.Errors.Count().should_not_be(0);
             };
 
@@ -83,7 +83,7 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Category = "X 1001"
                 };
-                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._itemService, d._itemTypeService);
+                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._itemService, d._itemTypeService, d._warehouseItemService ,d._warehouseService);
                 coreBuilderCopySkuNew.Errors.Count().should_not_be(0);
             };
 
@@ -98,13 +98,14 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Category = "X 1001"
                 };
-                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._itemService, d._itemTypeService);
+                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 coreBuilderCopySkuUsed.Errors.Count().should_not_be(0);
             };
 
             it["delete_corebuilder"] = () =>
             {
-                d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService);
+                d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService,
+                                                                       d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService);
                 d.coreBuilder.Errors.Count().should_be(0);
             };
 
@@ -141,7 +142,8 @@ namespace TestValidation
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
 
-                d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService);
+                d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService,
+                                                                       d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService);
                 d.coreBuilder.Errors.Count().should_not_be(0);
             };
         }

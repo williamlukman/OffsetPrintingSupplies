@@ -15,7 +15,8 @@ namespace Core.Interface.Validation
         Item VHasName(Item item);
         Item VHasCategory(Item item);
         Item VHasUoM(Item item);
-        Item VQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService);
+        Item VNonNegativeQuantity(Item item);
+        Item VWarehouseQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService);
         Item VIsInRecoveryAccessoryDetail(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         Item VIsInRollerBuilderCompound(Item item, IRollerBuilderService _rollerBuilderService);
         Item VIsNotCoreNorRoller(Item item, IItemTypeService _itemTypeService);
@@ -24,10 +25,12 @@ namespace Core.Interface.Validation
         Item VUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
         Item VDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService);
+        Item VAdjustQuantity(Item item);
         bool ValidCreateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
         bool ValidDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService);
+        bool ValidAdjustQuantity(Item item);
         bool isValid(Item item);
         string PrintError(Item item);
     }

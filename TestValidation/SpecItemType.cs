@@ -38,7 +38,7 @@ namespace TestValidation
                     UoM = "Pcs",
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService);
+                d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
             }
         }
 
@@ -80,7 +80,7 @@ namespace TestValidation
 
             it["delete_itemtype"] = () =>
             {
-                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._abstractItemService);
+                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
                 d.typeGlue.Errors.Count().should_be(0);
             };
 
@@ -95,8 +95,8 @@ namespace TestValidation
                     Sku = "G101",
                     UoM = "Pcs"
                 };
-                glue101 = d._itemService.CreateObject(glue101, d._itemTypeService);
-                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._abstractItemService);
+                glue101 = d._itemService.CreateObject(glue101, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
                 d.typeGlue.Errors.Count().should_not_be(0);
             };
         }

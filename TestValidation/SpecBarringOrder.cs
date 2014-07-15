@@ -63,7 +63,7 @@ namespace TestValidation
                 int bargenericquantity = d.bargeneric.Quantity;
                 int barleft1quantity = d.barleft1.Quantity;
                 int barright1quantity = d.barright1.Quantity;
-                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringOrderCustomer.IsConfirmed.should_be(true);
                 d.barringOrderCustomer.Errors.Count().should_be(0);
                 int blanket1quantityfinal = d.blanket1.Quantity;
@@ -80,23 +80,23 @@ namespace TestValidation
 
             it["finishes_barring_order"] = () =>
             {
-                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
-                d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
+                d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringOrderCustomer.Errors.Count().should_not_be(0);
             };
 
             it["unconfirms_barring_order"] = () =>
             {
-                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringOrderCustomer.IsConfirmed.should_be(true);
-                d.barringOrderCustomer = d._barringOrderService.UnconfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                d.barringOrderCustomer = d._barringOrderService.UnconfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringOrderCustomer.IsConfirmed.should_be(false);
                 d.barringOrderCustomer.Errors.Count().should_be(0);
             };
 
             it["deletes_barringorder_with_processed_detail"] = () =>
             {
-                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringODCustomer1 = d._barringOrderDetailService.CutObject(d.barringODCustomer1);
                 d.barringODCustomer1 = d._barringOrderDetailService.SideSealObject(d.barringODCustomer1);
 
@@ -108,7 +108,7 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                    d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
 
                     d._barringOrderDetailService.CutObject(d.barringODCustomer1);
                     d._barringOrderDetailService.CutObject(d.barringODCustomer2);
@@ -126,14 +126,14 @@ namespace TestValidation
 
                 it["validates_unconfirmbarringorder"] = () =>
                 {
-                    d.barringOrderCustomer = d._barringOrderService.UnconfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                    d.barringOrderCustomer = d._barringOrderService.UnconfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                     d.barringOrderCustomer.IsConfirmed.should_be(true);
                     d.barringOrderCustomer.Errors.Count().should_not_be(0);
                 };
 
                 it["validates_finishbarringorder"] = () =>
                 {
-                    d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                    d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                     d.barringOrderCustomer.IsFinished.should_be(false);
                     d.barringOrderCustomer.Errors.Count().should_not_be(0);
                 };
@@ -197,7 +197,7 @@ namespace TestValidation
                     {
                         int barring1quantity = d.barring1.Quantity;
                         int barring2quantity = d.barring2.Quantity;
-                        d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                        d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                         d.barringOrderCustomer.Errors.Count().should_be(0);
                         int barring1quantityfinal = d.barring1.Quantity;
                         int barring2quantityfinal = d.barring2.Quantity;
@@ -210,13 +210,13 @@ namespace TestValidation
                     {
                         int barring1quantity = d.barring1.Quantity;
                         int barring2quantity = d.barring2.Quantity;
-                        d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService);
+                        d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                         d.barringOrderCustomer.Errors.Count().should_be(0);
                         int barring1quantityfinal = d.barring1.Quantity;
                         int barring2quantityfinal = d.barring2.Quantity;
                         barring1quantityfinal.should_be(barring1quantity + 2);
                         barring2quantityfinal.should_be(barring2quantity + 1);
-                        d.barringOrderCustomer = d._barringOrderService.UnfinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService);
+                        d.barringOrderCustomer = d._barringOrderService.UnfinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._warehouseItemService);
                         d.barringOrderCustomer.Errors.Count().should_be(0);
                         int barring1quantityunconfirm = d.barring1.Quantity;
                         int barring2quantityunconfirm = d.barring2.Quantity;

@@ -116,6 +116,12 @@ namespace Service.Service
             return item;
         }
 
+        public Item AdjustQuantity(Item item, int quantity)
+        {
+            item.Quantity += quantity;
+            return (item = _validator.ValidAdjustQuantity(item) ? _repository.UpdateObject(item) : item);
+        }
+
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);

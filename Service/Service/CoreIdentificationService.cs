@@ -111,6 +111,7 @@ namespace Service.Service
                         Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                         _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
                                         _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
+                        _itemService.AdjustQuantity(item, 1);
                         WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
                         _warehouseItemService.AdjustQuantity(warehouseItem, 1);
                     }
@@ -135,9 +136,9 @@ namespace Service.Service
                         Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                         _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
                                         _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
+                        _itemService.AdjustQuantity(item, -1);
                         WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
                         _warehouseItemService.AdjustQuantity(warehouseItem, -1);
-                        //_itemService.AdjustQuantity(item, -1);
                     }
                 }
                 _repository.UnconfirmObject(coreIdentification);

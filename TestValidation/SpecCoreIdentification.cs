@@ -73,7 +73,7 @@ namespace TestValidation
                 int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
                 int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
                 d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService,
-                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
                 d.coreIdentificationCustomer.IsConfirmed.should_be(true);
                 d.coreIdentificationCustomer.Errors.Count().should_be(0);
                 int usedCoreBuilder3AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
@@ -85,11 +85,11 @@ namespace TestValidation
             it["unconfirms_coreidentificationcustomer"] = () =>
             {
                 d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService,
-                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
                 int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
                 int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
                 d.coreIdentificationCustomer = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService,
-                                               d._recoveryOrderService, d._coreBuilderService, d._itemService);
+                                               d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService);
                 int usedCoreBuilder3AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
                 int usedCoreBuilder4AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
                 d.coreIdentificationCustomer.IsConfirmed.should_be(false);
@@ -103,7 +103,7 @@ namespace TestValidation
                 int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
                 int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
                 d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._recoveryOrderService,
-                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
                 d.coreIdentificationInHouse.IsConfirmed.should_be(true);
                 d.coreIdentificationInHouse.Errors.Count().should_be(0);
                 int usedCoreBuilder3AfterConfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
@@ -115,11 +115,11 @@ namespace TestValidation
             it["unconfirms_coreidentificationinhouse"] = () =>
             {
                 d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._recoveryOrderService,
-                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService);
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
                 int usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
                 int usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
                 d.coreIdentificationInHouse = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService,
-                                               d._recoveryOrderService, d._coreBuilderService, d._itemService);
+                                               d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService);
                 int usedCoreBuilder3AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
                 int usedCoreBuilder4AfterUnconfirmed = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
                 d.coreIdentificationInHouse.IsConfirmed.should_be(false);
