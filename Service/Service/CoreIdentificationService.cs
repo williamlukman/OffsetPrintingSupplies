@@ -50,7 +50,7 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService)
+        public CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService)
         {
             CoreIdentification coreIdentification = new CoreIdentification
             {
@@ -58,12 +58,13 @@ namespace Service.Service
                 IsInHouse = false,
                 Code = Code,
                 Quantity = Quantity,
-                IdentifiedDate = IdentifiedDate
+                IdentifiedDate = IdentifiedDate,
+                WarehouseId = WarehouseId
             };
             return this.CreateObject(coreIdentification, _customerService);
         }
 
-        public CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService)
+        public CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService)
         {
             CoreIdentification coreIdentification = new CoreIdentification
             {
@@ -71,7 +72,8 @@ namespace Service.Service
                 IsInHouse = true,
                 Code = Code,
                 Quantity = Quantity,
-                IdentifiedDate = IdentifiedDate
+                IdentifiedDate = IdentifiedDate,
+                WarehouseId = WarehouseId
             };
             return this.CreateObject(coreIdentification, _customerService);
         }
@@ -103,7 +105,7 @@ namespace Service.Service
 
         public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
         {
             if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService))
             {
@@ -128,7 +130,7 @@ namespace Service.Service
 
         public CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                   IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService,
-                                                  IWarehouseItemService _warehouseItemService)
+                                                  IWarehouseItemService _warehouseItemService, IBarringService _barringService)
         {
             if (_validator.ValidUnconfirmObject(coreIdentification, _recoveryOrderService))
             {

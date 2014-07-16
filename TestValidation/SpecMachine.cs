@@ -28,14 +28,22 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
 
+                d.localWarehouse = new Warehouse()
+                {
+                    Name = "Sentral Solusi Data",
+                    Description = "Kali Besar Jakarta",
+                    IsMovingWarehouse = false,
+                    Code = "LCL"
+                };
+                d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
+
                 d.item = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
                     Category = "ABC123",
-                    UoM = "Pcs",
-                    Quantity = 0
+                    UoM = "Pcs"
                 };
                 d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
 
@@ -104,7 +112,8 @@ namespace TestValidation
                     Code = "CI0001",
                     Quantity = 1,
                     IsInHouse = true,
-                    IdentifiedDate = DateTime.Now
+                    IdentifiedDate = DateTime.Now,
+                    WarehouseId = d.localWarehouse.Id
                 };
                 d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()

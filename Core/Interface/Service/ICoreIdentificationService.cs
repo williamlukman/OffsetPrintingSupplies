@@ -17,16 +17,17 @@ namespace Core.Interface.Service
         IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId);
         CoreIdentification GetObjectById(int Id);
         CoreIdentification CreateObject(CoreIdentification coreIdentification, ICustomerService _customerService);
-        CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService);
-        CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, ICustomerService _customerService);
+        CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService);
+        CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService);
         CoreIdentification UpdateObject(CoreIdentification coreIdentification, ICustomerService _customerService);
         CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                             IRecoveryOrderService _recoveryOrderService);
         CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                          IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
-                                         IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                         IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService);
         CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                           IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                           IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService,
+                                           IWarehouseItemService _warehouseItemService, IBarringService _barringService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(CoreIdentification coreIdentification);
     }

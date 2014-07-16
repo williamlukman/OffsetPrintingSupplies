@@ -22,6 +22,7 @@ namespace Data.Context
             IList<String> tableNames = new List<String>() { "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
                                                             "BarringOrderDetail", "BarringOrder", "Barring",
+                                                            "WarehouseItem", "Warehouse",
                                                             "CoreBuilder", "Item", "ItemType", "Customer", "RollerType", "Machine",
                                                             };
 
@@ -50,6 +51,10 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new RecoveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new RollerBuilderMapping());
             modelBuilder.Configurations.Add(new RollerTypeMapping());
+            modelBuilder.Configurations.Add(new WarehouseMapping());
+            modelBuilder.Configurations.Add(new WarehouseItemMapping());
+            modelBuilder.Configurations.Add(new WarehouseMutationOrderMapping());
+            modelBuilder.Configurations.Add(new WarehouseMutationOrderDetailMapping());
             base.OnModelCreating(modelBuilder);
         }
 

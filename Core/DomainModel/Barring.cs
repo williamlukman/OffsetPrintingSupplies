@@ -14,10 +14,10 @@ namespace Core.DomainModel
         public int BlanketItemId { get; set; }
         public Nullable<int> LeftBarItemId { get; set; }
         public Nullable<int> RightBarItemId { get; set; }
-        public int AC { get; set; }
-        public int AR { get; set; }
-        public int thickness { get; set; }
-        public int KS { get; set; }
+        public decimal AC { get; set; }
+        public decimal AR { get; set; }
+        public decimal thickness { get; set; }
+        public decimal KS { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual Machine Machine { get; set; }

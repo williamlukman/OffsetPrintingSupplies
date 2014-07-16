@@ -110,10 +110,10 @@ namespace Service.Service
 
                 foreach (var ValuePair in ValuePairItemIdQuantity)
                 {
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
                     Item item = _itemService.GetObjectById(ValuePair.Key);
                     _itemService.AdjustQuantity(item, ValuePair.Value);
+                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
+                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
                 } 
                 _repository.ConfirmObject(barringOrder);
             }
@@ -157,10 +157,10 @@ namespace Service.Service
 
                 foreach (var ValuePair in ValuePairItemIdQuantity)
                 {
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
                     Item item = _itemService.GetObjectById(ValuePair.Key);
                     _itemService.AdjustQuantity(item, ValuePair.Value);
+                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
+                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
                 }
                 _repository.UnconfirmObject(barringOrder);
             }
@@ -210,10 +210,10 @@ namespace Service.Service
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePairPackaged.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePairPackaged.Value);
                     Barring barring = _barringService.GetObjectById(ValuePairPackaged.Key);
                     _barringService.AdjustQuantity(barring, ValuePairPackaged.Value);
+                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePairPackaged.Key);
+                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePairPackaged.Value);
                 }
                 barringOrder.QuantityRejected = QuantityRejected;
                 barringOrder.QuantityFinal = QuantityFinal;
@@ -222,7 +222,7 @@ namespace Service.Service
             return barringOrder;
         }
 
-        public BarringOrder UnfinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public BarringOrder UnfinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnfinishObject(barringOrder))
             {
@@ -261,10 +261,10 @@ namespace Service.Service
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePairPackaged.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePairPackaged.Value);
                     Barring barring = _barringService.GetObjectById(ValuePairPackaged.Key);
                     _barringService.AdjustQuantity(barring, ValuePairPackaged.Value);
+                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePairPackaged.Key);
+                    _warehouseItemService.AdjustQuantity(warehouseItem,  ValuePairPackaged.Value);
                 }
                 barringOrder.QuantityRejected = 0;
                 barringOrder.QuantityFinal = 0;

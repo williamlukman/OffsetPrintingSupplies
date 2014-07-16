@@ -73,6 +73,7 @@ namespace Service.Service
                 Name = coreBuilder.Name,
                 Category = coreBuilder.Category,
                 UoM = "pcs",
+                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
                 Sku = coreBuilder.SkuUsedCore
             };
@@ -83,6 +84,7 @@ namespace Service.Service
                 Name = coreBuilder.Name,
                 Category = coreBuilder.Category,
                 UoM = "pcs",
+                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
                 Sku = coreBuilder.SkuNewCore
             };

@@ -47,6 +47,7 @@ namespace Data.Repository
             barringOrder.QuantityFinal = 0;
             barringOrder.QuantityRejected = 0;
             barringOrder.IsConfirmed = false;
+            barringOrder.IsCompleted = false;
             barringOrder.IsFinished = false;
             barringOrder.IsDeleted = false;
             barringOrder.CreatedAt = DateTime.Now;
@@ -86,14 +87,16 @@ namespace Data.Repository
 
         public BarringOrder FinishObject(BarringOrder barringOrder)
         {
+            barringOrder.IsCompleted = true;
             barringOrder.IsFinished = true;
-            barringOrder.LastFinishDate = DateTime.Now;
+            barringOrder.FinishDate = DateTime.Now;
             Update(barringOrder);
             return barringOrder;
         }
 
         public BarringOrder UnfinishObject(BarringOrder barringOrder)
         {
+            barringOrder.IsCompleted = false;
             barringOrder.IsFinished = false;
             Update(barringOrder);
             return barringOrder;

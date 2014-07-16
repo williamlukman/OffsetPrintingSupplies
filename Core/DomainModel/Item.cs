@@ -29,5 +29,6 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
         public virtual ItemType ItemType { get; set; }
         public virtual ICollection<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
+        public virtual ICollection<WarehouseItem> WarehouseItems { get; set; }
     }
 }

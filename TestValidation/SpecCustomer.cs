@@ -33,22 +33,23 @@ namespace TestValidation
                     Sku = "ABC1001",
                     Name = "ABC",
                     Category = "ABC123",
-                    UoM = "Pcs",
-                    Quantity = 0
+                    UoM = "Pcs"
                 };
                 d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+
+                d.localWarehouse = new Warehouse()
+                {
+                    Name = "Sentral Solusi Data",
+                    Description = "Kali Besar Jakarta",
+                    IsMovingWarehouse = false,
+                    Code = "LCL"
+                };
+                d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
+
                 d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
             }
         }
 
-        /*
-         * STEPS:
-         * 1. Create valid d.item
-         * 2. Create invalid d.item with no name
-         * 3. Create invalid items with same SKU
-         * 4a. Delete d.item
-         * 4b. Delete d.item with stock mutations
-         */
         void customer_validation()
         {
         
@@ -167,7 +168,8 @@ namespace TestValidation
                     CustomerId = d.customer.Id,
                     Code = "CI0001",
                     Quantity = 1,
-                    IdentifiedDate = DateTime.Now
+                    IdentifiedDate = DateTime.Now,
+                    WarehouseId = d.localWarehouse.Id
                 };
                 d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()

@@ -31,10 +31,19 @@ namespace TestValidation
                     Sku = "ABC1001",
                     Name = "ABC",
                     Category = "ABC123",
-                    UoM = "Pcs",
-                    Quantity = 0
+                    UoM = "Pcs"
                 };
                 d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+
+                d.localWarehouse = new Warehouse()
+                {
+                    Name = "Sentral Solusi Data",
+                    Description = "Kali Besar Jakarta",
+                    IsMovingWarehouse = false,
+                    Code = "LCL"
+                };
+                d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
+
             }
         }
 
@@ -54,8 +63,7 @@ namespace TestValidation
                     Sku = "ABC1002",
                     Name = "     ",
                     Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
+                    UoM = "Pcs"
                 };
                 nonameitem = d._itemService.CreateObject(nonameitem, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 nonameitem.Errors.Count().should_not_be(0);
@@ -69,8 +77,7 @@ namespace TestValidation
                     Sku = "ABC1001",
                     Name = "BBC",
                     Category = "ABC222",
-                    UoM = "Pcs",
-                    Quantity = 0
+                    UoM = "Pcs"
                 };
                 sameskuitem = d._itemService.CreateObject(sameskuitem, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 sameskuitem.Errors.Count().should_not_be(0);
@@ -116,7 +123,8 @@ namespace TestValidation
                 {
                     Code = "CI0001",
                     Quantity = 1,
-                    IdentifiedDate = DateTime.Now
+                    IdentifiedDate = DateTime.Now,
+                    WarehouseId = d.localWarehouse.Id
                 };
                 d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
@@ -139,11 +147,13 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
                     Name = "Compound",
                     Category = "Compound",
-                    Quantity = 2,
                     Sku = "CMP0001",
                     UoM = "Pcs"
                 };
                 compound = d._itemService.CreateObject(compound, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d._itemService.AdjustQuantity(compound, 2);
+                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, compound.Id), 2);
+
                 d.rollerBuilder = new RollerBuilder()
                 {
                     CoreBuilderId = d.coreBuilder.Id,

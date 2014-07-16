@@ -21,11 +21,11 @@ namespace Core.DomainModel
 
         public string Name { get; set; }
         public string Category { get; set; }
-        public int RD { get; set; }
-        public int CD { get; set; }
-        public int RL { get; set; }
-        public int WL { get; set; }
-        public int TL { get; set; }
+        public decimal RD { get; set; }
+        public decimal CD { get; set; }
+        public decimal RL { get; set; }
+        public decimal WL { get; set; }
+        public decimal TL { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

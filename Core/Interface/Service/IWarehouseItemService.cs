@@ -18,6 +18,7 @@ namespace Core.Interface.Service
         IList<WarehouseItem> GetObjectsByItemId(int itemId);
         WarehouseItem GetObjectById(int Id);
         WarehouseItem GetObjectByWarehouseAndItem(int warehouseId, int itemId);
+        WarehouseItem AddObject(Warehouse warehouse, Item item, IWarehouseService _warehouseService, IItemService _itemService);
         WarehouseItem CreateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         WarehouseItem UpdateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         WarehouseItem SoftDeleteObject(WarehouseItem warehouseItem);

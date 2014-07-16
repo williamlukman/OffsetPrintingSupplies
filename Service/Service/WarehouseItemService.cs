@@ -55,6 +55,19 @@ namespace Service.Service
             return _repository.GetObjectByWarehouseAndItem(warehouseId, abstractItemId);
         }
 
+        public WarehouseItem AddObject(Warehouse warehouse, Item item, IWarehouseService _warehouseService, IItemService _itemService)
+        {
+            WarehouseItem warehouseItem = new WarehouseItem()
+            {
+                WarehouseId = warehouse.Id,
+                ItemId = item.Id,
+                Quantity = 0,
+                Warehouse = warehouse,
+                Item = item
+            };
+            return CreateObject(warehouseItem, _warehouseService, _itemService);
+        }
+
         public WarehouseItem CreateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService)
         {
             warehouseItem.Errors = new Dictionary<String, String>();
@@ -74,7 +87,11 @@ namespace Service.Service
         public WarehouseItem AdjustQuantity(WarehouseItem warehouseItem, int quantity)
         {
             warehouseItem.Quantity += quantity;
-            return (warehouseItem = _validator.ValidAdjustQuantity(warehouseItem) ? _repository.UpdateObject(warehouseItem) : warehouseItem);            
+            if (_validator.ValidAdjustQuantity(warehouseItem)) 
+            {
+                _repository.UpdateObject(warehouseItem);
+            }
+            return warehouseItem;
         }
 
         public bool DeleteObject(int Id)

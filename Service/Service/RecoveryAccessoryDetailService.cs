@@ -83,7 +83,8 @@ namespace Service.Service
         }
 
         public RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                     IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                     IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                     IBarringService _barringService)
         {
             if (_validator.ValidConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService))
             {
@@ -100,7 +101,8 @@ namespace Service.Service
         }
 
         public RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                       IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                       IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                       IBarringService _barringService)
         {
             if (_validator.ValidUnconfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService))
             {

@@ -29,6 +29,15 @@ namespace TestValidation
 
                 d = new DataBuilder();
 
+                d.localWarehouse = new Warehouse()
+                {
+                    Name = "Sentral Solusi Data",
+                    Description = "Kali Besar Jakarta",
+                    IsMovingWarehouse = false,
+                    Code = "LCL"
+                };
+                d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
+
                 d.item = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
@@ -91,11 +100,12 @@ namespace TestValidation
                     ItemTypeId = d.typeGlue.Id,
                     Name = "Glue101",
                     Category = "Glue",
-                    Quantity = 100,
                     Sku = "G101",
                     UoM = "Pcs"
                 };
                 glue101 = d._itemService.CreateObject(glue101, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d._itemService.AdjustQuantity(glue101, 100);
+                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, glue101.Id), 100);
                 d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
                 d.typeGlue.Errors.Count().should_not_be(0);
             };

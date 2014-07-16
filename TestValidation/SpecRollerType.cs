@@ -32,10 +32,19 @@ namespace TestValidation
                     Sku = "ABC1001",
                     Name = "ABC",
                     Category = "ABC123",
-                    UoM = "Pcs",
-                    Quantity = 0
+                    UoM = "Pcs"
                 };
                 d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+
+                d.localWarehouse = new Warehouse()
+                {
+                    Name = "Sentral Solusi Data",
+                    Description = "Kali Besar Jakarta",
+                    IsMovingWarehouse = false,
+                    Code = "LCL"
+                };
+                d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
+
             }
         }
 
@@ -80,10 +89,11 @@ namespace TestValidation
                         Sku = "Cmp10001",
                         Name = "Cmp 10001",
                         Category = "cmp",
-                        UoM = "Pcs",
-                        Quantity = 2
+                        UoM = "Pcs"
                     };
                     d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                    d._itemService.AdjustQuantity(d.itemCompound, 2);
+                    d._warehouseItemService.AdjustQuantity(d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.itemCompound.Id), 2);
 
                     d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
@@ -108,7 +118,8 @@ namespace TestValidation
                         CustomerId = d.customer.Id,
                         Code = "CI0001",
                         Quantity = 1,
-                        IdentifiedDate = DateTime.Now
+                        IdentifiedDate = DateTime.Now,
+                        WarehouseId = d.localWarehouse.Id
                     };
                     d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
                 };

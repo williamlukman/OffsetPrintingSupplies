@@ -57,12 +57,9 @@ namespace Service.Service
                     WarehouseItem warehouseItem = new WarehouseItem()
                     {
                         WarehouseId = warehouse.Id,
-                        ItemId = item.Id,
-                        Quantity = 0,
-                        Warehouse = warehouse,
-                        Item = item
+                        ItemId = item.Id
                     };
-                    _warehouseItemService.GetRepository().CreateObject(warehouseItem);
+                    _warehouseItemService.CreateObject(warehouseItem, this, _itemService);
                 }
             }
             return warehouse;

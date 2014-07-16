@@ -108,6 +108,7 @@ namespace Service.Service
                 Name = rollerBuilder.Name,
                 Category = rollerBuilder.Category,
                 UoM = "pcs",
+                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
                 Sku = rollerBuilder.SkuRollerUsedCore
             };
@@ -118,6 +119,7 @@ namespace Service.Service
                 Name = rollerBuilder.Name,
                 Category = rollerBuilder.Category,
                 UoM = "pcs",
+                Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
                 Sku = rollerBuilder.SkuRollerNewCore
             };

@@ -30,14 +30,6 @@ namespace TestValidation
             }
         }
 
-        /*
-         * STEPS:
-         * 1. Create valid d.item
-         * 2. Create invalid d.item with no name
-         * 3. Create invalid items with same SKU
-         * 4a. Delete d.item
-         * 4b. Delete d.item with stock mutations
-         */
         void data_validation()
         {
         
@@ -86,7 +78,7 @@ namespace TestValidation
                 int usedCoreBuilder3Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                 int usedCoreBuilder4Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                 d.recoveryOrderCustomer = d._recoveryOrderService.ConfirmObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
+                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
                 d.recoveryOrderCustomer.IsConfirmed.should_be(true);
                 d.recoveryOrderCustomer.Errors.Count().should_be(0);
                 int usedCoreBuilder3AfterConfirmed = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
@@ -98,19 +90,22 @@ namespace TestValidation
             it["finishes_recovery_order"] = () =>
             {
                 d.recoveryOrderCustomer = d._recoveryOrderService.ConfirmObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
+                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
                 d.recoveryOrderCustomer = d._recoveryOrderService.FinishObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                               d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService, d._warehouseItemService);
+                                                                               d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService, d._warehouseItemService,
+                                                                               d._barringService);
                 d.recoveryOrderCustomer.Errors.Count().should_not_be(0);
             };
 
             it["unconfirms_recovery_order"] = () =>
             {
                 d.recoveryOrderCustomer = d._recoveryOrderService.ConfirmObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
+                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService,
+                                                                                d._barringService);
                 d.recoveryOrderCustomer.IsConfirmed.should_be(true);
                 d.recoveryOrderCustomer = d._recoveryOrderService.UnconfirmObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
+                                                                                  d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService,
+                                                                                  d._barringService);
                 d.recoveryOrderCustomer.IsConfirmed.should_be(false);
                 d.recoveryOrderCustomer.Errors.Count().should_be(0);
             };
@@ -118,7 +113,8 @@ namespace TestValidation
             it["deletes_recoveryorder_with_processed_detail"] = () =>
             {
                 d.recoveryOrderCustomer = d._recoveryOrderService.ConfirmObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
+                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService,
+                                                                                d._barringService);
                 d.recoveryODCustomer1 = d._recoveryOrderDetailService.DisassembleObject(d.recoveryODCustomer1);
                 d.recoveryODCustomer1 = d._recoveryOrderDetailService.StripAndGlueObject(d.recoveryODCustomer1);
                 d.recoveryODCustomer1 = d._recoveryOrderDetailService.WrapObject(d.recoveryODCustomer1);
@@ -132,8 +128,8 @@ namespace TestValidation
                 before = () =>
                 {
                     d._recoveryOrderService.ConfirmObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                          d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
-
+                                                          d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService,
+                                                          d._barringService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODCustomer1);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODCustomer2);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODCustomer3);
@@ -156,7 +152,7 @@ namespace TestValidation
                 it["validates_unconfirmrecoveryorder"] = () =>
                 {
                     d.recoveryOrderCustomer = d._recoveryOrderService.UnconfirmObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                    d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService);
+                                                                                    d._recoveryAccessoryDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
                     d.recoveryOrderCustomer.IsConfirmed.should_be(true);
                     d.recoveryOrderCustomer.Errors.Count().should_not_be(0);
                 };
@@ -164,7 +160,7 @@ namespace TestValidation
                 it["validates_finishrecoveryorder"] = () =>
                 {
                     d.recoveryOrderCustomer = d._recoveryOrderService.FinishObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                   d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService, d._warehouseItemService);
+                                                                                   d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService, d._warehouseItemService, d._barringService);
                     d.recoveryOrderCustomer.IsFinished.should_be(false);
                     d.recoveryOrderCustomer.Errors.Count().should_not_be(0);
                 };
@@ -243,20 +239,20 @@ namespace TestValidation
                     it["validates_confirm_accessory"] = () =>
                     {
                         int itemquantitybefore = d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity;
-                        d._recoveryAccessoryDetailService.ConfirmObject(d.accessory1, d._recoveryOrderService, d._recoveryOrderDetailService, d._itemService, d._warehouseItemService);
+                        d._recoveryAccessoryDetailService.ConfirmObject(d.accessory1, d._recoveryOrderService, d._recoveryOrderDetailService, d._itemService, d._warehouseItemService, d._barringService);
                         d.accessory1.Errors.Count().should_be(0);
                         itemquantitybefore.should_be(d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity + 1);
                     };
 
                     it["validates_finishrecoveryorder"] = () =>
                     {
-                        d._recoveryAccessoryDetailService.ConfirmObject(d.accessory1, d._recoveryOrderService, d._recoveryOrderDetailService, d._itemService, d._warehouseItemService);
+                        d._recoveryAccessoryDetailService.ConfirmObject(d.accessory1, d._recoveryOrderService, d._recoveryOrderDetailService, d._itemService, d._warehouseItemService, d._barringService);
                         int usedCoreBuilder3Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                         int usedCoreBuilder4Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                         int usedRollerBuilder3Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                         int usedRollerBuilder4Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                         d.recoveryOrderCustomer = d._recoveryOrderService.FinishObject(d.recoveryOrderCustomer, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                       d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService, d._warehouseItemService);
+                                                                                       d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService, d._warehouseItemService, d._barringService);
                         d.recoveryOrderCustomer.IsFinished.should_be(true);
                         d.recoveryOrderCustomer.Errors.Count().should_be(0);
                         int usedCoreBuilder3Final = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;

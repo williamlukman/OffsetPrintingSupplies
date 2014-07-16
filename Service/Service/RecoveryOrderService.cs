@@ -51,13 +51,14 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public RecoveryOrder CreateObject(int CoreIdentificationId, string Code, int QuantityReceived, ICoreIdentificationService _coreIdentificationService)
+        public RecoveryOrder CreateObject(int CoreIdentificationId, string Code, int QuantityReceived, int WarehouseId, ICoreIdentificationService _coreIdentificationService)
         {
             RecoveryOrder recoveryOrder = new RecoveryOrder
             {
                 CoreIdentificationId = CoreIdentificationId,
                 Code = Code,
-                QuantityReceived = QuantityReceived
+                QuantityReceived = QuantityReceived,
+                WarehouseId = WarehouseId
             };
             return this.CreateObject(recoveryOrder, _coreIdentificationService);
         }
@@ -97,7 +98,8 @@ namespace Service.Service
         }
 
         public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                           IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                           IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                           IBarringService _barringService)
         {
             if (_validator.ValidConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService))
             {
@@ -132,7 +134,8 @@ namespace Service.Service
         }
 
         public RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                             IBarringService _barringService)
         {
             if (_validator.ValidUnconfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService))
             {
@@ -167,7 +170,7 @@ namespace Service.Service
         }
 
         public RecoveryOrder FinishObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                          ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                          ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
         {
             if (_validator.ValidFinishObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService))
             {
@@ -220,8 +223,8 @@ namespace Service.Service
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
-                    Item roller = _itemService.GetObjectById(ValuePairPackaged.Key);
-                    _itemService.AdjustQuantity(roller, ValuePairPackaged.Value);
+                    Item item = _itemService.GetObjectById(ValuePairPackaged.Key);
+                    _itemService.AdjustQuantity(item, ValuePairPackaged.Value);
                     WarehouseItem warehouseRoller = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePairPackaged.Key);
                     _warehouseItemService.AdjustQuantity(warehouseRoller, ValuePairPackaged.Value);
                 }
@@ -233,7 +236,7 @@ namespace Service.Service
         }
 
         public RecoveryOrder UnfinishObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
-                                            ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                            ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
         {
             if (_validator.ValidUnfinishObject(recoveryOrder))
             {
@@ -283,8 +286,8 @@ namespace Service.Service
 
                 foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
                 {
-                    Item roller = _itemService.GetObjectById(ValuePairPackaged.Key);
-                    _itemService.AdjustQuantity(roller, ValuePairPackaged.Value);
+                    Item item = _itemService.GetObjectById(ValuePairPackaged.Key);
+                    _itemService.AdjustQuantity(item, ValuePairPackaged.Value);
                     WarehouseItem warehouseRoller = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, ValuePairPackaged.Key);
                     _warehouseItemService.AdjustQuantity(warehouseRoller, ValuePairPackaged.Value);
                 }

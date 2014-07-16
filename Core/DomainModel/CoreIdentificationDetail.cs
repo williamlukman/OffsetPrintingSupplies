@@ -22,6 +22,8 @@ namespace Core.DomainModel
         public decimal WL { get; set; }
         public decimal TL { get; set; }
 
+        public bool IsJobScheduled { get; set; }
+        public bool IsDelivered { get; set; }
         public bool IsFinished { get; set; }
         public Nullable<DateTime> FinishDate { get; set; }
 

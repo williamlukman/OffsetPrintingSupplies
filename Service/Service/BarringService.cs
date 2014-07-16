@@ -65,7 +65,21 @@ namespace Service.Service
                                     IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             barring.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService) ? _repository.CreateObject(barring) : barring);
+            if (_validator.ValidCreateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService))
+            {
+                barring = _repository.CreateObject(barring);
+                IList<Warehouse> allWarehouses = _warehouseService.GetAll();
+                foreach (var warehouse in allWarehouses)
+                {
+                    WarehouseItem warehouseItem = new WarehouseItem()
+                    {
+                        WarehouseId = warehouse.Id,
+                        ItemId = barring.Id
+                    };
+                    _warehouseItemService.CreateObject(warehouseItem, _warehouseService, _itemService);
+                }
+            }
+            return barring;
         }
 
         public Barring UpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,

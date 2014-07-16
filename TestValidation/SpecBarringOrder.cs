@@ -197,29 +197,35 @@ namespace TestValidation
                     {
                         int barring1quantity = d.barring1.Quantity;
                         int barring2quantity = d.barring2.Quantity;
+                        int barring1warehousequantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
+                        int barring2warehousequantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
                         d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                         d.barringOrderCustomer.Errors.Count().should_be(0);
                         int barring1quantityfinal = d.barring1.Quantity;
                         int barring2quantityfinal = d.barring2.Quantity;
+                        int barring1warehousequantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
+                        int barring2warehousequantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
                         barring1quantityfinal.should_be(barring1quantity + 2);
                         barring2quantityfinal.should_be(barring2quantity + 1);
+                        barring1warehousequantityfinal.should_be(barring1warehousequantity + 2);
+                        barring2warehousequantityfinal.should_be(barring2warehousequantity + 1);
                         d.barringOrderCustomer.QuantityFinal.should_be(d.barringOrderCustomer.QuantityOrdered - d.barringOrderCustomer.QuantityRejected);
                     };
 
                     it["validates_unfinishrecoveryorder"] = () =>
                     {
-                        int barring1quantity = d.barring1.Quantity;
-                        int barring2quantity = d.barring2.Quantity;
+                        int barring1quantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
+                        int barring2quantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
                         d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                         d.barringOrderCustomer.Errors.Count().should_be(0);
-                        int barring1quantityfinal = d.barring1.Quantity;
-                        int barring2quantityfinal = d.barring2.Quantity;
+                        int barring1quantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
+                        int barring2quantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
                         barring1quantityfinal.should_be(barring1quantity + 2);
                         barring2quantityfinal.should_be(barring2quantity + 1);
-                        d.barringOrderCustomer = d._barringOrderService.UnfinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._warehouseItemService);
+                        d.barringOrderCustomer = d._barringOrderService.UnfinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                         d.barringOrderCustomer.Errors.Count().should_be(0);
-                        int barring1quantityunconfirm = d.barring1.Quantity;
-                        int barring2quantityunconfirm = d.barring2.Quantity;
+                        int barring1quantityunconfirm = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
+                        int barring2quantityunconfirm = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
                         barring1quantityunconfirm.should_be(barring1quantity);
                         barring2quantityunconfirm.should_be(barring2quantity);
                         d.barringOrderCustomer.QuantityFinal.should_be(0);

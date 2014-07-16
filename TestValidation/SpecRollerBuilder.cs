@@ -26,6 +26,15 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
 
+                d.localWarehouse = new Warehouse()
+                {
+                    Name = "Sentral Solusi Data",
+                    Description = "Kali Besar Jakarta",
+                    IsMovingWarehouse = false,
+                    Code = "LCL"
+                };
+                d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
+
                 d.item = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
@@ -42,10 +51,11 @@ namespace TestValidation
                     Sku = "Cmp10001",
                     Name = "Cmp 10001",
                     Category = "cmp",
-                    UoM = "Pcs",
-                    Quantity = 2
+                    UoM = "Pcs"
                 };
                 d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d._itemService.AdjustQuantity(d.itemCompound, 2);
+                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.itemCompound.Id), 2);
 
                 d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
@@ -70,7 +80,8 @@ namespace TestValidation
                     CustomerId = d.customer.Id,
                     Code = "CI0001",
                     Quantity = 1,
-                    IdentifiedDate = DateTime.Now
+                    IdentifiedDate = DateTime.Now,
+                    WarehouseId = d.localWarehouse.Id
                 };
                 d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
@@ -111,14 +122,6 @@ namespace TestValidation
             }
         }
 
-        /*
-         * STEPS:
-         * 1. Create valid d.item
-         * 2. Create invalid d.item with no name
-         * 3. Create invalid items with same SKU
-         * 4a. Delete d.item
-         * 4b. Delete d.item with stock mutations
-         */
         void rollerbuilder_validation()
         {
         
@@ -144,8 +147,9 @@ namespace TestValidation
                 d._itemService.AdjustQuantity(d._coreBuilderService.GetNewCore(d.coreBuilder.Id), 1);
                 d._itemService.AdjustQuantity(d._coreBuilderService.GetUsedCore(d.coreBuilder.Id), 1);
 
-                d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, d._coreIdentificationDetailService, d._recoveryOrderService, d._recoveryOrderDetailService,
-                                       d._coreBuilderService, d._itemService, d._warehouseItemService);
+                d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification,
+                                       d._coreIdentificationDetailService, d._recoveryOrderService, d._recoveryOrderDetailService,
+                                       d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
                 d.coreIdentification.Errors.Count().should_be(0);
 
                 RecoveryOrder recoveryOrder = new RecoveryOrder()
@@ -153,6 +157,7 @@ namespace TestValidation
                     Code = "RO0001",
                     CoreIdentificationId = d.coreIdentification.Id,
                     QuantityReceived = 1,
+                    WarehouseId = d.localWarehouse.Id
                 };
                 recoveryOrder = d._recoveryOrderService.CreateObject(recoveryOrder, d._coreIdentificationService);
                 recoveryOrder.Errors.Count().should_be(0);

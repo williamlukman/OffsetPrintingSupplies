@@ -44,6 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\OffsetPrintingSuppliesEntities.cs" />
+    <Compile Include="Mapping\WarehouseMutationOrderDetailMapping.cs" />
+    <Compile Include="Mapping\WarehouseMutationOrderMapping.cs" />
+    <Compile Include="Mapping\WarehouseMapping.cs" />
+    <Compile Include="Mapping\WarehouseItemMapping.cs" />
     <Compile Include="Mapping\ItemMapping.cs" />
     <Compile Include="Mapping\BarringMapping.cs" />
     <Compile Include="Mapping\BarringOrderDetailMapping.cs" />

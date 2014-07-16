@@ -49,6 +49,7 @@ namespace Data.Repository
 
         public Barring CreateObject(Barring barring)
         {
+            barring.Quantity = 0;
             barring.IsDeleted = false;
             barring.CreatedAt = DateTime.Now;
             return Create(barring);
