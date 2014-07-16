@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Constants
 {
-    public class Constant
+    public partial class Constant
     {
         public class MaterialCase
         {

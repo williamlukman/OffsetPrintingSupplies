@@ -39,11 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants\Constant.cs" />
+    <Compile Include="Constants\TransactionConstant.cs" />
+    <Compile Include="Constants\ManufacturingConstant.cs" />
     <Compile Include="DomainModel\Barring.cs" />
     <Compile Include="DomainModel\BarringOrder.cs" />
     <Compile Include="DomainModel\BarringOrderDetail.cs" />
     <Compile Include="DomainModel\Item.cs" />
+    <Compile Include="DomainModel\StockAdjustment.cs" />
+    <Compile Include="DomainModel\StockAdjustmentDetail.cs" />
+    <Compile Include="DomainModel\StockMutation.cs" />
     <Compile Include="DomainModel\WarehouseMutationOrderDetail.cs" />
     <Compile Include="DomainModel\WarehouseItem.cs" />
     <Compile Include="DomainModel\CoreIdentification.cs" />
@@ -59,6 +63,9 @@
     <Compile Include="DomainModel\RecoveryAccessoryDetail.cs" />
     <Compile Include="DomainModel\ItemType.cs" />
     <Compile Include="DomainModel\Warehouse.cs" />
+    <Compile Include="Interface\Repository\IStockAdjustmentDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IStockAdjustmentRepository.cs" />
+    <Compile Include="Interface\Repository\IStockMutationRepository.cs" />
     <Compile Include="Interface\Repository\IWarehouseMutationOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\IWarehouseMutationOrderRepository.cs" />
     <Compile Include="Interface\Repository\IWarehouseItemRepository.cs" />
@@ -79,6 +86,9 @@
     <Compile Include="Interface\Repository\IItemRepository.cs" />
     <Compile Include="Interface\Repository\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Service\IStockAdjustmentDetailService.cs" />
+    <Compile Include="Interface\Service\IStockAdjustmentService.cs" />
+    <Compile Include="Interface\Service\IStockMutationService.cs" />
     <Compile Include="Interface\Service\IWarehouseMutationOrderDetailService.cs" />
     <Compile Include="Interface\Service\IWarehouseMutationOrderService.cs" />
     <Compile Include="Interface\Service\IWarehouseItemService.cs" />
@@ -98,6 +108,9 @@
     <Compile Include="Interface\Service\ICustomerService.cs" />
     <Compile Include="Interface\Service\IItemService.cs" />
     <Compile Include="Interface\Service\IItemTypeService.cs" />
+    <Compile Include="Interface\Validation\IStockAdjustmentDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IStockAdjustmentValidator.cs" />
+    <Compile Include="Interface\Validation\IStockMutationValidator.cs" />
     <Compile Include="Interface\Validation\IWarehouseMutationOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\IWarehouseMutationOrderValidator.cs" />
     <Compile Include="Interface\Validation\IWarehouseItemValidator.cs" />

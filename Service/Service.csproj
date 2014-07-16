@@ -43,6 +43,9 @@
     <Compile Include="Service\BarringOrderDetailService.cs" />
     <Compile Include="Service\BarringOrderService.cs" />
     <Compile Include="Service\BarringService.cs" />
+    <Compile Include="Service\StockAdjustmentDetailService.cs" />
+    <Compile Include="Service\StockAdjustmentService.cs" />
+    <Compile Include="Service\StockMutationService.cs" />
     <Compile Include="Service\WarehouseItemService.cs" />
     <Compile Include="Service\WarehouseService.cs" />
     <Compile Include="Service\RecoveryOrderService.cs" />

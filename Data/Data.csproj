@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\OffsetPrintingSuppliesEntities.cs" />
+    <Compile Include="Mapping\StockAdjustmentDetailMapping.cs" />
+    <Compile Include="Mapping\StockAdjustmentMapping.cs" />
+    <Compile Include="Mapping\StockMutationMapping.cs" />
     <Compile Include="Mapping\WarehouseMutationOrderDetailMapping.cs" />
     <Compile Include="Mapping\WarehouseMutationOrderMapping.cs" />
     <Compile Include="Mapping\WarehouseMapping.cs" />
@@ -67,6 +70,9 @@
     <Compile Include="Repository\BarringOrderDetailRepository.cs" />
     <Compile Include="Repository\BarringOrderRepository.cs" />
     <Compile Include="Repository\BarringRepository.cs" />
+    <Compile Include="Repository\StockAdjustmentDetailRepository.cs" />
+    <Compile Include="Repository\StockAdjustmentRepository.cs" />
+    <Compile Include="Repository\StockMutationRepository.cs" />
     <Compile Include="Repository\WarehouseMutationOrderDetailRepository.cs" />
     <Compile Include="Repository\WarehouseMutationOrderRepository.cs" />
     <Compile Include="Repository\WarehouseItemRepository.cs" />

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data.Context;
-using Data.Repository;
 using System.Data;
 
 namespace Data.Repository
