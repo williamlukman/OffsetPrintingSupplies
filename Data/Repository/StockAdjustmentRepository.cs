@@ -41,7 +41,7 @@ namespace Data.Repository
 
         public StockAdjustment UpdateObject(StockAdjustment stockAdjustment)
         {
-            stockAdjustment.ModifiedAt = DateTime.Now;
+            stockAdjustment.UpdatedAt = DateTime.Now;
             Update(stockAdjustment);
             return stockAdjustment;
         }
@@ -54,15 +54,10 @@ namespace Data.Repository
             return stockAdjustment;
         }
 
-        public bool DeleteObject(int Id)
-        {
-            StockAdjustment stockAdjustment = Find(x => x.Id == Id);
-            return (Delete(stockAdjustment) == 1) ? true : false;
-        }
-
         public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment)
         {
             stockAdjustment.IsConfirmed = true;
+            stockAdjustment.ConfirmationDate = DateTime.Now;
             Update(stockAdjustment);
             return stockAdjustment;
         }
@@ -70,8 +65,24 @@ namespace Data.Repository
         public StockAdjustment UnconfirmObject(StockAdjustment stockAdjustment)
         {
             stockAdjustment.IsConfirmed = false;
+            stockAdjustment.ConfirmationDate = null;
+            stockAdjustment.UpdatedAt = DateTime.Now;
             Update(stockAdjustment);
             return stockAdjustment;
+        }
+
+        public StockAdjustment CompleteObject(StockAdjustment stockAdjustment)
+        {
+            stockAdjustment.IsCompleted = true;
+            stockAdjustment.UpdatedAt = DateTime.Now;
+            Update(stockAdjustment);
+            return stockAdjustment;
+        }
+
+        public bool DeleteObject(int Id)
+        {
+            StockAdjustment stockAdjustment = Find(x => x.Id == Id);
+            return (Delete(stockAdjustment) == 1) ? true : false;
         }
 
         public string SetObjectCode()

@@ -65,18 +65,19 @@ namespace Data.Repository
             return (Delete(warehouseMutationOrderDetail) == 1) ? true : false;
         }
 
-        public WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationOrderDetail FinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
         {
-            warehouseMutationOrderDetail.IsConfirmed = true;
-            warehouseMutationOrderDetail.ConfirmationDate = DateTime.Now;
+            warehouseMutationOrderDetail.IsFinished = true;
+            warehouseMutationOrderDetail.FinishedDate = DateTime.Now;
             Update(warehouseMutationOrderDetail);
             return warehouseMutationOrderDetail;
         }
 
-        public WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationOrderDetail UnfinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
         {
-            warehouseMutationOrderDetail.IsConfirmed = false;
-            warehouseMutationOrderDetail.ConfirmationDate = null;
+            warehouseMutationOrderDetail.IsFinished = false;
+            warehouseMutationOrderDetail.FinishedDate = null;
+            warehouseMutationOrderDetail.UpdatedAt = DateTime.Now;
             Update(warehouseMutationOrderDetail);
             return warehouseMutationOrderDetail;
         }

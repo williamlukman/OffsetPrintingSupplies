@@ -18,6 +18,7 @@ namespace Core.Interface.Repository
         WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder);
         WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder);
         WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder);
+        WarehouseMutationOrder CompleteObject(WarehouseMutationOrder warehouseMutationOrder);
         bool DeleteObject(int Id);
     }
 }

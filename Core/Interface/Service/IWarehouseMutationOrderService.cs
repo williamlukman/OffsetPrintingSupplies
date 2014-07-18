@@ -20,11 +20,10 @@ namespace Core.Interface.Service
         WarehouseMutationOrder UpdateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
         WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder);
         bool DeleteObject(int Id);
-        WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                    IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService,
-                                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                    IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService,
-                                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
+                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
+                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrder CompleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService);
     }
 }

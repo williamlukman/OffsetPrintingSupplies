@@ -77,6 +77,7 @@ namespace Data.Repository
         public CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsJobScheduled = true;
+            coreIdentificationDetail.UpdatedAt = DateTime.Now;
             Update(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
@@ -84,6 +85,7 @@ namespace Data.Repository
         public CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsJobScheduled = false;
+            coreIdentificationDetail.UpdatedAt = DateTime.Now;
             Update(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
@@ -91,6 +93,7 @@ namespace Data.Repository
         public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsFinished = true;
+            coreIdentificationDetail.FinishDate = DateTime.Now;
             Update(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
@@ -98,6 +101,8 @@ namespace Data.Repository
         public CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsFinished = false;
+            coreIdentificationDetail.FinishDate = null;
+            coreIdentificationDetail.UpdatedAt = DateTime.Now;
             Update(coreIdentificationDetail);
             return coreIdentificationDetail;
         }

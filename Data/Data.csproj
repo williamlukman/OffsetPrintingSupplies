@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\OffsetPrintingSuppliesEntities.cs" />
+    <Compile Include="Mapping\UoMMapping.cs" />
     <Compile Include="Mapping\StockAdjustmentDetailMapping.cs" />
     <Compile Include="Mapping\StockAdjustmentMapping.cs" />
     <Compile Include="Mapping\StockMutationMapping.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Repository\BarringOrderDetailRepository.cs" />
     <Compile Include="Repository\BarringOrderRepository.cs" />
     <Compile Include="Repository\BarringRepository.cs" />
+    <Compile Include="Repository\UoMRepository.cs" />
     <Compile Include="Repository\StockAdjustmentDetailRepository.cs" />
     <Compile Include="Repository\StockAdjustmentRepository.cs" />
     <Compile Include="Repository\StockMutationRepository.cs" />

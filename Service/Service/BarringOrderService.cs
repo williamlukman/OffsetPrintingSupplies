@@ -78,43 +78,10 @@ namespace Service.Service
             if (_validator.ValidConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService))
             {
                 IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-                // itemId contains Id of the blanket, leftbar, and rightbar
-                IDictionary<int, int> ValuePairItemIdQuantity = new Dictionary<int, int>();
                 foreach (var detail in details)
                 {
-                    Barring barring = _barringService.GetObjectById(detail.BarringId);
-                    // blanket
-                    if (ValuePairItemIdQuantity.ContainsKey(barring.BlanketItemId))
-                    { ValuePairItemIdQuantity[barring.BlanketItemId] -= 1; }
-                    else
-                    { ValuePairItemIdQuantity.Add(barring.BlanketItemId, -1); }
-
-                    // leftbar
-                    if (barring.LeftBarItemId != null)
-                    {
-                        if (ValuePairItemIdQuantity.ContainsKey((int)barring.LeftBarItemId))
-                        { ValuePairItemIdQuantity[(int)barring.LeftBarItemId] -= 1; }
-                        else
-                        { ValuePairItemIdQuantity.Add((int)barring.LeftBarItemId, -1); }
-                    }
-
-                    // rightbar
-                    if (barring.RightBarItemId != null)
-                    {
-                        if (ValuePairItemIdQuantity.ContainsKey((int)barring.RightBarItemId))
-                        { ValuePairItemIdQuantity[(int)barring.RightBarItemId] -= 1; }
-                        else
-                        { ValuePairItemIdQuantity.Add((int)barring.RightBarItemId, -1); }
-                    }
+                    _barringOrderDetailService.SetJobScheduled(detail);
                 }
-
-                foreach (var ValuePair in ValuePairItemIdQuantity)
-                {
-                    Item item = _itemService.GetObjectById(ValuePair.Key);
-                    _itemService.AdjustQuantity(item, ValuePair.Value);
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
-                } 
                 _repository.ConfirmObject(barringOrder);
             }
             return barringOrder;
@@ -125,42 +92,9 @@ namespace Service.Service
             if (_validator.ValidUnconfirmObject(barringOrder, _barringOrderDetailService))
             {
                 IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-                // itemId contains Id of the blanket, leftbar, and rightbar
-                IDictionary<int, int> ValuePairItemIdQuantity = new Dictionary<int, int>();
                 foreach (var detail in details)
                 {
-                    Barring barring = _barringService.GetObjectById(detail.BarringId);
-                    // blanket
-                    if (ValuePairItemIdQuantity.ContainsKey(barring.BlanketItemId))
-                    { ValuePairItemIdQuantity[barring.BlanketItemId] += 1; }
-                    else
-                    { ValuePairItemIdQuantity.Add(barring.BlanketItemId, 1); }
-
-                    // leftbar
-                    if (barring.LeftBarItemId != null)
-                    {
-                        if (ValuePairItemIdQuantity.ContainsKey((int)barring.LeftBarItemId))
-                        { ValuePairItemIdQuantity[(int)barring.LeftBarItemId] += 1; }
-                        else
-                        { ValuePairItemIdQuantity.Add((int)barring.LeftBarItemId, 1); }
-                    }
-
-                    // rightbar
-                    if (barring.RightBarItemId != null)
-                    {
-                        if (ValuePairItemIdQuantity.ContainsKey((int)barring.RightBarItemId))
-                        { ValuePairItemIdQuantity[(int)barring.RightBarItemId] += 1; }
-                        else
-                        { ValuePairItemIdQuantity.Add((int)barring.RightBarItemId, 1); }
-                    }
-                }
-
-                foreach (var ValuePair in ValuePairItemIdQuantity)
-                {
-                    Item item = _itemService.GetObjectById(ValuePair.Key);
-                    _itemService.AdjustQuantity(item, ValuePair.Value);
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePair.Value);
+                    _barringOrderDetailService.UnsetJobScheduled(detail);
                 }
                 _repository.UnconfirmObject(barringOrder);
             }
@@ -169,6 +103,7 @@ namespace Service.Service
 
         public BarringOrder FinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            // TODO
             if (_validator.ValidFinishObject(barringOrder, _barringOrderDetailService, _itemService))
             {
                 IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);

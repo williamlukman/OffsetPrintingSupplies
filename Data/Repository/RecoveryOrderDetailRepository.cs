@@ -182,6 +182,23 @@ namespace Data.Repository
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail)
+        {
+            recoveryOrderDetail.IsFinished = true;
+            recoveryOrderDetail.FinishedDate = DateTime.Now;
+            Update(recoveryOrderDetail);
+            return recoveryOrderDetail;
+        }
+
+        public RecoveryOrderDetail UnfinishObject(RecoveryOrderDetail recoveryOrderDetail)
+        {
+            recoveryOrderDetail.IsFinished = false;
+            recoveryOrderDetail.FinishedDate = null;
+            recoveryOrderDetail.UpdatedAt = DateTime.Now;
+            Update(recoveryOrderDetail);
+            return recoveryOrderDetail;
+        }
+        
         public bool DeleteObject(int Id)
         {
             RecoveryOrderDetail recoveryOrderDetail = Find(x => x.Id == Id);

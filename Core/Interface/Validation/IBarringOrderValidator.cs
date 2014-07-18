@@ -18,9 +18,9 @@ namespace Core.Interface.Validation
                                         IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder VHasBeenConfirmed(BarringOrder barringOrder);
         BarringOrder VHasNotBeenConfirmed(BarringOrder barringOrder);
-        BarringOrder VHasBeenFinished(BarringOrder barringOrder);
-        BarringOrder VHasNotBeenFinished(BarringOrder barringOrder);
-        BarringOrder VAllDetailsHaveBeenPackagedOrRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
+        BarringOrder VHasBeenCompleted(BarringOrder barringOrder);
+        BarringOrder VHasNotBeenCompleted(BarringOrder barringOrder);
+        BarringOrder VAllDetailsHaveBeenFinishedOrRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VAllDetailsHaveBeenCutOrRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VAllDetailsHaveNotBeenCutNorRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VAllDetailsHaveLeftAndRightBar(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IItemService _itemService);
@@ -29,16 +29,14 @@ namespace Core.Interface.Validation
         BarringOrder VDeleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder VUnconfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
-        BarringOrder VFinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IItemService _itemService);
-        BarringOrder VUnfinishObject(BarringOrder barringOrder);
+        BarringOrder VCompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
 
         bool ValidCreateObject(BarringOrder barringOrder, IBarringOrderService _barringOrderService);
         bool ValidUpdateObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringOrderService _barringOrderService);
         bool ValidDeleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         bool ValidConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
-        bool ValidFinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IItemService _itemService);
-        bool ValidUnfinishObject(BarringOrder barringOrder);
+        bool ValidCompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         bool isValid(BarringOrder barringOrder);
         string PrintError(BarringOrder barringOrder);
     }

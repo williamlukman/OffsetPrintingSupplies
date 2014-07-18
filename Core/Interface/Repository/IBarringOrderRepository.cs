@@ -18,8 +18,8 @@ namespace Core.Interface.Repository
         BarringOrder SoftDeleteObject(BarringOrder barringOrder);
         BarringOrder ConfirmObject(BarringOrder barringOrder);
         BarringOrder UnconfirmObject(BarringOrder barringOrder);
-        BarringOrder FinishObject(BarringOrder barringOrder);
-        BarringOrder UnfinishObject(BarringOrder barringOrder);
+        BarringOrder CompleteObject(BarringOrder barringOrder);
+        BarringOrder UndoCompleteObject(BarringOrder barringOrder);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(BarringOrder barringOrder);
     }

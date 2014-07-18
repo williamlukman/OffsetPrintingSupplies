@@ -96,6 +96,14 @@ namespace Data.Repository
             return warehouseMutationOrder;
         }
 
+        public WarehouseMutationOrder CompleteObject(WarehouseMutationOrder warehouseMutationOrder)
+        {
+            warehouseMutationOrder.IsCompleted = true;
+            warehouseMutationOrder.UpdatedAt = DateTime.Now;
+            Update(warehouseMutationOrder);
+            return warehouseMutationOrder;
+        }
+
         public bool DeleteObject(int Id)
         {
             WarehouseMutationOrder warehouseMutationOrder =  Find(x => x.Id == Id);

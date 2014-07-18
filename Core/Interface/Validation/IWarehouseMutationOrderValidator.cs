@@ -21,6 +21,8 @@ namespace Core.Interface.Validation
                                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationOrder VDetailsAreVerifiedUnconfirmable(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
                                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrder VAllDetailsHaveBeenFinished(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
+                                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationOrder VCreateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
         WarehouseMutationOrder VUpdateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
         WarehouseMutationOrder VDeleteObject(WarehouseMutationOrder warehouseMutationOrder);
@@ -28,6 +30,7 @@ namespace Core.Interface.Validation
                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationOrder VUnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrder VCompleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService);
         bool ValidCreateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
         bool ValidUpdateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
         bool ValidDeleteObject(WarehouseMutationOrder warehouseMutationOrder);
@@ -35,6 +38,7 @@ namespace Core.Interface.Validation
                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        bool ValidCompleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService);
         bool isValid(WarehouseMutationOrder warehouseMutationOrder);
         string PrintError(WarehouseMutationOrder warehouseMutationOrder);
     }

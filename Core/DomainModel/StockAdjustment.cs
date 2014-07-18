@@ -17,11 +17,11 @@ namespace Core.DomainModel
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
+        public bool IsCompleted { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
-
         public DateTime CreatedAt { get; set; }
-        public Nullable<DateTime> ModifiedAt { get; set; }
+        public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual ICollection<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public Dictionary<String, String> Errors { get; set; }

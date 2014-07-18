@@ -26,7 +26,10 @@ namespace Core.DomainModel
         public bool IsCWCGrinded { get; set; }
         public bool IsPolishedAndQC { get; set; }
         public bool IsPackaged { get; set; }
+
         public bool IsRejected { get; set; }
+        public bool IsFinished { get; set; }
+        public Nullable<DateTime> FinishedDate { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

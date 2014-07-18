@@ -48,7 +48,6 @@ namespace Data.Repository
             barringOrder.QuantityRejected = 0;
             barringOrder.IsConfirmed = false;
             barringOrder.IsCompleted = false;
-            barringOrder.IsFinished = false;
             barringOrder.IsDeleted = false;
             barringOrder.CreatedAt = DateTime.Now;
             return Create(barringOrder);
@@ -81,24 +80,23 @@ namespace Data.Repository
         {
             barringOrder.IsConfirmed = false;
             barringOrder.ConfirmationDate = null;
+            barringOrder.UpdatedAt = DateTime.Now;
             Update(barringOrder);
             return barringOrder;
         }
 
-        public BarringOrder FinishObject(BarringOrder barringOrder)
+        public BarringOrder CompleteObject(BarringOrder barringOrder)
         {
             barringOrder.IsCompleted = true;
-            barringOrder.IsFinished = true;
-            barringOrder.FinishDate = DateTime.Now;
+            barringOrder.UpdatedAt = DateTime.Now;
             Update(barringOrder);
             return barringOrder;
         }
 
-        public BarringOrder UnfinishObject(BarringOrder barringOrder)
+        public BarringOrder UndoCompleteObject(BarringOrder barringOrder)
         {
             barringOrder.IsCompleted = false;
-            barringOrder.IsFinished = false;
-            Update(barringOrder);
+            barringOrder.UpdatedAt = DateTime.Now;
             return barringOrder;
         }
 

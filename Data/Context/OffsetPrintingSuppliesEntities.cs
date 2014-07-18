@@ -23,7 +23,7 @@ namespace Data.Context
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
                                                             "BarringOrderDetail", "BarringOrder", "StockAdjustmentDetail", "StockAdjustment",
                                                             "StockMutation", "WarehouseItem", "Warehouse", 
-                                                            "Barring", "CoreBuilder", "Item", "ItemType", "Customer", "RollerType", "Machine",
+                                                            "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Customer", "RollerType", "Machine",
                                                             };
 
             foreach (var tableName in tableNames)
@@ -54,6 +54,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
+            modelBuilder.Configurations.Add(new UoMMapping());
             modelBuilder.Configurations.Add(new WarehouseMapping());
             modelBuilder.Configurations.Add(new WarehouseItemMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationOrderMapping());
@@ -79,6 +80,7 @@ namespace Data.Context
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }
+        public DbSet<UoM> UoMs { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseItem> WarehouseItems { get; set; }
         public DbSet<WarehouseMutationOrder> WarehouseMutationOrders { get; set; }

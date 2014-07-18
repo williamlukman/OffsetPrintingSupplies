@@ -20,6 +20,8 @@ namespace Core.Interface.Service
         BarringOrderDetail CreateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         BarringOrderDetail UpdateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         BarringOrderDetail SoftDeleteObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        BarringOrderDetail SetJobScheduled(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail UnsetJobScheduled(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
         BarringOrderDetail RemoveLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
         BarringOrderDetail AddRightBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
@@ -35,6 +37,8 @@ namespace Core.Interface.Service
         BarringOrderDetail PackageObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         BarringOrderDetail UndoRejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         bool DeleteObject(int Id);
     }
 }

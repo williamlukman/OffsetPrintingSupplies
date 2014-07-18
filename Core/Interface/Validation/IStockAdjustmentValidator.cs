@@ -15,9 +15,9 @@ namespace Core.Interface.Validation
         StockAdjustment VHasBeenConfirmed(StockAdjustment stockAdjustment);
         StockAdjustment VHasNotBeenConfirmed(StockAdjustment stockAdjustment);
         StockAdjustment VHasStockAdjustmentDetails(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService);
-        StockAdjustment VDetailsAreVerifiedConfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+        StockAdjustment VDetailsAreVerifiedFinishable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        StockAdjustment VDetailsAreVerifiedUnconfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+        StockAdjustment VDetailsAreVerifiedUnfinishable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                                          IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         StockAdjustment VCreateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService);
         StockAdjustment VUpdateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService);
@@ -26,13 +26,15 @@ namespace Core.Interface.Validation
                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         StockAdjustment VUnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        StockAdjustment VCompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService);
         bool ValidCreateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService);
         bool ValidUpdateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService);
         bool ValidDeleteObject(StockAdjustment stockAdjustment);
         bool ValidConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                  IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        bool ValidCompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService);
         bool isValid(StockAdjustment stockAdjustment);
         string PrintError(StockAdjustment stockAdjustment);
     }

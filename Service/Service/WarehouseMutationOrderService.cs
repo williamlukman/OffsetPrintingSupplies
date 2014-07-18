@@ -73,21 +73,7 @@ namespace Service.Service
             if (_validator.ValidConfirmObject(warehouseMutationOrder, _warehouseMutationOrderService, _warehouseMutationOrderDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
-                IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
-                foreach (var detail in details)
-                {
-                    if (!_warehouseMutationOrderDetailService.GetValidator().ValidConfirmObject(detail, this, _itemService, _barringService, _warehouseItemService))
-                    {
-                        warehouseMutationOrder.Errors.Add("Generic", "Tidak dapat mengkonfirmasi stock adjustment");
-                        return warehouseMutationOrder;
-                    }
-                }
-
                 _repository.ConfirmObject(warehouseMutationOrder);
-                foreach (var detail in details)
-                {
-                    _warehouseMutationOrderDetailService.ConfirmObject(detail, this, _itemService, _barringService, _warehouseItemService);
-                }
             }
             return warehouseMutationOrder;
         }
@@ -99,21 +85,7 @@ namespace Service.Service
             if (_validator.ValidUnconfirmObject(warehouseMutationOrder, _warehouseMutationOrderService, _warehouseMutationOrderDetailService,
                                                 _itemService, _barringService, _warehouseItemService))
             {
-                IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
-                foreach (var detail in details)
-                {
-                    if (!_warehouseMutationOrderDetailService.GetValidator().ValidUnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService))
-                    {
-                        warehouseMutationOrder.Errors.Add("Generic", "Tidak dapat mengkonfirmasi stock adjustment");
-                        return warehouseMutationOrder;
-                    }
-                }
-
                 _repository.UnconfirmObject(warehouseMutationOrder);
-                foreach (var detail in details)
-                {
-                    _warehouseMutationOrderDetailService.UnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService);
-                }
             }
             return warehouseMutationOrder;
         }

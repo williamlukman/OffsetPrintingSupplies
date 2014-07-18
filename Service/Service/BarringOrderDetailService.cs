@@ -69,6 +69,16 @@ namespace Service.Service
                                           _repository.SoftDeleteObject(barringOrderDetail) : barringOrderDetail);
         }
 
+        public BarringOrderDetail SetJobScheduled(BarringOrderDetail barringOrderDetail)
+        {
+            return _repository.SetJobScheduled(barringOrderDetail);
+        }
+
+        public BarringOrderDetail UnsetJobScheduled(BarringOrderDetail barringOrderDetail)
+        {
+            return _repository.UnsetJobScheduled(barringOrderDetail);
+        }
+
         public BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService)
         {
             return (barringOrderDetail = _validator.ValidAddLeftBar(barringOrderDetail) ?
@@ -148,6 +158,18 @@ namespace Service.Service
         {
             return (barringOrderDetail = _validator.ValidUndoRejectObject(barringOrderDetail, _barringOrderService) ?
                                           _repository.UndoRejectObject(barringOrderDetail) : barringOrderDetail);
+        }
+
+        public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        {
+            return (barringOrderDetail = _validator.ValidFinishObject(barringOrderDetail, _barringOrderService) ?
+                                         _repository.FinishObject(barringOrderDetail) : barringOrderDetail);
+        }
+
+        public BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        {
+            return (barringOrderDetail = _validator.ValidUnfinishObject(barringOrderDetail, _barringOrderService) ?
+                                         _repository.FinishObject(barringOrderDetail) : barringOrderDetail);
         }
 
         public bool DeleteObject(int Id)

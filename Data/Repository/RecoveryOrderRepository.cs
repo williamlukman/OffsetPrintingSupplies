@@ -80,7 +80,6 @@ namespace Data.Repository
             recoveryOrder.QuantityFinal = 0;
             recoveryOrder.QuantityRejected = 0;
             recoveryOrder.IsConfirmed = false;
-            recoveryOrder.IsFinished = false;
             recoveryOrder.IsDeleted = false;
             recoveryOrder.CreatedAt = DateTime.Now;
             return Create(recoveryOrder);
@@ -113,22 +112,15 @@ namespace Data.Repository
         {
             recoveryOrder.IsConfirmed = false;
             recoveryOrder.ConfirmationDate = null;
+            recoveryOrder.UpdatedAt = DateTime.Now;
             Update(recoveryOrder);
             return recoveryOrder;
         }
 
-        public RecoveryOrder FinishObject(RecoveryOrder recoveryOrder)
+        public RecoveryOrder CompleteObject(RecoveryOrder recoveryOrder)
         {
-            recoveryOrder.IsFinished = true;
-            recoveryOrder.FinishedDate = DateTime.Now;
-            Update(recoveryOrder);
-            return recoveryOrder;
-        }
-
-        public RecoveryOrder UnfinishObject(RecoveryOrder recoveryOrder)
-        {
-            recoveryOrder.IsFinished = false;
-            recoveryOrder.FinishedDate = null;
+            recoveryOrder.IsCompleted = true;
+            recoveryOrder.UpdatedAt = DateTime.Now;
             Update(recoveryOrder);
             return recoveryOrder;
         }

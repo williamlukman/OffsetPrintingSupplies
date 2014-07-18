@@ -26,6 +26,7 @@ namespace Core.DomainModel
         public bool IsPackaged { get; set; }
         public bool IsRejected { get; set; }
 
+        public bool IsJobScheduled { get; set; }
         public bool IsFinished { get; set; }
         public Nullable<DateTime> FinishDate { get; set; }
 

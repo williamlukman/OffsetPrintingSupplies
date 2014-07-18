@@ -49,6 +49,7 @@ namespace Data.Repository
 
         public CoreIdentification CreateObject(CoreIdentification coreIdentification)
         {
+            coreIdentification.IsCompleted = false;
             coreIdentification.IsConfirmed = false;
             coreIdentification.IsDeleted = false;
             coreIdentification.CreatedAt = DateTime.Now;
@@ -82,6 +83,15 @@ namespace Data.Repository
         {
             coreIdentification.IsConfirmed = false;
             coreIdentification.ConfirmationDate = null;
+            coreIdentification.UpdatedAt = DateTime.Now;
+            Update(coreIdentification);
+            return coreIdentification;
+        }
+
+        public CoreIdentification CompleteObject(CoreIdentification coreIdentification)
+        {
+            coreIdentification.IsCompleted = true;
+            coreIdentification.UpdatedAt = DateTime.Now;
             Update(coreIdentification);
             return coreIdentification;
         }

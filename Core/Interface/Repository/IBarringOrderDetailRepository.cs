@@ -16,6 +16,8 @@ namespace Core.Interface.Repository
         BarringOrderDetail CreateObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail UpdateObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail SoftDeleteObject(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail SetJobScheduled(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail UnsetJobScheduled(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail RemoveLeftBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail AddRightBar(BarringOrderDetail barringOrderDetail);
@@ -31,6 +33,8 @@ namespace Core.Interface.Repository
         BarringOrderDetail PackageObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail UndoRejectObject(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail);
         bool DeleteObject(int Id);
     }
 }

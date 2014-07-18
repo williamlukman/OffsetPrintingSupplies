@@ -25,6 +25,7 @@ namespace Core.Interface.Validation
         BarringOrderDetail VHasBeenQCAndMarked(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenPackaged(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenRejected(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail VHasBeenFinished(BarringOrderDetail barringOrderDetail);
 
         BarringOrderDetail VHasNoLeftBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasNoRightBar(BarringOrderDetail barringOrderDetail);
@@ -38,13 +39,15 @@ namespace Core.Interface.Validation
         BarringOrderDetail VHasNotBeenQCAndMarked(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasNotBeenPackaged(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasNotBeenRejected(BarringOrderDetail barringOrderDetail);
-
+        BarringOrderDetail VHasNotBeenFinished(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VBarringOrderHasNotBeenConfirmed(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
-        BarringOrderDetail VBarringOrderHasNotBeenFinished(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        BarringOrderDetail VBarringOrderHasNotBeenCompleted(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
 
         BarringOrderDetail VCreateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         BarringOrderDetail VUpdateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         BarringOrderDetail VDeleteObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        BarringOrderDetail VFinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        BarringOrderDetail VUnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
 
         BarringOrderDetail VAddLeftBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VRemoveLeftBar(BarringOrderDetail barringOrderDetail);
@@ -65,6 +68,8 @@ namespace Core.Interface.Validation
         bool ValidCreateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         bool ValidUpdateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         bool ValidDeleteObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        bool ValidFinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
+        bool ValidUnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
 
         bool ValidAddLeftBar(BarringOrderDetail barringOrderDetail);
         bool ValidRemoveLeftBar(BarringOrderDetail barringOrderDetail);

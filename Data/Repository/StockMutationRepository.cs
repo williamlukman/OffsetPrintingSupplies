@@ -55,7 +55,7 @@ namespace Data.Repository
 
         public StockMutation UpdateObject(StockMutation stockMutation)
         {
-            stockMutation.ModifiedAt = DateTime.Now;
+            stockMutation.UpdatedAt = DateTime.Now;
             Update(stockMutation);
             return stockMutation;
         }

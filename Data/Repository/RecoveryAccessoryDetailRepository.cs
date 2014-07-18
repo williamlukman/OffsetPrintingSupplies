@@ -77,6 +77,7 @@ namespace Data.Repository
         {
             recoveryAccessoryDetail.IsFinished = false;
             recoveryAccessoryDetail.FinishedDate = null;
+            recoveryAccessoryDetail.UpdatedAt = DateTime.Now;
             Update(recoveryAccessoryDetail);
             return recoveryAccessoryDetail;
         }

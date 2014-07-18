@@ -31,6 +31,8 @@ namespace Core.Interface.Repository
         RecoveryOrderDetail PackageObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail UnfinishObject(RecoveryOrderDetail recoveryOrderDetail);
         bool DeleteObject(int Id);
     }
 }

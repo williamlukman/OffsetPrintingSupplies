@@ -19,6 +19,7 @@ namespace Core.Interface.Repository
         CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification);
         CoreIdentification ConfirmObject(CoreIdentification coreIdentification);
         CoreIdentification UnconfirmObject(CoreIdentification coreIdentification);
+        CoreIdentification CompleteObject(CoreIdentification coreIdentification);
         bool DeleteObject(int Id);
     }
 }
