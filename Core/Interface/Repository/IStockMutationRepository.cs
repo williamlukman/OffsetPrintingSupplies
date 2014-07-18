@@ -10,6 +10,7 @@ namespace Core.Interface.Repository
     public interface IStockMutationRepository : IRepository<StockMutation>
     {
         IList<StockMutation> GetAll();
+        IList<StockMutation> GetObjectsByWarehouseId(int warehouseId);
         IList<StockMutation> GetObjectsByWarehouseItemId(int warehouseItemId);
         StockMutation GetObjectById(int Id);
         IList<StockMutation> GetObjectsBySourceDocumentDetail(int warehouseItemId, string SourceDocumentDetailType, int SourceDocumentDetailId);

@@ -15,10 +15,17 @@ namespace Core.Interface.Service
         IList<WarehouseMutationOrderDetail> GetAll();
         IList<WarehouseMutationOrderDetail> GetObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId);
         WarehouseMutationOrderDetail GetObjectById(int Id);
-        WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail abstractItem, IItemTypeService _itemTypeService);
-        WarehouseMutationOrderDetail UpdateObject(WarehouseMutationOrderDetail abstractItem, IItemTypeService _itemTypeService);
-        WarehouseMutationOrderDetail SoftDeleteObject(WarehouseMutationOrderDetail abstractItem);
-        WarehouseMutationOrderDetail AdjustQuantity(WarehouseMutationOrderDetail abstractItem, int Quantity);
+        WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrderDetail CreateObject(int warehouseMutationOrderId, int itemId, int quantity, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrderDetail UpdateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrderDetail SoftDeleteObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail WarehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail WarehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
     }
 }

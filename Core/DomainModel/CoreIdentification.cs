@@ -10,7 +10,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
-        public int WarehouseId { get; set; }
+        public int WarehouseId { get; set; } // Workshop Warehouse
 
         public Nullable<int> CustomerId { get; set; }
         public bool IsInHouse { get; set; }

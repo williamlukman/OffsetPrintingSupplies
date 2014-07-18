@@ -115,7 +115,6 @@ namespace Service.Service
                 bool ConfirmCase = true;
                 foreach (var detail in details)
                 {
-                    detail.ConfirmedAt = stockAdjustment.ConfirmedAt;
                     _stockAdjustmentDetailService.ConfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                     AdjustStock(stockAdjustment, detail, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, ConfirmCase);
                 }
@@ -142,7 +141,7 @@ namespace Service.Service
                 bool ConfirmCase = false;
                 foreach (var detail in details)
                 {
-                    detail.ConfirmedAt = stockAdjustment.ConfirmedAt;
+                    detail.ConfirmationDate = stockAdjustment.ConfirmationDate;
                     _stockAdjustmentDetailService.ConfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                     AdjustStock(stockAdjustment, detail, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, ConfirmCase);
                 }

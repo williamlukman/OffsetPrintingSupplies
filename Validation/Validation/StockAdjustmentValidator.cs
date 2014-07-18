@@ -57,7 +57,39 @@ namespace Validation.Validation
             IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
             if (!details.Any())
             {
-                stockAdjustment.Errors.Add("StockAdjustmentDetails", "Tidak boleh tidak ada");
+                stockAdjustment.Errors.Add("Generic", "Details tidak boleh tidak ada");
+            }
+            return stockAdjustment;
+        }
+
+        public StockAdjustment VDetailsAreVerifiedConfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        {
+            IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
+            foreach (var detail in details)
+            {
+                if (!_stockAdjustmentDetailService.GetValidator().ValidConfirmObject(detail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+                {
+                    stockAdjustment.Errors.Add("Generic", "Details tidak dapat dikonfirmasi");
+                }
+            }
+            return stockAdjustment;
+        }
+
+        public StockAdjustment VDetailsAreVerifiedUnconfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        {
+            IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
+            foreach (var detail in details)
+            {
+                if (!_stockAdjustmentDetailService.GetValidator().ValidUnconfirmObject(detail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+                {
+                    foreach (var error in detail.Errors)
+                    {
+                        stockAdjustment.Errors.Add(error.Key, error.Value);
+                    }
+                    if (!isValid(stockAdjustment)) { return stockAdjustment; }
+                }
             }
             return stockAdjustment;
         }
@@ -90,21 +122,8 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(stockAdjustment);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VHasStockAdjustmentDetails(stockAdjustment, _stockAdjustmentDetailService);
-            if (isValid(stockAdjustment))
-            {
-                IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-                foreach (var detail in details)
-                {
-                    if (!_stockAdjustmentDetailService.GetValidator().ValidConfirmObject(detail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
-                    {
-                        foreach (var error in detail.Errors)
-                        {
-                            stockAdjustment.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(stockAdjustment)) { return stockAdjustment; }
-                    }
-                }
-            }
+            if (!isValid(stockAdjustment)) { return stockAdjustment; }
+            VDetailsAreVerifiedConfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
             return stockAdjustment;
         }
 
@@ -112,22 +131,8 @@ namespace Validation.Validation
                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasBeenConfirmed(stockAdjustment);
-            if (isValid(stockAdjustment))
-            {
-                IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-                foreach (var detail in details)
-                {
-                    if (!_stockAdjustmentDetailService.GetValidator().ValidUnconfirmObject(detail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
-                    {
-                        foreach (var error in detail.Errors)
-                        {
-                            stockAdjustment.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(stockAdjustment)) { return stockAdjustment; }
-                    }
-                }
-            }
-
+            if (!isValid(stockAdjustment)) { return stockAdjustment; }
+            VDetailsAreVerifiedUnconfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
             return stockAdjustment;
         }
 

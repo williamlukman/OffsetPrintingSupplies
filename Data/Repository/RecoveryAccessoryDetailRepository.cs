@@ -44,7 +44,7 @@ namespace Data.Repository
 
         public RecoveryAccessoryDetail CreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
         {
-            recoveryAccessoryDetail.IsConfirmed = false;
+            recoveryAccessoryDetail.IsFinished = false;
             recoveryAccessoryDetail.IsDeleted = false;
             recoveryAccessoryDetail.CreatedAt = DateTime.Now;
             return Create(recoveryAccessoryDetail);
@@ -65,18 +65,18 @@ namespace Data.Repository
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public RecoveryAccessoryDetail FinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
         {
-            recoveryAccessoryDetail.IsConfirmed = true;
-            recoveryAccessoryDetail.ConfirmationDate = DateTime.Now;
+            recoveryAccessoryDetail.IsFinished = true;
+            recoveryAccessoryDetail.FinishedDate = DateTime.Now;
             Update(recoveryAccessoryDetail);
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public RecoveryAccessoryDetail UnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
         {
-            recoveryAccessoryDetail.IsConfirmed = false;
-            recoveryAccessoryDetail.ConfirmationDate = null;
+            recoveryAccessoryDetail.IsFinished = false;
+            recoveryAccessoryDetail.FinishedDate = null;
             Update(recoveryAccessoryDetail);
             return recoveryAccessoryDetail;
         }

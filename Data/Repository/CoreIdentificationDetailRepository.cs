@@ -74,6 +74,34 @@ namespace Data.Repository
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.IsJobScheduled = true;
+            Update(coreIdentificationDetail);
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.IsJobScheduled = false;
+            Update(coreIdentificationDetail);
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.IsFinished = true;
+            Update(coreIdentificationDetail);
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.IsFinished = false;
+            Update(coreIdentificationDetail);
+            return coreIdentificationDetail;
+        }
+
         public bool DeleteObject(int Id)
         {
             CoreIdentificationDetail coreIdentificationDetail = Find(x => x.Id == Id);

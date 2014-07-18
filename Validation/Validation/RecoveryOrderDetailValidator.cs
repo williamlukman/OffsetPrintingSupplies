@@ -262,7 +262,7 @@ namespace Validation.Validation
             {
                 foreach (var accessory in accessories)
                 {
-                    if (accessory.IsConfirmed)
+                    if (accessory.IsFinished)
                     {
                         return recoveryOrderDetail;
                     }
@@ -280,7 +280,7 @@ namespace Validation.Validation
                 IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
                 foreach (var accessory in accessories)
                 {
-                    if (accessory.IsConfirmed)
+                    if (accessory.IsFinished)
                     {
                         recoveryOrderDetail.Errors.Add("Generic", "Accessories sudah di konfirmasi");
                         return recoveryOrderDetail;
@@ -293,7 +293,7 @@ namespace Validation.Validation
         public RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
             RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
-            if (recoveryOrder.IsConfirmed)
+            if (recoveryOrder.IsFinished)
             {
                 recoveryOrderDetail.Errors.Add("Generic", "Recovery Order sudah dikonfirmasi");
             }

@@ -14,7 +14,7 @@ namespace Core.Interface.Validation
         StockAdjustmentDetail VHasItem(StockAdjustmentDetail StockAdjustmentDetail, IItemService _itemService);
         StockAdjustmentDetail VHasWarehouseItem(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IWarehouseItemService _warehouseItemService);
         StockAdjustmentDetail VNonZeroQuantity(StockAdjustmentDetail StockAdjustmentDetail);
-        // StockAdjustmentDetail VNonZeroNorNegativePrice(StockAdjustmentDetail StockAdjustmentDetail);
+        // StockAdjustmentDetail VNonNegativeNorZeroPrice(StockAdjustmentDetail StockAdjustmentDetail);
         StockAdjustmentDetail VUniqueItem(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentDetailService _StockAdjustmentDetails, IItemService _itemService);
         StockAdjustmentDetail VHasBeenConfirmed(StockAdjustmentDetail StockAdjustmentDetail);
         StockAdjustmentDetail VHasNotBeenConfirmed(StockAdjustmentDetail StockAdjustmentDetail);

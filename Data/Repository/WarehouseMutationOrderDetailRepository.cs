@@ -64,5 +64,22 @@ namespace Data.Repository
             WarehouseMutationOrderDetail warehouseMutationOrderDetail =  Find(x => x.Id == Id);
             return (Delete(warehouseMutationOrderDetail) == 1) ? true : false;
         }
+
+        public WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        {
+            warehouseMutationOrderDetail.IsConfirmed = true;
+            warehouseMutationOrderDetail.ConfirmationDate = DateTime.Now;
+            Update(warehouseMutationOrderDetail);
+            return warehouseMutationOrderDetail;
+        }
+
+        public WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        {
+            warehouseMutationOrderDetail.IsConfirmed = false;
+            warehouseMutationOrderDetail.ConfirmationDate = null;
+            Update(warehouseMutationOrderDetail);
+            return warehouseMutationOrderDetail;
+        }
+
     }
 }

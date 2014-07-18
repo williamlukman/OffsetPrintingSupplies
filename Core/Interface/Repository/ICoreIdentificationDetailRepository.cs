@@ -18,6 +18,10 @@ namespace Core.Interface.Repository
         CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UpdateObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail SoftDeleteObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
         bool DeleteObject(int Id);
     }
 }

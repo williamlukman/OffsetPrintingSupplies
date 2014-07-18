@@ -16,8 +16,8 @@ namespace Core.Interface.Repository
         RecoveryAccessoryDetail CreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
         RecoveryAccessoryDetail UpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
         RecoveryAccessoryDetail SoftDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
-        RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
-        RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
+        RecoveryAccessoryDetail FinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
+        RecoveryAccessoryDetail UnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail);
         bool DeleteObject(int Id);
     }
 }

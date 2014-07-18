@@ -23,6 +23,11 @@ namespace Data.Repository
             return FindAll(x => !x.IsDeleted).ToList();
         }
 
+        public IList<StockMutation> GetObjectsByWarehouseId(int warehouseId)
+        {
+            return FindAll(x => x.WarehouseId == warehouseId && !x.IsDeleted).ToList();
+        }
+
         public IList<StockMutation> GetObjectsByWarehouseItemId(int warehouseItemId)
         {
             return FindAll(x => x.WarehouseItemId == warehouseItemId && !x.IsDeleted).ToList();

@@ -13,94 +13,132 @@ namespace Validation.Validation
 {
     public class StockMutationValidator : IStockMutationValidator
     {
-        
-        public StockMutation VItemCase(StockMutation sm)
+
+        public StockMutation VHasWarehouse(StockMutation stockMutation, IWarehouseService _warehouseService)
         {
-            if (!sm.ItemCase.Equals (Constant.StockMutationItemCase.Ready) &&
-                !sm.ItemCase.Equals (Constant.StockMutationItemCase.PendingDelivery) &&
-                !sm.ItemCase.Equals (Constant.StockMutationItemCase.PendingReceival))
+            Warehouse warehouse = _warehouseService.GetObjectById(stockMutation.WarehouseId);
+            if (warehouse == null)
             {
-                sm.Errors.Add("ItemCase", "Harus merupakan bagian dari Constant.StockMutationItemCase");
+                stockMutation.Errors.Add("WarehouseId", "Tidak terasosiasi dengan warehouse");
             }
-            return sm;
+            return stockMutation;
         }
 
-        public StockMutation VStatus(StockMutation sm)
+        public StockMutation VHasWarehouseItem(StockMutation stockMutation, IWarehouseItemService _warehouseItemService)
         {
-            if (!sm.Status.Equals(Constant.StockMutationStatus.Addition) &&
-                !sm.Status.Equals(Constant.StockMutationStatus.Deduction))
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            if (warehouseItem == null)
             {
-                sm.Errors.Add("Status", "Harus merupakan bagian dari Constant.StockMutationStatus");
+                stockMutation.Errors.Add("WarehouseItemId", "Tidak terasosiasi dengan item di warehouse");
             }
-            return sm;
+            return stockMutation;
         }
 
-        public StockMutation VSourceDocumentType(StockMutation sm)
+        public StockMutation VItemCase(StockMutation stockMutation)
         {
-            if (!sm.SourceDocumentType.Equals(Constant.SourceDocumentType.PurchaseOrder) &&
-                !sm.SourceDocumentType.Equals(Constant.SourceDocumentType.PurchaseReceival) &&
-                !sm.SourceDocumentType.Equals(Constant.SourceDocumentType.SalesOrder) &&
-                !sm.SourceDocumentType.Equals(Constant.SourceDocumentType.DeliveryOrder))
+            if (!stockMutation.ItemCase.Equals (Constant.StockMutationItemCase.Ready) &&
+                !stockMutation.ItemCase.Equals (Constant.StockMutationItemCase.PendingDelivery) &&
+                !stockMutation.ItemCase.Equals (Constant.StockMutationItemCase.PendingReceival))
             {
-                sm.Errors.Add("SourceDocumentType", "Harus merupakan bagian dari Constant.SourceDocumentType");
+                stockMutation.Errors.Add("ItemCase", "Harus merupakan bagian dari Constant.StockMutationItemCase");
             }
-            return sm;
+            return stockMutation;
         }
 
-        public StockMutation VSourceDocumentDetailType(StockMutation sm)
+        public StockMutation VStatus(StockMutation stockMutation)
         {
-            if (!sm.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.PurchaseOrderDetail) &&
-                !sm.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.PurchaseReceivalDetail) &&
-                !sm.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.SalesOrderDetail) &&
-                !sm.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.DeliveryOrderDetail))
+            if (!stockMutation.Status.Equals(Constant.StockMutationStatus.Addition) &&
+                !stockMutation.Status.Equals(Constant.StockMutationStatus.Deduction))
             {
-                sm.Errors.Add("SourceDocumentDetailType", "Harus merupakan bagian dari Constant.SourceDocumentDetailType");
+                stockMutation.Errors.Add("Status", "Harus merupakan bagian dari Constant.StockMutationStatus");
             }
-            return sm;
+            return stockMutation;
         }
 
-        public StockMutation VQuantity(StockMutation sm)
+        public StockMutation VSourceDocumentType(StockMutation stockMutation)
         {
-            /*
-             * value never reach null.
-            if (sm.Quantity == null)
+            if (!stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.PurchaseOrder) &&
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.PurchaseReceival) &&
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.SalesOrder) &&
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.DeliveryOrder) &&
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrder) &&
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrderDetail))
             {
-                sm.Errors.Add("Quantity", "Tidak boleh tidak ada");
+                stockMutation.Errors.Add("SourceDocumentType", "Harus merupakan bagian dari Constant.SourceDocumentType");
             }
-            */
-            return sm;
+            return stockMutation;
         }
 
-        public StockMutation VCreateObject(StockMutation sm)
+        public StockMutation VSourceDocumentDetailType(StockMutation stockMutation)
         {
-            VItemCase(sm);
-            if (!isValid(sm)) { return sm; }
-            VStatus(sm);
-            if (!isValid(sm)) { return sm; }
-            VSourceDocumentType(sm);
-            if (!isValid(sm)) { return sm; }
-            VSourceDocumentDetailType(sm);
-            if (!isValid(sm)) { return sm; }
-            VQuantity(sm);
-            return sm;
+            if (!stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.PurchaseOrderDetail) &&
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.PurchaseReceivalDetail) &&
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.SalesOrderDetail) &&
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.DeliveryOrderDetail) &&
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryOrderDetail) &&
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryAccessoryDetail))
+            {
+                stockMutation.Errors.Add("SourceDocumentDetailType", "Harus merupakan bagian dari Constant.SourceDocumentDetailType");
+            }
+            return stockMutation;
         }
 
-        public StockMutation VDeleteObject(StockMutation sm)
+        public StockMutation VNonNegativeNorZeroQuantity(StockMutation stockMutation)
         {
-            return sm;
+            if (stockMutation.Quantity <= 0)
+            {
+                stockMutation.Errors.Add("Quantity", "Tidak boleh negatif atau 0");
+            }
+            return stockMutation;
         }
 
-        public bool ValidCreateObject(StockMutation sm)
+        public StockMutation VCreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
         {
-            VCreateObject(sm);
-            return isValid(sm);
+            VHasWarehouse(stockMutation, _warehouseService);
+            if (!isValid(stockMutation)) { return stockMutation; }
+            VHasWarehouseItem(stockMutation, _warehouseItemService);
+            if (!isValid(stockMutation)) { return stockMutation; }
+            VItemCase(stockMutation);
+            if (!isValid(stockMutation)) { return stockMutation; }
+            VStatus(stockMutation);
+            if (!isValid(stockMutation)) { return stockMutation; }
+            VSourceDocumentType(stockMutation);
+            if (!isValid(stockMutation)) { return stockMutation; }
+            VSourceDocumentDetailType(stockMutation);
+            if (!isValid(stockMutation)) { return stockMutation; }
+            VNonNegativeNorZeroQuantity(stockMutation);
+            return stockMutation;
         }
 
-        public bool ValidDeleteObject(StockMutation sm)
+        public StockMutation VUpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
         {
-            sm.Errors.Clear();
-            VDeleteObject(sm);
-            return isValid(sm);
+            VCreateObject(stockMutation, _warehouseService, _warehouseItemService);
+            return stockMutation;
+        }
+
+        public StockMutation VDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        {
+            return stockMutation;
+        }
+
+        public bool ValidCreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        {
+            VCreateObject(stockMutation, _warehouseService, _warehouseItemService);
+            return isValid(stockMutation);
+        }
+
+        public bool ValidUpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        {
+            stockMutation.Errors.Clear();
+            VUpdateObject(stockMutation, _warehouseService, _warehouseItemService);
+            return isValid(stockMutation);
+        }
+
+        public bool ValidDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        {
+            stockMutation.Errors.Clear();
+            VDeleteObject(stockMutation, _warehouseService, _warehouseItemService);
+            return isValid(stockMutation);
         }
 
         public bool isValid(StockMutation obj)

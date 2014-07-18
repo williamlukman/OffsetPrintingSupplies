@@ -28,7 +28,9 @@ namespace Core.Constants
             public static string SalesOrder = "SalesOrder";
             public static string DeliveryOrder = "DeliveryOrder";
             public static string StockAdjustment = "StockAdjustment";
+            public static string CoreIdentification = "CoreIdentification";
             public static string RecoveryOrder = "RecoveryOrder";
+            public static string RecoveryOrderDetail = "RecoveryOrderDetail";
         }
 
         public class SourceDocumentDetailType
@@ -38,7 +40,9 @@ namespace Core.Constants
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string DeliveryOrderDetail = "DeliveryOrderDetail";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
-            public static string RecoveryOrder = "RecoveryOrder";
+            public static string CoreIdentificationDetail = "CoreIdentificationDetail";
+            public static string RecoveryOrderDetail = "RecoveryOrderDetail";
+            public static string RecoveryAccessoryDetail = "RecoveryAccessoryDetail";
         }
 
         public class PayableSource

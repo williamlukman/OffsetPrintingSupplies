@@ -9,6 +9,7 @@ namespace Core.DomainModel
     public partial class StockMutation
     {
         public int Id { get; set; }
+        public int WarehouseId { get; set; }
         public int WarehouseItemId { get; set; }
         public int ItemCase { get; set; }
         public int Status { get; set; }

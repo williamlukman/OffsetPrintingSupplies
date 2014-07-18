@@ -161,7 +161,7 @@ namespace Validation.Validation
             }
             foreach (var accessory in accessories)
             {
-                if (accessory.IsConfirmed)
+                if (accessory.IsFinished)
                 {
                     recoveryOrder.Errors.Add("Generic", "Semua accessories tidak boleh telah dikonfirmasi");
                     return recoveryOrder;
@@ -181,9 +181,9 @@ namespace Validation.Validation
             }
             foreach (var accessory in accessories)
             {
-                if (!accessory.IsConfirmed)
+                if (!accessory.IsFinished)
                 {
-                    recoveryOrder.Errors.Add("Generic", "Semua accessories harus telah dikonfirmasi");
+                    recoveryOrder.Errors.Add("Generic", "Semua accessories harus telah selesai");
                     return recoveryOrder;
                 }
             }

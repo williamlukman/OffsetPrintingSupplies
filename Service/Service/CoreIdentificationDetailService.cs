@@ -116,6 +116,26 @@ namespace Service.Service
                                                _repository.SoftDeleteObject(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
+        public CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            return _repository.SetJobScheduled(coreIdentificationDetail);
+        }
+
+        public CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            return _repository.UnsetJobScheduled(coreIdentificationDetail);
+        }
+
+        public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            return _repository.FinishObject(coreIdentificationDetail);
+        }
+
+        public CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            return _repository.UnfinishObject(coreIdentificationDetail);
+        }
+
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);

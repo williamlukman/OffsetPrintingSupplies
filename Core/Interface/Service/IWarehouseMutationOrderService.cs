@@ -14,9 +14,17 @@ namespace Core.Interface.Service
         IWarehouseMutationOrderValidator GetValidator();
         IList<WarehouseMutationOrder> GetAll();
         WarehouseMutationOrder GetObjectById(int Id);
+        Warehouse GetWarehouseFrom(WarehouseMutationOrder warehouseMutationOrder);
+        Warehouse GetWarehouseTo(WarehouseMutationOrder warehouseMutationOrder);
         WarehouseMutationOrder CreateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
         WarehouseMutationOrder UpdateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
-        WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService);
+        WarehouseMutationOrder SoftDeleteObject(WarehouseMutationOrder warehouseMutationOrder);
         bool DeleteObject(int Id);
+        WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                    IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService,
+                                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                    IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService,
+                                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService);
     }
 }

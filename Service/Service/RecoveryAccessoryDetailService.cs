@@ -82,38 +82,24 @@ namespace Service.Service
             return (recoveryAccessoryDetail = _validator.ValidDeleteObject(recoveryAccessoryDetail) ? _repository.SoftDeleteObject(recoveryAccessoryDetail) : recoveryAccessoryDetail);
         }
 
-        public RecoveryAccessoryDetail ConfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                     IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
-                                                     IBarringService _barringService)
+        public RecoveryAccessoryDetail FinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
-            if (_validator.ValidConfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService))
+            if (_validator.ValidFinishObject(recoveryAccessoryDetail))
             {
                 RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
-                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 _recoveryOrderDetailService.AddAccessory(recoveryOrderDetail, this);
-                Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
-                _itemService.AdjustQuantity(item, -1);
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
-                _warehouseItemService.AdjustQuantity(warehouseItem, -1);
-                _repository.ConfirmObject(recoveryAccessoryDetail);
+                _repository.FinishObject(recoveryAccessoryDetail);
             }
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail UnconfirmObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,
-                                                       IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
-                                                       IBarringService _barringService)
+        public RecoveryAccessoryDetail UnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
-            if (_validator.ValidUnconfirmObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService))
+            if (_validator.ValidUnfinishObject(recoveryAccessoryDetail))
             {
                 RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
-                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 _recoveryOrderDetailService.RemoveAccessory(recoveryOrderDetail, this);
-                Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
-                _itemService.AdjustQuantity(item, 1);
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
-                _warehouseItemService.AdjustQuantity(warehouseItem, 1);
-                _repository.UnconfirmObject(recoveryAccessoryDetail);
+                _repository.UnfinishObject(recoveryAccessoryDetail);
             }
             return recoveryAccessoryDetail;
         }

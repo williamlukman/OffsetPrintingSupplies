@@ -30,6 +30,10 @@ namespace Core.Interface.Service
                                               ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService);
         CoreIdentificationDetail SoftDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                   IRecoveryOrderDetailService _recoveryOrderDetailService);
+        CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
         bool DeleteObject(int Id);
     }
 }
