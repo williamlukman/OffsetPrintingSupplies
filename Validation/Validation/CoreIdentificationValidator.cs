@@ -96,6 +96,20 @@ namespace Validation.Validation
             return coreIdentification;
         }
 
+        public CoreIdentification VAllDetailsHaveBeenDelivered(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        {
+            IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+            foreach (var detail in details)
+            {
+                if (!detail.IsDelivered)
+                {
+                    coreIdentification.Errors.Add("Generic", "Semua detail harus telah terkirim");
+                    return coreIdentification;
+                }
+            }
+            return coreIdentification;
+        }
+        
         public CoreIdentification VQuantityEqualNumberOfDetails(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
@@ -188,7 +202,12 @@ namespace Validation.Validation
             VIsInRecoveryOrder(coreIdentification, _recoveryOrderService);
             return coreIdentification;
         }
-        
+
+        public CoreIdentification VCompleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        {
+            VAllDetailsHaveBeenDelivered(coreIdentification, _coreIdentificationDetailService);
+            return coreIdentification;
+        }
         public bool ValidCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, ICustomerService _customerService)
         {
             VCreateObject(coreIdentification, _coreIdentificationService, _customerService);
@@ -222,7 +241,14 @@ namespace Validation.Validation
             VUnconfirmObject(coreIdentification, _recoveryOrderService);
             return isValid(coreIdentification);
         }
-        
+
+        public bool ValidCompleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        {
+            coreIdentification.Errors.Clear();
+            VCompleteObject(coreIdentification, _coreIdentificationDetailService);
+            return isValid(coreIdentification);
+        }
+
         public bool isValid(CoreIdentification obj)
         {
             bool isValid = !obj.Errors.Any();

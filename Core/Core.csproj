@@ -44,6 +44,8 @@
     <Compile Include="DomainModel\Barring.cs" />
     <Compile Include="DomainModel\BarringOrder.cs" />
     <Compile Include="DomainModel\BarringOrderDetail.cs" />
+    <Compile Include="DomainModel\RollerWarehouseMutation.cs" />
+    <Compile Include="DomainModel\RollerWarehouseMutationDetail.cs" />
     <Compile Include="DomainModel\UoM.cs" />
     <Compile Include="DomainModel\Item.cs" />
     <Compile Include="DomainModel\StockAdjustment.cs" />

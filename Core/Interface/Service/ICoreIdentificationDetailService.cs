@@ -34,6 +34,7 @@ namespace Core.Interface.Service
         CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail);
         bool DeleteObject(int Id);
     }
 }

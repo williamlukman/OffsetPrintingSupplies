@@ -22,6 +22,7 @@ namespace Core.Interface.Repository
         CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail);
         bool DeleteObject(int Id);
     }
 }

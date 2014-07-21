@@ -118,27 +118,34 @@ namespace Service.Service
 
         public CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
         {
-            return _repository.SetJobScheduled(coreIdentificationDetail);
+            return (coreIdentificationDetail = _validator.ValidSetJobScheduled(coreIdentificationDetail) ? _repository.SetJobScheduled(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
         public CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
         {
-            return _repository.UnsetJobScheduled(coreIdentificationDetail);
+            return (coreIdentificationDetail = _validator.ValidUnsetJobScheduled(coreIdentificationDetail) ? _repository.UnsetJobScheduled(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
         public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail)
         {
-            return _repository.FinishObject(coreIdentificationDetail);
+            return (coreIdentificationDetail = _validator.FinishObject(coreIdentificationDetail) ? _repository.FinishObject(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
         public CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail)
         {
-            return _repository.UnfinishObject(coreIdentificationDetail);
+            return (coreIdentificationDetail = _validator.ValidUnfinishObject(coreIdentificationDetail) ? _repository.UnfinishObject(coreIdentificationDetail) : coreIdentificationDetail);
+        }
+
+        public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            return (coreIdentificationDetail = _validator.DeliverObject(coreIdentificationDetail) ? _repository.DeliverObject(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
         }
+
+
     }
 }

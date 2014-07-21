@@ -67,57 +67,12 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public void AdjustStock(StockAdjustment stockAdjustment, StockAdjustmentDetail detail, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                   IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool ConfirmCase)
-        {
-            int stockAdjustmentDetailQuantity = ConfirmCase ? detail.Quantity : ((-1) * detail.Quantity);
-            //decimal stockAdjustmentDetailPrice = ConfirmCase ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-            Item item = _itemService.GetObjectById(detail.ItemId);
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(stockAdjustment.WarehouseId, item.Id);
-            if (item.GetType() == typeof(Barring))
-            {
-                Barring barring = _barringService.GetObjectById(item.Id);
-                // barring.AvgCost = _barringService.CalculateAvgCost(barring, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-                _barringService.AdjustQuantity(barring, stockAdjustmentDetailQuantity);
-            }
-            else
-            {
-                // item.AvgCost = _barringService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-                _itemService.AdjustQuantity(item, stockAdjustmentDetailQuantity);
-            }
-            _warehouseItemService.AdjustQuantity(warehouseItem, stockAdjustmentDetailQuantity);
-            if (ConfirmCase)
-            {
-                StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(detail, warehouseItem);
-            }
-            else
-            {
-                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForStockAdjustment(detail, warehouseItem);
-            }
-        }
-
         public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                              IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidConfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
             {
-                IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-                foreach (var detail in details)
-                {
-                    if (!_stockAdjustmentDetailService.GetValidator().ValidConfirmObject(detail, this, _itemService, _barringService, _warehouseItemService))
-                    {
-                        stockAdjustment.Errors.Add("Generic", "Tidak dapat mengkonfirmasi stock adjustment");
-                        return stockAdjustment;
-                    }
-                }
-
                 _repository.ConfirmObject(stockAdjustment);
-                bool ConfirmCase = true;
-                foreach (var detail in details)
-                {
-                    _stockAdjustmentDetailService.ConfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                    AdjustStock(stockAdjustment, detail, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, ConfirmCase);
-                }
             }
             return stockAdjustment;
         }
@@ -127,26 +82,14 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
             {
-                IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-                foreach (var detail in details)
-                {
-                    if (!_stockAdjustmentDetailService.GetValidator().ValidUnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService))
-                    {
-                        stockAdjustment.Errors.Add("Generic", "Tidak dapat meng unkonfirmasi stock adjustment");
-                        return stockAdjustment;
-                    }
-                }
-
                 _repository.UnconfirmObject(stockAdjustment);
-                bool ConfirmCase = false;
-                foreach (var detail in details)
-                {
-                    detail.ConfirmationDate = stockAdjustment.ConfirmationDate;
-                    _stockAdjustmentDetailService.ConfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                    AdjustStock(stockAdjustment, detail, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService, ConfirmCase);
-                }
             }
             return stockAdjustment;
+        }
+
+        public StockAdjustment CompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        {
+            return (stockAdjustment = _validator.ValidCompleteObject(stockAdjustment, _stockAdjustmentDetailService) ? _repository.CompleteObject(stockAdjustment) : stockAdjustment);
         }
     }
 }

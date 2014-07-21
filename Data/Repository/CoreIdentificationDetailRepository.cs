@@ -107,6 +107,14 @@ namespace Data.Repository
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.IsDelivered = true;
+            coreIdentificationDetail.UpdatedAt = DateTime.Now;
+            Update(coreIdentificationDetail);
+            return coreIdentificationDetail;
+        }
+
         public bool DeleteObject(int Id)
         {
             CoreIdentificationDetail coreIdentificationDetail = Find(x => x.Id == Id);

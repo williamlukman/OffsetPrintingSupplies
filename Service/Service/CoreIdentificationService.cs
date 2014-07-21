@@ -159,6 +159,15 @@ namespace Service.Service
             return coreIdentification;
         }
 
+        public CoreIdentification CompleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        {
+            if (_validator.ValidCompleteObject(coreIdentification, _coreIdentificationDetailService))
+            {
+                _repository.CompleteObject(coreIdentification);
+            }
+            return coreIdentification;
+        }
+        
         public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;

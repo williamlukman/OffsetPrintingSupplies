@@ -101,109 +101,11 @@ namespace Service.Service
             return barringOrder;
         }
 
-        public BarringOrder FinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        public BarringOrder CompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            // TODO
-            if (_validator.ValidFinishObject(barringOrder, _barringOrderDetailService, _itemService))
+            if (_validator.ValidCompleteObject(barringOrder, _barringOrderDetailService))
             {
-                IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-                IDictionary<int, int> ValuePairRejectedItemIdQuantity = new Dictionary<int, int>();
-                IDictionary<int, int> ValuePairPackagedItemIdQuantity = new Dictionary<int, int>();
-                int QuantityRejected = 0;
-                int QuantityFinal = 0;
-                foreach (var detail in details)
-                {
-                    QuantityRejected += detail.IsRejected ? 1 : 0;
-                    QuantityFinal += (detail.IsPackaged && !detail.IsRejected) ? 1 : 0;
-                    if (detail.IsRejected)
-                    {
-                        // Barring quantity increases
-                        if (ValuePairRejectedItemIdQuantity.ContainsKey(detail.BarringId))
-                        {
-                            ValuePairRejectedItemIdQuantity[detail.BarringId] += 1;
-                        }
-                        else
-                        {
-                            ValuePairRejectedItemIdQuantity.Add(detail.BarringId, 1);
-                        }
-
-                    }
-                    else if (detail.IsPackaged && !detail.IsRejected)
-                    {
-                        if (ValuePairPackagedItemIdQuantity.ContainsKey(detail.BarringId))
-                        {
-                            ValuePairPackagedItemIdQuantity[detail.BarringId] += 1;
-                        }
-                        else
-                        {
-                            ValuePairPackagedItemIdQuantity.Add(detail.BarringId, 1);
-                        }
-                    }
-                }
-
-                // do nothing for rejected data
-
-                foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
-                {
-                    Barring barring = _barringService.GetObjectById(ValuePairPackaged.Key);
-                    _barringService.AdjustQuantity(barring, ValuePairPackaged.Value);
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePairPackaged.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem, ValuePairPackaged.Value);
-                }
-                barringOrder.QuantityRejected = QuantityRejected;
-                barringOrder.QuantityFinal = QuantityFinal;
-                _repository.FinishObject(barringOrder);
-            }
-            return barringOrder;
-        }
-
-        public BarringOrder UnfinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
-        {
-            if (_validator.ValidUnfinishObject(barringOrder))
-            {
-                IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-                IDictionary<int, int> ValuePairRejectedItemIdQuantity = new Dictionary<int, int>();
-                IDictionary<int, int> ValuePairPackagedItemIdQuantity = new Dictionary<int, int>();
-                foreach (var detail in details)
-                {
-                    if (detail.IsRejected)
-                    {
-                        if (ValuePairRejectedItemIdQuantity.ContainsKey(detail.BarringId))
-                        {
-                            ValuePairRejectedItemIdQuantity[detail.BarringId] -= 1;
-                        }
-                        else
-                        {
-                            ValuePairRejectedItemIdQuantity.Add(detail.BarringId, -1);
-                        }
-
-                    }
-                    else if (detail.IsPackaged && !detail.IsRejected)
-                    {
-                        // Roller quantity increases
-                        if (ValuePairPackagedItemIdQuantity.ContainsKey(detail.BarringId))
-                        {
-                            ValuePairPackagedItemIdQuantity[detail.BarringId] -= 1;
-                        }
-                        else
-                        {
-                            ValuePairPackagedItemIdQuantity.Add(detail.BarringId, -1);
-                        }
-                    }
-                }
-
-                // do nothing for rejected data
-
-                foreach (var ValuePairPackaged in ValuePairPackagedItemIdQuantity)
-                {
-                    Barring barring = _barringService.GetObjectById(ValuePairPackaged.Key);
-                    _barringService.AdjustQuantity(barring, ValuePairPackaged.Value);
-                    WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePairPackaged.Key);
-                    _warehouseItemService.AdjustQuantity(warehouseItem,  ValuePairPackaged.Value);
-                }
-                barringOrder.QuantityRejected = 0;
-                barringOrder.QuantityFinal = 0;
-                _repository.UnfinishObject(barringOrder);
+                _repository.CompleteObject(barringOrder);
             }
             return barringOrder;
         }

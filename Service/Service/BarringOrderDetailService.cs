@@ -152,24 +152,42 @@ namespace Service.Service
         {
             return (barringOrderDetail = _validator.ValidRejectObject(barringOrderDetail, _barringOrderService) ?
                                           _repository.RejectObject(barringOrderDetail) : barringOrderDetail);
+            // add barring order reject quantity
+            // deduce bars quantity
+            // deduce blanket quantity
+            // if valid, complete barring order = true
         }
 
         public BarringOrderDetail UndoRejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
             return (barringOrderDetail = _validator.ValidUndoRejectObject(barringOrderDetail, _barringOrderService) ?
                                           _repository.UndoRejectObject(barringOrderDetail) : barringOrderDetail);
+            // deduce barring order reject quantity
+            // reverse stock mutation of RejectObject
+            // complete barring order = false
         }
 
         public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
-            return (barringOrderDetail = _validator.ValidFinishObject(barringOrderDetail, _barringOrderService) ?
-                                         _repository.FinishObject(barringOrderDetail) : barringOrderDetail);
+            if (_validator.ValidFinishObject(barringOrderDetail, _barringOrderService))
+            {
+                _repository.FinishObject(barringOrderDetail);
+                // add barring order quantity final
+                // add barring quantity
+                // deduce bars quantity
+                // deduce blanket quantity
+                // if valid, complete barring order = true
+            }
+            return barringOrderDetail;
         }
 
         public BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
             return (barringOrderDetail = _validator.ValidUnfinishObject(barringOrderDetail, _barringOrderService) ?
                                          _repository.FinishObject(barringOrderDetail) : barringOrderDetail);
+            // deduce barring order quantity final
+            // reverse stock mutation FinishObject
+            // complete barring order = false
         }
 
         public bool DeleteObject(int Id)

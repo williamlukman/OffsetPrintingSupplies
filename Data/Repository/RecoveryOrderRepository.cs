@@ -125,6 +125,11 @@ namespace Data.Repository
             return recoveryOrder;
         }
 
+        public RecoveryOrder AdjustQuantity(RecoveryOrder recoveryOrder)
+        {
+            return UpdateObject(recoveryOrder);
+        }
+
         public bool DeleteObject(int Id)
         {
             RecoveryOrder recoveryOrder = Find(x => x.Id == Id);

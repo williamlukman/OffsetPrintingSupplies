@@ -74,24 +74,58 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public StockAdjustmentDetail ConfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
+        public StockAdjustmentDetail FinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
                                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidFinishObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
             {
-                stockAdjustmentDetail = _repository.ConfirmObject(stockAdjustmentDetail);
+                stockAdjustmentDetail = _repository.FinishObject(stockAdjustmentDetail);
+                StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
+                AdjustStock(stockAdjustment, stockAdjustmentDetail, _stockMutationService, _itemService, _barringService, _warehouseItemService, true);
             }
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail UnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
+        public StockAdjustmentDetail UnfinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidUnfinishObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
             {
-                stockAdjustmentDetail = _repository.UnconfirmObject(stockAdjustmentDetail);
+                stockAdjustmentDetail = _repository.UnfinishObject(stockAdjustmentDetail);
+                StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
+                AdjustStock(stockAdjustment, stockAdjustmentDetail, _stockMutationService, _itemService, _barringService, _warehouseItemService, false);
             }
             return stockAdjustmentDetail;
         }
+
+        public void AdjustStock(StockAdjustment stockAdjustment, StockAdjustmentDetail stockAdjustmentDetail, IStockMutationService _stockMutationService,
+                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseFinish)
+        {
+            int stockAdjustmentDetailQuantity = CaseFinish ? stockAdjustmentDetail.Quantity : ((-1) * stockAdjustmentDetail.Quantity);
+            //decimal stockAdjustmentDetailPrice = ConfirmCase ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+            Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(stockAdjustment.WarehouseId, item.Id);
+            if (item.GetType() == typeof(Barring))
+            {
+                Barring barring = _barringService.GetObjectById(item.Id);
+                // barring.AvgCost = _barringService.CalculateAvgCost(barring, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+                _barringService.AdjustQuantity(barring, stockAdjustmentDetailQuantity);
+            }
+            else
+            {
+                // item.AvgCost = _barringService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+                _itemService.AdjustQuantity(item, stockAdjustmentDetailQuantity);
+            }
+            _warehouseItemService.AdjustQuantity(warehouseItem, stockAdjustmentDetailQuantity);
+            if (CaseFinish)
+            {
+                StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
+            }
+            else
+            {
+                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
+            }
+        }
+
     }
 }

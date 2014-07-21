@@ -26,5 +26,7 @@ namespace Core.Interface.Service
                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         StockAdjustmentDetail UnfinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        void AdjustStock(StockAdjustment stockAdjustment, StockAdjustmentDetail detail, IStockMutationService _stockMutationService,
+                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseFinish);
     }
 }
