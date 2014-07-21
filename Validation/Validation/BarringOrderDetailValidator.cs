@@ -140,11 +140,30 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
+        public BarringOrderDetail VHasBeenFinished(BarringOrderDetail barringOrderDetail)
+        {
+            if (!barringOrderDetail.IsFinished)
+            {
+                barringOrderDetail.Errors.Add("Generic", "Belum selesai");
+            }
+            return barringOrderDetail;
+        }
+
         public BarringOrderDetail VHasBeenRejected(BarringOrderDetail barringOrderDetail)
         {
             if (!barringOrderDetail.IsRejected)
             {
                 barringOrderDetail.Errors.Add("Generic", "Belum di reject");
+            }
+            return barringOrderDetail;
+        }
+
+        public BarringOrderDetail VBarringOrderHasBeenConfirmed(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        {
+            BarringOrder barringOrder = _barringOrderService.GetObjectById(barringOrderDetail.BarringOrderId);
+            if (!barringOrder.IsConfirmed)
+            {
+                barringOrderDetail.Errors.Add("Generic", "Barring Order belum dikonfirmasi");
             }
             return barringOrderDetail;
         }
@@ -248,6 +267,15 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
+        public BarringOrderDetail VHasNotBeenFinished(BarringOrderDetail barringOrderDetail)
+        {
+            if (barringOrderDetail.IsFinished)
+            {
+                barringOrderDetail.Errors.Add("Generic", "Sudah selesai");
+            }
+            return barringOrderDetail;
+        }
+
         public BarringOrderDetail VHasNotBeenRejected(BarringOrderDetail barringOrderDetail)
         {
             if (barringOrderDetail.IsRejected)
@@ -267,12 +295,12 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
-        public BarringOrderDetail VBarringOrderHasNotBeenFinished(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        public BarringOrderDetail VBarringOrderHasNotBeenCompleted(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
             BarringOrder barringOrder = _barringOrderService.GetObjectById(barringOrderDetail.BarringOrderId);
-            if (barringOrder.IsFinished)
+            if (barringOrder.IsCompleted)
             {
-                barringOrderDetail.Errors.Add("Generic", "Barring order sudah di finish");
+                barringOrderDetail.Errors.Add("Generic", "Barring order sudah complete");
             }
             return barringOrderDetail;
         }
@@ -421,11 +449,31 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
+        public BarringOrderDetail VFinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        {
+            VBarringOrderHasBeenConfirmed(barringOrderDetail, _barringOrderService);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
+            VHasNotBeenFinished(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
+            VHasBeenPackaged(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
+            VHasNotBeenRejected(barringOrderDetail);
+            return barringOrderDetail;
+        }
+
+        public BarringOrderDetail VUnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        {
+            VHasBeenFinished(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
+            VBarringOrderHasNotBeenCompleted(barringOrderDetail, _barringOrderService);
+            return barringOrderDetail;
+        }
+
         public BarringOrderDetail VRejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
             VHasNotBeenRejected(barringOrderDetail);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
-            VBarringOrderHasNotBeenFinished(barringOrderDetail, _barringOrderService);
+            VBarringOrderHasNotBeenCompleted(barringOrderDetail, _barringOrderService);
             return barringOrderDetail;
         }
 
@@ -433,7 +481,7 @@ namespace Validation.Validation
         {
             VHasBeenRejected(barringOrderDetail);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
-            VBarringOrderHasNotBeenFinished(barringOrderDetail, _barringOrderService);
+            VBarringOrderHasNotBeenCompleted(barringOrderDetail, _barringOrderService);
             return barringOrderDetail;
         }
 
@@ -545,6 +593,20 @@ namespace Validation.Validation
         {
             barringOrderDetail.Errors.Clear();
             VPackageObject(barringOrderDetail);
+            return isValid(barringOrderDetail);
+        }
+
+        public bool ValidFinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        {
+            barringOrderDetail.Errors.Clear();
+            VFinishObject(barringOrderDetail, _barringOrderService);
+            return isValid(barringOrderDetail);
+        }
+
+        public bool ValidUnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
+        {
+            barringOrderDetail.Errors.Clear();
+            VUnfinishObject(barringOrderDetail, _barringOrderService);
             return isValid(barringOrderDetail);
         }
 

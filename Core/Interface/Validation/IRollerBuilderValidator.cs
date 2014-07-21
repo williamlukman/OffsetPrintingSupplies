@@ -19,16 +19,17 @@ namespace Core.Interface.Validation
         RollerBuilder VHasRollerUsedCoreItem(RollerBuilder rollerBuilder, IItemService _itemService);
         RollerBuilder VHasRollerNewCoreItem(RollerBuilder rollerBuilder, IItemService _itemService);
         RollerBuilder VHasMeasurement(RollerBuilder rollerBuilder);
+        RollerBuilder VHasUoM(RollerBuilder rollerBuilder, IUoMService _uomService);
         RollerBuilder VIsInRecoveryOrderDetails(RollerBuilder rollerBuilder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RollerBuilder VCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
-                                    IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
+                                    IUoMService _uomService, IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
         RollerBuilder VUpdateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
-                                    IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
+                                    IUoMService _uomService, IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
         RollerBuilder VDeleteObject(RollerBuilder rollerBuilder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         bool ValidCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
-                                    IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
+                               IUoMService _uomService, IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
         bool ValidUpdateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
-                                    IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
+                               IUoMService _uomService, IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
         bool ValidDeleteObject(RollerBuilder rollerBuilder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         bool isValid(RollerBuilder rollerBuilder);
         string PrintError(RollerBuilder rollerBuilder);

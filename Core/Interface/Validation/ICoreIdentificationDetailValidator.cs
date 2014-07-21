@@ -19,8 +19,10 @@ namespace Core.Interface.Validation
         CoreIdentificationDetail VHasMeasurement(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VIsInRecoveryOrderDetails(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderDetailService _recoveryOrderDetailService);        
         CoreIdentificationDetail VCoreIdentificationHasNotBeenConfirmed(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
-        CoreIdentificationDetail VIsJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail VIsDelivered(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail VHasBeenJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail VHasNotBeenJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail VHasBeenDelivered(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail VHasNotBeenDelivered(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
                                                 IRollerTypeService _rollerTypeService, IMachineService _machineService);
@@ -30,7 +32,14 @@ namespace Core.Interface.Validation
         CoreIdentificationDetail VDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                IRecoveryOrderDetailService _recoveryOrderDetailService);
         CoreIdentificationDetail VFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                               IRecoveryOrderDetailService _recoveryOrderDetailService);
+                                               ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService);
+        CoreIdentificationDetail VUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                 ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService);
+        CoreIdentificationDetail VSetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        CoreIdentificationDetail VUnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        CoreIdentificationDetail VDeliverObject(CoreIdentificationDetail coreIdentificationDetail);
+        // CoreIdentificationDetail VDeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
+
         bool ValidCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
                                IRollerTypeService _rollerTypeService, IMachineService _machineService);
@@ -40,7 +49,13 @@ namespace Core.Interface.Validation
         bool ValidDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                IRecoveryOrderDetailService _recoveryOrderDetailService);
         bool ValidFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                               IRecoveryOrderDetailService _recoveryOrderDetailService);
+                               ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService);
+        bool ValidUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                 ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService);
+        bool ValidSetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        bool ValidUnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        bool ValidDeliverObject(CoreIdentificationDetail coreIdentificationDetail);
+        // bool ValidDeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         bool isValid(CoreIdentificationDetail coreIdentificationDetail);
         string PrintError(CoreIdentificationDetail coreIdentificationDetail);
     }

@@ -107,6 +107,43 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail VHasBeenJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (!coreIdentificationDetail.IsJobScheduled)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Job masih belum di schedule");
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VHasNotBeenJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (coreIdentificationDetail.IsJobScheduled)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Job sudah terschedule");
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VHasBeenDelivered(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (!coreIdentificationDetail.IsDelivered)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Item belum dikirim");
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VHasNotBeenDelivered(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (coreIdentificationDetail.IsDelivered)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Item sudah dikirim");
+            }
+            return coreIdentificationDetail;
+
+        }
+
         public CoreIdentificationDetail VCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
                                                       IRollerTypeService _rollerTypeService, IMachineService _machineService)
@@ -135,6 +172,80 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail VFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                          ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService)
+        {
+            // TODO
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                          ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService)
+        {
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VSetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService,
+                                                         IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByCoreIdentificationDetailId(coreIdentificationDetail.Id);
+            if (!details.Any())
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Tidak ada job yang ter schedule");
+                return coreIdentificationDetail;
+            }
+            foreach (var detail in details)
+            {
+                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
+                if (!recoveryOrder.IsConfirmed)
+                {
+                    coreIdentificationDetail.Errors.Add("Generic", "Job masih belum terkonfirmasi");
+                    return coreIdentificationDetail;
+                }
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VUnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService,
+                                                         IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByCoreIdentificationDetailId(coreIdentificationDetail.Id);
+            if (!details.Any())
+            {
+                return coreIdentificationDetail;
+            }
+            foreach (var detail in details)
+            {
+                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
+                if (recoveryOrder.IsConfirmed)
+                {
+                    coreIdentificationDetail.Errors.Add("Generic", "Job sudah terkonfirmasi");
+                    return coreIdentificationDetail;
+                }
+            }
+            return coreIdentificationDetail;
+        }
+
+
+        public CoreIdentificationDetail VDeliverObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            return coreIdentificationDetail;
+        }
+
+        /*
+         * TODO
+        public CoreIdentificationDetail VDeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            RollerWarehouseMutationDetail rollerWarehouseMutationDetail = _rollerWarehouseMutationDetailService.GetObjectByCoreIdentificationDetailId(coreIdentificationDetail.Id);
+            if (rollerWarehouseMutationDetail == null)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Tidak ada roller mutasi");
+                return coreIdentificationDetail;
+            }
+            return coreIdentificationDetail;
+        }
+        */
+
         public CoreIdentificationDetail VDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                       IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
@@ -153,11 +264,51 @@ namespace Validation.Validation
         }
 
         public bool ValidUpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                                      ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService)
+                                      ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
+                                      IRollerTypeService _rollerTypeService, IMachineService _machineService)
         {
             coreIdentificationDetail.Errors.Clear();
             VUpdateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _rollerTypeService, _machineService);
+            return isValid(coreIdentificationDetail);
+        }
+
+        public bool ValidFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                               ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService)
+        {
+            coreIdentificationDetail.Errors.Clear();
+            VFinishObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService);
+            return isValid(coreIdentificationDetail);
+        }
+
+        public bool ValidUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                               ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService)
+        {
+            coreIdentificationDetail.Errors.Clear();
+            VUnfinishObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService);
+            return isValid(coreIdentificationDetail);
+        }
+
+        public bool ValidSetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService,
+                                         IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            coreIdentificationDetail.Errors.Clear();
+            VSetJobScheduled(coreIdentificationDetail, _recoveryOrderService, _recoveryOrderDetailService);
+            return isValid(coreIdentificationDetail);
+        }
+
+        public bool ValidUnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService,
+                                           IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            coreIdentificationDetail.Errors.Clear();
+            VUnsetJobScheduled(coreIdentificationDetail, _recoveryOrderService, _recoveryOrderDetailService);
+            return isValid(coreIdentificationDetail);
+        }
+
+        public bool ValidDeliverObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.Errors.Clear();
+            VDeliverObject(coreIdentificationDetail);
+            //VDeliverObject(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
             return isValid(coreIdentificationDetail);
         }
 

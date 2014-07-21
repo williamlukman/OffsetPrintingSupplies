@@ -53,11 +53,12 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VHasUoM(Barring barring)
+        public Barring VHasUoM(Barring barring, IUoMService _uomService)
         {
-            if (String.IsNullOrEmpty(barring.UoM) || barring.UoM.Trim() == "")
+            UoM uom = _uomService.GetObjectById(barring.UoMId);
+            if (uom == null)
             {
-                barring.Errors.Add("UoM", "Tidak boleh kosong");
+                barring.Errors.Add("UoMId", "Tidak terasosiasi dengan Unit of Measurement");
             }
             return barring;
         }
@@ -146,10 +147,11 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VCreateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        public Barring VCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      ICustomerService _customerService, IMachineService _machineService)
         {
             // Item Validation
+
             VHasItemType(barring, _itemTypeService);
             if (!isValid(barring)) { return barring; }
             VHasUniqueSku(barring, _barringService);
@@ -158,7 +160,7 @@ namespace Validation.Validation
             if (!isValid(barring)) { return barring; }
             VHasCategory(barring);
             if (!isValid(barring)) { return barring; }
-            VHasUoM(barring);
+            VHasUoM(barring, _uomService);
             if (!isValid(barring)) { return barring; }
             VNonNegativeQuantity(barring);
             if (!isValid(barring)) { return barring; }
@@ -174,10 +176,10 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VUpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        public Barring VUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      ICustomerService _customerService, IMachineService _machineService)
         {
-            return VCreateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+            return VCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService);
         }
 
         public Barring VDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)
@@ -216,18 +218,18 @@ namespace Validation.Validation
             return barring;
         }
 
-        public bool ValidCreateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        public bool ValidCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      ICustomerService _customerService, IMachineService _machineService)
         {
-            VCreateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+            VCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService);
             return isValid(barring);
         }
 
-        public bool ValidUpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        public bool ValidUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      ICustomerService _customerService, IMachineService _machineService)
         {
             barring.Errors.Clear();
-            VUpdateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService);
+            VUpdateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService);
             return isValid(barring);
         }
 
@@ -291,6 +293,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

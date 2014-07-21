@@ -14,10 +14,12 @@ namespace Core.Interface.Validation
         WarehouseMutationOrderDetail VHasWarehouseItemFrom(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationOrderDetail VHasWarehouseItemTo(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationOrderDetail VUniqueItem(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService);
-        WarehouseMutationOrderDetail VNonNegativeNorZeroQuantity(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
-        WarehouseMutationOrderDetail VIsUnconfirmedWarehouseMutationOrder(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService);
-        WarehouseMutationOrderDetail VHasNotBeenConfirmed(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
-        WarehouseMutationOrderDetail VHasBeenConfirmed(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
+        WarehouseMutationOrderDetail VNonNegativeStockQuantity(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseConfirmOrFinish);
+        WarehouseMutationOrderDetail VWarehouseMutationOrderHasBeenConfirmed(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService);
+        WarehouseMutationOrderDetail VWarehouseMutationOrderHasNotBeenCompleted(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService);
+        WarehouseMutationOrderDetail VHasNotBeenFinished(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
+        WarehouseMutationOrderDetail VHasBeenFinished(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         WarehouseMutationOrderDetail VCreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                    IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationOrderDetail VUpdateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
@@ -34,7 +36,7 @@ namespace Core.Interface.Validation
         bool ValidFinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool ValidUnfinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                  IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool ValidDeleteObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         bool isValid(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         string PrintError(WarehouseMutationOrderDetail warehouseMutationOrderDetail);

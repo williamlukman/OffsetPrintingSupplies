@@ -30,11 +30,18 @@ namespace Core.Interface.Service
                                               ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService);
         CoreIdentificationDetail SoftDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                   IRecoveryOrderDetailService _recoveryOrderDetailService);
-        CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                              ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
+                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
+                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail);
+        //CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
+        void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
     }
 }

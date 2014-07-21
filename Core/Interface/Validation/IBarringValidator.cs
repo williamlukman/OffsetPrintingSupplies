@@ -14,7 +14,7 @@ namespace Core.Interface.Validation
         Barring VHasUniqueSku(Barring barring, IBarringService _barringService);
         Barring VHasName(Barring barring);
         Barring VHasCategory(Barring barring);
-        Barring VHasUoM(Barring barring);
+        Barring VHasUoM(Barring barring, IUoMService _uomService);
         Barring VWarehouseQuantityMustBeZero(Barring barring, IWarehouseItemService _warehouseItemService);
         Barring VNonNegativeQuantity(Barring barring);
 
@@ -23,9 +23,9 @@ namespace Core.Interface.Validation
         Barring VHasMachine(Barring barring, IMachineService _machineService);
         Barring VHasMeasurement(Barring barring);
 
-        Barring VCreateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        Barring VCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                               ICustomerService _customerService, IMachineService _machineService);
-        Barring VUpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        Barring VUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                               ICustomerService _customerService, IMachineService _machineService);
         Barring VDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService);
         Barring VAdjustQuantity(Barring barring);
@@ -34,9 +34,9 @@ namespace Core.Interface.Validation
         Barring VAddRightBar(Barring barring, IItemService _itemService);
         Barring VRemoveRightBar(Barring barring, IItemService _itemService);
 
-        bool ValidCreateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        bool ValidCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      ICustomerService _customerService, IMachineService _machineService);
-        bool ValidUpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        bool ValidUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      ICustomerService _customerService, IMachineService _machineService);
         bool ValidDeleteObject(Barring barring, IWarehouseItemService _warehouseItemSerrvice);
         bool ValidAdjustQuantity(Barring barring);

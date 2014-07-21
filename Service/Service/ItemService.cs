@@ -47,6 +47,11 @@ namespace Service.Service
             return _repository.GetObjectsByItemTypeId(ItemTypeId);
         }
 
+        public IList<Item> GetObjectsByUoMId(int UoMId)
+        {
+            return _repository.GetObjectsByUoMId(UoMId);
+        }
+
         public Item GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -57,10 +62,10 @@ namespace Service.Service
             return _repository.GetObjectBySku(Sku);
         }
 
-        public Item CreateObject(Item item, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             item.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(item, this, _itemTypeService))
+            if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
             {
                 item = _repository.CreateObject(item);
                 IList<Warehouse> allWarehouses = _warehouseService.GetAll();
@@ -77,9 +82,9 @@ namespace Service.Service
             return item;
         }
 
-        public Item UpdateObject(Item item, IItemTypeService _itemTypeService)
+        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService)
         {
-            return (item = _validator.ValidUpdateObject(item, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
+            return (item = _validator.ValidUpdateObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
         }
 
         public Item SoftDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,

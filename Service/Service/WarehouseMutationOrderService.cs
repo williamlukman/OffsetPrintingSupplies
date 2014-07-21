@@ -66,11 +66,10 @@ namespace Service.Service
             return (warehouseMutationOrder = _validator.ValidDeleteObject(warehouseMutationOrder) ? _repository.SoftDeleteObject(warehouseMutationOrder) : warehouseMutationOrder);
         }
 
-        public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                    IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService,
-                                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
+                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(warehouseMutationOrder, _warehouseMutationOrderService, _warehouseMutationOrderDetailService,
+            if (_validator.ValidConfirmObject(warehouseMutationOrder, this, _warehouseMutationOrderDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
                 _repository.ConfirmObject(warehouseMutationOrder);
@@ -78,14 +77,22 @@ namespace Service.Service
             return warehouseMutationOrder;
         }
 
-        public WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                    IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService,
-                                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
+                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(warehouseMutationOrder, _warehouseMutationOrderService, _warehouseMutationOrderDetailService,
+            if (_validator.ValidUnconfirmObject(warehouseMutationOrder, this, _warehouseMutationOrderDetailService,
                                                 _itemService, _barringService, _warehouseItemService))
             {
                 _repository.UnconfirmObject(warehouseMutationOrder);
+            }
+            return warehouseMutationOrder;
+        }
+
+        public WarehouseMutationOrder CompleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
+        {
+            if (_validator.ValidCompleteObject(warehouseMutationOrder, _warehouseMutationOrderDetailService))
+            {
+                _repository.CompleteObject(warehouseMutationOrder);
             }
             return warehouseMutationOrder;
         }

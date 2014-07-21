@@ -23,7 +23,6 @@ namespace Core.Interface.Validation
         BarringOrder VAllDetailsHaveBeenFinishedOrRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VAllDetailsHaveBeenCutOrRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VAllDetailsHaveNotBeenCutNorRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
-        BarringOrder VAllDetailsHaveLeftAndRightBar(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IItemService _itemService);
         BarringOrder VCreateObject(BarringOrder barringOrder, IBarringOrderService _barringOrderService);
         BarringOrder VUpdateObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringOrderService _barringOrderService);
         BarringOrder VDeleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);

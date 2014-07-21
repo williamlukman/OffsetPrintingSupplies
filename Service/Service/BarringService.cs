@@ -40,6 +40,11 @@ namespace Service.Service
             return _repository.GetObjectsByItemTypeId(ItemTypeId);
         }
 
+        public IList<Barring> GetObjectsByUoMId(int UoMId)
+        {
+            return _repository.GetObjectsByUoMId(UoMId);
+        }
+        
         public IList<Barring> GetObjectsByMachineId(int MachineId)
         {
             return _repository.GetObjectsByMachineId(MachineId);
@@ -60,12 +65,12 @@ namespace Service.Service
             return _repository.GetObjectBySku(Sku);
         }
 
-        public Barring CreateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        public Barring CreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                     ICustomerService _customerService, IMachineService _machineService,
                                     IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             barring.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService))
+            if (_validator.ValidCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService))
             {
                 barring = _repository.CreateObject(barring);
                 IList<Warehouse> allWarehouses = _warehouseService.GetAll();
@@ -82,11 +87,12 @@ namespace Service.Service
             return barring;
         }
 
-        public Barring UpdateObject(Barring barring, IBarringService _barringService, IItemService _itemService, IItemTypeService _itemTypeService,
+        public Barring UpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                     ICustomerService _customerService, IMachineService _machineService,
                                     IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {        
-            return (barring = _validator.ValidUpdateObject(barring, _barringService, _itemService, _itemTypeService, _customerService, _machineService) ? _repository.UpdateObject(barring) : barring);
+            return (barring = _validator.ValidUpdateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService) ?
+                              _repository.UpdateObject(barring) : barring);
         }
 
         public Barring SoftDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)

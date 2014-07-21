@@ -104,6 +104,16 @@ namespace Validation.Validation
             return rollerBuilder;
         }
 
+        public RollerBuilder VHasUoM(RollerBuilder rollerBuilder, IUoMService _uomService)
+        {
+            UoM uom = _uomService.GetObjectById(rollerBuilder.UoMId);
+            if (uom == null)
+            {
+                rollerBuilder.Errors.Add("UoMId", "Tidak terasosiasi dengan unit of measurement");
+            }
+            return rollerBuilder;
+        }
+
         public RollerBuilder VIsInRecoveryOrderDetails(RollerBuilder rollerBuilder, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRollerBuilderId(rollerBuilder.Id);
@@ -114,7 +124,7 @@ namespace Validation.Validation
             return rollerBuilder;
         }
  
-        public RollerBuilder VCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
+        public RollerBuilder VCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService, IUoMService _uomService,
                                     IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
         {
             VHasUniqueBaseSku(rollerBuilder, _rollerBuilderService);
@@ -130,13 +140,15 @@ namespace Validation.Validation
             VHasMachine(rollerBuilder, _machineService);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
             VHasMeasurement(rollerBuilder);
+            if (!isValid(rollerBuilder)) { return rollerBuilder; }
+            VHasUoM(rollerBuilder, _uomService);
             return rollerBuilder;
         }
 
-        public RollerBuilder VUpdateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
+        public RollerBuilder VUpdateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService, IUoMService _uomService,
                                     IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
         {
-            VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _itemService, _coreBuilderService, _rollerTypeService);
+            VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
             VHasRollerUsedCoreItem(rollerBuilder, _itemService);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
@@ -150,18 +162,18 @@ namespace Validation.Validation
             return rollerBuilder;
         }
 
-        public bool ValidCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
+        public bool ValidCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService, IUoMService _uomService,
                                     IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
         {
-            VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _itemService, _coreBuilderService, _rollerTypeService);
+            VCreateObject(rollerBuilder, _rollerBuilderService, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService);
             return isValid(rollerBuilder);
         }
 
-        public bool ValidUpdateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
+        public bool ValidUpdateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService, IUoMService _uomService,
                                     IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService)
         {
             rollerBuilder.Errors.Clear();
-            VUpdateObject(rollerBuilder, _rollerBuilderService, _machineService, _itemService, _coreBuilderService, _rollerTypeService);
+            VUpdateObject(rollerBuilder, _rollerBuilderService, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService);
             return isValid(rollerBuilder);
         }
 

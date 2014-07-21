@@ -55,6 +55,16 @@ namespace Validation.Validation
             return coreBuilder;
         }
 
+        public CoreBuilder VHasUoM(CoreBuilder coreBuilder, IUoMService _uomService)
+        {
+            UoM uom = _uomService.GetObjectById(coreBuilder.UoMId);
+            if (uom == null)
+            {
+                coreBuilder.Errors.Add("UoMId", "Tidak terasosiasi dengan unit of measurement");
+            }
+            return coreBuilder;
+        }
+
         public CoreBuilder VIsInCoreIdentificationDetail(CoreBuilder coreBuilder, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreBuilderId(coreBuilder.Id);
@@ -76,17 +86,19 @@ namespace Validation.Validation
         }
 
 
-        public CoreBuilder VCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+        public CoreBuilder VCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
         {
             VHasUniqueBaseSku(coreBuilder, _coreBuilderService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
             VNameNotEmpty(coreBuilder);
+            if (!isValid(coreBuilder)) { return coreBuilder; }
+            VHasUoM(coreBuilder, _uomService);
             return coreBuilder;
         }
 
-        public CoreBuilder VUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+        public CoreBuilder VUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
         {
-            VCreateObject(coreBuilder, _coreBuilderService, _itemService);
+            VCreateObject(coreBuilder, _coreBuilderService, _uomService, _itemService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
             VHasUsedCoreItem(coreBuilder, _itemService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
@@ -102,16 +114,16 @@ namespace Validation.Validation
             return coreBuilder;
         }
 
-        public bool ValidCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+        public bool ValidCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
         {
-            VCreateObject(coreBuilder, _coreBuilderService, _itemService);
+            VCreateObject(coreBuilder, _coreBuilderService, _uomService, _itemService);
             return isValid(coreBuilder);
         }
 
-        public bool ValidUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IItemService _itemService)
+        public bool ValidUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
         {
             coreBuilder.Errors.Clear();
-            VUpdateObject(coreBuilder, _coreBuilderService, _itemService);
+            VUpdateObject(coreBuilder, _coreBuilderService, _uomService, _itemService);
             return isValid(coreBuilder);
         }
 
@@ -140,6 +152,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

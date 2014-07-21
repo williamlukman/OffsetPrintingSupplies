@@ -41,8 +41,8 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasNotBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail VAccessoriesAtLeastOneHasBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VNoAccessoriesOrAccessoriesHaveNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrderDetail VAllAccessoriesHaveBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenCompleted(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
 

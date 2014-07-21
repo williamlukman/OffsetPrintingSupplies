@@ -76,20 +76,42 @@ namespace Validation.Validation
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail VHasNotBeenConfirmed(StockAdjustmentDetail stockAdjustmentDetail)
+        public StockAdjustmentDetail VHasNotBeenFinished(StockAdjustmentDetail stockAdjustmentDetail)
         {
-            if (stockAdjustmentDetail.IsConfirmed)
+            if (stockAdjustmentDetail.IsFinished)
             {
-                stockAdjustmentDetail.Errors.Add("IsConfirmed", "Tidak boleh sudah terkonfirmasi.");
+                stockAdjustmentDetail.Errors.Add("Generic", "Tidak boleh sudah selesai");
             }
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail VHasBeenConfirmed(StockAdjustmentDetail stockAdjustmentDetail)
+        public StockAdjustmentDetail VHasBeenFinished(StockAdjustmentDetail stockAdjustmentDetail)
         {
-            if (!stockAdjustmentDetail.IsConfirmed)
+            if (!stockAdjustmentDetail.IsFinished)
             {
-                stockAdjustmentDetail.Errors.Add("IsConfirmed", "Harus sudah terkonfirmasi.");
+                stockAdjustmentDetail.Errors.Add("Generic", "Harus sudah selesai");
+            }
+            return stockAdjustmentDetail;
+        }
+
+        public StockAdjustmentDetail VStockAdjustmentHasBeenConfirmed(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService)
+        {
+            StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
+            if (!stockAdjustment.IsConfirmed)
+            {
+                stockAdjustmentDetail.Errors.Add("Generic", "Stock adjustment belum di konfirmasi");
+                return stockAdjustmentDetail;
+            }
+            return stockAdjustmentDetail;
+        }
+
+        public StockAdjustmentDetail VStockAdjustmentHasNotBeenCompleted(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService)
+        {
+            StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
+            if (stockAdjustment.IsCompleted)
+            {
+                stockAdjustmentDetail.Errors.Add("Generic", "Stock adjustment sudah selesai");
+                return stockAdjustmentDetail;
             }
             return stockAdjustmentDetail;
         }
@@ -140,7 +162,7 @@ namespace Validation.Validation
         public StockAdjustmentDetail VUpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                                    IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            VHasNotBeenConfirmed(stockAdjustmentDetail);
+            VHasNotBeenFinished(stockAdjustmentDetail);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VCreateObject(stockAdjustmentDetail, _stockAdjustmentDetailService, _stockAdjustmentService, _itemService, _warehouseItemService);
             return stockAdjustmentDetail;
@@ -148,23 +170,27 @@ namespace Validation.Validation
 
         public StockAdjustmentDetail VDeleteObject(StockAdjustmentDetail stockAdjustmentDetail)
         {
-            VHasNotBeenConfirmed(stockAdjustmentDetail);
+            VHasNotBeenFinished(stockAdjustmentDetail);
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail VConfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
+        public StockAdjustmentDetail VFinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            VHasNotBeenConfirmed(stockAdjustmentDetail);
+            VStockAdjustmentHasBeenConfirmed(stockAdjustmentDetail, _stockAdjustmentService);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VNonNegativeStockQuantity(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService, true);
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail VUnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
+        public StockAdjustmentDetail VUnfinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            VHasBeenConfirmed(stockAdjustmentDetail);
+            VStockAdjustmentHasBeenConfirmed(stockAdjustmentDetail, _stockAdjustmentService);
+            if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
+            VStockAdjustmentHasNotBeenCompleted(stockAdjustmentDetail, _stockAdjustmentService);
+            if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
+            VHasBeenFinished(stockAdjustmentDetail);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VNonNegativeStockQuantity(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService, false);
             return stockAdjustmentDetail;
@@ -192,19 +218,19 @@ namespace Validation.Validation
             return isValid(stockAdjustmentDetail);
         }
 
-        public bool ValidConfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
+        public bool ValidFinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             stockAdjustmentDetail.Errors.Clear();
-            VConfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService);
+            VFinishObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService);
             return isValid(stockAdjustmentDetail);
         }
 
-        public bool ValidUnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
+        public bool ValidUnfinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
                                          IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             stockAdjustmentDetail.Errors.Clear();
-            VUnconfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService);
+            VUnfinishObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService);
             return isValid(stockAdjustmentDetail);
         }
 

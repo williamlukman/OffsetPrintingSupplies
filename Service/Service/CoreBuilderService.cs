@@ -50,7 +50,8 @@ namespace Service.Service
             return _repository.GetNewCore(Id);
         }
 
-        public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category, IItemService _itemService, IItemTypeService _itemTypeService,
+        public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category, int UoMId, IUoMService _uomService,
+                                        IItemService _itemService, IItemTypeService _itemTypeService,
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             CoreBuilder coreBuilder = new CoreBuilder
@@ -59,12 +60,13 @@ namespace Service.Service
                 SkuNewCore = SkuNewCore,
                 SkuUsedCore = SkuUsedCore,
                 Name = Name,
-                Category = Category
+                Category = Category,
+                UoMId = UoMId
             };
-            return this.CreateObject(coreBuilder, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
+            return this.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
         }
 
-        public CoreBuilder CreateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService,
+        public CoreBuilder CreateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             coreBuilder.Errors = new Dictionary<String, String>();
@@ -72,7 +74,7 @@ namespace Service.Service
             {
                 Name = coreBuilder.Name,
                 Category = coreBuilder.Category,
-                UoM = "pcs",
+                UoMId = coreBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
                 Sku = coreBuilder.SkuUsedCore
@@ -83,21 +85,21 @@ namespace Service.Service
             {
                 Name = coreBuilder.Name,
                 Category = coreBuilder.Category,
-                UoM = "pcs",
+                UoMId = coreBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
                 Sku = coreBuilder.SkuNewCore
             };
             NewCore.Errors = new Dictionary<string, string>();
 
-            if (_itemService.GetValidator().ValidCreateObject(UsedCore, _itemService, _itemTypeService) &&
-                _itemService.GetValidator().ValidCreateObject(NewCore, _itemService, _itemTypeService))
+            if (_itemService.GetValidator().ValidCreateObject(UsedCore, _uomService, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidCreateObject(NewCore, _uomService, _itemService, _itemTypeService))
             {
-                if (_validator.ValidCreateObject(coreBuilder, this, _itemService))
+                if (_validator.ValidCreateObject(coreBuilder, this, _uomService, _itemService))
                 {
-                    UsedCore = _itemService.CreateObject(UsedCore, _itemTypeService, _warehouseItemService, _warehouseService);
+                    UsedCore = _itemService.CreateObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
                     UsedCore.Id = UsedCore.Id;
-                    NewCore = _itemService.CreateObject(NewCore, _itemTypeService, _warehouseItemService, _warehouseService);
+                    NewCore = _itemService.CreateObject(NewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
                     NewCore.Id = NewCore.Id;
                     coreBuilder.UsedCoreItemId = UsedCore.Id;
                     coreBuilder.NewCoreItemId = NewCore.Id;
@@ -111,7 +113,7 @@ namespace Service.Service
             return coreBuilder;
         }
 
-        public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IItemService _itemService, IItemTypeService _itemTypeService)
+        public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             UsedCore.Name = coreBuilder.Name;
@@ -120,10 +122,10 @@ namespace Service.Service
             NewCore.Name = coreBuilder.Name;
             NewCore.Category = coreBuilder.Category;
 
-            if (_itemService.GetValidator().ValidUpdateObject(UsedCore, _itemService, _itemTypeService) &&
-                _itemService.GetValidator().ValidUpdateObject(NewCore, _itemService, _itemTypeService))
+            if (_itemService.GetValidator().ValidUpdateObject(UsedCore, _uomService, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidUpdateObject(NewCore, _uomService, _itemService, _itemTypeService))
             {
-                if (_validator.ValidUpdateObject(coreBuilder, this, _itemService))
+                if (_validator.ValidUpdateObject(coreBuilder, this, _uomService, _itemService))
                 {
                     _itemService.GetRepository().UpdateObject(UsedCore);
                     _itemService.GetRepository().UpdateObject(NewCore);

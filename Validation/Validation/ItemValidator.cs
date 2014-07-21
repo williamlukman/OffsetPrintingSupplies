@@ -54,11 +54,12 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VHasUoM(Item item)
+        public Item VHasUoM(Item item, IUoMService _uomService)
         {
-            if (String.IsNullOrEmpty(item.UoM) || item.UoM.Trim() == "")
+            UoM uom = _uomService.GetObjectById(item.UoMId);
+            if (uom == null)
             {
-                item.Errors.Add("UoM", "Tidak boleh kosong");
+                item.Errors.Add("UoMId", "Tidak terasosiasi dengan Unit of Measurement");
             }
             return item;
         }
@@ -117,8 +118,10 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VCreateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService)
+        public Item VCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
+            VHasUoM(item, _uomService);
+            if (!isValid(item)) { return item; }
             VHasItemType(item, _itemTypeService);
             if (!isValid(item)) { return item; }
             VHasUniqueSku(item, _itemService);
@@ -129,9 +132,9 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService)
+        public Item VUpdateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
-            return VCreateObject(item, _itemService, _itemTypeService);
+            return VCreateObject(item, _uomService, _itemService, _itemTypeService);
         }
 
         public Item VDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService)
@@ -156,16 +159,16 @@ namespace Validation.Validation
             return item;
         }
 
-        public bool ValidCreateObject(Item item, IItemService _itemService , IItemTypeService _itemTypeService)
+        public bool ValidCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
-            VCreateObject(item, _itemService, _itemTypeService);
+            VCreateObject(item, _uomService, _itemService, _itemTypeService);
             return isValid(item);
         }
 
-        public bool ValidUpdateObject(Item item, IItemService _itemService, IItemTypeService _itemTypeService)
+        public bool ValidUpdateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             item.Errors.Clear();
-            VUpdateObject(item, _itemService, _itemTypeService);
+            VUpdateObject(item, _uomService, _itemService, _itemTypeService);
             return isValid(item);
         }
 

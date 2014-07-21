@@ -66,11 +66,42 @@ namespace Validation.Validation
                                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
+            foreach (var stockAdjustmentDetail in details)
+            {
+                int stockAdjustmentDetailQuantity = stockAdjustmentDetail.Quantity;
+                //decimal stockAdjustmentDetailPrice = stockAdjustmentDetail.Price;
+                Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(stockAdjustment.WarehouseId, item.Id);
+                if (item.Quantity + stockAdjustmentDetailQuantity < 0)
+                {
+                    stockAdjustment.Errors.Add("Generic", "Stock barang tidak boleh menjadi kurang dari 0");
+                    return stockAdjustment;
+                }
+                if (warehouseItem.Quantity + stockAdjustmentDetailQuantity < 0)
+                {
+                    stockAdjustmentDetail.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
+                    return stockAdjustment;
+                }
+                /*
+                if (_itemService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
+                {
+                    stockAdjustment.Errors.Add("Generic", "AvgCost tidak boleh kurang dari 0");
+                    return stockAdjustment;
+                }
+                */
+            }
+            return stockAdjustment;
+        }
+
+        public StockAdjustment VAllDetailsHaveBeenFinished(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        {
+            IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
             foreach (var detail in details)
             {
-                if (!_stockAdjustmentDetailService.GetValidator().ValidConfirmObject(detail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+                if (!detail.IsFinished)
                 {
-                    stockAdjustment.Errors.Add("Generic", "Details tidak dapat dikonfirmasi");
+                    stockAdjustment.Errors.Add("Generic", "Detail masih belum selesai");
+                    return stockAdjustment;
                 }
             }
             return stockAdjustment;
@@ -80,16 +111,29 @@ namespace Validation.Validation
                                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-            foreach (var detail in details)
+            foreach (var stockAdjustmentDetail in details)
             {
-                if (!_stockAdjustmentDetailService.GetValidator().ValidUnconfirmObject(detail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+                int stockAdjustmentDetailQuantity = ((-1) * stockAdjustmentDetail.Quantity);
+                //decimal stockAdjustmentDetailPrice = ((-1) * stockAdjustmentDetail.Price);
+                Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(stockAdjustment.WarehouseId, item.Id);
+                if (item.Quantity + stockAdjustmentDetailQuantity < 0)
                 {
-                    foreach (var error in detail.Errors)
-                    {
-                        stockAdjustment.Errors.Add(error.Key, error.Value);
-                    }
-                    if (!isValid(stockAdjustment)) { return stockAdjustment; }
+                    stockAdjustment.Errors.Add("Generic", "Stock barang tidak boleh kurang dari detail adjustment");
+                    return stockAdjustment;
                 }
+                if (warehouseItem.Quantity + stockAdjustmentDetailQuantity < 0)
+                {
+                    stockAdjustment.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
+                    return stockAdjustment;
+                }
+                /*
+                if (_itemService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
+                {
+                    stockAdjustmentDetail.Errors.Add("AvgCost", "Tidak boleh kurang dari 0");
+                    return stockAdjustment;
+                }
+                */
             }
             return stockAdjustment;
         }
@@ -136,6 +180,12 @@ namespace Validation.Validation
             return stockAdjustment;
         }
 
+        public StockAdjustment VCompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        {
+            VAllDetailsHaveBeenFinished(stockAdjustment, _stockAdjustmentDetailService);
+            return stockAdjustment;
+        }
+
         public bool ValidCreateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService)
         {
             VCreateObject(stockAdjustment, _warehouseService);
@@ -169,6 +219,13 @@ namespace Validation.Validation
         {
             stockAdjustment.Errors.Clear();
             VUnconfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
+            return isValid(stockAdjustment);
+        }
+
+        public bool ValidCompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        {
+            stockAdjustment.Errors.Clear();
+            VCompleteObject(stockAdjustment, _stockAdjustmentDetailService);
             return isValid(stockAdjustment);
         }
 

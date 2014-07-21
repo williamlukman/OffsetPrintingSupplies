@@ -79,22 +79,22 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationOrderDetail FinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+                                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidFinishObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
             {
-                warehouseMutationOrderDetail = _repository.ConfirmObject(warehouseMutationOrderDetail);
+                _repository.FinishObject(warehouseMutationOrderDetail);
             }
             return warehouseMutationOrderDetail;
         }
 
-        public WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public WarehouseMutationOrderDetail UnfinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidUnfinishObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
             {
-                warehouseMutationOrderDetail = _repository.UnconfirmObject(warehouseMutationOrderDetail);
+                _repository.UnfinishObject(warehouseMutationOrderDetail);
             }
             return warehouseMutationOrderDetail;
         }

@@ -13,7 +13,6 @@ namespace Core.DomainModel
         public int CoreIdentificationDetailId { get; set; }
 
         public int ItemId { get; set; }
-        public int Quantity { get; set; }
 
         public bool IsFinished { get; set; }
         public Nullable<DateTime> FinishedDate { get; set; }

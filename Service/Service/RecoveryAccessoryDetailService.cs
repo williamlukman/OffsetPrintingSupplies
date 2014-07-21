@@ -82,9 +82,9 @@ namespace Service.Service
             return (recoveryAccessoryDetail = _validator.ValidDeleteObject(recoveryAccessoryDetail) ? _repository.SoftDeleteObject(recoveryAccessoryDetail) : recoveryAccessoryDetail);
         }
 
-        public RecoveryAccessoryDetail FinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        public RecoveryAccessoryDetail FinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidFinishObject(recoveryAccessoryDetail))
+            if (_validator.ValidFinishObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService))
             {
                 RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
                 _recoveryOrderDetailService.AddAccessory(recoveryOrderDetail, this);
@@ -95,7 +95,7 @@ namespace Service.Service
 
         public RecoveryAccessoryDetail UnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
-            if (_validator.ValidUnfinishObject(recoveryAccessoryDetail))
+            if (_validator.ValidUnfinishObject(recoveryAccessoryDetail, _recoveryOrderDetailService))
             {
                 RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
                 _recoveryOrderDetailService.RemoveAccessory(recoveryOrderDetail, this);

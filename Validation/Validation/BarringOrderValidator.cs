@@ -131,32 +131,32 @@ namespace Validation.Validation
             return barringOrder;
         }
 
-        public BarringOrder VHasBeenFinished(BarringOrder barringOrder)
+        public BarringOrder VHasBeenCompleted(BarringOrder barringOrder)
         {
-            if (!barringOrder.IsFinished)
+            if (!barringOrder.IsCompleted)
             {
-                barringOrder.Errors.Add("Generic", "Belum di finish");
+                barringOrder.Errors.Add("Generic", "Belum complete");
             }
             return barringOrder;
         }
 
-        public BarringOrder VHasNotBeenFinished(BarringOrder barringOrder)
+        public BarringOrder VHasNotBeenCompleted(BarringOrder barringOrder)
         {
-            if (barringOrder.IsFinished)
+            if (barringOrder.IsCompleted)
             {
-                barringOrder.Errors.Add("Generic", "Sudah di finish");
+                barringOrder.Errors.Add("Generic", "Sudah complete");
             }
             return barringOrder;
         }
 
-        public BarringOrder VAllDetailsHaveBeenPackagedOrRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService)
+        public BarringOrder VAllDetailsHaveBeenFinishedOrRejected(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService)
         {
             IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
             foreach (var detail in details)
             {
-                if (!detail.IsPackaged && !detail.IsRejected)
+                if (!detail.IsFinished && !detail.IsRejected)
                 {
-                    barringOrder.Errors.Add("Generic", "Semua barring order detail harus telah di package atau di reject");
+                    barringOrder.Errors.Add("Generic", "Semua barring order detail harus telah selesai atau di reject");
                     return barringOrder;
                 }
             }
@@ -185,20 +185,6 @@ namespace Validation.Validation
                 if (detail.IsCut || detail.IsRejected)
                 {
                     barringOrder.Errors.Add("Generic", "Semua barring order detail harus belum di cut atau di reject");
-                    return barringOrder;
-                }
-            }
-            return barringOrder;
-        }
-
-        public BarringOrder VAllDetailsHaveLeftAndRightBar(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IItemService _itemService)
-        {
-            IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-            foreach (var detail in details)
-            {
-                if ((!detail.HasLeftBar || !detail.HasRightBar) && (!detail.IsRejected))
-                {
-                    barringOrder.Errors.Add("Generic", "Semua barring order detail harus mempunyai bar kiri dan kanan");
                     return barringOrder;
                 }
             }
@@ -245,27 +231,19 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(barringOrder);
             if (!isValid(barringOrder)) { return barringOrder; }
-            VHasNotBeenFinished(barringOrder);
+            VHasNotBeenCompleted(barringOrder);
             if (!isValid(barringOrder)) { return barringOrder; }
             VAllDetailsHaveNotBeenCutNorRejected(barringOrder, _barringOrderDetailService);
             return barringOrder;
         }
 
-        public BarringOrder VFinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IItemService _itemService)
+        public BarringOrder VCompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService)
         {
             VHasBeenConfirmed(barringOrder);
             if (!isValid(barringOrder)) { return barringOrder; }
-            VHasNotBeenFinished(barringOrder);
+            VHasNotBeenCompleted(barringOrder);
             if (!isValid(barringOrder)) { return barringOrder; }
-            VAllDetailsHaveBeenPackagedOrRejected(barringOrder, _barringOrderDetailService);
-            if (!isValid(barringOrder)) { return barringOrder; }
-            VAllDetailsHaveLeftAndRightBar(barringOrder, _barringOrderDetailService, _itemService);
-            return barringOrder;
-        }
-
-        public BarringOrder VUnfinishObject(BarringOrder barringOrder)
-        {
-            VHasBeenFinished(barringOrder);
+            VAllDetailsHaveBeenFinishedOrRejected(barringOrder, _barringOrderDetailService);
             return barringOrder;
         }
 
@@ -304,17 +282,10 @@ namespace Validation.Validation
             return isValid(barringOrder);
         }
 
-        public bool ValidFinishObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IItemService _itemService)
+        public bool ValidCompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService)
         {
             barringOrder.Errors.Clear();
-            VFinishObject(barringOrder, _barringOrderDetailService, _itemService);
-            return isValid(barringOrder);
-        }
-
-        public bool ValidUnfinishObject(BarringOrder barringOrder)
-        {
-            barringOrder.Errors.Clear();
-            VUnfinishObject(barringOrder);
+            VCompleteObject(barringOrder, _barringOrderDetailService);
             return isValid(barringOrder);
         }
         

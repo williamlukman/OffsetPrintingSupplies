@@ -72,26 +72,12 @@ namespace Validation.Validation
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VRecoveryOrderHasNotBeenFinished(RecoveryAccessoryDetail recoveryAccessoryDetail,
-                            IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        public RecoveryAccessoryDetail VRecoveryOrderDetailHasNotBeenFinishedNorRejected(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
-            RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
-            if (recoveryOrder.IsFinished)
+            if (detail.IsRejected || detail.IsFinished)
             {
-                recoveryAccessoryDetail.Errors.Add("Generic", "Recovery Order sudah di finish");
-            }
-            return recoveryAccessoryDetail;
-        }
-
-        public RecoveryAccessoryDetail VRecoveryOrderHasBeenFinished(RecoveryAccessoryDetail recoveryAccessoryDetail,
-                            IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService)
-        {
-            RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.Id);
-            RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
-            if (!recoveryOrder.IsFinished)
-            {
-                recoveryAccessoryDetail.Errors.Add("Generic", "Harus sudah finish");
+                recoveryAccessoryDetail.Errors.Add("Generic", "Recovery Order Detail sudah selesai atau di reject");
             }
             return recoveryAccessoryDetail;
         }
@@ -120,24 +106,20 @@ namespace Validation.Validation
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VFinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public RecoveryAccessoryDetail VFinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            // TODO
-            /*
-            VRecoveryOrderHasNotBeenFinished(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService);
+            VRecoveryOrderDetailHasNotBeenFinishedNorRejected(recoveryAccessoryDetail, _recoveryOrderDetailService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
             VQuantityInStock(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
-             */
+            if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
             VHasNotBeenFinished(recoveryAccessoryDetail);
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VUnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public RecoveryAccessoryDetail VUnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
-            /*
-            VRecoveryOrderHasNotBeenFinished(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService);
+            VRecoveryOrderDetailHasNotBeenFinishedNorRejected(recoveryAccessoryDetail, _recoveryOrderDetailService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
-             */
             VHasBeenFinished(recoveryAccessoryDetail);
             return recoveryAccessoryDetail;
         }
@@ -164,17 +146,17 @@ namespace Validation.Validation
             return isValid(recoveryAccessoryDetail);
         }
 
-        public bool ValidFinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public bool ValidFinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryAccessoryDetail.Errors.Clear();
-            VFinishObject(recoveryAccessoryDetail);
+            VFinishObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
             return isValid(recoveryAccessoryDetail);
         }
 
-        public bool ValidUnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public bool ValidUnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             recoveryAccessoryDetail.Errors.Clear();
-            VUnfinishObject(recoveryAccessoryDetail);
+            VUnfinishObject(recoveryAccessoryDetail, _recoveryOrderDetailService);
             return isValid(recoveryAccessoryDetail);
         }
 

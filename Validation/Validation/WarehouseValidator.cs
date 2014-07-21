@@ -42,13 +42,20 @@ namespace Validation.Validation
         public Warehouse VIsInCoreIdentification(Warehouse warehouse, ICoreIdentificationService _coreIdentificationService)
         {
             IList<CoreIdentification> coreIdentifications = _coreIdentificationService.GetAllObjectsByWarehouseId(warehouse.Id);
-            // TODO, after finishing Roller Warehouse Mutation
+            if (coreIdentifications.Any())
+            {
+                warehouse.Errors.Add("Generic", "Tidak dapat menghapus warehouse");
+            }
             return warehouse;
         }
 
         public Warehouse VIsInBarringOrderAndIncomplete(Warehouse warehouse, IBarringOrderService _barringOrderService)
         {
-            // TODO, to discuss about stock mutation for barring
+            IList<BarringOrder> barringOrders = _barringOrderService.GetAllObjectsByWarehouseId(warehouse.Id);
+            if (barringOrders.Any())
+            {
+                warehouse.Errors.Add("Generic", "Tidak dapat menghapus warehouse");
+            }
             return warehouse;
         }
 

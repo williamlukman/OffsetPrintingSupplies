@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
     {
         IList<Item> GetAll();
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
+        IList<Item> GetObjectsByUoMId(int UoMId);
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);
         Item CreateObject(Item item);

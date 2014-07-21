@@ -10,15 +10,15 @@ namespace Core.Interface.Validation
 {
     public interface IUoMValidator
     {
-        UoM VHasUniqueName(UoM unitOfMeasurement, IUoMService _unitOfMeasurementService);
-        UoM VHasItem(UoM unitOfMeasurement, IItemService _itemService);
-        UoM VCreateObject(UoM unitOfMeasurement, IUoMService _unitOfMeasurementService);
-        UoM VUpdateObject(UoM unitOfMeasurement, IUoMService _unitOfMeasurementService);
-        UoM VDeleteObject(UoM unitOfMeasurement, IItemService _itemService);
-        bool ValidCreateObject(UoM unitOfMeasurement, IUoMService _unitOfMeasurementService);
-        bool ValidUpdateObject(UoM unitOfMeasurement, IUoMService _unitOfMeasurementService);
-        bool ValidDeleteObject(UoM unitOfMeasurement, IItemService _itemService);
-        bool isValid(UoM unitOfMeasurement);
-        string PrintError(UoM unitOfMeasurement);
+        UoM VHasUniqueName(UoM uom, IUoMService _uomService);
+        UoM VHasItem(UoM uom, IItemService _itemService);
+        UoM VCreateObject(UoM uom, IUoMService _uomService);
+        UoM VUpdateObject(UoM uom, IUoMService _uomService);
+        UoM VDeleteObject(UoM uom, IItemService _itemService);
+        bool ValidCreateObject(UoM uom, IUoMService _uomService);
+        bool ValidUpdateObject(UoM uom, IUoMService _uomService);
+        bool ValidDeleteObject(UoM uom, IItemService _itemService);
+        bool isValid(UoM uom);
+        string PrintError(UoM uom);
     }
 }

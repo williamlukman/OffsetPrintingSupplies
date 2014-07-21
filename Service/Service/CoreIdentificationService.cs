@@ -110,21 +110,6 @@ namespace Service.Service
         {
             if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService))
             {
-                if (coreIdentification.CustomerId != null)
-                {
-                    IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
-                    foreach (var detail in details)
-                    {
-                        // add customer core
-                        int MaterialCase = detail.MaterialCase;
-                        Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
-                                        _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
-                                        _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
-                        WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
-                        StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(detail, warehouseItem);
-                        StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
-                    }
-                }
                 _repository.ConfirmObject(coreIdentification);
             }
             return coreIdentification;
@@ -136,24 +121,6 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(coreIdentification, _recoveryOrderService))
             {
-                if (coreIdentification.CustomerId != null)
-                {
-                    IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
-                    foreach (var detail in details)
-                    {
-                        // reduce customer core
-                        int MaterialCase = detail.MaterialCase;
-                        Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
-                                        _coreBuilderService.GetNewCore(detail.CoreBuilderId) :
-                                        _coreBuilderService.GetUsedCore(detail.CoreBuilderId));
-                        WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
-                        IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForCoreIdentification(detail, warehouseItem);
-                        foreach (var stockMutation in stockMutations)
-                        {
-                            ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
-                        }
-                    }
-                }
                 _repository.UnconfirmObject(coreIdentification);
             }
             return coreIdentification;
@@ -168,23 +135,6 @@ namespace Service.Service
             return coreIdentification;
         }
         
-        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
-        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int reverseQuantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, reverseQuantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, reverseQuantity);
-        }
 
         public bool DeleteObject(int Id)
         {

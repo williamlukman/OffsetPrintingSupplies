@@ -58,6 +58,16 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
+        public RecoveryOrder VQuantityFinalAndRejectedIsLessThanOrEqualQuantityReceived(RecoveryOrder recoveryOrder)
+        {
+            if (recoveryOrder.QuantityFinal + recoveryOrder.QuantityRejected > recoveryOrder.QuantityReceived)
+            {
+                recoveryOrder.Errors.Add("Generic", "jumlah sudah melebihi jumalah yang diterima diawal");
+                return recoveryOrder;
+            }
+            return recoveryOrder;
+        }
+
         public RecoveryOrder VQuantityReceivedLessThanCoreIdentification(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService)
         {
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(recoveryOrder.CoreIdentificationId);
@@ -132,25 +142,25 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VHasBeenFinished(RecoveryOrder recoveryOrder)
+        public RecoveryOrder VHasBeenCompleted(RecoveryOrder recoveryOrder)
         {
-            if (!recoveryOrder.IsFinished)
+            if (!recoveryOrder.IsCompleted)
             {
-                recoveryOrder.Errors.Add("Generic", "Belum di finish");
+                recoveryOrder.Errors.Add("Generic", "Belum complete");
             }
             return recoveryOrder;
         }
 
-        public RecoveryOrder VHasNotBeenFinished(RecoveryOrder recoveryOrder)
+        public RecoveryOrder VHasNotBeenCompleted(RecoveryOrder recoveryOrder)
         {
-            if (recoveryOrder.IsFinished)
+            if (recoveryOrder.IsCompleted)
             {
-                recoveryOrder.Errors.Add("Generic", "Sudah di finish");
+                recoveryOrder.Errors.Add("Generic", "Sudah complete");
             }
             return recoveryOrder;
         }
 
-        public RecoveryOrder VAllAccessoriesHaveNotBeenConfirmed(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public RecoveryOrder VAllAccessoriesHaveNotBeenFinished(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
             IList<RecoveryAccessoryDetail> accessories = new List<RecoveryAccessoryDetail>();
@@ -170,7 +180,7 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VAllAccessoriesHaveBeenConfirmed(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public RecoveryOrder VAllAccessoriesHaveBeenFinished(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
             IList<RecoveryAccessoryDetail> accessories = new List<RecoveryAccessoryDetail>();
@@ -190,14 +200,14 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VAllDetailsHaveBeenPackagedOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        public RecoveryOrder VAllDetailsHaveBeenFinishedOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
             foreach (var detail in details)
             {
-                if (!detail.IsPackaged && !detail.IsRejected)
+                if (!detail.IsFinished && !detail.IsRejected)
                 {
-                    recoveryOrder.Errors.Add("Generic", "Semua recovery order detail harus telah di package atau di reject");
+                    recoveryOrder.Errors.Add("Generic", "Semua recovery order detail harus telah selesai atau di reject");
                     return recoveryOrder;
                 }
             }
@@ -258,7 +268,7 @@ namespace Validation.Validation
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VAllDetailsHaveNotBeenDisassembledNorRejected(recoveryOrder, _recoveryOrderDetailService);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllAccessoriesHaveNotBeenConfirmed(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
+            VAllAccessoriesHaveNotBeenFinished(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
             return recoveryOrder;
         }
 
@@ -279,29 +289,29 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VHasNotBeenFinished(recoveryOrder);
+            VHasNotBeenCompleted(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VAllDetailsHaveNotBeenDisassembledNorRejected(recoveryOrder, _recoveryOrderDetailService);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllAccessoriesHaveNotBeenConfirmed(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
+            VAllAccessoriesHaveNotBeenFinished(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
             return recoveryOrder;
         }
 
-        public RecoveryOrder VFinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public RecoveryOrder VAdjustQuantity(RecoveryOrder recoveryOrder)
+        {
+            VQuantityFinalAndRejectedIsLessThanOrEqualQuantityReceived(recoveryOrder);
+            return recoveryOrder;
+        }
+
+        public RecoveryOrder VCompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
             VHasBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VHasNotBeenFinished(recoveryOrder);
+            VHasNotBeenCompleted(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllDetailsHaveBeenPackagedOrRejected(recoveryOrder, _recoveryOrderDetailService);
+            VAllDetailsHaveBeenFinishedOrRejected(recoveryOrder, _recoveryOrderDetailService);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllAccessoriesHaveBeenConfirmed(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
-            return recoveryOrder;
-        }
-
-        public RecoveryOrder VUnfinishObject(RecoveryOrder recoveryOrder)
-        {
-            VHasBeenFinished(recoveryOrder);
+            VAllAccessoriesHaveBeenFinished(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
             return recoveryOrder;
         }
 
@@ -340,20 +350,20 @@ namespace Validation.Validation
             return isValid(recoveryOrder);
         }
 
-        public bool ValidFinishObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public bool ValidCompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
             recoveryOrder.Errors.Clear();
-            VFinishObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
+            VCompleteObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
             return isValid(recoveryOrder);
         }
 
-        public bool ValidUnfinishObject(RecoveryOrder recoveryOrder)
+        public bool ValidAdjustQuantity(RecoveryOrder recoveryOrder)
         {
             recoveryOrder.Errors.Clear();
-            VUnfinishObject(recoveryOrder);
+            VAdjustQuantity(recoveryOrder);
             return isValid(recoveryOrder);
         }
-        
+
         public bool isValid(RecoveryOrder obj)
         {
             bool isValid = !obj.Errors.Any();

@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
     {
         IList<Barring> GetAll();
         IList<Barring> GetObjectsByItemTypeId(int ItemTypeId);
+        IList<Barring> GetObjectsByUoMId(int UoMId);
         IList<Barring> GetObjectsByMachineId(int machineId);
         IList<Barring> GetObjectsByCustomerId(int customerId);
         Barring GetObjectById(int Id);

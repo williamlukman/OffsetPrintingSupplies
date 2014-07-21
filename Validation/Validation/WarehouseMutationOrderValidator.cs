@@ -91,9 +91,12 @@ namespace Validation.Validation
             IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
             foreach (var detail in details)
             {
-                if (!_warehouseMutationOrderDetailService.GetValidator().ValidConfirmObject(detail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
+                int Quantity = detail.Quantity;
+                WarehouseItem warehouseItemFrom = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseFromId, detail.ItemId);
+                if (warehouseItemFrom.Quantity + Quantity < 0)
                 {
-                    warehouseMutationOrder.Errors.Add("Generic", "Details tidak dapat dikonfirmasi");
+                    warehouseMutationOrder.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang akan dimutasikan");
+                    return warehouseMutationOrder;
                 }
             }
             return warehouseMutationOrder;
@@ -105,13 +108,26 @@ namespace Validation.Validation
             IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
             foreach (var detail in details)
             {
-                if (!_warehouseMutationOrderDetailService.GetValidator().ValidUnconfirmObject(detail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
+                int Quantity = (-1) * detail.Quantity;
+                WarehouseItem warehouseItemFrom = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseFromId, detail.ItemId);
+                if (warehouseItemFrom.Quantity + Quantity < 0)
                 {
-                    foreach (var error in detail.Errors)
-                    {
-                        warehouseMutationOrder.Errors.Add(error.Key, error.Value);
-                    }
-                    if (!isValid(warehouseMutationOrder)) { return warehouseMutationOrder; }
+                    warehouseMutationOrder.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang akan dimutasikan");
+                    return warehouseMutationOrder;
+                }
+            }
+            return warehouseMutationOrder;
+        }
+
+        public WarehouseMutationOrder VAllDetailsHaveBeenFinished(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
+        {
+            IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
+            foreach (var detail in details)
+            {
+                if (!detail.IsFinished)
+                {
+                    warehouseMutationOrder.Errors.Add("Generic", "Detail masih belum selesai");
+                    return warehouseMutationOrder;
                 }
             }
             return warehouseMutationOrder;
@@ -161,6 +177,12 @@ namespace Validation.Validation
             return warehouseMutationOrder;
         }
 
+        public WarehouseMutationOrder VCompleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
+        {
+            VAllDetailsHaveBeenFinished(warehouseMutationOrder, _warehouseMutationOrderDetailService);
+            return warehouseMutationOrder;
+        }
+
         public bool ValidCreateObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseService _warehouseService)
         {
             VCreateObject(warehouseMutationOrder, _warehouseService);
@@ -194,6 +216,13 @@ namespace Validation.Validation
         {
             warehouseMutationOrder.Errors.Clear();
             VUnconfirmObject(warehouseMutationOrder, _warehouseMutationOrderService, _warehouseMutationOrderDetailService, _itemService, _barringService, _warehouseItemService);
+            return isValid(warehouseMutationOrder);
+        }
+
+        public bool ValidCompleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
+        {
+            warehouseMutationOrder.Errors.Clear();
+            VCompleteObject(warehouseMutationOrder, _warehouseMutationOrderDetailService);
             return isValid(warehouseMutationOrder);
         }
 

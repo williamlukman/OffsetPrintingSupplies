@@ -109,7 +109,7 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(detail.CoreIdentificationDetailId);
-                    _coreIdentificationDetailService.SetJobScheduled(coreIdentificationDetail);
+                    _coreIdentificationDetailService.SetJobScheduled(coreIdentificationDetail, this, _recoveryOrderDetailService);
                 }
                 _repository.ConfirmObject(recoveryOrder);
             }
@@ -127,7 +127,7 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(detail.CoreIdentificationDetailId);
-                    _coreIdentificationDetailService.UnsetJobScheduled(coreIdentificationDetail);
+                    _coreIdentificationDetailService.UnsetJobScheduled(coreIdentificationDetail, this, _recoveryOrderDetailService);
                 }
                 _repository.UnconfirmObject(recoveryOrder);
             }
