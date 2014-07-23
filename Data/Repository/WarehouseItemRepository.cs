@@ -45,8 +45,7 @@ namespace Data.Repository
         public WarehouseItem FindOrCreateObject(int WarehouseId, int ItemId)
         {
             WarehouseItem warehouseItem = Find(x => x.WarehouseId == WarehouseId && x.ItemId == ItemId && !x.IsDeleted);
-            if (warehouseItem != null) { warehouseItem.Errors = new Dictionary<string, string>(); }
-            else
+            if (warehouseItem == null)
             {
                 warehouseItem = new WarehouseItem()
                 {
@@ -55,6 +54,7 @@ namespace Data.Repository
                 };
                 warehouseItem = CreateObject(warehouseItem);
             }
+            warehouseItem.Errors = new Dictionary<string, string>();
             return warehouseItem;
         }
 
