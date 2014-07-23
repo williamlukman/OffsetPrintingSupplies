@@ -110,6 +110,11 @@ namespace Service.Service
             return barringOrder;
         }
 
+        public BarringOrder AdjustQuantity(BarringOrder barringOrder)
+        {
+            return (barringOrder = _validator.ValidAdjustQuantity(barringOrder) ? _repository.AdjustQuantity(barringOrder) : barringOrder);
+        }
+
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);

@@ -12,8 +12,9 @@ namespace Core.Interface.Validation
     {
         BarringOrder VHasUniqueCode(BarringOrder barringOrder, IBarringOrderService _barringOrderService);
         BarringOrder VHasBarringOrderDetails(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
-        BarringOrder VHasQuantityOrdered(BarringOrder barringOrder);
-        BarringOrder VQuantityOrderedEqualDetails(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
+        BarringOrder VHasQuantityReceived(BarringOrder barringOrder);
+        BarringOrder VQuantityFinalAndRejectedIsLessThanOrEqualQuantityReceived(BarringOrder barringOrder);
+        BarringOrder VQuantityReceivedEqualDetails(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VQuantityIsInStock(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService,
                                         IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder VHasBeenConfirmed(BarringOrder barringOrder);
@@ -29,6 +30,7 @@ namespace Core.Interface.Validation
         BarringOrder VConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder VUnconfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VCompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
+        BarringOrder VAdjustQuantity(BarringOrder barringOrder);
 
         bool ValidCreateObject(BarringOrder barringOrder, IBarringOrderService _barringOrderService);
         bool ValidUpdateObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringOrderService _barringOrderService);
@@ -36,6 +38,7 @@ namespace Core.Interface.Validation
         bool ValidConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         bool ValidCompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
+        bool ValidAdjustQuantity(BarringOrder barringOrder);
         bool isValid(BarringOrder barringOrder);
         string PrintError(BarringOrder barringOrder);
     }

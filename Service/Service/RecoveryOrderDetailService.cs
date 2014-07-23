@@ -183,6 +183,8 @@ namespace Service.Service
                     _recoveryOrderService.CompleteObject(recoveryOrder, _coreIdentificationDetailService, this, _recoveryAccessoryDetailService);
                 }
 
+                bool CaseAddition = false;
+
                 // deduce compound
                 // TODO
 
@@ -196,7 +198,7 @@ namespace Service.Service
                 Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                 WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
-                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore);
+                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore, CaseAddition);
                 StockMutateObject(stockMutationCore, _itemService, _barringService, _warehouseItemService);
 
                 // accesories uncounted
@@ -262,6 +264,10 @@ namespace Service.Service
                     _recoveryOrderService.CompleteObject(recoveryOrder, _coreIdentificationDetailService, this, _recoveryAccessoryDetailService);
                 }
 
+                bool CaseAdditionCompound = false;
+                bool CaseAdditionCore = false;
+                bool CaseAdditionRoller = true;
+             
                 // deduce compound
                 // TODO
 
@@ -275,7 +281,7 @@ namespace Service.Service
                 Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                 WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
-                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore);
+                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore, CaseAdditionCore);
                 StockMutateObject(stockMutationCore, _itemService, _barringService, _warehouseItemService);
 
                 // add roller
@@ -283,7 +289,7 @@ namespace Service.Service
                 Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _rollerBuilderService.GetRollerNewCore(rollerBuilder.Id) : _rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id);
                 WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, roller.Id);
-                StockMutation stockMutationRoller = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseRoller);
+                StockMutation stockMutationRoller = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseRoller, CaseAdditionRoller);
                 StockMutateObject(stockMutationRoller, _itemService, _barringService, _warehouseItemService);
 
                 // deduce accessories
@@ -315,7 +321,7 @@ namespace Service.Service
                 RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 recoveryOrder.QuantityFinal += 1;
                 _recoveryOrderService.AdjustQuantity(recoveryOrder);
-                
+
                 // add compound
                 // TODO
                     

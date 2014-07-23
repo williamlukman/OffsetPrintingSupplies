@@ -63,7 +63,6 @@ namespace Validation.Validation
             if (recoveryOrder.QuantityFinal + recoveryOrder.QuantityRejected > recoveryOrder.QuantityReceived)
             {
                 recoveryOrder.Errors.Add("Generic", "jumlah sudah melebihi jumalah yang diterima diawal");
-                return recoveryOrder;
             }
             return recoveryOrder;
         }

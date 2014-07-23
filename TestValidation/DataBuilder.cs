@@ -62,6 +62,13 @@ namespace TestValidation
         public BarringOrder barringOrderCustomer;
         public BarringOrderDetail barringODCustomer1, barringODCustomer2, barringODCustomer3, barringODCustomer4; 
 
+        // extended variable
+        public int usedCoreBuilderQuantity, usedCoreBuilder1Quantity, usedCoreBuilder2Quantity, usedCoreBuilder3Quantity, usedCoreBuilder4Quantity;
+        public int usedRollerBuilderQuantity, usedRollerBuilder1Quantity, usedRollerBuilder2Quantity, usedRollerBuilder3Quantity, usedRollerBuilder4Quantity;
+        public int usedCoreBuilderFinal, usedCoreBuilder1Final, usedCoreBuilder2Final, usedCoreBuilder3Final, usedCoreBuilder4Final;
+        public int usedRollerBuilderFinal, usedRollerBuilder1Final, usedRollerBuilder2Final, usedRollerBuilder3Final, usedRollerBuilder4Final;
+        public int accessory1quantity;
+
         public DataBuilder()
         {
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
@@ -894,7 +901,7 @@ namespace TestValidation
             barringOrderCustomer = new BarringOrder()
             {
                 CustomerId = customer.Id,
-                QuantityOrdered = 4,
+                QuantityReceived = 4,
                 Code = "BO0001",
                 WarehouseId = localWarehouse.Id
             };
@@ -904,6 +911,7 @@ namespace TestValidation
             {
                 BarringId = barring1.Id,
                 BarringOrderId = barringOrderCustomer.Id,
+                IsBarRequired = true
             };
             _barringOrderDetailService.CreateObject(barringODCustomer1, _barringOrderService, _barringService);
 
@@ -911,6 +919,7 @@ namespace TestValidation
             {
                 BarringId = barring1.Id,
                 BarringOrderId = barringOrderCustomer.Id,
+                IsBarRequired = true
             };
             _barringOrderDetailService.CreateObject(barringODCustomer2, _barringOrderService, _barringService);
 
@@ -918,6 +927,7 @@ namespace TestValidation
             {
                 BarringId = barring2.Id,
                 BarringOrderId = barringOrderCustomer.Id,
+                IsBarRequired = true
             };
             _barringOrderDetailService.CreateObject(barringODCustomer3, _barringOrderService, _barringService);
 
@@ -925,6 +935,7 @@ namespace TestValidation
             {
                 BarringId = barring2.Id,
                 BarringOrderId = barringOrderCustomer.Id,
+                IsBarRequired = true
             };
             _barringOrderDetailService.CreateObject(barringODCustomer4, _barringOrderService, _barringService);
         }

@@ -93,11 +93,9 @@ namespace Data.Repository
             return barringOrder;
         }
 
-        public BarringOrder UndoCompleteObject(BarringOrder barringOrder)
+        public BarringOrder AdjustQuantity(BarringOrder barringOrder)
         {
-            barringOrder.IsCompleted = false;
-            barringOrder.UpdatedAt = DateTime.Now;
-            return barringOrder;
+            return UpdateObject(barringOrder);
         }
 
         public bool DeleteObject(int Id)

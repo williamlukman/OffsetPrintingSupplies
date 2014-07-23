@@ -12,7 +12,7 @@ namespace Core.Interface.Validation
     {
         BarringOrderDetail VHasBarringOrder(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         BarringOrderDetail VHasBarring(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
-        BarringOrderDetail VIsBarRequiredMustBeFalse(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail VIsBarRequiredMustBeTrue(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasLeftBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasRightBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenCut(BarringOrderDetail barringOrderDetail);

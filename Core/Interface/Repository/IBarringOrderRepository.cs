@@ -19,7 +19,7 @@ namespace Core.Interface.Repository
         BarringOrder ConfirmObject(BarringOrder barringOrder);
         BarringOrder UnconfirmObject(BarringOrder barringOrder);
         BarringOrder CompleteObject(BarringOrder barringOrder);
-        BarringOrder UndoCompleteObject(BarringOrder barringOrder);
+        BarringOrder AdjustQuantity(BarringOrder barringOrder);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(BarringOrder barringOrder);
     }

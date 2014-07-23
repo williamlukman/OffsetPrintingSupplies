@@ -13,7 +13,7 @@ namespace Core.DomainModel
         public int WarehouseId { get; set; }
         public string Code { get; set; }
 
-        public int QuantityOrdered { get; set; }
+        public int QuantityReceived { get; set; }
         public int QuantityRejected { get; set; }
         public int QuantityFinal { get; set; }
         public bool IsConfirmed { get; set; }

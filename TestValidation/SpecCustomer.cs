@@ -177,7 +177,8 @@ namespace TestValidation
                     SkuNewCore = "CB00001N",
                     SkuUsedCore = "CB00001U",
                     Name = "CoreBuilder00001",
-                    Category = "X"
+                    Category = "X",
+                    UoMId = d.Pcs.Id
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.coreIdentification = new CoreIdentification()

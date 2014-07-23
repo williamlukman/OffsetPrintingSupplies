@@ -135,7 +135,8 @@ namespace TestValidation
                     SkuNewCore = "CB00001N",
                     SkuUsedCore = "CB00001U",
                     Name = "CoreBuilder00001",
-                    Category = "X"
+                    Category = "X",
+                    UoMId = d.Pcs.Id
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.coreIdentification = new CoreIdentification()
@@ -188,7 +189,8 @@ namespace TestValidation
                     SkuRollerNewCore = "RB0001N",
                     Name = "Roller Builder",
                     Category = "RB",
-                    CompoundId = compound.Id
+                    CompoundId = compound.Id,
+                    UoMId = d.Pcs.Id
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService);
 

@@ -37,10 +37,6 @@ namespace TestValidation
             {
                 d.localWarehouse.Errors.Count().should_be(0);
                 d.movingWarehouse.Errors.Count().should_be(0);
-                IList<WarehouseItem> localitems = d._warehouseItemService.GetObjectsByWarehouseId(d.localWarehouse.Id);
-                IList<WarehouseItem> movingitems = d._warehouseItemService.GetObjectsByWarehouseId(d.movingWarehouse.Id);
-                localitems.Count().should_be(0);
-                movingitems.Count().should_be(0);
             };
         }
     }

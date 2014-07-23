@@ -195,13 +195,13 @@ namespace Service.Service
             StockMutation stockMutation = new StockMutation();
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
-            stockMutation.Quantity = stockAdjustmentDetail.Quantity;
+            stockMutation.Quantity = (stockAdjustmentDetail.Quantity >= 0) ? stockAdjustmentDetail.Quantity : (-1) * stockAdjustmentDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.StockAdjustment;
             stockMutation.SourceDocumentId = stockAdjustmentDetail.StockAdjustmentId;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.StockAdjustmentDetail;
             stockMutation.SourceDocumentDetailId = stockAdjustmentDetail.Id;
             stockMutation.ItemCase = Constant.StockMutationItemCase.Ready;
-            stockMutation.Status = Constant.StockMutationStatus.Addition;
+            stockMutation.Status = (stockAdjustmentDetail.Quantity >= 0) ? Constant.StockMutationStatus.Addition : Constant.StockMutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
         }
 
@@ -240,18 +240,18 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public StockMutation CreateStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, WarehouseItem warehouseItem)
+        public StockMutation CreateStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, WarehouseItem warehouseItem, bool CaseAddition)
         {
             StockMutation stockMutation = new StockMutation();
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = 1;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.RecoveryOrder;
-            stockMutation.SourceDocumentId = recoveryOrderDetail.Id;
+            stockMutation.SourceDocumentId = recoveryOrderDetail.RecoveryOrderId;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RecoveryOrderDetail;
-            stockMutation.SourceDocumentDetailId = recoveryOrderDetail.RecoveryOrderId;
+            stockMutation.SourceDocumentDetailId = recoveryOrderDetail.Id;
             stockMutation.ItemCase = Constant.StockMutationItemCase.Ready;
-            stockMutation.Status = Constant.StockMutationStatus.Addition;
+            stockMutation.Status = CaseAddition ? Constant.StockMutationStatus.Addition : Constant.StockMutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
         }
 
@@ -276,7 +276,7 @@ namespace Service.Service
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RecoveryAccessoryDetail;
             stockMutation.SourceDocumentDetailId = recoveryAccessoryDetail.Id;
             stockMutation.ItemCase = Constant.StockMutationItemCase.Ready;
-            stockMutation.Status = Constant.StockMutationStatus.Addition;
+            stockMutation.Status = Constant.StockMutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
         }
 
@@ -290,5 +290,29 @@ namespace Service.Service
             return stockMutations;
         }
 
+        public StockMutation CreateStockMutationForBarringOrder(BarringOrderDetail barringOrderDetail, WarehouseItem warehouseItem, bool CaseAddition)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.WarehouseId = warehouseItem.WarehouseId;
+            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.Quantity = 1;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.BarringOrder;
+            stockMutation.SourceDocumentId = barringOrderDetail.BarringOrderId;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BarringOrderDetail;
+            stockMutation.SourceDocumentDetailId = barringOrderDetail.Id;
+            stockMutation.ItemCase = Constant.StockMutationItemCase.Ready;
+            stockMutation.Status = CaseAddition ? Constant.StockMutationStatus.Addition : Constant.StockMutationStatus.Deduction;
+            return _repository.CreateObject(stockMutation);
+        }
+
+        public IList<StockMutation> SoftDeleteStockMutationForBarringOrder(BarringOrderDetail barringOrderDetail, WarehouseItem warehouseItem)
+        {
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(warehouseItem.Id, Constant.SourceDocumentDetailType.BarringOrderDetail, barringOrderDetail.Id);
+            foreach (var stockMutation in stockMutations)
+            {
+                _repository.Delete(stockMutation);
+            }
+            return stockMutations;
+        }
     }
 }

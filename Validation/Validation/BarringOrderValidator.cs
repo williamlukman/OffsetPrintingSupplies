@@ -35,21 +35,30 @@ namespace Validation.Validation
             return barringOrder;
         }
 
-        public BarringOrder VHasQuantityOrdered(BarringOrder barringOrder)
+        public BarringOrder VHasQuantityReceived(BarringOrder barringOrder)
         {
-            if (barringOrder.QuantityOrdered <= 0)
+            if (barringOrder.QuantityReceived <= 0)
             {
-                barringOrder.Errors.Add("QuantityOrdered", "Harus lebih dari 0");
+                barringOrder.Errors.Add("QuantityReceived", "Harus lebih dari 0");
             }
             return barringOrder;
         }
 
-        public BarringOrder VQuantityOrderedEqualDetails(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService)
+        public BarringOrder VQuantityFinalAndRejectedIsLessThanOrEqualQuantityReceived(BarringOrder barringOrder)
+        {
+            if (barringOrder.QuantityFinal + barringOrder.QuantityRejected > barringOrder.QuantityReceived)
+            {
+                barringOrder.Errors.Add("Generic", "jumlah sudah melebihi jumalah yang diterima diawal");
+            }
+            return barringOrder;
+        }
+
+        public BarringOrder VQuantityReceivedEqualDetails(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService)
         {
             IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-            if (barringOrder.QuantityOrdered != details.Count())
+            if (barringOrder.QuantityReceived != details.Count())
             {
-                barringOrder.Errors.Add("QuantityOrdered", "Jumlah quantity received dan jumlah barring order detail tidak sama");
+                barringOrder.Errors.Add("QuantityReceived", "Jumlah quantity received dan jumlah barring order detail tidak sama");
             }
             return barringOrder;
         }
@@ -195,7 +204,7 @@ namespace Validation.Validation
         {
             VHasUniqueCode(barringOrder, _barringOrderService);
             if (!isValid(barringOrder)) { return barringOrder; }
-            VHasQuantityOrdered(barringOrder);
+            VHasQuantityReceived(barringOrder);
             return barringOrder;
         }
 
@@ -221,7 +230,7 @@ namespace Validation.Validation
             if (!isValid(barringOrder)) { return barringOrder; }
             VHasBarringOrderDetails(barringOrder, _barringOrderDetailService);
             if (!isValid(barringOrder)) { return barringOrder; }
-            VQuantityOrderedEqualDetails(barringOrder, _barringOrderDetailService);
+            VQuantityReceivedEqualDetails(barringOrder, _barringOrderDetailService);
             if (!isValid(barringOrder)) { return barringOrder; }
             VQuantityIsInStock(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService);
             return barringOrder;
@@ -244,6 +253,12 @@ namespace Validation.Validation
             VHasNotBeenCompleted(barringOrder);
             if (!isValid(barringOrder)) { return barringOrder; }
             VAllDetailsHaveBeenFinishedOrRejected(barringOrder, _barringOrderDetailService);
+            return barringOrder;
+        }
+
+        public BarringOrder VAdjustQuantity(BarringOrder barringOrder)
+        {
+            VQuantityFinalAndRejectedIsLessThanOrEqualQuantityReceived(barringOrder);
             return barringOrder;
         }
 
@@ -286,6 +301,13 @@ namespace Validation.Validation
         {
             barringOrder.Errors.Clear();
             VCompleteObject(barringOrder, _barringOrderDetailService);
+            return isValid(barringOrder);
+        }
+
+        public bool ValidAdjustQuantity(BarringOrder barringOrder)
+        {
+            barringOrder.Errors.Clear();
+            VAdjustQuantity(barringOrder);
             return isValid(barringOrder);
         }
         
