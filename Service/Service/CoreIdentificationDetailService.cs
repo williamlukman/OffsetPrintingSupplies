@@ -131,18 +131,20 @@ namespace Service.Service
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if( _validator.ValidFinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService))
+            if( _validator.ValidFinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
-                // add customer core
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
-                int MaterialCase = coreIdentificationDetail.MaterialCase;
-                Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
-                                _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
-                                _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
-                StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
-                StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
-
+                if (coreIdentification.CustomerId != null)
+                {
+                    // add customer core
+                    int MaterialCase = coreIdentificationDetail.MaterialCase;
+                    Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
+                                    _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
+                                    _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
+                    WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                    StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
+                    StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
                 _repository.FinishObject(coreIdentificationDetail);
             }
             return coreIdentificationDetail;
@@ -152,28 +154,31 @@ namespace Service.Service
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService))
+            if (_validator.ValidUnfinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
-                // reduce customer core
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
-                int MaterialCase = coreIdentificationDetail.MaterialCase;
-                Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
-                                _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
-                                _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
-                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
-                foreach (var stockMutation in stockMutations)
+                if (coreIdentification.CustomerId != null)
                 {
-                    ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    // reduce customer core
+                    int MaterialCase = coreIdentificationDetail.MaterialCase;
+                    Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
+                                    _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
+                                    _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
+                    WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                    IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
+                    foreach (var stockMutation in stockMutations)
+                    {
+                        ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    }
                 }
                 _repository.UnfinishObject(coreIdentificationDetail);
             }
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail)
+        public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
-            return (coreIdentificationDetail = _validator.ValidDeliverObject(coreIdentificationDetail) ? _repository.DeliverObject(coreIdentificationDetail) : coreIdentificationDetail);
+            return (coreIdentificationDetail = _validator.ValidDeliverObject(coreIdentificationDetail, _rollerWarehouseMutationDetailService) ? _repository.DeliverObject(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
         public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)

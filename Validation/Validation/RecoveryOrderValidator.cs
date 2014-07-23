@@ -100,7 +100,7 @@ namespace Validation.Validation
                 CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
                 Item item = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, item.Id);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, item.Id);
                 if (ValuePairItemIdQuantity.ContainsKey(warehouseItem.Id))
                 {
                     ValuePairItemIdQuantity[warehouseItem.Id] += 1;

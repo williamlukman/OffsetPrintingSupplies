@@ -25,7 +25,7 @@ namespace Validation.Validation
         public WarehouseMutationOrderDetail VHasWarehouseItemFrom(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService)
         {
             WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            WarehouseItem warehouseItemFrom = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
+            WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
             if (warehouseItemFrom == null)
             {
                 warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak terasosiasi dengan item dari warehouse yang sebelum");
@@ -36,7 +36,7 @@ namespace Validation.Validation
         public WarehouseMutationOrderDetail VHasWarehouseItemTo(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService)
         {
             WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            WarehouseItem warehouseItemTo = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseToId, warehouseMutationOrderDetail.ItemId);
+            WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, warehouseMutationOrderDetail.ItemId);
             if (warehouseItemTo == null)
             {
                 warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak terasosiasi dengan item dari warehouse yang dituju");
@@ -109,7 +109,7 @@ namespace Validation.Validation
         {
             int Quantity = CaseConfirmOrFinish ? warehouseMutationOrderDetail.Quantity : ((-1) * warehouseMutationOrderDetail.Quantity);
             WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            WarehouseItem warehouseItemFrom = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
+            WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
             if (warehouseItemFrom.Quantity + Quantity < 0)
             {
                 warehouseMutationOrderDetail.Errors.Add("Quantity", "Stock barang tidak boleh menjadi kurang dari 0");

@@ -51,16 +51,7 @@ namespace Service.Service
             if (_validator.ValidCreateObject(warehouse, this))
             {
                 warehouse = _repository.CreateObject(warehouse);
-                IList<Item> allItems = _itemService.GetAll();
-                foreach (var item in allItems)
-                {
-                    WarehouseItem warehouseItem = new WarehouseItem()
-                    {
-                        WarehouseId = warehouse.Id,
-                        ItemId = item.Id
-                    };
-                    _warehouseItemService.CreateObject(warehouseItem, this, _itemService);
-                }
+                // warehouse item will be created upon calling WarehouseItemService.FindOrCreateObject()
             }
             return warehouse;
         }

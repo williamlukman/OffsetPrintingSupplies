@@ -16,6 +16,12 @@ namespace Data.Mapping
             HasMany(uom => uom.Items)
                 .WithRequired(i => i.UoM)
                 .HasForeignKey(i => i.UoMId);
+            HasMany(uom => uom.CoreBuilders)
+                .WithRequired(cb => cb.UoM)
+                .HasForeignKey(cb => cb.UoMId);
+            HasMany(uom => uom.RollerBuilders)
+                .WithRequired(rb => rb.UoM)
+                .HasForeignKey(rb => rb.UoMId);
             Ignore(uom => uom.Errors);
         }
     }

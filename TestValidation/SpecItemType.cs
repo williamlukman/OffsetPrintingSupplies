@@ -29,6 +29,25 @@ namespace TestValidation
 
                 d = new DataBuilder();
 
+
+                d.Pcs = new UoM()
+                {
+                    Name = "Pcs"
+                };
+                d._uomService.CreateObject(d.Pcs);
+
+                d.Boxes = new UoM()
+                {
+                    Name = "Boxes"
+                };
+                d._uomService.CreateObject(d.Boxes);
+
+                d.Tubs = new UoM()
+                {
+                    Name = "Tubs"
+                };
+                d._uomService.CreateObject(d.Tubs);
+
                 d.localWarehouse = new Warehouse()
                 {
                     Name = "Sentral Solusi Data",
@@ -44,21 +63,13 @@ namespace TestValidation
                     Sku = "ABC1001",
                     Name = "ABC",
                     Category = "ABC123",
-                    UoM = "Pcs",
+                    UoMId = d.Pcs.Id,
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
             }
         }
 
-        /*
-         * STEPS:
-         * 1. Create valid d.item
-         * 2. Create invalid d.item with no name
-         * 3. Create invalid items with same SKU
-         * 4a. Delete d.item
-         * 4b. Delete d.item with stock mutations
-         */
         void itemtype_validation()
         {
         
@@ -101,11 +112,11 @@ namespace TestValidation
                     Name = "Glue101",
                     Category = "Glue",
                     Sku = "G101",
-                    UoM = "Pcs"
+                    UoMId = d.Pcs.Id
                 };
-                glue101 = d._itemService.CreateObject(glue101, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                glue101 = d._itemService.CreateObject(glue101, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d._itemService.AdjustQuantity(glue101, 100);
-                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, glue101.Id), 100);
+                d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, glue101.Id), 100);
                 d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
                 d.typeGlue.Errors.Count().should_not_be(0);
             };

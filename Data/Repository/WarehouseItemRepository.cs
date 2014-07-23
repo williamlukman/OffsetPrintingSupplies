@@ -42,10 +42,19 @@ namespace Data.Repository
             return warehouseItem;
         }
 
-        public WarehouseItem GetObjectByWarehouseAndItem(int WarehouseId, int ItemId)
+        public WarehouseItem FindOrCreateObject(int WarehouseId, int ItemId)
         {
             WarehouseItem warehouseItem = Find(x => x.WarehouseId == WarehouseId && x.ItemId == ItemId && !x.IsDeleted);
             if (warehouseItem != null) { warehouseItem.Errors = new Dictionary<string, string>(); }
+            else
+            {
+                warehouseItem = new WarehouseItem()
+                {
+                    WarehouseId = WarehouseId,
+                    ItemId = ItemId,
+                };
+                warehouseItem = CreateObject(warehouseItem);
+            }
             return warehouseItem;
         }
 

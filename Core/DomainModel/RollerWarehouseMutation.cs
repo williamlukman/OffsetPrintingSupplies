@@ -14,6 +14,8 @@ namespace Core.DomainModel
         public int WarehouseFromId { get; set; }
         public int WarehouseToId { get; set; }
 
+        public int Quantity { get; set; }
+
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsCompleted { get; set; }

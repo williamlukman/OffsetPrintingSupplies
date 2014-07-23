@@ -13,7 +13,7 @@ namespace Core.Interface.Repository
         IList<WarehouseItem> GetObjectsByWarehouseId(int WarehouseId);
         IList<WarehouseItem> GetObjectsByItemId(int itemId);
         WarehouseItem GetObjectById(int Id);
-        WarehouseItem GetObjectByWarehouseAndItem(int WarehouseId, int itemId);
+        WarehouseItem FindOrCreateObject(int WarehouseId, int ItemId);
         WarehouseItem CreateObject(WarehouseItem warehouseItem);
         WarehouseItem UpdateObject(WarehouseItem warehouseItem);
         WarehouseItem SoftDeleteObject(WarehouseItem warehouseItem);

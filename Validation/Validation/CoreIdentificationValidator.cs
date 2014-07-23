@@ -127,27 +127,28 @@ namespace Validation.Validation
             if (!coreIdentification.IsInHouse) { return coreIdentification; }
 
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
-            IDictionary<int, int> temporaryItemQuantity = new Dictionary<int, int>();
+            IDictionary<int, int> ValuePairWarehouseItemIdQuantity = new Dictionary<int, int>();
             
             foreach (var detail in details)
             {
                 CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(detail.CoreBuilderId);
                 Item item = (detail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(coreIdentification.WarehouseId, item.Id);
-                if (temporaryItemQuantity.ContainsKey(warehouseItem.Id))
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                if (ValuePairWarehouseItemIdQuantity.ContainsKey(warehouseItem.Id))
                 {
-                    temporaryItemQuantity[warehouseItem.Id] -= 1;
+                    ValuePairWarehouseItemIdQuantity[warehouseItem.Id] += 1;
                 }
                 else
                 {
-                    temporaryItemQuantity.Add(warehouseItem.Id, warehouseItem.Quantity - 1);
+                    ValuePairWarehouseItemIdQuantity.Add(warehouseItem.Id, 1);
                 }
             }
 
-            foreach (var temp in temporaryItemQuantity)
+            foreach (var ValuePair in ValuePairWarehouseItemIdQuantity)
             {
-                if (temp.Value < 0)
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePair.Key);
+                if (warehouseItem.Quantity < ValuePair.Value)
                 {
                     coreIdentification.Errors.Add("Generic", "Stock item tidak mencukupi untuk melakukan Core Identification");
                     return coreIdentification;

@@ -103,7 +103,7 @@ namespace Validation.Validation
 
             foreach (var ValuePair in ValuePairItemIdQuantity)
             {
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(barringOrder.WarehouseId, ValuePair.Key);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, ValuePair.Key);
                 if (warehouseItem.Quantity < ValuePair.Value)
                 {
                     barringOrder.Errors.Add("Generic", "Stock quantity BoM untuk barring tidak boleh kurang dari jumlah di dalam barring order");

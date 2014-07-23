@@ -15,13 +15,17 @@ namespace Data.Mapping
             HasKey(rb => rb.Id);
             HasRequired(rb => rb.CoreBuilder)
                 .WithMany(cb => cb.RollerBuilders)
-                .HasForeignKey(rb => rb.CoreBuilderId);
+                .HasForeignKey(rb => rb.CoreBuilderId)
+                .WillCascadeOnDelete(false);
             HasRequired(rb => rb.Machine)
                 .WithMany(m => m.RollerBuilders)
                 .HasForeignKey(rb => rb.MachineId);
             HasRequired(rb => rb.RollerType)
                 .WithMany(rt => rt.RollerBuilders)
                 .HasForeignKey(rb => rb.RollerTypeId);
+            HasRequired(rb => rb.UoM)
+                .WithMany(uom => uom.RollerBuilders)
+                .HasForeignKey(rb => rb.UoMId);
             Ignore(rb => rb.Errors);
         }
     }

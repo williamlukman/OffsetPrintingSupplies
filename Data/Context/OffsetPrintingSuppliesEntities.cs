@@ -22,6 +22,8 @@ namespace Data.Context
             IList<String> tableNames = new List<String>() { "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
                                                             "BarringOrderDetail", "BarringOrder", "StockAdjustmentDetail", "StockAdjustment",
+                                                            "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
+                                                            "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                                             "StockMutation", "WarehouseItem", "Warehouse", 
                                                             "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Customer", "RollerType", "Machine",
                                                             };
@@ -51,6 +53,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new RecoveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new RollerBuilderMapping());
             modelBuilder.Configurations.Add(new RollerTypeMapping());
+            modelBuilder.Configurations.Add(new RollerWarehouseMutationMapping());
+            modelBuilder.Configurations.Add(new RollerWarehouseMutationDetailMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
@@ -77,6 +81,8 @@ namespace Data.Context
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
         public DbSet<RollerBuilder> RollerBuilders { get; set; }
         public DbSet<RollerType> RollerTypes { get; set; }
+        public DbSet<RollerWarehouseMutationDetail> RolleWarehouseMutationDetail { get; set; }
+        public DbSet<RollerWarehouseMutation> RolleWarehouseMutation { get; set; }
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }

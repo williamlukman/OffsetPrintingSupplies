@@ -26,6 +26,23 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
+                d.Pcs = new UoM()
+                {
+                    Name = "Pcs"
+                };
+                d._uomService.CreateObject(d.Pcs);
+
+                d.Boxes = new UoM()
+                {
+                    Name = "Boxes"
+                };
+                d._uomService.CreateObject(d.Boxes);
+
+                d.Tubs = new UoM()
+                {
+                    Name = "Tubs"
+                };
+                d._uomService.CreateObject(d.Tubs);
 
                 d.item = new Item()
                 {
@@ -33,9 +50,9 @@ namespace TestValidation
                     Sku = "ABC1001",
                     Name = "ABC",
                     Category = "ABC123",
-                    UoM = "Pcs"
+                    UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
 
                 d.localWarehouse = new Warehouse()
                 {
@@ -162,7 +179,7 @@ namespace TestValidation
                     Name = "CoreBuilder00001",
                     Category = "X"
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     CustomerId = d.customer.Id,

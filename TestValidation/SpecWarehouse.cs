@@ -39,9 +39,8 @@ namespace TestValidation
                 d.movingWarehouse.Errors.Count().should_be(0);
                 IList<WarehouseItem> localitems = d._warehouseItemService.GetObjectsByWarehouseId(d.localWarehouse.Id);
                 IList<WarehouseItem> movingitems = d._warehouseItemService.GetObjectsByWarehouseId(d.movingWarehouse.Id);
-                int totalitem = d._itemService.GetAll().ToList().Count();
-                localitems.Count().should_be(totalitem);
-                movingitems.Count().should_be(totalitem);
+                localitems.Count().should_be(0);
+                movingitems.Count().should_be(0);
             };
         }
     }

@@ -78,13 +78,6 @@ namespace TestValidation
                 barright1quantityfinal.should_be(barleft1quantity - 2);
             };
 
-            it["finishes_barring_order"] = () =>
-            {
-                d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-                d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-                d.barringOrderCustomer.Errors.Count().should_not_be(0);
-            };
-
             it["unconfirms_barring_order"] = () =>
             {
                 d.barringOrderCustomer = d._barringOrderService.ConfirmObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
@@ -131,13 +124,6 @@ namespace TestValidation
                     d.barringOrderCustomer.Errors.Count().should_not_be(0);
                 };
 
-                it["validates_finishbarringorder"] = () =>
-                {
-                    d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-                    d.barringOrderCustomer.IsFinished.should_be(false);
-                    d.barringOrderCustomer.Errors.Count().should_not_be(0);
-                };
-
                 context["when barring order details are all finished"] = () =>
                 {
                     before = () =>
@@ -152,6 +138,7 @@ namespace TestValidation
                         d._barringOrderDetailService.PackageObject(d.barringODCustomer1);
                         d._barringOrderDetailService.AddLeftBar(d.barringODCustomer1, d._barringService);
                         d._barringOrderDetailService.AddRightBar(d.barringODCustomer1, d._barringService);
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer1, d._barringOrderService);
 
                         d._barringOrderDetailService.SideSealObject(d.barringODCustomer2);
                         d._barringOrderDetailService.PrepareObject(d.barringODCustomer2);
@@ -163,6 +150,7 @@ namespace TestValidation
                         d._barringOrderDetailService.PackageObject(d.barringODCustomer2);
                         d._barringOrderDetailService.AddLeftBar(d.barringODCustomer2, d._barringService);
                         d._barringOrderDetailService.AddRightBar(d.barringODCustomer2, d._barringService);
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer2, d._barringOrderService);
 
                         d._barringOrderDetailService.SideSealObject(d.barringODCustomer3);
                         d._barringOrderDetailService.PrepareObject(d.barringODCustomer3);
@@ -174,6 +162,7 @@ namespace TestValidation
                         d._barringOrderDetailService.PackageObject(d.barringODCustomer3);
                         d._barringOrderDetailService.AddLeftBar(d.barringODCustomer3, d._barringService);
                         d._barringOrderDetailService.AddRightBar(d.barringODCustomer3, d._barringService);
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer3, d._barringOrderService);
 
                         d._barringOrderDetailService.SideSealObject(d.barringODCustomer4);
                         d._barringOrderDetailService.PrepareObject(d.barringODCustomer4);
@@ -193,43 +182,27 @@ namespace TestValidation
                         d.barringODCustomer4.Errors.Count().should_be(0);
                     };
 
-                    it["validates_finishrecoveryorder"] = () =>
+                    it["validates_finishbarringorder"] = () =>
                     {
                         int barring1quantity = d.barring1.Quantity;
                         int barring2quantity = d.barring2.Quantity;
-                        int barring1warehousequantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
-                        int barring2warehousequantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
-                        d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-                        d.barringOrderCustomer.Errors.Count().should_be(0);
+                        int barring1warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring1.Id).Quantity;
+                        int barring2warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring2.Id).Quantity;
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer1, d._barringOrderService);
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer2, d._barringOrderService);
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer3, d._barringOrderService);
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer4, d._barringOrderService);
+                        d._barringOrderDetailService.FinishObject(d.barringODCustomer4, d._barringOrderService);
+                        d.barringOrderCustomer.IsCompleted.should_be(true);
                         int barring1quantityfinal = d.barring1.Quantity;
                         int barring2quantityfinal = d.barring2.Quantity;
-                        int barring1warehousequantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
-                        int barring2warehousequantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
+                        int barring1warehousequantityfinal = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring1.Id).Quantity;
+                        int barring2warehousequantityfinal = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring2.Id).Quantity;
                         barring1quantityfinal.should_be(barring1quantity + 2);
                         barring2quantityfinal.should_be(barring2quantity + 1);
                         barring1warehousequantityfinal.should_be(barring1warehousequantity + 2);
                         barring2warehousequantityfinal.should_be(barring2warehousequantity + 1);
                         d.barringOrderCustomer.QuantityFinal.should_be(d.barringOrderCustomer.QuantityOrdered - d.barringOrderCustomer.QuantityRejected);
-                    };
-
-                    it["validates_unfinishrecoveryorder"] = () =>
-                    {
-                        int barring1quantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
-                        int barring2quantity = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
-                        d.barringOrderCustomer = d._barringOrderService.FinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-                        d.barringOrderCustomer.Errors.Count().should_be(0);
-                        int barring1quantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
-                        int barring2quantityfinal = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
-                        barring1quantityfinal.should_be(barring1quantity + 2);
-                        barring2quantityfinal.should_be(barring2quantity + 1);
-                        d.barringOrderCustomer = d._barringOrderService.UnfinishObject(d.barringOrderCustomer, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-                        d.barringOrderCustomer.Errors.Count().should_be(0);
-                        int barring1quantityunconfirm = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring1.Id).Quantity;
-                        int barring2quantityunconfirm = d._warehouseItemService.GetObjectByWarehouseAndItem(d.localWarehouse.Id, d.barring2.Id).Quantity;
-                        barring1quantityunconfirm.should_be(barring1quantity);
-                        barring2quantityunconfirm.should_be(barring2quantity);
-                        d.barringOrderCustomer.QuantityFinal.should_be(0);
-                        d.barringOrderCustomer.QuantityRejected.should_be(0);
                     };
                 };
             };

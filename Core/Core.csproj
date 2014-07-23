@@ -66,6 +66,8 @@
     <Compile Include="DomainModel\RecoveryAccessoryDetail.cs" />
     <Compile Include="DomainModel\ItemType.cs" />
     <Compile Include="DomainModel\Warehouse.cs" />
+    <Compile Include="Interface\Repository\IRollerWarehouseMutationDetailRepository.cs" />
+    <Compile Include="Interface\Repository\IRollerWarehouseMutationRepository.cs" />
     <Compile Include="Interface\Repository\IUoMRepository.cs" />
     <Compile Include="Interface\Repository\IStockAdjustmentDetailRepository.cs" />
     <Compile Include="Interface\Repository\IStockAdjustmentRepository.cs" />
@@ -90,6 +92,8 @@
     <Compile Include="Interface\Repository\IItemRepository.cs" />
     <Compile Include="Interface\Repository\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Service\IRollerWarehouseMutationDetailService.cs" />
+    <Compile Include="Interface\Service\IRollerWarehouseMutationService.cs" />
     <Compile Include="Interface\Service\IUoMService.cs" />
     <Compile Include="Interface\Service\IStockAdjustmentDetailService.cs" />
     <Compile Include="Interface\Service\IStockAdjustmentService.cs" />
@@ -113,6 +117,8 @@
     <Compile Include="Interface\Service\ICustomerService.cs" />
     <Compile Include="Interface\Service\IItemService.cs" />
     <Compile Include="Interface\Service\IItemTypeService.cs" />
+    <Compile Include="Interface\Validation\IRollerWarehouseMutationDetailValidator.cs" />
+    <Compile Include="Interface\Validation\IRollerWarehouseMutationValidator.cs" />
     <Compile Include="Interface\Validation\IUoMValidator.cs" />
     <Compile Include="Interface\Validation\IStockAdjustmentDetailValidator.cs" />
     <Compile Include="Interface\Validation\IStockAdjustmentValidator.cs" />

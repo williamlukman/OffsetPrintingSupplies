@@ -155,7 +155,7 @@ namespace TestValidation
 
             itemCompound = _itemService.CreateObject(itemCompound, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(itemCompound, 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, itemCompound.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound.Id), 5);
 
             itemCompound1 = new Item()
             {
@@ -167,7 +167,7 @@ namespace TestValidation
             };
             itemCompound1 = _itemService.CreateObject(itemCompound1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(itemCompound1, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, itemCompound1.Id), 2);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound1.Id), 2);
 
             itemCompound2 = new Item()
             {
@@ -179,7 +179,7 @@ namespace TestValidation
             };
             itemCompound2 = _itemService.CreateObject(itemCompound2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(itemCompound2, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, itemCompound2.Id), 2);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound2.Id), 2);
 
             itemAccessory1 = new Item()
             {
@@ -191,7 +191,7 @@ namespace TestValidation
             };
             itemAccessory1 = _itemService.CreateObject(itemAccessory1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(itemAccessory1, 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, itemAccessory1.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemAccessory1.Id), 5);
 
             itemAccessory2 = new Item()
             {
@@ -203,7 +203,7 @@ namespace TestValidation
             };
             itemAccessory2 = _itemService.CreateObject(itemAccessory2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(itemAccessory2, 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, itemAccessory2.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemAccessory2.Id), 5);
         }
 
         public void PopulateWarehouse()
@@ -456,29 +456,29 @@ namespace TestValidation
             _itemService.AdjustQuantity(RollerNewCore3, 5);
             _itemService.AdjustQuantity(RollerNewCore4, 5);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, NewCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, NewCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, NewCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, NewCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, NewCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore1.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore2.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore3.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore4.Id), 5);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, UsedCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, UsedCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, UsedCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, UsedCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, UsedCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore1.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore2.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore3.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore4.Id), 5);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerNewCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerNewCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerNewCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerNewCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerNewCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore1.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore2.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore3.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore4.Id), 5);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerUsedCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerUsedCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerUsedCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerUsedCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, RollerUsedCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore1.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore2.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore3.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore4.Id), 5);
         }
 
         public void PopulateCoreIdentifications()
@@ -739,7 +739,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(bargeneric, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(bargeneric, 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, bargeneric.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, bargeneric.Id), 5);
 
             barleft1 = new Item()
             {
@@ -751,7 +751,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(barleft1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(barleft1, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, barleft1.Id), 2);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barleft1.Id), 2);
 
             barleft2 = new Item()
             {
@@ -763,7 +763,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(barleft2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(barleft2, 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, barleft2.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barleft2.Id), 5);
 
             barright1 = new Item()
             {
@@ -775,7 +775,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(barright1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(barright1, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, barright1.Id), 2);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barright1.Id), 2);
 
             barright2 = new Item()
             {
@@ -787,7 +787,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(barright2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(barright2, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, barright2.Id), 2);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barright2.Id), 2);
 
             blanket1 = new Item()
             {
@@ -799,7 +799,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(blanket1, 10);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, blanket1.Id), 10);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket1.Id), 10);
 
             blanket2 = new Item()
             {
@@ -811,7 +811,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(blanket2, 4);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, blanket2.Id), 4);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket2.Id), 4);
 
             blanket3 = new Item()
             {
@@ -823,7 +823,7 @@ namespace TestValidation
             };
             _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
             _itemService.AdjustQuantity(blanket3, 3);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, blanket3.Id), 3);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket3.Id), 3);
 
             barring1 = new Barring()
             {
@@ -845,7 +845,7 @@ namespace TestValidation
             };
             _barringService.CreateObject(barring1, _barringService, _uomService,_itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
             _barringService.AdjustQuantity(barring1, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, barring1.Id), 2);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barring1.Id), 2);
 
             barring2 = new Barring()
             {
@@ -867,7 +867,7 @@ namespace TestValidation
             };
             _barringService.CreateObject(barring2, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
             _barringService.AdjustQuantity(barring2, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, barring2.Id), 2);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barring2.Id), 2);
             
             barring3 = new Barring()
             {
@@ -889,7 +889,7 @@ namespace TestValidation
             };
             _barringService.CreateObject(barring3, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
             _barringService.AdjustQuantity(barring3, 3);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.GetObjectByWarehouseAndItem(localWarehouse.Id, barring3.Id), 3);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barring3.Id), 3);
 
             barringOrderCustomer = new BarringOrder()
             {

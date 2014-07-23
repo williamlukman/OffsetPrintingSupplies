@@ -52,21 +52,6 @@ namespace Validation.Validation
             return warehouseMutationOrder;
         }
 
-        public WarehouseMutationOrder VQuantityWarehouseFromIsLargerThanQuantity(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IWarehouseItemService _warehouseItemService)
-        {
-            IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
-            foreach (var detail in details)
-            {
-                WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseFromId, detail.ItemId);
-                if (warehouseItem.Quantity < detail.Quantity)
-                {
-                    warehouseMutationOrder.Errors.Add("Generic", "Quantity di warehouse tidak mencukupi untuk melakukan mutasi");
-                    return warehouseMutationOrder;
-                }
-            }
-            return warehouseMutationOrder;
-        }
-
         public WarehouseMutationOrder VHasNotBeenConfirmed(WarehouseMutationOrder warehouseMutationOrder)
         {
             if (warehouseMutationOrder.IsConfirmed)
@@ -91,9 +76,8 @@ namespace Validation.Validation
             IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
             foreach (var detail in details)
             {
-                int Quantity = detail.Quantity;
-                WarehouseItem warehouseItemFrom = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseFromId, detail.ItemId);
-                if (warehouseItemFrom.Quantity + Quantity < 0)
+                WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, detail.ItemId);
+                if (warehouseItemFrom.Quantity < detail.Quantity)
                 {
                     warehouseMutationOrder.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang akan dimutasikan");
                     return warehouseMutationOrder;
@@ -108,9 +92,8 @@ namespace Validation.Validation
             IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
             foreach (var detail in details)
             {
-                int Quantity = (-1) * detail.Quantity;
-                WarehouseItem warehouseItemFrom = _warehouseItemService.GetObjectByWarehouseAndItem(warehouseMutationOrder.WarehouseFromId, detail.ItemId);
-                if (warehouseItemFrom.Quantity + Quantity < 0)
+                WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, detail.ItemId);
+                if (warehouseItemTo.Quantity < detail.Quantity)
                 {
                     warehouseMutationOrder.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang akan dimutasikan");
                     return warehouseMutationOrder;
@@ -158,7 +141,7 @@ namespace Validation.Validation
         }
 
         public WarehouseMutationOrder VConfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
-                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasNotBeenConfirmed(warehouseMutationOrder);
             if (!isValid(warehouseMutationOrder)) { return warehouseMutationOrder; }
@@ -169,7 +152,7 @@ namespace Validation.Validation
         }
 
         public WarehouseMutationOrder VUnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
-                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasBeenConfirmed(warehouseMutationOrder);
             if (!isValid(warehouseMutationOrder)) { return warehouseMutationOrder; }

@@ -46,7 +46,7 @@ namespace Validation.Validation
         {
             RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
             RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(recoveryOrder.WarehouseId, recoveryAccessoryDetail.ItemId);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, recoveryAccessoryDetail.ItemId);
             if (warehouseItem.Quantity < recoveryAccessoryDetail.Quantity)
             {
                 recoveryAccessoryDetail.Errors.Add("Quantity", "Tidak boleh lebih dari jumlah stock barang");

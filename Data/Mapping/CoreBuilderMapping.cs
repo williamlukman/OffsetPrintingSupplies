@@ -19,6 +19,9 @@ namespace Data.Mapping
             HasMany(cb => cb.RollerBuilders)
                 .WithRequired(rb => rb.CoreBuilder)
                 .HasForeignKey(rb => rb.CoreBuilderId);
+            HasRequired(cb => cb.UoM)
+                .WithMany(uom => uom.CoreBuilders)
+                .HasForeignKey(cb => cb.UoMId);
             Ignore(cb => cb.Errors);
         }
     }

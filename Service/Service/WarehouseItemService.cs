@@ -50,9 +50,9 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public WarehouseItem GetObjectByWarehouseAndItem(int warehouseId, int abstractItemId)
+        public WarehouseItem FindOrCreateObject(int warehouseId, int abstractItemId)
         {
-            return _repository.GetObjectByWarehouseAndItem(warehouseId, abstractItemId);
+            return _repository.FindOrCreateObject(warehouseId, abstractItemId);
         }
 
         public WarehouseItem AddObject(Warehouse warehouse, Item item, IWarehouseService _warehouseService, IItemService _itemService)

@@ -35,7 +35,7 @@ namespace Validation.Validation
         public StockAdjustmentDetail VHasWarehouseItem(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IWarehouseItemService _warehouseItemService)
         {
             StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(stockAdjustment.WarehouseId, stockAdjustmentDetail.ItemId);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, stockAdjustmentDetail.ItemId);
             if (warehouseItem == null)
             {
                 stockAdjustmentDetail.Errors.Add("Generic", "Tidak terasosiasi dengan warehouse");
@@ -123,7 +123,7 @@ namespace Validation.Validation
             //decimal stockAdjustmentDetailPrice = ToConfirm ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
             Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
             StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectByWarehouseAndItem(stockAdjustment.WarehouseId, item.Id);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
             if (item.Quantity + stockAdjustmentDetailQuantity < 0)
             {
                 stockAdjustmentDetail.Errors.Add("Quantity", "Stock barang tidak boleh menjadi kurang dari 0");

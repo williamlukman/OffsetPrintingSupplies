@@ -27,15 +27,33 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
 
+                d.Pcs = new UoM()
+                {
+                    Name = "Pcs"
+                };
+                d._uomService.CreateObject(d.Pcs);
+
+                d.Boxes = new UoM()
+                {
+                    Name = "Boxes"
+                };
+                d._uomService.CreateObject(d.Boxes);
+
+                d.Tubs = new UoM()
+                {
+                    Name = "Tubs"
+                };
+                d._uomService.CreateObject(d.Tubs);
+
                 d.item = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
                     Category = "ABC123",
-                    UoM = "Pcs"
+                    UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
 
                 d.localWarehouse = new Warehouse()
                 {
@@ -54,9 +72,10 @@ namespace TestValidation
                     SkuNewCore = "CORE1001N",
                     SkuUsedCore = "CORE1001U",
                     Name = "Core X 1001",
-                    Category = "X 1001"
+                    Category = "X 1001",
+                    UoMId = d.Pcs.Id
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
             }
         }
 
@@ -76,9 +95,10 @@ namespace TestValidation
                     SkuNewCore = "123N",
                     SkuUsedCore = "123U",
                     Name = "Core X 1001",
-                    Category = "X 1001"
+                    Category = "X 1001",
+                    UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 coreBuilderCopySku.Errors.Count().should_not_be(0);
             };
 
@@ -90,9 +110,10 @@ namespace TestValidation
                     SkuNewCore = "CORE1001N",
                     SkuUsedCore = "123U",
                     Name = "Core X 1001",
-                    Category = "X 1001"
+                    Category = "X 1001",
+                    UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._itemService, d._itemTypeService, d._warehouseItemService ,d._warehouseService);
+                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService ,d._warehouseService);
                 coreBuilderCopySkuNew.Errors.Count().should_not_be(0);
             };
 
@@ -105,9 +126,10 @@ namespace TestValidation
                     SkuNewCore = "123N",
                     SkuUsedCore = "CORE1001U",
                     Name = "Core X 1001",
-                    Category = "X 1001"
+                    Category = "X 1001",
+                    UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 coreBuilderCopySkuUsed.Errors.Count().should_not_be(0);
             };
 
