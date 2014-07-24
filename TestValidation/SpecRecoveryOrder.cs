@@ -26,7 +26,13 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
-                d.PopulateData();
+                d.PopulateWarehouse();
+                d.PopulateItem();
+                d.PopulateSingles();
+                d.PopulateBuilders();
+                d.PopulateWarehouseMutationForRollerIdentificationAndRecovery();
+                d.PopulateCoreIdentifications();
+                d.PopulateRecoveryOrders();
             }
         }
 

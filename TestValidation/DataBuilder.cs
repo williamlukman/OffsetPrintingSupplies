@@ -57,6 +57,8 @@ namespace TestValidation
         public RecoveryOrder recoveryOrder, recoveryOrderCustomer, recoveryOrderInHouse;
         public RecoveryOrderDetail recoveryODCustomer1, recoveryODCustomer2, recoveryODCustomer3,
                                    recoveryODInHouse1, recoveryODInHouse2, recoveryODInHouse3;
+        public RecoveryOrder recoveryOrderCustomer2, recoveryOrderInHouse2;
+        public RecoveryOrderDetail recoveryODCustomer2b, recoveryODInHouse3b;
         public RecoveryAccessoryDetail accessory1, accessory2, accessory3, accessory4;
         public Item bargeneric, barleft1, barleft2, barright1, barright2;
         public Item blanket1, blanket2, blanket3;
@@ -66,8 +68,8 @@ namespace TestValidation
         public WarehouseMutationOrder warehouseMutationOrder;
         public WarehouseMutationOrderDetail wmoDetail1, wmoDetail2, wmoDetail3, wmoDetail4, wmoDetail5, wmoDetail6,
                                             wmoDetail7, wmoDetail8, wmoDetail9;
-        public RollerWarehouseMutation rollerWarehouseMutation;
-        public RollerWarehouseMutationDetail rwmDetailCustomer1, rwmDetailCustomer2, rmwDetailCustomer3,
+        public RollerWarehouseMutation rollerWarehouseMutationCustomer, rollerWarehouseMutationInHouse;
+        public RollerWarehouseMutationDetail rwmDetailCustomer1, rwmDetailCustomer2, rwmDetailCustomer3,
                                              rwmDetailInHouse1, rwmDetailInHouse2, rwmDetailInHouse3;
         // extended variable
         public int usedCoreBuilderQuantity, usedCoreBuilder1Quantity, usedCoreBuilder2Quantity, usedCoreBuilder3Quantity, usedCoreBuilder4Quantity;
@@ -138,6 +140,9 @@ namespace TestValidation
             PopulateWarehouseMutationForRollerIdentificationAndRecovery();
             PopulateCoreIdentifications();
             PopulateRecoveryOrders();
+            PopulateRecoveryOrders2();
+            PopulateCoreIdentifications2();
+            PopulateRollerWarehouseMutation();
             PopulateBarringOrders();
         }
 
@@ -519,7 +524,7 @@ namespace TestValidation
             {
                 WarehouseMutationOrderId = warehouseMutationOrder.Id,
                 ItemId = coreBuilder2.UsedCoreItemId,
-                Quantity = 1
+                Quantity = 2
             };
             wmoDetail2 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail2, _warehouseMutationOrderService, _itemService, _warehouseItemService);
 
@@ -717,11 +722,11 @@ namespace TestValidation
 
             coreIdentificationDetail = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             coreIDCustomer1 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDCustomer2 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDCustomer3 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDInHouse1 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDInHouse2 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDInHouse3 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDCustomer2 = _coreIdentificationDetailService.FinishObject(coreIDCustomer2, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDCustomer3 = _coreIdentificationDetailService.FinishObject(coreIDCustomer3, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse1 = _coreIdentificationDetailService.FinishObject(coreIDInHouse1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse2 = _coreIdentificationDetailService.FinishObject(coreIDInHouse2, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse3 = _coreIdentificationDetailService.FinishObject(coreIDInHouse3, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
 
             recoveryOrder = new RecoveryOrder()
             {
@@ -757,7 +762,7 @@ namespace TestValidation
                 Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
                 RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                RollerBuilderId = rollerBuilder1.Id,
+                RollerBuilderId = rollerBuilder1.Id
             };
             recoveryODInHouse1 = _recoveryOrderDetailService.CreateObject(recoveryODInHouse1, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
 
@@ -768,7 +773,7 @@ namespace TestValidation
                 Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
                 RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                RollerBuilderId = rollerBuilder1.Id,
+                RollerBuilderId = rollerBuilder1.Id
             };
             recoveryODInHouse2 = _recoveryOrderDetailService.CreateObject(recoveryODInHouse2, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
 
@@ -779,7 +784,7 @@ namespace TestValidation
                 Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
                 RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                RollerBuilderId = rollerBuilder2.Id,
+                RollerBuilderId = rollerBuilder2.Id
             };
             recoveryODInHouse3 = _recoveryOrderDetailService.CreateObject(recoveryODInHouse3, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
 
@@ -790,7 +795,7 @@ namespace TestValidation
                 Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
                 RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                RollerBuilderId = rollerBuilder3.Id,
+                RollerBuilderId = rollerBuilder3.Id
             };
             recoveryODCustomer1 = _recoveryOrderDetailService.CreateObject(recoveryODCustomer1, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
 
@@ -801,7 +806,7 @@ namespace TestValidation
                 Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
                 RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                RollerBuilderId = rollerBuilder3.Id,
+                RollerBuilderId = rollerBuilder3.Id
             };
             recoveryODCustomer2 = _recoveryOrderDetailService.CreateObject(recoveryODCustomer2, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
 
@@ -812,10 +817,279 @@ namespace TestValidation
                 Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
                 RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                RollerBuilderId = rollerBuilder4.Id,
+                RollerBuilderId = rollerBuilder4.Id
             };
             recoveryODCustomer3 = _recoveryOrderDetailService.CreateObject(recoveryODCustomer3, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
+        }
 
+        public void PopulateRecoveryOrders2()
+        {
+            // status after this function
+            // recoveryODCustomer2, recoveryODInHouse3 are rejected.
+            // The rest are delivered back to localWarehouse to complete the batch.
+            // New recovery orders are created to complete coreIdentificationInHouse and coreIdentificationCustomer
+            _recoveryOrderService.ConfirmObject(recoveryOrderCustomer, _coreIdentificationDetailService, _recoveryOrderDetailService,
+                                      _recoveryAccessoryDetailService, _coreBuilderService, _stockMutationService, _itemService,
+                                      _barringService, _warehouseItemService, _warehouseService);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.StripAndGlueObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.WrapObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.VulcanizeObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.FaceOffObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.ConventionalGrindObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.CWCGrindObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.PolishAndQCObject(recoveryODCustomer1);
+            _recoveryOrderDetailService.PackageObject(recoveryODCustomer1);
+
+            _recoveryOrderDetailService.DisassembleObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.StripAndGlueObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.WrapObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.VulcanizeObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.FaceOffObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.ConventionalGrindObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.CWCGrindObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.PolishAndQCObject(recoveryODCustomer2);
+            _recoveryOrderDetailService.PackageObject(recoveryODCustomer2);
+
+            _recoveryOrderDetailService.DisassembleObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.StripAndGlueObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.WrapObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.VulcanizeObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.FaceOffObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.ConventionalGrindObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.CWCGrindObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.PolishAndQCObject(recoveryODCustomer3);
+            _recoveryOrderDetailService.PackageObject(recoveryODCustomer3);
+
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.CWCGrindObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.PackageObject(recoveryODInHouse1);
+
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.CWCGrindObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.PackageObject(recoveryODInHouse2);
+
+            accessory1 = new RecoveryAccessoryDetail()
+            {
+                ItemId = itemAccessory1.Id,
+                Quantity = 1,
+                RecoveryOrderDetailId = recoveryODInHouse2.Id
+            };
+            _recoveryAccessoryDetailService.CreateObject(accessory1, _recoveryOrderDetailService, _itemService, _itemTypeService);
+            _recoveryAccessoryDetailService.FinishObject(accessory1, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
+
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3);
+
+            _recoveryOrderDetailService.FinishObject(recoveryODCustomer1, _coreIdentificationService, _coreIdentificationDetailService,
+                                                       _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
+                                                       _itemService, _warehouseItemService, _barringService, _stockMutationService);
+            _recoveryOrderDetailService.RejectObject(recoveryODCustomer2, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+                                                       _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
+                                                       _warehouseItemService, _barringService, _stockMutationService);
+            _recoveryOrderDetailService.FinishObject(recoveryODCustomer3, _coreIdentificationService, _coreIdentificationDetailService,
+                                                       _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
+                                                       _itemService, _warehouseItemService, _barringService, _stockMutationService);
+            _recoveryOrderDetailService.FinishObject(recoveryODInHouse1, _coreIdentificationService, _coreIdentificationDetailService,
+                                                       _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
+                                                       _itemService, _warehouseItemService, _barringService, _stockMutationService);
+            _recoveryOrderDetailService.FinishObject(recoveryODInHouse2, _coreIdentificationService, _coreIdentificationDetailService,
+                                                       _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
+                                                       _itemService, _warehouseItemService, _barringService, _stockMutationService);
+            _recoveryOrderDetailService.RejectObject(recoveryODInHouse3, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+                                                       _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
+                                                       _warehouseItemService, _barringService, _stockMutationService);
+
+            recoveryOrderCustomer2 = new RecoveryOrder()
+            {
+                Code = "R002C2",
+                CoreIdentificationId = coreIdentificationCustomer.Id,
+                QuantityReceived = 1,
+                WarehouseId = movingWarehouse.Id
+            };
+            _recoveryOrderService.CreateObject(recoveryOrderCustomer2, _coreIdentificationService);
+
+            recoveryOrderInHouse2 = new RecoveryOrder()
+            {
+                Code = "R002H2",
+                CoreIdentificationId = coreIdentificationInHouse.Id,
+                QuantityReceived = 1,
+                WarehouseId = movingWarehouse.Id
+            };
+            _recoveryOrderService.CreateObject(recoveryOrderInHouse2, _coreIdentificationService);
+
+            recoveryODCustomer2b = new RecoveryOrderDetail()
+            {
+                RecoveryOrderId = recoveryOrderCustomer2.Id,
+                CoreIdentificationDetailId = coreIDCustomer2.Id,
+                Acc = "Y",
+                CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
+                RollerBuilderId = rollerBuilder3.Id
+            };
+            _recoveryOrderDetailService.CreateObject(recoveryODCustomer2b, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
+
+            recoveryODInHouse3b = new RecoveryOrderDetail()
+            {
+                RecoveryOrderId = recoveryOrderInHouse2.Id,
+                CoreIdentificationDetailId = coreIDInHouse3.Id,
+                Acc = "Y",
+                CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
+                RollerBuilderId = rollerBuilder2.Id
+            };
+            _recoveryOrderDetailService.CreateObject(recoveryODInHouse3b, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
+        }
+
+        public void PopulateCoreIdentifications2()
+        {
+            _recoveryOrderService.ConfirmObject(recoveryOrderCustomer2, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService,
+                                                _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _warehouseService);
+            _recoveryOrderService.ConfirmObject(recoveryOrderInHouse2, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService,
+                                                _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _warehouseService);
+
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.CWCGrindObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.PackageObject(recoveryODInHouse3b);
+
+            _recoveryOrderDetailService.DisassembleObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.StripAndGlueObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.WrapObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.VulcanizeObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.FaceOffObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.ConventionalGrindObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.CWCGrindObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.PolishAndQCObject(recoveryODCustomer2b);
+            _recoveryOrderDetailService.PackageObject(recoveryODCustomer2b);
+
+            _recoveryOrderDetailService.FinishObject(recoveryODInHouse3b, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
+                                                     _barringService, _stockMutationService);
+            _recoveryOrderDetailService.FinishObject(recoveryODCustomer2b, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
+                                                     _barringService, _stockMutationService);
+        }
+
+        public void PopulateRollerWarehouseMutation()
+        {
+            rollerWarehouseMutationCustomer = new RollerWarehouseMutation()
+            {
+                CoreIdentificationId = coreIdentificationCustomer.Id,
+                Quantity = 3,
+                WarehouseFromId = movingWarehouse.Id,
+                WarehouseToId = localWarehouse.Id
+            };
+            _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationCustomer, _warehouseService, _coreIdentificationService);
+
+            rwmDetailCustomer1 = new RollerWarehouseMutationDetail()
+            {
+                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                CoreIdentificationDetailId = coreIDCustomer1.Id,
+                ItemId = (coreIDCustomer1.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
+                          _coreBuilderService.GetUsedCore(coreIDCustomer1.CoreBuilderId).Id :
+                          _coreBuilderService.GetNewCore(coreIDCustomer1.CoreBuilderId).Id
+            };
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailCustomer1, _rollerWarehouseMutationService,
+                                                               _coreIdentificationDetailService, _itemService, _warehouseItemService);
+            
+            rwmDetailCustomer2 = new RollerWarehouseMutationDetail()
+            {
+                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                CoreIdentificationDetailId = coreIDCustomer2.Id,
+                ItemId = (coreIDCustomer2.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
+                          _coreBuilderService.GetUsedCore(coreIDCustomer2.CoreBuilderId).Id :
+                          _coreBuilderService.GetNewCore(coreIDCustomer2.CoreBuilderId).Id
+            };
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailCustomer2, _rollerWarehouseMutationService,
+                                                               _coreIdentificationDetailService, _itemService, _warehouseItemService);
+
+            rwmDetailCustomer3 = new RollerWarehouseMutationDetail()
+            {
+                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                CoreIdentificationDetailId = coreIDCustomer3.Id,
+                ItemId = (coreIDCustomer3.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
+                          _coreBuilderService.GetUsedCore(coreIDCustomer3.CoreBuilderId).Id :
+                          _coreBuilderService.GetNewCore(coreIDCustomer3.CoreBuilderId).Id
+            };
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailCustomer3, _rollerWarehouseMutationService,
+                                                               _coreIdentificationDetailService, _itemService, _warehouseItemService);
+
+            _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationCustomer, _rollerWarehouseMutationDetailService, _itemService,
+                                                          _barringService, _warehouseItemService);
+            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailCustomer1, _rollerWarehouseMutationService, _itemService, _barringService,
+                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailCustomer2, _rollerWarehouseMutationService, _itemService, _barringService,
+                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailCustomer3, _rollerWarehouseMutationService, _itemService, _barringService,
+                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+
+            rollerWarehouseMutationInHouse = new RollerWarehouseMutation()
+            {
+                CoreIdentificationId = coreIdentificationInHouse.Id,
+                Quantity = 3,
+                WarehouseFromId = movingWarehouse.Id,
+                WarehouseToId = localWarehouse.Id
+            };
+            _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationInHouse, _warehouseService, _coreIdentificationService);
+
+            rwmDetailInHouse1 = new RollerWarehouseMutationDetail()
+            {
+                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                CoreIdentificationDetailId = coreIDInHouse1.Id,
+                ItemId = (coreIDInHouse1.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
+                          _coreBuilderService.GetUsedCore(coreIDInHouse1.CoreBuilderId).Id :
+                          _coreBuilderService.GetNewCore(coreIDInHouse1.CoreBuilderId).Id
+            };
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse1, _rollerWarehouseMutationService,
+                                                               _coreIdentificationDetailService, _itemService, _warehouseItemService);
+
+            rwmDetailInHouse2 = new RollerWarehouseMutationDetail()
+            {
+                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                CoreIdentificationDetailId = coreIDInHouse2.Id,
+                ItemId = (coreIDInHouse2.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
+                          _coreBuilderService.GetUsedCore(coreIDInHouse2.CoreBuilderId).Id :
+                          _coreBuilderService.GetNewCore(coreIDInHouse2.CoreBuilderId).Id
+            };
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse2, _rollerWarehouseMutationService,
+                                                               _coreIdentificationDetailService, _itemService, _warehouseItemService);
+
+            rwmDetailInHouse3 = new RollerWarehouseMutationDetail()
+            {
+                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                CoreIdentificationDetailId = coreIDInHouse3.Id,
+                ItemId = (coreIDInHouse3.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
+                          _coreBuilderService.GetUsedCore(coreIDInHouse3.CoreBuilderId).Id :
+                          _coreBuilderService.GetNewCore(coreIDInHouse3.CoreBuilderId).Id
+            };
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse3, _rollerWarehouseMutationService,
+                                                               _coreIdentificationDetailService, _itemService, _warehouseItemService);
+
+            _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationInHouse, _rollerWarehouseMutationDetailService, _itemService,
+                                                          _barringService, _warehouseItemService);
+            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailInHouse1, _rollerWarehouseMutationService, _itemService, _barringService,
+                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailInHouse2, _rollerWarehouseMutationService, _itemService, _barringService,
+                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailInHouse3, _rollerWarehouseMutationService, _itemService, _barringService,
+                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
         }
 
         public void PopulateBarringOrders()

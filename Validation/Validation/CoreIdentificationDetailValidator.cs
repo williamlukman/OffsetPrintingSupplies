@@ -87,12 +87,32 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail VHasRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            RollerWarehouseMutationDetail rollerWarehouseMutationDetail = _rollerWarehouseMutationDetailService.GetObjectByCoreIdentificationDetailId(coreIdentificationDetail.Id);
+            if (rollerWarehouseMutationDetail == null)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Tidak ada roller mutasi");
+            }
+            return coreIdentificationDetail;
+        }
+
         public CoreIdentificationDetail VIsInRecoveryOrderDetails(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByCoreIdentificationDetailId(coreIdentificationDetail.Id);
             if (details.Any())
             {
                 coreIdentificationDetail.Errors.Add("Generic", "Tidak boleh memiliki asosiasi Recovery Order Detail");
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VIsInRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            RollerWarehouseMutationDetail rollerWarehouseMutationDetail = _rollerWarehouseMutationDetailService.GetObjectByCoreIdentificationDetailId(coreIdentificationDetail.Id);
+            if (rollerWarehouseMutationDetail != null)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Tidak boleh terasosiasi dengan roller warehouse mutation detail");
             }
             return coreIdentificationDetail;
         }
@@ -113,6 +133,16 @@ namespace Validation.Validation
             if (coreIdentification.IsConfirmed)
             {
                 coreIdentificationDetail.Errors.Add("Generic", "CoreIdentification sudah dikonfirmasi");
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VCoreIdentificationHasNotBeenCompleted(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService)
+        {
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+            if (coreIdentification.IsCompleted)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "CoreIdentification sudah selesai");
             }
             return coreIdentificationDetail;
         }
@@ -261,21 +291,26 @@ namespace Validation.Validation
 
         public CoreIdentificationDetail VDeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
-            RollerWarehouseMutationDetail rollerWarehouseMutationDetail = _rollerWarehouseMutationDetailService.GetObjectByCoreIdentificationDetailId(coreIdentificationDetail.Id);
-            if (rollerWarehouseMutationDetail == null)
-            {
-                coreIdentificationDetail.Errors.Add("Generic", "Tidak ada roller mutasi");
-                return coreIdentificationDetail;
-            }
+            VHasRollerWarehouseMutationDetail(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VUndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            VHasRollerWarehouseMutationDetail(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VCoreIdentificationHasNotBeenCompleted(coreIdentificationDetail, _coreIdentificationService);
             return coreIdentificationDetail;
         }
 
         public CoreIdentificationDetail VDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                                      IRecoveryOrderDetailService _recoveryOrderDetailService)
+                                                      IRecoveryOrderDetailService _recoveryOrderDetailService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
             VCoreIdentificationHasNotBeenConfirmed(coreIdentificationDetail, _coreIdentificationService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VIsInRecoveryOrderDetails(coreIdentificationDetail, _recoveryOrderDetailService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VIsInRollerWarehouseMutationDetail(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
             return coreIdentificationDetail;
         }
 
@@ -335,11 +370,17 @@ namespace Validation.Validation
             return isValid(coreIdentificationDetail);
         }
 
-        public bool ValidDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                      IRecoveryOrderDetailService _recoveryOrderDetailService)
+        public bool ValidUndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
             coreIdentificationDetail.Errors.Clear();
-            VDeleteObject(coreIdentificationDetail, _coreIdentificationService, _recoveryOrderDetailService);
+            VUndoDeliverObject(coreIdentificationDetail, _coreIdentificationService, _rollerWarehouseMutationDetailService);
+            return isValid(coreIdentificationDetail);
+        }
+        public bool ValidDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                      IRecoveryOrderDetailService _recoveryOrderDetailService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            coreIdentificationDetail.Errors.Clear();
+            VDeleteObject(coreIdentificationDetail, _coreIdentificationService, _recoveryOrderDetailService, _rollerWarehouseMutationDetailService);
             return isValid(coreIdentificationDetail);
         }
 

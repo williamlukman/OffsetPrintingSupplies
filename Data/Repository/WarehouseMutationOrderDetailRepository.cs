@@ -39,6 +39,7 @@ namespace Data.Repository
 
         public WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
         {
+            warehouseMutationOrderDetail.IsFinished = false;
             warehouseMutationOrderDetail.IsDeleted = false;
             warehouseMutationOrderDetail.CreatedAt = DateTime.Now;
             return Create(warehouseMutationOrderDetail);

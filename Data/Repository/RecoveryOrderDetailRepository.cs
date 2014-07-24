@@ -61,6 +61,7 @@ namespace Data.Repository
             recoveryOrderDetail.IsPackaged = false;
             recoveryOrderDetail.IsRejected = false;
             recoveryOrderDetail.IsDeleted = false;
+            recoveryOrderDetail.IsFinished = false;
             recoveryOrderDetail.CreatedAt = DateTime.Now;
             return Create(recoveryOrderDetail);
         }

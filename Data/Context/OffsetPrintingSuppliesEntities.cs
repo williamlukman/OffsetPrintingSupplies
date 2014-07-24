@@ -19,11 +19,11 @@ namespace Data.Context
 
         public void DeleteAllTables()
         {
-            IList<String> tableNames = new List<String>() { "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
+            IList<String> tableNames = new List<String>() { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
+                                                            "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
+                                                            "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
                                                             "BarringOrderDetail", "BarringOrder", "StockAdjustmentDetail", "StockAdjustment",
-                                                            "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
-                                                            "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                                             "StockMutation", "WarehouseItem", "Warehouse", 
                                                             "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Customer", "RollerType", "Machine",
                                                             };
@@ -37,6 +37,7 @@ namespace Data.Context
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
             modelBuilder.Configurations.Add(new BarringMapping());
             modelBuilder.Configurations.Add(new BarringOrderMapping());

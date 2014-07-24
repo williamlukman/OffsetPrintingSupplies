@@ -35,5 +35,6 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
         public virtual CoreIdentification CoreIdentification { get; set; }
         public virtual CoreBuilder CoreBuilder { get; set; }
+        //public virtual RollerWarehouseMutationDetail RollerWarehouseMutationDetail { get; set; }
     }
 }

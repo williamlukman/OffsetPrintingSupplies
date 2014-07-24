@@ -107,7 +107,6 @@ namespace Validation.Validation
                 else
                 {
                     ValuePairItemIdQuantity.Add(warehouseItem.Id, 1);
-
                 }
             }
 

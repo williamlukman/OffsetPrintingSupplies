@@ -79,6 +79,7 @@ namespace Data.Repository
         {
             recoveryOrder.QuantityFinal = 0;
             recoveryOrder.QuantityRejected = 0;
+            recoveryOrder.IsCompleted = false;
             recoveryOrder.IsConfirmed = false;
             recoveryOrder.IsDeleted = false;
             recoveryOrder.CreatedAt = DateTime.Now;

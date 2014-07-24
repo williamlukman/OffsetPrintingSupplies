@@ -35,6 +35,7 @@ namespace Data.Repository
             stockAdjustment.Code = SetObjectCode();
             stockAdjustment.IsDeleted = false;
             stockAdjustment.IsConfirmed = false;
+            stockAdjustment.IsCompleted = false;
             stockAdjustment.CreatedAt = DateTime.Now;
             return Create(stockAdjustment);
         }

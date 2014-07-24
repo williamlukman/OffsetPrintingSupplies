@@ -27,7 +27,7 @@ namespace Validation.Validation
             RollerWarehouseMutation rollerWarehouseMutation = _rollerWarehouseMutationService.GetObjectById(rollerWarehouseMutationDetail.RollerWarehouseMutationId);
             if (rollerWarehouseMutation == null)
             {
-                rollerWarehouseMutationDetail.Errors.Add("RollerWarehouseMutationId", "Tidak terasosiasi dengan Stock Adjustment");
+                rollerWarehouseMutationDetail.Errors.Add("RollerWarehouseMutationId", "Tidak terasosiasi dengan Roller Warehouse Mutation");
             }
             return rollerWarehouseMutationDetail;
         }
@@ -54,14 +54,14 @@ namespace Validation.Validation
             return rollerWarehouseMutationDetail;
         }
 
-        public RollerWarehouseMutationDetail VUniqueItem(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService, IItemService _itemService)
+        public RollerWarehouseMutationDetail VUniqueCoreIdentificationDetail(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
             IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutationDetail.RollerWarehouseMutationId);
             foreach (var detail in details)
             {
-                if (detail.ItemId == rollerWarehouseMutationDetail.ItemId && detail.Id != rollerWarehouseMutationDetail.Id)
+                if (detail.CoreIdentificationDetailId == rollerWarehouseMutationDetail.CoreIdentificationDetailId && detail.Id != rollerWarehouseMutationDetail.Id)
                 {
-                     rollerWarehouseMutationDetail.Errors.Add("ItemId", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
+                     rollerWarehouseMutationDetail.Errors.Add("ItemId", "Tidak boleh ada duplikasi core identification detail dalam 1 Roller Warehouse Mutation");
                 }
             }
             return rollerWarehouseMutationDetail;
@@ -130,7 +130,7 @@ namespace Validation.Validation
             if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
             VHasWarehouseItemTo(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _warehouseItemService);
             if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
-            VUniqueItem(rollerWarehouseMutationDetail, _rollerWarehouseMutationDetailService, _itemService);
+            VUniqueCoreIdentificationDetail(rollerWarehouseMutationDetail, _rollerWarehouseMutationDetailService);
             return rollerWarehouseMutationDetail;
         }
 

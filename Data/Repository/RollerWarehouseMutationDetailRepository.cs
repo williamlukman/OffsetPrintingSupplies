@@ -44,6 +44,7 @@ namespace Data.Repository
 
         public RollerWarehouseMutationDetail CreateObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail)
         {
+            rollerWarehouseMutationDetail.IsFinished = false;
             rollerWarehouseMutationDetail.IsDeleted = false;
             rollerWarehouseMutationDetail.CreatedAt = DateTime.Now;
             return Create(rollerWarehouseMutationDetail);

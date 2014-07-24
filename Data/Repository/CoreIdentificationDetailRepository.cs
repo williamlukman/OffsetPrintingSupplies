@@ -115,6 +115,14 @@ namespace Data.Repository
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.IsDelivered = false;
+            coreIdentificationDetail.UpdatedAt = DateTime.Now;
+            Update(coreIdentificationDetail);
+            return coreIdentificationDetail;
+        }
+
         public bool DeleteObject(int Id)
         {
             CoreIdentificationDetail coreIdentificationDetail = Find(x => x.Id == Id);

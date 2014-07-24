@@ -111,9 +111,9 @@ namespace Service.Service
         }
 
         public CoreIdentificationDetail SoftDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                                         IRecoveryOrderDetailService _recoveryOrderDetailService)
+                                                         IRecoveryOrderDetailService _recoveryOrderDetailService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
-            return (coreIdentificationDetail = _validator.ValidDeleteObject(coreIdentificationDetail, _coreIdentificationService, _recoveryOrderDetailService) ?
+            return (coreIdentificationDetail = _validator.ValidDeleteObject(coreIdentificationDetail, _coreIdentificationService, _recoveryOrderDetailService, _rollerWarehouseMutationDetailService) ?
                                                _repository.SoftDeleteObject(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
@@ -176,9 +176,28 @@ namespace Service.Service
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
-            return (coreIdentificationDetail = _validator.ValidDeliverObject(coreIdentificationDetail, _rollerWarehouseMutationDetailService) ? _repository.DeliverObject(coreIdentificationDetail) : coreIdentificationDetail);
+            if (_validator.ValidDeliverObject(coreIdentificationDetail, _rollerWarehouseMutationDetailService))
+            {
+                _repository.DeliverObject(coreIdentificationDetail);
+
+                CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+                if (_coreIdentificationService.GetValidator().ValidCompleteObject(coreIdentification, this))
+                {
+                    _coreIdentificationService.CompleteObject(coreIdentification, this);
+                }
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            if (_validator.ValidUndoDeliverObject(coreIdentificationDetail, _coreIdentificationService, _rollerWarehouseMutationDetailService))
+            {
+                _repository.UndoDeliverObject(coreIdentificationDetail);
+            }
+            return coreIdentificationDetail;
         }
 
         public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)

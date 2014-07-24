@@ -60,6 +60,8 @@ namespace Data.Repository
 
         public WarehouseMutationOrder CreateObject(WarehouseMutationOrder warehouseMutationOrder)
         {
+            warehouseMutationOrder.IsConfirmed = false;
+            warehouseMutationOrder.IsCompleted = false;
             warehouseMutationOrder.IsDeleted = false;
             warehouseMutationOrder.CreatedAt = DateTime.Now;
             return Create(warehouseMutationOrder);

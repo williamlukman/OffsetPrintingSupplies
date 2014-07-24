@@ -65,6 +65,8 @@ namespace Data.Repository
 
         public RollerWarehouseMutation CreateObject(RollerWarehouseMutation rollerWarehouseMutation)
         {
+            rollerWarehouseMutation.IsConfirmed = false;
+            rollerWarehouseMutation.IsCompleted = false;
             rollerWarehouseMutation.IsDeleted = false;
             rollerWarehouseMutation.CreatedAt = DateTime.Now;
             return Create(rollerWarehouseMutation);

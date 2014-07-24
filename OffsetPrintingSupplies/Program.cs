@@ -23,22 +23,7 @@ namespace OffsetPrintingSupplies
             {
                 db.DeleteAllTables();
                 DataBuilder d = new DataBuilder();
-
-                d.PopulateWarehouse();
-                d.PopulateItem();
-                d.PopulateSingles();
-                d.PopulateBuilders();
-                d.PopulateWarehouseMutationForRollerIdentificationAndRecovery();
-
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService, d._itemService, d._barringService, d._warehouseItemService);
-                d.wmoDetail1 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail1, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.wmoDetail2 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail2, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.wmoDetail3 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail3, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.wmoDetail4 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail4, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.wmoDetail5 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail5, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.wmoDetail6 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail6, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-
-                Console.WriteLine(d.warehouseMutationOrder.IsCompleted);
+                d.PopulateData();
 
                 if (d.itemCompound.Errors.Count() > 0) { Console.WriteLine("Error"); };
                 if (d.itemCompound1.Errors.Count() > 0) { Console.WriteLine("Error"); };
