@@ -22,9 +22,9 @@ namespace ExtJs.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Customer()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Your customer page.";
 
             return View();
         }

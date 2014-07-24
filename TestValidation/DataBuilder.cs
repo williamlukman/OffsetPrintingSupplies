@@ -256,9 +256,9 @@ namespace TestValidation
             {
                 Name = "President of Indonesia",
                 Address = "Istana Negara Jl. Veteran No. 16 Jakarta Pusat",
-                ContactNo = "021 3863777",
+                CustomerNo = "021 3863777",
                 PIC = "Mr. President",
-                PICContactNo = "021 3863777",
+                PICCustomerNo = "021 3863777",
                 Email = "random@ri.gov.au"
             };
             customer = _customerService.CreateObject(customer);

@@ -389,7 +389,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-icon-scissors { background-position: -144px -128px; }
 .ui-icon-clipboard { background-position: -160px -128px; }
 .ui-icon-copy { background-position: -176px -128px; }
-.ui-icon-contact { background-position: -192px -128px; }
+.ui-icon-customer { background-position: -192px -128px; }
 .ui-icon-image { background-position: -208px -128px; }
 .ui-icon-video { background-position: -224px -128px; }
 .ui-icon-script { background-position: -240px -128px; }

@@ -40,15 +40,15 @@ namespace Service.Service
             return _repository.FindAll(c => c.Name == name && !c.IsDeleted).FirstOrDefault();
         }
 
-        public Customer CreateObject(string Name, string Address, string ContactNo, string PIC, string PICContactNo, string Email)
+        public Customer CreateObject(string Name, string Address, string CustomerNo, string PIC, string PICCustomerNo, string Email)
         {
             Customer customer = new Customer
             {
                 Name = Name,
                 Address = Address,
-                ContactNo = ContactNo,
+                CustomerNo = CustomerNo,
                 PIC = PIC,
-                PICContactNo = PICContactNo,
+                PICCustomerNo = PICCustomerNo,
                 Email = Email
             };
             return this.CreateObject(customer);

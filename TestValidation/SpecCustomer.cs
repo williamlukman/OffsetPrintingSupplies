@@ -81,9 +81,9 @@ namespace TestValidation
                 {
                     Name = "     ",
                     Address = "I have no name",
-                    ContactNo = "0000123",
+                    CustomerNo = "0000123",
                     PIC = "Who are you?",
-                    PICContactNo = "001234",
+                    PICCustomerNo = "001234",
                     Email = "empty@noname.com"
                 };
                 noname = d._customerService.CreateObject(noname);
@@ -96,9 +96,9 @@ namespace TestValidation
                 {
                     Name = "Abbey",
                     Address = "I am a copy",
-                    ContactNo = "0000123",
+                    CustomerNo = "0000123",
                     PIC = "Who are you?",
-                    PICContactNo = "001234",
+                    PICCustomerNo = "001234",
                     Email = "empty@noname.com"
                 }; 
                 samename = d._customerService.CreateObject(samename);
@@ -111,28 +111,28 @@ namespace TestValidation
                 {
                     Name = "Abbey12",
                     Address = " ",
-                    ContactNo = "0000123",
+                    CustomerNo = "0000123",
                     PIC = "Who are you?",
-                    PICContactNo = "001234",
+                    PICCustomerNo = "001234",
                     Email = "empty@noname.com"
                 };
                 emptyaddress = d._customerService.CreateObject(emptyaddress);
                 emptyaddress.Errors.Count().should_not_be(0);
             };
 
-            it["withemptycontact"] = () =>
+            it["withemptycustomer"] = () =>
             {
-                Customer emptycontact = new Customer()
+                Customer emptycustomer = new Customer()
                 {
                     Name = "Abbey123",
                     Address = "Ada isi",
-                    ContactNo = "   ",
+                    CustomerNo = "   ",
                     PIC = "Who are you?",
-                    PICContactNo = "001234",
+                    PICCustomerNo = "001234",
                     Email = "empty@noname.com"
                 };
-                emptycontact = d._customerService.CreateObject(emptycontact);
-                emptycontact.Errors.Count().should_not_be(0);
+                emptycustomer = d._customerService.CreateObject(emptycustomer);
+                emptycustomer.Errors.Count().should_not_be(0);
             };
 
             it["update_with_empty_pic"] = () =>
@@ -142,9 +142,9 @@ namespace TestValidation
                 d.customer.Errors.Count().should_not_be(0);
             };
 
-            it["update_with_empty_pic_contactno"] = () =>
+            it["update_with_empty_pic_customerno"] = () =>
             {
-                d.customer.PICContactNo = "   ";
+                d.customer.PICCustomerNo = "   ";
                 d.customer = d._customerService.UpdateObject(d.customer);
                 d.customer.Errors.Count().should_not_be(0);
             };

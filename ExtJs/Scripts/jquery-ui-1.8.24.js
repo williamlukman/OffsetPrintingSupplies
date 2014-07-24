@@ -3217,7 +3217,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 		}
 
 		//Post events to containers
-		this._contactContainers(event);
+		this._customerContainers(event);
 
 		//Interconnect with droppables
 		if($.ui.ddmanager) $.ui.ddmanager.drag(this, event);
@@ -3592,7 +3592,7 @@ $.widget("ui.sortable", $.ui.mouse, {
 
 	},
 
-	_contactContainers: function(event) {
+	_customerContainers: function(event) {
 		
 		// get innermost container that intersects with item 
 		var innermostContainer = null, innermostIndex = null;		

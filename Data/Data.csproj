@@ -44,8 +44,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\OffsetPrintingSuppliesEntities.cs" />
+    <Compile Include="Mapping\DeliveryOrderDetailMapping.cs" />
+    <Compile Include="Mapping\DeliveryOrderMapping.cs" />
+    <Compile Include="Mapping\PurchaseOrderDetailMapping.cs" />
+    <Compile Include="Mapping\PurchaseOrderMapping.cs" />
+    <Compile Include="Mapping\PurchaseReceivalDetailMapping.cs" />
+    <Compile Include="Mapping\PurchaseReceivalMapping.cs" />
     <Compile Include="Mapping\RollerWarehouseMutationDetailMapping.cs" />
     <Compile Include="Mapping\RollerWarehouseMutationMapping.cs" />
+    <Compile Include="Mapping\SalesOrderDetailMapping.cs" />
+    <Compile Include="Mapping\SalesOrderMapping.cs" />
     <Compile Include="Mapping\UoMMapping.cs" />
     <Compile Include="Mapping\StockAdjustmentDetailMapping.cs" />
     <Compile Include="Mapping\StockAdjustmentMapping.cs" />
@@ -73,8 +81,16 @@
     <Compile Include="Repository\BarringOrderDetailRepository.cs" />
     <Compile Include="Repository\BarringOrderRepository.cs" />
     <Compile Include="Repository\BarringRepository.cs" />
+    <Compile Include="Repository\DeliveryOrderDetailRepository.cs" />
+    <Compile Include="Repository\DeliveryOrderRepository.cs" />
+    <Compile Include="Repository\PurchaseOrderDetailRepository.cs" />
+    <Compile Include="Repository\PurchaseOrderRepository.cs" />
+    <Compile Include="Repository\PurchaseReceivalDetailRepository.cs" />
+    <Compile Include="Repository\PurchaseReceivalRepository.cs" />
     <Compile Include="Repository\RollerWarehouseMutationDetailRepository.cs" />
     <Compile Include="Repository\RollerWarehouseMutationRepository.cs" />
+    <Compile Include="Repository\SalesOrderDetailRepository.cs" />
+    <Compile Include="Repository\SalesOrderRepository.cs" />
     <Compile Include="Repository\UoMRepository.cs" />
     <Compile Include="Repository\StockAdjustmentDetailRepository.cs" />
     <Compile Include="Repository\StockAdjustmentRepository.cs" />

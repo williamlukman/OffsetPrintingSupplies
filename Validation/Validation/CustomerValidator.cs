@@ -35,11 +35,11 @@ namespace Validation.Validation
             return customer;
         }
 
-        public Customer VHasContactNo(Customer customer)
+        public Customer VHasCustomerNo(Customer customer)
         {
-            if (String.IsNullOrEmpty(customer.ContactNo) || customer.ContactNo.Trim() == "")
+            if (String.IsNullOrEmpty(customer.CustomerNo) || customer.CustomerNo.Trim() == "")
             {
-                customer.Errors.Add("ContactNo", "Tidak boleh kosong");
+                customer.Errors.Add("CustomerNo", "Tidak boleh kosong");
             }
             return customer;
         }
@@ -53,11 +53,11 @@ namespace Validation.Validation
             return customer;
         }
 
-        public Customer VHasPICContactNo(Customer customer)
+        public Customer VHasPICCustomerNo(Customer customer)
         {
-            if (String.IsNullOrEmpty(customer.PICContactNo) || customer.PICContactNo.Trim() == "")
+            if (String.IsNullOrEmpty(customer.PICCustomerNo) || customer.PICCustomerNo.Trim() == "")
             {
-                customer.Errors.Add("PICContactNo", "Tidak boleh kosong");
+                customer.Errors.Add("PICCustomerNo", "Tidak boleh kosong");
             }
             return customer;
         }
@@ -97,11 +97,11 @@ namespace Validation.Validation
             if (!isValid(customer)) { return customer; }
             VHasAddress(customer);
             if (!isValid(customer)) { return customer; }
-            VHasContactNo(customer);
+            VHasCustomerNo(customer);
             if (!isValid(customer)) { return customer; }
             VHasPIC(customer);
             if (!isValid(customer)) { return customer; }
-            VHasPICContactNo(customer);
+            VHasPICCustomerNo(customer);
             if (!isValid(customer)) { return customer; }
             VHasEmail(customer);
             return customer;

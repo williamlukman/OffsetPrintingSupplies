@@ -24,6 +24,8 @@ namespace Data.Context
                                                             "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
                                                             "BarringOrderDetail", "BarringOrder", "StockAdjustmentDetail", "StockAdjustment",
+                                                            "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder",
+                                                            "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder",
                                                             "StockMutation", "WarehouseItem", "Warehouse", 
                                                             "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Customer", "RollerType", "Machine",
                                                             };
@@ -45,10 +47,16 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CoreBuilderMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationDetailMapping());
+            modelBuilder.Configurations.Add(new DeliveryOrderMapping());
+            modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new CustomerMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
             modelBuilder.Configurations.Add(new MachineMapping());
+            modelBuilder.Configurations.Add(new PurchaseOrderMapping());
+            modelBuilder.Configurations.Add(new PurchaseOrderDetailMapping());
+            modelBuilder.Configurations.Add(new PurchaseReceivalMapping());
+            modelBuilder.Configurations.Add(new PurchaseReceivalDetailMapping());
             modelBuilder.Configurations.Add(new RecoveryAccessoryDetailMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderDetailMapping());
@@ -56,6 +64,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new RollerTypeMapping());
             modelBuilder.Configurations.Add(new RollerWarehouseMutationMapping());
             modelBuilder.Configurations.Add(new RollerWarehouseMutationDetailMapping());
+            modelBuilder.Configurations.Add(new SalesOrderMapping());
+            modelBuilder.Configurations.Add(new SalesOrderDetailMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
@@ -74,9 +84,15 @@ namespace Data.Context
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
+        public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<Machine> Machines { get; set; }
+        public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
+        public DbSet<PurchaseReceival> PurchaseReceivals { get; set; }
         public DbSet<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
         public DbSet<RecoveryOrder> RecoveryOrders { get; set; }
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
@@ -84,6 +100,8 @@ namespace Data.Context
         public DbSet<RollerType> RollerTypes { get; set; }
         public DbSet<RollerWarehouseMutationDetail> RolleWarehouseMutationDetail { get; set; }
         public DbSet<RollerWarehouseMutation> RolleWarehouseMutation { get; set; }
+        public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
+        public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }

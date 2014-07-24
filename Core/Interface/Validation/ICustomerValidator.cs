@@ -12,9 +12,9 @@ namespace Core.Interface.Validation
     {
         Customer VHasUniqueName(Customer customer, ICustomerService _customerService);
         Customer VHasAddress(Customer customer);
-        Customer VHasContactNo(Customer customer);
+        Customer VHasCustomerNo(Customer customer);
         Customer VHasPIC(Customer customer);
-        Customer VHasPICContactNo(Customer customer);
+        Customer VHasPICCustomerNo(Customer customer);
         Customer VHasEmail(Customer customer);
         Customer VHasCoreIdentification(Customer customer, ICoreIdentificationService _coreIdentificationService);
         Customer VHasBarring(Customer customer, IBarringService _barringService);

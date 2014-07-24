@@ -15,7 +15,7 @@ namespace Core.Interface.Service
         Customer GetObjectById(int Id);
         Customer GetObjectByName(string Name);
         Customer CreateObject(Customer customer);
-        Customer CreateObject(string Name, string Address, string ContactNo, string PIC, string PICContactNo, string Email);
+        Customer CreateObject(string Name, string Address, string CustomerNo, string PIC, string PICCustomerNo, string Email);
         Customer UpdateObject(Customer customer);
         Customer SoftDeleteObject(Customer customer, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService);
         bool DeleteObject(int Id);

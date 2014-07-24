@@ -380,16 +380,16 @@ aside {
     display: inline;
 }
 
-/* contact */
-.contact h3 {
+/* customer */
+.customer h3 {
     font-size: 1.2em;
 }
 
-.contact p {
+.customer p {
     margin: 5px 0 0 10px;
 }
 
-.contact iframe {
+.customer iframe {
     border: 1px solid #333;
     margin: 5px 0 0 10px;
 }

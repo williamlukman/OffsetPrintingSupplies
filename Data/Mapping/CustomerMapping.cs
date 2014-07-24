@@ -22,6 +22,16 @@ namespace Data.Mapping
             HasMany(c => c.Barrings)
                 .WithRequired(b => b.Customer)
                 .HasForeignKey(c => c.CustomerId);
+
+            HasOptional(c => c.PurchaseOrders);
+            HasOptional(c => c.PurchaseOrderDetails);
+            HasOptional(c => c.PurchaseReceivals);
+            HasOptional(c => c.PurchaseReceivalDetails);
+            HasOptional(c => c.SalesOrders);
+            HasOptional(c => c.SalesOrderDetails);
+            HasOptional(c => c.DeliveryOrders);
+            HasOptional(c => c.DeliveryOrderDetails);
+
             Ignore(c => c.Errors);
         }
     }
