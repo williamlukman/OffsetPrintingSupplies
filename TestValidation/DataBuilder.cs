@@ -137,6 +137,7 @@ namespace TestValidation
             PopulateItem();
             PopulateSingles();
             PopulateBuilders();
+            PopulateBarring();
             PopulateWarehouseMutationForRollerIdentificationAndRecovery();
             PopulateCoreIdentifications();
             PopulateRecoveryOrders();
@@ -559,6 +560,14 @@ namespace TestValidation
                 Quantity = 1
             };
             wmoDetail6 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail6, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+
+            wmoDetail7 = new WarehouseMutationOrderDetail()
+            {
+                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                ItemId = barring3.Id,
+                Quantity = 1
+            };
+            wmoDetail7 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail7, _warehouseMutationOrderService, _itemService, _warehouseItemService);
         }
 
         public void PopulateCoreIdentifications()
@@ -570,6 +579,7 @@ namespace TestValidation
             wmoDetail4 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail4, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
             wmoDetail5 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail5, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
             wmoDetail6 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail6, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            wmoDetail7 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail7, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
             
             coreIdentification = new CoreIdentification()
             {
@@ -1092,7 +1102,7 @@ namespace TestValidation
                                                                _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
         }
 
-        public void PopulateBarringOrders()
+        public void PopulateBarring()
         {
             bargeneric = new Item()
             {
@@ -1208,7 +1218,7 @@ namespace TestValidation
                 thickness = 1,
                 MachineId = machine.Id
             };
-            _barringService.CreateObject(barring1, _barringService, _uomService,_itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
+            _barringService.CreateObject(barring1, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
             _barringService.AdjustQuantity(barring1, 2);
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barring1.Id), 2);
 
@@ -1233,7 +1243,7 @@ namespace TestValidation
             _barringService.CreateObject(barring2, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
             _barringService.AdjustQuantity(barring2, 2);
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barring2.Id), 2);
-            
+
             barring3 = new Barring()
             {
                 ItemTypeId = typeBarring.Id,
@@ -1253,9 +1263,12 @@ namespace TestValidation
                 MachineId = machine.Id
             };
             _barringService.CreateObject(barring3, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService, _warehouseItemService, _warehouseService);
-            _barringService.AdjustQuantity(barring3, 3);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barring3.Id), 3);
+            _barringService.AdjustQuantity(barring3, 4);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, barring3.Id), 4);
+        }
 
+        public void PopulateBarringOrders()
+        {
             barringOrderCustomer = new BarringOrder()
             {
                 CustomerId = customer.Id,

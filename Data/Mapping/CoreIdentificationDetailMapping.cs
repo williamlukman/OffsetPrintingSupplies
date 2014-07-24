@@ -19,8 +19,6 @@ namespace Data.Mapping
             HasRequired(cid => cid.CoreBuilder)
                 .WithMany(cb => cb.CoreIdentificationDetails)
                 .HasForeignKey(cid => cid.CoreBuilderId);
-            //HasRequired(cid => cid.RollerWarehouseMutationDetail)
-            //    .WithRequiredPrincipal(rwmd => rwmd.CoreIdentificationDetail);
             Ignore(cid => cid.Errors);
         }
     }

@@ -30,6 +30,7 @@ namespace TestValidation
                 d.PopulateItem();
                 d.PopulateSingles();
                 d.PopulateBuilders();
+                d.PopulateBarring();
                 d.PopulateWarehouseMutationForRollerIdentificationAndRecovery();
                 d.PopulateCoreIdentifications();
             }

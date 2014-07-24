@@ -133,7 +133,15 @@ namespace Service.Service
             int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
+            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
+            if (barring == null)
+            {
+                _itemService.AdjustQuantity(item, Quantity);
+            }
+            else
+            {
+                _barringService.AdjustQuantity(barring, Quantity);
+            }
             _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
         }
 
@@ -142,7 +150,15 @@ namespace Service.Service
             int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
+            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
+            if (barring == null)
+            {
+                _itemService.AdjustQuantity(item, Quantity);
+            }
+            else
+            {
+                _barringService.AdjustQuantity(barring, Quantity);
+            }
             _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
         }
 

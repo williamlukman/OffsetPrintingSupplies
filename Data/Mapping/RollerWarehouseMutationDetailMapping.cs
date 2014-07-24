@@ -16,8 +16,11 @@ namespace Data.Mapping
             HasRequired(rwmd => rwmd.RollerWarehouseMutation)
                 .WithMany(rwm => rwm.RollerWarehouseMutationDetails)
                 .HasForeignKey(rwmd => rwmd.RollerWarehouseMutationId);
-            //HasRequired(rwmd => rwmd.CoreIdentificationDetail)
-            //    .WithRequiredDependent(cid => cid.RollerWarehouseMutationDetail);
+            // supposed to be 1 to 0-1 relationship rather than 1 to many.
+            // changing WithMany to WithOptional causes error in the EF
+            HasRequired(rwmd => rwmd.CoreIdentificationDetail)
+                .WithMany()
+                .HasForeignKey(rwmd => rwmd.CoreIdentificationDetailId);
             Ignore(rwmd => rwmd.Errors);
         }
     }

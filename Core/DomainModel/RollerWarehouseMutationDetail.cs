@@ -22,6 +22,6 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
         public virtual RollerWarehouseMutation RollerWarehouseMutation { get; set; }
-        //public virtual CoreIdentificationDetail CoreIdentificationDetail { get; set; }
+        public virtual CoreIdentificationDetail CoreIdentificationDetail { get; set; }
     }
 }

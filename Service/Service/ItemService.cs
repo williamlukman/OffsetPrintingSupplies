@@ -81,9 +81,9 @@ namespace Service.Service
         public Item SoftDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                      IBarringService _barringService)
         {
-            if (item.GetType() == typeof(Barring))
+            Barring barring = _barringService.GetObjectById(item.Id);
+            if (barring != null)
             {
-                Barring barring = _barringService.GetObjectById(item.Id);
                 _barringService.SoftDeleteObject(barring, _warehouseItemService);
             }
             else

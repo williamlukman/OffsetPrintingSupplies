@@ -28,6 +28,6 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual ICollection<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
-        //public virtual ICollection<RollerWarehouseMutation> RollerWarehouseMutations { get; set; }
+        public virtual ICollection<RollerWarehouseMutation> RollerWarehouseMutations { get; set; }
     }
 }

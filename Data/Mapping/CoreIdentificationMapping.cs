@@ -19,9 +19,9 @@ namespace Data.Mapping
             HasMany(ci => ci.CoreIdentificationDetails)
                 .WithRequired(cid => cid.CoreIdentification)
                 .HasForeignKey(cid => cid.CoreIdentificationId);
-            //HasMany(ci => ci.RollerWarehouseMutations)
-            //    .WithRequired(rwm => rwm.CoreIdentification)
-            //    .HasForeignKey(rwm => rwm.CoreIdentificationId);
+            HasMany(ci => ci.RollerWarehouseMutations)
+                .WithRequired(rwm => rwm.CoreIdentification)
+                .HasForeignKey(rwm => rwm.CoreIdentificationId);
             Ignore(ci => ci.Errors);
         }
     }

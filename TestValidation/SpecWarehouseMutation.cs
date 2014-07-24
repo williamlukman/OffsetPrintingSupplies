@@ -30,6 +30,7 @@ namespace TestValidation
                 d.PopulateItem();
                 d.PopulateSingles();
                 d.PopulateBuilders();
+                d.PopulateBarring();
                 d.PopulateWarehouseMutationForRollerIdentificationAndRecovery();
             }
         }
@@ -119,6 +120,7 @@ namespace TestValidation
                     d.wmoDetail4 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail4, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
                     d.wmoDetail5 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail5, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
                     d.wmoDetail6 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail6, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
+                    d.wmoDetail7 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail7, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
                 };
 
                 it["validates_finish_details"] = () =>

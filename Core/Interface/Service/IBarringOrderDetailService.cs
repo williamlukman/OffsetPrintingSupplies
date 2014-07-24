@@ -43,8 +43,6 @@ namespace Core.Interface.Service
                                         IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                           IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
-        void StockMutateBarring(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        void ReverseStockMutateBarring(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);

@@ -16,9 +16,9 @@ namespace Data.Mapping
             HasMany(rwm => rwm.RollerWarehouseMutationDetails)
                 .WithRequired(rwmd => rwmd.RollerWarehouseMutation)
                 .HasForeignKey(rwmd => rwmd.RollerWarehouseMutationId);
-            //HasRequired(rwm => rwm.CoreIdentification)
-            //    .WithMany(ci => ci.RollerWarehouseMutations)
-            //    .HasForeignKey(rwm => rwm.CoreIdentificationId);
+            HasRequired(rwm => rwm.CoreIdentification)
+                .WithMany(ci => ci.RollerWarehouseMutations)
+                .HasForeignKey(rwm => rwm.CoreIdentificationId);
             Ignore(rwm => rwm.Errors);
         }
     }

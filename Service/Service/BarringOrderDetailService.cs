@@ -268,7 +268,7 @@ namespace Service.Service
                 Barring barring = _barringService.GetObjectById(barringOrderDetail.BarringId);
                 WarehouseItem warehouseBarring = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, barring.Id);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseBarring, CaseAdditionBarring);
-                StockMutateBarring(stockMutation, _itemService, _barringService, _warehouseItemService);
+                StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
 
                 // deduce bars quantity
                 if (barringOrderDetail.IsBarRequired)
@@ -351,30 +351,20 @@ namespace Service.Service
             return barringOrderDetail;
         }
 
-        public void StockMutateBarring(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
-            _barringService.AdjustQuantity(barring, Quantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
-        public void ReverseStockMutateBarring(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
-            _barringService.AdjustQuantity(barring, Quantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
         public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
+            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
+            if (barring == null)
+            {
+                _itemService.AdjustQuantity(item, Quantity);
+            }
+            else
+            {
+                _barringService.AdjustQuantity(barring, Quantity);
+            }
             _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
         }
 
@@ -383,7 +373,15 @@ namespace Service.Service
             int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
+            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
+            if (barring == null)
+            {
+                _itemService.AdjustQuantity(item, Quantity);
+            }
+            else
+            {
+                _barringService.AdjustQuantity(barring, Quantity);
+            }
             _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
         }
 
