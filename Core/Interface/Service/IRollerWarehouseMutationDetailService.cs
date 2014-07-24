@@ -24,9 +24,11 @@ namespace Core.Interface.Service
                                                    ICoreIdentificationDetailService _coreIdentificationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         RollerWarehouseMutationDetail SoftDeleteObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService);
         RollerWarehouseMutationDetail FinishObject(RollerWarehouseMutationDetail RollerWarehouseMutationDetail, IRollerWarehouseMutationService _warehouseMutationOrderService,
-                                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
         RollerWarehouseMutationDetail UnfinishObject(RollerWarehouseMutationDetail RollerWarehouseMutationDetail, IRollerWarehouseMutationService _warehouseMutationOrderService,
-                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
+        void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
     }
 }

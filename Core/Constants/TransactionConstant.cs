@@ -30,8 +30,10 @@ namespace Core.Constants
             public static string PurchaseReceival = "PurchaseReceival";
             public static string RecoveryOrder = "RecoveryOrder";
             public static string RecoveryOrderDetail = "RecoveryOrderDetail";
+            public static string RollerWarehouseMutation = "RollerWarehouseMutation";
             public static string SalesOrder = "SalesOrder";
             public static string StockAdjustment = "StockAdjustment";
+            public static string WarehouseMutationOrder = "WarehouseMutationOrder";
         }
 
         public class SourceDocumentDetailType
@@ -43,8 +45,10 @@ namespace Core.Constants
             public static string PurchaseReceivalDetail = "PurchaseReceivalDetail";
             public static string RecoveryOrderDetail = "RecoveryOrderDetail";
             public static string RecoveryAccessoryDetail = "RecoveryAccessoryDetail";
+            public static string RollerWarehouseMutationDetail = "RollerWarehouseMutationDetail";
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
+            public static string WarehouseMutationOrderDetail = "WarehouseMutationOrderDetail";
         }
 
         public class PayableSource

@@ -19,9 +19,8 @@ namespace Core.Interface.Validation
         RollerWarehouseMutation VHasBeenConfirmed(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation VDetailsAreVerifiedConfirmable(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
                                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        RollerWarehouseMutation VDetailsAreVerifiedUnconfirmable(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         RollerWarehouseMutation VAllDetailsHaveBeenFinished(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
+        RollerWarehouseMutation VAllDetailsHaveNotBeenFinished(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         RollerWarehouseMutation VCreateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, ICoreIdentificationService _coreIdentificationService);
         RollerWarehouseMutation VUpdateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, ICoreIdentificationService _coreIdentificationService);
         RollerWarehouseMutation VDeleteObject(RollerWarehouseMutation rollerWarehouseMutation);

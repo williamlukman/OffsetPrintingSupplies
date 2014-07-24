@@ -107,33 +107,16 @@ namespace Validation.Validation
             return stockAdjustment;
         }
 
-        public StockAdjustment VDetailsAreVerifiedUnconfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public StockAdjustment VAllDetailsHaveNotBeenFinished(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
         {
             IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-            foreach (var stockAdjustmentDetail in details)
+            foreach (var detail in details)
             {
-                int stockAdjustmentDetailQuantity = ((-1) * stockAdjustmentDetail.Quantity);
-                //decimal stockAdjustmentDetailPrice = ((-1) * stockAdjustmentDetail.Price);
-                Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
-                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
-                if (item.Quantity + stockAdjustmentDetailQuantity < 0)
+                if (detail.IsFinished)
                 {
-                    stockAdjustment.Errors.Add("Generic", "Stock barang tidak boleh kurang dari detail adjustment");
+                    stockAdjustment.Errors.Add("Generic", "Detail sudah selesai");
                     return stockAdjustment;
                 }
-                if (warehouseItem.Quantity + stockAdjustmentDetailQuantity < 0)
-                {
-                    stockAdjustment.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
-                    return stockAdjustment;
-                }
-                /*
-                if (_itemService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
-                {
-                    stockAdjustmentDetail.Errors.Add("AvgCost", "Tidak boleh kurang dari 0");
-                    return stockAdjustment;
-                }
-                */
             }
             return stockAdjustment;
         }
@@ -176,7 +159,7 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(stockAdjustment);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
-            VDetailsAreVerifiedUnconfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
+            VAllDetailsHaveNotBeenFinished(stockAdjustment, _stockAdjustmentDetailService);
             return stockAdjustment;
         }
 

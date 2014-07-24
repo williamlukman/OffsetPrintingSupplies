@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecWarehouseMutation.cs" />
+    <Compile Include="SpecCoreIdentificationComplete.cs" />
     <Compile Include="SpecWarehouse.cs" />
     <Compile Include="SpecBarringOrder.cs" />
     <Compile Include="SpecCoreIdentification.cs" />

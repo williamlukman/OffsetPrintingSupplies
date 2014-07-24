@@ -110,36 +110,6 @@ namespace Validation.Validation
             return rollerWarehouseMutation;
         }
 
-        public RollerWarehouseMutation VDetailsAreVerifiedUnconfirmable(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
-            IDictionary<int, int> ValuePairWarehouseItemIdQuantity = new Dictionary<int, int>();
-            foreach (var detail in details)
-            {
-                WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(rollerWarehouseMutation.WarehouseToId, detail.ItemId);
-                if (ValuePairWarehouseItemIdQuantity.ContainsKey(warehouseItemTo.Id))
-                {
-                    ValuePairWarehouseItemIdQuantity[warehouseItemTo.Id] += 1;
-                }
-                else
-                {
-                    ValuePairWarehouseItemIdQuantity.Add(warehouseItemTo.Id, 1);
-                }
-            }
-
-            foreach (var ValuePair in ValuePairWarehouseItemIdQuantity)
-            {
-                WarehouseItem warehouseItemTo = _warehouseItemService.GetObjectById(ValuePair.Key);
-                if (ValuePair.Value > warehouseItemTo.Quantity)
-                {
-                    rollerWarehouseMutation.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang mau direversemutasikan");
-                    return rollerWarehouseMutation;
-                }
-            }
-            return rollerWarehouseMutation;
-        }
-
         public RollerWarehouseMutation VAllDetailsHaveBeenFinished(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
             IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
@@ -148,6 +118,20 @@ namespace Validation.Validation
                 if (!detail.IsFinished)
                 {
                     rollerWarehouseMutation.Errors.Add("Generic", "Detail masih belum selesai");
+                    return rollerWarehouseMutation;
+                }
+            }
+            return rollerWarehouseMutation;
+        }
+
+        public RollerWarehouseMutation VAllDetailsHaveNotBeenFinished(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
+            foreach (var detail in details)
+            {
+                if (detail.IsFinished)
+                {
+                    rollerWarehouseMutation.Errors.Add("Generic", "Detail sudah selesai");
                     return rollerWarehouseMutation;
                 }
             }
@@ -196,7 +180,7 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(rollerWarehouseMutation);
             if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
-            VDetailsAreVerifiedUnconfirmable(rollerWarehouseMutation, _rollerWarehouseMutationService, _rollerWarehouseMutationDetailService, _itemService, _barringService, _warehouseItemService);
+            VAllDetailsHaveNotBeenFinished(rollerWarehouseMutation, _rollerWarehouseMutationDetailService);
             return rollerWarehouseMutation;
         }
 

@@ -86,22 +86,6 @@ namespace Validation.Validation
             return warehouseMutationOrder;
         }
 
-        public WarehouseMutationOrder VDetailsAreVerifiedUnconfirmable(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
-                                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
-            foreach (var detail in details)
-            {
-                WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, detail.ItemId);
-                if (warehouseItemTo.Quantity < detail.Quantity)
-                {
-                    warehouseMutationOrder.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang akan dimutasikan");
-                    return warehouseMutationOrder;
-                }
-            }
-            return warehouseMutationOrder;
-        }
-
         public WarehouseMutationOrder VAllDetailsHaveBeenFinished(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
         {
             IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
@@ -110,6 +94,20 @@ namespace Validation.Validation
                 if (!detail.IsFinished)
                 {
                     warehouseMutationOrder.Errors.Add("Generic", "Detail masih belum selesai");
+                    return warehouseMutationOrder;
+                }
+            }
+            return warehouseMutationOrder;
+        }
+
+        public WarehouseMutationOrder VAllDetailsHaveNotBeenFinished(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
+        {
+            IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
+            foreach (var detail in details)
+            {
+                if (detail.IsFinished)
+                {
+                    warehouseMutationOrder.Errors.Add("Generic", "Detail sudah selesai");
                     return warehouseMutationOrder;
                 }
             }
@@ -156,7 +154,7 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(warehouseMutationOrder);
             if (!isValid(warehouseMutationOrder)) { return warehouseMutationOrder; }
-            VDetailsAreVerifiedUnconfirmable(warehouseMutationOrder, _warehouseMutationOrderService, _warehouseMutationOrderDetailService, _itemService, _barringService, _warehouseItemService);
+            VAllDetailsHaveNotBeenFinished(warehouseMutationOrder, _warehouseMutationOrderDetailService);
             return warehouseMutationOrder;
         }
 

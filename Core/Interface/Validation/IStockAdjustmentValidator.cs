@@ -17,9 +17,8 @@ namespace Core.Interface.Validation
         StockAdjustment VHasStockAdjustmentDetails(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService);
         StockAdjustment VDetailsAreVerifiedConfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        StockAdjustment VDetailsAreVerifiedUnconfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         StockAdjustment VAllDetailsHaveBeenFinished(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService);
+        StockAdjustment VAllDetailsHaveNotBeenFinished(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService);
         StockAdjustment VCreateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService);
         StockAdjustment VUpdateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService);
         StockAdjustment VDeleteObject(StockAdjustment stockAdjustment);

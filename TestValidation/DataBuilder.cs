@@ -31,6 +31,8 @@ namespace TestValidation
         public IRecoveryOrderService _recoveryOrderService;
         public IRollerBuilderService _rollerBuilderService;
         public IRollerTypeService _rollerTypeService;
+        public IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService;
+        public IRollerWarehouseMutationService _rollerWarehouseMutationService;
         public IStockMutationService _stockMutationService;
         public IUoMService _uomService;
         public IWarehouseItemService _warehouseItemService;
@@ -61,7 +63,12 @@ namespace TestValidation
         public Barring barring1, barring2, barring3;
         public BarringOrder barringOrderCustomer;
         public BarringOrderDetail barringODCustomer1, barringODCustomer2, barringODCustomer3, barringODCustomer4; 
-
+        public WarehouseMutationOrder warehouseMutationOrder;
+        public WarehouseMutationOrderDetail wmoDetail1, wmoDetail2, wmoDetail3, wmoDetail4, wmoDetail5, wmoDetail6,
+                                            wmoDetail7, wmoDetail8, wmoDetail9;
+        public RollerWarehouseMutation rollerWarehouseMutation;
+        public RollerWarehouseMutationDetail rwmDetailCustomer1, rwmDetailCustomer2, rmwDetailCustomer3,
+                                             rwmDetailInHouse1, rwmDetailInHouse2, rwmDetailInHouse3;
         // extended variable
         public int usedCoreBuilderQuantity, usedCoreBuilder1Quantity, usedCoreBuilder2Quantity, usedCoreBuilder3Quantity, usedCoreBuilder4Quantity;
         public int usedRollerBuilderQuantity, usedRollerBuilder1Quantity, usedRollerBuilder2Quantity, usedRollerBuilder3Quantity, usedRollerBuilder4Quantity;
@@ -86,12 +93,14 @@ namespace TestValidation
             _recoveryAccessoryDetailService = new RecoveryAccessoryDetailService(new RecoveryAccessoryDetailRepository(), new RecoveryAccessoryDetailValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
+            _rollerWarehouseMutationDetailService = new RollerWarehouseMutationDetailService(new RollerWarehouseMutationDetailRepository(), new RollerWarehouseMutationDetailValidator());
+            _rollerWarehouseMutationService = new RollerWarehouseMutationService(new RollerWarehouseMutationRepository(), new RollerWarehouseMutationValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-            //_warehouseMutationOrderService = new _warehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
-            //_warehouseMutationOrderDetailService = new _warehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
+            _warehouseMutationOrderService = new WarehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
+            _warehouseMutationOrderDetailService = new WarehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
@@ -126,6 +135,7 @@ namespace TestValidation
             PopulateItem();
             PopulateSingles();
             PopulateBuilders();
+            PopulateWarehouseMutationForRollerIdentificationAndRecovery();
             PopulateCoreIdentifications();
             PopulateRecoveryOrders();
             PopulateBarringOrders();
@@ -161,8 +171,8 @@ namespace TestValidation
             };
 
             itemCompound = _itemService.CreateObject(itemCompound, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
-            _itemService.AdjustQuantity(itemCompound, 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound.Id), 5);
+            _itemService.AdjustQuantity(itemCompound, 1000);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound.Id), 1000);
 
             itemCompound1 = new Item()
             {
@@ -173,8 +183,8 @@ namespace TestValidation
                 UoMId = _uomService.GetObjectByName("Tubs").Id
             };
             itemCompound1 = _itemService.CreateObject(itemCompound1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
-            _itemService.AdjustQuantity(itemCompound1, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound1.Id), 2);
+            _itemService.AdjustQuantity(itemCompound1, 2000);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound1.Id), 2000);
 
             itemCompound2 = new Item()
             {
@@ -185,8 +195,8 @@ namespace TestValidation
                 UoMId = Tubs.Id
             };
             itemCompound2 = _itemService.CreateObject(itemCompound2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
-            _itemService.AdjustQuantity(itemCompound2, 2);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound2.Id), 2);
+            _itemService.AdjustQuantity(itemCompound2, 2000);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound2.Id), 2000);
 
             itemAccessory1 = new Item()
             {
@@ -488,8 +498,74 @@ namespace TestValidation
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore4.Id), 5);
         }
 
+        public void PopulateWarehouseMutationForRollerIdentificationAndRecovery()
+        {
+            warehouseMutationOrder = new WarehouseMutationOrder()
+            {
+                WarehouseFromId = localWarehouse.Id,
+                WarehouseToId = movingWarehouse.Id,
+            };
+            warehouseMutationOrder = _warehouseMutationOrderService.CreateObject(warehouseMutationOrder, _warehouseService);
+
+            wmoDetail1 = new WarehouseMutationOrderDetail()
+            {
+                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                ItemId = coreBuilder1.UsedCoreItemId,
+                Quantity = 2
+            };
+            wmoDetail1 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail1, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+
+            wmoDetail2 = new WarehouseMutationOrderDetail()
+            {
+                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                ItemId = coreBuilder2.UsedCoreItemId,
+                Quantity = 1
+            };
+            wmoDetail2 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail2, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+
+            wmoDetail3 = new WarehouseMutationOrderDetail()
+            {
+                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                ItemId = itemCompound.Id,
+                Quantity = 500
+            };
+            wmoDetail3 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail3, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+
+            wmoDetail4 = new WarehouseMutationOrderDetail()
+            {
+                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                ItemId = itemCompound1.Id,
+                Quantity = 500
+            };
+            wmoDetail4 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail4, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+
+            wmoDetail5 = new WarehouseMutationOrderDetail()
+            {
+                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                ItemId = itemCompound2.Id,
+                Quantity = 500
+            };
+            wmoDetail5 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail5, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+
+            wmoDetail6 = new WarehouseMutationOrderDetail()
+            {
+                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                ItemId = itemAccessory1.Id,
+                Quantity = 1
+            };
+            wmoDetail6 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail6, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+        }
+
         public void PopulateCoreIdentifications()
         {
+            warehouseMutationOrder = _warehouseMutationOrderService.ConfirmObject(warehouseMutationOrder, _warehouseMutationOrderDetailService, _itemService, _barringService, _warehouseItemService);
+            wmoDetail1 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail1, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            wmoDetail2 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail2, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            wmoDetail3 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail3, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            wmoDetail4 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail4, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            wmoDetail5 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail5, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            wmoDetail6 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail6, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            
             coreIdentification = new CoreIdentification()
             {
                 Code = "CI001",
@@ -497,7 +573,7 @@ namespace TestValidation
                 IsInHouse = false,
                 IdentifiedDate = DateTime.Now,
                 Quantity = 1,
-                WarehouseId = localWarehouse.Id
+                WarehouseId = movingWarehouse.Id
             };
             coreIdentification = _coreIdentificationService.CreateObject(coreIdentification, _customerService);
             coreIdentificationInHouse = new CoreIdentification()
@@ -506,7 +582,7 @@ namespace TestValidation
                 IsInHouse = true,
                 IdentifiedDate = DateTime.Now,
                 Quantity = 3,
-                WarehouseId = localWarehouse.Id
+                WarehouseId = movingWarehouse.Id
             };
             coreIdentificationInHouse = _coreIdentificationService.CreateObject(coreIdentificationInHouse, _customerService);
             coreIdentificationCustomer = new CoreIdentification()
@@ -516,7 +592,7 @@ namespace TestValidation
                 IsInHouse = false,
                 IdentifiedDate = DateTime.Now,
                 Quantity = 3,
-                WarehouseId = localWarehouse.Id
+                WarehouseId = movingWarehouse.Id
             };
             coreIdentificationCustomer = _coreIdentificationService.CreateObject(coreIdentificationCustomer, _customerService);
 
@@ -639,12 +715,20 @@ namespace TestValidation
             coreIdentificationCustomer = _coreIdentificationService.ConfirmObject(coreIdentificationCustomer, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
             coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
 
+            coreIdentificationDetail = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDCustomer1 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDCustomer2 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDCustomer3 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse1 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse2 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse3 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+
             recoveryOrder = new RecoveryOrder()
             {
                 Code = "ROX",
                 CoreIdentificationId = coreIdentification.Id,
                 QuantityReceived = coreIdentification.Quantity,
-                WarehouseId = localWarehouse.Id
+                WarehouseId = movingWarehouse.Id
             };
             recoveryOrder = _recoveryOrderService.CreateObject(recoveryOrder, _coreIdentificationService);
 
@@ -653,7 +737,7 @@ namespace TestValidation
                 Code = "RO001",
                 CoreIdentificationId = coreIdentificationInHouse.Id,
                 QuantityReceived = coreIdentificationInHouse.Quantity,
-                WarehouseId = localWarehouse.Id
+                WarehouseId = movingWarehouse.Id
             };
             recoveryOrderInHouse = _recoveryOrderService.CreateObject(recoveryOrderInHouse, _coreIdentificationService);
             
@@ -662,7 +746,7 @@ namespace TestValidation
                 Code = "RO002",
                 CoreIdentificationId = coreIdentificationCustomer.Id,
                 QuantityReceived = coreIdentificationCustomer.Quantity,
-                WarehouseId = localWarehouse.Id
+                WarehouseId = movingWarehouse.Id
             };
             recoveryOrderCustomer = _recoveryOrderService.CreateObject(recoveryOrderCustomer, _coreIdentificationService);
 

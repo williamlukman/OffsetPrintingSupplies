@@ -1,4 +1,5 @@
-﻿using Core.DomainModel;
+﻿using Core.Constants;
+using Core.DomainModel;
 using Core.Interface.Repository;
 using Core.Interface.Service;
 using Core.Interface.Validation;
@@ -80,23 +81,70 @@ namespace Service.Service
         }
 
         public WarehouseMutationOrderDetail FinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
             if (_validator.ValidFinishObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
             {
+                WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
+
                 _repository.FinishObject(warehouseMutationOrderDetail);
+                if (_warehouseMutationOrderService.GetValidator().ValidCompleteObject(warehouseMutationOrder, this))
+                {
+                    _warehouseMutationOrderService.CompleteObject(warehouseMutationOrder, this);
+                }
+
+                // deduce warehouseFrom item
+                // add warehouseTo item
+                WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
+                WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, warehouseMutationOrderDetail.ItemId);
+
+                IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForWarehouseMutationOrder(warehouseMutationOrderDetail, warehouseItemFrom, warehouseItemTo);
+                foreach (var stockMutation in stockMutations)
+                {
+                    StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
             }
             return warehouseMutationOrderDetail;
         }
 
         public WarehouseMutationOrderDetail UnfinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                            IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                            IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
             if (_validator.ValidUnfinishObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
             {
                 _repository.UnfinishObject(warehouseMutationOrderDetail);
+
+                // reverse mutate item in warehousefrom and warehouseto
+                WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
+                WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
+                WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, warehouseMutationOrderDetail.ItemId);
+
+                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForWarehouseMutationOrder(warehouseMutationOrderDetail, warehouseItemFrom, warehouseItemTo);
+                foreach (var stockMutation in stockMutations)
+                {
+                    ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
             }
             return warehouseMutationOrderDetail;
         }
+
+        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        {
+            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
+            _itemService.AdjustQuantity(item, Quantity);
+            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
+        }
+
+        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        {
+            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
+            _itemService.AdjustQuantity(item, Quantity);
+            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
+        }
+
     }
 }

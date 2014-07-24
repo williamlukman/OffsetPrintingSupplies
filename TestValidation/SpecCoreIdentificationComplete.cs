@@ -15,7 +15,7 @@ using Validation.Validation;
 namespace TestValidation
 {
 
-    public class SpecCoreIdentification: nspec
+    public class SpecCoreIdentificationComplete: nspec
     {
         DataBuilder d;
         
