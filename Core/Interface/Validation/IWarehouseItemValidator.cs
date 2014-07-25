@@ -22,6 +22,8 @@ namespace Core.Interface.Validation
         bool ValidUpdateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         bool ValidDeleteObject(WarehouseItem warehouseItem);
         bool ValidAdjustQuantity(WarehouseItem warehouseItem);
+        bool ValidAdjustPendingReceival(WarehouseItem warehouseItem);
+        bool ValidAdjustPendingDelivery(WarehouseItem warehouseItem);
         bool isValid(WarehouseItem warehouseItem);
         string PrintError(WarehouseItem warehouseItem);
     }

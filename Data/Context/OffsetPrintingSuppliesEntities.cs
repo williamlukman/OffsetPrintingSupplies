@@ -19,14 +19,14 @@ namespace Data.Context
 
         public void DeleteAllTables()
         {
-            IList<String> tableNames = new List<String>() { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
+            IList<String> tableNames = new List<String>() { "StockMutation", "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                                             "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                                             "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                                             "CoreIdentificationDetail", "CoreIdentification", "RollerBuilder",
                                                             "BarringOrderDetail", "BarringOrder", "StockAdjustmentDetail", "StockAdjustment",
                                                             "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder",
                                                             "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder",
-                                                            "StockMutation", "WarehouseItem", "Warehouse", 
+                                                            "WarehouseItem", "Warehouse", 
                                                             "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Customer", "RollerType", "Machine",
                                                             };
 

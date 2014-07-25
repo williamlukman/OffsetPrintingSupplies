@@ -7,179 +7,200 @@ using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
-using Core.Constant;
+using Core.Constants;
 
 namespace Validation.Validation
 {
     public class PurchaseOrderDetailValidator : IPurchaseOrderDetailValidator
     {
-        public PurchaseOrderDetail VHasPurchaseOrder(PurchaseOrderDetail pod, IPurchaseOrderService _pos)
+        public PurchaseOrderDetail VHasPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService)
         {
-            PurchaseOrder po = _pos.GetObjectById(pod.PurchaseOrderId);
+            PurchaseOrder po = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
             if (po == null)
             {
-                pod.Errors.Add("PurchaseOrder", "Tidak boleh tidak ada");
+                purchaseOrderDetail.Errors.Add("PurchaseOrder", "Tidak boleh tidak ada");
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VHasItem(PurchaseOrderDetail pod, IItemService _is)
+        public PurchaseOrderDetail VHasItem(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
         {
-            Item item = _is.GetObjectById(pod.ItemId);
+            Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
             if (item == null)
             {
-                pod.Errors.Add("Item", "Tidak boleh tidak ada");
+                purchaseOrderDetail.Errors.Add("Item", "Tidak boleh tidak ada");
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VQuantity(PurchaseOrderDetail pod)
+        public PurchaseOrderDetail VQuantity(PurchaseOrderDetail purchaseOrderDetail)
         {
-            if (pod.Quantity < 0)
+            if (purchaseOrderDetail.Quantity < 0)
             {
-                pod.Errors.Add("Quantity", "Tidak boleh kurang dari 0");
+                purchaseOrderDetail.Errors.Add("Quantity", "Tidak boleh kurang dari 0");
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VPrice(PurchaseOrderDetail pod)
+        public PurchaseOrderDetail VPrice(PurchaseOrderDetail purchaseOrderDetail)
         {
-            if (pod.Price <= 0)
+            if (purchaseOrderDetail.Price <= 0)
             {
-                pod.Errors.Add("Price", "Tidak boleh kurang dari atau sama dengan 0");
+                purchaseOrderDetail.Errors.Add("Price", "Tidak boleh kurang dari atau sama dengan 0");
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUniquePOD(PurchaseOrderDetail pod, IPurchaseOrderDetailService _pods, IItemService _is)
+        public PurchaseOrderDetail VUniquePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IItemService _itemService)
         {
-            IList<PurchaseOrderDetail> details = _pods.GetObjectsByPurchaseOrderId(pod.PurchaseOrderId);
+            IList<PurchaseOrderDetail> details = _purchaseOrderDetails.GetObjectsByPurchaseOrderId(purchaseOrderDetail.PurchaseOrderId);
             foreach (var detail in details)
             {
-                if (detail.ItemId == pod.ItemId && detail.Id != pod.Id)
+                if (detail.ItemId == purchaseOrderDetail.ItemId && detail.Id != purchaseOrderDetail.Id)
                 {
-                    pod.Errors.Add("PurchaseOrderDetail", "Tidak boleh memiliki Sku yang sama dalam 1 Purchase Order");
-                    return pod;
+                    purchaseOrderDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh memiliki Sku yang sama dalam 1 Purchase Order");
+                    return purchaseOrderDetail;
                 }
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VIsConfirmed(PurchaseOrderDetail pod)
+        public PurchaseOrderDetail VHasBeenFinished(PurchaseOrderDetail purchaseOrderDetail)
         {
-            if (pod.IsConfirmed)
+            if (!purchaseOrderDetail.IsFinished)
             {
-                pod.Errors.Add("PurchaseOrderDetail", "Tidak boleh sudah dikonfirmasi");
+                purchaseOrderDetail.Errors.Add("Generic", "Belum selesai");
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VHasItemPendingReceival(PurchaseOrderDetail pod, IItemService _is)
+        public PurchaseOrderDetail VHasNotBeenFinished(PurchaseOrderDetail purchaseOrderDetail)
         {
-            Item item = _is.GetObjectById(pod.ItemId);
-            if (item.PendingReceival < pod.Quantity)
+            if (purchaseOrderDetail.IsFinished)
             {
-                pod.Errors.Add("Item.PendingReceival", "Tidak boleh kurang dari quantity");
+                purchaseOrderDetail.Errors.Add("Generic", "Sudah selesai");
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VConfirmedPurchaseReceival(PurchaseOrderDetail pod, IPurchaseReceivalDetailService _prds)
+        public PurchaseOrderDetail VHasItemPendingReceival(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
         {
-            PurchaseReceivalDetail prd = _prds.GetObjectByPurchaseOrderDetailId(pod.Id);
-            if (prd == null)
+            Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
+            if (item.PendingReceival < purchaseOrderDetail.Quantity)
             {
-                return pod;
+                purchaseOrderDetail.Errors.Add("Item.PendingReceival", "Tidak boleh kurang dari quantity");
             }
-            if (prd.IsConfirmed)
+            return purchaseOrderDetail;
+        }
+
+        public PurchaseOrderDetail VHasNoPurchaseReceivalDetail(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        {
+            PurchaseReceivalDetail purchaseReceivalDetail = _purchaseReceivalDetailService.GetObjectByPurchaseOrderDetailId(purchaseOrderDetail.Id);
+            if (purchaseReceivalDetail != null)
             {
-                pod.Errors.Add("PurchaseReceival", "Tidak boleh sudah dikonfirmasi");
+                purchaseOrderDetail.Errors.Add("Generic", "Tidak boleh terasosiasi dengan purchase receival");
             }
-            return pod;
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VCreateObject(PurchaseOrderDetail pod, IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is)
+        public PurchaseOrderDetail VPurchaseReceivalDetailHasBeenFinished(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
-            VHasPurchaseOrder(pod, _pos);
-            if (!isValid(pod)) { return pod; }
-            VHasItem(pod, _is);
-            if (!isValid(pod)) { return pod; }
-            VQuantity(pod);
-            if (!isValid(pod)) { return pod; }
-            VPrice(pod);
-            if (!isValid(pod)) { return pod; }
-            VUniquePOD(pod, _pods, _is);
-            return pod;
+            PurchaseReceivalDetail purchaseReceivalDetail = _purchaseReceivalDetailService.GetObjectByPurchaseOrderDetailId(purchaseOrderDetail.Id);
+            if (!purchaseReceivalDetail.IsFinished)
+            {
+                purchaseOrderDetail.Errors.Add("Generic", "Purchase Receival belum selesai");
+            }
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail pod, IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is)
+
+        public PurchaseOrderDetail VCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            VHasPurchaseOrder(pod, _pos);
-            if (!isValid(pod)) { return pod; }
-            VHasItem(pod, _is);
-            if (!isValid(pod)) { return pod; }
-            VQuantity(pod);
-            if (!isValid(pod)) { return pod; }
-            VPrice(pod);
-            if (!isValid(pod)) { return pod; }
-            VUniquePOD(pod, _pods, _is);
-            if (!isValid(pod)) { return pod; }
-            VIsConfirmed(pod);
-            return pod;
+            VHasPurchaseOrder(purchaseOrderDetail, _purchaseOrderService);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VHasItem(purchaseOrderDetail, _itemService);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VQuantity(purchaseOrderDetail);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VPrice(purchaseOrderDetail);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VUniquePurchaseOrderDetail(purchaseOrderDetail, _purchaseOrderDetails, _itemService);
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VDeleteObject(PurchaseOrderDetail pod)
+        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            VIsConfirmed(pod);
-            return pod;
+            VCreateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VHasNotBeenFinished(purchaseOrderDetail);
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VConfirmObject(PurchaseOrderDetail pod)
+        public PurchaseOrderDetail VDeleteObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            VIsConfirmed(pod);
-            return pod;
+            VHasNotBeenFinished(purchaseOrderDetail);
+            return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUnconfirmObject(PurchaseOrderDetail pod, IPurchaseOrderDetailService _pods, IPurchaseReceivalDetailService _prds, IItemService _is)
+        public PurchaseOrderDetail VFinishObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            VHasItemPendingReceival(pod, _is);
-            if (!isValid(pod)) { return pod; }
-            VConfirmedPurchaseReceival(pod, _prds);
-            return pod;
+            VHasNotBeenFinished(purchaseOrderDetail);
+            return purchaseOrderDetail;
         }
 
-        public bool ValidCreateObject(PurchaseOrderDetail pod,  IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is)
+        public PurchaseOrderDetail VUnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseReceivalDetailService _purchaseReceivalDetails, IItemService _itemService)
         {
-            VCreateObject(pod, _pods, _pos, _is);
-            return isValid(pod);
+            VHasItemPendingReceival(purchaseOrderDetail, _itemService);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VHasNoPurchaseReceivalDetail(purchaseOrderDetail, _purchaseReceivalDetails);
+            return purchaseOrderDetail;
         }
 
-        public bool ValidUpdateObject(PurchaseOrderDetail pod,  IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is)
+        public PurchaseOrderDetail VReceiveObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
-            pod.Errors.Clear();
-            VUpdateObject(pod, _pods, _pos, _is);
-            return isValid(pod);
+            VPurchaseReceivalDetailHasBeenFinished(purchaseOrderDetail, _purchaseReceivalDetailService);
+            return purchaseOrderDetail;
         }
 
-        public bool ValidDeleteObject(PurchaseOrderDetail pod)
+        public bool ValidCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            pod.Errors.Clear();
-            VDeleteObject(pod);
-            return isValid(pod);
+            VCreateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
+            return isValid(purchaseOrderDetail);
         }
 
-        public bool ValidConfirmObject(PurchaseOrderDetail pod)
+        public bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail,  IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            pod.Errors.Clear();
-            VConfirmObject(pod);
-            return isValid(pod);
+            purchaseOrderDetail.Errors.Clear();
+            VUpdateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
+            return isValid(purchaseOrderDetail);
         }
 
-        public bool ValidUnconfirmObject(PurchaseOrderDetail pod, IPurchaseOrderDetailService _pods, IPurchaseReceivalDetailService _prds, IItemService _is)
+        public bool ValidDeleteObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            pod.Errors.Clear();
-            VUnconfirmObject(pod, _pods, _prds, _is);
-            return isValid(pod);
+            purchaseOrderDetail.Errors.Clear();
+            VDeleteObject(purchaseOrderDetail);
+            return isValid(purchaseOrderDetail);
+        }
+
+        public bool ValidFinishObject(PurchaseOrderDetail purchaseOrderDetail)
+        {
+            purchaseOrderDetail.Errors.Clear();
+            VFinishObject(purchaseOrderDetail);
+            return isValid(purchaseOrderDetail);
+        }
+
+        public bool ValidUnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        {
+            purchaseOrderDetail.Errors.Clear();
+            VUnfinishObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService);
+            return isValid(purchaseOrderDetail);
+        }
+
+        public bool ValidReceiveObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        {
+            purchaseOrderDetail.Errors.Clear();
+            VReceiveObject(purchaseOrderDetail, _purchaseReceivalDetailService);
+            return isValid(purchaseOrderDetail);
         }
 
         public bool isValid(PurchaseOrderDetail obj)

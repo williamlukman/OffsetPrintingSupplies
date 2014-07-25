@@ -94,6 +94,26 @@ namespace Service.Service
             return warehouseItem;
         }
 
+        public WarehouseItem AdjustPendingReceival(WarehouseItem warehouseItem, int quantity)
+        {
+            warehouseItem.PendingReceival += quantity;
+            if (_validator.ValidAdjustPendingReceival(warehouseItem))
+            {
+                _repository.UpdateObject(warehouseItem);
+            }
+            return warehouseItem;
+        }
+
+        public WarehouseItem AdjustPendingDelivery(WarehouseItem warehouseItem, int quantity)
+        {
+            warehouseItem.PendingDelivery += quantity;
+            if (_validator.ValidAdjustPendingDelivery(warehouseItem))
+            {
+                _repository.UpdateObject(warehouseItem);
+            }
+            return warehouseItem;
+        }
+
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);

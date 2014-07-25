@@ -7,214 +7,215 @@ using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
-using Core.Constant;
+using Core.Constants;
 
 namespace Validation.Validation
 {
     public class PurchaseReceivalDetailValidator : IPurchaseReceivalDetailValidator
     {
-        public PurchaseReceivalDetail VHasPurchaseReceival(PurchaseReceivalDetail prd, IPurchaseReceivalService _prs)
+        public PurchaseReceivalDetail VHasPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService)
         {
-            PurchaseReceival pr = _prs.GetObjectById(prd.PurchaseReceivalId);
+            PurchaseReceival pr = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
             if (pr == null)
             {
-                prd.Errors.Add("PurchaseReceival", "Tidak boleh tidak ada");
+                purchaseReceivalDetail.Errors.Add("PurchaseReceival", "Tidak boleh tidak ada");
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VHasItem(PurchaseReceivalDetail prd, IItemService _is)
+        public PurchaseReceivalDetail VHasItem(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
         {
-            Item item = _is.GetObjectById(prd.ItemId);
+            Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
             if (item == null)
             {
-                prd.Errors.Add("Item", "Tidak boleh tidak ada");
+                purchaseReceivalDetail.Errors.Add("Item", "Tidak boleh tidak ada");
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VContact(PurchaseReceivalDetail prd, IPurchaseReceivalService _prs, IPurchaseOrderService _pos, IPurchaseOrderDetailService _pods, IContactService _cs)
+        public PurchaseReceivalDetail VCustomer(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, ICustomerService _customerService)
         {
-            PurchaseReceival pr = _prs.GetObjectById(prd.PurchaseReceivalId);
-            PurchaseOrderDetail pod = _pods.GetObjectById(prd.PurchaseOrderDetailId);
+            PurchaseReceival pr = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
             if (pod == null)
             {
-                prd.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
-                return prd;
+                purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
+                return purchaseReceivalDetail;
             }
-            PurchaseOrder po = _pos.GetObjectById(pod.PurchaseOrderId);
-            if (po.ContactId != pr.ContactId)
+            PurchaseOrder po = _purchaseOrderService.GetObjectById(pod.PurchaseOrderId);
+            if (po.CustomerId != pr.CustomerId)
             {
-                prd.Errors.Add("Contact", "Tidak boleh merupakan kustomer yang berbeda dengan Purchase Order");
+                purchaseReceivalDetail.Errors.Add("Customer", "Tidak boleh merupakan kustomer yang berbeda dengan Purchase Order");
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VQuantityCreate(PurchaseReceivalDetail prd, IPurchaseOrderDetailService _pods)
+        public PurchaseReceivalDetail VQuantityCreate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            PurchaseOrderDetail pod = _pods.GetObjectById(prd.PurchaseOrderDetailId);
+            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
             if (pod == null)
             {
-                prd.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
-                return prd;
+                purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
+                return purchaseReceivalDetail;
             }
-            if (prd.Quantity <= 0)
+            if (purchaseReceivalDetail.Quantity <= 0)
             {
-                prd.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
-                return prd;
+                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
+                return purchaseReceivalDetail;
             }
-            if (prd.Quantity > pod.Quantity)
+            if (purchaseReceivalDetail.Quantity > pod.Quantity)
             {
-                prd.Errors.Add("Quantity", "Tidak boleh lebih dari quantity dari Purchase Order Detail");
-                return prd;
+                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh lebih dari quantity dari Purchase Order Detail");
+                return purchaseReceivalDetail;
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VQuantityUpdate(PurchaseReceivalDetail prd, IPurchaseOrderDetailService _pods)
+        public PurchaseReceivalDetail VQuantityUpdate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            PurchaseOrderDetail pod = _pods.GetObjectById(prd.PurchaseOrderDetailId);
-            if (prd.Quantity <= 0)
+            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+            if (purchaseReceivalDetail.Quantity <= 0)
             {
-                prd.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
+                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
             }
-            if (prd.Quantity > pod.Quantity)
+            if (purchaseReceivalDetail.Quantity > pod.Quantity)
             {
-                prd.Errors.Add("Quantity", "Tidak boleh lebih besar dari quantity dari Purchase Order Detail");
+                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh lebih besar dari quantity dari Purchase Order Detail");
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail prd, IPurchaseOrderDetailService _pods)
+        public PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            PurchaseOrderDetail pod = _pods.GetObjectById(prd.PurchaseOrderDetailId);
+            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
             if (pod == null)
             {
-                prd.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
+                purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
         
-        public PurchaseReceivalDetail VUniquePOD(PurchaseReceivalDetail prd, IPurchaseReceivalDetailService _prds, IItemService _is)
+        public PurchaseReceivalDetail VUniquePurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
-            IList<PurchaseReceivalDetail> details = _prds.GetObjectsByPurchaseReceivalId(prd.PurchaseReceivalId);
+            IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceivalDetail.PurchaseReceivalId);
             foreach (var detail in details)
             {
-                if (detail.PurchaseOrderDetailId == prd.PurchaseOrderDetailId && detail.Id != prd.Id)
+                if (detail.PurchaseOrderDetailId == purchaseReceivalDetail.PurchaseOrderDetailId && detail.Id != purchaseReceivalDetail.Id)
                 {
-                    prd.Errors.Add("PurchaseOrderDetail", "Tidak boleh memiliki lebih dari 2 Purchase Receival Detail");
+                    purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh memiliki lebih dari 2 Purchase Receival Detail");
                 }
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VIsConfirmed(PurchaseReceivalDetail prd)
+        public PurchaseReceivalDetail VHasNotBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            if (prd.IsConfirmed)
+            if (purchaseReceivalDetail.IsFinished)
             {
-                prd.Errors.Add("IsConfirmed", "Tidak boleh sudah dikonfirmasi");
+                purchaseReceivalDetail.Errors.Add("Generic", "Tidak boleh sudah selesai");
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VHasItemQuantity(PurchaseReceivalDetail prd, IItemService _is)
+        public PurchaseReceivalDetail VHasBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            Item item = _is.GetObjectById(prd.ItemId);
+            if (!purchaseReceivalDetail.IsFinished)
+            {
+                purchaseReceivalDetail.Errors.Add("Generic", "Belum selesai");
+            }
+            return purchaseReceivalDetail;
+        }
+
+        public PurchaseReceivalDetail VHasItemQuantity(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
+        {
+            Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
             if (item.PendingReceival < 0)
             {
-                prd.Errors.Add("Item.PendingReceival", "Tidak boleh kurang dari 0");
+                purchaseReceivalDetail.Errors.Add("Item.PendingReceival", "Tidak boleh kurang dari 0");
             }
-            if (item.Ready < prd.Quantity)
+            if (item.Quantity < purchaseReceivalDetail.Quantity)
             {
-                prd.Errors.Add("Item.Ready", "Tidak boleh kurang dari quantity dari Purchase Receival Detail");
+                purchaseReceivalDetail.Errors.Add("item.Quantity", "Tidak boleh kurang dari quantity dari Purchase Receival Detail");
             }
-            return prd;
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail prd, IPurchaseReceivalDetailService _prds, IPurchaseReceivalService _prs,
-                                                    IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is, IContactService _cs)
+        public PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            VHasPurchaseReceival(prd, _prs);
-            if (!isValid(prd)) return prd;
-            VHasItem(prd, _is);
-            if (!isValid(prd)) return prd;
-            VContact(prd, _prs, _pos, _pods, _cs);
-            if (!isValid(prd)) return prd;
-            VQuantityCreate(prd, _pods);
-            if (!isValid(prd)) return prd;
-            VUniquePOD(prd, _prds, _is);
-            return prd;
+            VHasPurchaseReceival(purchaseReceivalDetail, _purchaseReceivalService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VHasItem(purchaseReceivalDetail, _itemService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VCustomer(purchaseReceivalDetail, _purchaseReceivalService, _purchaseOrderService, _purchaseOrderDetailService, _customerService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VQuantityCreate(purchaseReceivalDetail, _purchaseOrderDetailService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VUniquePurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _itemService);
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail prd, IPurchaseReceivalDetailService _prds, IPurchaseReceivalService _prs,
-                                                    IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is, IContactService _cs)
+        public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            VHasPurchaseReceival(prd, _prs);
-            if (!isValid(prd)) return prd;
-            VHasItem(prd, _is);
-            if (!isValid(prd)) return prd;
-            VContact(prd, _prs, _pos, _pods, _cs);
-            if (!isValid(prd)) return prd;
-            VQuantityUpdate(prd, _pods);
-            if (!isValid(prd)) return prd;
-            VUniquePOD(prd, _prds, _is);
-            if (!isValid(prd)) return prd;
-            VIsConfirmed(prd);
-            return prd;
+            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VHasNotBeenFinished(purchaseReceivalDetail);
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VDeleteObject(PurchaseReceivalDetail prd)
+        public PurchaseReceivalDetail VDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            VIsConfirmed(prd);
-            return prd;
+            VHasNotBeenFinished(purchaseReceivalDetail);
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VConfirmObject(PurchaseReceivalDetail prd)
+        public PurchaseReceivalDetail VFinishObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            VIsConfirmed(prd);
-            return prd;
+            VHasNotBeenFinished(purchaseReceivalDetail);
+            return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VUnconfirmObject(PurchaseReceivalDetail prd, IPurchaseReceivalDetailService _prds, IItemService _is)
+        public PurchaseReceivalDetail VUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
-            VHasItemQuantity(prd, _is);
-            return prd;
+            VHasItemQuantity(purchaseReceivalDetail, _itemService);
+            return purchaseReceivalDetail;
         }
 
-        public bool ValidCreateObject(PurchaseReceivalDetail prd, IPurchaseReceivalDetailService _prds, IPurchaseReceivalService _prs,
-                                                    IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is, IContactService _cs)
+        public bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            VCreateObject(prd, _prds, _prs, _pods, _pos, _is, _cs);
-            return isValid(prd);
+            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+            return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidUpdateObject(PurchaseReceivalDetail prd, IPurchaseReceivalDetailService _prds, IPurchaseReceivalService _prs,
-                                                    IPurchaseOrderDetailService _pods, IPurchaseOrderService _pos, IItemService _is, IContactService _cs)
+        public bool ValidUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            prd.Errors.Clear();
-            VUpdateObject(prd, _prds, _prs, _pods, _pos, _is, _cs);
-            return isValid(prd);
+            purchaseReceivalDetail.Errors.Clear();
+            VUpdateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+            return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidDeleteObject(PurchaseReceivalDetail prd)
+        public bool ValidDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            prd.Errors.Clear();
-            VDeleteObject(prd);
-            return isValid(prd);
+            purchaseReceivalDetail.Errors.Clear();
+            VDeleteObject(purchaseReceivalDetail);
+            return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidConfirmObject(PurchaseReceivalDetail prd)
+        public bool ValidFinishObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            prd.Errors.Clear();
-            VConfirmObject(prd);
-            return isValid(prd);
+            purchaseReceivalDetail.Errors.Clear();
+            VFinishObject(purchaseReceivalDetail);
+            return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidUnconfirmObject(PurchaseReceivalDetail prd, IPurchaseReceivalDetailService _prds, IItemService _is)
+        public bool ValidUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
-            prd.Errors.Clear();
-            VUnconfirmObject(prd, _prds, _is);
-            return isValid(prd);
+            purchaseReceivalDetail.Errors.Clear();
+            VUnfinishObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _itemService);
+            return isValid(purchaseReceivalDetail);
         }
 
         public bool isValid(PurchaseReceivalDetail obj)

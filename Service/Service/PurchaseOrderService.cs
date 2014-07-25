@@ -36,30 +36,30 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<PurchaseOrder> GetObjectsByContactId(int contactId)
+        public IList<PurchaseOrder> GetObjectsByCustomerId(int customerId)
         {
-            return _repository.GetObjectsByContactId(contactId);
+            return _repository.GetObjectsByCustomerId(customerId);
         }
 
-        public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
+        public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
         {
             purchaseOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(purchaseOrder, _contactService) ? _repository.CreateObject(purchaseOrder) : purchaseOrder);
+            return (_validator.ValidCreateObject(purchaseOrder, _customerService) ? _repository.CreateObject(purchaseOrder) : purchaseOrder);
         }
 
-        public PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService)
+        public PurchaseOrder CreateObject(int customerId, DateTime purchaseDate, ICustomerService _customerService)
         {
-            PurchaseOrder po = new PurchaseOrder
+            PurchaseOrder purchaseOrder = new PurchaseOrder
             {
-                ContactId = contactId,
+                CustomerId = customerId,
                 PurchaseDate = purchaseDate
             };
-            return this.CreateObject(po, _contactService);
+            return this.CreateObject(purchaseOrder, _customerService);
         }
 
-        public PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
+        public PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
         {
-            return (_validator.ValidUpdateObject(purchaseOrder, _contactService) ? _repository.UpdateObject(purchaseOrder) : purchaseOrder);
+            return (_validator.ValidUpdateObject(purchaseOrder, _customerService) ? _repository.UpdateObject(purchaseOrder) : purchaseOrder);
         }
 
         public PurchaseOrder SoftDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
@@ -78,29 +78,23 @@ namespace Service.Service
             if (_validator.ValidConfirmObject(purchaseOrder, _purchaseOrderDetailService))
             {
                 _repository.ConfirmObject(purchaseOrder);
-                IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
-                foreach (var detail in details)
-                {
-                    detail.ConfirmedAt = purchaseOrder.ConfirmedAt;
-                    _purchaseOrderDetailService.ConfirmObject(detail, _stockMutationService, _itemService);
-                }
             }
             return purchaseOrder;
         }
 
         public PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                    IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
+                                             IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
         {
             if (_validator.ValidUnconfirmObject(purchaseOrder, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService))
             {
                 _repository.UnconfirmObject(purchaseOrder);
-                IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
-                foreach (var detail in details)
-                {
-                    _purchaseOrderDetailService.UnconfirmObject(detail, _purchaseReceivalDetailService, _stockMutationService, _itemService);
-                }
             }
             return purchaseOrder;
+        }
+
+        public PurchaseOrder CompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            return (purchaseOrder = _validator.ValidCompleteObject(purchaseOrder, _purchaseOrderDetailService) ? _repository.CompleteObject(purchaseOrder) : purchaseOrder);
         }
     }
 }

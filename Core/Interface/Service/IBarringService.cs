@@ -28,6 +28,8 @@ namespace Core.Interface.Service
                              IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
         Barring SoftDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService);
         Barring AdjustQuantity(Barring barring, int quantity);
+        Barring AdjustPendingReceival(Barring barring, int quantity);
+        Barring AdjustPendingDelivery(Barring barring, int quantity);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Barring barring);
     }

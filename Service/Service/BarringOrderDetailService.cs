@@ -70,16 +70,6 @@ namespace Service.Service
                                           _repository.SoftDeleteObject(barringOrderDetail) : barringOrderDetail);
         }
 
-        public BarringOrderDetail SetJobScheduled(BarringOrderDetail barringOrderDetail)
-        {
-            return _repository.SetJobScheduled(barringOrderDetail);
-        }
-
-        public BarringOrderDetail UnsetJobScheduled(BarringOrderDetail barringOrderDetail)
-        {
-            return _repository.UnsetJobScheduled(barringOrderDetail);
-        }
-
         public BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService)
         {
             return (barringOrderDetail = _validator.ValidAddLeftBar(barringOrderDetail) ?
@@ -178,20 +168,20 @@ namespace Service.Service
                     {
                         WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
                         StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar, CaseAddition);
-                        StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
+                        _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
                     }
                     if (rightbar != null)
                     {
                         WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
                         StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar, CaseAddition);
-                        StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
+                        _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                     }
                 }
 
                 // deduce blanket quantity
                 WarehouseItem warehouseBlanket = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, barring.BlanketItemId);
                 StockMutation stockMutationBlanket = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseBlanket, CaseAddition);
-                StockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.StockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
             }
             return barringOrderDetail;
         }
@@ -220,7 +210,7 @@ namespace Service.Service
                         IList<StockMutation> stockMutationLeftBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar);
                         foreach (var stockMutationLeftBar in stockMutationLeftBars)
                         {
-                            ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
+                            _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
                         }
                     }
                     if (rightbar != null)
@@ -229,7 +219,7 @@ namespace Service.Service
                         IList<StockMutation> stockMutationRightBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar);
                         foreach (var stockMutationRightBar in stockMutationRightBars)
                         {
-                            ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
+                            _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                         }
                     }
                 }
@@ -238,7 +228,7 @@ namespace Service.Service
                 IList<StockMutation> stockMutationBlankets = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseBlanket);
                 foreach (var stockMutationBlanket in stockMutationBlankets)
                 {
-                    ReverseStockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
                 }
             }
             return barringOrderDetail;
@@ -268,7 +258,7 @@ namespace Service.Service
                 Barring barring = _barringService.GetObjectById(barringOrderDetail.BarringId);
                 WarehouseItem warehouseBarring = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, barring.Id);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseBarring, CaseAdditionBarring);
-                StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
 
                 // deduce bars quantity
                 if (barringOrderDetail.IsBarRequired)
@@ -279,20 +269,20 @@ namespace Service.Service
                     {
                         WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
                         StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar, CaseAdditionElse);
-                        StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
+                        _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
                     }
                     if (rightbar != null)
                     {
                         WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
                         StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar, CaseAdditionElse);
-                        StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
+                        _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                     }
                 }
 
                 // deduce blanket quantity
                 WarehouseItem warehouseBlanket = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, barring.BlanketItemId);
                 StockMutation stockMutationBlanket = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseBlanket, CaseAdditionElse);
-                StockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.StockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
             }
             return barringOrderDetail;
         }
@@ -314,7 +304,7 @@ namespace Service.Service
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseBarring);
                 foreach (var stockMutation in stockMutations)
                 {
-                    ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
 
                 if (barringOrderDetail.IsBarRequired)
@@ -327,7 +317,7 @@ namespace Service.Service
                         IList<StockMutation> stockMutationLeftBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar);
                         foreach (var stockMutationLeftBar in stockMutationLeftBars)
                         {
-                            ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
+                            _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
                         }
                     }
                     if (rightbar != null)
@@ -336,7 +326,7 @@ namespace Service.Service
                         IList<StockMutation> stockMutationRightBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar);
                         foreach (var stockMutationRightBar in stockMutationRightBars)
                         {
-                            ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
+                            _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                         }
                     }
                 }
@@ -345,44 +335,10 @@ namespace Service.Service
                 IList<StockMutation> stockMutationBlankets = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseBlanket);
                 foreach (var stockMutationBlanket in stockMutationBlankets)
                 {
-                    ReverseStockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutationBlanket, _itemService, _barringService, _warehouseItemService);
                 }
             }
             return barringOrderDetail;
-        }
-
-        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
-            if (barring == null)
-            {
-                _itemService.AdjustQuantity(item, Quantity);
-            }
-            else
-            {
-                _barringService.AdjustQuantity(barring, Quantity);
-            }
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
-        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
-            if (barring == null)
-            {
-                _itemService.AdjustQuantity(item, Quantity);
-            }
-            else
-            {
-                _barringService.AdjustQuantity(barring, Quantity);
-            }
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
         }
 
         public bool DeleteObject(int Id)

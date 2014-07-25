@@ -42,7 +42,7 @@ namespace Service.Service
             purchaseOrderDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService))
             {
-                purchaseOrderDetail.ContactId = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId).ContactId;
+                purchaseOrderDetail.CustomerId = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId).CustomerId;
                 return _repository.CreateObject(purchaseOrderDetail);
             }
             else
@@ -53,15 +53,14 @@ namespace Service.Service
 
         public PurchaseOrderDetail CreateObject(int purchaseOrderId, int itemId, int quantity, decimal price, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            PurchaseOrderDetail pod = new PurchaseOrderDetail
+            PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail
             {
                 PurchaseOrderId = purchaseOrderId,
                 ItemId = itemId,
-                ContactId = 0,
                 Quantity = quantity,
                 Price = price
             };
-            return this.CreateObject(pod, _purchaseOrderService, _itemService);
+            return this.CreateObject(purchaseOrderDetail, _purchaseOrderService, _itemService);
         }
 
         public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
@@ -80,36 +79,40 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService)
+        public PurchaseOrderDetail FinishObject(PurchaseOrderDetail purchaseOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService,
+                                                IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(purchaseOrderDetail))
+            if (_validator.ValidFinishObject(purchaseOrderDetail))
             {
-                purchaseOrderDetail = _repository.ConfirmObject(purchaseOrderDetail);
+                purchaseOrderDetail = _repository.FinishObject(purchaseOrderDetail);
                 Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
-                item.PendingReceival += purchaseOrderDetail.Quantity;
-                _itemService.UpdateObject(item);
-                StockMutation sm = _stockMutationService.CreateStockMutationForPurchaseOrder(purchaseOrderDetail, item);
+                StockMutation stockMutation = _stockMutationService.CreateStockMutationForPurchaseOrder(purchaseOrderDetail, item);
+                //item.PendingReceival += purchaseOrderDetail.Quantity;
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
             }
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
+        public PurchaseOrderDetail UnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService,
+                                                  IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(purchaseOrderDetail, this, _purchaseReceivalDetailService, _itemService))
+            if (_validator.ValidUnfinishObject(purchaseOrderDetail, this, _purchaseReceivalDetailService, _itemService))
             {
-                purchaseOrderDetail = _repository.UnconfirmObject(purchaseOrderDetail);
+                purchaseOrderDetail = _repository.UnfinishObject(purchaseOrderDetail);
                 Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
-                item.PendingReceival -= purchaseOrderDetail.Quantity;
-                _itemService.UpdateObject(item);
-                IList<StockMutation> sm = _stockMutationService.SoftDeleteStockMutationForPurchaseOrder(purchaseOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForPurchaseOrder(purchaseOrderDetail, item);
+                foreach (var stockMutation in stockMutations)
+                {
+                    //item.PendingReceival -= purchaseOrderDetail.Quantity;
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
             }
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail FulfilObject(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail ReceiveObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            return _repository.FulfilObject(purchaseOrderDetail);
+            return _repository.ReceiveObject(purchaseOrderDetail);
         }
-
     }
 }

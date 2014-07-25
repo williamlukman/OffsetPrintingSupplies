@@ -7,212 +7,216 @@ using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
-using Core.Constant;
+using Core.Constants;
 
 namespace Validation.Validation
 {
     public class DeliveryOrderDetailValidator : IDeliveryOrderDetailValidator
     {
-        public DeliveryOrderDetail VHasDeliveryOrder(DeliveryOrderDetail dod, IDeliveryOrderService _prs)
+        public DeliveryOrderDetail VHasDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _purchaseReceivalService)
         {
-            DeliveryOrder pr = _prs.GetObjectById(dod.DeliveryOrderId);
+            DeliveryOrder pr = _purchaseReceivalService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
             if (pr == null)
             {
-                dod.Errors.Add("DeliveryOrder", "Tidak boleh tidak ada");
+                deliveryOrderDetail.Errors.Add("DeliveryOrder", "Tidak boleh tidak ada");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VHasItem(DeliveryOrderDetail dod, IItemService _is)
+        public DeliveryOrderDetail VHasItem(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
-            Item item = _is.GetObjectById(dod.ItemId);
+            Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
             if (item == null)
             {
-                dod.Errors.Add("Item", "Tidak boleh tidak ada");
+                deliveryOrderDetail.Errors.Add("Item", "Tidak boleh tidak ada");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VContact(DeliveryOrderDetail dod, IDeliveryOrderService _prs, ISalesOrderService _sos, ISalesOrderDetailService _sods, IContactService _cs)
+        public DeliveryOrderDetail VCustomer(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _purchaseReceivalService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, ICustomerService _customerService)
         {
-            DeliveryOrder pr = _prs.GetObjectById(dod.DeliveryOrderId);
-            SalesOrderDetail sod = _sods.GetObjectById(dod.SalesOrderDetailId);
+            DeliveryOrder pr = _purchaseReceivalService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+            SalesOrderDetail sod = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
             if (sod == null)
             {
-                dod.Errors.Add("SalesOrderDetail", "Tidak boleh tidak ada");
-                return dod;
+                deliveryOrderDetail.Errors.Add("SalesOrderDetail", "Tidak boleh tidak ada");
+                return deliveryOrderDetail;
             }
-            SalesOrder so = _sos.GetObjectById(sod.SalesOrderId);
-            if (so.ContactId != pr.ContactId)
+            SalesOrder so = _salesOrderService.GetObjectById(sod.SalesOrderId);
+            if (so.CustomerId != pr.CustomerId)
             {
-                dod.Errors.Add("Contact", "Tidak boleh merupakan kustomer yang berbeda dengan Sales Order");
+                deliveryOrderDetail.Errors.Add("Customer", "Tidak boleh merupakan kustomer yang berbeda dengan Sales Order");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VQuantityCreate(DeliveryOrderDetail dod, ISalesOrderDetailService _sods)
+        public DeliveryOrderDetail VQuantityCreate(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService)
         {
-            SalesOrderDetail sod = _sods.GetObjectById(dod.SalesOrderDetailId);
-            if (dod.Quantity <= 0)
+            SalesOrderDetail sod = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+            if (deliveryOrderDetail.Quantity <= 0)
             {
-                dod.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
+                deliveryOrderDetail.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
             }
-            if (dod.Quantity > sod.Quantity)
+            if (deliveryOrderDetail.Quantity > sod.Quantity)
             {
-                dod.Errors.Add("Quantity", "Tidak boleh lebih dari Sales Order quantity");
+                deliveryOrderDetail.Errors.Add("Quantity", "Tidak boleh lebih dari Sales Order quantity");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VQuantityUpdate(DeliveryOrderDetail dod, ISalesOrderDetailService _sods)
+        public DeliveryOrderDetail VQuantityUpdate(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService)
         {
-            VQuantityCreate(dod, _sods);
-            return dod;
+            VQuantityCreate(deliveryOrderDetail, _salesOrderDetailService);
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VQuantityUnconfirm(DeliveryOrderDetail dod, IItemService _is)
+        public DeliveryOrderDetail VQuantityUnconfirm(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
-            Item item = _is.GetObjectById(dod.ItemId);
+            Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
             if (item.PendingDelivery < 0)
             {
-                dod.Errors.Add("Item.PendingDelivery", "Tidak boleh kurang dari 0");
+                deliveryOrderDetail.Errors.Add("Item.PendingDelivery", "Tidak boleh kurang dari 0");
             }
-            if (item.Ready < 0)
+            if (item.Quantity < 0)
             {
-                dod.Errors.Add("Item.Ready", "Tidak boleh kurang dari 0");
+                deliveryOrderDetail.Errors.Add("item.Quantity", "Tidak boleh kurang dari 0");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail dod, ISalesOrderDetailService _sods)
+        public DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService)
         {
-            SalesOrderDetail sod = _sods.GetObjectById(dod.SalesOrderDetailId);
+            SalesOrderDetail sod = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
             if (sod == null)
             {
-                dod.Errors.Add("SalesOrderDetail", "Tidak boleh tidak ada");
+                deliveryOrderDetail.Errors.Add("SalesOrderDetail", "Tidak boleh tidak ada");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail dod, IItemService _is)
+        public DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
-            Item item = _is.GetObjectById(dod.ItemId);
-            if (item.Ready - dod.Quantity < 0)
+            Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
+            if (item.Quantity - deliveryOrderDetail.Quantity < 0)
             {
-                dod.Errors.Add("Item.Ready", "Tidak boleh kurang dari quantity Delivery Order");
+                deliveryOrderDetail.Errors.Add("item.Quantity", "Tidak boleh kurang dari quantity Delivery Order");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VUniqueSOD(DeliveryOrderDetail dod, IDeliveryOrderDetailService _dods, IItemService _is)
+        public DeliveryOrderDetail VUniqueSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
-            IList<DeliveryOrderDetail> details = _dods.GetObjectsByDeliveryOrderId(dod.DeliveryOrderId);
+            IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrderDetail.DeliveryOrderId);
             foreach (var detail in details)
             {
-                if (detail.SalesOrderDetailId == dod.SalesOrderDetailId && detail.Id != dod.Id)
+                if (detail.SalesOrderDetailId == deliveryOrderDetail.SalesOrderDetailId && detail.Id != deliveryOrderDetail.Id)
                 {
-                    dod.Errors.Add("SalesOrderDetail", "Tidak boleh memiliki lebih dari 2 Delivery Order Detail");
-                    return dod;
+                    deliveryOrderDetail.Errors.Add("SalesOrderDetail", "Tidak boleh memiliki lebih dari 2 Delivery Order Detail");
+                    return deliveryOrderDetail;
                 }
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VIsConfirmed(DeliveryOrderDetail dod)
+        public DeliveryOrderDetail VHasBeenFinished(DeliveryOrderDetail deliveryOrderDetail)
         {
-            if (dod.IsConfirmed)
+            if (!deliveryOrderDetail.IsFinished)
             {
-                dod.Errors.Add("DeliveryOrderDetail", "Tidak boleh sudah dikonfirmasi.");
+                deliveryOrderDetail.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi.");
             }
-            return dod;
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VCreateObject(DeliveryOrderDetail dod, IDeliveryOrderDetailService _dods, IDeliveryOrderService _prs,
-                                                    ISalesOrderDetailService _sods, ISalesOrderService _sos, IItemService _is, IContactService _cs)
+        public DeliveryOrderDetail VHasNotBeenFinished(DeliveryOrderDetail deliveryOrderDetail)
         {
-            VHasDeliveryOrder(dod, _prs);
-            if (!isValid(dod)) { return dod; }
-            VHasItem(dod, _is);
-            if (!isValid(dod)) { return dod; }
-            VContact(dod, _prs, _sos, _sods, _cs);
-            if (!isValid(dod)) { return dod; }
-            VQuantityCreate(dod, _sods);
-            if (!isValid(dod)) { return dod; }
-            VUniqueSOD(dod, _dods, _is);
-            return dod;
+            if (deliveryOrderDetail.IsFinished)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi.");
+            }
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail dod, IDeliveryOrderDetailService _dods, IDeliveryOrderService _prs,
-                                                    ISalesOrderDetailService _sods, ISalesOrderService _sos, IItemService _is, IContactService _cs)
+        public DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService,
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            VHasDeliveryOrder(dod, _prs);
-            if (!isValid(dod)) { return dod; }
-            VHasItem(dod, _is);
-            if (!isValid(dod)) { return dod; }
-            VContact(dod, _prs, _sos, _sods, _cs);
-            if (!isValid(dod)) { return dod; }
-            VQuantityUpdate(dod, _sods);
-            if (!isValid(dod)) { return dod; }
-            VUniqueSOD(dod, _dods, _is);
-            if (!isValid(dod)) { return dod; }
-            VIsConfirmed(dod);
-            return dod;
+            VHasDeliveryOrder(deliveryOrderDetail, _deliveryOrderService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VHasItem(deliveryOrderDetail, _itemService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VCustomer(deliveryOrderDetail, _deliveryOrderService, _salesOrderService, _salesOrderDetailService, _customerService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VQuantityCreate(deliveryOrderDetail, _salesOrderDetailService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VUniqueSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _itemService);
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VDeleteObject(DeliveryOrderDetail dod)
+        public DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService,
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            VIsConfirmed(dod);
-            return dod;
+            VHasNotBeenFinished(deliveryOrderDetail);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VConfirmObject(DeliveryOrderDetail dod, IItemService _is)
+        public DeliveryOrderDetail VDeleteObject(DeliveryOrderDetail deliveryOrderDetail)
         {
-            VIsConfirmed(dod);
-            if (!isValid(dod)) { return dod; }
-            VHasItemQuantity(dod, _is);
-            return dod;
+            VHasNotBeenFinished(deliveryOrderDetail);
+            return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VUnconfirmObject(DeliveryOrderDetail dod, IDeliveryOrderDetailService _dods, IItemService _is)
+        public DeliveryOrderDetail VFinishObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
-            VQuantityUnconfirm(dod, _is);
-            return dod;
+            VHasNotBeenFinished(deliveryOrderDetail);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VHasItemQuantity(deliveryOrderDetail, _itemService);
+            return deliveryOrderDetail;
         }
 
-        public bool ValidCreateObject(DeliveryOrderDetail dod, IDeliveryOrderDetailService _dods, IDeliveryOrderService _prs,
-                                                    ISalesOrderDetailService _sods, ISalesOrderService _sos, IItemService _is, IContactService _cs)
+        public DeliveryOrderDetail VUnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
-            VCreateObject(dod, _dods, _prs, _sods, _sos, _is, _cs);
-            return isValid(dod);
+            VQuantityUnconfirm(deliveryOrderDetail, _itemService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            // TODO
+            //VDeliveryOrderHasNotBeenCompleted(deliveryOrderDetail, _deliveryOrderService);
+            return deliveryOrderDetail;
         }
 
-        public bool ValidUpdateObject(DeliveryOrderDetail dod, IDeliveryOrderDetailService _dods, IDeliveryOrderService _prs,
-                                                    ISalesOrderDetailService _sods, ISalesOrderService _sos, IItemService _is, IContactService _cs)
+        public bool ValidCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _purchaseReceivalService,
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            dod.Errors.Clear();
-            VUpdateObject(dod, _dods, _prs, _sods, _sos, _is, _cs);
-            return isValid(dod);
+            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _purchaseReceivalService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
+            return isValid(deliveryOrderDetail);
         }
 
-        public bool ValidDeleteObject(DeliveryOrderDetail dod)
+        public bool ValidUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _purchaseReceivalService,
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            dod.Errors.Clear();
-            VDeleteObject(dod);
-            return isValid(dod);
+            deliveryOrderDetail.Errors.Clear();
+            VUpdateObject(deliveryOrderDetail, _deliveryOrderDetailService, _purchaseReceivalService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
+            return isValid(deliveryOrderDetail);
         }
 
-        public bool ValidConfirmObject(DeliveryOrderDetail dod, IItemService _is)
+        public bool ValidDeleteObject(DeliveryOrderDetail deliveryOrderDetail)
         {
-            dod.Errors.Clear();
-            VConfirmObject(dod, _is);
-            return isValid(dod);
+            deliveryOrderDetail.Errors.Clear();
+            VDeleteObject(deliveryOrderDetail);
+            return isValid(deliveryOrderDetail);
         }
 
-        public bool ValidUnconfirmObject(DeliveryOrderDetail dod, IDeliveryOrderDetailService _dods, IItemService _is)
+        public bool ValidFinishObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
-            dod.Errors.Clear();
-            VUnconfirmObject(dod, _dods, _is);
-            return isValid(dod);
+            deliveryOrderDetail.Errors.Clear();
+            VFinishObject(deliveryOrderDetail, _itemService);
+            return isValid(deliveryOrderDetail);
+        }
+
+        public bool ValidUnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        {
+            deliveryOrderDetail.Errors.Clear();
+            VUnfinishObject(deliveryOrderDetail, _deliveryOrderDetailService, _itemService);
+            return isValid(deliveryOrderDetail);
         }
 
         public bool isValid(DeliveryOrderDetail obj)

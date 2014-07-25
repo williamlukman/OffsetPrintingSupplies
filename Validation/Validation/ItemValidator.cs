@@ -70,6 +70,14 @@ namespace Validation.Validation
             {
                 item.Errors.Add("Quantity", "Tidak boleh negatif");
             }
+            else if (item.PendingDelivery < 0)
+            {
+                item.Errors.Add("Generic", "Pending delivery tidak boleh negatif");
+            }
+            else if (item.PendingReceival < 0)
+            {
+                item.Errors.Add("Generic", "Pending receival tidak boleh negatif");
+            }
             return item;
         }
 
@@ -159,6 +167,18 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VAdjustPendingDelivery(Item item)
+        {
+            VNonNegativeQuantity(item);
+            return item;
+        }
+
+        public Item VAdjustPendingReceival(Item item)
+        {
+            VNonNegativeQuantity(item);
+            return item;
+        }
+
         public bool ValidCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             VCreateObject(item, _uomService, _itemService, _itemTypeService);
@@ -190,6 +210,20 @@ namespace Validation.Validation
         {
             item.Errors.Clear();
             VAdjustQuantity(item);
+            return isValid(item);
+        }
+
+        public bool ValidAdjustPendingDelivery(Item item)
+        {
+            item.Errors.Clear();
+            VAdjustPendingDelivery(item);
+            return isValid(item);
+        }
+
+        public bool ValidAdjustPendingReceival(Item item)
+        {
+            item.Errors.Clear();
+            VAdjustPendingReceival(item);
             return isValid(item);
         }
 

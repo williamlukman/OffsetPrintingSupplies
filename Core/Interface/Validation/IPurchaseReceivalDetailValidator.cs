@@ -17,8 +17,9 @@ namespace Core.Interface.Validation
         PurchaseReceivalDetail VQuantityCreate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail VQuantityUpdate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        PurchaseReceivalDetail VUniquePOD(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
-        PurchaseReceivalDetail VIsConfirmed(PurchaseReceivalDetail purchaseReceivalDetail);
+        PurchaseReceivalDetail VUniquePurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
+        PurchaseReceivalDetail VHasBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail);
+        PurchaseReceivalDetail VHasNotBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail VHasItemQuantity(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService);
         PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,

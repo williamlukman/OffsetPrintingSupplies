@@ -12,12 +12,14 @@ namespace Data.Mapping
     {
         public DeliveryOrderMapping()
         {
-            HasKey(pr => pr.Id);
-            HasRequired(pr => pr.Customer)
+            HasKey(d => d.Id);
+            HasRequired(d => d.Customer)
                 .WithMany(c => c.DeliveryOrders)
-                .WillCascadeOnDelete(false);
-            HasOptional(pr => pr.DeliveryOrderDetails);
-            Ignore(pr => pr.Errors);
+                .HasForeignKey(d => d.CustomerId);
+            HasMany(d => d.DeliveryOrderDetails)
+                .WithRequired(dod => dod.DeliveryOrder)
+                .HasForeignKey(dod => dod.DeliveryOrderId);
+            Ignore(d => d.Errors);
         }
     }
 }

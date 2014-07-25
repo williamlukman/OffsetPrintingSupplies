@@ -36,35 +36,35 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<DeliveryOrder> GetObjectsByContactId(int contactId)
+        public IList<DeliveryOrder> GetObjectsByCustomerId(int customerId)
         {
-            return _repository.GetObjectsByContactId(contactId);
+            return _repository.GetObjectsByCustomerId(customerId);
         }
 
-        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, IContactService _cs)
+        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
         {
             deliveryOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(deliveryOrder, _cs) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidCreateObject(deliveryOrder, _customerService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
         }
 
-        public DeliveryOrder CreateObject(int contactId, DateTime deliveryDate, IContactService _cs)
+        public DeliveryOrder CreateObject(int customerId, DateTime deliveryDate, ICustomerService _customerService)
         {
             DeliveryOrder deliveryOrder = new DeliveryOrder
             {
-                ContactId = contactId,
+                CustomerId = customerId,
                 DeliveryDate = deliveryDate
             };
-            return this.CreateObject(deliveryOrder, _cs);
+            return this.CreateObject(deliveryOrder, _customerService);
         }
 
-        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, IContactService _cs)
+        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
         {
-            return (_validator.ValidUpdateObject(deliveryOrder, _cs) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidUpdateObject(deliveryOrder, _customerService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
         }
 
-        public DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _dods)
+        public DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
-            return (_validator.ValidDeleteObject(deliveryOrder, _dods) ? _repository.SoftDeleteObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidDeleteObject(deliveryOrder, _deliveryOrderDetailService) ? _repository.SoftDeleteObject(deliveryOrder) : deliveryOrder);
         }
 
         public bool DeleteObject(int Id)
@@ -72,21 +72,12 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _dods,
-                                    ISalesOrderDetailService _sods, IStockMutationService _stockMutationService, IItemService _itemService)
+        public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                    ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
         {
-            if (_validator.ValidConfirmObject(deliveryOrder, _dods, _itemService))
+            if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService, _itemService))
             {
-                IList<DeliveryOrderDetail> details = _dods.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-                foreach (var detail in details)
-                {
-                    detail.ConfirmedAt = deliveryOrder.ConfirmedAt;
-                    _dods.ConfirmObject(detail, _stockMutationService, _itemService);
-                    SalesOrderDetail sod = _sods.GetObjectById(detail.SalesOrderDetailId);
-                    _sods.FulfilObject(sod);
-                }
-
-                return _repository.ConfirmObject(deliveryOrder);
+                _repository.ConfirmObject(deliveryOrder);
             }
             return deliveryOrder;
         }
@@ -96,15 +87,14 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(deliveryOrder, _deliveryOrderDetailService, _itemService))
             {
-                IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-                foreach (var detail in details)
-                {
-                    _deliveryOrderDetailService.UnconfirmObject(detail, _stockMutationService, _itemService);
-                }
-
-                return _repository.UnconfirmObject(deliveryOrder);
+                _repository.UnconfirmObject(deliveryOrder);
             }
             return deliveryOrder;
+        }
+
+        public DeliveryOrder CompleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        {
+            return (deliveryOrder = _validator.ValidCompleteObject(deliveryOrder, _deliveryOrderDetailService) ? _repository.CompleteObject(deliveryOrder) : deliveryOrder);
         }
     }
 }

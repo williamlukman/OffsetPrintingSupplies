@@ -42,13 +42,10 @@ namespace Service.Service
             salesOrderDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(salesOrderDetail, this, _salesOrderService, _itemService))
             {
-                salesOrderDetail.ContactId = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId).ContactId;
-                return _repository.CreateObject(salesOrderDetail);
+                salesOrderDetail.CustomerId = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId).CustomerId;
+                _repository.CreateObject(salesOrderDetail);
             }
-            else
-            {
-                return salesOrderDetail;
-            }
+            return salesOrderDetail;
         }
 
         public SalesOrderDetail CreateObject(int salesOrderId, int itemId, int quantity, decimal price, ISalesOrderService _salesOrderService, IItemService _itemService)
@@ -57,7 +54,6 @@ namespace Service.Service
             {
                 SalesOrderId = salesOrderId,
                 ItemId = itemId,
-                ContactId = 0,
                 Quantity = quantity,
                 Price = price
             };
@@ -79,35 +75,40 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesOrderDetail ConfirmObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService)
+        public SalesOrderDetail FinishObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService,
+                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(salesOrderDetail))
+            if (_validator.ValidFinishObject(salesOrderDetail))
             {
-                salesOrderDetail = _repository.ConfirmObject(salesOrderDetail);
+                salesOrderDetail = _repository.FinishObject(salesOrderDetail);
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
-                item.PendingDelivery += salesOrderDetail.Quantity;
-                _itemService.UpdateObject(item);
-                StockMutation sm = _stockMutationService.CreateStockMutationForSalesOrder(salesOrderDetail, item);
+                StockMutation stockMutation = _stockMutationService.CreateStockMutationForSalesOrder(salesOrderDetail, item);
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                // item.PendingDelivery += salesOrderDetail.Quantity;
             }
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail UnconfirmObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
+        public SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService,
+                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(salesOrderDetail, this, _deliveryOrderDetailService, _itemService))
+            if (_validator.ValidUnfinishObject(salesOrderDetail, this, _deliveryOrderDetailService, _itemService))
             {
-                salesOrderDetail = _repository.UnconfirmObject(salesOrderDetail);
+                salesOrderDetail = _repository.UnfinishObject(salesOrderDetail);
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
-                item.PendingDelivery -= salesOrderDetail.Quantity;
-                _itemService.UpdateObject(item);
-                IList<StockMutation> sm = _stockMutationService.SoftDeleteStockMutationForSalesOrder(salesOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForSalesOrder(salesOrderDetail, item);
+                foreach (var stockMutation in stockMutations)
+                {
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    //item.PendingDelivery -= salesOrderDetail.Quantity;
+                }
             }
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail FulfilObject(SalesOrderDetail salesOrderDetail)
+        public SalesOrderDetail DeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
-            return _repository.FulfilObject(salesOrderDetail);
+            return (salesOrderDetail = _validator.ValidDeliverObject(salesOrderDetail, _deliveryOrderDetailService) ? _repository.DeliverObject(salesOrderDetail) : salesOrderDetail);
         }
     }
 }

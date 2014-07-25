@@ -128,9 +128,6 @@ namespace TestValidation
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse1);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse2);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse3);
-                    d._recoveryOrderDetailService.RejectObject(d.recoveryODInHouse3, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
-                                                               d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
-                                                               d._warehouseItemService, d._barringService, d._stockMutationService);
                 };
 
                 it["validates_recoveryorderdetails"] = () =>
@@ -227,11 +224,16 @@ namespace TestValidation
                     {
                         before = () =>
                         {
+                            d.usedCoreBuilder1Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
+                            d.usedCoreBuilder2Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                             d.usedCoreBuilder3Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                             d.usedCoreBuilder4Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
+                            d.usedRollerBuilder1Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
+                            d.usedRollerBuilder2Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                             d.usedRollerBuilder3Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                             d.usedRollerBuilder4Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                             d.accessory1quantity = d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity;
+                            
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODCustomer1, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                    d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
                                                    d._itemService, d._warehouseItemService, d._barringService, d._stockMutationService);
@@ -247,17 +249,29 @@ namespace TestValidation
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODInHouse2, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
                                                                        d._itemService, d._warehouseItemService, d._barringService, d._stockMutationService);
+                            d._recoveryOrderDetailService.RejectObject(d.recoveryODInHouse3, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
+                                                                       d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
+                                                                       d._warehouseItemService, d._barringService, d._stockMutationService);
+
+                            d.usedCoreBuilder1Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
+                            d.usedCoreBuilder2Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                             d.usedCoreBuilder3Final = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                             d.usedCoreBuilder4Final = d._recoveryOrderDetailService.GetCore(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
+                            d.usedRollerBuilder1Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
+                            d.usedRollerBuilder2Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                             d.usedRollerBuilder3Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                             d.usedRollerBuilder4Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODCustomer3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
                         };
                         
                         it["validates_finish"] = () =>
                         {
-                            d.usedCoreBuilder3Final.should_be(d.usedCoreBuilder3Quantity);
-                            d.usedRollerBuilder3Final.should_be(d.usedRollerBuilder3Quantity + 1);
-                            d.usedCoreBuilder4Final.should_be(d.usedCoreBuilder4Quantity);
+                            d.usedCoreBuilder1Final.should_be(d.usedCoreBuilder1Quantity - 2);
+                            d.usedRollerBuilder1Final.should_be(d.usedRollerBuilder1Quantity + 2);
+                            d.usedCoreBuilder2Final.should_be(d.usedCoreBuilder2Quantity - 1);
+                            d.usedRollerBuilder2Final.should_be(d.usedRollerBuilder2Quantity); // ODInHouse3 rejected
+                            d.usedCoreBuilder3Final.should_be(d.usedCoreBuilder3Quantity - 2);
+                            d.usedRollerBuilder3Final.should_be(d.usedRollerBuilder3Quantity + 1); // ODCustomer2 rejected
+                            d.usedCoreBuilder4Final.should_be(d.usedCoreBuilder4Quantity - 1);
                             d.usedRollerBuilder4Final.should_be(d.usedRollerBuilder4Quantity + 1);
                             d.accessory1quantity.should_be(d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity + 1);
                         };

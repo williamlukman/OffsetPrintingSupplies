@@ -19,8 +19,10 @@ namespace Core.Interface.Service
         SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService);
         SalesOrderDetail SoftDeleteObject(SalesOrderDetail salesOrderDetail);
         bool DeleteObject(int Id);
-        SalesOrderDetail FinishObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService);
-        SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService);
-        SalesOrderDetail DeliverObject(SalesOrderDetail salesOrderDetail);
+        SalesOrderDetail FinishObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService,
+                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService,
+                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        SalesOrderDetail DeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
     }
 }

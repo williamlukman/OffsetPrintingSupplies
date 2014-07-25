@@ -40,8 +40,6 @@ namespace Core.Interface.Service
                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
-        void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
     }
 }

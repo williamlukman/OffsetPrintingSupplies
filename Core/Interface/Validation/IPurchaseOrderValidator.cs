@@ -12,8 +12,9 @@ namespace Core.Interface.Validation
     {
         PurchaseOrder VCustomer(PurchaseOrder purchaseOrder, ICustomerService _customerService);
         PurchaseOrder VPurchaseDate(PurchaseOrder purchaseOrder);
-        PurchaseOrder VIsConfirmed(PurchaseOrder purchaseOrder);
+        PurchaseOrder VHasNotBeenConfirmed(PurchaseOrder purchaseOrder);
         PurchaseOrder VHasPurchaseOrderDetails(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
+        PurchaseOrder VAllDetailsHaveBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
         PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
         PurchaseOrder VDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);

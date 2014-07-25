@@ -113,7 +113,7 @@ namespace Service.Service
                 IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForRollerWarehouseMutation(rollerWarehouseMutationDetail, warehouseItemFrom, warehouseItemTo);
                 foreach (var stockMutation in stockMutations)
                 {
-                    StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
             }
             return rollerWarehouseMutationDetail;
@@ -139,30 +139,11 @@ namespace Service.Service
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForRollerWarehouseMutation(rollerWarehouseMutationDetail, warehouseItemFrom, warehouseItemTo);
                 foreach (var stockMutation in stockMutations)
                 {
-                    ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
 
             }
             return rollerWarehouseMutationDetail;
         }
-
-        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
-        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
     }
 }

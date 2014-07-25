@@ -44,13 +44,13 @@ namespace Service.Service
 
         public PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
                                                      IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService,
-                                                     IItemService _itemService, IContactService _contactService)
+                                                     IItemService _itemService, ICustomerService _customerService)
         {
             purchaseReceivalDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseReceivalDetail, this, _purchaseReceivalService,
-                                        _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService))
+                                        _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService))
             {
-                purchaseReceivalDetail.ContactId = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId).ContactId;
+                purchaseReceivalDetail.CustomerId = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId).CustomerId;
                 return _repository.CreateObject(purchaseReceivalDetail);
             }
             else
@@ -61,25 +61,24 @@ namespace Service.Service
 
         public PurchaseReceivalDetail CreateObject(int purchaseReceivalId, int itemId, int quantity, int purchaseOrderDetailId,
                                                     IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
         {
             PurchaseReceivalDetail prd = new PurchaseReceivalDetail
             {
                 PurchaseReceivalId = purchaseReceivalId,
                 ItemId = itemId,
                 Quantity = quantity,
-                PurchaseOrderDetailId = purchaseOrderDetailId,
-                ContactId = 0
+                PurchaseOrderDetailId = purchaseOrderDetailId
             };
-            return this.CreateObject(prd, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
+            return this.CreateObject(prd, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
         }
 
 
         public PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail,
                                                     IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            return (_validator.ValidUpdateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService) ?
+            return (_validator.ValidUpdateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService) ?
                     _repository.UpdateObject(purchaseReceivalDetail) : purchaseReceivalDetail);
         }
 
@@ -93,34 +92,46 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PurchaseReceivalDetail ConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
+        public PurchaseReceivalDetail FinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                                   IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(purchaseReceivalDetail))
+            if (_validator.ValidFinishObject(purchaseReceivalDetail))
             {
-                purchaseReceivalDetail = _repository.ConfirmObject(purchaseReceivalDetail);
+                purchaseReceivalDetail = _repository.FinishObject(purchaseReceivalDetail);
+                PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
-                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
-                item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity, itemPrice);
-                item.PendingReceival -= purchaseReceivalDetail.Quantity;
-                item.Ready += purchaseReceivalDetail.Quantity;
-                _itemService.UpdateObject(item);
-                IList<StockMutation> sm = _stockMutationService.CreateStockMutationForPurchaseReceival(purchaseReceivalDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
+                foreach (var stockMutation in stockMutations)
+                {
+                    // decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
+                    // item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity, itemPrice);
+                    //item.PendingReceival -= purchaseReceivalDetail.Quantity;
+                    //item.Quantity += purchaseReceivalDetail.Quantity;
+                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
+        public PurchaseReceivalDetail UnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                                     IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(purchaseReceivalDetail, this, _itemService))
+            if (_validator.ValidUnfinishObject(purchaseReceivalDetail, this, _itemService))
             {
-                purchaseReceivalDetail = _repository.UnconfirmObject(purchaseReceivalDetail);
+                purchaseReceivalDetail = _repository.UnfinishObject(purchaseReceivalDetail);
+                PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
-                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
-                item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
-                item.PendingReceival += purchaseReceivalDetail.Quantity;
-                item.Ready -= purchaseReceivalDetail.Quantity;
-                _itemService.UpdateObject(item);
-                IList<StockMutation> sm = _stockMutationService.SoftDeleteStockMutationForPurchaseReceival(purchaseReceivalDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
+                foreach (var stockMutation in stockMutations)
+                {
+                    //decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
+                    //item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
+                    //item.PendingReceival += purchaseReceivalDetail.Quantity;
+                    //item.Quantity -= purchaseReceivalDetail.Quantity;
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
             }
             return purchaseReceivalDetail;
         }

@@ -38,6 +38,14 @@ namespace Validation.Validation
             {
                 warehouseItem.Errors.Add("Quantity", "Tidak boleh negatif");
             }
+            else if (warehouseItem.PendingDelivery < 0)
+            {
+                warehouseItem.Errors.Add("Generic", "Pending delivery tidak boleh negatif");
+            }
+            else if (warehouseItem.PendingReceival < 0)
+            {
+                warehouseItem.Errors.Add("Generic", "Pending receival tidak boleh negatif");
+            }
             return warehouseItem;
         }
 
@@ -78,6 +86,18 @@ namespace Validation.Validation
             return warehouseItem;
         }
 
+        public WarehouseItem VAdjustPendingReceival(WarehouseItem warehouseItem)
+        {
+            VNonNegativeQuantity(warehouseItem);
+            return warehouseItem;
+        }
+
+        public WarehouseItem VAdjustPendingDelivery(WarehouseItem warehouseItem)
+        {
+            VNonNegativeQuantity(warehouseItem);
+            return warehouseItem;
+        }
+
         public bool ValidCreateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService)
         {
             VCreateObject(warehouseItem, _warehouseService, _itemService);
@@ -104,7 +124,21 @@ namespace Validation.Validation
             VAdjustQuantity(warehouseItem);
             return isValid(warehouseItem);
         }
-        
+
+        public bool ValidAdjustPendingDelivery(WarehouseItem warehouseItem)
+        {
+            warehouseItem.Errors.Clear();
+            VAdjustPendingDelivery(warehouseItem);
+            return isValid(warehouseItem);
+        }
+
+        public bool ValidAdjustPendingReceival(WarehouseItem warehouseItem)
+        {
+            warehouseItem.Errors.Clear();
+            VAdjustPendingReceival(warehouseItem);
+            return isValid(warehouseItem);
+        }
+
         public bool isValid(WarehouseItem obj)
         {
             bool isValid = !obj.Errors.Any();

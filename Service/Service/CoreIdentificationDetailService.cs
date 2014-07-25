@@ -143,7 +143,7 @@ namespace Service.Service
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
                     WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
                     StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
-                    StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
                 _repository.FinishObject(coreIdentificationDetail);
             }
@@ -168,7 +168,7 @@ namespace Service.Service
                     IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
-                        ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                        _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                     }
                 }
                 _repository.UnfinishObject(coreIdentificationDetail);
@@ -200,29 +200,9 @@ namespace Service.Service
             return coreIdentificationDetail;
         }
 
-        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, Quantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
-        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int reverseQuantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            _itemService.AdjustQuantity(item, reverseQuantity);
-            _warehouseItemService.AdjustQuantity(warehouseItem, reverseQuantity);
-        }
-
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
         }
-
-
     }
 }

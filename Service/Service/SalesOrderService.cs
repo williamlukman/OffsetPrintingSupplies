@@ -36,30 +36,30 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<SalesOrder> GetObjectsByContactId(int contactId)
+        public IList<SalesOrder> GetObjectsByCustomerId(int customerId)
         {
-            return _repository.GetObjectsByContactId(contactId);
+            return _repository.GetObjectsByCustomerId(customerId);
         }
         
-        public SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService)
+        public SalesOrder CreateObject(SalesOrder salesOrder, ICustomerService _customerService)
         {
             salesOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(salesOrder, _contactService) ? _repository.CreateObject(salesOrder) : salesOrder);
+            return (_validator.ValidCreateObject(salesOrder, _customerService) ? _repository.CreateObject(salesOrder) : salesOrder);
         }
 
-        public SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService)
+        public SalesOrder CreateObject(int customerId, DateTime salesDate, ICustomerService _customerService)
         {
             SalesOrder so = new SalesOrder
             {
-                ContactId = contactId,
+                CustomerId = customerId,
                 SalesDate = salesDate
             };
-            return this.CreateObject(so, _contactService);
+            return this.CreateObject(so, _customerService);
         }
 
-        public SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService)
+        public SalesOrder UpdateObject(SalesOrder salesOrder, ICustomerService _customerService)
         {
-            return (_validator.ValidUpdateObject(salesOrder, _contactService) ? _repository.UpdateObject(salesOrder) : salesOrder);
+            return (_validator.ValidUpdateObject(salesOrder, _customerService) ? _repository.UpdateObject(salesOrder) : salesOrder);
         }
 
         public SalesOrder SoftDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
@@ -72,18 +72,12 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesOrder ConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _sods,
+        public SalesOrder ConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,
                                         IStockMutationService _stockMutationService, IItemService _itemService)
         {
-            if (_validator.ValidConfirmObject(salesOrder, _sods))
+            if (_validator.ValidConfirmObject(salesOrder, _salesOrderDetailService))
             {
                 _repository.ConfirmObject(salesOrder);
-                IList<SalesOrderDetail> details = _sods.GetObjectsBySalesOrderId(salesOrder.Id);
-                foreach (var detail in details)
-                {
-                    detail.ConfirmedAt = salesOrder.ConfirmedAt;
-                    _sods.ConfirmObject(detail, _stockMutationService, _itemService);
-                }
             }
             return salesOrder;
         }
@@ -94,11 +88,15 @@ namespace Service.Service
             if (_validator.ValidUnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderDetailService, _itemService))
             {
                 _repository.UnconfirmObject(salesOrder);
-                IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
-                foreach (var detail in details)
-                {
-                    _salesOrderDetailService.UnconfirmObject(detail, _deliveryOrderDetailService, _stockMutationService, _itemService);
-                }
+            }
+            return salesOrder;
+        }
+
+        public SalesOrder CompleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
+        {
+            if (_validator.ValidCompleteObject(salesOrder, _salesOrderDetailService))
+            {
+                _repository.CompleteObject(salesOrder);
             }
             return salesOrder;
         }

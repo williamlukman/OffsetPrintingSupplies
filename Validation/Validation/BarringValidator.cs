@@ -69,6 +69,14 @@ namespace Validation.Validation
             {
                 barring.Errors.Add("Quantity", "Tidak boleh negatif");
             }
+            else if (barring.PendingDelivery < 0)
+            {
+                barring.Errors.Add("Generic", "Pending delivery tidak boleh negatif");
+            }
+            else if (barring.PendingReceival < 0)
+            {
+                barring.Errors.Add("Generic", "Pending receival tidak boleh negatif");
+            }
             return barring;
         }
 
@@ -194,6 +202,18 @@ namespace Validation.Validation
             return barring;
         }
 
+        public Barring VAdjustPendingReceival(Barring barring)
+        {
+            VNonNegativeQuantity(barring);
+            return barring;
+        }
+
+        public Barring VAdjustPendingDelivery(Barring barring)
+        {
+            VNonNegativeQuantity(barring);
+            return barring;
+        }
+
         public Barring VAddLeftBar(Barring barring, IItemService _itemService)
         {
             VHasNoBar(barring, (int) barring.LeftBarItemId, _itemService);
@@ -244,6 +264,20 @@ namespace Validation.Validation
         {
             barring.Errors.Clear();
             VAdjustQuantity(barring);
+            return isValid(barring);
+        }
+
+        public bool ValidAdjustPendingReceival(Barring barring)
+        {
+            barring.Errors.Clear();
+            VAdjustPendingReceival(barring);
+            return isValid(barring);
+        }
+
+        public bool ValidAdjustPendingDelivery(Barring barring)
+        {
+            barring.Errors.Clear();
+            VAdjustPendingDelivery(barring);
             return isValid(barring);
         }
 

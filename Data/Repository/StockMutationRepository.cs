@@ -23,6 +23,11 @@ namespace Data.Repository
             return FindAll(x => !x.IsDeleted).ToList();
         }
 
+        public IList<StockMutation> GetObjectsByItemId(int itemId)
+        {
+            return FindAll(x => x.ItemId == itemId && !x.IsDeleted).ToList();
+        }
+
         public IList<StockMutation> GetObjectsByWarehouseId(int warehouseId)
         {
             return FindAll(x => x.WarehouseId == warehouseId && !x.IsDeleted).ToList();
@@ -40,9 +45,15 @@ namespace Data.Repository
             return stockMutation;
         }
 
-        public IList<StockMutation> GetObjectsBySourceDocumentDetail(int warehouseItemId, string SourceDocumentDetailType, int SourceDocumentDetailId)
+        public IList<StockMutation> GetObjectsBySourceDocumentDetailForWarehouseItem(int warehouseItemId, string SourceDocumentDetailType, int SourceDocumentDetailId)
         {
             return FindAll(x => x.WarehouseItemId == warehouseItemId && x.SourceDocumentDetailType == SourceDocumentDetailType
+                                && x.SourceDocumentDetailId == SourceDocumentDetailId && !x.IsDeleted).ToList();
+        }
+
+        public IList<StockMutation> GetObjectsBySourceDocumentDetailForItem(int itemId, string SourceDocumentDetailType, int SourceDocumentDetailId)
+        {
+            return FindAll(x => x.ItemId == itemId && x.SourceDocumentDetailType == SourceDocumentDetailType
                                 && x.SourceDocumentDetailId == SourceDocumentDetailId && !x.IsDeleted).ToList();
         }
 

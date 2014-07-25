@@ -33,6 +33,8 @@ namespace TestValidation
         public IRollerTypeService _rollerTypeService;
         public IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService;
         public IRollerWarehouseMutationService _rollerWarehouseMutationService;
+        public IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        public IStockAdjustmentService _stockAdjustmentService;
         public IStockMutationService _stockMutationService;
         public IUoMService _uomService;
         public IWarehouseItemService _warehouseItemService;
@@ -71,6 +73,9 @@ namespace TestValidation
         public RollerWarehouseMutation rollerWarehouseMutationCustomer, rollerWarehouseMutationInHouse;
         public RollerWarehouseMutationDetail rwmDetailCustomer1, rwmDetailCustomer2, rwmDetailCustomer3,
                                              rwmDetailInHouse1, rwmDetailInHouse2, rwmDetailInHouse3;
+        public StockAdjustment stockAdjustment;
+        public StockAdjustmentDetail stockAD1, stockAD2;
+
         // extended variable
         public int usedCoreBuilderQuantity, usedCoreBuilder1Quantity, usedCoreBuilder2Quantity, usedCoreBuilder3Quantity, usedCoreBuilder4Quantity;
         public int usedRollerBuilderQuantity, usedRollerBuilder1Quantity, usedRollerBuilder2Quantity, usedRollerBuilder3Quantity, usedRollerBuilder4Quantity;
@@ -97,6 +102,8 @@ namespace TestValidation
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
             _rollerWarehouseMutationDetailService = new RollerWarehouseMutationDetailService(new RollerWarehouseMutationDetailRepository(), new RollerWarehouseMutationDetailValidator());
             _rollerWarehouseMutationService = new RollerWarehouseMutationService(new RollerWarehouseMutationRepository(), new RollerWarehouseMutationValidator());
+            _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+            _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
@@ -142,6 +149,8 @@ namespace TestValidation
             PopulateCoreIdentifications();
             PopulateRecoveryOrders();
             PopulateRecoveryOrders2();
+            PopulateStockAdjustment();
+            PopulateRecoveryOrders3();
             PopulateCoreIdentifications2();
             PopulateRollerWarehouseMutation();
             PopulateBarringOrders();
@@ -730,7 +739,7 @@ namespace TestValidation
             coreIdentificationCustomer = _coreIdentificationService.ConfirmObject(coreIdentificationCustomer, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
             coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
 
-            coreIdentificationDetail = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIdentificationDetail = _coreIdentificationDetailService.FinishObject(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             coreIDCustomer1 = _coreIdentificationDetailService.FinishObject(coreIDCustomer1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             coreIDCustomer2 = _coreIdentificationDetailService.FinishObject(coreIDCustomer2, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             coreIDCustomer3 = _coreIdentificationDetailService.FinishObject(coreIDCustomer3, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
@@ -920,6 +929,39 @@ namespace TestValidation
             _recoveryOrderDetailService.RejectObject(recoveryODInHouse3, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
                                                        _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
                                                        _warehouseItemService, _barringService, _stockMutationService);
+        }
+
+        public void PopulateStockAdjustment()
+        {
+            stockAdjustment = new StockAdjustment()
+            {
+                WarehouseId = movingWarehouse.Id,
+                AdjustmentDate = DateTime.Now
+            };
+            stockAdjustment = _stockAdjustmentService.CreateObject(stockAdjustment, _warehouseService);
+
+            stockAD1 = new StockAdjustmentDetail()
+            {
+                ItemId = coreBuilder2.UsedCoreItemId,
+                Quantity = 1,
+                StockAdjustmentId = stockAdjustment.Id
+            };
+            stockAD1 = _stockAdjustmentDetailService.CreateObject(stockAD1, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            stockAD2 = new StockAdjustmentDetail()
+            {
+                ItemId = coreBuilder3.UsedCoreItemId,
+                Quantity = 1,
+                StockAdjustmentId = stockAdjustment.Id
+            };
+            stockAD2 = _stockAdjustmentDetailService.CreateObject(stockAD2, _stockAdjustmentService, _itemService, _warehouseItemService);
+        }
+
+        public void PopulateRecoveryOrders3()
+        {
+            _stockAdjustmentService.ConfirmObject(stockAdjustment, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            _stockAdjustmentDetailService.FinishObject(stockAD1, _stockAdjustmentService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            _stockAdjustmentDetailService.FinishObject(stockAD2, _stockAdjustmentService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
 
             recoveryOrderCustomer2 = new RecoveryOrder()
             {

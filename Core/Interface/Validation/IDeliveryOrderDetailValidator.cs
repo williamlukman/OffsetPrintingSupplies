@@ -19,7 +19,8 @@ namespace Core.Interface.Validation
         DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);
         DeliveryOrderDetail VUniqueSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetails, IItemService _itemService);
-        DeliveryOrderDetail VIsConfirmed(DeliveryOrderDetail deliveryOrderDetail);
+        DeliveryOrderDetail VHasBeenFinished(DeliveryOrderDetail deliveryOrderDetail);
+        DeliveryOrderDetail VHasNotBeenFinished(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetails, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _sos, IItemService _itemService, ICustomerService _customerService);
         DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetails, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _sos, IItemService _itemService, ICustomerService _customerService);
         DeliveryOrderDetail VDeleteObject(DeliveryOrderDetail deliveryOrderDetail);

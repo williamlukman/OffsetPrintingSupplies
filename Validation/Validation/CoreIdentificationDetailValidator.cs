@@ -277,15 +277,19 @@ namespace Validation.Validation
             {
                 return coreIdentificationDetail;
             }
+            bool IsFinished = false;
             foreach (var detail in details)
             {
-                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(detail.RecoveryOrderId);
-                if (recoveryOrder.IsConfirmed)
+                if (detail.IsFinished)
                 {
-                    coreIdentificationDetail.Errors.Add("Generic", "Job sudah terkonfirmasi");
-                    return coreIdentificationDetail;
+                    IsFinished = true;
                 }
             }
+            if (!IsFinished)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Belum bisa di unset Job Schedule");
+            }
+
             return coreIdentificationDetail;
         }
 

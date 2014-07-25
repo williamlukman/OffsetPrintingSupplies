@@ -116,6 +116,18 @@ namespace Service.Service
             return (item = _validator.ValidAdjustQuantity(item) ? _repository.UpdateObject(item) : item);
         }
 
+        public Item AdjustPendingReceival(Item item, int quantity)
+        {
+            item.PendingReceival += quantity;
+            return (item = _validator.ValidAdjustPendingReceival(item) ? _repository.UpdateObject(item) : item);
+        }
+
+        public Item AdjustPendingDelivery(Item item, int quantity)
+        {
+            item.PendingDelivery += quantity;
+            return (item = _validator.ValidAdjustPendingDelivery(item) ? _repository.UpdateObject(item) : item);
+        }
+
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);

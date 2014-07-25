@@ -19,8 +19,10 @@ namespace Core.Interface.Service
         PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
         PurchaseOrderDetail SoftDeleteObject(PurchaseOrderDetail purchaseOrderDetail);
         bool DeleteObject(int Id);
-        PurchaseOrderDetail FinishObject(PurchaseOrderDetail purchaseOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService);
-        PurchaseOrderDetail UnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService, IItemService _itemService);
+        PurchaseOrderDetail FinishObject(PurchaseOrderDetail purchaseOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService,
+                                         IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        PurchaseOrderDetail UnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService,
+                                           IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         PurchaseOrderDetail ReceiveObject(PurchaseOrderDetail purchaseOrderDetail);
     }
 }

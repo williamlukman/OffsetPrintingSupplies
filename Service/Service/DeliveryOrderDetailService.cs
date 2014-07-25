@@ -43,41 +43,37 @@ namespace Service.Service
         }
 
         public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail, 
-            IDeliveryOrderService _dos, ISalesOrderDetailService _sods,
-            ISalesOrderService _sos, IItemService _is, IContactService _cs)
+                                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
+                                                ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
             deliveryOrderDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(deliveryOrderDetail, this, _dos, _sods, _sos, _is, _cs))
+            if (_validator.ValidCreateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService))
             { 
-                deliveryOrderDetail.ContactId = _dos.GetObjectById(deliveryOrderDetail.DeliveryOrderId).ContactId;
-                return _repository.CreateObject(deliveryOrderDetail);
+                deliveryOrderDetail.CustomerId = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId).CustomerId;
+                _repository.CreateObject(deliveryOrderDetail);
             }
-            else
-            {
-                return deliveryOrderDetail;
-            }
+            return deliveryOrderDetail;
         }
 
         public DeliveryOrderDetail CreateObject(int deliveryOrderId, int itemId, int quantity, int salesOrderDetailId,
-            IDeliveryOrderService _dos, ISalesOrderDetailService _sods,
-            ISalesOrderService _sos, IItemService _is, IContactService _cs)
+                                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
+                                                ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            DeliveryOrderDetail dod = new DeliveryOrderDetail
+            DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail
             {
                 DeliveryOrderId = deliveryOrderId,
                 ItemId = itemId,
                 Quantity = quantity,
-                ContactId = 0,
                 SalesOrderDetailId = salesOrderDetailId
             };
-            return this.CreateObject(dod, _dos, _sods, _sos, _is, _cs);
+            return this.CreateObject(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
         }
 
         public DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail,
-            IDeliveryOrderService _dos, ISalesOrderDetailService _sods,
-            ISalesOrderService _sos, IItemService _is, IContactService _cs)
+                                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
+                                                ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
-            return (_validator.ValidUpdateObject(deliveryOrderDetail, this, _dos, _sods, _sos, _is, _cs) ?
+            return (_validator.ValidUpdateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService) ?
                     _repository.UpdateObject(deliveryOrderDetail) : deliveryOrderDetail);
         }
 
@@ -91,30 +87,47 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService)
+        public DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IStockMutationService _stockMutationService,
+                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidConfirmObject(deliveryOrderDetail, _itemService))
+            if (_validator.ValidFinishObject(deliveryOrderDetail, _itemService))
             {
-                deliveryOrderDetail = _repository.ConfirmObject(deliveryOrderDetail);
+                deliveryOrderDetail = _repository.FinishObject(deliveryOrderDetail);
+                DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+                // TODO
+                // Check complete delivery order
+    
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.Warehouse.Id, deliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
-                item.PendingDelivery -= deliveryOrderDetail.Quantity;
-                item.Ready -= deliveryOrderDetail.Quantity;
-                _itemService.UpdateObject(item);
-                IList<StockMutation> sm = _stockMutationService.CreateStockMutationForDeliveryOrder(deliveryOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
+                foreach (var stockMutation in stockMutations)
+                {
+                    //item.PendingDelivery -= deliveryOrderDetail.Quantity;
+                    //item.Quantity -= deliveryOrderDetail.Quantity;
+                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
+                // TODO
+                // SalesOrderDetail.IsDelivered = true
             }
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IStockMutationService _stockMutationService, IItemService _itemService)
+        public DeliveryOrderDetail UnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IStockMutationService _stockMutationService,
+                                                  IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(deliveryOrderDetail, this, _itemService))
+            if (_validator.ValidUnfinishObject(deliveryOrderDetail, this, _itemService))
             {
-                deliveryOrderDetail = _repository.UnconfirmObject(deliveryOrderDetail);
+                deliveryOrderDetail = _repository.UnfinishObject(deliveryOrderDetail);
+                DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.WarehouseId, deliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
-                item.PendingDelivery += deliveryOrderDetail.Quantity;
-                item.Ready += deliveryOrderDetail.Quantity;
-                _itemService.UpdateObject(item);
-                IList<StockMutation> sm = _stockMutationService.SoftDeleteStockMutationForDeliveryOrder(deliveryOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
+                foreach (var stockMutation in stockMutations)
+                {
+                    //item.PendingDelivery += deliveryOrderDetail.Quantity;
+                    //item.Quantity += deliveryOrderDetail.Quantity;
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                }
             }
             return deliveryOrderDetail;
         }

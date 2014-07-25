@@ -30,7 +30,6 @@ namespace Core.DomainModel
         public virtual Customer Customer { get; set; }
         public virtual Item Item { get; set; }
         public virtual SalesOrder SalesOrder { get; set; }
-        public virtual DeliveryOrderDetail DeliveryOrderDetail { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }

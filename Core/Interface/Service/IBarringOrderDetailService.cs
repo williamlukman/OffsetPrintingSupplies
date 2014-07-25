@@ -20,8 +20,6 @@ namespace Core.Interface.Service
         BarringOrderDetail CreateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         BarringOrderDetail UpdateObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IBarringService _barringService);
         BarringOrderDetail SoftDeleteObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
-        BarringOrderDetail SetJobScheduled(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail UnsetJobScheduled(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
         BarringOrderDetail RemoveLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
         BarringOrderDetail AddRightBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
@@ -43,8 +41,6 @@ namespace Core.Interface.Service
                                         IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                           IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
-        void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         bool DeleteObject(int Id);
     }
 }

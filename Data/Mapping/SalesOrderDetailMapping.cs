@@ -19,9 +19,6 @@ namespace Data.Mapping
             HasRequired(sod => sod.SalesOrder)
                 .WithMany(po => po.SalesOrderDetails)
                 .HasForeignKey(sod => sod.SalesOrderId);
-            HasOptional(sod => sod.DeliveryOrderDetail)
-                .WithOptionalPrincipal(prd => prd.SalesOrderDetail)
-                .Map(prd => prd.MapKey("DeliveryOrderDetailId"));
             Ignore(sod => sod.Errors);
         }
     }

@@ -19,8 +19,9 @@ namespace Data.Mapping
             HasRequired(prd => prd.PurchaseReceival)
                 .WithMany(pr => pr.PurchaseReceivalDetails)
                 .HasForeignKey(prd => prd.PurchaseReceivalId);
-            HasOptional(prd => prd.PurchaseOrderDetail)
-                .WithOptionalDependent(pod => pod.PurchaseReceivalDetail);
+            HasRequired(prd => prd.PurchaseOrderDetail)
+                .WithMany()
+                .HasForeignKey(prd => prd.PurchaseOrderDetailId);
             Ignore(pod => pod.Errors);
         }
     }

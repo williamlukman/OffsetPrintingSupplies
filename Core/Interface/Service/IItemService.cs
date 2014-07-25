@@ -23,6 +23,8 @@ namespace Core.Interface.Service
         Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService);
         Item SoftDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService);
         Item AdjustQuantity(Item item, int quantity);
+        Item AdjustPendingReceival(Item item, int quantity);
+        Item AdjustPendingDelivery(Item item, int quantity);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Item item);
     }

@@ -77,11 +77,6 @@ namespace Service.Service
         {
             if (_validator.ValidConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService))
             {
-                IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-                foreach (var detail in details)
-                {
-                    _barringOrderDetailService.SetJobScheduled(detail);
-                }
                 _repository.ConfirmObject(barringOrder);
             }
             return barringOrder;
@@ -91,11 +86,6 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(barringOrder, _barringOrderDetailService))
             {
-                IList<BarringOrderDetail> details = _barringOrderDetailService.GetObjectsByBarringOrderId(barringOrder.Id);
-                foreach (var detail in details)
-                {
-                    _barringOrderDetailService.UnsetJobScheduled(detail);
-                }
                 _repository.UnconfirmObject(barringOrder);
             }
             return barringOrder;

@@ -23,6 +23,8 @@ namespace Core.Interface.Service
         WarehouseItem UpdateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         WarehouseItem SoftDeleteObject(WarehouseItem warehouseItem);
         WarehouseItem AdjustQuantity(WarehouseItem warehouseItem, int quantity);
+        WarehouseItem AdjustPendingDelivery(WarehouseItem warehouseItem, int quantity);
+        WarehouseItem AdjustPendingReceival(WarehouseItem warehouseItem, int quantity);
         bool DeleteObject(int Id);
     }
 }

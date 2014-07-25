@@ -21,6 +21,8 @@ namespace Core.DomainModel
         public string Category { get; set; }
         public int UoMId { get; set; }
         public int Quantity { get; set; }
+        public int PendingDelivery { get; set; }
+        public int PendingReceival { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

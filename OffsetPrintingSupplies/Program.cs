@@ -23,6 +23,7 @@ namespace OffsetPrintingSupplies
             {
                 db.DeleteAllTables();
                 DataBuilder d = new DataBuilder();
+                
                 d.PopulateData();
 
                 if (d.itemCompound.Errors.Count() > 0) { Console.WriteLine("Error"); };
@@ -56,7 +57,6 @@ namespace OffsetPrintingSupplies
                 if (d.recoveryODInHouse2.Errors.Count() > 0) { Console.WriteLine("Error"); };
                 if (d.recoveryODInHouse3.Errors.Count() > 0) { Console.WriteLine("Error"); };
                 
-                Console.WriteLine(d.barringOrderCustomer.IsCompleted);
 
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();

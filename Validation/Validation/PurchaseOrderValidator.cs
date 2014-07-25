@@ -7,151 +7,181 @@ using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
-using Core.Constant;
+using Core.Constants;
 
 namespace Validation.Validation
 {
     public class PurchaseOrderValidator : IPurchaseOrderValidator
     {
-        public PurchaseOrder VContact(PurchaseOrder po, IContactService _cs)
+        public PurchaseOrder VCustomer(PurchaseOrder purchaseOrder, ICustomerService _customerService)
         {
-            Contact c = _cs.GetObjectById(po.ContactId);
+            Customer c = _customerService.GetObjectById(purchaseOrder.CustomerId);
             if (c == null)
             {
-                po.Errors.Add("Contact", "Tidak boleh tidak ada");
+                purchaseOrder.Errors.Add("Customer", "Tidak boleh tidak ada");
             }
-            return po;
+            return purchaseOrder;
         }
 
-        public PurchaseOrder VPurchaseDate(PurchaseOrder po)
+        public PurchaseOrder VPurchaseDate(PurchaseOrder purchaseOrder)
         {
             /* purchaseDate is never null
-            if (po.PurchaseDate == null)
+            if (purchaseOrder.PurchaseDate == null)
             {
-                po.Errors.Add("PurchaseDate", "Tidak boleh tidak ada");
+                purchaseOrder.Errors.Add("PurchaseDate", "Tidak boleh tidak ada");
             }
             */
-            return po;
+            return purchaseOrder;
         }
 
-        public PurchaseOrder VIsConfirmed(PurchaseOrder po)
+        public PurchaseOrder VHasNotBeenConfirmed(PurchaseOrder purchaseOrder)
         {
-            if (po.IsConfirmed)
+            if (purchaseOrder.IsConfirmed)
             {
-                po.Errors.Add("PurchaseOrder", "Tidak boleh sudah dikonfirmasi");
+                purchaseOrder.Errors.Add("PurchaseOrder", "Tidak boleh sudah dikonfirmasi");
             }
-            return po;
+            return purchaseOrder;
         }
 
-        public PurchaseOrder VHasPurchaseOrderDetails(PurchaseOrder po, IPurchaseOrderDetailService _pods)
+        public PurchaseOrder VHasPurchaseOrderDetails(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            IList<PurchaseOrderDetail> details = _pods.GetObjectsByPurchaseOrderId(po.Id);
+            IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
             if (!details.Any())
             {
-                po.Errors.Add("PurchaseOrder", "Tidak boleh memilik Purchase Order Details");
+                purchaseOrder.Errors.Add("PurchaseOrder", "Tidak boleh memilik Purchase Order Details");
             }
-            return po;
+            return purchaseOrder;
         }
 
-        public PurchaseOrder VCreateObject(PurchaseOrder po, IContactService _cs)
+        public PurchaseOrder VAllDetailsHaveBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            VContact(po, _cs);
-            if (!isValid(po)) { return po; }
-            VPurchaseDate(po);
-            return po;
-        }
-
-        public PurchaseOrder VUpdateObject(PurchaseOrder po, IContactService _cs)
-        {
-            VContact(po, _cs);
-            if (!isValid(po)) { return po; }
-            VPurchaseDate(po);
-            if (!isValid(po)) { return po; }
-            VIsConfirmed(po);
-            return po;
-        }
-
-        public PurchaseOrder VDeleteObject(PurchaseOrder po, IPurchaseOrderDetailService _pods)
-        {
-            VIsConfirmed(po);
-            return po;
-        }
-
-        public PurchaseOrder VConfirmObject(PurchaseOrder po, IPurchaseOrderDetailService _pods)
-        {
-            VIsConfirmed(po);
-            if (!isValid(po)) { return po; }
-            VHasPurchaseOrderDetails(po, _pods);
-            if (isValid(po))
+            IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
+            foreach(var detail in details)
             {
-                IList<PurchaseOrderDetail> details = _pods.GetObjectsByPurchaseOrderId(po.Id);
+                if (!detail.IsFinished)
+                {
+                    purchaseOrder.Errors.Add("Generic", "Purchase Order Detail belum selesai");
+                    return purchaseOrder;
+                }
+            }
+            return purchaseOrder;
+        }
+
+        public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        {
+            VCustomer(purchaseOrder, _customerService);
+            if (!isValid(purchaseOrder)) { return purchaseOrder; }
+            VPurchaseDate(purchaseOrder);
+            return purchaseOrder;
+        }
+
+        public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        {
+            VCreateObject(purchaseOrder, _customerService);
+            if (!isValid(purchaseOrder)) { return purchaseOrder; }
+            VHasNotBeenConfirmed(purchaseOrder);
+            return purchaseOrder;
+        }
+
+        public PurchaseOrder VDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            VHasNotBeenConfirmed(purchaseOrder);
+            return purchaseOrder;
+        }
+
+        public PurchaseOrder VConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            VHasNotBeenConfirmed(purchaseOrder);
+            if (!isValid(purchaseOrder)) { return purchaseOrder; }
+            VHasPurchaseOrderDetails(purchaseOrder, _purchaseOrderDetailService);
+            
+            /*
+            if (isValid(purchaseOrder))
+            {
+                IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
                 IPurchaseOrderDetailValidator detailvalidator = new PurchaseOrderDetailValidator();
                 foreach (var detail in details)
                 {
                     detailvalidator.VConfirmObject(detail);
                     foreach (var error in detail.Errors)
                     {
-                        po.Errors.Add(error.Key, error.Value);
+                        purchaseOrder.Errors.Add(error.Key, error.Value);
                     }
-                    if (!isValid(po)) { return po; }
+                    if (!isValid(purchaseOrder)) { return purchaseOrder; }
                 }
             }
-            return po;
+            */
+            return purchaseOrder;
         }
 
-        public PurchaseOrder VUnconfirmObject(PurchaseOrder po, IPurchaseOrderDetailService _pods, IPurchaseReceivalDetailService _prds, IItemService _is)
+        public PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
-            if (isValid(po))
+            // TODO
+            /*
+            if (isValid(purchaseOrder))
             {
-                IList<PurchaseOrderDetail> details = _pods.GetObjectsByPurchaseOrderId(po.Id);
+                IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
                 foreach (var detail in details)
                 {
-                    if (!_pods.GetValidator().ValidUnconfirmObject(detail, _pods, _prds, _is))
+                    if (!_purchaseOrderDetailService.GetValidator().ValidUnconfirmObject(detail, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService))
                     {
                         foreach (var error in detail.Errors)
                         {
-                            po.Errors.Add(error.Key, error.Value);
+                            purchaseOrder.Errors.Add(error.Key, error.Value);
                         }
-                        if (!isValid(po)) { return po; }
+                        if (!isValid(purchaseOrder)) { return purchaseOrder; }
                     }
                 }
             }
-
-            return po;
+            */
+            return purchaseOrder;
         }
 
-        public bool ValidCreateObject(PurchaseOrder po, IContactService _cs)
+        public PurchaseOrder VCompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            VCreateObject(po, _cs);
-            return isValid(po);
+            VAllDetailsHaveBeenFinished(purchaseOrder, _purchaseOrderDetailService);
+            return purchaseOrder;
         }
 
-        public bool ValidUpdateObject(PurchaseOrder po, IContactService _cs)
+        public bool ValidCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
         {
-            po.Errors.Clear();
-            VUpdateObject(po, _cs);
-            return isValid(po);
+            VCreateObject(purchaseOrder, _customerService);
+            return isValid(purchaseOrder);
         }
 
-        public bool ValidDeleteObject(PurchaseOrder po, IPurchaseOrderDetailService _pods)
+        public bool ValidUpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
         {
-            po.Errors.Clear();
-            VDeleteObject(po, _pods);
-            return isValid(po);
+            purchaseOrder.Errors.Clear();
+            VUpdateObject(purchaseOrder, _customerService);
+            return isValid(purchaseOrder);
         }
 
-        public bool ValidConfirmObject(PurchaseOrder po, IPurchaseOrderDetailService _pods)
+        public bool ValidDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            po.Errors.Clear();
-            VConfirmObject(po, _pods);
-            return isValid(po);
+            purchaseOrder.Errors.Clear();
+            VDeleteObject(purchaseOrder, _purchaseOrderDetailService);
+            return isValid(purchaseOrder);
         }
 
-        public bool ValidUnconfirmObject(PurchaseOrder po, IPurchaseOrderDetailService _pods, IPurchaseReceivalDetailService _prds, IItemService _is)
+        public bool ValidConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            po.Errors.Clear();
-            VUnconfirmObject(po, _pods, _prds, _is);
-            return isValid(po);
+            purchaseOrder.Errors.Clear();
+            VConfirmObject(purchaseOrder, _purchaseOrderDetailService);
+            return isValid(purchaseOrder);
+        }
+
+        public bool ValidUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        {
+            purchaseOrder.Errors.Clear();
+            VUnconfirmObject(purchaseOrder, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService);
+            return isValid(purchaseOrder);
+        }
+
+        public bool ValidCompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            purchaseOrder.Errors.Clear();
+            VCompleteObject(purchaseOrder, _purchaseOrderDetailService);
+            return isValid(purchaseOrder);
         }
 
         public bool isValid(PurchaseOrder obj)

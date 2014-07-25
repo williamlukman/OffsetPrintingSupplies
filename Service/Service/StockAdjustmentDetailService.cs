@@ -82,10 +82,14 @@ namespace Service.Service
             {
                 stockAdjustmentDetail = _repository.FinishObject(stockAdjustmentDetail);
                 StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
+                if (_stockAdjustmentService.GetValidator().ValidCompleteObject(stockAdjustment, this))
+                {
+                    _stockAdjustmentService.CompleteObject(stockAdjustment, this);
+                }
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
-                StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
             }
             return stockAdjustmentDetail;
         }
@@ -101,50 +105,10 @@ namespace Service.Service
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
-                    ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
             }
             return stockAdjustmentDetail;
-        }
-
-        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : ((-1) * stockMutation.Quantity);
-            // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
-            if (barring == null)
-            {
-                _itemService.AdjustQuantity(item, Quantity);
-                // item.AvgCost = _barringService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-            }
-            else
-            {
-                _barringService.AdjustQuantity(barring, Quantity);
-                // barring.AvgCost = _barringService.CalculateAvgCost(barring, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-            }
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
-        }
-
-        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
-        {
-            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : ((-1) * stockMutation.Quantity);
-            // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            Item item = _itemService.GetObjectById(warehouseItem.ItemId);
-            Barring barring = _barringService.GetObjectById(warehouseItem.ItemId);
-            if (barring == null)
-            {
-                _itemService.AdjustQuantity(item, Quantity);
-                // item.AvgCost = _barringService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-            }
-            else
-            {
-                _barringService.AdjustQuantity(barring, Quantity);
-                // barring.AvgCost = _barringService.CalculateAvgCost(barring, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-            }
-            _warehouseItemService.AdjustQuantity(warehouseItem, Quantity);
         }
     }
 }

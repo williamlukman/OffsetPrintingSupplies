@@ -32,6 +32,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<StockMutation> GetObjectsByItemId(int itemId)
+        {
+            return _repository.GetObjectsByItemId(itemId);
+        }
+
         public IList<StockMutation> GetObjectsByWarehouseId(int warehouseId)
         {
             return _repository.GetObjectsByWarehouseId(warehouseId);
@@ -47,23 +52,28 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<StockMutation> GetObjectsBySourceDocumentDetail(int itemId, string SourceDocumentDetailType, int SourceDocumentDetailId)
+        public IList<StockMutation> GetObjectsBySourceDocumentDetailForWarehouseItem(int warehouseItemId, string SourceDocumentDetailType, int SourceDocumentDetailId)
         {
-            return _repository.GetObjectsBySourceDocumentDetail(itemId, SourceDocumentDetailType, SourceDocumentDetailId);
+            return _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItemId, SourceDocumentDetailType, SourceDocumentDetailId);
         }
 
-        public StockMutation CreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        public IList<StockMutation> GetObjectsBySourceDocumentDetailForItem(int itemId, string SourceDocumentDetailType, int SourceDocumentDetailId)
+        {
+            return _repository.GetObjectsBySourceDocumentDetailForItem(itemId, SourceDocumentDetailType, SourceDocumentDetailId);
+        }
+
+        public StockMutation CreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBarringService _barringService)
         {
             stockMutation.Errors = new Dictionary<String, String>();
             return (_validator.ValidCreateObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.CreateObject(stockMutation) : stockMutation);
         }
 
-        public StockMutation UpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        public StockMutation UpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBarringService _barringService)
         {
             return (_validator.ValidUpdateObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.UpdateObject(stockMutation) : stockMutation);
         }
 
-        public StockMutation SoftDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        public StockMutation SoftDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBarringService _barringService)
         {
             return (_validator.ValidDeleteObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.SoftDeleteObject(stockMutation) : stockMutation);
         }
@@ -73,12 +83,12 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        /*
-        public StockMutation CreateStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, WarehouseItem warehouseItem)
+        public StockMutation CreateStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item)
         {
             StockMutation stockMutation = new StockMutation();
-            stockMutation.WarehouseId = warehouseItem.WarehouseId;
-            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.ItemId = item.Id;
+            stockMutation.WarehouseId = 0;
+            stockMutation.WarehouseItemId = 0;
             stockMutation.Quantity = purchaseOrderDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseOrder;
             stockMutation.SourceDocumentId = purchaseOrderDetail.PurchaseOrderId;
@@ -89,9 +99,9 @@ namespace Service.Service
             return _repository.CreateObject(stockMutation);
         }
         
-        public IList<StockMutation> SoftDeleteStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, WarehouseItem warehouseItem)
+        public IList<StockMutation> SoftDeleteStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(item.Id, Constant.SourceDocumentDetailType.PurchaseOrderDetail, purchaseOrderDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForItem(item.Id, Constant.SourceDocumentDetailType.PurchaseOrderDetail, purchaseOrderDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -104,6 +114,7 @@ namespace Service.Service
             IList<StockMutation> result = new List<StockMutation>();
             
             StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = purchaseReceivalDetail.Quantity;
@@ -123,7 +134,7 @@ namespace Service.Service
 
         public IList<StockMutation> SoftDeleteStockMutationForPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(item.Id, Constant.SourceDocumentDetailType.PurchaseReceivalDetail, purchaseReceivalDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.PurchaseReceivalDetail, purchaseReceivalDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -131,11 +142,12 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public StockMutation CreateStockMutationForSalesOrder(SalesOrderDetail salesOrderDetail, WarehouseItem warehouseItem)
+        public StockMutation CreateStockMutationForSalesOrder(SalesOrderDetail salesOrderDetail, Item item)
         {
             StockMutation stockMutation = new StockMutation();
-            stockMutation.WarehouseId = warehouseItem.WarehouseId;
-            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.ItemId = item.Id;
+            stockMutation.WarehouseId = 0;
+            stockMutation.WarehouseItemId = 0;
             stockMutation.Quantity = salesOrderDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.SalesOrder;
             stockMutation.SourceDocumentId = salesOrderDetail.SalesOrderId;
@@ -146,9 +158,9 @@ namespace Service.Service
             return _repository.CreateObject(stockMutation);
         }
 
-        public IList<StockMutation> SoftDeleteStockMutationForSalesOrder(SalesOrderDetail salesOrderDetail, WarehouseItem warehouseItem)
+        public IList<StockMutation> SoftDeleteStockMutationForSalesOrder(SalesOrderDetail salesOrderDetail, Item item)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(item.Id, Constant.SourceDocumentDetailType.SalesOrderDetail, salesOrderDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForItem(item.Id, Constant.SourceDocumentDetailType.SalesOrderDetail, salesOrderDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -161,6 +173,7 @@ namespace Service.Service
             IList<StockMutation> result = new List<StockMutation>();
 
             StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.ItemId = deliveryOrderDetail.ItemId;
@@ -181,18 +194,18 @@ namespace Service.Service
 
         public IList<StockMutation> SoftDeleteStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(item.Id, Constant.SourceDocumentDetailType.DeliveryOrderDetail, deliveryOrderDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.DeliveryOrderDetail, deliveryOrderDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
             }
             return stockMutations;
         }
-        */
 
         public StockMutation CreateStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem)
         {
             StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = (stockAdjustmentDetail.Quantity >= 0) ? stockAdjustmentDetail.Quantity : (-1) * stockAdjustmentDetail.Quantity;
@@ -207,7 +220,7 @@ namespace Service.Service
 
         public IList<StockMutation> SoftDeleteStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(warehouseItem.Id, Constant.SourceDocumentDetailType.StockAdjustmentDetail, stockAdjustmentDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.StockAdjustmentDetail, stockAdjustmentDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -218,6 +231,7 @@ namespace Service.Service
         public StockMutation CreateStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, WarehouseItem warehouseItem)
         {
             StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = 1;
@@ -232,7 +246,7 @@ namespace Service.Service
 
         public IList<StockMutation> SoftDeleteStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(warehouseItem.Id, Constant.SourceDocumentDetailType.CoreIdentificationDetail, coreIdentificationDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.CoreIdentificationDetail, coreIdentificationDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -243,6 +257,7 @@ namespace Service.Service
         public StockMutation CreateStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, WarehouseItem warehouseItem, bool CaseAddition)
         {
             StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = 1;
@@ -257,7 +272,7 @@ namespace Service.Service
 
         public IList<StockMutation> SoftDeleteStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(warehouseItem.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -268,6 +283,7 @@ namespace Service.Service
         public StockMutation CreateStockMutationForRecoveryAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, WarehouseItem warehouseItem)
         {
             StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = recoveryAccessoryDetail.Quantity;
@@ -282,7 +298,7 @@ namespace Service.Service
 
         public IList<StockMutation> SoftDeleteStockMutationForRecoveryAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(warehouseItem.Id, Constant.SourceDocumentDetailType.RecoveryAccessoryDetail, recoveryAccessoryDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.RecoveryAccessoryDetail, recoveryAccessoryDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -293,6 +309,7 @@ namespace Service.Service
         public StockMutation CreateStockMutationForBarringOrder(BarringOrderDetail barringOrderDetail, WarehouseItem warehouseItem, bool CaseAddition)
         {
             StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = 1;
@@ -307,7 +324,7 @@ namespace Service.Service
 
         public IList<StockMutation> SoftDeleteStockMutationForBarringOrder(BarringOrderDetail barringOrderDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetail(warehouseItem.Id, Constant.SourceDocumentDetailType.BarringOrderDetail, barringOrderDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.BarringOrderDetail, barringOrderDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -320,6 +337,7 @@ namespace Service.Service
             IList<StockMutation> stockMutations = new List<StockMutation>();
 
             StockMutation stockMutationFrom = new StockMutation();
+            stockMutationFrom.ItemId = warehouseItemFrom.ItemId;
             stockMutationFrom.WarehouseId = warehouseItemFrom.WarehouseId;
             stockMutationFrom.WarehouseItemId = warehouseItemFrom.Id;
             stockMutationFrom.Quantity = 1;
@@ -332,6 +350,7 @@ namespace Service.Service
             stockMutationFrom = _repository.CreateObject(stockMutationFrom);
 
             StockMutation stockMutationTo = new StockMutation();
+            stockMutationTo.ItemId = warehouseItemTo.ItemId;
             stockMutationTo.WarehouseId = warehouseItemTo.WarehouseId;
             stockMutationTo.WarehouseItemId = warehouseItemTo.Id;
             stockMutationTo.Quantity = 1;
@@ -352,14 +371,14 @@ namespace Service.Service
         {
             IList<StockMutation> stockMutations = new List<StockMutation>();
 
-            IList<StockMutation> stockMutationFrom = _repository.GetObjectsBySourceDocumentDetail(warehouseItemFrom.Id, Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail, rollerWarehouseMutationDetail.Id);
+            IList<StockMutation> stockMutationFrom = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItemFrom.Id, Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail, rollerWarehouseMutationDetail.Id);
             stockMutationFrom.ToList().ForEach(x => stockMutations.Add(x));
             foreach (var stockMutation in stockMutationFrom)
             {
                 _repository.Delete(stockMutation);
             }
 
-            IList<StockMutation> stockMutationTo = _repository.GetObjectsBySourceDocumentDetail(warehouseItemTo.Id, Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail, rollerWarehouseMutationDetail.Id);
+            IList<StockMutation> stockMutationTo = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItemTo.Id, Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail, rollerWarehouseMutationDetail.Id);
             stockMutationTo.ToList().ForEach(x => stockMutations.Add(x));
             foreach (var stockMutation in stockMutationTo)
             {
@@ -373,6 +392,7 @@ namespace Service.Service
             IList<StockMutation> stockMutations = new List<StockMutation>();
 
             StockMutation stockMutationFrom = new StockMutation();
+            stockMutationFrom.ItemId = warehouseItemFrom.ItemId;
             stockMutationFrom.WarehouseId = warehouseItemFrom.WarehouseId;
             stockMutationFrom.WarehouseItemId = warehouseItemFrom.Id;
             stockMutationFrom.Quantity = warehouseMutationOrderDetail.Quantity;
@@ -385,6 +405,7 @@ namespace Service.Service
             stockMutationFrom = _repository.CreateObject(stockMutationFrom);
 
             StockMutation stockMutationTo = new StockMutation();
+            stockMutationTo.ItemId = warehouseItemTo.ItemId;
             stockMutationTo.WarehouseId = warehouseItemTo.WarehouseId;
             stockMutationTo.WarehouseItemId = warehouseItemTo.Id;
             stockMutationTo.Quantity = warehouseMutationOrderDetail.Quantity;
@@ -405,14 +426,14 @@ namespace Service.Service
         {
             IList<StockMutation> stockMutations = new List<StockMutation>();
 
-            IList<StockMutation> stockMutationFrom = _repository.GetObjectsBySourceDocumentDetail(warehouseItemFrom.Id, Constant.SourceDocumentDetailType.WarehouseMutationOrderDetail, warehouseMutationOrderDetail.Id);
+            IList<StockMutation> stockMutationFrom = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItemFrom.Id, Constant.SourceDocumentDetailType.WarehouseMutationOrderDetail, warehouseMutationOrderDetail.Id);
             stockMutationFrom.ToList().ForEach(x => stockMutations.Add(x));
             foreach (var stockMutation in stockMutationFrom)
             {
                 _repository.Delete(stockMutation);
             }
 
-            IList<StockMutation> stockMutationTo = _repository.GetObjectsBySourceDocumentDetail(warehouseItemTo.Id, Constant.SourceDocumentDetailType.WarehouseMutationOrderDetail, warehouseMutationOrderDetail.Id);
+            IList<StockMutation> stockMutationTo = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItemTo.Id, Constant.SourceDocumentDetailType.WarehouseMutationOrderDetail, warehouseMutationOrderDetail.Id);
             stockMutationTo.ToList().ForEach(x => stockMutations.Add(x));
             foreach (var stockMutation in stockMutationTo)
             {
@@ -421,5 +442,86 @@ namespace Service.Service
             return stockMutations;
         }
 
+        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        {
+            // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+            // item.AvgCost = _barringService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+            // barring.AvgCost = _barringService.CalculateAvgCost(barring, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+
+            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            Item item = _itemService.GetObjectById(stockMutation.ItemId);
+            Barring barring = _barringService.GetObjectById(stockMutation.ItemId);
+
+            if (warehouseItem != null)
+            {
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
+                { _warehouseItemService.AdjustQuantity(warehouseItem, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                { _warehouseItemService.AdjustPendingDelivery(warehouseItem, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                { _warehouseItemService.AdjustPendingReceival(warehouseItem, Quantity); }
+            }
+
+            if (barring == null)
+            {
+                // itemService in action
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
+                { _itemService.AdjustQuantity(item, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                { _itemService.AdjustPendingDelivery(item, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                { _itemService.AdjustPendingReceival(item, Quantity); }
+            }
+            else
+            {
+                // barringService in action
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
+                { _barringService.AdjustQuantity(barring, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                { _barringService.AdjustPendingDelivery(barring, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                { _barringService.AdjustPendingReceival(barring, Quantity); }
+            }
+        }
+
+        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        {
+            // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.StockMutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+
+            int Quantity = (stockMutation.Status == Constant.StockMutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            Item item = _itemService.GetObjectById(stockMutation.ItemId);
+            Barring barring = _barringService.GetObjectById(stockMutation.ItemId);
+            if (warehouseItem != null) {
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
+                { _warehouseItemService.AdjustQuantity(warehouseItem, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                { _warehouseItemService.AdjustPendingDelivery(warehouseItem, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                { _warehouseItemService.AdjustPendingReceival(warehouseItem, Quantity); }
+            }
+
+            if (barring == null)
+            {
+                // itemService in action
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
+                { _itemService.AdjustQuantity(item, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                { _itemService.AdjustPendingDelivery(item, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                { _itemService.AdjustPendingReceival(item, Quantity); }
+            }
+            else
+            {
+                // barringService in action
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
+                { _barringService.AdjustQuantity(barring, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                { _barringService.AdjustPendingDelivery(barring, Quantity); }
+                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                { _barringService.AdjustPendingReceival(barring, Quantity); }
+            }
+        }
     }
 }

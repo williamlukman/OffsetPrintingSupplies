@@ -110,6 +110,7 @@ namespace Data.Repository
         public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsDelivered = true;
+            coreIdentificationDetail.IsJobScheduled = false;
             coreIdentificationDetail.UpdatedAt = DateTime.Now;
             Update(coreIdentificationDetail);
             return coreIdentificationDetail;

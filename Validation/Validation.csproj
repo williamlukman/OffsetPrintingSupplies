@@ -43,8 +43,16 @@
     <Compile Include="Validation\BarringOrderDetailValidator.cs" />
     <Compile Include="Validation\BarringOrderValidator.cs" />
     <Compile Include="Validation\BarringValidator.cs" />
+    <Compile Include="Validation\DeliveryOrderDetailValidator.cs" />
+    <Compile Include="Validation\DeliveryOrderValidator.cs" />
+    <Compile Include="Validation\PurchaseOrderDetailValidator.cs" />
+    <Compile Include="Validation\PurchaseOrderValidator.cs" />
+    <Compile Include="Validation\PurchaseReceivalDetailValidator.cs" />
+    <Compile Include="Validation\PurchaseReceivalValidator.cs" />
     <Compile Include="Validation\RollerWarehouseMutationDetailValidator.cs" />
     <Compile Include="Validation\RollerWarehouseMutationValidator.cs" />
+    <Compile Include="Validation\SalesOrderDetailValidator.cs" />
+    <Compile Include="Validation\SalesOrderValidator.cs" />
     <Compile Include="Validation\UoMValidator.cs" />
     <Compile Include="Validation\WarehouseMutationOrderValidator.cs" />
     <Compile Include="Validation\WarehouseMutationOrderDetailValidator.cs" />
