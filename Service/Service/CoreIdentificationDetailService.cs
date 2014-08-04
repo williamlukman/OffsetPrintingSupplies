@@ -176,6 +176,11 @@ namespace Service.Service
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail BuildRoller(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            return _repository.BuildRoller(coreIdentificationDetail);
+        }
+
         public CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
             if (_validator.ValidDeliverObject(coreIdentificationDetail, _rollerWarehouseMutationDetailService))

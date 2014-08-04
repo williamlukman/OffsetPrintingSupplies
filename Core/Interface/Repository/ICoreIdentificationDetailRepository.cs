@@ -24,6 +24,7 @@ namespace Core.Interface.Repository
         CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail BuildRoller(CoreIdentificationDetail coreIdentificationDetail);
         bool DeleteObject(int Id);
     }
 }

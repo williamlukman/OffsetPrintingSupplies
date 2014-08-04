@@ -270,6 +270,22 @@ namespace Service.Service
             return _repository.CreateObject(stockMutation);
         }
 
+        public StockMutation CreateStockMutationForRecoveryOrderCompound(RecoveryOrderDetail recoveryOrderDetail, WarehouseItem warehouseItem, bool CaseAddition)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
+            stockMutation.WarehouseId = warehouseItem.WarehouseId;
+            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.Quantity = recoveryOrderDetail.CompoundUsage;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.RecoveryOrder;
+            stockMutation.SourceDocumentId = recoveryOrderDetail.RecoveryOrderId;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RecoveryOrderDetail;
+            stockMutation.SourceDocumentDetailId = recoveryOrderDetail.Id;
+            stockMutation.ItemCase = Constant.StockMutationItemCase.Ready;
+            stockMutation.Status = CaseAddition ? Constant.StockMutationStatus.Addition : Constant.StockMutationStatus.Deduction;
+            return _repository.CreateObject(stockMutation);
+        }
+
         public IList<StockMutation> SoftDeleteStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, WarehouseItem warehouseItem)
         {
             IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);

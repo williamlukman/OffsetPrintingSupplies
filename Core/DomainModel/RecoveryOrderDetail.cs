@@ -13,8 +13,7 @@ namespace Core.DomainModel
         public int CoreIdentificationDetailId { get; set; }
         public int RollerBuilderId { get; set; }
 
-        // TODO
-        // public decimal CompoundUsage { get; set; }
+        public int CompoundUsage { get; set; }
 
         public string CoreTypeCase { get; set; }
         public string Acc { get; set; }

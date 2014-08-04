@@ -21,8 +21,8 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         SalesOrderDetail FinishObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService,
                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService,
-                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                        IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         SalesOrderDetail DeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
     }
 }

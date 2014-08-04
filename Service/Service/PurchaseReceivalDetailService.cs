@@ -117,7 +117,7 @@ namespace Service.Service
         public PurchaseReceivalDetail UnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                                      IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(purchaseReceivalDetail, this, _itemService))
+            if (_validator.ValidUnfinishObject(purchaseReceivalDetail, _purchaseReceivalService, this, _itemService))
             {
                 purchaseReceivalDetail = _repository.UnfinishObject(purchaseReceivalDetail);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);

@@ -70,7 +70,21 @@ namespace Validation.Validation
             {
                 if (!detail.IsFinished)
                 {
-                    purchaseReceival.Errors.Add("PurchaseReceivalDetail", "Tidak boleh tidak ada");
+                    purchaseReceival.Errors.Add("PurchaseReceivalDetail", "Belum selesai");
+                    return purchaseReceival;
+                }
+            }
+            return purchaseReceival;
+        }
+
+        public PurchaseReceival VAllDetailsHaveNotBeenFinished(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        {
+            IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
+            foreach (var detail in details)
+            {
+                if (detail.IsFinished)
+                {
+                    purchaseReceival.Errors.Add("PurchaseReceivalDetail", "Sudah selesai");
                     return purchaseReceival;
                 }
             }
@@ -104,46 +118,14 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(purchaseReceival);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasPurchaseReceivalDetails(purchaseReceival, _purchaseReceivalDetailService);
-            /*
-             * TODO
-            if (isValid(purchaseReceival))
-            {
-                IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
-                foreach (var detail in details)
-                {
-                    if (!_purchaseReceivalDetailService.GetValidator().ValidConfirmObject(detail))
-                    {
-                        foreach (var error in detail.Errors)
-                        {
-                            purchaseReceival.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(purchaseReceival)) { return purchaseReceival; }
-                    }
-                }
-            }
-             */
             return purchaseReceival;
         }
 
         public PurchaseReceival VUnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
-        {       
-            /*
-            if (isValid(purchaseReceival))
-            {
-                IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
-                foreach (var detail in details)
-                {
-                    if (!_purchaseReceivalDetailService.GetValidator().ValidUnconfirmObject(detail, _purchaseReceivalDetailService, _itemService))
-                    {
-                        foreach (var error in detail.Errors)
-                        {
-                            purchaseReceival.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(purchaseReceival)) { return purchaseReceival; }
-                    }
-                }
-            }
-            */
+        {
+            VHasBeenConfirmed(purchaseReceival);
+            if (!isValid(purchaseReceival)) { return purchaseReceival; }
+            VAllDetailsHaveNotBeenFinished(purchaseReceival, _purchaseReceivalDetailService);
             return purchaseReceival;
         }
 

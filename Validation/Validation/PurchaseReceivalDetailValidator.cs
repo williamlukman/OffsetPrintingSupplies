@@ -126,6 +126,16 @@ namespace Validation.Validation
             return purchaseReceivalDetail;
         }
 
+        public PurchaseReceivalDetail VPurchaseReceivalHasNotBeenCompleted(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService)
+        {
+            PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+            if (purchaseReceival.IsCompleted)
+            {
+                purchaseReceivalDetail.Errors.Add("Generic", "Purchase receival sudah complete");
+            }
+            return purchaseReceivalDetail;
+        }
+
         public PurchaseReceivalDetail VHasItemQuantity(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
@@ -176,8 +186,10 @@ namespace Validation.Validation
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        public PurchaseReceivalDetail VUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
+            VPurchaseReceivalHasNotBeenCompleted(purchaseReceivalDetail, _purchaseReceivalService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasItemQuantity(purchaseReceivalDetail, _itemService);
             return purchaseReceivalDetail;
         }
@@ -211,10 +223,10 @@ namespace Validation.Validation
             return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        public bool ValidUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
             purchaseReceivalDetail.Errors.Clear();
-            VUnfinishObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _itemService);
+            VUnfinishObject(purchaseReceivalDetail, _purchaseReceivalService, _purchaseReceivalDetailService, _itemService);
             return isValid(purchaseReceivalDetail);
         }
 

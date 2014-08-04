@@ -24,7 +24,6 @@ namespace Core.DomainModel
 
         public bool IsJobScheduled { get; set; }
         public bool IsDelivered { get; set; }
-        // TODO
         public bool IsRollerBuilt { get; set; }
         public bool IsFinished { get; set; }
         public Nullable<DateTime> FinishDate { get; set; }

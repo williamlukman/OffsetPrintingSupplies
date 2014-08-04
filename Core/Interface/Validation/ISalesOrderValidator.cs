@@ -12,9 +12,11 @@ namespace Core.Interface.Validation
     {
         SalesOrder VCustomer(SalesOrder salesOrder, ICustomerService _customerService);
         SalesOrder VSalesDate(SalesOrder salesOrder);
-        SalesOrder VIsConfirmed(SalesOrder salesOrder);
+        SalesOrder VHasBeenConfirmed(SalesOrder salesOrder);
+        SalesOrder VHasNotBeenConfirmed(SalesOrder salesOrder);
         SalesOrder VHasSalesOrderDetails(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         SalesOrder VAllDetailsHaveBeenFinished(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
+        SalesOrder VAllDetailsHaveNotBeenFinished(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         SalesOrder VCreateObject(SalesOrder salesOrder, ICustomerService _customerService);
         SalesOrder VUpdateObject(SalesOrder salesOrder, ICustomerService _customerService);
         SalesOrder VDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);

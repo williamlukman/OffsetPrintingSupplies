@@ -34,7 +34,16 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public DeliveryOrder VIsConfirmed(DeliveryOrder deliveryOrder)
+        public DeliveryOrder VHasBeenConfirmed(DeliveryOrder deliveryOrder)
+        {
+            if (!deliveryOrder.IsConfirmed)
+            {
+                deliveryOrder.Errors.Add("Generic", "Belum dikonfirmasi");
+            }
+            return deliveryOrder;
+        }
+
+        public DeliveryOrder VHasNotBeenConfirmed(DeliveryOrder deliveryOrder)
         {
             if (deliveryOrder.IsConfirmed)
             {
@@ -81,6 +90,20 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
+        public DeliveryOrder VAllDetailsHaveNotBeenFinished(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        {
+            IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+            foreach (var detail in details)
+            {
+                if (detail.IsFinished)
+                {
+                    deliveryOrder.Errors.Add("Generic", "Detail sudah selesai");
+                    return deliveryOrder;
+                }
+            }
+            return deliveryOrder;
+        }
+
         public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
         {
             VCustomer(deliveryOrder, _customerService);
@@ -95,67 +118,37 @@ namespace Validation.Validation
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VDeliveryDate(deliveryOrder);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
-            VIsConfirmed(deliveryOrder);
+            VHasNotBeenConfirmed(deliveryOrder);
             return deliveryOrder;
         }
 
         public DeliveryOrder VDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
-            VIsConfirmed(deliveryOrder);
+            VHasNotBeenConfirmed(deliveryOrder);
             return deliveryOrder;
         }
 
         public DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
-            VIsConfirmed(deliveryOrder);
+            VHasNotBeenConfirmed(deliveryOrder);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasDeliveryOrderDetails(deliveryOrder, _deliveryOrderDetailService);
-            /*
-            if (isValid(deliveryOrder))
-            {
-                IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-                IDeliveryOrderDetailValidator detailvalidator = new DeliveryOrderDetailValidator();
-                foreach (var detail in details)
-                {
-                    detailvalidator.VConfirmObject(detail, _itemService);
-                    foreach (var error in detail.Errors)
-                    {
-                        deliveryOrder.Errors.Add(error.Key, error.Value);
-                    }
-                    if (!isValid(deliveryOrder)) { return deliveryOrder; }
-                }
-            }
-             * */
-            // TODO
-            return deliveryOrder;
-        }
-
-        public DeliveryOrder VCompleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
-        {
-            VAllDetailsHaveBeenFinished(deliveryOrder, _deliveryOrderDetailService);
             return deliveryOrder;
         }
 
         public DeliveryOrder VUnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
             VHasItemQuantity(deliveryOrder, _deliveryOrderDetailService, _itemService);
-            /*
-             * if (isValid(deliveryOrder))
-            {
-                IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-                foreach (var detail in details)
-                {
-                    if (!_deliveryOrderDetailService.GetValidator().ValidUnconfirmObject(detail, _deliveryOrderDetailService, _itemService))
-                    {
-                        foreach (var error in detail.Errors)
-                        {
-                            deliveryOrder.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(deliveryOrder)) { return deliveryOrder; }
-                    }
-                }
-            }
-            */
+            if (!isValid(deliveryOrder)) { return deliveryOrder; }
+            VHasBeenConfirmed(deliveryOrder);
+            if (!isValid(deliveryOrder)) { return deliveryOrder; }
+            VAllDetailsHaveNotBeenFinished(deliveryOrder, _deliveryOrderDetailService);
+            return deliveryOrder;
+        }
+
+        public DeliveryOrder VCompleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        {
+            VAllDetailsHaveBeenFinished(deliveryOrder, _deliveryOrderDetailService);
             return deliveryOrder;
         }
 

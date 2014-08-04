@@ -83,6 +83,16 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
+        public SalesOrderDetail VSalesOrderHasNotBeenCompleted(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService)
+        {
+            SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
+            if (salesOrder.IsCompleted)
+            {
+                salesOrderDetail.Errors.Add("Generic", "Sales order sudah complete");
+            }
+            return salesOrderDetail;
+        }
+
         public SalesOrderDetail VHasItemPendingDelivery(SalesOrderDetail salesOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
@@ -147,8 +157,10 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public SalesOrderDetail VUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
+            VSalesOrderHasNotBeenCompleted(salesOrderDetail, _salesOrderService);
+            if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VHasItemPendingDelivery(salesOrderDetail, _itemService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VHasNoDeliveryOrderDetail(salesOrderDetail, _deliveryOrderDetailService);
@@ -188,10 +200,10 @@ namespace Validation.Validation
             return isValid(salesOrderDetail);
         }
 
-        public bool ValidUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public bool ValidUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
             salesOrderDetail.Errors.Clear();
-            VUnfinishObject(salesOrderDetail, _salesOrderDetailService, _deliveryOrderDetailService, _itemService);
+            VUnfinishObject(salesOrderDetail, _salesOrderService, _salesOrderDetailService, _deliveryOrderDetailService, _itemService);
             return isValid(salesOrderDetail);
         }
 

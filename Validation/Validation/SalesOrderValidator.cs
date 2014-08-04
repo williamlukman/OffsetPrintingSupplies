@@ -33,12 +33,21 @@ namespace Validation.Validation
             */
             return salesOrder;
         }
+        
+        public SalesOrder VHasBeenConfirmed(SalesOrder salesOrder)
+        {
+            if (!salesOrder.IsConfirmed)
+            {
+                salesOrder.Errors.Add("Generic", "Belum dikonfirmasi");
+            }
+            return salesOrder;
+        }
 
-        public SalesOrder VIsConfirmed(SalesOrder salesOrder)
+        public SalesOrder VHasNotBeenConfirmed(SalesOrder salesOrder)
         {
             if (salesOrder.IsConfirmed)
             {
-                salesOrder.Errors.Add("IsConfirmed", "Tidak boleh sudah dikonfirmasi");
+                salesOrder.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi");
             }
             return salesOrder;
         }
@@ -67,6 +76,20 @@ namespace Validation.Validation
             return salesOrder;
         }
 
+        public SalesOrder VAllDetailsHaveNotBeenFinished(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
+        {
+            IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
+            foreach (var detail in details)
+            {
+                if (detail.IsFinished)
+                {
+                    salesOrder.Errors.Add("Generic", "Detail sudah selesai");
+                    return salesOrder;
+                }
+            }
+            return salesOrder;
+        }
+
         public SalesOrder VCreateObject(SalesOrder salesOrder, ICustomerService _customerService)
         {
             VCustomer(salesOrder, _customerService);
@@ -81,61 +104,29 @@ namespace Validation.Validation
             if (!isValid(salesOrder)) { return salesOrder; }
             VSalesDate(salesOrder);
             if (!isValid(salesOrder)) { return salesOrder; }
-            VIsConfirmed(salesOrder);
+            VHasNotBeenConfirmed(salesOrder);
             return salesOrder;
         }
 
         public SalesOrder VDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
         {
-            VIsConfirmed(salesOrder);
+            VHasNotBeenConfirmed(salesOrder);
             return salesOrder;
         }
 
         public SalesOrder VConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
         {
-            VIsConfirmed(salesOrder);
+            VHasNotBeenConfirmed(salesOrder);
             if (!isValid(salesOrder)) { return salesOrder; }
             VHasSalesOrderDetails(salesOrder, _salesOrderDetailService);
-            /*
-                if (isValid(salesOrder))
-                {
-                    IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
-                    ISalesOrderDetailValidator detailvalidator = new SalesOrderDetailValidator();
-                    foreach (var detail in details)
-                    {
-                        detailvalidator.VConfirmObject(detail);
-                        foreach (var error in detail.Errors)
-                        {
-                            salesOrder.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(salesOrder)) { return salesOrder; }
-                    }
-                }
-             */
-            // TODO
             return salesOrder;
         }
 
-        public SalesOrder VUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _dods, IItemService _is)
+        public SalesOrder VUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
-            // TODO
-            /*
-            if (isValid(salesOrder))
-            {
-                IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
-                foreach (var detail in details)
-                {
-                    if (!_salesOrderDetailService.GetValidator().ValidUnconfirmObject(detail, _salesOrderDetailService, _dods, _is))
-                    {
-                        foreach (var error in detail.Errors)
-                        {
-                            salesOrder.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(salesOrder)) { return salesOrder; }
-                    }
-                }
-            }
-            */
+            VHasBeenConfirmed(salesOrder);
+            if (!isValid(salesOrder)) { return salesOrder; }
+            VAllDetailsHaveNotBeenFinished(salesOrder, _salesOrderDetailService);
             return salesOrder;
         }
 
@@ -172,10 +163,10 @@ namespace Validation.Validation
             return isValid(salesOrder);
         }
 
-        public bool ValidUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _dods, IItemService _is)
+        public bool ValidUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
             salesOrder.Errors.Clear();
-            VUnconfirmObject(salesOrder, _salesOrderDetailService, _dods, _is);
+            VUnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderDetailService, _itemService);
             return isValid(salesOrder);
         }
 

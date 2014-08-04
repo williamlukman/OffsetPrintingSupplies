@@ -77,16 +77,14 @@ namespace Data.Repository
         public CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsJobScheduled = true;
-            coreIdentificationDetail.UpdatedAt = DateTime.Now;
-            Update(coreIdentificationDetail);
+            UpdateObject(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 
         public CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsJobScheduled = false;
-            coreIdentificationDetail.UpdatedAt = DateTime.Now;
-            Update(coreIdentificationDetail);
+            UpdateObject(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 
@@ -102,8 +100,7 @@ namespace Data.Repository
         {
             coreIdentificationDetail.IsFinished = false;
             coreIdentificationDetail.FinishDate = null;
-            coreIdentificationDetail.UpdatedAt = DateTime.Now;
-            Update(coreIdentificationDetail);
+            UpdateObject(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 
@@ -111,16 +108,21 @@ namespace Data.Repository
         {
             coreIdentificationDetail.IsDelivered = true;
             coreIdentificationDetail.IsJobScheduled = false;
-            coreIdentificationDetail.UpdatedAt = DateTime.Now;
-            Update(coreIdentificationDetail);
+            UpdateObject(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 
         public CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsDelivered = false;
-            coreIdentificationDetail.UpdatedAt = DateTime.Now;
-            Update(coreIdentificationDetail);
+            UpdateObject(coreIdentificationDetail);
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail BuildRoller(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            coreIdentificationDetail.IsRollerBuilt = true;
+            UpdateObject(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 

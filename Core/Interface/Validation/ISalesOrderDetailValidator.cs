@@ -17,6 +17,7 @@ namespace Core.Interface.Validation
         SalesOrderDetail VUniqueSalesOrderDetail(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService);
         SalesOrderDetail VHasBeenFinished(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail VHasNotBeenFinished(SalesOrderDetail salesOrderDetail);
+        SalesOrderDetail VSalesOrderHasNotBeenCompleted(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService);
         SalesOrderDetail VHasItemPendingDelivery(SalesOrderDetail salesOrderDetail, IItemService _itemService);
         SalesOrderDetail VHasNoDeliveryOrderDetail(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         SalesOrderDetail VDeliveryOrderDetailHasBeenFinished(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
@@ -24,13 +25,13 @@ namespace Core.Interface.Validation
         SalesOrderDetail VUpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService);
         SalesOrderDetail VDeleteObject(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail VFinishObject(SalesOrderDetail salesOrderDetail);
-        SalesOrderDetail VUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
+        SalesOrderDetail VUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
         SalesOrderDetail VDeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool ValidCreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService);
         bool ValidUpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService);
         bool ValidDeleteObject(SalesOrderDetail salesOrderDetail);
         bool ValidFinishObject(SalesOrderDetail salesOrderDetail);
-        bool ValidUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
+        bool ValidUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
         bool ValidDeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool isValid(SalesOrderDetail salesOrderDetail);
         string PrintError(SalesOrderDetail salesOrderDetail);

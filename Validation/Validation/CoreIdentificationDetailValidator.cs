@@ -184,6 +184,15 @@ namespace Validation.Validation
 
         }
 
+        public CoreIdentificationDetail VHasBeenRollerBuilt(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (!coreIdentificationDetail.IsRollerBuilt)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Roller is not built yet");
+            }
+            return coreIdentificationDetail;
+        }
+
         public CoreIdentificationDetail VQuantityIsInStockForCustomer(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
@@ -295,6 +304,7 @@ namespace Validation.Validation
 
         public CoreIdentificationDetail VDeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
+            VHasBeenRollerBuilt(coreIdentificationDetail);
             VHasRollerWarehouseMutationDetail(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
             return coreIdentificationDetail;
         }

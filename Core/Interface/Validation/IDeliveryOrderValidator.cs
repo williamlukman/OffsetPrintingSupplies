@@ -12,9 +12,11 @@ namespace Core.Interface.Validation
     {
         DeliveryOrder VCustomer(DeliveryOrder deliveryOrder, ICustomerService _customerService);
         DeliveryOrder VDeliveryDate(DeliveryOrder deliveryOrder);
-        DeliveryOrder VIsConfirmed(DeliveryOrder deliveryOrder);
+        DeliveryOrder VHasBeenConfirmed(DeliveryOrder deliveryOrder);
+        DeliveryOrder VHasNotBeenConfirmed(DeliveryOrder deliveryOrder);
         DeliveryOrder VHasDeliveryOrderDetails(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
         DeliveryOrder VAllDetailsHaveBeenFinished(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        DeliveryOrder VAllDetailsHaveNotBeenFinished(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
         DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService);
         DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService);
         DeliveryOrder VDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);

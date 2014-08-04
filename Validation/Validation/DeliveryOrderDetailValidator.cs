@@ -70,7 +70,7 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VQuantityUnconfirm(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
+        public DeliveryOrderDetail VQuantityUnfinish(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
             if (item.PendingDelivery < 0)
@@ -136,6 +136,16 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
+        public DeliveryOrderDetail VDeliveryOrderHasNotBeenCompleted(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService)
+        {
+            DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+            if (deliveryOrder.IsCompleted)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "Delivery order sudah complete");
+            }
+            return deliveryOrderDetail;
+        }
+
         public DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService,
                                                     ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
         {
@@ -174,12 +184,11 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VUnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public DeliveryOrderDetail VUnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
-            VQuantityUnconfirm(deliveryOrderDetail, _itemService);
+            VQuantityUnfinish(deliveryOrderDetail, _itemService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            // TODO
-            //VDeliveryOrderHasNotBeenCompleted(deliveryOrderDetail, _deliveryOrderService);
+            VDeliveryOrderHasNotBeenCompleted(deliveryOrderDetail, _deliveryOrderService);
             return deliveryOrderDetail;
         }
 
@@ -212,10 +221,10 @@ namespace Validation.Validation
             return isValid(deliveryOrderDetail);
         }
 
-        public bool ValidUnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public bool ValidUnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
             deliveryOrderDetail.Errors.Clear();
-            VUnfinishObject(deliveryOrderDetail, _deliveryOrderDetailService, _itemService);
+            VUnfinishObject(deliveryOrderDetail, _deliveryOrderService, _deliveryOrderDetailService, _itemService);
             return isValid(deliveryOrderDetail);
         }
 

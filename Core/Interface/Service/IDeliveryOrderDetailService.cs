@@ -26,8 +26,8 @@ namespace Core.Interface.Service
                                          ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService);
         DeliveryOrderDetail SoftDeleteObject(DeliveryOrderDetail deliveryOrderDetail);
         bool DeleteObject(int Id);
-        DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IStockMutationService _stockMutationService,
-                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
+                                                IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         DeliveryOrderDetail UnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IStockMutationService _stockMutationService,
                                            IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
     }

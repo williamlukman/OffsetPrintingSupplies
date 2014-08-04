@@ -16,6 +16,7 @@ namespace Core.Interface.Validation
         PurchaseReceival VHasBeenConfirmed(PurchaseReceival purchaseReceival);
         PurchaseReceival VHasPurchaseReceivalDetails(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseReceival VAllDetailsHaveBeenFinished(PurchaseReceival purchaseOrder, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        PurchaseReceival VAllDetailsHaveNotBeenFinished(PurchaseReceival purchaseOrder, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService);
         PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService);
         PurchaseReceival VDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);

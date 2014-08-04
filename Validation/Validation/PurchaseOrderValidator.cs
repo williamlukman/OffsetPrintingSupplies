@@ -34,6 +34,15 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
+        public PurchaseOrder VHasBeenConfirmed(PurchaseOrder purchaseOrder)
+        {
+            if (!purchaseOrder.IsConfirmed)
+            {
+                purchaseOrder.Errors.Add("PurchaseOrder", "Belum dikonfirmasi");
+            }
+            return purchaseOrder;
+        }
+
         public PurchaseOrder VHasNotBeenConfirmed(PurchaseOrder purchaseOrder)
         {
             if (purchaseOrder.IsConfirmed)
@@ -67,6 +76,20 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
+        public PurchaseOrder VAllDetailsHaveNotBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
+            foreach (var detail in details)
+            {
+                if (detail.IsFinished)
+                {
+                    purchaseOrder.Errors.Add("Generic", "Purchase Order Detail sudah selesai");
+                    return purchaseOrder;
+                }
+            }
+            return purchaseOrder;
+        }
+
         public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
         {
             VCustomer(purchaseOrder, _customerService);
@@ -93,47 +116,15 @@ namespace Validation.Validation
         {
             VHasNotBeenConfirmed(purchaseOrder);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
-            VHasPurchaseOrderDetails(purchaseOrder, _purchaseOrderDetailService);
-            
-            /*
-            if (isValid(purchaseOrder))
-            {
-                IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
-                IPurchaseOrderDetailValidator detailvalidator = new PurchaseOrderDetailValidator();
-                foreach (var detail in details)
-                {
-                    detailvalidator.VConfirmObject(detail);
-                    foreach (var error in detail.Errors)
-                    {
-                        purchaseOrder.Errors.Add(error.Key, error.Value);
-                    }
-                    if (!isValid(purchaseOrder)) { return purchaseOrder; }
-                }
-            }
-            */
+            VHasPurchaseOrderDetails(purchaseOrder, _purchaseOrderDetailService);            
             return purchaseOrder;
         }
 
         public PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
-            // TODO
-            /*
-            if (isValid(purchaseOrder))
-            {
-                IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
-                foreach (var detail in details)
-                {
-                    if (!_purchaseOrderDetailService.GetValidator().ValidUnconfirmObject(detail, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService))
-                    {
-                        foreach (var error in detail.Errors)
-                        {
-                            purchaseOrder.Errors.Add(error.Key, error.Value);
-                        }
-                        if (!isValid(purchaseOrder)) { return purchaseOrder; }
-                    }
-                }
-            }
-            */
+            VHasBeenConfirmed(purchaseOrder);
+            if (!isValid(purchaseOrder)) { return purchaseOrder; }
+            VAllDetailsHaveNotBeenFinished(purchaseOrder, _purchaseOrderDetailService);
             return purchaseOrder;
         }
 

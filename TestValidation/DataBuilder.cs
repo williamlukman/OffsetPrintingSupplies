@@ -1055,8 +1055,8 @@ namespace TestValidation
                 RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
                 CoreIdentificationDetailId = coreIDCustomer1.Id,
                 ItemId = (coreIDCustomer1.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
-                          _coreBuilderService.GetUsedCore(coreIDCustomer1.CoreBuilderId).Id :
-                          _coreBuilderService.GetNewCore(coreIDCustomer1.CoreBuilderId).Id
+                         _rollerBuilderService.GetRollerUsedCore(recoveryODCustomer1.RollerBuilderId).Id :
+                          _rollerBuilderService.GetRollerNewCore(recoveryODCustomer1.RollerBuilderId).Id
             };
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailCustomer1, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
@@ -1066,8 +1066,8 @@ namespace TestValidation
                 RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
                 CoreIdentificationDetailId = coreIDCustomer2.Id,
                 ItemId = (coreIDCustomer2.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
-                          _coreBuilderService.GetUsedCore(coreIDCustomer2.CoreBuilderId).Id :
-                          _coreBuilderService.GetNewCore(coreIDCustomer2.CoreBuilderId).Id
+                         _rollerBuilderService.GetRollerUsedCore(recoveryODCustomer2b.RollerBuilderId).Id :
+                          _rollerBuilderService.GetRollerNewCore(recoveryODCustomer2b.RollerBuilderId).Id
             };
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailCustomer2, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
@@ -1077,9 +1077,10 @@ namespace TestValidation
                 RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
                 CoreIdentificationDetailId = coreIDCustomer3.Id,
                 ItemId = (coreIDCustomer3.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
-                          _coreBuilderService.GetUsedCore(coreIDCustomer3.CoreBuilderId).Id :
-                          _coreBuilderService.GetNewCore(coreIDCustomer3.CoreBuilderId).Id
+                         _rollerBuilderService.GetRollerUsedCore(recoveryODCustomer3.RollerBuilderId).Id :
+                          _rollerBuilderService.GetRollerNewCore(recoveryODCustomer3.RollerBuilderId).Id
             };
+
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailCustomer3, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
@@ -1103,33 +1104,33 @@ namespace TestValidation
 
             rwmDetailInHouse1 = new RollerWarehouseMutationDetail()
             {
-                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                RollerWarehouseMutationId = rollerWarehouseMutationInHouse.Id,
                 CoreIdentificationDetailId = coreIDInHouse1.Id,
                 ItemId = (coreIDInHouse1.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
-                          _coreBuilderService.GetUsedCore(coreIDInHouse1.CoreBuilderId).Id :
-                          _coreBuilderService.GetNewCore(coreIDInHouse1.CoreBuilderId).Id
+                         _rollerBuilderService.GetRollerUsedCore(recoveryODInHouse1.RollerBuilderId).Id :
+                          _rollerBuilderService.GetRollerNewCore(recoveryODInHouse1.RollerBuilderId).Id
             };
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse1, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
             rwmDetailInHouse2 = new RollerWarehouseMutationDetail()
             {
-                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                RollerWarehouseMutationId = rollerWarehouseMutationInHouse.Id,
                 CoreIdentificationDetailId = coreIDInHouse2.Id,
                 ItemId = (coreIDInHouse2.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
-                          _coreBuilderService.GetUsedCore(coreIDInHouse2.CoreBuilderId).Id :
-                          _coreBuilderService.GetNewCore(coreIDInHouse2.CoreBuilderId).Id
+                         _rollerBuilderService.GetRollerUsedCore(recoveryODInHouse2.RollerBuilderId).Id :
+                          _rollerBuilderService.GetRollerNewCore(recoveryODInHouse2.RollerBuilderId).Id
             };
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse2, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
             rwmDetailInHouse3 = new RollerWarehouseMutationDetail()
             {
-                RollerWarehouseMutationId = rollerWarehouseMutationCustomer.Id,
+                RollerWarehouseMutationId = rollerWarehouseMutationInHouse.Id,
                 CoreIdentificationDetailId = coreIDInHouse3.Id,
                 ItemId = (coreIDInHouse3.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
-                          _coreBuilderService.GetUsedCore(coreIDInHouse3.CoreBuilderId).Id :
-                          _coreBuilderService.GetNewCore(coreIDInHouse3.CoreBuilderId).Id
+                         _rollerBuilderService.GetRollerUsedCore(recoveryODInHouse3b.RollerBuilderId).Id :
+                          _rollerBuilderService.GetRollerNewCore(recoveryODInHouse3b.RollerBuilderId).Id
             };
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse3, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);

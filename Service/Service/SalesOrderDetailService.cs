@@ -89,10 +89,10 @@ namespace Service.Service
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService,
-                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                               IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(salesOrderDetail, this, _deliveryOrderDetailService, _itemService))
+            if (_validator.ValidUnfinishObject(salesOrderDetail, _salesOrderService, this, _deliveryOrderDetailService, _itemService))
             {
                 salesOrderDetail = _repository.UnfinishObject(salesOrderDetail);
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);

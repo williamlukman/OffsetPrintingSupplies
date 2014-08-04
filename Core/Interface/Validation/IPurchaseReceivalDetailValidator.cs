@@ -20,6 +20,7 @@ namespace Core.Interface.Validation
         PurchaseReceivalDetail VUniquePurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
         PurchaseReceivalDetail VHasBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail VHasNotBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail);
+        PurchaseReceivalDetail VPurchaseReceivalHasNotBeenCompleted(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService);
         PurchaseReceivalDetail VHasItemQuantity(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService);
         PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
@@ -29,7 +30,8 @@ namespace Core.Interface.Validation
                                              IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
         PurchaseReceivalDetail VDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail VFinishObject(PurchaseReceivalDetail purchaseReceivalDetail);
-        PurchaseReceivalDetail VUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
+        PurchaseReceivalDetail VUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
+                                               IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
         bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
@@ -38,7 +40,8 @@ namespace Core.Interface.Validation
                                IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
         bool ValidDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail);
         bool ValidFinishObject(PurchaseReceivalDetail purchaseReceivalDetail);
-        bool ValidUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
+        bool ValidUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
+                                 IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
         bool isValid(PurchaseReceivalDetail purchaseReceivalDetail);
         string PrintError(PurchaseReceivalDetail purchaseReceivalDetail);
     }
