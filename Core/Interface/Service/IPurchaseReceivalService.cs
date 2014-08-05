@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         PurchaseReceival GetObjectById(int Id);
         IList<PurchaseReceival> GetObjectsByCustomerId(int customerId);
         PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService);
-        PurchaseReceival CreateObject(int customerId, DateTime ReceivalDate, ICustomerService _customerService);
+        PurchaseReceival CreateObject(int warehouseId, int customerId, DateTime ReceivalDate, ICustomerService _customerService);
         PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService);
         PurchaseReceival SoftDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         bool DeleteObject(int Id);

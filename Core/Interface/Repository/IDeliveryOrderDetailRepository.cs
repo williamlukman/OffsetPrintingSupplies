@@ -11,7 +11,7 @@ namespace Core.Interface.Repository
     {
         IList<DeliveryOrderDetail> GetObjectsByDeliveryOrderId(int deliveryOrderId);
         DeliveryOrderDetail GetObjectById(int Id);
-        DeliveryOrderDetail GetObjectBySalesOrderDetailId(int salesOrderDetailId);
+        IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId);
         DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail SoftDeleteObject(DeliveryOrderDetail deliveryOrderDetail);

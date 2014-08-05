@@ -47,11 +47,12 @@ namespace Service.Service
             return (_validator.ValidCreateObject(deliveryOrder, _customerService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
         }
 
-        public DeliveryOrder CreateObject(int customerId, DateTime deliveryDate, ICustomerService _customerService)
+        public DeliveryOrder CreateObject(int customerId, int warehouseId, DateTime deliveryDate, ICustomerService _customerService)
         {
             DeliveryOrder deliveryOrder = new DeliveryOrder
             {
                 CustomerId = customerId,
+                WarehouseId = warehouseId,
                 DeliveryDate = deliveryDate
             };
             return this.CreateObject(deliveryOrder, _customerService);

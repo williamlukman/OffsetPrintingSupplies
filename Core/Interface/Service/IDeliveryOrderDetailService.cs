@@ -14,7 +14,7 @@ namespace Core.Interface.Service
         IDeliveryOrderDetailValidator GetValidator();
         IList<DeliveryOrderDetail> GetObjectsByDeliveryOrderId(int deliveryOrderId);
         DeliveryOrderDetail GetObjectById(int Id);
-        DeliveryOrderDetail GetObjectBySalesOrderDetailId(int salesOrderDetailId);
+        IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId);
         DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                          ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService);

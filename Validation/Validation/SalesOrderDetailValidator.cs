@@ -105,8 +105,8 @@ namespace Validation.Validation
 
         public SalesOrderDetail VHasNoDeliveryOrderDetail(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
-            DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectBySalesOrderDetailId(salesOrderDetail.Id);
-            if (deliveryOrderDetail != null)
+            IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsBySalesOrderDetailId(salesOrderDetail.Id);
+            if (details.Any())
             {
                 salesOrderDetail.Errors.Add("Generic", "Tidak boleh boleh terasosiasi dengan Delivery Order Detail");
             }
@@ -115,11 +115,15 @@ namespace Validation.Validation
 
         public SalesOrderDetail VDeliveryOrderDetailHasBeenFinished(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
-            DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectBySalesOrderDetailId(salesOrderDetail.Id);
-            if (!deliveryOrderDetail.IsFinished)
+            IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsBySalesOrderDetailId(salesOrderDetail.Id);
+            foreach (var deliveryOrderDetail in deliveryOrderDetails)
             {
-                salesOrderDetail.Errors.Add("Generic", "Belum selesai");
+                if (deliveryOrderDetail.IsFinished)
+                {
+                    return salesOrderDetail;
+                }
             }
+            salesOrderDetail.Errors.Add("Generic", "Belum selesai");
             return salesOrderDetail;
         }
 

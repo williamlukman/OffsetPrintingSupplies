@@ -14,9 +14,9 @@ namespace Data.Mapping
         public StockMutationMapping()
         {
             HasKey(sm => sm.Id);
-            HasRequired(sm => sm.WarehouseItem)
+            HasRequired(sm => sm.Item)
                 .WithMany()
-                .HasForeignKey(sm => sm.WarehouseItemId)
+                .HasForeignKey(sm => sm.ItemId)
                 .WillCascadeOnDelete(false);
             Ignore(sm => sm.Errors);
         }

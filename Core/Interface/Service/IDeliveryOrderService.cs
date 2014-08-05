@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         DeliveryOrder GetObjectById(int Id);
         IList<DeliveryOrder> GetObjectsByCustomerId(int customerId);
         DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService);
-        DeliveryOrder CreateObject(int customerId, DateTime deliveryDate, ICustomerService _customerService);
+        DeliveryOrder CreateObject(int warehouseId, int customerId, DateTime deliveryDate, ICustomerService _customerService);
         DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService);
         DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool DeleteObject(int Id);

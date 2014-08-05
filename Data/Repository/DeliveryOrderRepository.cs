@@ -69,7 +69,7 @@ namespace Data.Repository
         {
             deliveryOrder.IsConfirmed = true;
             deliveryOrder.ConfirmationDate = DateTime.Now;
-            UpdateObject(deliveryOrder);
+            Update(deliveryOrder);
             return deliveryOrder;
         }
 

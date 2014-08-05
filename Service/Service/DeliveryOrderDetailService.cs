@@ -37,9 +37,9 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public DeliveryOrderDetail GetObjectBySalesOrderDetailId(int salesOrderDetailId)
+        public IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId)
         {
-            return _repository.GetObjectBySalesOrderDetailId(salesOrderDetailId);
+            return _repository.GetObjectsBySalesOrderDetailId(salesOrderDetailId);
         }
 
         public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail, 
@@ -90,7 +90,7 @@ namespace Service.Service
         public DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                 IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidFinishObject(deliveryOrderDetail, _itemService))
+            if (_validator.ValidFinishObject(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService))
             {
                 deliveryOrderDetail = _repository.FinishObject(deliveryOrderDetail);
 
@@ -101,7 +101,7 @@ namespace Service.Service
                     _deliveryOrderService.CompleteObject(deliveryOrder, this);
                 }
     
-                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.Warehouse.Id, deliveryOrderDetail.ItemId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.WarehouseId, deliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
                 IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)

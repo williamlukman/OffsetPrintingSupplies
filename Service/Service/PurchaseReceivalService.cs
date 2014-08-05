@@ -47,14 +47,15 @@ namespace Service.Service
             return (_validator.ValidCreateObject(purchaseReceival, _customerService) ? _repository.CreateObject(purchaseReceival) : purchaseReceival);
         }
 
-        public PurchaseReceival CreateObject(int customerId, DateTime receivalDate, ICustomerService _customerService)
+        public PurchaseReceival CreateObject(int warehouseId, int customerId, DateTime receivalDate, ICustomerService _customerService)
         {
-            PurchaseReceival pr = new PurchaseReceival
+            PurchaseReceival purchaseReceival = new PurchaseReceival
             {
                 CustomerId = customerId,
-                ReceivalDate = receivalDate
+                ReceivalDate = receivalDate,
+                WarehouseId = warehouseId
             };
-            return this.CreateObject(pr, _customerService);
+            return this.CreateObject(purchaseReceival, _customerService);
         }
 
         public PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService)

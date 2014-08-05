@@ -113,22 +113,34 @@ namespace Service.Service
         {
             IList<StockMutation> result = new List<StockMutation>();
             
-            StockMutation stockMutation = new StockMutation();
-            stockMutation.ItemId = warehouseItem.ItemId;
-            stockMutation.WarehouseId = warehouseItem.WarehouseId;
-            stockMutation.WarehouseItemId = warehouseItem.Id;
-            stockMutation.Quantity = purchaseReceivalDetail.Quantity;
-            stockMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseReceival;
-            stockMutation.SourceDocumentId = purchaseReceivalDetail.PurchaseReceivalId;
-            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.PurchaseReceivalDetail;
-            stockMutation.SourceDocumentDetailId = purchaseReceivalDetail.Id;
-            stockMutation.ItemCase = Constant.StockMutationItemCase.PendingReceival;
-            stockMutation.Status = Constant.StockMutationStatus.Deduction;
-            result.Add(_repository.CreateObject(stockMutation));
+            StockMutation stockMutationPendingReceival = new StockMutation();
+            stockMutationPendingReceival.ItemId = warehouseItem.ItemId;
+            stockMutationPendingReceival.WarehouseId = warehouseItem.WarehouseId;
+            stockMutationPendingReceival.WarehouseItemId = warehouseItem.Id;
+            stockMutationPendingReceival.Quantity = purchaseReceivalDetail.Quantity;
+            stockMutationPendingReceival.SourceDocumentType = Constant.SourceDocumentType.PurchaseReceival;
+            stockMutationPendingReceival.SourceDocumentId = purchaseReceivalDetail.PurchaseReceivalId;
+            stockMutationPendingReceival.SourceDocumentDetailType = Constant.SourceDocumentDetailType.PurchaseReceivalDetail;
+            stockMutationPendingReceival.SourceDocumentDetailId = purchaseReceivalDetail.Id;
+            stockMutationPendingReceival.ItemCase = Constant.StockMutationItemCase.PendingReceival;
+            stockMutationPendingReceival.Status = Constant.StockMutationStatus.Deduction;
+            stockMutationPendingReceival = _repository.CreateObject(stockMutationPendingReceival);
 
-            stockMutation.ItemCase = Constant.StockMutationItemCase.Ready;
-            stockMutation.Status = (purchaseReceivalDetail.Quantity > 0) ? Constant.StockMutationStatus.Addition : Constant.StockMutationStatus.Deduction;
-            result.Add(_repository.CreateObject(stockMutation));
+            StockMutation stockMutationReady = new StockMutation();
+            stockMutationReady.ItemId = warehouseItem.ItemId;
+            stockMutationReady.WarehouseId = warehouseItem.WarehouseId;
+            stockMutationReady.WarehouseItemId = warehouseItem.Id;
+            stockMutationReady.Quantity = purchaseReceivalDetail.Quantity;
+            stockMutationReady.SourceDocumentType = Constant.SourceDocumentType.PurchaseReceival;
+            stockMutationReady.SourceDocumentId = purchaseReceivalDetail.PurchaseReceivalId;
+            stockMutationReady.SourceDocumentDetailType = Constant.SourceDocumentDetailType.PurchaseReceivalDetail;
+            stockMutationReady.SourceDocumentDetailId = purchaseReceivalDetail.Id;
+            stockMutationReady.ItemCase = Constant.StockMutationItemCase.Ready;
+            stockMutationReady.Status = Constant.StockMutationStatus.Addition;
+            stockMutationReady = _repository.CreateObject(stockMutationReady);
+
+            result.Add(stockMutationPendingReceival);
+            result.Add(stockMutationReady);
             return result;
         }
 
@@ -172,23 +184,36 @@ namespace Service.Service
         {
             IList<StockMutation> result = new List<StockMutation>();
 
-            StockMutation stockMutation = new StockMutation();
-            stockMutation.ItemId = warehouseItem.ItemId;
-            stockMutation.WarehouseId = warehouseItem.WarehouseId;
-            stockMutation.WarehouseItemId = warehouseItem.Id;
-            stockMutation.ItemId = deliveryOrderDetail.ItemId;
-            stockMutation.Quantity = deliveryOrderDetail.Quantity;
-            stockMutation.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
-            stockMutation.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
-            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
-            stockMutation.SourceDocumentDetailId = deliveryOrderDetail.Id;
-            stockMutation.ItemCase = Constant.StockMutationItemCase.PendingDelivery;
-            stockMutation.Status = Constant.StockMutationStatus.Deduction;
-            result.Add(_repository.CreateObject(stockMutation));
+            StockMutation stockMutationPendingDelivery = new StockMutation();
+            stockMutationPendingDelivery.ItemId = warehouseItem.ItemId;
+            stockMutationPendingDelivery.WarehouseId = warehouseItem.WarehouseId;
+            stockMutationPendingDelivery.WarehouseItemId = warehouseItem.Id;
+            stockMutationPendingDelivery.ItemId = deliveryOrderDetail.ItemId;
+            stockMutationPendingDelivery.Quantity = deliveryOrderDetail.Quantity;
+            stockMutationPendingDelivery.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
+            stockMutationPendingDelivery.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
+            stockMutationPendingDelivery.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
+            stockMutationPendingDelivery.SourceDocumentDetailId = deliveryOrderDetail.Id;
+            stockMutationPendingDelivery.ItemCase = Constant.StockMutationItemCase.PendingDelivery;
+            stockMutationPendingDelivery.Status = Constant.StockMutationStatus.Deduction;
+            stockMutationPendingDelivery = _repository.CreateObject(stockMutationPendingDelivery);
 
-            stockMutation.ItemCase = Constant.StockMutationItemCase.Ready;
-            stockMutation.Status = Constant.StockMutationStatus.Deduction;
-            result.Add(_repository.CreateObject(stockMutation));
+            StockMutation stockMutationReady = new StockMutation();
+            stockMutationReady.ItemId = warehouseItem.ItemId;
+            stockMutationReady.WarehouseId = warehouseItem.WarehouseId;
+            stockMutationReady.WarehouseItemId = warehouseItem.Id;
+            stockMutationReady.ItemId = deliveryOrderDetail.ItemId;
+            stockMutationReady.Quantity = deliveryOrderDetail.Quantity;
+            stockMutationReady.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
+            stockMutationReady.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
+            stockMutationReady.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
+            stockMutationReady.SourceDocumentDetailId = deliveryOrderDetail.Id;
+            stockMutationReady.ItemCase = Constant.StockMutationItemCase.Ready;
+            stockMutationReady.Status = Constant.StockMutationStatus.Deduction;
+            stockMutationReady = _repository.CreateObject(stockMutationReady);
+
+            result.Add(stockMutationPendingDelivery);
+            result.Add(stockMutationReady);
             return result;
         }
 
@@ -473,10 +498,12 @@ namespace Service.Service
             {
                 if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
                 { _warehouseItemService.AdjustQuantity(warehouseItem, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                    /* TODO
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
                 { _warehouseItemService.AdjustPendingDelivery(warehouseItem, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
                 { _warehouseItemService.AdjustPendingReceival(warehouseItem, Quantity); }
+                     */
             }
 
             if (barring == null)
@@ -484,9 +511,9 @@ namespace Service.Service
                 // itemService in action
                 if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
                 { _itemService.AdjustQuantity(item, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
                 { _itemService.AdjustPendingDelivery(item, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
                 { _itemService.AdjustPendingReceival(item, Quantity); }
             }
             else
@@ -494,9 +521,9 @@ namespace Service.Service
                 // barringService in action
                 if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
                 { _barringService.AdjustQuantity(barring, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
                 { _barringService.AdjustPendingDelivery(barring, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
                 { _barringService.AdjustPendingReceival(barring, Quantity); }
             }
         }
@@ -512,10 +539,12 @@ namespace Service.Service
             if (warehouseItem != null) {
                 if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
                 { _warehouseItemService.AdjustQuantity(warehouseItem, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                    /* TODO
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
                 { _warehouseItemService.AdjustPendingDelivery(warehouseItem, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
                 { _warehouseItemService.AdjustPendingReceival(warehouseItem, Quantity); }
+                     */
             }
 
             if (barring == null)
@@ -523,9 +552,9 @@ namespace Service.Service
                 // itemService in action
                 if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
                 { _itemService.AdjustQuantity(item, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
                 { _itemService.AdjustPendingDelivery(item, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
                 { _itemService.AdjustPendingReceival(item, Quantity); }
             }
             else
@@ -533,9 +562,9 @@ namespace Service.Service
                 // barringService in action
                 if (stockMutation.ItemCase == Constant.StockMutationItemCase.Ready)
                 { _barringService.AdjustQuantity(barring, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingDelivery)
                 { _barringService.AdjustPendingDelivery(barring, Quantity); }
-                if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
+                else if (stockMutation.ItemCase == Constant.StockMutationItemCase.PendingReceival)
                 { _barringService.AdjustPendingReceival(barring, Quantity); }
             }
         }

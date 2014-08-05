@@ -27,11 +27,9 @@ namespace Data.Repository
             return Find(dod => dod.Id == Id && !dod.IsDeleted);
         }
 
-        public DeliveryOrderDetail GetObjectBySalesOrderDetailId(int salesOrderDetailId)
+        public IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId)
         {
-            DeliveryOrderDetail detail = Find(dod => dod.SalesOrderDetailId == salesOrderDetailId && !dod.IsDeleted);
-            if (detail != null) { detail.Errors = new Dictionary<string, string>(); }
-            return detail;
+            return FindAll(dod => dod.SalesOrderDetailId == salesOrderDetailId && !dod.IsDeleted).ToList();
         }
 
         public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail)

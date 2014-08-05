@@ -94,12 +94,18 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
+        public DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.WarehouseId, deliveryOrderDetail.ItemId);
             Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
             if (item.Quantity - deliveryOrderDetail.Quantity < 0)
             {
-                deliveryOrderDetail.Errors.Add("item.Quantity", "Tidak boleh kurang dari quantity Delivery Order");
+                deliveryOrderDetail.Errors.Add("Generic", "Item quantity kurang dari quantity untuk di kirim");
+            }
+            else if (warehouseItem.Quantity - deliveryOrderDetail.Quantity < 0)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "WarehouseItem quantity kurang dari quantity untuk di kirim");
             }
             return deliveryOrderDetail;
         }
@@ -176,11 +182,11 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VFinishObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
+        public DeliveryOrderDetail VFinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasNotBeenFinished(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            VHasItemQuantity(deliveryOrderDetail, _itemService);
+            VHasItemQuantity(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService);
             return deliveryOrderDetail;
         }
 
@@ -214,10 +220,10 @@ namespace Validation.Validation
             return isValid(deliveryOrderDetail);
         }
 
-        public bool ValidFinishObject(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
+        public bool ValidFinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             deliveryOrderDetail.Errors.Clear();
-            VFinishObject(deliveryOrderDetail, _itemService);
+            VFinishObject(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService);
             return isValid(deliveryOrderDetail);
         }
 
