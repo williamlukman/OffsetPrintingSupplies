@@ -1,0 +1,21 @@
+using Core.DomainModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Core.Interface.Repository
+{
+    public interface IPayableRepository : IRepository<Payable>
+    {
+        IList<Payable> GetAll();
+        IList<Payable> GetObjectsByCustomerId(int customerId);
+        Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
+        Payable GetObjectById(int Id);
+        Payable CreateObject(Payable payable);
+        Payable UpdateObject(Payable payable);
+        Payable SoftDeleteObject(Payable payable);
+        bool DeleteObject(int Id);
+        string SetObjectCode();
+    }
+}
