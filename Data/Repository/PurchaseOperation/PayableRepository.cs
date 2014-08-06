@@ -1,0 +1,83 @@
+using Core.DomainModel;
+using Core.Interface.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Data.Context;
+using Data.Repository;
+
+namespace Data.Repository
+{
+    public class PayableRepository : EfRepository<Payable>, IPayableRepository
+    {
+        private OffsetPrintingSuppliesEntities entities;
+        public PayableRepository()
+        {
+            entities = new OffsetPrintingSuppliesEntities();
+        }
+
+        public IList<Payable> GetAll()
+        {
+            return FindAll().ToList();
+        }
+
+        public IList<Payable> GetObjectsByCustomerId(int customerId)
+        {
+            return FindAll(p => p.CustomerId == customerId && !p.IsDeleted).ToList();
+        }
+
+        public Payable GetObjectBySource(string PayableSource, int PayableSourceId)
+        {
+            Payable payable = Find(p => p.PayableSource == PayableSource && p.PayableSourceId == PayableSourceId && !p.IsDeleted);
+            if (payable != null) { payable.Errors = new Dictionary<string, string>(); }
+            return payable;
+        }
+
+        public Payable GetObjectById(int Id)
+        {
+            Payable payable = Find(p => p.Id == Id && !p.IsDeleted);
+            if (payable != null) { payable.Errors = new Dictionary<string, string>(); }
+            return payable;
+        }
+
+        public Payable CreateObject(Payable payable)
+        {
+            payable.Code = SetObjectCode();
+            payable.PendingClearanceAmount = 0;
+            payable.IsCompleted = false;
+            payable.IsDeleted = false;
+            payable.CreatedAt = DateTime.Now;
+            return Create(payable);
+        }
+
+        public Payable UpdateObject(Payable payable)
+        {
+            payable.UpdatedAt = DateTime.Now;
+            Update(payable);
+            return payable;
+        }
+
+        public Payable SoftDeleteObject(Payable payable)
+        {
+            payable.IsDeleted = true;
+            payable.DeletedAt = DateTime.Now;
+            Update(payable);
+            return payable;
+        }
+
+        public bool DeleteObject(int Id)
+        {
+            Payable payable = Find(x => x.Id == Id);
+            return (Delete(payable) == 1) ? true : false;
+        }
+
+        public string SetObjectCode()
+        {
+            // Code: #{year}/#{total_number
+            int totalobject = FindAll().Count() + 1;
+            string Code = "#" + DateTime.Now.Year.ToString() + "/#" + totalobject;
+            return Code;
+        }
+    }
+}
