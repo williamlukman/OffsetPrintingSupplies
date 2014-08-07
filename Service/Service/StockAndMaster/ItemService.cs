@@ -80,6 +80,7 @@ namespace Service.Service
         public Item SoftDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                      IBarringService _barringService)
         {
+            // TODO:
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
             {
