@@ -50,9 +50,9 @@
     <Compile Include="DomainModel\PurchaseOperation\PaymentVoucherDetail.cs" />
     <Compile Include="DomainModel\PurchaseOperation\PurchaseInvoice.cs" />
     <Compile Include="DomainModel\PurchaseOperation\PurchaseInvoiceDetail.cs" />
+    <Compile Include="DomainModel\SalesOperation\Receivable.cs" />
     <Compile Include="DomainModel\SalesOperation\ReceiptVoucher.cs" />
     <Compile Include="DomainModel\SalesOperation\ReceiptVoucherDetail.cs" />
-    <Compile Include="DomainModel\SalesOperation\Receivable.cs" />
     <Compile Include="DomainModel\SalesOperation\SalesInvoice.cs" />
     <Compile Include="DomainModel\SalesOperation\SalesInvoiceDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\Barring.cs" />
@@ -104,9 +104,9 @@
     <Compile Include="Interface\Repository\PurchaseOperation\IPurchaseReceivalRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\IRollerWarehouseMutationDetailRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\IRollerWarehouseMutationRepository.cs" />
+    <Compile Include="Interface\Repository\SalesOperation\IReceivableRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IReceiptVoucherDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IReceiptVoucherRepository.cs" />
-    <Compile Include="Interface\Repository\SalesOperation\IReceivableRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ISalesInvoiceDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ISalesInvoiceRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ISalesOrderDetailRepository.cs" />
@@ -153,9 +153,9 @@
     <Compile Include="Interface\Service\PurchaseOperation\IPurchaseReceivalService.cs" />
     <Compile Include="Interface\Service\Manufacturing\IRollerWarehouseMutationDetailService.cs" />
     <Compile Include="Interface\Service\Manufacturing\IRollerWarehouseMutationService.cs" />
+    <Compile Include="Interface\Service\SalesOperation\IReceivableService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IReceiptVoucherDetailService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IReceiptVoucherService.cs" />
-    <Compile Include="Interface\Service\SalesOperation\IReceivableService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ISalesInvoiceDetailService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ISalesInvoiceService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ISalesOrderDetailService.cs" />
@@ -200,9 +200,9 @@
     <Compile Include="Interface\Validation\PurchaseOperation\IPurchaseReceivalValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\IRollerWarehouseMutationDetailValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\IRollerWarehouseMutationValidator.cs" />
+    <Compile Include="Interface\Validation\SalesOperation\IReceivableValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IReceiptVoucherDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IReceiptVoucherValidator.cs" />
-    <Compile Include="Interface\Validation\SalesOperation\IReceivableValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ISalesInvoiceDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ISalesInvoiceValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ISalesOrderDetailValidator.cs" />

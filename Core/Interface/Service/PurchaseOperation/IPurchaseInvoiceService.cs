@@ -12,15 +12,17 @@ namespace Core.Interface.Service
         IPurchaseInvoiceValidator GetValidator();
         IList<PurchaseInvoice> GetAll();
         PurchaseInvoice GetObjectById(int Id);
-        IList<PurchaseInvoice> GetObjectsByContactId(int contactId);
-        PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice, ICustomerService _customerService);
-        PurchaseInvoice CreateObject(int customerId, string description, decimal totalAmount, ICustomerService _customerService);
-        PurchaseInvoice UpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, ICustomerService _customerService);
-        PurchaseInvoice SoftDeleteObject(PurchaseInvoice purchaseInvoice);
+        IList<PurchaseInvoice> GetObjectsByPurchaseReceivalId(int purchaseReceivalId);
+        PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService);
+        PurchaseInvoice CreateObject(int purchaseReceivalId, string description, int discount, int tax, DateTime InvoiceDate, DateTime DueDate, IPurchaseReceivalService _purchaseReceivalService);
+        PurchaseInvoice UpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
+        PurchaseInvoice SoftDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         bool DeleteObject(int Id);
         PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                      IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService);
+                                      IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService);
         PurchaseInvoice UnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
+                                        IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                         IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+        PurchaseInvoice CalculateAmountPayable(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
     }
 }

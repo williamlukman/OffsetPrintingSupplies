@@ -11,14 +11,18 @@ namespace Core.Interface.Service
     {
         ISalesInvoiceDetailValidator GetValidator();
         IList<SalesInvoiceDetail> GetObjectsBySalesInvoiceId(int salesInvoiceId);
+        IList<SalesInvoiceDetail> GetObjectsByDeliveryOrderDetailId(int deliveryOrderDetailId);
         SalesInvoiceDetail GetObjectById(int Id);
-        DeliveryOrderDetail GetDeliveryOrderDetailByDeliveryOrderDetailId(int deliveryOrderDetailId);
-        SalesInvoiceDetail CreateObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        SalesInvoiceDetail CreateObject(int salesInvoiceId, int deliveryOrderDetailId, int quantity, decimal amount, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        SalesInvoiceDetail UpdateObject(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        SalesInvoiceDetail SoftDeleteObject(SalesInvoiceDetail salesInvoiceDetail);
+        SalesInvoiceDetail CreateObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService,
+                                           ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoiceDetail CreateObject(int salesInvoiceId, int deliveryOrderDetailId, int quantity, decimal amount,
+                                           ISalesInvoiceService _salesInvoiceService, ISalesOrderDetailService _salesOrderDetailService,
+                                           IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoiceDetail UpdateObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService,
+                                           ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoiceDetail SoftDeleteObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService);
         bool DeleteObject(int Id);
-        SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        SalesInvoiceDetail UnconfirmObject(SalesInvoiceDetail salesInvoiceDetail, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+        SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoiceDetail UnconfirmObject(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService);
     }
 }

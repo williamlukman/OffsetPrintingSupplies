@@ -167,12 +167,6 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VReceiveObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
-        {
-            VPurchaseReceivalDetailHasBeenFinished(purchaseOrderDetail, _purchaseReceivalDetailService);
-            return purchaseOrderDetail;
-        }
-
         public bool ValidCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
             VCreateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
@@ -204,13 +198,6 @@ namespace Validation.Validation
         {
             purchaseOrderDetail.Errors.Clear();
             VUnfinishObject(purchaseOrderDetail, _purchaseOrderService, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService);
-            return isValid(purchaseOrderDetail);
-        }
-
-        public bool ValidReceiveObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
-        {
-            purchaseOrderDetail.Errors.Clear();
-            VReceiveObject(purchaseOrderDetail, _purchaseReceivalDetailService);
             return isValid(purchaseOrderDetail);
         }
 

@@ -183,6 +183,8 @@ namespace Validation.Validation
         public PurchaseReceivalDetail VFinishObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
             VHasNotBeenFinished(purchaseReceivalDetail);
+            // TODO
+            //VPurchaseOrderHasBeenFinished(purchaseOrderDetail);
             return purchaseReceivalDetail;
         }
 

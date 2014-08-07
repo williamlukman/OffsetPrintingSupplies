@@ -8,7 +8,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-
 namespace Service.Service
 {
     public class BarringOrderService : IBarringOrderService

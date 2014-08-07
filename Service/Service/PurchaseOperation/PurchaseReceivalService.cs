@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Service.Service
 {
     public class PurchaseReceivalService : IPurchaseReceivalService
@@ -99,6 +98,26 @@ namespace Service.Service
             {
                 _repository.CompleteObject(purchaseReceival);
             }
+            return purchaseReceival;
+        }
+
+        public PurchaseReceival CheckAndSetInvoiceComplete(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        {
+            IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
+
+            foreach (var detail in details)
+            {
+                if (!detail.IsAllInvoiced)
+                {
+                    return purchaseReceival;
+                }
+            }
+            return _repository.SetInvoiceComplete(purchaseReceival);
+        }
+
+        public PurchaseReceival UnsetInvoiceComplete(PurchaseReceival purchaseReceival)
+        {
+            _repository.UnsetInvoiceComplete(purchaseReceival);
             return purchaseReceival;
         }
     }

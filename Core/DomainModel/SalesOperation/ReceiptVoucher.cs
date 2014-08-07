@@ -18,18 +18,18 @@ namespace Core.DomainModel
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }
 
+        // TODO
         public decimal TotalAmount { get; set; }
         public decimal PendingClearanceAmount { get; set; }
+
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeleted { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
 
         public virtual Customer Customer { get; set; }
-        public virtual CashBank CashBank { get; set; }
         public virtual ICollection<ReceiptVoucherDetail> ReceiptVoucherDetails { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }

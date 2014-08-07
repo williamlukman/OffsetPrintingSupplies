@@ -28,14 +28,15 @@ namespace Data.Repository
             return purchaseInvoice;
         }
 
-        public IList<PurchaseInvoice> GetObjectsByContactId(int contactId)
+        public IList<PurchaseInvoice> GetObjectsByPurchaseReceivalId(int purchaseReceivalId)
         {
-            return FindAll(pi => pi.ContactId == contactId && !pi.IsDeleted).ToList();
+            return FindAll(pi => pi.PurchaseReceivalId == purchaseReceivalId && !pi.IsDeleted).ToList();
         }
 
         public PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice)
         {
             purchaseInvoice.Code = SetObjectCode();
+            purchaseInvoice.AmountPayable = 0;
             purchaseInvoice.IsDeleted = false;
             purchaseInvoice.IsConfirmed = false;
             purchaseInvoice.CreatedAt = DateTime.Now;
@@ -66,6 +67,7 @@ namespace Data.Repository
         public PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice)
         {
             purchaseInvoice.IsConfirmed = true;
+            purchaseInvoice.ConfirmationDate = DateTime.Now;
             Update(purchaseInvoice);
             return purchaseInvoice;
         }
@@ -73,13 +75,14 @@ namespace Data.Repository
         public PurchaseInvoice UnconfirmObject(PurchaseInvoice purchaseInvoice)
         {
             purchaseInvoice.IsConfirmed = false;
-            Update(purchaseInvoice);
+            purchaseInvoice.ConfirmationDate = null;
+            UpdateObject(purchaseInvoice);
             return purchaseInvoice;
         }
 
         public string SetObjectCode()
         {
-            // Code: #{year}/#{total_number
+            // Code: #{year}/#{total_number + 1}
             int totalobject = FindAll().Count() + 1;
             string Code = "#" + DateTime.Now.Year.ToString() + "/#" + totalobject;
             return Code;

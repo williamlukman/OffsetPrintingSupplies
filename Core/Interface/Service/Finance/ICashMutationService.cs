@@ -13,8 +13,8 @@ namespace Core.Interface.Service
         IList<CashMutation> GetAll();
         CashMutation GetObjectById(int Id);
         IList<CashMutation> GetObjectsByCashBankId(int cashBankId);
-        IList<CashMutation> GetObjectsBySourceDocument(string SourceDocumentType, int SourceDocumentId);
-        CashMutation CreateObject(CashMutation cashMutation);
+        IList<CashMutation> GetObjectsBySourceDocument(int cashBankId, string SourceDocumentType, int SourceDocumentId);
+        CashMutation CreateObject(CashMutation cashMutation, ICashBankService _cashBankService);
         CashMutation SoftDeleteObject(CashMutation cashMutation);
         bool DeleteObject(int Id);
         CashMutation CreateCashMutationForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
@@ -25,7 +25,7 @@ namespace Core.Interface.Service
         IList<CashMutation> SoftDeleteCashMutationForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
         IList<CashMutation> SoftDeleteCashMutationForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
         IList<CashMutation> SoftDeleteCashMutationForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
-        CashMutation CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService);
-        CashMutation ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService);
+        void CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService);
+        void ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService);
     }
 }

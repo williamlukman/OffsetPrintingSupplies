@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.Interface.Validation;
 
 namespace Service.Service
@@ -181,14 +180,16 @@ namespace Service.Service
         {
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Addition) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
-            _cashBankService.AdjustAmount(cashBank, Amount);
+            cashBank.Amount += Amount;
+            _cashBankService.UpdateObject(cashBank);
         }
 
         public void ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService)
         {
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Deduction) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
-            _cashBankService.AdjustAmount(cashBank, Amount);
+            cashBank.Amount -= Amount;
+            _cashBankService.UpdateObject(cashBank);
         }
     }
 }

@@ -22,6 +22,11 @@ namespace Data.Repository
             return FindAll(x => !x.IsDeleted).ToList();
         }
 
+        public IList<CashBankAdjustment> GetObjectsByCashBankId(int cashBankId)
+        {
+            return FindAll(x => x.CashBankId == cashBankId && !x.IsDeleted).ToList();
+        }
+
         public CashBankAdjustment GetObjectById(int Id)
         {
             CashBankAdjustment cashBankAdjustment = Find(x => x.Id == Id && !x.IsDeleted);

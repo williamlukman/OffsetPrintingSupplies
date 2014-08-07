@@ -18,6 +18,8 @@ namespace Core.Interface.Repository
         DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder);
         DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder);
         DeliveryOrder CompleteObject(DeliveryOrder deliveryOrder);
+        DeliveryOrder SetInvoiceComplete(DeliveryOrder deliveryOrder);
+        DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder);
         string SetObjectCode();
     }
 }

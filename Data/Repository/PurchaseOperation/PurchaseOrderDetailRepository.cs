@@ -39,7 +39,6 @@ namespace Data.Repository
             }
             purchaseOrderDetail.Code = SetObjectCode(ParentCode);
             purchaseOrderDetail.IsFinished = false;
-            purchaseOrderDetail.IsReceived = false;
             purchaseOrderDetail.IsDeleted = false;
             purchaseOrderDetail.CreatedAt = DateTime.Now;
             return Create(purchaseOrderDetail);
@@ -78,13 +77,6 @@ namespace Data.Repository
         {
             purchaseOrderDetail.IsFinished = false;
             purchaseOrderDetail.FinishDate = null;
-            UpdateObject(purchaseOrderDetail);
-            return purchaseOrderDetail;
-        }
-
-        public PurchaseOrderDetail ReceiveObject(PurchaseOrderDetail purchaseOrderDetail)
-        {
-            purchaseOrderDetail.IsReceived = true;
             UpdateObject(purchaseOrderDetail);
             return purchaseOrderDetail;
         }

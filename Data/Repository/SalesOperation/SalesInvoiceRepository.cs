@@ -18,24 +18,25 @@ namespace Data.Repository
 
         public IList<SalesInvoice> GetAll()
         {
-            return FindAll(si => !si.IsDeleted).ToList();
+            return FindAll(pi => !pi.IsDeleted).ToList();
         }
 
         public SalesInvoice GetObjectById(int Id)
         {
-            SalesInvoice salesInvoice = Find(si => si.Id == Id && !si.IsDeleted);
+            SalesInvoice salesInvoice = Find(pi => pi.Id == Id && !pi.IsDeleted);
             if (salesInvoice != null) { salesInvoice.Errors = new Dictionary<string, string>(); }
             return salesInvoice;
         }
 
-        public IList<SalesInvoice> GetObjectsByContactId(int contactId)
+        public IList<SalesInvoice> GetObjectsByDeliveryOrderId(int deliveryOrderId)
         {
-            return FindAll(si => si.ContactId == contactId && !si.IsDeleted).ToList();
+            return FindAll(pi => pi.DeliveryOrderId == deliveryOrderId && !pi.IsDeleted).ToList();
         }
 
         public SalesInvoice CreateObject(SalesInvoice salesInvoice)
         {
             salesInvoice.Code = SetObjectCode();
+            salesInvoice.AmountReceivable = 0;
             salesInvoice.IsDeleted = false;
             salesInvoice.IsConfirmed = false;
             salesInvoice.CreatedAt = DateTime.Now;
@@ -59,13 +60,14 @@ namespace Data.Repository
 
         public bool DeleteObject(int Id)
         {
-            SalesInvoice si = Find(x => x.Id == Id);
-            return (Delete(si) == 1) ? true : false;
+            SalesInvoice pi = Find(x => x.Id == Id);
+            return (Delete(pi) == 1) ? true : false;
         }
 
         public SalesInvoice ConfirmObject(SalesInvoice salesInvoice)
         {
             salesInvoice.IsConfirmed = true;
+            salesInvoice.ConfirmationDate = DateTime.Now;
             Update(salesInvoice);
             return salesInvoice;
         }
@@ -73,13 +75,14 @@ namespace Data.Repository
         public SalesInvoice UnconfirmObject(SalesInvoice salesInvoice)
         {
             salesInvoice.IsConfirmed = false;
-            Update(salesInvoice);
+            salesInvoice.ConfirmationDate = null;
+            UpdateObject(salesInvoice);
             return salesInvoice;
         }
 
         public string SetObjectCode()
         {
-            // Code: #{year}/#{total_number
+            // Code: #{year}/#{total_number + 1}
             int totalobject = FindAll().Count() + 1;
             string Code = "#" + DateTime.Now.Year.ToString() + "/#" + totalobject;
             return Code;

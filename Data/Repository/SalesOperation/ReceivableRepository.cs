@@ -22,27 +22,28 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
-        public IList<Receivable> GetObjectsByContactId(int contactId)
+        public IList<Receivable> GetObjectsByCustomerId(int customerId)
         {
-            return FindAll(r => r.ContactId == contactId && !r.IsDeleted).ToList();
+            return FindAll(p => p.CustomerId == customerId && !p.IsDeleted).ToList();
         }
 
         public Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId)
         {
-            Receivable receivable = Find(r => r.ReceivableSource == ReceivableSource && r.ReceivableSourceId == ReceivableSourceId && !r.IsDeleted);
+            Receivable receivable = Find(p => p.ReceivableSource == ReceivableSource && p.ReceivableSourceId == ReceivableSourceId && !p.IsDeleted);
             if (receivable != null) { receivable.Errors = new Dictionary<string, string>(); }
             return receivable;
         }
 
         public Receivable GetObjectById(int Id)
         {
-            Receivable receivable = Find(r => r.Id == Id && !r.IsDeleted);
+            Receivable receivable = Find(p => p.Id == Id && !p.IsDeleted);
             if (receivable != null) { receivable.Errors = new Dictionary<string, string>(); }
             return receivable;
         }
 
         public Receivable CreateObject(Receivable receivable)
         {
+            receivable.Code = SetObjectCode();
             receivable.PendingClearanceAmount = 0;
             receivable.IsCompleted = false;
             receivable.IsDeleted = false;

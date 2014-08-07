@@ -12,15 +12,16 @@ namespace Core.Interface.Service
         IReceiptVoucherDetailValidator GetValidator();
         IList<ReceiptVoucherDetail> GetObjectsByReceiptVoucherId(int receiptVoucherId);
         IList<ReceiptVoucherDetail> GetObjectsByReceivableId(int receivableId);
-        ReceiptVoucherDetail GetObjectById(int Id);
-        ReceiptVoucherDetail CreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
+        ReceiptVoucherDetail GetObjectById(int Id);        
+        ReceiptVoucherDetail CreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
+                                          ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail CreateObject(int receiptVoucherId, int receivableId, decimal amount, string description,
-                                            IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService,
-                                            IReceivableService _receivableService, ICustomerService _customerService);
-        ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
+                                          IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService);
+        ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
+                                          ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail SoftDeleteObject(ReceiptVoucherDetail receiptVoucherDetail);
         bool DeleteObject(int Id);
-        ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
-        ReceiptVoucherDetail UnconfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
+        ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService);
+        ReceiptVoucherDetail UnconfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService);
     }
 }

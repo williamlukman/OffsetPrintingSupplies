@@ -18,12 +18,17 @@ namespace Data.Repository
 
         public IList<SalesInvoiceDetail> GetObjectsBySalesInvoiceId(int salesInvoiceId)
         {
-            return FindAll(sid => sid.SalesInvoiceId == salesInvoiceId && !sid.IsDeleted).ToList();
+            return FindAll(pid => pid.SalesInvoiceId == salesInvoiceId && !pid.IsDeleted).ToList();
+        }
+
+        public IList<SalesInvoiceDetail> GetObjectsByDeliveryOrderDetailId(int deliveryOrderDetailId)
+        {
+            return FindAll(pid => pid.DeliveryOrderDetailId == deliveryOrderDetailId && !pid.IsDeleted).ToList();
         }
 
         public SalesInvoiceDetail GetObjectById(int Id)
         {
-            SalesInvoiceDetail detail = Find(sid => sid.Id == Id);
+            SalesInvoiceDetail detail = Find(pid => pid.Id == Id);
             if (detail != null) { detail.Errors = new Dictionary<string, string>(); }
             return detail;
         }
@@ -61,8 +66,8 @@ namespace Data.Repository
 
         public bool DeleteObject(int Id)
         {
-            SalesInvoiceDetail sid = Find(x => x.Id == Id);
-            return (Delete(sid) == 1) ? true : false;
+            SalesInvoiceDetail pid = Find(x => x.Id == Id);
+            return (Delete(pid) == 1) ? true : false;
         }
 
         public SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail)
@@ -84,6 +89,8 @@ namespace Data.Repository
             // Code: #{parent_object.code}/#{total_number_objects}
             int totalobject = FindAll().Count() + 1;
             string Code = ParentCode + "/#" + totalobject;
+            // TODO
+            // string Code = DateTime.Now.Year + "." + DateTime.Now.Month + "." + totalforthemonth;
             return Code;
         } 
 

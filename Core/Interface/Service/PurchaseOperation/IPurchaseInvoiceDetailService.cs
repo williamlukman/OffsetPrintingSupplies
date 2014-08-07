@@ -11,16 +11,18 @@ namespace Core.Interface.Service
     {
         IPurchaseInvoiceDetailValidator GetValidator();
         IList<PurchaseInvoiceDetail> GetObjectsByPurchaseInvoiceId(int purchaseInvoiceId);
+        IList<PurchaseInvoiceDetail> GetObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId);
         PurchaseInvoiceDetail GetObjectById(int Id);
-        PurchaseReceivalDetail GetPurchaseReceivalDetailByPurchaseReceivalDetailId(int purchaseReceivalDetailId);
         PurchaseInvoiceDetail CreateObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService,
-                                           IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+                                           IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseInvoiceDetail CreateObject(int purchaseInvoiceId, int purchaseReceivalDetailId, int quantity, decimal amount,
-                                           IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseInvoiceDetail UpdateObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseInvoiceDetail SoftDeleteObject(PurchaseInvoiceDetail purchaseInvoiceDetail);
+                                           IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                           IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        PurchaseInvoiceDetail UpdateObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService,
+                                           IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        PurchaseInvoiceDetail SoftDeleteObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService);
         bool DeleteObject(int Id);
         PurchaseInvoiceDetail ConfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseInvoiceDetail UnconfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+        PurchaseInvoiceDetail UnconfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
     }
 }

@@ -29,5 +29,7 @@ namespace Core.Interface.Service
                                             IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         PurchaseReceivalDetail UnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                               IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity);
+        PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity, IPurchaseReceivalService _purchaseReceivalService);
     }
 }

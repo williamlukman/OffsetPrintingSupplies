@@ -25,13 +25,11 @@ namespace Core.Interface.Validation
         SalesOrderDetail VDeleteObject(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail VFinishObject(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail VUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
-        SalesOrderDetail VDeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool ValidCreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService);
         bool ValidUpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService);
         bool ValidDeleteObject(SalesOrderDetail salesOrderDetail);
         bool ValidFinishObject(SalesOrderDetail salesOrderDetail);
         bool ValidUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
-        bool ValidDeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool isValid(SalesOrderDetail salesOrderDetail);
         string PrintError(SalesOrderDetail salesOrderDetail);
     }

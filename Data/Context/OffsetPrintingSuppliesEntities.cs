@@ -133,6 +133,9 @@ namespace Data.Context
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
         public DbSet<PurchaseReceival> PurchaseReceivals { get; set; }
+        public DbSet<Receivable> Receivables { get; set; }
+        public DbSet<ReceiptVoucherDetail> ReceiptVoucherDetails { get; set; }
+        public DbSet<ReceiptVoucher> ReceiptVouchers { get; set; }
         public DbSet<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
         public DbSet<RecoveryOrder> RecoveryOrders { get; set; }
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
@@ -140,6 +143,8 @@ namespace Data.Context
         public DbSet<RollerType> RollerTypes { get; set; }
         public DbSet<RollerWarehouseMutationDetail> RolleWarehouseMutationDetail { get; set; }
         public DbSet<RollerWarehouseMutation> RolleWarehouseMutation { get; set; }
+        public DbSet<SalesInvoiceDetail> SalesInvoiceDetails { get; set; }
+        public DbSet<SalesInvoice> SalesInvoices { get; set; }
         public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<StockAdjustment> StockAdjustments { get; set; }

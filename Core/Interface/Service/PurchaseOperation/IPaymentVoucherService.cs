@@ -24,13 +24,14 @@ namespace Core.Interface.Service
                                     ICustomerService _customerService, ICashBankService _cashBankService);
         PaymentVoucher SoftDeleteObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
         bool DeleteObject(int Id);
-        PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashMutationService _cashMutationService,
-                                     ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
-        PaymentVoucher UnconfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashMutationService _cashMutationService,
-                                     ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
-        PaymentVoucher ReconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashMutationService _cashMutationService,
-                                     ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
-        PaymentVoucher UnreconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashMutationService _cashMutationService,
-                                     ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
+        PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                     ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService);
+        PaymentVoucher UnconfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                       ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService);
+        PaymentVoucher ReconcileObject(PaymentVoucher paymentVoucher, DateTime ReconciliationDate,
+                                       IPaymentVoucherDetailService _paymentVoucherDetailService, ICashMutationService _cashMutationService,
+                                       ICashBankService _cashBankService, IPayableService _payableService);
+        PaymentVoucher UnreconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
+                                         ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService);
     }
 }

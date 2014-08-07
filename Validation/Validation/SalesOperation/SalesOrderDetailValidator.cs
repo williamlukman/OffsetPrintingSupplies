@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -171,12 +169,6 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VDeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
-        {
-            VDeliveryOrderDetailHasBeenFinished(salesOrderDetail, _deliveryOrderDetailService);
-            return salesOrderDetail;
-        }
-
         public bool ValidCreateObject(SalesOrderDetail salesOrderDetail,  ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             VCreateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService);
@@ -208,13 +200,6 @@ namespace Validation.Validation
         {
             salesOrderDetail.Errors.Clear();
             VUnfinishObject(salesOrderDetail, _salesOrderService, _salesOrderDetailService, _deliveryOrderDetailService, _itemService);
-            return isValid(salesOrderDetail);
-        }
-
-        public bool ValidDeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
-        {
-            salesOrderDetail.Errors.Clear();
-            VDeliverObject(salesOrderDetail, _deliveryOrderDetailService);
             return isValid(salesOrderDetail);
         }
 

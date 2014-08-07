@@ -14,7 +14,7 @@ namespace Data.Mapping
             HasKey(cba => cba.Id);
             HasRequired(cba => cba.CashBank)
                 .WithMany()
-                .HasForeignKey(cba => cba.CashBankAdjustmentId)
+                .HasForeignKey(cba => cba.CashBankId)
                 .WillCascadeOnDelete(false);
             Ignore(cba => cba.Errors);
         }

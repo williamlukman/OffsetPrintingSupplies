@@ -19,7 +19,6 @@ namespace Core.DomainModel
         // TODO IsConfirmed
         public bool IsFinished { get; set; }
         public Nullable<DateTime> FinishDate { get; set; }
-        public bool IsReceived { get; set; }
 
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

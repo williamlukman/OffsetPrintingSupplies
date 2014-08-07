@@ -18,17 +18,17 @@ namespace Data.Repository
 
         public IList<ReceiptVoucherDetail> GetObjectsByReceiptVoucherId(int receiptVoucherId)
         {
-            return FindAll(rvd => rvd.ReceiptVoucherId == receiptVoucherId && !rvd.IsDeleted).ToList();
+            return FindAll(pvd => pvd.ReceiptVoucherId == receiptVoucherId && !pvd.IsDeleted).ToList();
         }
 
         public IList<ReceiptVoucherDetail> GetObjectsByReceivableId(int receivableId)
         {
-            return FindAll(rvd => rvd.ReceivableId == receivableId && !rvd.IsDeleted).ToList();
+            return FindAll(pvd => pvd.ReceivableId == receivableId && !pvd.IsDeleted).ToList();
         }
 
         public ReceiptVoucherDetail GetObjectById(int Id)
         {
-            ReceiptVoucherDetail detail = Find(rvd => rvd.Id == Id);
+            ReceiptVoucherDetail detail = Find(pvd => pvd.Id == Id);
             if (detail != null) { detail.Errors = new Dictionary<string, string>(); }
             return detail;
         }
@@ -66,13 +66,14 @@ namespace Data.Repository
 
         public bool DeleteObject(int Id)
         {
-            ReceiptVoucherDetail rvd = Find(x => x.Id == Id);
-            return (Delete(rvd) == 1) ? true : false;
+            ReceiptVoucherDetail pvd = Find(x => x.Id == Id);
+            return (Delete(pvd) == 1) ? true : false;
         }
 
         public ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail)
         {
             receiptVoucherDetail.IsConfirmed = true;
+            receiptVoucherDetail.ConfirmationDate = DateTime.Now;
             Update(receiptVoucherDetail);
             return receiptVoucherDetail;
         }
@@ -80,21 +81,8 @@ namespace Data.Repository
         public ReceiptVoucherDetail UnconfirmObject(ReceiptVoucherDetail receiptVoucherDetail)
         {
             receiptVoucherDetail.IsConfirmed = false;
-            Update(receiptVoucherDetail);
-            return receiptVoucherDetail;
-        }
-
-        public ReceiptVoucherDetail ClearObject(ReceiptVoucherDetail receiptVoucherDetail)
-        {
-            receiptVoucherDetail.IsCleared = true;
-            Update(receiptVoucherDetail);
-            return receiptVoucherDetail;
-        }
-
-        public ReceiptVoucherDetail UnclearObject(ReceiptVoucherDetail receiptVoucherDetail)
-        {
-            receiptVoucherDetail.IsCleared = false;
-            Update(receiptVoucherDetail);
+            receiptVoucherDetail.ConfirmationDate = null;
+            UpdateObject(receiptVoucherDetail);
             return receiptVoucherDetail;
         }
 

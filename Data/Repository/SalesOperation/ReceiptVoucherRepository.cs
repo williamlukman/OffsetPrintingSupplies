@@ -18,24 +18,24 @@ namespace Data.Repository
 
         public IList<ReceiptVoucher> GetAll()
         {
-            return FindAll(rv => !rv.IsDeleted).ToList();
-        }
-
-        public IList<ReceiptVoucher> GetObjectsByCashBankId(int cashBankId)
-        {
-            return FindAll(rv => rv.CashBankId == cashBankId && !rv.IsDeleted).ToList();
+            return FindAll(pv => !pv.IsDeleted).ToList();
         }
 
         public ReceiptVoucher GetObjectById(int Id)
         {
-            ReceiptVoucher receiptVoucher = Find(rv => rv.Id == Id && !rv.IsDeleted);
+            ReceiptVoucher receiptVoucher = Find(pv => pv.Id == Id && !pv.IsDeleted);
             if (receiptVoucher != null) { receiptVoucher.Errors = new Dictionary<string, string>(); }
             return receiptVoucher;
         }
 
-        public IList<ReceiptVoucher> GetObjectsByContactId(int contactId)
+        public IList<ReceiptVoucher> GetObjectsByCashBankId(int cashBankId)
         {
-            return FindAll(rv => rv.ContactId == contactId && !rv.IsDeleted).ToList();
+            return FindAll(pv => pv.CashBankId == cashBankId && !pv.IsDeleted).ToList();
+        }
+
+        public IList<ReceiptVoucher> GetObjectsByCustomerId(int customerId)
+        {
+            return FindAll(pv => pv.CustomerId == customerId && !pv.IsDeleted).ToList();
         }
 
         public ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher)
@@ -44,6 +44,7 @@ namespace Data.Repository
             receiptVoucher.Code = SetObjectCode();
             receiptVoucher.IsDeleted = false;
             receiptVoucher.IsConfirmed = false;
+            receiptVoucher.IsReconciled = false;
             receiptVoucher.CreatedAt = DateTime.Now;
             return Create(receiptVoucher);
         }
@@ -65,13 +66,14 @@ namespace Data.Repository
 
         public bool DeleteObject(int Id)
         {
-            ReceiptVoucher rv = Find(x => x.Id == Id);
-            return (Delete(rv) == 1) ? true : false;
+            ReceiptVoucher pv = Find(x => x.Id == Id);
+            return (Delete(pv) == 1) ? true : false;
         }
 
         public ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher)
         {
             receiptVoucher.IsConfirmed = true;
+            receiptVoucher.ConfirmationDate = DateTime.Now;
             Update(receiptVoucher);
             return receiptVoucher;
         }
@@ -79,24 +81,25 @@ namespace Data.Repository
         public ReceiptVoucher UnconfirmObject(ReceiptVoucher receiptVoucher)
         {
             receiptVoucher.IsConfirmed = false;
-            Update(receiptVoucher);
+            receiptVoucher.ConfirmationDate = null;
+            UpdateObject(receiptVoucher);
             return receiptVoucher;
         }
 
-        public ReceiptVoucher ClearObject(ReceiptVoucher receiptVoucher)
+        public ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher)
         {
-            receiptVoucher.IsCleared = true;
+            receiptVoucher.IsReconciled = true;
             Update(receiptVoucher);
             return receiptVoucher;
         }
 
-        public ReceiptVoucher UnclearObject(ReceiptVoucher receiptVoucher)
+        public ReceiptVoucher UnreconcileObject(ReceiptVoucher receiptVoucher)
         {
-            receiptVoucher.IsCleared = false;
-            Update(receiptVoucher);
+            receiptVoucher.IsReconciled = false;
+            receiptVoucher.ReconciliationDate = null;
+            UpdateObject(receiptVoucher);
             return receiptVoucher;
         }
-
 
         public string SetObjectCode()
         {

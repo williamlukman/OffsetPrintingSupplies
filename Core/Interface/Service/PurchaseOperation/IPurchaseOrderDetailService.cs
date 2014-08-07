@@ -22,6 +22,5 @@ namespace Core.Interface.Service
                                          IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         PurchaseOrderDetail UnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                            IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        PurchaseOrderDetail ReceiveObject(PurchaseOrderDetail purchaseOrderDetail);
     }
 }

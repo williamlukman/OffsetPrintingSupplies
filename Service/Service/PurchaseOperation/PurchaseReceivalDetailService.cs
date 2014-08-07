@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Service.Service
 {
     public class PurchaseReceivalDetailService : IPurchaseReceivalDetailService
@@ -133,6 +132,27 @@ namespace Service.Service
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
             }
+            return purchaseReceivalDetail;
+        }
+
+        public PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity)
+        {
+            purchaseReceivalDetail.PendingInvoicedQuantity -= Quantity;
+            purchaseReceivalDetail.InvoicedQuantity += Quantity;
+            if (purchaseReceivalDetail.PendingInvoicedQuantity == 0) { purchaseReceivalDetail.IsAllInvoiced = true; }
+            _repository.UpdateObject(purchaseReceivalDetail);
+            return purchaseReceivalDetail;
+        }
+
+        public PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity, IPurchaseReceivalService _purchaseReceivalService)
+        {
+            PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+            _purchaseReceivalService.UnsetInvoiceComplete(purchaseReceival);
+
+            purchaseReceivalDetail.IsAllInvoiced = false;
+            purchaseReceivalDetail.PendingInvoicedQuantity += Quantity;
+            purchaseReceivalDetail.InvoicedQuantity -= Quantity;
+            _repository.UpdateObject(purchaseReceivalDetail);
             return purchaseReceivalDetail;
         }
     }

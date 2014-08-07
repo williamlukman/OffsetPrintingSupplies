@@ -13,14 +13,15 @@ namespace Core.Interface.Service
         IList<PaymentVoucherDetail> GetObjectsByPaymentVoucherId(int paymentVoucherId);
         IList<PaymentVoucherDetail> GetObjectsByPayableId(int payableId);
         PaymentVoucherDetail GetObjectById(int Id);        
-        PaymentVoucherDetail CreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
+        PaymentVoucherDetail CreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
+                                          ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail CreateObject(int paymentVoucherId, int payableId, decimal amount, string description,
-                                            IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService,
-                                            IPayableService _payableService, ICustomerService _customerService);
-        PaymentVoucherDetail UpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
+                                          IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService);
+        PaymentVoucherDetail UpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
+                                          ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail);
         bool DeleteObject(int Id);
-        PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
-        PaymentVoucherDetail UnconfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService, ICustomerService _customerService);
+        PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
+        PaymentVoucherDetail UnconfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
     }
 }

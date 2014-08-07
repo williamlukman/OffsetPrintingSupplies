@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Service.Service
 {
     public class DeliveryOrderService : IDeliveryOrderService
@@ -96,6 +95,26 @@ namespace Service.Service
         public DeliveryOrder CompleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
             return (deliveryOrder = _validator.ValidCompleteObject(deliveryOrder, _deliveryOrderDetailService) ? _repository.CompleteObject(deliveryOrder) : deliveryOrder);
+        }
+
+        public DeliveryOrder CheckAndSetInvoiceComplete(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        {
+            IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+
+            foreach (var detail in details)
+            {
+                if (!detail.IsAllInvoiced)
+                {
+                    return deliveryOrder;
+                }
+            }
+            return _repository.SetInvoiceComplete(deliveryOrder);
+        }
+
+        public DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder)
+        {
+            _repository.UnsetInvoiceComplete(deliveryOrder);
+            return deliveryOrder;
         }
     }
 }

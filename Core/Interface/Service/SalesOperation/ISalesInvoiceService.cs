@@ -12,15 +12,17 @@ namespace Core.Interface.Service
         ISalesInvoiceValidator GetValidator();
         IList<SalesInvoice> GetAll();
         SalesInvoice GetObjectById(int Id);
-        DeliveryOrder GetDeliveryOrderByDeliveryOrderId(int deliveryOrderId);
-        IList<SalesInvoice> GetObjectsByContactId(int customerId);
-        SalesInvoice CreateObject(SalesInvoice salesInvoice, ICustomerService _customerService);
-        SalesInvoice CreateObject(int customerId, string description, decimal totalAmount, ICustomerService _customerService);
-        SalesInvoice UpdateObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, ICustomerService _customerService);
-        SalesInvoice SoftDeleteObject(SalesInvoice salesInvoice);
+        IList<SalesInvoice> GetObjectsByDeliveryOrderId(int deliveryOrderId);
+        SalesInvoice CreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
+        SalesInvoice CreateObject(int deliveryOrderId, string description, int discount, int tax, DateTime InvoiceDate, DateTime DueDate, IDeliveryOrderService _deliveryOrderService);
+        SalesInvoice UpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService);
+        SalesInvoice SoftDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
         bool DeleteObject(int Id);
-        SalesInvoice ConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService);
+        SalesInvoice ConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
+                                      IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService);
         SalesInvoice UnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
+                                        IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                         IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+        SalesInvoice CalculateAmountReceivable(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
     }
 }

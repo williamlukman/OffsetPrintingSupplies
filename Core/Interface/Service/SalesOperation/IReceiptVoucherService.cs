@@ -14,21 +14,24 @@ namespace Core.Interface.Service
         ReceiptVoucher GetObjectById(int Id);
         IList<ReceiptVoucher> GetObjectsByCashBankId(int cashBankId);
         IList<ReceiptVoucher> GetObjectsByCustomerId(int customerId);
-        ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService);
-        ReceiptVoucher CreateObject(int cashBankId, int customerId, DateTime paymentDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+        ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
+                                    ICustomerService _customerService, ICashBankService _cashBankService);
+        ReceiptVoucher CreateObject(int cashBankId, int customerId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
                                     IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
                                     ICustomerService _customerService, ICashBankService _cashBankService);
         ReceiptVoucher UpdateAmount(ReceiptVoucher receiptVoucher);
-        ReceiptVoucher UpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService);
+        ReceiptVoucher UpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
+                                    ICustomerService _customerService, ICashBankService _cashBankService);
         ReceiptVoucher SoftDeleteObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool DeleteObject(int Id);
-        ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashMutationService _cashMutationService, 
-                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
-        ReceiptVoucher UnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashMutationService _cashMutationService, 
-                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
-        ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashMutationService _cashMutationService, 
-                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
-        ReceiptVoucher UnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashMutationService _cashMutationService, 
-                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICustomerService _customerService);
+        ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService);
+        ReceiptVoucher UnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                       ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService);
+        ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher, DateTime ReconciliationDate,
+                                       IReceiptVoucherDetailService _receiptVoucherDetailService, ICashMutationService _cashMutationService,
+                                       ICashBankService _cashBankService, IReceivableService _receivableService);
+        ReceiptVoucher UnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                         ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService);
     }
 }

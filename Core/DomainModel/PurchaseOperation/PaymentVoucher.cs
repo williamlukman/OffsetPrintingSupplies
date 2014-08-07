@@ -18,6 +18,7 @@ namespace Core.DomainModel
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }
 
+        // TODO
         public decimal TotalAmount { get; set; }
         public decimal PendingClearanceAmount { get; set; }
 

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Service.Service
 {
     public class DeliveryOrderDetailService : IDeliveryOrderDetailService
@@ -110,13 +109,6 @@ namespace Service.Service
                     //item.Quantity -= deliveryOrderDetail.Quantity;
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
-
-                // SalesOrderDetail.IsDelivered = true
-                SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
-                if (_salesOrderDetailService.GetValidator().ValidDeliverObject(salesOrderDetail, this))
-                {
-                    _salesOrderDetailService.DeliverObject(salesOrderDetail, this);
-                }
             }
             return deliveryOrderDetail;
         }
@@ -140,5 +132,27 @@ namespace Service.Service
             }
             return deliveryOrderDetail;
         }
+
+        public DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity)
+        {
+            deliveryOrderDetail.PendingInvoicedQuantity -= Quantity;
+            deliveryOrderDetail.InvoicedQuantity += Quantity;
+            if (deliveryOrderDetail.PendingInvoicedQuantity == 0) { deliveryOrderDetail.IsAllInvoiced = true; }
+            _repository.UpdateObject(deliveryOrderDetail);
+            return deliveryOrderDetail;
+        }
+
+        public DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity, IDeliveryOrderService _deliveryOrderService)
+        {
+            DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+            _deliveryOrderService.UnsetInvoiceComplete(deliveryOrder);
+
+            deliveryOrderDetail.IsAllInvoiced = false;
+            deliveryOrderDetail.PendingInvoicedQuantity += Quantity;
+            deliveryOrderDetail.InvoicedQuantity -= Quantity;
+            _repository.UpdateObject(deliveryOrderDetail);
+            return deliveryOrderDetail;
+        }
+
     }
 }

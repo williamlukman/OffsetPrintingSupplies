@@ -12,6 +12,9 @@ namespace Core.DomainModel
         public int DeliveryOrderId { get; set; }
         public int ItemId { get; set; }
         public int Quantity { get; set; }
+        public bool IsAllInvoiced { get; set; }
+        public int InvoicedQuantity { get; set; }
+        public int PendingInvoicedQuantity { get; set; }
         public int SalesOrderDetailId { get; set; }
         public int CustomerId { get; set; }
 

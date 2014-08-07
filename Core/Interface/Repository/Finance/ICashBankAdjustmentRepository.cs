@@ -9,8 +9,8 @@ namespace Core.Interface.Repository
     public interface ICashBankAdjustmentRepository : IRepository<CashBankAdjustment>
     {
         IList<CashBankAdjustment> GetAll();
-        CashBankAdjustment GetObjectById(int Id);
         IList<CashBankAdjustment> GetObjectsByCashBankId(int cashBankId);
+        CashBankAdjustment GetObjectById(int Id);
         CashBankAdjustment CreateObject(CashBankAdjustment cashBankAdjustment);
         CashBankAdjustment UpdateObject(CashBankAdjustment cashBankAdjustment);
         CashBankAdjustment SoftDeleteObject(CashBankAdjustment cashBankAdjustment);

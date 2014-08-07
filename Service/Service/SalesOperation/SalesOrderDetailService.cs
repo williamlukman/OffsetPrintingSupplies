@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Service.Service
 {
     public class SalesOrderDetailService : ISalesOrderDetailService
@@ -104,11 +103,6 @@ namespace Service.Service
                 }
             }
             return salesOrderDetail;
-        }
-
-        public SalesOrderDetail DeliverObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
-        {
-            return (salesOrderDetail = _validator.ValidDeliverObject(salesOrderDetail, _deliveryOrderDetailService) ? _repository.DeliverObject(salesOrderDetail) : salesOrderDetail);
         }
     }
 }

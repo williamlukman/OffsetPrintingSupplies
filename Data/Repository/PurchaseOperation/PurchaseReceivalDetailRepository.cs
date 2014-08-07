@@ -45,6 +45,9 @@ namespace Data.Repository
             purchaseReceivalDetail.Code = SetObjectCode(ParentCode);
             purchaseReceivalDetail.IsFinished = false;
             purchaseReceivalDetail.IsDeleted = false;
+            purchaseReceivalDetail.IsAllInvoiced = false;
+            purchaseReceivalDetail.InvoicedQuantity = 0;
+            purchaseReceivalDetail.PendingInvoicedQuantity = purchaseReceivalDetail.Quantity;
             purchaseReceivalDetail.CreatedAt = DateTime.Now;
             return Create(purchaseReceivalDetail);
         }

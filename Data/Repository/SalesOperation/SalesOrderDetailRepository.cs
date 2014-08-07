@@ -39,7 +39,6 @@ namespace Data.Repository
             }
             salesOrderDetail.Code = SetObjectCode(ParentCode);
             salesOrderDetail.IsFinished = false;
-            salesOrderDetail.IsDelivered = false;
             salesOrderDetail.IsDeleted = false;
             salesOrderDetail.CreatedAt = DateTime.Now;
             return Create(salesOrderDetail);
@@ -78,13 +77,6 @@ namespace Data.Repository
         {
             salesOrderDetail.IsFinished = false;
             salesOrderDetail.FinishDate = null;
-            UpdateObject(salesOrderDetail);
-            return salesOrderDetail;
-        }
-
-        public SalesOrderDetail DeliverObject(SalesOrderDetail salesOrderDetail)
-        {
-            salesOrderDetail.IsDelivered = true;
             UpdateObject(salesOrderDetail);
             return salesOrderDetail;
         }

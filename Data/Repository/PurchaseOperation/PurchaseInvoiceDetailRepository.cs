@@ -21,6 +21,11 @@ namespace Data.Repository
             return FindAll(pid => pid.PurchaseInvoiceId == purchaseInvoiceId && !pid.IsDeleted).ToList();
         }
 
+        public IList<PurchaseInvoiceDetail> GetObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId)
+        {
+            return FindAll(pid => pid.PurchaseReceivalDetailId == purchaseReceivalDetailId && !pid.IsDeleted).ToList();
+        }
+
         public PurchaseInvoiceDetail GetObjectById(int Id)
         {
             PurchaseInvoiceDetail detail = Find(pid => pid.Id == Id);
@@ -84,6 +89,8 @@ namespace Data.Repository
             // Code: #{parent_object.code}/#{total_number_objects}
             int totalobject = FindAll().Count() + 1;
             string Code = ParentCode + "/#" + totalobject;
+            // TODO
+            // string Code = DateTime.Now.Year + "." + DateTime.Now.Month + "." + totalforthemonth;
             return Code;
         } 
 

@@ -39,6 +39,7 @@ namespace Data.Repository
             purchaseReceival.IsDeleted = false;
             purchaseReceival.IsCompleted = false;
             purchaseReceival.IsConfirmed = false;
+            purchaseReceival.IsInvoiceCompleted = false;
             purchaseReceival.CreatedAt = DateTime.Now;
             return Create(purchaseReceival);
         }
@@ -83,6 +84,20 @@ namespace Data.Repository
         public PurchaseReceival CompleteObject(PurchaseReceival purchaseReceival)
         {
             purchaseReceival.IsCompleted = true;
+            UpdateObject(purchaseReceival);
+            return purchaseReceival;
+        }
+
+        public PurchaseReceival SetInvoiceComplete(PurchaseReceival purchaseReceival)
+        {
+            purchaseReceival.IsInvoiceCompleted = true;
+            UpdateObject(purchaseReceival);
+            return purchaseReceival;
+        }
+
+        public PurchaseReceival UnsetInvoiceComplete(PurchaseReceival purchaseReceival)
+        {
+            purchaseReceival.IsInvoiceCompleted = false;
             UpdateObject(purchaseReceival);
             return purchaseReceival;
         }

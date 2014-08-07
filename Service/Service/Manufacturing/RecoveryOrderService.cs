@@ -5,10 +5,8 @@ using Core.Interface.Service;
 using Core.Interface.Validation;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-
 
 namespace Service.Service
 {
@@ -79,8 +77,8 @@ namespace Service.Service
         {
             if (_validator.ValidDeleteObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService))
             {
-                ICollection<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
-                ICollection<RecoveryAccessoryDetail> accessories = new Collection<RecoveryAccessoryDetail>();
+                IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
+                IList<RecoveryAccessoryDetail> accessories = new List<RecoveryAccessoryDetail>();
                 foreach (var detail in details)
                 {
                     // populate accessories

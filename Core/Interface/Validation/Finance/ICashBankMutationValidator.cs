@@ -10,22 +10,24 @@ namespace Core.Interface.Validation
     public interface ICashBankMutationValidator
     {
         CashBankMutation VHasDifferentCashBank(CashBankMutation cashBankMutation);
-        CashBankMutation VHasSourceCashBank(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
-        CashBankMutation VHasTargetCashBank(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
+        CashBankMutation VHasSourceCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        CashBankMutation VHasTargetCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VHasNotBeenConfirmed(CashBankMutation cashBankMutation);
         CashBankMutation VHasBeenConfirmed(CashBankMutation cashBankMutation);
-        CashBankMutation VNonNegativeNorZeroSourceCashBank(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
-        CashBankMutation VNonNegativeNorZeroTargetCashBank(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
-        CashBankMutation VCreateObject(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
-        CashBankMutation VUpdateObject(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
+        CashBankMutation VHasNotBeenDeleted(CashBankMutation cashBankMutation);
+        CashBankMutation VNonNegativeNorZeroAmount(CashBankMutation cashBankMutation);
+        CashBankMutation VNonNegativeNorZeroSourceCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        CashBankMutation VNonNegativeNorZeroTargetCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        CashBankMutation VCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        CashBankMutation VUpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VDeleteObject(CashBankMutation cashBankMutation);
-        CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
-        CashBankMutation VUnconfirmObject(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
+        CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        CashBankMutation VUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         bool ValidCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         bool ValidUpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         bool ValidDeleteObject(CashBankMutation cashBankMutation);
-        bool ValidConfirmObject(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
-        bool ValidUnconfirmObject(CashBankMutation cashBankMutation, ICashBankMutationService _cashBankMutationService);
+        bool ValidConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
+        bool ValidUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         bool isValid(CashBankMutation cashBankMutation);
         string PrintError(CashBankMutation cashBankMutation);
     }

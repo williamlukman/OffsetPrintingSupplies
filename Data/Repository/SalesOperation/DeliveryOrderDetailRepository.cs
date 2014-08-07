@@ -43,6 +43,9 @@ namespace Data.Repository
             deliveryOrderDetail.Code = SetObjectCode(ParentCode);
             deliveryOrderDetail.IsFinished = false;
             deliveryOrderDetail.IsDeleted = false;
+            deliveryOrderDetail.IsAllInvoiced = false;
+            deliveryOrderDetail.InvoicedQuantity = 0;
+            deliveryOrderDetail.PendingInvoicedQuantity = deliveryOrderDetail.Quantity;
             deliveryOrderDetail.CreatedAt = DateTime.Now;
             return Create(deliveryOrderDetail);
         }

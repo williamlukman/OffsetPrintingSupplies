@@ -12,13 +12,14 @@ namespace Core.Interface.Service
     {
         ICashBankAdjustmentValidator GetValidator();
         IList<CashBankAdjustment> GetAll();
+        IList<CashBankAdjustment> GetObjectsByCashBankId(int cashBankId);
         CashBankAdjustment GetObjectById(int Id);
         CashBankAdjustment CreateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         CashBankAdjustment CreateObject(int CashBankId, DateTime AdjustmentDate, ICashBankService _cashBankService);
         CashBankAdjustment UpdateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         CashBankAdjustment SoftDeleteObject(CashBankAdjustment cashBankAdjustment);
         bool DeleteObject(int Id);
-        CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
-        CashBankAdjustment UnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
+        CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, ICashMutationService _cashMutationService, ICashBankService _cashBankService);
+        CashBankAdjustment UnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashMutationService _cashMutationService, ICashBankService _cashBankService);
     }
 }

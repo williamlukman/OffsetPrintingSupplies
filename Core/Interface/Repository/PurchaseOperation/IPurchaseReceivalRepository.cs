@@ -18,6 +18,8 @@ namespace Core.Interface.Repository
         PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival);
         PurchaseReceival UnconfirmObject(PurchaseReceival purchaseReceival);
         PurchaseReceival CompleteObject(PurchaseReceival purchaseReceival);
+        PurchaseReceival SetInvoiceComplete(PurchaseReceival purchaseReceival);
+        PurchaseReceival UnsetInvoiceComplete(PurchaseReceival purchaseReceival);
         string SetObjectCode();
     }
 }

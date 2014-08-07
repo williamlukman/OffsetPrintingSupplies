@@ -9,20 +9,33 @@ namespace Core.Interface.Validation
 {
     public interface ISalesInvoiceValidator
     {
-        SalesInvoice VContact(SalesInvoice salesInvoice, ICustomerService _customerService);
+        SalesInvoice VHasDeliveryOrder(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
+        SalesInvoice VHasNoSalesInvoiceDetails(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
         SalesInvoice VHasSalesInvoiceDetails(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
-        SalesInvoice VHasReceipt(SalesInvoice salesInvoice, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
-        SalesInvoice VIsConfirmed(SalesInvoice salesInvoice);
-        SalesInvoice VCreateObject(SalesInvoice salesInvoice, ICustomerService _customerService);
-        SalesInvoice VUpdateObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, ICustomerService _customerService);
-        SalesInvoice VDeleteObject(SalesInvoice salesInvoice);
-        SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailServices, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        SalesInvoice VUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailServices, IReceiptVoucherDetailService _rvds, IReceivableService _receivableService);
-        bool ValidCreateObject(SalesInvoice salesInvoice, ICustomerService _customerService);
-        bool ValidUpdateObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, ICustomerService  _customerService);
-        bool ValidDeleteObject(SalesInvoice salesInvoice);
-        bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailServices, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        bool ValidUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailServices, IReceiptVoucherDetailService _rvds, IReceivableService _receivableService);
+        SalesInvoice VDeliveryOrderHasNotBeenInvoiceCompleted(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
+        SalesInvoice VHasInvoiceDate(SalesInvoice salesInvoice);
+        SalesInvoice VHasDueDate(SalesInvoice salesInvoice);
+        SalesInvoice VHasTaxGreaterOrEqualZero(SalesInvoice salesInvoice);
+        SalesInvoice VHasDiscountGreaterOrEqualZero(SalesInvoice salesInvoice);
+        SalesInvoice VHasReceiptVoucherDetails(SalesInvoice salesInvoice, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
+        SalesInvoice VHasNotBeenConfirmed(SalesInvoice salesInvoice);
+        SalesInvoice VHasBeenConfirmed(SalesInvoice salesInvoice);
+        SalesInvoice VHasNotBeenDeleted(SalesInvoice salesInvoice);
+        SalesInvoice VAllSalesInvoiceDetailsAreConfirmable(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoice VAllSalesInvoiceDetailsAreUnconfirmable(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+        SalesInvoice VReceivableHasNoOtherAssociation(SalesInvoice salesInvoice, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
+        SalesInvoice VCreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
+        SalesInvoice VUpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService);
+        SalesInvoice VDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
+        SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
+                                       IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoice VUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+        bool ValidCreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
+        bool ValidUpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService);
+        bool ValidDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
+        bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
+                                IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        bool ValidUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
         bool isValid(SalesInvoice salesInvoice);
         string PrintError(SalesInvoice salesInvoice);
     }

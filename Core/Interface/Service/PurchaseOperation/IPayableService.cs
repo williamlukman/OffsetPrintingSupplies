@@ -15,7 +15,7 @@ namespace Core.Interface.Service
         Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
         Payable GetObjectById(int Id);
         Payable CreateObject(Payable payable);
-        Payable CreateObject(int customerId, string payableSource, int payableSourceId, decimal amount);
+        Payable CreateObject(int customerId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate);
         Payable UpdateObject(Payable payable);
         Payable SoftDeleteObject(Payable payable);
         bool DeleteObject(int Id);

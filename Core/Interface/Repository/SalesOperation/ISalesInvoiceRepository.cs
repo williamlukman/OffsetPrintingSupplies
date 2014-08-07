@@ -10,14 +10,13 @@ namespace Core.Interface.Repository
     {
         IList<SalesInvoice> GetAll();
         SalesInvoice GetObjectById(int Id);
-        DeliveryOrder GetDeliveryOrderByDeliveryOrderId(int deliveryOrderId);
-        IList<SalesInvoice> GetObjectsByCustomerId(int customerId);
-        SalesInvoice CreateObject(SalesInvoice salesOrder);
-        SalesInvoice UpdateObject(SalesInvoice salesOrder);
-        SalesInvoice SoftDeleteObject(SalesInvoice salesOrder);
+        IList<SalesInvoice> GetObjectsByDeliveryOrderId(int deliveryOrderId);
+        SalesInvoice CreateObject(SalesInvoice salesInvoice);
+        SalesInvoice UpdateObject(SalesInvoice salesInvoice);
+        SalesInvoice SoftDeleteObject(SalesInvoice salesInvoice);
         bool DeleteObject(int Id);
-        SalesInvoice ConfirmObject(SalesInvoice salesOrder);
-        SalesInvoice UnconfirmObject(SalesInvoice salesOrder);
+        SalesInvoice ConfirmObject(SalesInvoice salesInvoice);
+        SalesInvoice UnconfirmObject(SalesInvoice salesInvoice);
         string SetObjectCode();
     }
 }

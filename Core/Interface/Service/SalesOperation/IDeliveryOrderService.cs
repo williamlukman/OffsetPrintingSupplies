@@ -24,5 +24,7 @@ namespace Core.Interface.Service
         DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                     IStockMutationService _stockMutationService, IItemService _itemService);
         DeliveryOrder CompleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        DeliveryOrder CheckAndSetInvoiceComplete(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder);
     }
 }

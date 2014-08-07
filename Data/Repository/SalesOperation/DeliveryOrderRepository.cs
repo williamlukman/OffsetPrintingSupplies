@@ -87,6 +87,20 @@ namespace Data.Repository
             return deliveryOrder;
         }
 
+        public DeliveryOrder SetInvoiceComplete(DeliveryOrder deliveryOrder)
+        {
+            deliveryOrder.IsInvoiceCompleted = true;
+            UpdateObject(deliveryOrder);
+            return deliveryOrder;
+        }
+
+        public DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder)
+        {
+            deliveryOrder.IsInvoiceCompleted = false;
+            UpdateObject(deliveryOrder);
+            return deliveryOrder;
+        }
+
         public string SetObjectCode()
         {
             // Code: #{year}/#{total_number

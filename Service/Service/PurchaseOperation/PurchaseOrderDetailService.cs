@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Service.Service
 {
     public class PurchaseOrderDetailService : IPurchaseOrderDetailService
@@ -116,11 +115,6 @@ namespace Service.Service
                 }
             }
             return purchaseOrderDetail;
-        }
-
-        public PurchaseOrderDetail ReceiveObject(PurchaseOrderDetail purchaseOrderDetail)
-        {
-            return _repository.ReceiveObject(purchaseOrderDetail);
         }
     }
 }

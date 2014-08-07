@@ -9,8 +9,8 @@ namespace Core.Interface.Repository
     public interface ISalesInvoiceDetailRepository : IRepository<SalesInvoiceDetail>
     {
         IList<SalesInvoiceDetail> GetObjectsBySalesInvoiceId(int salesInvoiceId);
+        IList<SalesInvoiceDetail> GetObjectsByDeliveryOrderDetailId(int deliveryOrderDetailId);
         SalesInvoiceDetail GetObjectById(int Id);
-        DeliveryOrderDetail GetDeliveryOrderDetailByDeliveryOrderDetailId(int deliveryOrderDetailId);
         SalesInvoiceDetail CreateObject(SalesInvoiceDetail salesInvoiceDetail);
         SalesInvoiceDetail UpdateObject(SalesInvoiceDetail salesInvoiceDetail);
         SalesInvoiceDetail SoftDeleteObject(SalesInvoiceDetail salesInvoiceDetail);
