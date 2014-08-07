@@ -14,7 +14,7 @@ namespace Data.Context
     {
         public OffsetPrintingSuppliesEntities()
         {
-            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseAlways<OffsetPrintingSuppliesEntities>());
+            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
         }
 
         public void DeleteAllTables()

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OffsetPrintingSupplies", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtJs", "ExtJs\ExtJs.csproj", "{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebView", "WebView\WebView.csproj", "{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,33 +24,30 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8E08D94C-1E43-4A28-9B69-CA7172CF5B76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E08D94C-1E43-4A28-9B69-CA7172CF5B76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E08D94C-1E43-4A28-9B69-CA7172CF5B76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E08D94C-1E43-4A28-9B69-CA7172CF5B76}.Release|Any CPU.Build.0 = Release|Any CPU
 		{518749BE-3EA1-4DB9-A03F-4B2D2923E659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{518749BE-3EA1-4DB9-A03F-4B2D2923E659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{518749BE-3EA1-4DB9-A03F-4B2D2923E659}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{518749BE-3EA1-4DB9-A03F-4B2D2923E659}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C73DD4B2-38FD-4FB1-82AC-2744A491ACD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C73DD4B2-38FD-4FB1-82AC-2744A491ACD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C73DD4B2-38FD-4FB1-82AC-2744A491ACD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C73DD4B2-38FD-4FB1-82AC-2744A491ACD5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5FCE3A19-3B1D-4BD3-9752-274D5EFE7F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FCE3A19-3B1D-4BD3-9752-274D5EFE7F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FCE3A19-3B1D-4BD3-9752-274D5EFE7F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FCE3A19-3B1D-4BD3-9752-274D5EFE7F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A18ED05-6179-4697-8648-B44594203DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A18ED05-6179-4697-8648-B44594203DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A18ED05-6179-4697-8648-B44594203DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A18ED05-6179-4697-8648-B44594203DCC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EA8D668-A5B2-460A-8200-C3C2E5EB9C5A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDF120C7-DF97-4EA4-9E70-0D21C9C8E2AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37E9CE9B-F929-4A67-81F8-879EDB19FC3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
