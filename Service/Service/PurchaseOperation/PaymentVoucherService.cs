@@ -41,39 +41,39 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<PaymentVoucher> GetObjectsByCustomerId(int customerId)
+        public IList<PaymentVoucher> GetObjectsByContactId(int contactId)
         {
-            return _repository.GetObjectsByCustomerId(customerId);
+            return _repository.GetObjectsByContactId(contactId);
         }
 
         public PaymentVoucher CreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                            IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                            IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
             paymentVoucher.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _customerService, _cashBankService) ?
+            return (_validator.ValidCreateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService) ?
                     _repository.CreateObject(paymentVoucher) : paymentVoucher);
         }
 
-        public PaymentVoucher CreateObject(int cashBankId, int customerId, DateTime paymentDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+        public PaymentVoucher CreateObject(int cashBankId, int contactId, DateTime paymentDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
                                     IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService)
+                                    IContactService _contactService, ICashBankService _cashBankService)
         {
             PaymentVoucher paymentVoucher = new PaymentVoucher
             {
                 CashBankId = cashBankId,
-                CustomerId = customerId,
+                ContactId = contactId,
                 PaymentDate = paymentDate,
                 TotalAmount = totalAmount,
                 IsGBCH = IsGBCH,
                 DueDate = DueDate,
                 IsBank = IsBank
             };
-            return this.CreateObject(paymentVoucher, _paymentVoucherDetailService, _payableService, _customerService, _cashBankService);
+            return this.CreateObject(paymentVoucher, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
         }
 
-        public PaymentVoucher UpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService)
+        public PaymentVoucher UpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            return (_validator.ValidUpdateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _customerService, _cashBankService) ? _repository.UpdateObject(paymentVoucher) : paymentVoucher);
+            return (_validator.ValidUpdateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService) ? _repository.UpdateObject(paymentVoucher) : paymentVoucher);
         }
 
         public PaymentVoucher UpdateAmount(PaymentVoucher paymentVoucher)
@@ -148,7 +148,6 @@ namespace Service.Service
                 _repository.ReconcileObject(paymentVoucher);
 
                 CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
-                // TODO Check the cashMutation input
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForPaymentVoucher(paymentVoucher, cashBank);
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
 

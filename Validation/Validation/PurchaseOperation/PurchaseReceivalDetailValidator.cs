@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -33,7 +31,7 @@ namespace Validation.Validation
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VCustomer(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, ICustomerService _customerService)
+        public PurchaseReceivalDetail VContact(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, IContactService _contactService)
         {
             PurchaseReceival pr = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
             PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
@@ -43,9 +41,9 @@ namespace Validation.Validation
                 return purchaseReceivalDetail;
             }
             PurchaseOrder po = _purchaseOrderService.GetObjectById(pod.PurchaseOrderId);
-            if (po.CustomerId != pr.CustomerId)
+            if (po.ContactId != pr.ContactId)
             {
-                purchaseReceivalDetail.Errors.Add("Customer", "Tidak boleh merupakan kustomer yang berbeda dengan Purchase Order");
+                purchaseReceivalDetail.Errors.Add("Contact", "Tidak boleh merupakan kustomer yang berbeda dengan Purchase Order");
             }
             return purchaseReceivalDetail;
         }
@@ -151,13 +149,13 @@ namespace Validation.Validation
         }
 
         public PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
         {
             VHasPurchaseReceival(purchaseReceivalDetail, _purchaseReceivalService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasItem(purchaseReceivalDetail, _itemService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
-            VCustomer(purchaseReceivalDetail, _purchaseReceivalService, _purchaseOrderService, _purchaseOrderDetailService, _customerService);
+            VContact(purchaseReceivalDetail, _purchaseReceivalService, _purchaseOrderService, _purchaseOrderDetailService, _contactService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VQuantityCreate(purchaseReceivalDetail, _purchaseOrderDetailService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
@@ -166,9 +164,9 @@ namespace Validation.Validation
         }
 
         public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
         {
-            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasNotBeenFinished(purchaseReceivalDetail);
             return purchaseReceivalDetail;
@@ -197,17 +195,17 @@ namespace Validation.Validation
         }
 
         public bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
         {
-            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
             return isValid(purchaseReceivalDetail);
         }
 
         public bool ValidUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
         {
             purchaseReceivalDetail.Errors.Clear();
-            VUpdateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+            VUpdateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
             return isValid(purchaseReceivalDetail);
         }
 

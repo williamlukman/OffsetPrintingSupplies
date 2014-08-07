@@ -13,10 +13,10 @@ namespace Core.Interface.Service
         IPurchaseOrderValidator GetValidator();
         IList<PurchaseOrder> GetAll();
         PurchaseOrder GetObjectById(int Id);
-        IList<PurchaseOrder> GetObjectsByCustomerId(int customerId);
-        PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
-        PurchaseOrder CreateObject(int customerId, DateTime purchaseDate, ICustomerService _customerService);
-        PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
+        IList<PurchaseOrder> GetObjectsByContactId(int contactId);
+        PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
+        PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService);
+        PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder SoftDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         bool DeleteObject(int Id);
         PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService,

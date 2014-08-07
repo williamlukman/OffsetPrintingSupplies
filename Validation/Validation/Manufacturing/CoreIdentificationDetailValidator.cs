@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Text.RegularExpressions;
-
 namespace Validation.Validation
 {
     public class CoreIdentificationDetailValidator : ICoreIdentificationDetailValidator
@@ -193,10 +191,10 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail VQuantityIsInStockForCustomer(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
+        public CoreIdentificationDetail VQuantityIsInStockForContact(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
-            if (coreIdentification.CustomerId != null)
+            if (coreIdentification.ContactId != null)
             {
                 int MaterialCase = coreIdentificationDetail.MaterialCase;
                 Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
@@ -253,7 +251,7 @@ namespace Validation.Validation
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VHasNotBeenJobScheduled(coreIdentificationDetail);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
-            VQuantityIsInStockForCustomer(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
+            VQuantityIsInStockForContact(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
             return coreIdentificationDetail;
         }
 

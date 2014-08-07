@@ -11,7 +11,7 @@ namespace Core.DomainModel
         public string Code { get; set; }
         public int WarehouseId { get; set; } // Workshop Warehouse
 
-        public Nullable<int> CustomerId { get; set; }
+        public Nullable<int> ContactId { get; set; }
         public bool IsInHouse { get; set; }
         public int Quantity { get; set; }
         public DateTime IdentifiedDate { get; set; }
@@ -25,7 +25,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
-        public virtual Customer Customer { get; set; }
+        public virtual Contact Contact { get; set; }
         public virtual ICollection<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
         public virtual ICollection<RollerWarehouseMutation> RollerWarehouseMutations { get; set; }
     }

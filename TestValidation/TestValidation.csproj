@@ -61,7 +61,7 @@
     <Compile Include="SpecRollerBuilder.cs" />
     <Compile Include="SpecCoreBuilder.cs" />
     <Compile Include="SpecItemType.cs" />
-    <Compile Include="SpecCustomer.cs" />
+    <Compile Include="SpecContact.cs" />
     <Compile Include="SpecMachine.cs" />
     <Compile Include="DebuggerShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

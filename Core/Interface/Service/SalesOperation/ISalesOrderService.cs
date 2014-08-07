@@ -13,10 +13,10 @@ namespace Core.Interface.Service
         ISalesOrderValidator GetValidator();
         IList<SalesOrder> GetAll();
         SalesOrder GetObjectById(int Id);
-        IList<SalesOrder> GetObjectsByCustomerId(int customerId);
-        SalesOrder CreateObject(SalesOrder salesOrder, ICustomerService _customerService);
-        SalesOrder CreateObject(int customerId, DateTime salesDate, ICustomerService _customerService);
-        SalesOrder UpdateObject(SalesOrder salesOrder, ICustomerService _customerService);
+        IList<SalesOrder> GetObjectsByContactId(int contactId);
+        SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService);
+        SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService);
+        SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder SoftDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         bool DeleteObject(int Id);
         SalesOrder ConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _sods,

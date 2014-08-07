@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -15,7 +14,7 @@ using Validation.Validation;
 namespace TestValidation
 {
 
-    public class SpecCustomer: nspec
+    public class SpecContact: nspec
     {
 
         DataBuilder d;
@@ -58,111 +57,110 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
-                d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
             }
         }
 
-        void customer_validation()
+        void contact_validation()
         {
         
-            it["validates_customer"] = () =>
+            it["validates_contact"] = () =>
             {
-                d.customer.Errors.Count().should_be(0);
+                d.contact.Errors.Count().should_be(0);
             };
 
-            it["customer_with_no_name"] = () =>
+            it["contact_with_no_name"] = () =>
             {
-                Customer noname = new Customer()
+                Contact noname = new Contact()
                 {
                     Name = "     ",
                     Address = "I have no name",
-                    CustomerNo = "0000123",
+                    ContactNo = "0000123",
                     PIC = "Who are you?",
-                    PICCustomerNo = "001234",
+                    PICContactNo = "001234",
                     Email = "empty@noname.com"
                 };
-                noname = d._customerService.CreateObject(noname);
+                noname = d._contactService.CreateObject(noname);
                 noname.Errors.Count().should_not_be(0);
             };
 
             it["item_with_same_name"] = () =>
             {
-                Customer samename = new Customer()
+                Contact samename = new Contact()
                 {
                     Name = "Abbey",
                     Address = "I am a copy",
-                    CustomerNo = "0000123",
+                    ContactNo = "0000123",
                     PIC = "Who are you?",
-                    PICCustomerNo = "001234",
+                    PICContactNo = "001234",
                     Email = "empty@noname.com"
                 }; 
-                samename = d._customerService.CreateObject(samename);
+                samename = d._contactService.CreateObject(samename);
                 samename.Errors.Count().should_not_be(0);
             };
 
             it["withemptyaddress"] = () =>
             {
-                Customer emptyaddress = new Customer()
+                Contact emptyaddress = new Contact()
                 {
                     Name = "Abbey12",
                     Address = " ",
-                    CustomerNo = "0000123",
+                    ContactNo = "0000123",
                     PIC = "Who are you?",
-                    PICCustomerNo = "001234",
+                    PICContactNo = "001234",
                     Email = "empty@noname.com"
                 };
-                emptyaddress = d._customerService.CreateObject(emptyaddress);
+                emptyaddress = d._contactService.CreateObject(emptyaddress);
                 emptyaddress.Errors.Count().should_not_be(0);
             };
 
-            it["withemptycustomer"] = () =>
+            it["withemptycontact"] = () =>
             {
-                Customer emptycustomer = new Customer()
+                Contact emptycontact = new Contact()
                 {
                     Name = "Abbey123",
                     Address = "Ada isi",
-                    CustomerNo = "   ",
+                    ContactNo = "   ",
                     PIC = "Who are you?",
-                    PICCustomerNo = "001234",
+                    PICContactNo = "001234",
                     Email = "empty@noname.com"
                 };
-                emptycustomer = d._customerService.CreateObject(emptycustomer);
-                emptycustomer.Errors.Count().should_not_be(0);
+                emptycontact = d._contactService.CreateObject(emptycontact);
+                emptycontact.Errors.Count().should_not_be(0);
             };
 
             it["update_with_empty_pic"] = () =>
             {
-                d.customer.PIC = "   ";
-                d.customer = d._customerService.UpdateObject(d.customer);
-                d.customer.Errors.Count().should_not_be(0);
+                d.contact.PIC = "   ";
+                d.contact = d._contactService.UpdateObject(d.contact);
+                d.contact.Errors.Count().should_not_be(0);
             };
 
-            it["update_with_empty_pic_customerno"] = () =>
+            it["update_with_empty_pic_contactno"] = () =>
             {
-                d.customer.PICCustomerNo = "   ";
-                d.customer = d._customerService.UpdateObject(d.customer);
-                d.customer.Errors.Count().should_not_be(0);
+                d.contact.PICContactNo = "   ";
+                d.contact = d._contactService.UpdateObject(d.contact);
+                d.contact.Errors.Count().should_not_be(0);
             };
 
             it["update_with_empty_email"] = () =>
             {
-                d.customer.Email = "   ";
-                d.customer = d._customerService.UpdateObject(d.customer);
-                d.customer.Errors.Count().should_not_be(0);
+                d.contact.Email = "   ";
+                d.contact = d._contactService.UpdateObject(d.contact);
+                d.contact.Errors.Count().should_not_be(0);
             };
 
-            it["delete_customer"] = () =>
+            it["delete_contact"] = () =>
             {
-                d.customer = d._customerService.SoftDeleteObject(d.customer, d._coreIdentificationService, d._barringService);
-                d.customer.Errors.Count().should_be(0);
+                d.contact = d._contactService.SoftDeleteObject(d.contact, d._coreIdentificationService, d._barringService);
+                d.contact.Errors.Count().should_be(0);
             };
 
-            it["delete_customer_with_core_identification"] = () =>
+            it["delete_contact_with_core_identification"] = () =>
             {
                 d.machine = new Machine()
                 {
@@ -183,13 +181,13 @@ namespace TestValidation
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.coreIdentification = new CoreIdentification()
                 {
-                    CustomerId = d.customer.Id,
+                    ContactId = d.contact.Id,
                     Code = "CI0001",
                     Quantity = 1,
                     IdentifiedDate = DateTime.Now,
                     WarehouseId = d.localWarehouse.Id
                 };
-                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
+                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
                 {
                     CoreIdentificationId = d.coreIdentification.Id,
@@ -205,8 +203,8 @@ namespace TestValidation
                     TL = 12
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
-                d.customer = d._customerService.SoftDeleteObject(d.customer, d._coreIdentificationService, d._barringService);
-                d.customer.Errors.Count().should_not_be(0);
+                d.contact = d._contactService.SoftDeleteObject(d.contact, d._coreIdentificationService, d._barringService);
+                d.contact.Errors.Count().should_not_be(0);
             };
         }
     }

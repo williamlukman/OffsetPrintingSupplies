@@ -11,11 +11,11 @@ namespace Core.Interface.Service
     {
         IReceivableValidator GetValidator();
         IList<Receivable> GetAll();
-        IList<Receivable> GetObjectsByCustomerId(int customerId);
+        IList<Receivable> GetObjectsByContactId(int contactId);
         Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId); 
         Receivable GetObjectById(int Id);
         Receivable CreateObject(Receivable receivable);
-        Receivable CreateObject(int customerId, string receivableSource, int receivableSourceId, decimal amount, DateTime dueDate);
+        Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, decimal amount, DateTime dueDate);
         Receivable UpdateObject(Receivable receivable);
         Receivable SoftDeleteObject(Receivable receivable);
         bool DeleteObject(int Id);

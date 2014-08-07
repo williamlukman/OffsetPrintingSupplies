@@ -11,12 +11,12 @@ namespace Validation.Validation
 {
     public class PaymentVoucherValidator : IPaymentVoucherValidator
     {
-        public PaymentVoucher VHasCustomer(PaymentVoucher paymentVoucher, ICustomerService _customerService)
+        public PaymentVoucher VHasContact(PaymentVoucher paymentVoucher, IContactService _contactService)
         {
-            Customer customer = _customerService.GetObjectById(paymentVoucher.CustomerId);
-            if (customer == null)
+            Contact contact = _contactService.GetObjectById(paymentVoucher.ContactId);
+            if (contact == null)
             {
-                paymentVoucher.Errors.Add("CustomerId", "Tidak boleh tidak ada");
+                paymentVoucher.Errors.Add("ContactId", "Tidak boleh tidak ada");
             }
             return paymentVoucher;
         }
@@ -190,9 +190,9 @@ namespace Validation.Validation
         }
 
         public PaymentVoucher VCreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                            IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                            IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            VHasCustomer(paymentVoucher, _customerService);
+            VHasContact(paymentVoucher, _contactService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasCashBank(paymentVoucher, _cashBankService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
@@ -205,11 +205,11 @@ namespace Validation.Validation
         }
 
         public PaymentVoucher VUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                            IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                            IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
             VHasNoPaymentVoucherDetail(paymentVoucher, _paymentVoucherDetailService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
-            VCreateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _customerService, _cashBankService);
+            VCreateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
             return paymentVoucher;
         }
 
@@ -268,17 +268,17 @@ namespace Validation.Validation
         }
 
         public bool ValidCreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                      IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                      IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            VCreateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _customerService, _cashBankService);
+            VCreateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
             return isValid(paymentVoucher);
         }
 
         public bool ValidUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                      IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                      IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
             paymentVoucher.Errors.Clear();
-            VUpdateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _customerService, _cashBankService);
+            VUpdateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
             return isValid(paymentVoucher);
         }
 

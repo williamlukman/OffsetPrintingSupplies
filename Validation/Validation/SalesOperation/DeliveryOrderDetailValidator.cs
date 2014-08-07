@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -33,7 +31,7 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VCustomer(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _purchaseReceivalService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, ICustomerService _customerService)
+        public DeliveryOrderDetail VContact(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _purchaseReceivalService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IContactService _contactService)
         {
             DeliveryOrder pr = _purchaseReceivalService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
             SalesOrderDetail sod = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
@@ -43,9 +41,9 @@ namespace Validation.Validation
                 return deliveryOrderDetail;
             }
             SalesOrder so = _salesOrderService.GetObjectById(sod.SalesOrderId);
-            if (so.CustomerId != pr.CustomerId)
+            if (so.ContactId != pr.ContactId)
             {
-                deliveryOrderDetail.Errors.Add("Customer", "Tidak boleh merupakan kustomer yang berbeda dengan Sales Order");
+                deliveryOrderDetail.Errors.Add("Contact", "Tidak boleh merupakan kustomer yang berbeda dengan Sales Order");
             }
             return deliveryOrderDetail;
         }
@@ -153,13 +151,13 @@ namespace Validation.Validation
         }
 
         public DeliveryOrderDetail VCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService,
-                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
         {
             VHasDeliveryOrder(deliveryOrderDetail, _deliveryOrderService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VHasItem(deliveryOrderDetail, _itemService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            VCustomer(deliveryOrderDetail, _deliveryOrderService, _salesOrderService, _salesOrderDetailService, _customerService);
+            VContact(deliveryOrderDetail, _deliveryOrderService, _salesOrderService, _salesOrderDetailService, _contactService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VQuantityCreate(deliveryOrderDetail, _salesOrderDetailService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
@@ -168,11 +166,11 @@ namespace Validation.Validation
         }
 
         public DeliveryOrderDetail VUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService,
-                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
         {
             VHasNotBeenFinished(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
+            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
             return deliveryOrderDetail;
         }
 
@@ -199,17 +197,17 @@ namespace Validation.Validation
         }
 
         public bool ValidCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _purchaseReceivalService,
-                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
         {
-            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _purchaseReceivalService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
+            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _purchaseReceivalService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
             return isValid(deliveryOrderDetail);
         }
 
         public bool ValidUpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _purchaseReceivalService,
-                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
         {
             deliveryOrderDetail.Errors.Clear();
-            VUpdateObject(deliveryOrderDetail, _deliveryOrderDetailService, _purchaseReceivalService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
+            VUpdateObject(deliveryOrderDetail, _deliveryOrderDetailService, _purchaseReceivalService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
             return isValid(deliveryOrderDetail);
         }
 

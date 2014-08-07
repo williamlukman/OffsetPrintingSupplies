@@ -13,15 +13,15 @@ namespace Core.Interface.Service
         IList<ReceiptVoucher> GetAll();
         ReceiptVoucher GetObjectById(int Id);
         IList<ReceiptVoucher> GetObjectsByCashBankId(int cashBankId);
-        IList<ReceiptVoucher> GetObjectsByCustomerId(int customerId);
+        IList<ReceiptVoucher> GetObjectsByContactId(int contactId);
         ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService);
-        ReceiptVoucher CreateObject(int cashBankId, int customerId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+                                    IContactService _contactService, ICashBankService _cashBankService);
+        ReceiptVoucher CreateObject(int cashBankId, int contactId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
                                     IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService);
+                                    IContactService _contactService, ICashBankService _cashBankService);
         ReceiptVoucher UpdateAmount(ReceiptVoucher receiptVoucher);
         ReceiptVoucher UpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService);
+                                    IContactService _contactService, ICashBankService _cashBankService);
         ReceiptVoucher SoftDeleteObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool DeleteObject(int Id);
         ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,

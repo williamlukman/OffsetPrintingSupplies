@@ -12,9 +12,9 @@ namespace Data.Mapping
         public SalesOrderDetailMapping()
         {
             HasKey(sod => sod.Id);
-            HasRequired(sod => sod.Customer)
+            HasRequired(sod => sod.Contact)
                 .WithMany(c => c.SalesOrderDetails)
-                .HasForeignKey(sod => sod.CustomerId);
+                .HasForeignKey(sod => sod.ContactId);
             HasRequired(sod => sod.SalesOrder)
                 .WithMany(po => po.SalesOrderDetails)
                 .HasForeignKey(sod => sod.SalesOrderId);

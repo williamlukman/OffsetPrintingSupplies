@@ -42,12 +42,12 @@ namespace Data.Repository
             }
         }
 
-        public IList<RecoveryOrder> GetAllObjectsByCustomerId(int CustomerId)
+        public IList<RecoveryOrder> GetAllObjectsByContactId(int ContactId)
         {
             using (var db = GetContext())
             {
                 IList<CoreIdentification> cores = (from obj in db.CoreIdentifications
-                                                   where obj.CustomerId == CustomerId
+                                                   where obj.ContactId == ContactId
                                                    select obj).ToList();
                 IList<RecoveryOrder> orders = new List<RecoveryOrder>();
                 foreach (var core in cores)

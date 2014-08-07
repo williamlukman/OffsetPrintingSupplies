@@ -6,18 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Text.RegularExpressions;
-
 namespace Validation.Validation
 {
     public class BarringValidator : IBarringValidator
     {
-        public Barring VHasItemType(Barring barring, IItemTypeService _itemTypeService)
+        public Barring VHasItemTypeAndIsLegacy(Barring barring, IItemTypeService _itemTypeService)
         {
             ItemType itemType = _itemTypeService.GetObjectById(barring.ItemTypeId);
             if (itemType == null)
             {
-                barring.Errors.Add("itemType", "Tidak boleh tidak ada");
+                barring.Errors.Add("ItemTypeId", "Tidak boleh tidak ada");
+            }
+            else if (!itemType.IsLegacy)
+            {
+                barring.Errors.Add("ItemTypeId", "Harus berupa legacy item");
             }
             return barring;
         }
@@ -104,12 +106,12 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VHasCustomer(Barring barring, ICustomerService _customerService)
+        public Barring VHasContact(Barring barring, IContactService _contactService)
         {
-            Customer customer = _customerService.GetObjectById(barring.CustomerId);
-            if (customer == null)
+            Contact contact = _contactService.GetObjectById(barring.ContactId);
+            if (contact == null)
             {
-                barring.Errors.Add("CustomerId", "Tidak terasosiasi dengan customer");
+                barring.Errors.Add("ContactId", "Tidak terasosiasi dengan contact");
             }
             return barring;
         }
@@ -156,11 +158,11 @@ namespace Validation.Validation
         }
 
         public Barring VCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService)
+                                     IContactService _contactService, IMachineService _machineService)
         {
             // Item Validation
 
-            VHasItemType(barring, _itemTypeService);
+            VHasItemTypeAndIsLegacy(barring, _itemTypeService);
             if (!isValid(barring)) { return barring; }
             VHasUniqueSku(barring, _barringService);
             if (!isValid(barring)) { return barring; }
@@ -176,7 +178,7 @@ namespace Validation.Validation
             // Bar Validation
             VHasBlanket(barring, _itemService);
             if (!isValid(barring)) { return barring; }
-            VHasCustomer(barring, _customerService);
+            VHasContact(barring, _contactService);
             if (!isValid(barring)) { return barring; }
             VHasMachine(barring, _machineService);
             if (!isValid(barring)) { return barring; }
@@ -185,13 +187,15 @@ namespace Validation.Validation
         }
 
         public Barring VUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService)
+                                     IContactService _contactService, IMachineService _machineService)
         {
-            return VCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService);
+            return VCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _contactService, _machineService);
         }
 
-        public Barring VDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)
+        public Barring VDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
+            VHasItemTypeAndIsLegacy(barring, _itemTypeService);
+            if (!isValid(barring)) { return barring; }
             VWarehouseQuantityMustBeZero(barring, _warehouseItemService);
             return barring;
         }
@@ -239,24 +243,24 @@ namespace Validation.Validation
         }
 
         public bool ValidCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService)
+                                     IContactService _contactService, IMachineService _machineService)
         {
-            VCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService);
+            VCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _contactService, _machineService);
             return isValid(barring);
         }
 
         public bool ValidUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService)
+                                     IContactService _contactService, IMachineService _machineService)
         {
             barring.Errors.Clear();
-            VUpdateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _customerService, _machineService);
+            VUpdateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _contactService, _machineService);
             return isValid(barring);
         }
 
-        public bool ValidDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService)
+        public bool ValidDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
             barring.Errors.Clear();
-            VDeleteObject(barring, _warehouseItemService);
+            VDeleteObject(barring, _itemTypeService, _warehouseItemService);
             return isValid(barring);
         }
 

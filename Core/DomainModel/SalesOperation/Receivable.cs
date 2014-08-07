@@ -8,7 +8,7 @@ namespace Core.DomainModel
     public partial class Receivable
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public int ContactId { get; set; }
         public string ReceivableSource { get; set; }
         public int ReceivableSourceId { get; set; }
         public string Code { get; set; }
@@ -25,7 +25,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
 
-        public virtual Customer Customer { get; set; }
+        public virtual Contact Contact { get; set; }
         public virtual ICollection<ReceiptVoucherDetail> ReceiptVoucherDetails { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }

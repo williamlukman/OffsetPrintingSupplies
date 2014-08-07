@@ -9,7 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
-        public int CustomerId { get; set; }
+        public int ContactId { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int WarehouseId { get; set; }
 
@@ -24,7 +24,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual ICollection<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
-        public virtual Customer Customer {get; set;}
+        public virtual Contact Contact {get; set;}
         public Dictionary<String, String> Errors { get; set; }
         public virtual Warehouse Warehouse { get; set; }
     }

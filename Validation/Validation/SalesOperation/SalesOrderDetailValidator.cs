@@ -136,6 +136,8 @@ namespace Validation.Validation
             VPrice(salesOrderDetail);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VUniqueSalesOrderDetail(salesOrderDetail, _salesOrderDetailService, _itemService);
+            // TODO
+            //VQuantityIsLessThanItemQuantity
             return salesOrderDetail;
         }
 

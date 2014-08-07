@@ -11,7 +11,7 @@ namespace Core.Interface.Repository
         IList<ReceiptVoucher> GetAll();
         ReceiptVoucher GetObjectById(int Id);
         IList<ReceiptVoucher> GetObjectsByCashBankId(int cashBankId);
-        IList<ReceiptVoucher> GetObjectsByCustomerId(int customerId);
+        IList<ReceiptVoucher> GetObjectsByContactId(int contactId);
         ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher);
         ReceiptVoucher UpdateObject(ReceiptVoucher receiptVoucher);
         ReceiptVoucher SoftDeleteObject(ReceiptVoucher receiptVoucher);

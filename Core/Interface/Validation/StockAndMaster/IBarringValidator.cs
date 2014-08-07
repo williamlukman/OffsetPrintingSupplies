@@ -9,7 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface IBarringValidator
     {
-        Barring VHasItemType(Barring barring, IItemTypeService _itemTypeService);
+        Barring VHasItemTypeAndIsLegacy(Barring barring, IItemTypeService _itemTypeService);
         Barring VHasUniqueSku(Barring barring, IBarringService _barringService);
         Barring VHasName(Barring barring);
         Barring VHasCategory(Barring barring);
@@ -18,15 +18,15 @@ namespace Core.Interface.Validation
         Barring VNonNegativeQuantity(Barring barring);
 
         Barring VHasBlanket(Barring barring, IItemService _itemService);
-        Barring VHasCustomer(Barring barring, ICustomerService _customerService);
+        Barring VHasContact(Barring barring, IContactService _contactService);
         Barring VHasMachine(Barring barring, IMachineService _machineService);
         Barring VHasMeasurement(Barring barring);
 
         Barring VCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                              ICustomerService _customerService, IMachineService _machineService);
+                              IContactService _contactService, IMachineService _machineService);
         Barring VUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                              ICustomerService _customerService, IMachineService _machineService);
-        Barring VDeleteObject(Barring barring, IWarehouseItemService _warehouseItemService);
+                              IContactService _contactService, IMachineService _machineService);
+        Barring VDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
         Barring VAdjustQuantity(Barring barring);
         Barring VAdjustPendingDelivery(Barring barring);
         Barring VAdjustPendingReceival(Barring barring);
@@ -37,10 +37,10 @@ namespace Core.Interface.Validation
         Barring VRemoveRightBar(Barring barring, IItemService _itemService);
 
         bool ValidCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService);
+                                     IContactService _contactService, IMachineService _machineService);
         bool ValidUpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                     ICustomerService _customerService, IMachineService _machineService);
-        bool ValidDeleteObject(Barring barring, IWarehouseItemService _warehouseItemSerrvice);
+                                     IContactService _contactService, IMachineService _machineService);
+        bool ValidDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemSerrvice);
         bool ValidAdjustQuantity(Barring barring);
         bool ValidAdjustPendingDelivery(Barring barring);
         bool ValidAdjustPendingReceival(Barring barring);

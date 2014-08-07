@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Text.RegularExpressions;
-
 namespace Validation.Validation
 {
     public class CoreIdentificationValidator : ICoreIdentificationValidator
@@ -25,19 +23,19 @@ namespace Validation.Validation
             return coreIdentification;
         }
 
-        public CoreIdentification VInHouseOrHasCustomer(CoreIdentification coreIdentification, ICustomerService _customerService)
+        public CoreIdentification VInHouseOrHasContact(CoreIdentification coreIdentification, IContactService _contactService)
         {
-            if ((coreIdentification.IsInHouse && coreIdentification.CustomerId != null) ||
-                (!coreIdentification.IsInHouse && coreIdentification.CustomerId == null))
+            if ((coreIdentification.IsInHouse && coreIdentification.ContactId != null) ||
+                (!coreIdentification.IsInHouse && coreIdentification.ContactId == null))
             {
-                coreIdentification.Errors.Add("Generic", "Core Identification harus memilih InHouse atau menyertakan informasi Customer");
+                coreIdentification.Errors.Add("Generic", "Core Identification harus memilih InHouse atau menyertakan informasi Contact");
             }
-            else if (!coreIdentification.IsInHouse && coreIdentification.CustomerId != null)
+            else if (!coreIdentification.IsInHouse && coreIdentification.ContactId != null)
             {
-                Customer customer = _customerService.GetObjectById((int)coreIdentification.CustomerId);
-                if (customer == null)
+                Contact contact = _contactService.GetObjectById((int)coreIdentification.ContactId);
+                if (contact == null)
                 {
-                    coreIdentification.Errors.Add("CustomerId", "Tidak terasosiasi dengan customer");
+                    coreIdentification.Errors.Add("ContactId", "Tidak terasosiasi dengan contact");
                 }
             }
             return coreIdentification;
@@ -157,11 +155,11 @@ namespace Validation.Validation
             return coreIdentification;
         }
 
-        public CoreIdentification VCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, ICustomerService _customerService)
+        public CoreIdentification VCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService)
         {
             VHasUniqueCode(coreIdentification, _coreIdentificationService);
             if (!isValid(coreIdentification)) { return coreIdentification; }
-            VInHouseOrHasCustomer(coreIdentification, _customerService);
+            VInHouseOrHasContact(coreIdentification, _contactService);
             if (!isValid(coreIdentification)) { return coreIdentification; }
             VQuantity(coreIdentification);
             if (!isValid(coreIdentification)) { return coreIdentification; }
@@ -169,9 +167,9 @@ namespace Validation.Validation
             return coreIdentification;
         }
 
-        public CoreIdentification VUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, ICustomerService _customerService)
+        public CoreIdentification VUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService)
         {
-            VCreateObject(coreIdentification, _coreIdentificationService, _customerService);
+            VCreateObject(coreIdentification, _coreIdentificationService, _contactService);
             return coreIdentification;
         }
 
@@ -209,16 +207,16 @@ namespace Validation.Validation
             VAllDetailsHaveBeenDelivered(coreIdentification, _coreIdentificationDetailService);
             return coreIdentification;
         }
-        public bool ValidCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, ICustomerService _customerService)
+        public bool ValidCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService)
         {
-            VCreateObject(coreIdentification, _coreIdentificationService, _customerService);
+            VCreateObject(coreIdentification, _coreIdentificationService, _contactService);
             return isValid(coreIdentification);
         }
 
-        public bool ValidUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, ICustomerService _customerService)
+        public bool ValidUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService)
         {
             coreIdentification.Errors.Clear();
-            VUpdateObject(coreIdentification, _coreIdentificationService, _customerService);
+            VUpdateObject(coreIdentification, _coreIdentificationService, _contactService);
             return isValid(coreIdentification);
         }
 

@@ -11,7 +11,7 @@ namespace Core.Interface.Service
     {
         IBarringOrderValidator GetValidator();
         IList<BarringOrder> GetAll();
-        IList<BarringOrder> GetAllObjectsByCustomerId(int CustomerId);
+        IList<BarringOrder> GetAllObjectsByContactId(int ContactId);
         IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId);
         BarringOrder GetObjectById(int Id);
         BarringOrder CreateObject(BarringOrder barringOrder);

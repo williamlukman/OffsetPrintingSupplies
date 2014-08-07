@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Validation.Validation
 {
     public class ItemTypeValidator : IItemTypeValidator
@@ -24,12 +23,21 @@ namespace Validation.Validation
             return itemType;
         }
 
-        public ItemType VHasItem(ItemType itemType, IItemService _itemService)
+        public ItemType VHasNoItem(ItemType itemType, IItemService _itemService)
         {
             IList<Item> list = _itemService.GetObjectsByItemTypeId(itemType.Id);
             if (list.Any())
             {
                 itemType.Errors.Add("Generic", "Item tidak boleh ada yang terasosiakan dengan itemType");
+            }
+            return itemType;
+        }
+
+        public ItemType VNotALegacy(ItemType itemType)
+        {
+            if (itemType.IsLegacy)
+            {
+                itemType.Errors.Add("Generic", "Cannot update legacy item " + itemType.Name); 
             }
             return itemType;
         }
@@ -43,12 +51,16 @@ namespace Validation.Validation
         public ItemType VUpdateObject(ItemType itemType, IItemTypeService _itemTypeService)
         {
             VHasUniqueName(itemType, _itemTypeService);
+            if (!isValid(itemType)) { return itemType; }
+            VNotALegacy(itemType);
             return itemType;
         }
 
         public ItemType VDeleteObject(ItemType itemType, IItemService _itemService)
         {
-            VHasItem(itemType, _itemService);
+            VHasNoItem(itemType, _itemService);
+            if (!isValid(itemType)) { return itemType; }
+            VNotALegacy(itemType);
             return itemType;
         }
 

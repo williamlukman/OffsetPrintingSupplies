@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -59,12 +58,11 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
-                d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
                 d.coreBuilder = new CoreBuilder()
                 {
@@ -136,7 +134,8 @@ namespace TestValidation
             it["delete_corebuilder"] = () =>
             {
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService,
-                                                                       d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService);
+                                                                       d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService,
+                                                                       d._stockMutationService, d._itemTypeService);
                 d.coreBuilder.Errors.Count().should_be(0);
             };
 
@@ -151,13 +150,13 @@ namespace TestValidation
                 d.machine = d._machineService.CreateObject(d.machine);
                 d.coreIdentification = new CoreIdentification()
                 {
-                    CustomerId = d.customer.Id,
+                    ContactId = d.contact.Id,
                     Code = "CI0001",
                     Quantity = 1,
                     IdentifiedDate = DateTime.Now,
                     WarehouseId = d.localWarehouse.Id
                 };
-                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
+                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
                 {
                     CoreIdentificationId = d.coreIdentification.Id,
@@ -174,8 +173,8 @@ namespace TestValidation
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
 
-                d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService,
-                                                                       d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService);
+                d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService,
+                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService);
                 d.coreBuilder.Errors.Count().should_not_be(0);
             };
         }

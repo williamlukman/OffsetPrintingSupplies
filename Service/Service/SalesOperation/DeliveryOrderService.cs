@@ -35,31 +35,31 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<DeliveryOrder> GetObjectsByCustomerId(int customerId)
+        public IList<DeliveryOrder> GetObjectsByContactId(int contactId)
         {
-            return _repository.GetObjectsByCustomerId(customerId);
+            return _repository.GetObjectsByContactId(contactId);
         }
 
-        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
+        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
         {
             deliveryOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(deliveryOrder, _customerService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidCreateObject(deliveryOrder, _contactService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
         }
 
-        public DeliveryOrder CreateObject(int customerId, int warehouseId, DateTime deliveryDate, ICustomerService _customerService)
+        public DeliveryOrder CreateObject(int contactId, int warehouseId, DateTime deliveryDate, IContactService _contactService)
         {
             DeliveryOrder deliveryOrder = new DeliveryOrder
             {
-                CustomerId = customerId,
+                ContactId = contactId,
                 WarehouseId = warehouseId,
                 DeliveryDate = deliveryDate
             };
-            return this.CreateObject(deliveryOrder, _customerService);
+            return this.CreateObject(deliveryOrder, _contactService);
         }
 
-        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
+        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(deliveryOrder, _customerService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidUpdateObject(deliveryOrder, _contactService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
         }
 
         public DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)

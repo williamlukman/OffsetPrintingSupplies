@@ -33,9 +33,9 @@ namespace Data.Repository
             return (from x in Context.Items.OfType<Barring>() where x.UoMId == UoMId && !x.IsDeleted select x).ToList();
         }
 
-        public IList<Barring> GetObjectsByCustomerId(int CustomerId)
+        public IList<Barring> GetObjectsByContactId(int ContactId)
         {
-            return (from x in Context.Items.OfType<Barring>() where x.CustomerId == CustomerId && !x.IsDeleted select x).ToList();
+            return (from x in Context.Items.OfType<Barring>() where x.ContactId == ContactId && !x.IsDeleted select x).ToList();
         }
 
         public IList<Barring> GetObjectsByMachineId(int MachineId)

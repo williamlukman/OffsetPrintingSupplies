@@ -33,14 +33,13 @@ namespace Data.Repository
             return FindAll(pv => pv.CashBankId == cashBankId && !pv.IsDeleted).ToList();
         }
 
-        public IList<ReceiptVoucher> GetObjectsByCustomerId(int customerId)
+        public IList<ReceiptVoucher> GetObjectsByContactId(int contactId)
         {
-            return FindAll(pv => pv.CustomerId == customerId && !pv.IsDeleted).ToList();
+            return FindAll(pv => pv.ContactId == contactId && !pv.IsDeleted).ToList();
         }
 
         public ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher)
         {
-            receiptVoucher.PendingClearanceAmount = 0;
             receiptVoucher.Code = SetObjectCode();
             receiptVoucher.IsDeleted = false;
             receiptVoucher.IsConfirmed = false;

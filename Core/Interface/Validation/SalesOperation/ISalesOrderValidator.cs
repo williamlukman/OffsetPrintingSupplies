@@ -9,22 +9,22 @@ namespace Core.Interface.Validation
 {
     public interface ISalesOrderValidator
     {
-        SalesOrder VCustomer(SalesOrder salesOrder, ICustomerService _customerService);
+        SalesOrder VContact(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder VSalesDate(SalesOrder salesOrder);
         SalesOrder VHasBeenConfirmed(SalesOrder salesOrder);
         SalesOrder VHasNotBeenConfirmed(SalesOrder salesOrder);
         SalesOrder VHasSalesOrderDetails(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         SalesOrder VAllDetailsHaveBeenFinished(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         SalesOrder VAllDetailsHaveNotBeenFinished(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
-        SalesOrder VCreateObject(SalesOrder salesOrder, ICustomerService _customerService);
-        SalesOrder VUpdateObject(SalesOrder salesOrder, ICustomerService _customerService);
+        SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService);
+        SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder VDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         SalesOrder VConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         SalesOrder VUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,
                                     IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService);
         SalesOrder VCompleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
-        bool ValidCreateObject(SalesOrder salesOrder, ICustomerService _customerService);
-        bool ValidUpdateObject(SalesOrder salesOrder, ICustomerService _customerService);
+        bool ValidCreateObject(SalesOrder salesOrder, IContactService _contactService);
+        bool ValidUpdateObject(SalesOrder salesOrder, IContactService _contactService);
         bool ValidDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         bool ValidConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         bool ValidUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,

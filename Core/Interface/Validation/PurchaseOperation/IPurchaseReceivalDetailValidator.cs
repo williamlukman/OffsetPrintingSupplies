@@ -11,8 +11,8 @@ namespace Core.Interface.Validation
     {
         PurchaseReceivalDetail VHasPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService);
         PurchaseReceivalDetail VHasItem(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService);
-        PurchaseReceivalDetail VCustomer(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService,
-                                        IPurchaseOrderDetailService _purchaseOrderDetailService, ICustomerService _customerService);
+        PurchaseReceivalDetail VContact(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService,
+                                        IPurchaseOrderDetailService _purchaseOrderDetailService, IContactService _contactService);
         PurchaseReceivalDetail VQuantityCreate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail VQuantityUpdate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
@@ -23,20 +23,20 @@ namespace Core.Interface.Validation
         PurchaseReceivalDetail VHasItemQuantity(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService);
         PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                             IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
+                                             IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService);
         PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                             IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
+                                             IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService);
         PurchaseReceivalDetail VDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail VFinishObject(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail VUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
                                                IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
         bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                               IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
+                               IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService);
         bool ValidUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                               IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
+                               IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService);
         bool ValidDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail);
         bool ValidFinishObject(PurchaseReceivalDetail purchaseReceivalDetail);
         bool ValidUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,

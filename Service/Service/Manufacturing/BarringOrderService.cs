@@ -30,9 +30,9 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
-        public IList<BarringOrder> GetAllObjectsByCustomerId(int CustomerId)
+        public IList<BarringOrder> GetAllObjectsByContactId(int ContactId)
         {
-            return _repository.GetAllObjectsByCustomerId(CustomerId);
+            return _repository.GetAllObjectsByContactId(ContactId);
         }
 
         public IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId)

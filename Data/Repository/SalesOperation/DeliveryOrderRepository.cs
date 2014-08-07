@@ -28,9 +28,9 @@ namespace Data.Repository
             return deliveryOrder;
         }
 
-        public IList<DeliveryOrder> GetObjectsByCustomerId(int customerId)
+        public IList<DeliveryOrder> GetObjectsByContactId(int contactId)
         {
-            return FindAll(d => d.CustomerId == customerId && !d.IsDeleted).ToList();
+            return FindAll(d => d.ContactId == contactId && !d.IsDeleted).ToList();
         }
 
         public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder)

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -13,12 +11,12 @@ namespace Validation.Validation
 {
     public class SalesOrderValidator : ISalesOrderValidator
     {
-        public SalesOrder VCustomer(SalesOrder salesOrder, ICustomerService _customerService)
+        public SalesOrder VContact(SalesOrder salesOrder, IContactService _contactService)
         {
-            Customer customer = _customerService.GetObjectById(salesOrder.CustomerId);
-            if (customer == null)
+            Contact contact = _contactService.GetObjectById(salesOrder.ContactId);
+            if (contact == null)
             {
-                salesOrder.Errors.Add("Customer", "Tidak boleh tidak ada");
+                salesOrder.Errors.Add("Contact", "Tidak boleh tidak ada");
             }
             return salesOrder;
         }
@@ -90,17 +88,17 @@ namespace Validation.Validation
             return salesOrder;
         }
 
-        public SalesOrder VCreateObject(SalesOrder salesOrder, ICustomerService _customerService)
+        public SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VCustomer(salesOrder, _customerService);
+            VContact(salesOrder, _contactService);
             if (!isValid(salesOrder)) { return salesOrder; }
             VSalesDate(salesOrder);
             return salesOrder;
         }
 
-        public SalesOrder VUpdateObject(SalesOrder salesOrder, ICustomerService _customerService)
+        public SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VCustomer(salesOrder, _customerService);
+            VContact(salesOrder, _contactService);
             if (!isValid(salesOrder)) { return salesOrder; }
             VSalesDate(salesOrder);
             if (!isValid(salesOrder)) { return salesOrder; }
@@ -136,16 +134,16 @@ namespace Validation.Validation
             return salesOrder;
         }
 
-        public bool ValidCreateObject(SalesOrder salesOrder, ICustomerService _customerService)
+        public bool ValidCreateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VCreateObject(salesOrder, _customerService);
+            VCreateObject(salesOrder, _contactService);
             return isValid(salesOrder);
         }
 
-        public bool ValidUpdateObject(SalesOrder salesOrder, ICustomerService _customerService)
+        public bool ValidUpdateObject(SalesOrder salesOrder, IContactService _contactService)
         {
             salesOrder.Errors.Clear();
-            VUpdateObject(salesOrder, _customerService);
+            VUpdateObject(salesOrder, _contactService);
             return isValid(salesOrder);
         }
 

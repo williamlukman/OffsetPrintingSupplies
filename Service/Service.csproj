@@ -84,7 +84,7 @@
     <Compile Include="Service\StockAndMaster\CoreBuilderService.cs" />
     <Compile Include="Service\StockAndMaster\RollerTypeService.cs" />
     <Compile Include="Service\StockAndMaster\MachineService.cs" />
-    <Compile Include="Service\StockAndMaster\CustomerService.cs" />
+    <Compile Include="Service\StockAndMaster\ContactService.cs" />
     <Compile Include="Service\StockAndMaster\ItemService.cs" />
     <Compile Include="Service\StockAndMaster\ItemTypeService.cs" />
   </ItemGroup>

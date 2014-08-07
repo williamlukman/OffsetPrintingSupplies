@@ -9,7 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface IPaymentVoucherValidator
     {
-        PaymentVoucher VHasCustomer(PaymentVoucher paymentVoucher, ICustomerService _customerService);
+        PaymentVoucher VHasContact(PaymentVoucher paymentVoucher, IContactService _contactService);
         PaymentVoucher VHasCashBank(PaymentVoucher paymentVoucher, ICashBankService _cashBankService);
         PaymentVoucher VHasPaymentDate(PaymentVoucher paymentVoucher);
         PaymentVoucher VIfGBCHThenIsBank(PaymentVoucher paymentVoucher);
@@ -29,9 +29,9 @@ namespace Core.Interface.Validation
         PaymentVoucher VHasNotBeenReconciled(PaymentVoucher paymentVoucher);
         PaymentVoucher VHasReconciliationDate(PaymentVoucher paymentVoucher);
         PaymentVoucher VCreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                     IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                                     IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService);
         PaymentVoucher VUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                     IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                                     IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService);
         PaymentVoucher VDeleteObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
         PaymentVoucher VConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService,
                                        IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
@@ -40,9 +40,9 @@ namespace Core.Interface.Validation
         PaymentVoucher VReconcileObject(PaymentVoucher paymentVoucher);
         PaymentVoucher VUnreconcileObject(PaymentVoucher paymentVoucher);
         bool ValidCreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                               IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                               IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                               IPayableService _payableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                               IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidDeleteObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
         bool ValidConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService,
                                 IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,

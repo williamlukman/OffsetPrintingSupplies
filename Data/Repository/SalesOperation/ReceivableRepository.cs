@@ -22,9 +22,9 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
-        public IList<Receivable> GetObjectsByCustomerId(int customerId)
+        public IList<Receivable> GetObjectsByContactId(int contactId)
         {
-            return FindAll(p => p.CustomerId == customerId && !p.IsDeleted).ToList();
+            return FindAll(p => p.ContactId == contactId && !p.IsDeleted).ToList();
         }
 
         public Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId)

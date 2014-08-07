@@ -11,7 +11,7 @@ namespace Core.Interface.Repository
         IList<PaymentVoucher> GetAll();
         PaymentVoucher GetObjectById(int Id);
         IList<PaymentVoucher> GetObjectsByCashBankId(int cashBankId);
-        IList<PaymentVoucher> GetObjectsByCustomerId(int customerId);
+        IList<PaymentVoucher> GetObjectsByContactId(int contactId);
         PaymentVoucher CreateObject(PaymentVoucher paymentVoucher);
         PaymentVoucher UpdateObject(PaymentVoucher paymentVoucher);
         PaymentVoucher SoftDeleteObject(PaymentVoucher paymentVoucher);

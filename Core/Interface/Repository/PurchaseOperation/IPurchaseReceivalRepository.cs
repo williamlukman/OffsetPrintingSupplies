@@ -10,7 +10,7 @@ namespace Core.Interface.Repository
     {
         IList<PurchaseReceival> GetAll();
         PurchaseReceival GetObjectById(int Id);
-        IList<PurchaseReceival> GetObjectsByCustomerId(int customerId);
+        IList<PurchaseReceival> GetObjectsByContactId(int contactId);
         PurchaseReceival CreateObject(PurchaseReceival purchaseReceival);
         PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival);
         PurchaseReceival SoftDeleteObject(PurchaseReceival purchaseReceival);

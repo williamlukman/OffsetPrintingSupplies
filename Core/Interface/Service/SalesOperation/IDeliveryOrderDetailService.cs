@@ -16,13 +16,13 @@ namespace Core.Interface.Service
         IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId);
         DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                         ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService);
+                                         ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService);
         DeliveryOrderDetail CreateObject(int deliveryOrderId, int itemId, int quantity, int salesOrderDetailId,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                         ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService);
+                                         ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService);
         DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                         ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService);
+                                         ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService);
         DeliveryOrderDetail SoftDeleteObject(DeliveryOrderDetail deliveryOrderDetail);
         bool DeleteObject(int Id);
         DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,

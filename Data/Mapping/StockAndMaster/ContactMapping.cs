@@ -7,20 +7,20 @@ using System.Text;
 
 namespace Data.Mapping
 {
-    public class CustomerMapping : EntityTypeConfiguration<Customer>
+    public class ContactMapping : EntityTypeConfiguration<Contact>
     {
-        public CustomerMapping()
+        public ContactMapping()
         {
             HasKey(c => c.Id);
             HasMany(c => c.CoreIdentifications)
-                .WithOptional(ci => ci.Customer)
-                .HasForeignKey(ci => ci.CustomerId);
+                .WithOptional(ci => ci.Contact)
+                .HasForeignKey(ci => ci.ContactId);
             HasMany(c => c.BarringOrders)
-                .WithRequired(bo => bo.Customer)
-                .HasForeignKey(bo => bo.CustomerId);
+                .WithRequired(bo => bo.Contact)
+                .HasForeignKey(bo => bo.ContactId);
             HasMany(c => c.Barrings)
-                .WithRequired(b => b.Customer)
-                .HasForeignKey(c => c.CustomerId);
+                .WithRequired(b => b.Contact)
+                .HasForeignKey(c => c.ContactId);
 
             HasOptional(c => c.PurchaseOrders);
             HasOptional(c => c.PurchaseOrderDetails);

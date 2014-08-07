@@ -8,7 +8,7 @@ namespace Core.DomainModel
     public partial class BarringOrder
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public int ContactId { get; set; }
         public int WarehouseId { get; set; }
         public string Code { get; set; }
 
@@ -25,7 +25,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
-        public virtual Customer Customer { get; set; }
+        public virtual Contact Contact { get; set; }
         public virtual ICollection<BarringOrderDetail> BarringOrderDetails { get; set; }
     }
 }

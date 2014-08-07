@@ -35,31 +35,31 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<PurchaseReceival> GetObjectsByCustomerId(int customerId)
+        public IList<PurchaseReceival> GetObjectsByContactId(int contactId)
         {
-            return _repository.GetObjectsByCustomerId(customerId);
+            return _repository.GetObjectsByContactId(contactId);
         }
         
-        public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService)
+        public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, IContactService _contactService)
         {
             purchaseReceival.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(purchaseReceival, _customerService) ? _repository.CreateObject(purchaseReceival) : purchaseReceival);
+            return (_validator.ValidCreateObject(purchaseReceival, _contactService) ? _repository.CreateObject(purchaseReceival) : purchaseReceival);
         }
 
-        public PurchaseReceival CreateObject(int warehouseId, int customerId, DateTime receivalDate, ICustomerService _customerService)
+        public PurchaseReceival CreateObject(int warehouseId, int contactId, DateTime receivalDate, IContactService _contactService)
         {
             PurchaseReceival purchaseReceival = new PurchaseReceival
             {
-                CustomerId = customerId,
+                ContactId = contactId,
                 ReceivalDate = receivalDate,
                 WarehouseId = warehouseId
             };
-            return this.CreateObject(purchaseReceival, _customerService);
+            return this.CreateObject(purchaseReceival, _contactService);
         }
 
-        public PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService)
+        public PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(purchaseReceival, _customerService) ? _repository.UpdateObject(purchaseReceival) : purchaseReceival);
+            return (_validator.ValidUpdateObject(purchaseReceival, _contactService) ? _repository.UpdateObject(purchaseReceival) : purchaseReceival);
         }
 
         public PurchaseReceival SoftDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService)

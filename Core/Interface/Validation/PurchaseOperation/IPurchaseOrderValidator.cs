@@ -9,21 +9,21 @@ namespace Core.Interface.Validation
 {
     public interface IPurchaseOrderValidator
     {
-        PurchaseOrder VCustomer(PurchaseOrder purchaseOrder, ICustomerService _customerService);
+        PurchaseOrder VContact(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder VPurchaseDate(PurchaseOrder purchaseOrder);
         PurchaseOrder VHasBeenConfirmed(PurchaseOrder purchaseOrder);
         PurchaseOrder VHasNotBeenConfirmed(PurchaseOrder purchaseOrder);
         PurchaseOrder VHasPurchaseOrderDetails(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseOrder VAllDetailsHaveBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseOrder VAllDetailsHaveNotBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
-        PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
+        PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
+        PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder VDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseOrder VConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
         PurchaseOrder VCompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        bool ValidCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
-        bool ValidUpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService);
+        bool ValidCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
+        bool ValidUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         bool ValidDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         bool ValidConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         bool ValidUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);

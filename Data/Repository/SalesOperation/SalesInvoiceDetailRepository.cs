@@ -89,8 +89,6 @@ namespace Data.Repository
             // Code: #{parent_object.code}/#{total_number_objects}
             int totalobject = FindAll().Count() + 1;
             string Code = ParentCode + "/#" + totalobject;
-            // TODO
-            // string Code = DateTime.Now.Year + "." + DateTime.Now.Month + "." + totalforthemonth;
             return Code;
         } 
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -13,12 +11,12 @@ namespace Validation.Validation
 {
     public class PurchaseOrderValidator : IPurchaseOrderValidator
     {
-        public PurchaseOrder VCustomer(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        public PurchaseOrder VContact(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            Customer c = _customerService.GetObjectById(purchaseOrder.CustomerId);
+            Contact c = _contactService.GetObjectById(purchaseOrder.ContactId);
             if (c == null)
             {
-                purchaseOrder.Errors.Add("Customer", "Tidak boleh tidak ada");
+                purchaseOrder.Errors.Add("Contact", "Tidak boleh tidak ada");
             }
             return purchaseOrder;
         }
@@ -90,17 +88,17 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
-        public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            VCustomer(purchaseOrder, _customerService);
+            VContact(purchaseOrder, _contactService);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
             VPurchaseDate(purchaseOrder);
             return purchaseOrder;
         }
 
-        public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            VCreateObject(purchaseOrder, _customerService);
+            VCreateObject(purchaseOrder, _contactService);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
             VHasNotBeenConfirmed(purchaseOrder);
             return purchaseOrder;
@@ -134,16 +132,16 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
-        public bool ValidCreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        public bool ValidCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            VCreateObject(purchaseOrder, _customerService);
+            VCreateObject(purchaseOrder, _contactService);
             return isValid(purchaseOrder);
         }
 
-        public bool ValidUpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        public bool ValidUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
             purchaseOrder.Errors.Clear();
-            VUpdateObject(purchaseOrder, _customerService);
+            VUpdateObject(purchaseOrder, _contactService);
             return isValid(purchaseOrder);
         }
 

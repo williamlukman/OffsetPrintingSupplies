@@ -9,7 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface IReceiptVoucherValidator
     {
-        ReceiptVoucher VHasCustomer(ReceiptVoucher receiptVoucher, ICustomerService _customerService);
+        ReceiptVoucher VHasContact(ReceiptVoucher receiptVoucher, IContactService _contactService);
         ReceiptVoucher VHasCashBank(ReceiptVoucher receiptVoucher, ICashBankService _cashBankService);
         ReceiptVoucher VHasReceiptDate(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VIfGBCHThenIsBank(ReceiptVoucher receiptVoucher);
@@ -29,9 +29,9 @@ namespace Core.Interface.Validation
         ReceiptVoucher VHasNotBeenReconciled(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VHasReconciliationDate(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VCreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                     IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                                     IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService);
         ReceiptVoucher VUpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                     IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                                     IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService);
         ReceiptVoucher VDeleteObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);
         ReceiptVoucher VConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService,
                                        IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
@@ -40,9 +40,9 @@ namespace Core.Interface.Validation
         ReceiptVoucher VReconcileObject(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VUnreconcileObject(ReceiptVoucher receiptVoucher);
         bool ValidCreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                               IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                               IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidUpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                               IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService);
+                               IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService);
         bool ValidDeleteObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool ValidConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService,
                                 IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,

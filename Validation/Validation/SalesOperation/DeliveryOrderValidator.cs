@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -13,12 +12,12 @@ namespace Validation.Validation
     public class DeliveryOrderValidator : IDeliveryOrderValidator
     {
 
-        public DeliveryOrder VCustomer(DeliveryOrder deliveryOrder, ICustomerService _customerService)
+        public DeliveryOrder VContact(DeliveryOrder deliveryOrder, IContactService _contactService)
         {
-            Customer customer = _customerService.GetObjectById(deliveryOrder.CustomerId);
-            if (customer == null)
+            Contact contact = _contactService.GetObjectById(deliveryOrder.ContactId);
+            if (contact == null)
             {
-                deliveryOrder.Errors.Add("CustomerId", "Tidak terasosiasi dengan customer");
+                deliveryOrder.Errors.Add("ContactId", "Tidak terasosiasi dengan contact");
             }
             return deliveryOrder;
         }
@@ -104,17 +103,17 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
+        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
         {
-            VCustomer(deliveryOrder, _customerService);
+            VContact(deliveryOrder, _contactService);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VDeliveryDate(deliveryOrder);
             return deliveryOrder;
         }
 
-        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
+        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
         {
-            VCustomer(deliveryOrder, _customerService);
+            VContact(deliveryOrder, _contactService);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VDeliveryDate(deliveryOrder);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
@@ -152,16 +151,16 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public bool ValidCreateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
+        public bool ValidCreateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
         {
-            VCreateObject(deliveryOrder, _customerService);
+            VCreateObject(deliveryOrder, _contactService);
             return isValid(deliveryOrder);
         }
 
-        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, ICustomerService _customerService)
+        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
         {
             deliveryOrder.Errors.Clear();
-            VUpdateObject(deliveryOrder, _customerService);
+            VUpdateObject(deliveryOrder, _contactService);
             return isValid(deliveryOrder);
         }
 

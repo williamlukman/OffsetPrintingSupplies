@@ -12,13 +12,13 @@ namespace Core.Interface.Service
         ICoreIdentificationValidator GetValidator();
         IList<CoreIdentification> GetAll();
         IList<CoreIdentification> GetAllObjectsInHouse();
-        IList<CoreIdentification> GetAllObjectsByCustomerId(int CustomerId);
+        IList<CoreIdentification> GetAllObjectsByContactId(int ContactId);
         IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId);
         CoreIdentification GetObjectById(int Id);
-        CoreIdentification CreateObject(CoreIdentification coreIdentification, ICustomerService _customerService);
-        CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService);
-        CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService);
-        CoreIdentification UpdateObject(CoreIdentification coreIdentification, ICustomerService _customerService);
+        CoreIdentification CreateObject(CoreIdentification coreIdentification, IContactService _contactService);
+        CoreIdentification CreateObjectForContact(int ContactId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, IContactService _contactService);
+        CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, IContactService _contactService);
+        CoreIdentification UpdateObject(CoreIdentification coreIdentification, IContactService _contactService);
         CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                             IRecoveryOrderService _recoveryOrderService);
         CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,

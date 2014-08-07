@@ -9,7 +9,7 @@ namespace Core.Interface.Repository
     public interface IPayableRepository : IRepository<Payable>
     {
         IList<Payable> GetAll();
-        IList<Payable> GetObjectsByCustomerId(int customerId);
+        IList<Payable> GetObjectsByContactId(int contactId);
         Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
         Payable GetObjectById(int Id);
         Payable CreateObject(Payable payable);

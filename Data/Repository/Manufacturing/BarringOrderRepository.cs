@@ -23,9 +23,9 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
-        public IList<BarringOrder> GetAllObjectsByCustomerId(int CustomerId)
+        public IList<BarringOrder> GetAllObjectsByContactId(int ContactId)
         {
-            return FindAll(x => x.CustomerId == CustomerId && !x.IsDeleted).ToList();
+            return FindAll(x => x.ContactId == ContactId && !x.IsDeleted).ToList();
         }
 
         public IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId)

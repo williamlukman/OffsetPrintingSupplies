@@ -11,12 +11,12 @@ namespace Validation.Validation
 {
     public class ReceiptVoucherValidator : IReceiptVoucherValidator
     {
-        public ReceiptVoucher VHasCustomer(ReceiptVoucher receiptVoucher, ICustomerService _customerService)
+        public ReceiptVoucher VHasContact(ReceiptVoucher receiptVoucher, IContactService _contactService)
         {
-            Customer customer = _customerService.GetObjectById(receiptVoucher.CustomerId);
-            if (customer == null)
+            Contact contact = _contactService.GetObjectById(receiptVoucher.ContactId);
+            if (contact == null)
             {
-                receiptVoucher.Errors.Add("CustomerId", "Tidak boleh tidak ada");
+                receiptVoucher.Errors.Add("ContactId", "Tidak boleh tidak ada");
             }
             return receiptVoucher;
         }
@@ -190,9 +190,9 @@ namespace Validation.Validation
         }
 
         public ReceiptVoucher VCreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                            IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                            IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            VHasCustomer(receiptVoucher, _customerService);
+            VHasContact(receiptVoucher, _contactService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasCashBank(receiptVoucher, _cashBankService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
@@ -205,11 +205,11 @@ namespace Validation.Validation
         }
 
         public ReceiptVoucher VUpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                            IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                            IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService)
         {
             VHasNoReceiptVoucherDetail(receiptVoucher, _receiptVoucherDetailService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
-            VCreateObject(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _receivableService, _customerService, _cashBankService);
+            VCreateObject(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
             return receiptVoucher;
         }
 
@@ -268,17 +268,17 @@ namespace Validation.Validation
         }
 
         public bool ValidCreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                      IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                      IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            VCreateObject(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _receivableService, _customerService, _cashBankService);
+            VCreateObject(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
             return isValid(receiptVoucher);
         }
 
         public bool ValidUpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                      IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                      IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService)
         {
             receiptVoucher.Errors.Clear();
-            VUpdateObject(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _receivableService, _customerService, _cashBankService);
+            VUpdateObject(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
             return isValid(receiptVoucher);
         }
 

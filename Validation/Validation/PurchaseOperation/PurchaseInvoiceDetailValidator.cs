@@ -11,7 +11,6 @@ namespace Validation.Validation
 {
     public class PurchaseInvoiceDetailValidator : IPurchaseInvoiceDetailValidator
     {
-
         public PurchaseInvoiceDetail VHasPurchaseInvoice(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService)
         {
             PurchaseInvoice purchaseInvoice = _purchaseInvoiceService.GetObjectById(purchaseInvoiceDetail.PurchaseInvoiceId);

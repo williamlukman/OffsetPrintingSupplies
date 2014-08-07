@@ -43,12 +43,12 @@ namespace Service.Service
 
         public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail, 
                                                 IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                                ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
         {
             deliveryOrderDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService))
+            if (_validator.ValidCreateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService))
             { 
-                deliveryOrderDetail.CustomerId = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId).CustomerId;
+                deliveryOrderDetail.ContactId = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId).ContactId;
                 _repository.CreateObject(deliveryOrderDetail);
             }
             return deliveryOrderDetail;
@@ -56,7 +56,7 @@ namespace Service.Service
 
         public DeliveryOrderDetail CreateObject(int deliveryOrderId, int itemId, int quantity, int salesOrderDetailId,
                                                 IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                                ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
         {
             DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail
             {
@@ -65,14 +65,14 @@ namespace Service.Service
                 Quantity = quantity,
                 SalesOrderDetailId = salesOrderDetailId
             };
-            return this.CreateObject(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService);
+            return this.CreateObject(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
         }
 
         public DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail,
                                                 IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                                ISalesOrderService _salesOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _customerService) ?
+            return (_validator.ValidUpdateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService) ?
                     _repository.UpdateObject(deliveryOrderDetail) : deliveryOrderDetail);
         }
 

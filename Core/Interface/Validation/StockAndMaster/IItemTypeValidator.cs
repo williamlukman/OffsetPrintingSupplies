@@ -10,7 +10,8 @@ namespace Core.Interface.Validation
     public interface IItemTypeValidator
     {
         ItemType VHasUniqueName(ItemType itemType, IItemTypeService _itemTypeService);
-        ItemType VHasItem(ItemType itemType, IItemService _itemService);
+        ItemType VHasNoItem(ItemType itemType, IItemService _itemService);
+        ItemType VNotALegacy(ItemType itemType);
         ItemType VCreateObject(ItemType itemType, IItemTypeService _itemTypeService);
         ItemType VUpdateObject(ItemType itemType, IItemTypeService _itemTypeService);
         ItemType VDeleteObject(ItemType itemType, IItemService _itemService);

@@ -28,9 +28,9 @@ namespace Data.Repository
             return purchaseOrder;
         }
 
-        public IList<PurchaseOrder> GetObjectsByCustomerId(int customerId)
+        public IList<PurchaseOrder> GetObjectsByContactId(int contactId)
         {
-            return FindAll(po => po.CustomerId == customerId && !po.IsDeleted).ToList();
+            return FindAll(po => po.ContactId == contactId && !po.IsDeleted).ToList();
         }
 
         public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder)

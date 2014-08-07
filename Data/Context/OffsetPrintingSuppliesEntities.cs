@@ -38,7 +38,7 @@ namespace Data.Context
             IList<String> stockAndMasterNames = new List<String>()
                                         { "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
-                                          "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Customer",
+                                          "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine" };
 
             financeNames.ToList().ForEach(x => tableNames.Add(x));
@@ -70,7 +70,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CoreIdentificationDetailMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
-            modelBuilder.Configurations.Add(new CustomerMapping());
+            modelBuilder.Configurations.Add(new ContactMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
             modelBuilder.Configurations.Add(new MachineMapping());
@@ -118,7 +118,7 @@ namespace Data.Context
         public DbSet<CoreBuilder> CoreBuilders { get; set; }
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public DbSet<Item> Items { get; set; }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -58,7 +57,6 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
@@ -116,7 +114,7 @@ namespace TestValidation
 
             it["delete_item"] = () =>
             {
-                d.item = d._itemService.SoftDeleteObject(d.item, d._recoveryAccessoryDetailService, d._itemTypeService, d._warehouseItemService, d._barringService);
+                d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService);
                 d.item.Errors.Count().should_be(0);
             };
 
@@ -146,7 +144,7 @@ namespace TestValidation
                     IdentifiedDate = DateTime.Now,
                     WarehouseId = d.localWarehouse.Id
                 };
-                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
+                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
                 {
                     CoreIdentificationId = d.coreIdentification.Id,
@@ -194,7 +192,7 @@ namespace TestValidation
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService);
 
-                compound = d._itemService.SoftDeleteObject(compound, d._recoveryAccessoryDetailService, d._itemTypeService, d._warehouseItemService, d._barringService);
+                compound = d._itemService.SoftDeleteObject(compound, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService);
                 compound.Errors.Count().should_not_be(0);
             };
         }

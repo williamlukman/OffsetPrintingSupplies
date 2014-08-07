@@ -49,6 +49,17 @@ namespace Service.Service
             return this.CreateObject(itemType);
         }
 
+        public ItemType CreateObject(string Name, string Description, bool IsLegacy)
+        {
+            ItemType itemType = new ItemType
+            {
+                Name = Name,
+                Description = Description,
+                IsLegacy = IsLegacy
+            };
+            return this.CreateObject(itemType);
+        }
+
         public ItemType CreateObject(ItemType itemType)
         {
             itemType.Errors = new Dictionary<String, String>();

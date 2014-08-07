@@ -35,9 +35,9 @@ namespace Service.Service
             return _repository.GetAllObjectsInHouse();
         }
 
-        public IList<CoreIdentification> GetAllObjectsByCustomerId(int CustomerId)
+        public IList<CoreIdentification> GetAllObjectsByContactId(int ContactId)
         {
-            return _repository.GetAllObjectsByCustomerId(CustomerId);
+            return _repository.GetAllObjectsByContactId(ContactId);
         }
 
         public IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId)
@@ -50,43 +50,43 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public CoreIdentification CreateObjectForCustomer(int CustomerId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService)
+        public CoreIdentification CreateObjectForContact(int ContactId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, IContactService _contactService)
         {
             CoreIdentification coreIdentification = new CoreIdentification
             {
-                CustomerId = CustomerId,
+                ContactId = ContactId,
                 IsInHouse = false,
                 Code = Code,
                 Quantity = Quantity,
                 IdentifiedDate = IdentifiedDate,
                 WarehouseId = WarehouseId
             };
-            return this.CreateObject(coreIdentification, _customerService);
+            return this.CreateObject(coreIdentification, _contactService);
         }
 
-        public CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, ICustomerService _customerService)
+        public CoreIdentification CreateObjectForInHouse(string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, IContactService _contactService)
         {
             CoreIdentification coreIdentification = new CoreIdentification
             {
-                CustomerId = null,
+                ContactId = null,
                 IsInHouse = true,
                 Code = Code,
                 Quantity = Quantity,
                 IdentifiedDate = IdentifiedDate,
                 WarehouseId = WarehouseId
             };
-            return this.CreateObject(coreIdentification, _customerService);
+            return this.CreateObject(coreIdentification, _contactService);
         }
 
-        public CoreIdentification CreateObject(CoreIdentification coreIdentification, ICustomerService _customerService)
+        public CoreIdentification CreateObject(CoreIdentification coreIdentification, IContactService _contactService)
         {
             coreIdentification.Errors = new Dictionary<String, String>();
-            return (coreIdentification = _validator.ValidCreateObject(coreIdentification, this, _customerService) ? _repository.CreateObject(coreIdentification) : coreIdentification);
+            return (coreIdentification = _validator.ValidCreateObject(coreIdentification, this, _contactService) ? _repository.CreateObject(coreIdentification) : coreIdentification);
         }
 
-        public CoreIdentification UpdateObject(CoreIdentification coreIdentification, ICustomerService _customerService)
+        public CoreIdentification UpdateObject(CoreIdentification coreIdentification, IContactService _contactService)
         {
-            return (coreIdentification = _validator.ValidUpdateObject(coreIdentification, this, _customerService) ? _repository.UpdateObject(coreIdentification) : coreIdentification);
+            return (coreIdentification = _validator.ValidUpdateObject(coreIdentification, this, _contactService) ? _repository.UpdateObject(coreIdentification) : coreIdentification);
         }
 
         public CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderService _recoveryOrderService)

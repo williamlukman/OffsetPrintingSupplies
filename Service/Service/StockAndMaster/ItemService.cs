@@ -67,7 +67,16 @@ namespace Service.Service
             if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
             {
                 item = _repository.CreateObject(item);
-                // warehouse item will be created upon calling WarehouseItemService.FindOrCreateObject()
+            }
+            return item;
+        }
+
+        public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        {
+            item.Errors = new Dictionary<String, String>();
+            if (_validator.ValidCreateLegacyObject(item, _uomService, this, _itemTypeService))
+            {
+                item = _repository.CreateObject(item);
             }
             return item;
         }
@@ -77,35 +86,69 @@ namespace Service.Service
             return (item = _validator.ValidUpdateObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item SoftDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                                     IBarringService _barringService)
+        public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                       IBarringService _barringService, IContactService _contactService, IMachineService _machineService)
         {
-            // TODO:
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
             {
-                _barringService.SoftDeleteObject(barring, _warehouseItemService);
+                _barringService.UpdateObject(barring, _barringService, _uomService, this, _itemTypeService,
+                                             _contactService, _machineService, _warehouseItemService, _warehouseService);
+                return barring;
             }
-            else
+
+            return (item = _validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
+        }
+
+        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+        {
+            if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService))
             {
-                if (_validator.ValidDeleteObject(item, _recoveryAccessoryDetailService, _itemTypeService, _warehouseItemService))
+                IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
+                foreach (var warehouseitem in allwarehouseitems)
                 {
-                    IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
-                    foreach (var warehouseitem in allwarehouseitems)
+                    IWarehouseItemValidator warehouseItemValidator = _warehouseItemService.GetValidator();
+                    if (!warehouseItemValidator.ValidDeleteObject(warehouseitem))
                     {
-                        IWarehouseItemValidator warehouseItemValidator = _warehouseItemService.GetValidator();
-                        if (!warehouseItemValidator.ValidDeleteObject(warehouseitem))
-                        {
-                            item.Errors.Add("Generic", "Tidak bisa menghapus item yang berhubungan dengan warehouse");
-                            return item;
-                        }
+                        item.Errors.Add("Generic", "Tidak bisa menghapus item yang berhubungan dengan warehouse");
+                        return item;
                     }
-                    foreach (var warehouseitem in allwarehouseitems)
-                    {
-                        _warehouseItemService.SoftDeleteObject(warehouseitem);
-                    }
-                    _repository.SoftDeleteObject(item);
                 }
+                foreach (var warehouseitem in allwarehouseitems)
+                {
+                    _warehouseItemService.SoftDeleteObject(warehouseitem);
+                }
+                _repository.SoftDeleteObject(item);
+            }
+            return item;
+        }
+
+        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+        {
+            Barring barring = _barringService.GetObjectById(item.Id);
+            if (barring != null)
+            {
+                _barringService.SoftDeleteObject(barring, _itemTypeService, _warehouseItemService);
+                return barring;
+            }
+
+            if (_validator.ValidDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService))
+            {
+                IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
+                foreach (var warehouseitem in allwarehouseitems)
+                {
+                    IWarehouseItemValidator warehouseItemValidator = _warehouseItemService.GetValidator();
+                    if (!warehouseItemValidator.ValidDeleteObject(warehouseitem))
+                    {
+                        item.Errors.Add("Generic", "Tidak bisa menghapus item yang berhubungan dengan warehouse");
+                        return item;
+                    }
+                }
+                foreach (var warehouseitem in allwarehouseitems)
+                {
+                    _warehouseItemService.SoftDeleteObject(warehouseitem);
+                }
+                _repository.SoftDeleteObject(item);
             }
             return item;
         }

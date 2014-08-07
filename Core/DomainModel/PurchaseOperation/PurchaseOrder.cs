@@ -9,7 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
-        public int CustomerId { get; set; }
+        public int ContactId { get; set; }
         public DateTime PurchaseDate { get; set; }
         
         public bool IsConfirmed { get; set; }
@@ -22,7 +22,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
-        public virtual Customer Customer {get; set;}
+        public virtual Contact Contact {get; set;}
         public Dictionary<String, String> Errors { get; set; }
 
     }

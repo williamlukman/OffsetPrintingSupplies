@@ -16,7 +16,7 @@ namespace Core.DomainModel
         public int InvoicedQuantity { get; set; }
         public int PendingInvoicedQuantity { get; set; }
         public int PurchaseOrderDetailId { get; set; }
-        public int CustomerId { get; set; }
+        public int ContactId { get; set; }
 
         public bool IsFinished { get; set; }
         public Nullable<DateTime> FinishDate { get; set; }
@@ -25,7 +25,7 @@ namespace Core.DomainModel
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
 
-        public virtual Customer Customer { get; set; }
+        public virtual Contact Contact { get; set; }
         public virtual Item Item { get; set; }
         public virtual PurchaseReceival PurchaseReceival { get; set; }
         public virtual PurchaseOrderDetail PurchaseOrderDetail { get; set; }

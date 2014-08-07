@@ -133,9 +133,9 @@ namespace Service.Service
             if( _validator.ValidFinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
-                if (coreIdentification.CustomerId != null)
+                if (coreIdentification.ContactId != null)
                 {
-                    // add customer core
+                    // add contact core
                     int MaterialCase = coreIdentificationDetail.MaterialCase;
                     Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                     _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
@@ -156,9 +156,9 @@ namespace Service.Service
             if (_validator.ValidUnfinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
-                if (coreIdentification.CustomerId != null)
+                if (coreIdentification.ContactId != null)
                 {
-                    // reduce customer core
+                    // reduce contact core
                     int MaterialCase = coreIdentificationDetail.MaterialCase;
                     Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                     _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :

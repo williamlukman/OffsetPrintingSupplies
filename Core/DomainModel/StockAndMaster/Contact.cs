@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Core.DomainModel
 {
-    public partial class Customer
+    public partial class Contact
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
         public string Address { get; set; }
-        public string CustomerNo { get; set; }
+        public string ContactNo { get; set; }
         public string PIC { get; set; }
-        public string PICCustomerNo { get; set; }
+        public string PICContactNo { get; set; }
         public string Email { get; set; }
         
         public bool IsDeleted { get; set; }

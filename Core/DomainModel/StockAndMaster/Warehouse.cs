@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Core.DomainModel
 {
     public partial class Warehouse
@@ -13,7 +12,6 @@ namespace Core.DomainModel
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public bool IsMovingWarehouse { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

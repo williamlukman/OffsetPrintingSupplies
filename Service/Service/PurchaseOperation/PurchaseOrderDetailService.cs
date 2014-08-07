@@ -41,7 +41,7 @@ namespace Service.Service
             purchaseOrderDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService))
             {
-                purchaseOrderDetail.CustomerId = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId).CustomerId;
+                purchaseOrderDetail.ContactId = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId).ContactId;
                 return _repository.CreateObject(purchaseOrderDetail);
             }
             else

@@ -10,28 +10,31 @@ namespace Core.Interface.Validation
     public interface IItemValidator
     {
         Item VHasItemType(Item item, IItemTypeService _itemTypeService);
+        Item VHasItemTypeAndNotLegacyItem(Item item, IItemTypeService _itemTypeService);
         Item VHasUniqueSku(Item item, IItemService _itemService);
         Item VHasName(Item item);
         Item VHasCategory(Item item);
         Item VHasUoM(Item item, IUoMService _uomService);
         Item VNonNegativeQuantity(Item item);
         Item VWarehouseQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService);
-        Item VIsInRecoveryAccessoryDetail(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        Item VIsInRollerBuilderCompound(Item item, IRollerBuilderService _rollerBuilderService);
-        Item VIsNotCoreNorRoller(Item item, IItemTypeService _itemTypeService);
-
+        Item VHasNoStockMutations(Item item, IStockMutationService _stockMutationService);
+        
         Item VCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
+        Item VCreateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VUpdateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
-        Item VDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
-        Item VDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService);
+        Item VUpdateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
+        Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+        Item VDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
         Item VAdjustQuantity(Item item);
         Item VAdjustPendingDelivery(Item item);
         Item VAdjustPendingReceival(Item item);
 
         bool ValidCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
+        bool ValidCreateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidUpdateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
-        bool ValidDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
-        bool ValidDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService);
+        bool ValidUpdateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
+        bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+        bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
         bool ValidAdjustQuantity(Item item);
         bool ValidAdjustPendingDelivery(Item item);
         bool ValidAdjustPendingReceival(Item item);

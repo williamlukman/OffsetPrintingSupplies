@@ -31,9 +31,9 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
-        public IList<Payable> GetObjectsByCustomerId(int customerId)
+        public IList<Payable> GetObjectsByContactId(int contactId)
         {
-            return _repository.GetObjectsByCustomerId(customerId);
+            return _repository.GetObjectsByContactId(contactId);
         }
 
         public Payable GetObjectBySource(string PayableSource, int PayableSourceId)
@@ -52,11 +52,11 @@ namespace Service.Service
             return (_validator.ValidCreateObject(payable, this) ? _repository.CreateObject(payable) : payable);
         }
 
-        public Payable CreateObject(int customerId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate)
+        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate)
         {
             Payable payable = new Payable
             {
-                CustomerId = customerId,
+                ContactId = contactId,
                 PayableSource = payableSource,
                 PayableSourceId = payableSourceId,
                 Amount = amount,

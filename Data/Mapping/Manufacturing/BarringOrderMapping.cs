@@ -15,9 +15,9 @@ namespace Data.Mapping
             HasMany(bo => bo.BarringOrderDetails)
                 .WithRequired(bod => bod.BarringOrder)
                 .HasForeignKey(bod => bod.BarringOrderId);
-            HasRequired(bo => bo.Customer)
+            HasRequired(bo => bo.Contact)
                 .WithMany(c => c.BarringOrders)
-                .HasForeignKey(bo => bo.CustomerId);
+                .HasForeignKey(bo => bo.ContactId);
             Ignore(bo => bo.Errors);
         }
     }

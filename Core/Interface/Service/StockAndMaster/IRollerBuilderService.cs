@@ -27,11 +27,11 @@ namespace Core.Interface.Service
         RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService, IItemService _itemService,
                                    IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
-        RollerBuilder UpdateNameAndCategory(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService, IItemService _itemService,
+        RollerBuilder UpdateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService, IItemService _itemService,
                                    IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
-        RollerBuilder UpdateMeasurement(RollerBuilder rollerBuilder);
         RollerBuilder SoftDeleteObject(RollerBuilder rollerBuilder, IItemService _itemService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                        ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
+                                       ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService,
+                                       IItemTypeService _itemTypeService);
         bool DeleteObject(int Id);
         bool IsBaseSkuDuplicated(RollerBuilder rollerBuilder);
     }

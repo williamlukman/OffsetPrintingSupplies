@@ -10,7 +10,7 @@ namespace Core.Interface.Repository
     {
         IList<CoreIdentification> GetAll();
         IList<CoreIdentification> GetAllObjectsInHouse();
-        IList<CoreIdentification> GetAllObjectsByCustomerId(int CustomerId);
+        IList<CoreIdentification> GetAllObjectsByContactId(int ContactId);
         IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId);
         CoreIdentification GetObjectById(int Id);
         CoreIdentification CreateObject(CoreIdentification coreIdentification);

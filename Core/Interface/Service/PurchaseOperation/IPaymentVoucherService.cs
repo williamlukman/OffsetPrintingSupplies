@@ -13,15 +13,15 @@ namespace Core.Interface.Service
         IList<PaymentVoucher> GetAll();
         PaymentVoucher GetObjectById(int Id);
         IList<PaymentVoucher> GetObjectsByCashBankId(int cashBankId);
-        IList<PaymentVoucher> GetObjectsByCustomerId(int customerId);
+        IList<PaymentVoucher> GetObjectsByContactId(int contactId);
         PaymentVoucher CreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService);
-        PaymentVoucher CreateObject(int cashBankId, int customerId, DateTime paymentDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+                                    IContactService _contactService, ICashBankService _cashBankService);
+        PaymentVoucher CreateObject(int cashBankId, int contactId, DateTime paymentDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
                                     IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService);
+                                    IContactService _contactService, ICashBankService _cashBankService);
         PaymentVoucher UpdateAmount(PaymentVoucher paymentVoucher);
         PaymentVoucher UpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService);
+                                    IContactService _contactService, ICashBankService _cashBankService);
         PaymentVoucher SoftDeleteObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
         bool DeleteObject(int Id);
         PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,

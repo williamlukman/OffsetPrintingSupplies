@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         ItemType GetObjectByName(string Name);
         ItemType CreateObject(ItemType itemType);
         ItemType CreateObject(string Name, string Description);
+        ItemType CreateObject(string Name, string Description, bool IsLegacy);
         ItemType UpdateObject(ItemType itemType);
         ItemType SoftDeleteObject(ItemType itemType, IItemService _itemService);
         bool DeleteObject(int Id);

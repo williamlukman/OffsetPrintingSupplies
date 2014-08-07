@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -46,7 +45,7 @@ namespace TestValidation
                 d.itemCompound2.Errors.Count().should_be(0);
                 d.itemAccessory1.Errors.Count().should_be(0);
                 d.itemAccessory2.Errors.Count().should_be(0);
-                d.customer.Errors.Count().should_be(0);
+                d.contact.Errors.Count().should_be(0);
                 d.machine.Errors.Count().should_be(0);
                 d.coreBuilder.Errors.Count().should_be(0);
                 d.coreBuilder1.Errors.Count().should_be(0);
@@ -54,10 +53,10 @@ namespace TestValidation
                 d.coreBuilder3.Errors.Count().should_be(0);
                 d.coreBuilder4.Errors.Count().should_be(0);
                 d.coreIdentification.Errors.Count().should_be(0);
-                d.coreIdentificationCustomer.Errors.Count().should_be(0);
-                d.coreIDCustomer1.Errors.Count().should_be(0);
-                d.coreIDCustomer2.Errors.Count().should_be(0);
-                d.coreIDCustomer3.Errors.Count().should_be(0);
+                d.coreIdentificationContact.Errors.Count().should_be(0);
+                d.coreIDContact1.Errors.Count().should_be(0);
+                d.coreIDContact2.Errors.Count().should_be(0);
+                d.coreIDContact3.Errors.Count().should_be(0);
                 d.coreIdentificationDetail.Errors.Count().should_be(0);
                 d.coreIdentificationInHouse.Errors.Count().should_be(0);
                 d.coreIDInHouse1.Errors.Count().should_be(0);
@@ -67,27 +66,27 @@ namespace TestValidation
 
             it["deletes_coreidentification"] = () =>
             {
-                d.coreIdentificationCustomer = d._coreIdentificationService.SoftDeleteObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService);
-                d.coreIdentificationCustomer.Errors.Count().should_be(0);
+                d.coreIdentificationContact = d._coreIdentificationService.SoftDeleteObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._recoveryOrderService);
+                d.coreIdentificationContact.Errors.Count().should_be(0);
             };
 
-            it["confirms_coreidentificationcustomer"] = () =>
+            it["confirms_coreidentificationcontact"] = () =>
             {
-                d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._stockMutationService, d._recoveryOrderService,
+                d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._stockMutationService, d._recoveryOrderService,
                                                d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
-                d.coreIdentificationCustomer.IsConfirmed.should_be(true);
-                d.coreIdentificationCustomer.Errors.Count().should_be(0);
+                d.coreIdentificationContact.IsConfirmed.should_be(true);
+                d.coreIdentificationContact.Errors.Count().should_be(0);
             };
 
-            it["unconfirms_coreidentificationcustomer"] = () =>
+            it["unconfirms_coreidentificationcontact"] = () =>
             {
-                d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._stockMutationService,
+                d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._stockMutationService,
                                                d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
-                d.coreIdentificationCustomer.IsConfirmed.should_be(true);
-                d.coreIdentificationCustomer = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._stockMutationService,
+                d.coreIdentificationContact.IsConfirmed.should_be(true);
+                d.coreIdentificationContact = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._stockMutationService,
                                                d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
-                d.coreIdentificationCustomer.IsConfirmed.should_be(false);
-                d.coreIdentificationCustomer.Errors.Count().should_be(0);
+                d.coreIdentificationContact.IsConfirmed.should_be(false);
+                d.coreIdentificationContact.Errors.Count().should_be(0);
             };
 
             it["confirms_coreidentificationinhouse"] = () =>
@@ -111,28 +110,28 @@ namespace TestValidation
                 d.coreIdentificationInHouse.Errors.Count().should_be(0);
             };
 
-            it["deletes_coreidentificationcustomer_with_recoveryorder"] = () =>
+            it["deletes_coreidentificationcontact_with_recoveryorder"] = () =>
             {
                 d.PopulateRecoveryOrders();
-                d.coreIdentificationCustomer = d._coreIdentificationService.SoftDeleteObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._recoveryOrderService);
-                d.coreIdentificationCustomer.Errors.Count().should_not_be(0);
+                d.coreIdentificationContact = d._coreIdentificationService.SoftDeleteObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._recoveryOrderService);
+                d.coreIdentificationContact.Errors.Count().should_not_be(0);
             };
 
             context["finishes_detail"] = () =>
             {
                 before = () =>
                 {
-                    // customer core identification
+                    // contact core identification
                     d.usedCoreBuilderQuantity = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                    d.usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDContact1, d._coreBuilderService).Quantity;
+                    d.usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDContact3, d._coreBuilderService).Quantity;
                     d.usedCoreBuilder1Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
                     d.usedCoreBuilder2Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
 
                     d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
                                                                          d._warehouseItemService, d._barringService);
-                    d.coreIdentificationCustomer = d._coreIdentificationService.ConfirmObject(d.coreIdentificationCustomer, d._coreIdentificationDetailService, d._stockMutationService,
+                    d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
                                                                          d._warehouseItemService, d._barringService);
                     d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._stockMutationService,
@@ -140,11 +139,11 @@ namespace TestValidation
                                                                          d._warehouseItemService, d._barringService);
                     d.coreIdentificationDetail = d._coreIdentificationDetailService.FinishObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                                  d._barringService, d._warehouseItemService);
-                    d.coreIDCustomer1 = d._coreIdentificationDetailService.FinishObject(d.coreIDCustomer1, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
+                    d.coreIDContact1 = d._coreIdentificationDetailService.FinishObject(d.coreIDContact1, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                         d._barringService, d._warehouseItemService);
-                    d.coreIDCustomer2 = d._coreIdentificationDetailService.FinishObject(d.coreIDCustomer2, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
+                    d.coreIDContact2 = d._coreIdentificationDetailService.FinishObject(d.coreIDContact2, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                         d._barringService, d._warehouseItemService);
-                    d.coreIDCustomer3 = d._coreIdentificationDetailService.FinishObject(d.coreIDCustomer3, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
+                    d.coreIDContact3 = d._coreIdentificationDetailService.FinishObject(d.coreIDContact3, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                         d._barringService, d._warehouseItemService);
                     d.coreIDInHouse1 = d._coreIdentificationDetailService.FinishObject(d.coreIDInHouse1, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                        d._barringService, d._warehouseItemService);
@@ -156,8 +155,8 @@ namespace TestValidation
 
                     // in house core identification
                     d.usedCoreBuilderFinal = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder3Final = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer1, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder4Final = d._coreIdentificationDetailService.GetCore(d.coreIDCustomer3, d._coreBuilderService).Quantity;
+                    d.usedCoreBuilder3Final = d._coreIdentificationDetailService.GetCore(d.coreIDContact1, d._coreBuilderService).Quantity;
+                    d.usedCoreBuilder4Final = d._coreIdentificationDetailService.GetCore(d.coreIDContact3, d._coreBuilderService).Quantity;
                     d.usedCoreBuilder1Final = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
                     d.usedCoreBuilder2Final = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
                 };
@@ -174,7 +173,7 @@ namespace TestValidation
                 it["validates_nondelivereddetails"] = () =>
                 {
                     d.coreIdentification.IsCompleted.should_be(false);
-                    d.coreIdentificationCustomer.IsCompleted.should_be(false);
+                    d.coreIdentificationContact.IsCompleted.should_be(false);
                     d.coreIdentificationInHouse.IsCompleted.should_be(false);
                 };
             };

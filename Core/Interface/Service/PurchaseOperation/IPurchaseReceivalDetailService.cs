@@ -16,13 +16,13 @@ namespace Core.Interface.Service
         PurchaseReceivalDetail GetObjectByPurchaseOrderDetailId(int purchaseOrderDetailId);
         PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail,
                                             IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                            IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
+                                            IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService);
         PurchaseReceivalDetail CreateObject(int purchaseReceivalId, int itemId, int quantity, int purchaseOrderDetailId,
                                             IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                            IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
+                                            IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService);
         PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail,
                                             IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                            IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService);
+                                            IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService);
         PurchaseReceivalDetail SoftDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail);
         bool DeleteObject(int Id);
         PurchaseReceivalDetail FinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,

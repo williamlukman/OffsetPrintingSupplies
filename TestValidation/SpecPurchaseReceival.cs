@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -17,7 +16,7 @@ namespace TestValidation
 
     public class SpecPurchaseReceival : nspec
     {
-        Customer customer;
+        Contact contact;
         Item item_batiktulis;
         Item item_busway;
         Item item_botolaqua;
@@ -41,7 +40,7 @@ namespace TestValidation
         PurchaseReceivalDetail purchaseReceivalDetail_batiktulis_do2b;
         PurchaseReceivalDetail purchaseReceivalDetail_busway_do2;
         PurchaseReceivalDetail purchaseReceivalDetail_botolaqua_do2;
-        ICustomerService _customerService;
+        IContactService _contactService;
         IItemService _itemService;
         IStockMutationService _stockMutationService;
         IStockAdjustmentService _stockAdjustmentService;
@@ -62,7 +61,7 @@ namespace TestValidation
             using (db)
             {
                 db.DeleteAllTables();
-                _customerService = new CustomerService(new CustomerRepository(), new CustomerValidator());
+                _contactService = new ContactService(new ContactRepository(), new ContactValidator());
                 _itemService = new ItemService(new ItemRepository(), new ItemValidator());
                 _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
                 _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
@@ -83,16 +82,16 @@ namespace TestValidation
                 };
                 _uomService.CreateObject(Pcs);
 
-                customer = new Customer()
+                contact = new Contact()
                 {
                     Name = "President of Indonesia",
                     Address = "Istana Negara Jl. Veteran No. 16 Jakarta Pusat",
-                    CustomerNo = "021 3863777",
+                    ContactNo = "021 3863777",
                     PIC = "Mr. President",
-                    PICCustomerNo = "021 3863777",
+                    PICContactNo = "021 3863777",
                     Email = "random@ri.gov.au"
                 };
-                customer = _customerService.CreateObject(customer);
+                contact = _contactService.CreateObject(contact);
 
                 type = _itemTypeService.CreateObject("Item", "Item");
 
@@ -100,7 +99,6 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 warehouse = _warehouseService.CreateObject(warehouse, _warehouseItemService, _itemService);
@@ -142,8 +140,8 @@ namespace TestValidation
                 _itemService.AdjustQuantity(item_botolaqua, 20000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_botolaqua.Id), 20000);
 
-                purchaseOrder1 = _purchaseOrderService.CreateObject(customer.Id, new DateTime(2014, 07, 09), _customerService);
-                purchaseOrder2 = _purchaseOrderService.CreateObject(customer.Id, new DateTime(2014, 04, 09), _customerService);
+                purchaseOrder1 = _purchaseOrderService.CreateObject(contact.Id, new DateTime(2014, 07, 09), _contactService);
+                purchaseOrder2 = _purchaseOrderService.CreateObject(contact.Id, new DateTime(2014, 04, 09), _contactService);
                 purchaseOrderDetail_batiktulis_so1 = _purchaseOrderDetailService.CreateObject(purchaseOrder1.Id, item_batiktulis.Id, 500, 2000000, _purchaseOrderService, _itemService);
                 purchaseOrderDetail_busway_so1 = _purchaseOrderDetailService.CreateObject(purchaseOrder1.Id, item_busway.Id, 91, 800000000, _purchaseOrderService, _itemService);
                 purchaseOrderDetail_botolaqua_so1 = _purchaseOrderDetailService.CreateObject(purchaseOrder1.Id, item_botolaqua.Id, 2000, 5000, _purchaseOrderService, _itemService);
@@ -165,7 +163,7 @@ namespace TestValidation
         {
             it["validates_all_variables"] = () =>
             {
-                customer.Errors.Count().should_be(0);
+                contact.Errors.Count().should_be(0);
                 item_batiktulis.Errors.Count().should_be(0);
                 item_busway.Errors.Count().should_be(0);
                 item_botolaqua.Errors.Count().should_be(0);
@@ -184,22 +182,22 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    purchaseReceival1 = _purchaseReceivalService.CreateObject(warehouse.Id, customer.Id, new DateTime(2000, 1, 1), _customerService);
-                    purchaseReceival2 = _purchaseReceivalService.CreateObject(warehouse.Id, customer.Id, new DateTime(2014, 5, 5), _customerService);
+                    purchaseReceival1 = _purchaseReceivalService.CreateObject(warehouse.Id, contact.Id, new DateTime(2000, 1, 1), _contactService);
+                    purchaseReceival2 = _purchaseReceivalService.CreateObject(warehouse.Id, contact.Id, new DateTime(2014, 5, 5), _contactService);
                     purchaseReceivalDetail_batiktulis_do1 = _purchaseReceivalDetailService.CreateObject(purchaseReceival1.Id, item_batiktulis.Id, 400, purchaseOrderDetail_batiktulis_so1.Id, _purchaseReceivalService,
-                                                                                                  _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+                                                                                                  _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
                     purchaseReceivalDetail_busway_do1 = _purchaseReceivalDetailService.CreateObject(purchaseReceival1.Id, item_busway.Id, 91, purchaseOrderDetail_busway_so1.Id, _purchaseReceivalService,
-                                                                                                _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+                                                                                                _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
                     purchaseReceivalDetail_botolaqua_do1 = _purchaseReceivalDetailService.CreateObject(purchaseReceival1.Id, item_botolaqua.Id, 2000, purchaseOrderDetail_botolaqua_so1.Id,  _purchaseReceivalService,
-                                                                                                  _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+                                                                                                  _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
                     purchaseReceivalDetail_batiktulis_do2a = _purchaseReceivalDetailService.CreateObject(purchaseReceival2.Id, item_batiktulis.Id, 100, purchaseOrderDetail_batiktulis_so1.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
                     purchaseReceivalDetail_batiktulis_do2b = _purchaseReceivalDetailService.CreateObject(purchaseReceival2.Id, item_batiktulis.Id, 40, purchaseOrderDetail_batiktulis_so2.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
                     purchaseReceivalDetail_busway_do2 = _purchaseReceivalDetailService.CreateObject(purchaseReceival2.Id, item_busway.Id, 3, purchaseOrderDetail_busway_so2.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
                     purchaseReceivalDetail_botolaqua_do2 = _purchaseReceivalDetailService.CreateObject(purchaseReceival2.Id, item_botolaqua.Id, 340, purchaseOrderDetail_botolaqua_so2.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
                     purchaseReceival1 = _purchaseReceivalService.ConfirmObject(purchaseReceival1, _purchaseReceivalDetailService, _purchaseOrderDetailService, _stockMutationService, _itemService);
                     purchaseReceival2 = _purchaseReceivalService.ConfirmObject(purchaseReceival2, _purchaseReceivalDetailService, _purchaseOrderDetailService, _stockMutationService, _itemService);
                 };

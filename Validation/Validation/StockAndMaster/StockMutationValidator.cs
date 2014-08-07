@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -13,7 +11,6 @@ namespace Validation.Validation
 {
     public class StockMutationValidator : IStockMutationValidator
     {
-
         public StockMutation VHasWarehouse(StockMutation stockMutation, IWarehouseService _warehouseService)
         {
             Warehouse warehouse = _warehouseService.GetObjectById(stockMutation.WarehouseId);

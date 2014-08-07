@@ -95,7 +95,7 @@ namespace Service.Service
                 salesInvoice = _repository.ConfirmObject(salesInvoice);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
-                Receivable receivable = _receivableService.CreateObject(deliveryOrder.CustomerId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.AmountReceivable, salesInvoice.DueDate);
+                Receivable receivable = _receivableService.CreateObject(deliveryOrder.ContactId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.AmountReceivable, salesInvoice.DueDate);
             }
             return salesInvoice;
         }

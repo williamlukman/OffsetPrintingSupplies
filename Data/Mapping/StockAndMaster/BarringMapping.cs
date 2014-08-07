@@ -12,9 +12,9 @@ namespace Data.Mapping
         public BarringMapping()
         {
             ToTable("Barring");
-            HasRequired(b => b.Customer)
+            HasRequired(b => b.Contact)
                 .WithMany(c => c.Barrings)
-                .HasForeignKey(b => b.CustomerId)
+                .HasForeignKey(b => b.ContactId)
                 .WillCascadeOnDelete(false);
             HasRequired(b => b.Machine)
                 .WithMany(m => m.Barrings)

@@ -41,39 +41,39 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<ReceiptVoucher> GetObjectsByCustomerId(int customerId)
+        public IList<ReceiptVoucher> GetObjectsByContactId(int contactId)
         {
-            return _repository.GetObjectsByCustomerId(customerId);
+            return _repository.GetObjectsByContactId(contactId);
         }
 
         public ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                            IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService)
+                                            IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService)
         {
             receiptVoucher.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(receiptVoucher, this, _receiptVoucherDetailService, _receivableService, _customerService, _cashBankService) ?
+            return (_validator.ValidCreateObject(receiptVoucher, this, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService) ?
                     _repository.CreateObject(receiptVoucher) : receiptVoucher);
         }
 
-        public ReceiptVoucher CreateObject(int cashBankId, int customerId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
+        public ReceiptVoucher CreateObject(int cashBankId, int contactId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
                                     IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                    ICustomerService _customerService, ICashBankService _cashBankService)
+                                    IContactService _contactService, ICashBankService _cashBankService)
         {
             ReceiptVoucher receiptVoucher = new ReceiptVoucher
             {
                 CashBankId = cashBankId,
-                CustomerId = customerId,
+                ContactId = contactId,
                 ReceiptDate = receiptDate,
                 TotalAmount = totalAmount,
                 IsGBCH = IsGBCH,
                 DueDate = DueDate,
                 IsBank = IsBank
             };
-            return this.CreateObject(receiptVoucher, _receiptVoucherDetailService, _receivableService, _customerService, _cashBankService);
+            return this.CreateObject(receiptVoucher, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
         }
 
-        public ReceiptVoucher UpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService, ICustomerService _customerService, ICashBankService _cashBankService)
+        public ReceiptVoucher UpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService)
         {
-            return (_validator.ValidUpdateObject(receiptVoucher, this, _receiptVoucherDetailService, _receivableService, _customerService, _cashBankService) ? _repository.UpdateObject(receiptVoucher) : receiptVoucher);
+            return (_validator.ValidUpdateObject(receiptVoucher, this, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService) ? _repository.UpdateObject(receiptVoucher) : receiptVoucher);
         }
 
         public ReceiptVoucher UpdateAmount(ReceiptVoucher receiptVoucher)
@@ -148,7 +148,6 @@ namespace Service.Service
                 _repository.ReconcileObject(receiptVoucher);
 
                 CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
-                // TODO Check the cashMutation input
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForReceiptVoucher(receiptVoucher, cashBank);
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
 

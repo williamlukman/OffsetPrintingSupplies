@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using System.Text.RegularExpressions;
 using Core.Interface.Validation;
 using Core.DomainModel;
 using Core.Interface.Service;
@@ -14,12 +12,12 @@ namespace Validation.Validation
     public class PurchaseReceivalValidator : IPurchaseReceivalValidator
     {
 
-        public PurchaseReceival VCustomer(PurchaseReceival purchaseReceival, ICustomerService _customerService)
+        public PurchaseReceival VContact(PurchaseReceival purchaseReceival, IContactService _contactService)
         {
-            Customer customer = _customerService.GetObjectById(purchaseReceival.CustomerId);
-            if (customer == null)
+            Contact contact = _contactService.GetObjectById(purchaseReceival.ContactId);
+            if (contact == null)
             {
-                purchaseReceival.Errors.Add("Customer", "Tidak boleh tidak ada");
+                purchaseReceival.Errors.Add("Contact", "Tidak boleh tidak ada");
             }
             return purchaseReceival;
         }
@@ -91,17 +89,17 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService)
+        public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IContactService _contactService)
         {
-            VCustomer(purchaseReceival, _customerService);
+            VContact(purchaseReceival, _contactService);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VReceivalDate(purchaseReceival);
             return purchaseReceival;
         }
 
-        public PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService)
+        public PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, IContactService _contactService)
         {
-            VCreateObject(purchaseReceival, _customerService);
+            VCreateObject(purchaseReceival, _contactService);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasNotBeenConfirmed(purchaseReceival);
             return purchaseReceival;
@@ -135,16 +133,16 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public bool ValidCreateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService)
+        public bool ValidCreateObject(PurchaseReceival purchaseReceival, IContactService _contactService)
         {
-            VCreateObject(purchaseReceival, _customerService);
+            VCreateObject(purchaseReceival, _contactService);
             return isValid(purchaseReceival);
         }
 
-        public bool ValidUpdateObject(PurchaseReceival purchaseReceival, ICustomerService _customerService)
+        public bool ValidUpdateObject(PurchaseReceival purchaseReceival, IContactService _contactService)
         {
             purchaseReceival.Errors.Clear();
-            VUpdateObject(purchaseReceival, _customerService);
+            VUpdateObject(purchaseReceival, _contactService);
             return isValid(purchaseReceival);
         }
 

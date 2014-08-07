@@ -35,30 +35,30 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public IList<PurchaseOrder> GetObjectsByCustomerId(int customerId)
+        public IList<PurchaseOrder> GetObjectsByContactId(int contactId)
         {
-            return _repository.GetObjectsByCustomerId(customerId);
+            return _repository.GetObjectsByContactId(contactId);
         }
 
-        public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
             purchaseOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(purchaseOrder, _customerService) ? _repository.CreateObject(purchaseOrder) : purchaseOrder);
+            return (_validator.ValidCreateObject(purchaseOrder, _contactService) ? _repository.CreateObject(purchaseOrder) : purchaseOrder);
         }
 
-        public PurchaseOrder CreateObject(int customerId, DateTime purchaseDate, ICustomerService _customerService)
+        public PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService)
         {
             PurchaseOrder purchaseOrder = new PurchaseOrder
             {
-                CustomerId = customerId,
+                ContactId = contactId,
                 PurchaseDate = purchaseDate
             };
-            return this.CreateObject(purchaseOrder, _customerService);
+            return this.CreateObject(purchaseOrder, _contactService);
         }
 
-        public PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, ICustomerService _customerService)
+        public PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(purchaseOrder, _customerService) ? _repository.UpdateObject(purchaseOrder) : purchaseOrder);
+            return (_validator.ValidUpdateObject(purchaseOrder, _contactService) ? _repository.UpdateObject(purchaseOrder) : purchaseOrder);
         }
 
         public PurchaseOrder SoftDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)

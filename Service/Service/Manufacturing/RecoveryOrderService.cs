@@ -35,9 +35,9 @@ namespace Service.Service
             return _repository.GetAllObjectsInHouse();
         }
 
-        public IList<RecoveryOrder> GetAllObjectsByCustomerId(int CustomerId)
+        public IList<RecoveryOrder> GetAllObjectsByContactId(int ContactId)
         {
-            return _repository.GetAllObjectsByCustomerId(CustomerId);
+            return _repository.GetAllObjectsByContactId(ContactId);
         }
 
         public IList<RecoveryOrder> GetObjectsByCoreIdentificationId(int coreIdentificationId)

@@ -12,9 +12,9 @@ namespace Data.Mapping
         public PaymentVoucherMapping()
         {
             HasKey(pv => pv.Id);
-            HasRequired(pv => pv.Customer)
+            HasRequired(pv => pv.Contact)
                 .WithMany()
-                .HasForeignKey(pv => pv.CustomerId)
+                .HasForeignKey(pv => pv.ContactId)
                 .WillCascadeOnDelete(false);
             HasMany(pv => pv.PaymentVoucherDetails)
                 .WithRequired(pvd => pvd.PaymentVoucher)

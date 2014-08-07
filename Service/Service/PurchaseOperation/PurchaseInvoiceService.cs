@@ -95,7 +95,7 @@ namespace Service.Service
                 purchaseInvoice = _repository.ConfirmObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);
-                Payable payable = _payableService.CreateObject(purchaseReceival.CustomerId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id, purchaseInvoice.AmountPayable, purchaseInvoice.DueDate);
+                Payable payable = _payableService.CreateObject(purchaseReceival.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id, purchaseInvoice.AmountPayable, purchaseInvoice.DueDate);
             }
             return purchaseInvoice;
         }

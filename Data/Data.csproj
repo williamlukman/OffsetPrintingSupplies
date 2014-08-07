@@ -89,7 +89,7 @@
     <Compile Include="Mapping\StockAndMaster\RollerBuilderMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\RollerTypeMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CoreBuilderMapping.cs" />
-    <Compile Include="Mapping\StockAndMaster\CustomerMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\ContactMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ItemTypeMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Finance\CashBankRepository.cs" />
@@ -136,7 +136,7 @@
     <Compile Include="Repository\StockAndMaster\RollerTypeRepository.cs" />
     <Compile Include="Repository\StockAndMaster\MachineRepository.cs" />
     <Compile Include="Repository\StockAndMaster\RollerBuilderRepository.cs" />
-    <Compile Include="Repository\StockAndMaster\CustomerRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\ContactRepository.cs" />
     <Compile Include="Repository\EfRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ItemRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ItemTypeRepository.cs" />

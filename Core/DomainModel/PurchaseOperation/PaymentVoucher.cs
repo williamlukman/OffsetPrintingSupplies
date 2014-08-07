@@ -8,7 +8,7 @@ namespace Core.DomainModel
     public partial class PaymentVoucher
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public int ContactId { get; set; }
         public int CashBankId { get; set; }
         public string Code { get; set; }
         public DateTime PaymentDate { get; set; }
@@ -18,9 +18,7 @@ namespace Core.DomainModel
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }
 
-        // TODO
         public decimal TotalAmount { get; set; }
-        public decimal PendingClearanceAmount { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
@@ -29,7 +27,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
 
-        public virtual Customer Customer { get; set; }
+        public virtual Contact Contact { get; set; }
         public virtual ICollection<PaymentVoucherDetail> PaymentVoucherDetails { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }

@@ -6,19 +6,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Text.RegularExpressions;
-
 namespace Validation.Validation
 {
     public class ItemValidator : IItemValidator
     {
-
         public Item VHasItemType(Item item, IItemTypeService _itemTypeService)
         {
             ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
             if (itemType == null)
             {
                 item.Errors.Add("ItemType", "Tidak boleh tidak ada");
+            }
+            return item;
+        }
+
+        public Item VHasItemTypeAndNotLegacyItem(Item item, IItemTypeService _itemTypeService)
+        {
+            ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+            if (itemType == null)
+            {
+                item.Errors.Add("ItemType", "Tidak boleh tidak ada");
+            }
+            else if (itemType.IsLegacy)
+            {
+                item.Errors.Add("ItemType", "Tidak boleh memilih Legacy item type");
             }
             return item;
         }
@@ -95,38 +106,31 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VIsInRecoveryAccessoryDetail(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public Item VHasNoStockMutations(Item item, IStockMutationService _stockMutationService)
         {
-            IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByItemId(item.Id);
-            if (accessories.Any())
+            IList<StockMutation> stockMutations = _stockMutationService.GetObjectsByItemId(item.Id);
+            if (stockMutations.Any())
             {
-                item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan Recovery Accessory Detail");
-            }
-            return item;
-        }
-
-        public Item VIsInRollerBuilderCompound(Item item, IRollerBuilderService _rollerBuilderService)
-        {
-            IList<RollerBuilder> rollerBuilders = _rollerBuilderService.GetObjectsByItemId(item.Id);
-            if (rollerBuilders.Any())
-            {
-                item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan Roller Builder");
-            }
-            return item;
-        }
-
-        public Item VIsNotCoreNorRoller(Item item, IItemTypeService _itemTypeService)
-        {
-            ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
-            if (itemType.Name == Core.Constants.Constant.ItemTypeCase.Core ||
-                itemType.Name == Core.Constants.Constant.ItemTypeCase.Roller)
-            {
-                item.Errors.Add("Generic", "Tidak boleh menghapus Core atau Roller dari class Item");
+                item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan stock mutation");
             }
             return item;
         }
 
         public Item VCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
+        {
+            VHasUoM(item, _uomService);
+            if (!isValid(item)) { return item; }
+            VHasItemTypeAndNotLegacyItem(item, _itemTypeService);
+            if (!isValid(item)) { return item; }
+            VHasUniqueSku(item, _itemService);
+            if (!isValid(item)) { return item; }
+            VHasName(item);
+            if (!isValid(item)) { return item; }
+            VHasCategory(item);
+            return item;
+        }
+
+        public Item VCreateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             VHasUoM(item, _uomService);
             if (!isValid(item)) { return item; }
@@ -145,17 +149,24 @@ namespace Validation.Validation
             return VCreateObject(item, _uomService, _itemService, _itemTypeService);
         }
 
-        public Item VDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService)
+        public Item VUpdateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
+            return VCreateLegacyObject(item, _uomService, _itemService, _itemTypeService);
+        }
+
+        public Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        {
+            VHasItemTypeAndNotLegacyItem(item, _itemTypeService);
+            if (!isValid(item)) { return item; }
+            VHasNoStockMutations(item, _stockMutationService);
+            if (!isValid(item)) { return item; }
             VWarehouseQuantityMustBeZero(item, _warehouseItemService);
             return item;
         }
 
-        public Item VDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public Item VDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
-            VIsNotCoreNorRoller(item, _itemTypeService);
-            if (!isValid(item)) { return item; }
-            VIsInRecoveryAccessoryDetail(item, _recoveryAccessoryDetailService);
+            VHasNoStockMutations(item, _stockMutationService);
             if (!isValid(item)) { return item; }
             VWarehouseQuantityMustBeZero(item, _warehouseItemService);
             return item;
@@ -185,6 +196,12 @@ namespace Validation.Validation
             return isValid(item);
         }
 
+        public bool ValidCreateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
+        {
+            VCreateLegacyObject(item, _uomService, _itemService, _itemTypeService);
+            return isValid(item);
+        }
+
         public bool ValidUpdateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             item.Errors.Clear();
@@ -192,17 +209,24 @@ namespace Validation.Validation
             return isValid(item);
         }
 
-        public bool ValidDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public bool ValidUpdateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             item.Errors.Clear();
-            VDeleteObject(item, _recoveryAccessoryDetailService, _itemTypeService, _warehouseItemService);
+            VUpdateLegacyObject(item, _uomService, _itemService, _itemTypeService);
             return isValid(item);
         }
 
-        public bool ValidDeleteCoreOrRoller(Item item, IWarehouseItemService _warehouseItemService)
+        public bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
             item.Errors.Clear();
-            VDeleteCoreOrRoller(item, _warehouseItemService);
+            VDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService);
+            return isValid(item);
+        }
+
+        public bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        {
+            item.Errors.Clear();
+            VDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService);
             return isValid(item);
         }
 
@@ -245,6 +269,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

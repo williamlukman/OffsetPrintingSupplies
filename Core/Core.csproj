@@ -84,7 +84,7 @@
     <Compile Include="DomainModel\StockAndMaster\CoreBuilder.cs" />
     <Compile Include="DomainModel\StockAndMaster\RollerBuilder.cs" />
     <Compile Include="DomainModel\StockAndMaster\Machine.cs" />
-    <Compile Include="DomainModel\StockAndMaster\Customer.cs" />
+    <Compile Include="DomainModel\StockAndMaster\Contact.cs" />
     <Compile Include="DomainModel\Manufacturing\RecoveryAccessoryDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ItemType.cs" />
     <Compile Include="DomainModel\StockAndMaster\Warehouse.cs" />
@@ -132,7 +132,7 @@
     <Compile Include="Interface\Repository\StockAndMaster\IRollerTypeRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\IRecoveryAccessoryDetailRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IRollerBuilderRepository.cs" />
-    <Compile Include="Interface\Repository\StockAndMaster\ICustomerRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\IContactRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IItemRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
@@ -180,7 +180,7 @@
     <Compile Include="Interface\Service\StockAndMaster\IRollerBuilderService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IMachineService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\ICoreBuilderService.cs" />
-    <Compile Include="Interface\Service\StockAndMaster\ICustomerService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\IContactService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemTypeService.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankValidator.cs" />
@@ -227,7 +227,7 @@
     <Compile Include="Interface\Validation\StockAndMaster\ICoreBuilderValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IMachineValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IRollerTypeValidator.cs" />
-    <Compile Include="Interface\Validation\StockAndMaster\ICustomerValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\IContactValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IItemTypeValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IItemValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

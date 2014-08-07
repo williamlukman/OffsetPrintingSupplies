@@ -22,9 +22,9 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
-        public IList<Payable> GetObjectsByCustomerId(int customerId)
+        public IList<Payable> GetObjectsByContactId(int contactId)
         {
-            return FindAll(p => p.CustomerId == customerId && !p.IsDeleted).ToList();
+            return FindAll(p => p.ContactId == contactId && !p.IsDeleted).ToList();
         }
 
         public Payable GetObjectBySource(string PayableSource, int PayableSourceId)

@@ -43,13 +43,13 @@ namespace Service.Service
 
         public PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
                                                      IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService,
-                                                     IItemService _itemService, ICustomerService _customerService)
+                                                     IItemService _itemService, IContactService _contactService)
         {
             purchaseReceivalDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseReceivalDetail, this, _purchaseReceivalService,
-                                        _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService))
+                                        _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService))
             {
-                purchaseReceivalDetail.CustomerId = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId).CustomerId;
+                purchaseReceivalDetail.ContactId = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId).ContactId;
                 return _repository.CreateObject(purchaseReceivalDetail);
             }
             else
@@ -60,7 +60,7 @@ namespace Service.Service
 
         public PurchaseReceivalDetail CreateObject(int purchaseReceivalId, int itemId, int quantity, int purchaseOrderDetailId,
                                                     IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
         {
             PurchaseReceivalDetail prd = new PurchaseReceivalDetail
             {
@@ -69,15 +69,15 @@ namespace Service.Service
                 Quantity = quantity,
                 PurchaseOrderDetailId = purchaseOrderDetailId
             };
-            return this.CreateObject(prd, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService);
+            return this.CreateObject(prd, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
         }
 
 
         public PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail,
                                                     IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, ICustomerService _customerService)
+                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _customerService) ?
+            return (_validator.ValidUpdateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService) ?
                     _repository.UpdateObject(purchaseReceivalDetail) : purchaseReceivalDetail);
         }
 

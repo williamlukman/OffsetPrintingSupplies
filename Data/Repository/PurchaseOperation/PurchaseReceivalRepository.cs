@@ -28,9 +28,9 @@ namespace Data.Repository
             return purchaseReceival;
         }
 
-        public IList<PurchaseReceival> GetObjectsByCustomerId(int customerId)
+        public IList<PurchaseReceival> GetObjectsByContactId(int contactId)
         {
-            return FindAll(pr => pr.CustomerId == customerId && !pr.IsDeleted).ToList();
+            return FindAll(pr => pr.ContactId == contactId && !pr.IsDeleted).ToList();
         }
 
         public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival)

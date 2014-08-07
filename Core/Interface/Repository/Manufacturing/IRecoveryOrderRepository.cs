@@ -10,7 +10,7 @@ namespace Core.Interface.Repository
     {
         IList<RecoveryOrder> GetAll();
         IList<RecoveryOrder> GetAllObjectsInHouse();
-        IList<RecoveryOrder> GetAllObjectsByCustomerId(int CustomerId);
+        IList<RecoveryOrder> GetAllObjectsByContactId(int ContactId);
         IList<RecoveryOrder> GetObjectsByCoreIdentificationId(int coreIdentificationId);
         RecoveryOrder GetObjectById(int Id);
         RecoveryOrder CreateObject(RecoveryOrder recoveryOrder);

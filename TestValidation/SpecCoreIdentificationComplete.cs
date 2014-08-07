@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -35,7 +34,7 @@ namespace TestValidation
         
             it["validates_data"] = () =>
             {
-                d.coreIdentificationCustomer.IsCompleted.should_be(true);
+                d.coreIdentificationContact.IsCompleted.should_be(true);
                 d.coreIdentificationInHouse.IsCompleted.should_be(true);
             };
         }

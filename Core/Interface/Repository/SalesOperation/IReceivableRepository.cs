@@ -9,7 +9,7 @@ namespace Core.Interface.Repository
     public interface IReceivableRepository : IRepository<Receivable>
     {
         IList<Receivable> GetAll();
-        IList<Receivable> GetObjectsByCustomerId(int customerId);
+        IList<Receivable> GetObjectsByContactId(int contactId);
         Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId); 
         Receivable GetObjectById(int Id);
         Receivable CreateObject(Receivable receivable);

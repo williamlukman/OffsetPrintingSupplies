@@ -84,7 +84,7 @@
     <Compile Include="Validation\StockAndMaster\RollerTypeValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CoreBuilderValidator.cs" />
     <Compile Include="Validation\StockAndMaster\RollerBuilderValidator.cs" />
-    <Compile Include="Validation\StockAndMaster\CustomerValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ContactValidator.cs" />
     <Compile Include="Validation\StockAndMaster\ItemTypeValidator.cs" />
     <Compile Include="Validation\StockAndMaster\ItemValidator.cs" />
   </ItemGroup>

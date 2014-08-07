@@ -12,9 +12,9 @@ namespace Data.Mapping
         public ReceivableMapping()
         {
             HasKey(r => r.Id);
-            HasRequired(r => r.Customer)
+            HasRequired(r => r.Contact)
                 .WithMany()
-                .HasForeignKey(r => r.CustomerId)
+                .HasForeignKey(r => r.ContactId)
                 .WillCascadeOnDelete(false);
             HasMany(r => r.ReceiptVoucherDetails)
                 .WithRequired(rvd => rvd.Receivable)

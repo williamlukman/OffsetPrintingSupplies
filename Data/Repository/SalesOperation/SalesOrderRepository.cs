@@ -28,9 +28,9 @@ namespace Data.Repository
             return salesOrder;
         }
 
-        public IList<SalesOrder> GetObjectsByCustomerId(int customerId)
+        public IList<SalesOrder> GetObjectsByContactId(int contactId)
         {
-            return FindAll(so => so.CustomerId == customerId && !so.IsDeleted).ToList();
+            return FindAll(so => so.ContactId == contactId && !so.IsDeleted).ToList();
         }
 
         public SalesOrder CreateObject(SalesOrder salesOrder)

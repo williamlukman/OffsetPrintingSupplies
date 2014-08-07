@@ -11,11 +11,11 @@ namespace Core.Interface.Service
     {
         IPayableValidator GetValidator();
         IList<Payable> GetAll();
-        IList<Payable> GetObjectsByCustomerId(int customerId);
+        IList<Payable> GetObjectsByContactId(int contactId);
         Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
         Payable GetObjectById(int Id);
         Payable CreateObject(Payable payable);
-        Payable CreateObject(int customerId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate);
+        Payable CreateObject(int contactId, string payableSource, int payableSourceId, decimal amount, DateTime dueDate);
         Payable UpdateObject(Payable payable);
         Payable SoftDeleteObject(Payable payable);
         bool DeleteObject(int Id);
