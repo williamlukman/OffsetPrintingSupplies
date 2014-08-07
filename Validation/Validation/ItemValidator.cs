@@ -23,6 +23,22 @@ namespace Validation.Validation
             return item;
         }
 
+				public Item VHasItemTypeAndNotLegacyItem(Item item, IItemTypeService _itemTypeService)
+        {
+            ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+            if (itemType == null)
+            {
+                item.Errors.Add("ItemType", "Tidak boleh tidak ada");
+            }
+						
+						if (itemType && itemType.IsLegacy == true ){
+							item.Errors.Add("ItemType", "Tidak boleh memilih Legacy Item Type")
+						}
+
+
+            return item;
+        }
+
         public Item VHasUniqueSku(Item item, IItemService _itemService)
         {
             if (String.IsNullOrEmpty(item.Sku) || item.Sku.Trim() == "")
@@ -126,11 +142,29 @@ namespace Validation.Validation
             return item;
         }
 
+				public Item VIsNotLegacyItemType(Item item, IItemTypeService _itemTypeService)
+        {
+            ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+						
+						 
+						
+
+            if (itemType.Name == Core.Constants.Constant.ItemTypeCase.Core ||
+                itemType.Name == Core.Constants.Constant.ItemTypeCase.Roller)
+            {
+                item.Errors.Add("Generic", "Tidak boleh menghapus Core atau Roller dari class Item");
+            }
+            return item;
+        }
+
+				
+
         public Item VCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             VHasUoM(item, _uomService);
             if (!isValid(item)) { return item; }
-            VHasItemType(item, _itemTypeService);
+            // VHasItemType(item, _itemTypeService);
+						VHasItemTypeAndNotLegacyItem( item, _itemTypeService );
             if (!isValid(item)) { return item; }
             VHasUniqueSku(item, _itemService);
             if (!isValid(item)) { return item; }
@@ -138,6 +172,26 @@ namespace Validation.Validation
             if (!isValid(item)) { return item; }
             VHasCategory(item);
             return item;
+        }
+
+				public Item VCreateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
+        {
+            VHasUoM(item, _uomService);
+            if (!isValid(item)) { return item; }
+            VHasItemType(item, _itemTypeService);
+						// VHasItemTypeAndNotLegacyItem( item, _itemTypeService );
+            if (!isValid(item)) { return item; }
+            VHasUniqueSku(item, _itemService);
+            if (!isValid(item)) { return item; }
+            VHasName(item);
+            if (!isValid(item)) { return item; }
+            VHasCategory(item);
+            return item;
+        }
+
+				public Item VUpdateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
+        {
+            return VCreateLegacyObject(item, _uomService, _itemService, _itemTypeService);
         }
 
         public Item VUpdateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)

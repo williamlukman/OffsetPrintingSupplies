@@ -125,14 +125,14 @@ namespace Service.Service
             };
             RollerNewCore.Errors = new Dictionary<string, string>();
 
-            if (_itemService.GetValidator().ValidCreateObject(RollerUsedCore, _uomService, _itemService, _itemTypeService) &&
-                _itemService.GetValidator().ValidCreateObject(RollerNewCore, _uomService, _itemService, _itemTypeService))
+            if (_itemService.GetValidator().ValidCreateLegacyObject(RollerUsedCore, _uomService, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidCreateLegacyObject(RollerNewCore, _uomService, _itemService, _itemTypeService))
             {
                 if (_validator.ValidCreateObject(rollerBuilder, this, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
-                    RollerUsedCore = _itemService.CreateObject(RollerUsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                    RollerUsedCore = _itemService.CreateLegacyObject(RollerUsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
                     RollerUsedCore.Id = RollerUsedCore.Id;
-                    RollerNewCore = _itemService.CreateObject(RollerNewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                    RollerNewCore = _itemService.CreateLegacyObject(RollerNewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
                     RollerNewCore.Id = RollerNewCore.Id;
                     rollerBuilder.RollerUsedCoreItemId = RollerUsedCore.Id;
                     rollerBuilder.RollerNewCoreItemId = RollerNewCore.Id;
@@ -156,8 +156,8 @@ namespace Service.Service
             RollerNewCore.Name = rollerBuilder.Name;
             RollerNewCore.Category = rollerBuilder.Category;
 
-            if (_itemService.GetValidator().ValidUpdateObject(RollerUsedCore, _uomService, _itemService, _itemTypeService) &&
-                _itemService.GetValidator().ValidUpdateObject(RollerNewCore, _uomService, _itemService, _itemTypeService))
+            if (_itemService.GetValidator().ValidUpdateLegacyObject(RollerUsedCore, _uomService, _itemService, _itemTypeService) &&
+                _itemService.GetValidator().ValidUpdateLegacyObject(RollerNewCore, _uomService, _itemService, _itemTypeService))
             {
                 if (_validator.ValidUpdateObject(rollerBuilder, this, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService))
                 {

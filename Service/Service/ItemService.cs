@@ -73,9 +73,25 @@ namespace Service.Service
             return item;
         }
 
+				public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        {
+            item.Errors = new Dictionary<String, String>();
+            if (_validator.ValidCreateLegacyObject(item, _uomService, this, _itemTypeService))
+            {
+                item = _repository.CreateObject(item);
+                // warehouse item will be created upon calling WarehouseItemService.FindOrCreateObject()
+            }
+            return item;
+        }
+
         public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService)
         {
             return (item = _validator.ValidUpdateObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
+        }
+
+				public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService)
+        {
+            return (item = _validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
         }
 
         public Item SoftDeleteObject(Item item, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
