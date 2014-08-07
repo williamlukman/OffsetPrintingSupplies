@@ -21,7 +21,7 @@ namespace Data.Context
             IList<String> tableNames = new List<String>();
 
             IList<String> financeNames = new List<String>()
-                                        { "CashMutation", "CashAdjustment", "CashBankMutation", "CashBank"};
+                                        { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank"};
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
