@@ -12,9 +12,6 @@ namespace Data.Mapping
         public PurchaseReceivalDetailMapping()
         {
             HasKey(prd => prd.Id);
-            HasRequired(prd => prd.Contact)
-                .WithMany(c => c.PurchaseReceivalDetails)
-                .HasForeignKey(prd => prd.ContactId);
             HasRequired(prd => prd.PurchaseReceival)
                 .WithMany(pr => pr.PurchaseReceivalDetails)
                 .HasForeignKey(prd => prd.PurchaseReceivalId);

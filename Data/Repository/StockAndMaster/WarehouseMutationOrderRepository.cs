@@ -59,7 +59,6 @@ namespace Data.Repository
         public WarehouseMutationOrder CreateObject(WarehouseMutationOrder warehouseMutationOrder)
         {
             warehouseMutationOrder.IsConfirmed = false;
-            warehouseMutationOrder.IsCompleted = false;
             warehouseMutationOrder.IsDeleted = false;
             warehouseMutationOrder.CreatedAt = DateTime.Now;
             return Create(warehouseMutationOrder);
@@ -83,7 +82,6 @@ namespace Data.Repository
         public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder)
         {
             warehouseMutationOrder.IsConfirmed = true;
-            warehouseMutationOrder.ConfirmationDate = DateTime.Now;
             Update(warehouseMutationOrder);
             return warehouseMutationOrder;
         }
@@ -92,14 +90,6 @@ namespace Data.Repository
         {
             warehouseMutationOrder.IsConfirmed = false;
             warehouseMutationOrder.ConfirmationDate = null;
-            Update(warehouseMutationOrder);
-            return warehouseMutationOrder;
-        }
-
-        public WarehouseMutationOrder CompleteObject(WarehouseMutationOrder warehouseMutationOrder)
-        {
-            warehouseMutationOrder.IsCompleted = true;
-            warehouseMutationOrder.UpdatedAt = DateTime.Now;
             Update(warehouseMutationOrder);
             return warehouseMutationOrder;
         }

@@ -126,7 +126,7 @@ namespace Service.Service
             return (coreIdentificationDetail = _validator.ValidUnsetJobScheduled(coreIdentificationDetail, _recoveryOrderService, _recoveryOrderDetailService) ? _repository.UnsetJobScheduled(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
-        public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
@@ -144,6 +144,7 @@ namespace Service.Service
                     StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
+                coreIdentificationDetail.FinishedDate = FinishedDate;
                 _repository.FinishObject(coreIdentificationDetail);
             }
             return coreIdentificationDetail;

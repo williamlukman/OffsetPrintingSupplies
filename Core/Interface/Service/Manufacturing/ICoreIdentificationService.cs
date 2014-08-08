@@ -21,7 +21,7 @@ namespace Core.Interface.Service
         CoreIdentification UpdateObject(CoreIdentification coreIdentification, IContactService _contactService);
         CoreIdentification SoftDeleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                             IRecoveryOrderService _recoveryOrderService);
-        CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
+        CoreIdentification ConfirmObject(CoreIdentification coreIdentification, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
                                          IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
                                          IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService);
         CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,

@@ -18,7 +18,6 @@ namespace Core.Interface.Repository
         RollerWarehouseMutation SoftDeleteObject(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation ConfirmObject(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation UnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation);
-        RollerWarehouseMutation CompleteObject(RollerWarehouseMutation rollerWarehouseMutation);
         bool DeleteObject(int Id);
     }
 }

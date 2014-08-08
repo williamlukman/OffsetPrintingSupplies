@@ -69,20 +69,11 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
-        public PurchaseInvoice VHasTaxGreaterOrEqualZero(PurchaseInvoice purchaseInvoice)
+        public PurchaseInvoice VHasDiscountBetweenZeroAndHundred(PurchaseInvoice purchaseInvoice)
         {
-            if (purchaseInvoice.Tax < 0)
+            if (purchaseInvoice.Discount < 0 || purchaseInvoice.Discount > 100)
             {
-                purchaseInvoice.Errors.Add("Tax", "Harus lebih besar sama dengan 0");
-            }
-            return purchaseInvoice;
-        }
-
-        public PurchaseInvoice VHasDiscountGreaterOrEqualZero(PurchaseInvoice purchaseInvoice)
-        {
-            if (purchaseInvoice.Discount < 0)
-            {
-                purchaseInvoice.Errors.Add("Discount", "Harus lebih besar sama dengan 0");
+                purchaseInvoice.Errors.Add("Discount", "Harus antara 0 dan 100");
             }
             return purchaseInvoice;
         }
@@ -187,9 +178,7 @@ namespace Validation.Validation
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VHasDueDate(purchaseInvoice);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
-            VHasTaxGreaterOrEqualZero(purchaseInvoice);
-            if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
-            VHasDiscountGreaterOrEqualZero(purchaseInvoice);
+            VHasDiscountBetweenZeroAndHundred(purchaseInvoice);
             return purchaseInvoice;
         }
 
@@ -215,9 +204,20 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
+        public PurchaseInvoice VHasConfirmationDate(PurchaseInvoice obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public PurchaseInvoice VConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                               IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
+            VHasConfirmationDate(purchaseInvoice);
+            if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VPurchaseReceivalHasNotBeenInvoiceCompleted(purchaseInvoice, _purchaseReceivalService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VHasNotBeenDeleted(purchaseInvoice);

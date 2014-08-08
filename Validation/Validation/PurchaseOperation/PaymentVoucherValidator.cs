@@ -223,10 +223,21 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
+        public PaymentVoucher VHasConfirmationDate(PaymentVoucher obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public PaymentVoucher VConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService,
                                              IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
                                              IPayableService _payableService)
         {
+            VHasConfirmationDate(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasPaymentVoucherDetails(paymentVoucher, _paymentVoucherDetailService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VTotalAmountIsNotZero(paymentVoucher, _paymentVoucherDetailService);

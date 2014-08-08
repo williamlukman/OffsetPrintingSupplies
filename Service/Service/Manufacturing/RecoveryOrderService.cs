@@ -96,7 +96,7 @@ namespace Service.Service
             return recoveryOrder;
         }
 
-        public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+        public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                              IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
@@ -109,6 +109,7 @@ namespace Service.Service
                     CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(detail.CoreIdentificationDetailId);
                     _coreIdentificationDetailService.SetJobScheduled(coreIdentificationDetail, this, _recoveryOrderDetailService);
                 }
+                recoveryOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(recoveryOrder);
             }
             return recoveryOrder;

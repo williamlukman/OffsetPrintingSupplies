@@ -88,7 +88,6 @@ namespace Data.Repository
         public RollerWarehouseMutation ConfirmObject(RollerWarehouseMutation rollerWarehouseMutation)
         {
             rollerWarehouseMutation.IsConfirmed = true;
-            rollerWarehouseMutation.ConfirmationDate = DateTime.Now;
             Update(rollerWarehouseMutation);
             return rollerWarehouseMutation;
         }

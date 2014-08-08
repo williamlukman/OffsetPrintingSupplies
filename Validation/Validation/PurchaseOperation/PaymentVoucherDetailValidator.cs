@@ -137,8 +137,19 @@ namespace Validation.Validation
             return paymentVoucherDetail;
         }
 
+        public PaymentVoucherDetail VHasConfirmationDate(PaymentVoucherDetail obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public PaymentVoucherDetail VConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService)
         {
+            VHasConfirmationDate(paymentVoucherDetail);
+            if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VAmountLessOrEqualPayable(paymentVoucherDetail, _payableService);
             return paymentVoucherDetail;
         }

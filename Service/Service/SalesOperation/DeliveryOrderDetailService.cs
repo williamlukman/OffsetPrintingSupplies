@@ -41,14 +41,12 @@ namespace Service.Service
             return _repository.GetObjectsBySalesOrderDetailId(salesOrderDetailId);
         }
 
-        public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail, 
-                                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                                ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
+        public DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
+                                                ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             deliveryOrderDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService))
+            if (_validator.ValidCreateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _itemService))
             { 
-                deliveryOrderDetail.ContactId = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId).ContactId;
                 _repository.CreateObject(deliveryOrderDetail);
             }
             return deliveryOrderDetail;
@@ -56,7 +54,7 @@ namespace Service.Service
 
         public DeliveryOrderDetail CreateObject(int deliveryOrderId, int itemId, int quantity, int salesOrderDetailId,
                                                 IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                                ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
+                                                ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail
             {
@@ -65,14 +63,13 @@ namespace Service.Service
                 Quantity = quantity,
                 SalesOrderDetailId = salesOrderDetailId
             };
-            return this.CreateObject(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
+            return this.CreateObject(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
         }
 
-        public DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail,
-                                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                                ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService)
+        public DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
+                                                ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
-            return (_validator.ValidUpdateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService, _contactService) ?
+            return (_validator.ValidUpdateObject(deliveryOrderDetail, this, _deliveryOrderService, _salesOrderDetailService, _itemService) ?
                     _repository.UpdateObject(deliveryOrderDetail) : deliveryOrderDetail);
         }
 
@@ -86,20 +83,15 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
+        public DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail, DateTime ConfirmationDate, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                 IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidFinishObject(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(deliveryOrderDetail, _deliveryOrderService, this, _salesOrderDetailService, _itemService, _warehouseItemService))
             {
-                deliveryOrderDetail = _repository.FinishObject(deliveryOrderDetail);
+                deliveryOrderDetail.ConfirmationDate = ConfirmationDate;
+                deliveryOrderDetail = _repository.ConfirmObject(deliveryOrderDetail);
 
-                // If valid, deliveryOrder.IsCompleted = true
-                DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
-                if (_deliveryOrderService.GetValidator().ValidCompleteObject(deliveryOrder, this))
-                {
-                    _deliveryOrderService.CompleteObject(deliveryOrder, this);
-                }
-    
+                DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);    
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.WarehouseId, deliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
                 IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
@@ -113,12 +105,13 @@ namespace Service.Service
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail UnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IStockMutationService _stockMutationService,
-                                                  IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
+                                                   ISalesInvoiceDetailService _salesInvoiceDetailService, IStockMutationService _stockMutationService,
+                                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(deliveryOrderDetail, _deliveryOrderService, this, _itemService))
+            if (_validator.ValidUnconfirmObject(deliveryOrderDetail, _salesInvoiceDetailService))
             {
-                deliveryOrderDetail = _repository.UnfinishObject(deliveryOrderDetail);
+                deliveryOrderDetail = _repository.UnconfirmObject(deliveryOrderDetail);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.WarehouseId, deliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);

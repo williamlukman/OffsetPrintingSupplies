@@ -28,16 +28,15 @@ namespace Data.Repository
             return purchaseReceival;
         }
 
-        public IList<PurchaseReceival> GetObjectsByContactId(int contactId)
+        public IList<PurchaseReceival> GetObjectsByPurchaseOrderId(int purchaseOrderId)
         {
-            return FindAll(pr => pr.ContactId == contactId && !pr.IsDeleted).ToList();
+            return FindAll(pr => pr.PurchaseOrderId == purchaseOrderId && !pr.IsDeleted).ToList();
         }
 
         public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival)
         {
             purchaseReceival.Code = SetObjectCode();
             purchaseReceival.IsDeleted = false;
-            purchaseReceival.IsCompleted = false;
             purchaseReceival.IsConfirmed = false;
             purchaseReceival.IsInvoiceCompleted = false;
             purchaseReceival.CreatedAt = DateTime.Now;
@@ -68,7 +67,6 @@ namespace Data.Repository
         public PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival)
         {
             purchaseReceival.IsConfirmed = true;
-            purchaseReceival.ConfirmationDate = DateTime.Now;
             Update(purchaseReceival);
             return purchaseReceival;
         }
@@ -77,13 +75,6 @@ namespace Data.Repository
         {
             purchaseReceival.IsConfirmed = false;
             purchaseReceival.ConfirmationDate = null;
-            UpdateObject(purchaseReceival);
-            return purchaseReceival;
-        }
-
-        public PurchaseReceival CompleteObject(PurchaseReceival purchaseReceival)
-        {
-            purchaseReceival.IsCompleted = true;
             UpdateObject(purchaseReceival);
             return purchaseReceival;
         }

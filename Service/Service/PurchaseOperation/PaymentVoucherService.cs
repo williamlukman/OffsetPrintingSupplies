@@ -91,7 +91,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
+        public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, DateTime ConfirmationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService)
         {
             if (_validator.ValidConfirmObject(paymentVoucher, this, _paymentVoucherDetailService, _cashBankService, _payableService))
@@ -99,8 +99,9 @@ namespace Service.Service
                 IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                 foreach (var detail in details)
                 {
-                    _paymentVoucherDetailService.ConfirmObject(detail, this, _payableService);
+                    _paymentVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _payableService);
                 }
+                paymentVoucher.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(paymentVoucher);
 
                 if (!paymentVoucher.IsGBCH)

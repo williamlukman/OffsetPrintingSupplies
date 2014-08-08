@@ -71,11 +71,12 @@ namespace Service.Service
             return barringOrder;
         }
 
-        public BarringOrder ConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService,
+        public BarringOrder ConfirmObject(BarringOrder barringOrder, DateTime ConfirmationDate, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService,
                                           IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService))
             {
+                barringOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(barringOrder);
             }
             return barringOrder;

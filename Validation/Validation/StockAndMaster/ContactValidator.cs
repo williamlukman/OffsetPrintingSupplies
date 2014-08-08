@@ -88,6 +88,26 @@ namespace Validation.Validation
             return contact;
         }
 
+        public Contact VHasPurchaseOrder(Contact contact, IPurchaseOrderService _purchaseOrderService)
+        {
+            IList<PurchaseOrder> purchaseOrders = _purchaseOrderService.GetObjectsByContactId(contact.Id);
+            if (purchaseOrders.Any())
+            {
+                contact.Errors.Add("Generic", "Contact masih memiliki asosiasi dengan purchase order");
+            }
+            return contact;
+        }
+
+        public Contact VHasSalesOrder(Contact contact, ISalesOrderService _salesOrderService)
+        {
+            IList<SalesOrder> salesOrders = _salesOrderService.GetObjectsByContactId(contact.Id);
+            if (salesOrders.Any())
+            {
+                contact.Errors.Add("Generic", "Contact masih memiliki asosiasi dengan sales order");
+            }
+            return contact;
+        }
+
         public Contact VCreateObject(Contact contact, IContactService _contactService)
         {
             VHasUniqueName(contact, _contactService);
@@ -110,11 +130,16 @@ namespace Validation.Validation
             return contact;
         }
 
-        public Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService)
+        public Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+                                     IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
         {
             VHasCoreIdentification(contact, _coreIdentificationService);
             if (!isValid(contact)) { return contact; }
             VHasBarring(contact, _barringService);
+            if (!isValid(contact)) { return contact; }
+            VHasSalesOrder(contact, _salesOrderService);
+            if (!isValid(contact)) { return contact; }
+            VHasPurchaseOrder(contact, _purchaseOrderService);
             return contact;
         }
 
@@ -131,10 +156,11 @@ namespace Validation.Validation
             return isValid(contact);
         }
 
-        public bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService)
+        public bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+                                      IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
         {
             contact.Errors.Clear();
-            VDeleteObject(contact, _coreIdentificationService, _barringService);
+            VDeleteObject(contact, _coreIdentificationService, _barringService, _purchaseOrderService, _salesOrderService);
             return isValid(contact);
         }
 

@@ -47,14 +47,14 @@ namespace Service.Service
             return (_validator.ValidCreateObject(purchaseInvoice, _purchaseReceivalService) ? _repository.CreateObject(purchaseInvoice) : purchaseInvoice);
         }
 
-        public PurchaseInvoice CreateObject(int purchaseReceivalId, string description, int discount, int tax, DateTime InvoiceDate, DateTime DueDate, IPurchaseReceivalService _purchaseReceivalService)
+        public PurchaseInvoice CreateObject(int purchaseReceivalId, string description, int discount, bool isTaxable, DateTime InvoiceDate, DateTime DueDate, IPurchaseReceivalService _purchaseReceivalService)
         {
             PurchaseInvoice purchaseInvoice = new PurchaseInvoice
             {
                 PurchaseReceivalId = purchaseReceivalId,
                 Description = description,
                 Discount = discount,
-                Tax = tax,
+                IsTaxable = isTaxable,
                 InvoiceDate = InvoiceDate,
                 DueDate = DueDate
             };
@@ -76,7 +76,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
+        public PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice, DateTime ConfirmationDate, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseOrderService _purchaseOrderService,
                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService)
         {
             if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService))
@@ -86,16 +86,18 @@ namespace Service.Service
                 IList<PurchaseInvoiceDetail> details = _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(purchaseInvoice.Id);
                 foreach (var detail in details)
                 {
-                    _purchaseInvoiceDetailService.ConfirmObject(detail, _purchaseReceivalDetailService);
+                    _purchaseInvoiceDetailService.ConfirmObject(detail, ConfirmationDate, _purchaseReceivalDetailService);
                 }
                 purchaseInvoice = CalculateAmountPayable(purchaseInvoice, _purchaseInvoiceDetailService);
 
                 // confirm object
                 // create payable
+                purchaseInvoice.ConfirmationDate = ConfirmationDate;
                 purchaseInvoice = _repository.ConfirmObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);
-                Payable payable = _payableService.CreateObject(purchaseReceival.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id, purchaseInvoice.AmountPayable, purchaseInvoice.DueDate);
+                PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
+                Payable payable = _payableService.CreateObject(purchaseOrder.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id, purchaseInvoice.AmountPayable, purchaseInvoice.DueDate);
             }
             return purchaseInvoice;
         }
@@ -128,7 +130,9 @@ namespace Service.Service
             {
                 AmountPayable += detail.Amount;
             }
-            purchaseInvoice.AmountPayable = AmountPayable - purchaseInvoice.Discount - purchaseInvoice.Tax;
+            decimal Discount = purchaseInvoice.Discount / 100 * AmountPayable;
+            decimal TaxableAmount = AmountPayable - Discount;
+            purchaseInvoice.AmountPayable = TaxableAmount * (decimal) 1.1; // 10% Tax
             _repository.Update(purchaseInvoice);
             return purchaseInvoice;
         }

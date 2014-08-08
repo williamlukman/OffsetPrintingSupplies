@@ -129,8 +129,9 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidStripAndGlueObject(recoveryOrderDetail) ? _repository.StripAndGlueObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, int CompoundUsage)
         {
+            recoveryOrderDetail.CompoundUsage = CompoundUsage;
             return (recoveryOrderDetail = _validator.ValidWrapObject(recoveryOrderDetail) ? _repository.WrapObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
@@ -164,12 +165,13 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidPackageObject(recoveryOrderDetail) ? _repository.PackageObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+        public RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail, DateTime RejectedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
                                                 IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IStockMutationService _stockMutationService)
         {
             if (_validator.ValidRejectObject(recoveryOrderDetail, _recoveryOrderService))
-            { 
+            {
+                recoveryOrderDetail.RejectedDate = RejectedDate;
                 _repository.RejectObject(recoveryOrderDetail);
 
                 // add recovery order quantity reject
@@ -252,13 +254,14 @@ namespace Service.Service
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+        public RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
                                                 IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IStockMutationService _stockMutationService)
         {
             if (_validator.ValidFinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService))
             {
                 // set object to finish
+                recoveryOrderDetail.FinishedDate = FinishedDate;
                 _repository.FinishObject(recoveryOrderDetail);
 
                 // add recovery order quantity final

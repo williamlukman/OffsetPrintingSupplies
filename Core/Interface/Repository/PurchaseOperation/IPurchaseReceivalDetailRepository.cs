@@ -10,13 +10,13 @@ namespace Core.Interface.Repository
     {
         IList<PurchaseReceivalDetail> GetObjectsByPurchaseReceivalId(int purchaseReceivalId);
         PurchaseReceivalDetail GetObjectById(int Id);
-        PurchaseReceivalDetail GetObjectByPurchaseOrderDetailId(int purchaseOrderDetailId);
+        IList<PurchaseReceivalDetail> GetObjectsByPurchaseOrderDetailId(int purchaseOrderDetailId);
         PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail SoftDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail);
         bool DeleteObject(int Id);
-        PurchaseReceivalDetail FinishObject(PurchaseReceivalDetail purchaseReceivalDetail);
-        PurchaseReceivalDetail UnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail);
+        PurchaseReceivalDetail ConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail);
+        PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail);
         string SetObjectCode(string ParentCode);
     }
 }

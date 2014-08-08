@@ -33,6 +33,7 @@ namespace Core.Interface.Validation
         ReceiptVoucher VUpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                      IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService);
         ReceiptVoucher VDeleteObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);
+        ReceiptVoucher VHasConfirmationDate(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VConfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService,
                                        IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
                                        IReceivableService _receivableService);

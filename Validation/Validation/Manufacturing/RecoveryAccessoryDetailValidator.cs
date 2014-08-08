@@ -31,7 +31,7 @@ namespace Validation.Validation
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VNonZeroQuantity(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public RecoveryAccessoryDetail VNonNegativeNorZeroQuantity(RecoveryAccessoryDetail recoveryAccessoryDetail)
         {
             if (recoveryAccessoryDetail.Quantity <= 0)
             {
@@ -52,24 +52,6 @@ namespace Validation.Validation
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VHasBeenFinished(RecoveryAccessoryDetail recoveryAccessoryDetail)
-        {
-            if (!recoveryAccessoryDetail.IsFinished)
-            {
-                recoveryAccessoryDetail.Errors.Add("Generic", "Harus sudah difinish");
-            }
-            return recoveryAccessoryDetail;
-        }
-
-        public RecoveryAccessoryDetail VHasNotBeenFinished(RecoveryAccessoryDetail recoveryAccessoryDetail)
-        {
-            if (recoveryAccessoryDetail.IsFinished)
-            {
-                recoveryAccessoryDetail.Errors.Add("Generic", "Sudah difinish");
-            }
-            return recoveryAccessoryDetail;
-        }
-
         public RecoveryAccessoryDetail VRecoveryOrderDetailHasNotBeenFinishedNorRejected(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
@@ -80,81 +62,53 @@ namespace Validation.Validation
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VCreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                                     IItemService _itemService, IItemTypeService _itemTypeService)
+        public RecoveryAccessoryDetail VCreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                                     IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
             VHasRecoveryOrderDetail(recoveryAccessoryDetail, _recoveryOrderDetailService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
             VIsAccessory(recoveryAccessoryDetail, _itemService, _itemTypeService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
-            VNonZeroQuantity(recoveryAccessoryDetail);
-            return recoveryAccessoryDetail;
-        }
-
-        public RecoveryAccessoryDetail VUpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                                     IItemService _itemService, IItemTypeService _itemTypeService)
-        {
-            VCreateObject(recoveryAccessoryDetail, _recoveryOrderDetailService, _itemService, _itemTypeService);
-            return recoveryAccessoryDetail;
-        }
-
-        public RecoveryAccessoryDetail VDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
-        {
-            VHasNotBeenFinished(recoveryAccessoryDetail);
-            return recoveryAccessoryDetail;
-        }
-
-        public RecoveryAccessoryDetail VFinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
-        {
-            VRecoveryOrderDetailHasNotBeenFinishedNorRejected(recoveryAccessoryDetail, _recoveryOrderDetailService);
+            VNonNegativeNorZeroQuantity(recoveryAccessoryDetail);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
             VQuantityInStock(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
-            VHasNotBeenFinished(recoveryAccessoryDetail);
+            VRecoveryOrderDetailHasNotBeenFinishedNorRejected(recoveryAccessoryDetail, _recoveryOrderDetailService);
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VUnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        public RecoveryAccessoryDetail VUpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                                     IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        {
+            VCreateObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _itemTypeService, _warehouseItemService);
+            return recoveryAccessoryDetail;
+        }
+
+        public RecoveryAccessoryDetail VDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             VRecoveryOrderDetailHasNotBeenFinishedNorRejected(recoveryAccessoryDetail, _recoveryOrderDetailService);
-            if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
-            VHasBeenFinished(recoveryAccessoryDetail);
             return recoveryAccessoryDetail;
         }
 
-        public bool ValidCreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                                     IItemService _itemService, IItemTypeService _itemTypeService)
+        public bool ValidCreateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
-            VCreateObject(recoveryAccessoryDetail, _recoveryOrderDetailService, _itemService, _itemTypeService);
+            VCreateObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _itemTypeService, _warehouseItemService);
             return isValid(recoveryAccessoryDetail);
         }
 
-        public bool ValidUpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                                     IItemService _itemService, IItemTypeService _itemTypeService)
+        public bool ValidUpdateObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
             recoveryAccessoryDetail.Errors.Clear();
-            VUpdateObject(recoveryAccessoryDetail, _recoveryOrderDetailService, _itemService, _itemTypeService);
+            VUpdateObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _itemTypeService, _warehouseItemService);
             return isValid(recoveryAccessoryDetail);
         }
 
-        public bool ValidDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail)
+        public bool ValidDeleteObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             recoveryAccessoryDetail.Errors.Clear();
-            VDeleteObject(recoveryAccessoryDetail);
-            return isValid(recoveryAccessoryDetail);
-        }
-
-        public bool ValidFinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
-        {
-            recoveryAccessoryDetail.Errors.Clear();
-            VFinishObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
-            return isValid(recoveryAccessoryDetail);
-        }
-
-        public bool ValidUnfinishObject(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
-        {
-            recoveryAccessoryDetail.Errors.Clear();
-            VUnfinishObject(recoveryAccessoryDetail, _recoveryOrderDetailService);
+            VDeleteObject(recoveryAccessoryDetail, _recoveryOrderDetailService);
             return isValid(recoveryAccessoryDetail);
         }
 

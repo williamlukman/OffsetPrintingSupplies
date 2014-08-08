@@ -10,7 +10,6 @@ namespace Validation.Validation
 {
     public class RollerWarehouseMutationValidator : IRollerWarehouseMutationValidator
     {
-
         public RollerWarehouseMutation VHasCoreIdentification(RollerWarehouseMutation rollerWarehouseMutation, ICoreIdentificationService _coreIdentificationService)
         {
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(rollerWarehouseMutation.CoreIdentificationId);
@@ -108,34 +107,6 @@ namespace Validation.Validation
             return rollerWarehouseMutation;
         }
 
-        public RollerWarehouseMutation VAllDetailsHaveBeenFinished(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
-        {
-            IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
-            foreach (var detail in details)
-            {
-                if (!detail.IsFinished)
-                {
-                    rollerWarehouseMutation.Errors.Add("Generic", "Detail masih belum selesai");
-                    return rollerWarehouseMutation;
-                }
-            }
-            return rollerWarehouseMutation;
-        }
-
-        public RollerWarehouseMutation VAllDetailsHaveNotBeenFinished(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
-        {
-            IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
-            foreach (var detail in details)
-            {
-                if (detail.IsFinished)
-                {
-                    rollerWarehouseMutation.Errors.Add("Generic", "Detail sudah selesai");
-                    return rollerWarehouseMutation;
-                }
-            }
-            return rollerWarehouseMutation;
-        }
-
         public RollerWarehouseMutation VCreateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, ICoreIdentificationService _coreIdentificationService)
         {
             VHasCoreIdentification(rollerWarehouseMutation, _coreIdentificationService);
@@ -162,9 +133,20 @@ namespace Validation.Validation
             return rollerWarehouseMutation;
         }
 
+        public RollerWarehouseMutation VHasConfirmationDate(RollerWarehouseMutation obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public RollerWarehouseMutation VConfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            VHasConfirmationDate(rollerWarehouseMutation);
+            if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
             VHasNotBeenConfirmed(rollerWarehouseMutation);
             if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
             VHasRollerWarehouseMutationDetails(rollerWarehouseMutation, _rollerWarehouseMutationDetailService);
@@ -177,14 +159,6 @@ namespace Validation.Validation
                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasBeenConfirmed(rollerWarehouseMutation);
-            if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
-            VAllDetailsHaveNotBeenFinished(rollerWarehouseMutation, _rollerWarehouseMutationDetailService);
-            return rollerWarehouseMutation;
-        }
-
-        public RollerWarehouseMutation VCompleteObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
-        {
-            VAllDetailsHaveBeenFinished(rollerWarehouseMutation, _rollerWarehouseMutationDetailService);
             return rollerWarehouseMutation;
         }
 
@@ -221,13 +195,6 @@ namespace Validation.Validation
         {
             rollerWarehouseMutation.Errors.Clear();
             VUnconfirmObject(rollerWarehouseMutation, _rollerWarehouseMutationService, _rollerWarehouseMutationDetailService, _itemService, _barringService, _warehouseItemService);
-            return isValid(rollerWarehouseMutation);
-        }
-
-        public bool ValidCompleteObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
-        {
-            rollerWarehouseMutation.Errors.Clear();
-            VCompleteObject(rollerWarehouseMutation, _rollerWarehouseMutationDetailService);
             return isValid(rollerWarehouseMutation);
         }
 

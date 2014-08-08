@@ -22,6 +22,7 @@ namespace Core.Interface.Validation
         ReceiptVoucherDetail VCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail VUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail VDeleteObject(ReceiptVoucherDetail receiptVoucherDetail);
+        ReceiptVoucherDetail VHasConfirmationDate(ReceiptVoucherDetail receiptVoucherDetail);
         ReceiptVoucherDetail VConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService);
         ReceiptVoucherDetail VUnconfirmObject(ReceiptVoucherDetail receiptVoucherDetail);
         bool ValidCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);

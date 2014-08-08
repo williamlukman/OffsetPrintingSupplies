@@ -79,7 +79,8 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService)
+        public PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, DateTime ConfirmationDate,
+                                                  IPaymentVoucherService _paymentVoucherService, IPayableService _payableService)
         {
             if (_validator.ValidConfirmObject(paymentVoucherDetail, _payableService))
             {
@@ -95,6 +96,7 @@ namespace Service.Service
                 }
                 _payableService.UpdateObject(payable);
 
+                paymentVoucherDetail.ConfirmationDate = ConfirmationDate;
                 paymentVoucherDetail = _repository.ConfirmObject(paymentVoucherDetail);
             }
             return paymentVoucherDetail;

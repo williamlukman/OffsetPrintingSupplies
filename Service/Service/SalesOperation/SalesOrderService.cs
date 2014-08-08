@@ -71,31 +71,37 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesOrder ConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,
-                                        IStockMutationService _stockMutationService, IItemService _itemService)
+        public SalesOrder ConfirmObject(SalesOrder salesOrder, DateTime ConfirmationDate, ISalesOrderDetailService _salesOrderDetailService,
+                                        IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                        IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidConfirmObject(salesOrder, _salesOrderDetailService))
             {
+                IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
+                foreach (var detail in salesOrderDetails)
+                {
+                    _salesOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService,
+                                                           _barringService, _warehouseItemService);
+                }
+                salesOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(salesOrder);
             }
             return salesOrder;
         }
 
         public SalesOrder UnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,
-                                    IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
+                                          IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                          IStockMutationService _stockMutationService, IItemService _itemService,
+                                          IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderDetailService, _itemService))
+            if (_validator.ValidUnconfirmObject(salesOrder, _deliveryOrderService))
             {
+                IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
+                foreach (var detail in salesOrderDetails)
+                {
+                    _salesOrderDetailService.UnconfirmObject(detail, this, _deliveryOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                }
                 _repository.UnconfirmObject(salesOrder);
-            }
-            return salesOrder;
-        }
-
-        public SalesOrder CompleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
-        {
-            if (_validator.ValidCompleteObject(salesOrder, _salesOrderDetailService))
-            {
-                _repository.CompleteObject(salesOrder);
             }
             return salesOrder;
         }

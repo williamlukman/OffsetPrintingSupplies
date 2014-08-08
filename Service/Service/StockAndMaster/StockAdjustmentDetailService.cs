@@ -74,17 +74,14 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public StockAdjustmentDetail FinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
+        public StockAdjustmentDetail ConfirmObject(StockAdjustmentDetail stockAdjustmentDetail, DateTime ConfirmationDate, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
                                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidFinishObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
             {
-                stockAdjustmentDetail = _repository.FinishObject(stockAdjustmentDetail);
+                stockAdjustmentDetail.ConfirmationDate = ConfirmationDate;
+                stockAdjustmentDetail = _repository.ConfirmObject(stockAdjustmentDetail);
                 StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
-                if (_stockAdjustmentService.GetValidator().ValidCompleteObject(stockAdjustment, this))
-                {
-                    _stockAdjustmentService.CompleteObject(stockAdjustment, this);
-                }
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
@@ -92,12 +89,12 @@ namespace Service.Service
             }
             return stockAdjustmentDetail;
         }
-        public StockAdjustmentDetail UnfinishObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
+        public StockAdjustmentDetail UnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidUnconfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
             {
-                stockAdjustmentDetail = _repository.UnfinishObject(stockAdjustmentDetail);
+                stockAdjustmentDetail = _repository.UnconfirmObject(stockAdjustmentDetail);
                 StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);

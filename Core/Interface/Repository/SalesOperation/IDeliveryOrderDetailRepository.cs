@@ -15,8 +15,8 @@ namespace Core.Interface.Repository
         DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail SoftDeleteObject(DeliveryOrderDetail deliveryOrderDetail);
         bool DeleteObject(int Id);
-        DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail);
-        DeliveryOrderDetail UnfinishObject(DeliveryOrderDetail deliveryOrderDetail);
+        DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail);
+        DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail);
         string SetObjectCode(string ParentCode);
     }
 }

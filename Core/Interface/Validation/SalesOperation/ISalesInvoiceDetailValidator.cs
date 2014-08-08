@@ -24,6 +24,7 @@ namespace Core.Interface.Validation
         SalesInvoiceDetail VUpdateObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                             IDeliveryOrderDetailService _deliveryOrderDetailService);
         SalesInvoiceDetail VDeleteObject(SalesInvoiceDetail salesInvoiceDetail);
+        SalesInvoiceDetail VHasConfirmationDate(SalesInvoiceDetail salesInvoiceDetail);
         SalesInvoiceDetail VConfirmObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                              IDeliveryOrderDetailService _deliveryOrderDetailService);
         SalesInvoiceDetail VUnconfirmObject(SalesInvoiceDetail salesInvoiceDetail);

@@ -123,8 +123,19 @@ namespace Validation.Validation
             return cashBankMutation;
         }
 
+        public CashBankMutation VHasConfirmationDate(CashBankMutation obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
         {
+            VHasConfirmationDate(cashBankMutation);
+            if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VHasNotBeenDeleted(cashBankMutation);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VHasNotBeenConfirmed(cashBankMutation);

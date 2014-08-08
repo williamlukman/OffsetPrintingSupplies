@@ -37,7 +37,6 @@ namespace Data.Repository
         {
             salesOrder.Code = SetObjectCode();
             salesOrder.IsDeleted = false;
-            salesOrder.IsCompleted = false;
             salesOrder.IsConfirmed = false;
             salesOrder.CreatedAt = DateTime.Now;
             return Create(salesOrder);
@@ -67,7 +66,6 @@ namespace Data.Repository
         public SalesOrder ConfirmObject(SalesOrder salesOrder)
         {
             salesOrder.IsConfirmed = true;
-            salesOrder.ConfirmationDate = DateTime.Now;
             Update(salesOrder);
             return salesOrder;
         }
@@ -76,13 +74,6 @@ namespace Data.Repository
         {
             salesOrder.IsConfirmed = false;
             salesOrder.ConfirmationDate = null;
-            UpdateObject(salesOrder);
-            return salesOrder;
-        }
-
-        public SalesOrder CompleteObject(SalesOrder salesOrder)
-        {
-            salesOrder.IsCompleted = true;
             UpdateObject(salesOrder);
             return salesOrder;
         }

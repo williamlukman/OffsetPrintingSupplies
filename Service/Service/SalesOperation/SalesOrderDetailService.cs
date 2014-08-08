@@ -74,12 +74,14 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesOrderDetail FinishObject(SalesOrderDetail salesOrderDetail, IStockMutationService _stockMutationService,
+        public SalesOrderDetail ConfirmObject(SalesOrderDetail salesOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidFinishObject(salesOrderDetail))
+            if (_validator.ValidConfirmObject(salesOrderDetail))
             {
-                salesOrderDetail = _repository.FinishObject(salesOrderDetail);
+                salesOrderDetail.ConfirmationDate = ConfirmationDate;
+                salesOrderDetail = _repository.ConfirmObject(salesOrderDetail);
+
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForSalesOrder(salesOrderDetail, item);
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
@@ -88,12 +90,12 @@ namespace Service.Service
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+        public SalesOrderDetail UnconfirmObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                                IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(salesOrderDetail, _salesOrderService, this, _deliveryOrderDetailService, _itemService))
+            if (_validator.ValidUnconfirmObject(salesOrderDetail, _deliveryOrderDetailService, _itemService))
             {
-                salesOrderDetail = _repository.UnfinishObject(salesOrderDetail);
+                salesOrderDetail = _repository.UnconfirmObject(salesOrderDetail);
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForSalesOrder(salesOrderDetail, item);
                 foreach (var stockMutation in stockMutations)

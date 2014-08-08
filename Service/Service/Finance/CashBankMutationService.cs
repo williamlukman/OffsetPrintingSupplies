@@ -65,7 +65,7 @@ namespace Service.Service
             return (cashBankMutation = _validator.ValidDeleteObject(cashBankMutation) ? _repository.SoftDeleteObject(cashBankMutation) : cashBankMutation);
         }
 
-        public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService)
+        public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService)
         {
             if (_validator.ValidConfirmObject(cashBankMutation, _cashBankService))
             {
@@ -76,6 +76,7 @@ namespace Service.Service
                 {
                     _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
                 }
+                cashBankMutation.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(cashBankMutation);
             }
             return cashBankMutation;

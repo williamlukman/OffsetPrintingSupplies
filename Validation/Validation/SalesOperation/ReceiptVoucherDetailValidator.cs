@@ -137,8 +137,19 @@ namespace Validation.Validation
             return receiptVoucherDetail;
         }
 
+        public ReceiptVoucherDetail VHasConfirmationDate(ReceiptVoucherDetail obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public ReceiptVoucherDetail VConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService)
         {
+            VHasConfirmationDate(receiptVoucherDetail);
+            if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VAmountLessOrEqualReceivable(receiptVoucherDetail, _receivableService);
             return receiptVoucherDetail;
         }

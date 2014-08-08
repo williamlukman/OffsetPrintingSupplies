@@ -79,7 +79,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
+        public ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, DateTime ConfirmationDate, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
         {
             if (_validator.ValidConfirmObject(receiptVoucherDetail, _receivableService))
             {
@@ -95,6 +95,7 @@ namespace Service.Service
                 }
                 _receivableService.UpdateObject(receivable);
 
+                receiptVoucherDetail.ConfirmationDate = ConfirmationDate;
                 receiptVoucherDetail = _repository.ConfirmObject(receiptVoucherDetail);
             }
             return receiptVoucherDetail;

@@ -21,7 +21,7 @@ namespace Core.Interface.Service
                                           ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail);
         bool DeleteObject(int Id);
-        PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
+        PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, DateTime ConfirmationDate, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
         PaymentVoucherDetail UnconfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
     }
 }

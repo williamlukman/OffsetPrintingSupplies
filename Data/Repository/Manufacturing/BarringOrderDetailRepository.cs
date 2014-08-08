@@ -197,7 +197,6 @@ namespace Data.Repository
         public BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail)
         {
             barringOrderDetail.IsRejected = true;
-            barringOrderDetail.UpdatedAt = DateTime.Now;
             Update(barringOrderDetail);
             return barringOrderDetail;
         }
@@ -205,15 +204,15 @@ namespace Data.Repository
         public BarringOrderDetail UndoRejectObject(BarringOrderDetail barringOrderDetail)
         {
             barringOrderDetail.IsRejected = false;
-            barringOrderDetail.UpdatedAt = DateTime.Now;
-            Update(barringOrderDetail);
+            barringOrderDetail.RejectedDate = null;
+            UpdateObject(barringOrderDetail);
             return barringOrderDetail;
         }
 
         public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail)
         {
             barringOrderDetail.IsFinished = true;
-            barringOrderDetail.FinishDate = DateTime.Now;
+            barringOrderDetail.FinishedDate = DateTime.Now;
             Update(barringOrderDetail);
             return barringOrderDetail;
         }
@@ -221,9 +220,8 @@ namespace Data.Repository
         public BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail)
         {
             barringOrderDetail.IsFinished = false;
-            barringOrderDetail.FinishDate = null;
-            barringOrderDetail.UpdatedAt = DateTime.Now;
-            Update(barringOrderDetail);
+            barringOrderDetail.FinishedDate = null;
+            UpdateObject(barringOrderDetail);
             return barringOrderDetail;
         }
 

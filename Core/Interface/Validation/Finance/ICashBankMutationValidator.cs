@@ -21,6 +21,7 @@ namespace Core.Interface.Validation
         CashBankMutation VCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VUpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VDeleteObject(CashBankMutation cashBankMutation);
+        CashBankMutation VHasConfirmationDate(CashBankMutation cashBankMutation);
         CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         bool ValidCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);

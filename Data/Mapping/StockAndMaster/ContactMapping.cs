@@ -21,16 +21,12 @@ namespace Data.Mapping
             HasMany(c => c.Barrings)
                 .WithRequired(b => b.Contact)
                 .HasForeignKey(c => c.ContactId);
-
-            HasOptional(c => c.PurchaseOrders);
-            HasOptional(c => c.PurchaseOrderDetails);
-            HasOptional(c => c.PurchaseReceivals);
-            HasOptional(c => c.PurchaseReceivalDetails);
-            HasOptional(c => c.SalesOrders);
-            HasOptional(c => c.SalesOrderDetails);
-            HasOptional(c => c.DeliveryOrders);
-            HasOptional(c => c.DeliveryOrderDetails);
-
+            HasMany(c => c.PurchaseOrders)
+                .WithRequired(po => po.Contact)
+                .HasForeignKey(po => po.ContactId);
+            HasMany(c => c.SalesOrders)
+                .WithRequired(so => so.Contact)
+                .HasForeignKey(so => so.ContactId);
             Ignore(c => c.Errors);
         }
     }

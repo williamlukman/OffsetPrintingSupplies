@@ -28,9 +28,9 @@ namespace Data.Repository
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail GetObjectByPurchaseOrderDetailId(int purchaseOrderDetailId)
+        public IList<PurchaseReceivalDetail> GetObjectsByPurchaseOrderDetailId(int purchaseOrderDetailId)
         {
-            return Find(prd => prd.PurchaseOrderDetailId == purchaseOrderDetailId && !prd.IsDeleted);
+            return FindAll(prd => prd.PurchaseOrderDetailId == purchaseOrderDetailId && !prd.IsDeleted).ToList();
         }
 
         public PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail)
@@ -43,10 +43,9 @@ namespace Data.Repository
                               select obj.Code).FirstOrDefault();
             }
             purchaseReceivalDetail.Code = SetObjectCode(ParentCode);
-            purchaseReceivalDetail.IsFinished = false;
+            purchaseReceivalDetail.IsConfirmed = false;
             purchaseReceivalDetail.IsDeleted = false;
             purchaseReceivalDetail.IsAllInvoiced = false;
-            purchaseReceivalDetail.InvoicedQuantity = 0;
             purchaseReceivalDetail.PendingInvoicedQuantity = purchaseReceivalDetail.Quantity;
             purchaseReceivalDetail.CreatedAt = DateTime.Now;
             return Create(purchaseReceivalDetail);
@@ -73,17 +72,16 @@ namespace Data.Repository
             return (Delete(prd) == 1) ? true : false;
         }
 
-        public PurchaseReceivalDetail FinishObject(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail ConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            purchaseReceivalDetail.IsFinished = true;
-            purchaseReceivalDetail.FinishDate = DateTime.Now;
+            purchaseReceivalDetail.IsConfirmed = true;
             Update(purchaseReceivalDetail);
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail UnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            purchaseReceivalDetail.IsFinished = false;
+            purchaseReceivalDetail.IsConfirmed = false;
             UpdateObject(purchaseReceivalDetail);
             return purchaseReceivalDetail;
         }

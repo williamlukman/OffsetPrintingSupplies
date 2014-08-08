@@ -53,6 +53,19 @@ namespace Validation.Validation
         public CoreIdentification VHasIdentifiedDate(CoreIdentification coreIdentification)
         {
             // will always be true since date is not null
+            if (coreIdentification.IdentifiedDate == null)
+            {
+                coreIdentification.Errors.Add("IdentifiedDate", "Tidak boleh kosong");
+            }
+            return coreIdentification;
+        }
+
+        public CoreIdentification VHasConfirmationDate(CoreIdentification coreIdentification)
+        {
+            if (coreIdentification.ConfirmationDate == null)
+            {
+                coreIdentification.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
             return coreIdentification;
         }
 
@@ -184,6 +197,8 @@ namespace Validation.Validation
         public CoreIdentification VConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                  ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
+            VHasConfirmationDate(coreIdentification);
+            if (!isValid(coreIdentification)) { return coreIdentification; }
             VHasCoreIdentificationDetails(coreIdentification, _coreIdentificationDetailService);
             if (!isValid(coreIdentification)) { return coreIdentification; }
             VQuantityEqualNumberOfDetails(coreIdentification, _coreIdentificationDetailService);

@@ -24,7 +24,9 @@ namespace Core.Interface.Validation
         BarringOrderDetail VHasBeenQCAndMarked(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenPackaged(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenRejected(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail VHasRejectedDate(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenFinished(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail VHasFinishedDate(BarringOrderDetail barringOrderDetail);
 
         BarringOrderDetail VHasNoLeftBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasNoRightBar(BarringOrderDetail barringOrderDetail);

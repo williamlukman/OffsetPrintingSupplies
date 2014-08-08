@@ -17,12 +17,16 @@ namespace Core.Interface.Validation
         Contact VHasEmail(Contact contact);
         Contact VHasCoreIdentification(Contact contact, ICoreIdentificationService _coreIdentificationService);
         Contact VHasBarring(Contact contact, IBarringService _barringService);
+        Contact VHasPurchaseOrder(Contact contact, IPurchaseOrderService _purchaseOrderService);
+        Contact VHasSalesOrder(Contact contact, ISalesOrderService _salesOrderService);
         Contact VCreateObject(Contact contact, IContactService _contactService);
         Contact VUpdateObject(Contact contact, IContactService _contactService);
-        Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService);
+        Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+                              IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService);
         bool ValidCreateObject(Contact contact, IContactService _contactService);
         bool ValidUpdateObject(Contact contact, IContactService _contactService);
-        bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService);
+        bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+                               IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService);
         bool isValid(Contact contact);
         string PrintError(Contact contact);
     }

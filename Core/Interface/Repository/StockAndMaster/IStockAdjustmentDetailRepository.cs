@@ -14,8 +14,8 @@ namespace Core.Interface.Repository
         StockAdjustmentDetail UpdateObject(StockAdjustmentDetail stockAdjustmentDetail);
         StockAdjustmentDetail SoftDeleteObject(StockAdjustmentDetail stockAdjustmentDetail);
         bool DeleteObject(int Id);
-        StockAdjustmentDetail FinishObject(StockAdjustmentDetail stockAdjustmentDetail);
-        StockAdjustmentDetail UnfinishObject(StockAdjustmentDetail stockAdjustmentDetail);
+        StockAdjustmentDetail ConfirmObject(StockAdjustmentDetail stockAdjustmentDetail);
+        StockAdjustmentDetail UnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail);
         string SetObjectCode(string ParentCode);
     }
 }

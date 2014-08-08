@@ -11,7 +11,7 @@ namespace Validation.Validation
 {
     public class SalesOrderValidator : ISalesOrderValidator
     {
-        public SalesOrder VContact(SalesOrder salesOrder, IContactService _contactService)
+        public SalesOrder VHasContact(SalesOrder salesOrder, IContactService _contactService)
         {
             Contact contact = _contactService.GetObjectById(salesOrder.ContactId);
             if (contact == null)
@@ -21,14 +21,12 @@ namespace Validation.Validation
             return salesOrder;
         }
 
-        public SalesOrder VSalesDate(SalesOrder salesOrder)
+        public SalesOrder VHasSalesDate(SalesOrder salesOrder)
         {
-            /* salesDate is never null
             if (salesOrder.SalesDate == null)
             {
-                salesOrder.Errors.Add("Sales Date, "Tidak boleh tidak ada");
+                salesOrder.Errors.Add("SalesDate", "Tidak boleh kosong");
             }
-            */
             return salesOrder;
         }
         
@@ -55,52 +53,51 @@ namespace Validation.Validation
             IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
             if (!details.Any())
             {
-                salesOrder.Errors.Add("SalesOrderDetail", "Tidak boleh tidak ada");
+                salesOrder.Errors.Add("Generic", "Tidak memiliki sales order detail");
             }
             return salesOrder;
         }
 
-        public SalesOrder VAllDetailsHaveBeenFinished(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
+        public SalesOrder VHasNoSalesOrderDetail(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
         {
             IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
-            foreach (var detail in details)
+            if (details.Any())
             {
-                if (!detail.IsFinished)
-                {
-                    salesOrder.Errors.Add("Generic", "Detail belum selesai");
-                    return salesOrder;
-                }
+                salesOrder.Errors.Add("Generic", "Masih memiliki sales order detail");
             }
             return salesOrder;
         }
 
-        public SalesOrder VAllDetailsHaveNotBeenFinished(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
+        public SalesOrder VHasNoDeliveryOrder(SalesOrder salesOrder, IDeliveryOrderService _deliveryOrderService)
         {
-            IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
-            foreach (var detail in details)
+            IList<DeliveryOrder> deliveryOrders = _deliveryOrderService.GetObjectsBySalesOrderId(salesOrder.Id); 
+            if (deliveryOrders.Any())
             {
-                if (detail.IsFinished)
-                {
-                    salesOrder.Errors.Add("Generic", "Detail sudah selesai");
-                    return salesOrder;
-                }
+                salesOrder.Errors.Add("Generic", "Sudah memiliki delivery order");
             }
             return salesOrder;
+        }
+
+        public SalesOrder VHasConfirmationDate(SalesOrder obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
         }
 
         public SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VContact(salesOrder, _contactService);
+            VHasContact(salesOrder, _contactService);
             if (!isValid(salesOrder)) { return salesOrder; }
-            VSalesDate(salesOrder);
+            VHasSalesDate(salesOrder);
             return salesOrder;
         }
 
         public SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            VContact(salesOrder, _contactService);
-            if (!isValid(salesOrder)) { return salesOrder; }
-            VSalesDate(salesOrder);
+            VCreateObject(salesOrder, _contactService);
             if (!isValid(salesOrder)) { return salesOrder; }
             VHasNotBeenConfirmed(salesOrder);
             return salesOrder;
@@ -109,28 +106,26 @@ namespace Validation.Validation
         public SalesOrder VDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
         {
             VHasNotBeenConfirmed(salesOrder);
+            if (!isValid(salesOrder)) { return salesOrder; }
+            VHasNoSalesOrderDetail(salesOrder, _salesOrderDetailService);
             return salesOrder;
         }
 
         public SalesOrder VConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
         {
+            VHasConfirmationDate(salesOrder);
+            if (!isValid(salesOrder)) { return salesOrder; }
             VHasNotBeenConfirmed(salesOrder);
             if (!isValid(salesOrder)) { return salesOrder; }
             VHasSalesOrderDetails(salesOrder, _salesOrderDetailService);
             return salesOrder;
         }
 
-        public SalesOrder VUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public SalesOrder VUnconfirmObject(SalesOrder salesOrder, IDeliveryOrderService _deliveryOrderService)
         {
             VHasBeenConfirmed(salesOrder);
             if (!isValid(salesOrder)) { return salesOrder; }
-            VAllDetailsHaveNotBeenFinished(salesOrder, _salesOrderDetailService);
-            return salesOrder;
-        }
-
-        public SalesOrder VCompleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
-        {
-            VAllDetailsHaveBeenFinished(salesOrder, _salesOrderDetailService);
+            VHasNoDeliveryOrder(salesOrder, _deliveryOrderService);
             return salesOrder;
         }
 
@@ -161,17 +156,10 @@ namespace Validation.Validation
             return isValid(salesOrder);
         }
 
-        public bool ValidUnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public bool ValidUnconfirmObject(SalesOrder salesOrder, IDeliveryOrderService _deliveryOrderService)
         {
             salesOrder.Errors.Clear();
-            VUnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderDetailService, _itemService);
-            return isValid(salesOrder);
-        }
-
-        public bool ValidCompleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
-        {
-            salesOrder.Errors.Clear();
-            VCompleteObject(salesOrder, _salesOrderDetailService);
+            VUnconfirmObject(salesOrder, _deliveryOrderService);
             return isValid(salesOrder);
         }
 

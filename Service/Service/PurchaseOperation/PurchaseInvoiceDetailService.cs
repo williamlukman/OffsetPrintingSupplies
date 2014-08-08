@@ -103,10 +103,12 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PurchaseInvoiceDetail ConfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        public PurchaseInvoiceDetail ConfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, DateTime ConfirmationDate,
+                                                   IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
             if (_validator.ValidConfirmObject(purchaseInvoiceDetail, this, _purchaseReceivalDetailService))
             {
+                purchaseInvoiceDetail.ConfirmationDate = ConfirmationDate;
                 purchaseInvoiceDetail = _repository.ConfirmObject(purchaseInvoiceDetail);
                 // update purchase receival detail PendingInvoiceQuantity
                 PurchaseReceivalDetail purchaseReceivalDetail = _purchaseReceivalDetailService.GetObjectById(purchaseInvoiceDetail.PurchaseReceivalDetailId);

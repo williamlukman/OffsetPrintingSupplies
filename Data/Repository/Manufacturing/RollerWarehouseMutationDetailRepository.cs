@@ -42,7 +42,7 @@ namespace Data.Repository
 
         public RollerWarehouseMutationDetail CreateObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail)
         {
-            rollerWarehouseMutationDetail.IsFinished = false;
+            rollerWarehouseMutationDetail.IsConfirmed = false;
             rollerWarehouseMutationDetail.IsDeleted = false;
             rollerWarehouseMutationDetail.CreatedAt = DateTime.Now;
             return Create(rollerWarehouseMutationDetail);
@@ -69,20 +69,18 @@ namespace Data.Repository
             return (Delete(rollerWarehouseMutationDetail) == 1) ? true : false;
         }
 
-        public RollerWarehouseMutationDetail FinishObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail)
+        public RollerWarehouseMutationDetail ConfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail)
         {
-            rollerWarehouseMutationDetail.IsFinished = true;
-            rollerWarehouseMutationDetail.FinishedDate = DateTime.Now;
+            rollerWarehouseMutationDetail.IsConfirmed = true;
             Update(rollerWarehouseMutationDetail);
             return rollerWarehouseMutationDetail;
         }
 
-        public RollerWarehouseMutationDetail UnfinishObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail)
+        public RollerWarehouseMutationDetail UnconfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail)
         {
-            rollerWarehouseMutationDetail.IsFinished = false;
-            rollerWarehouseMutationDetail.FinishedDate = null;
-            rollerWarehouseMutationDetail.UpdatedAt = DateTime.Now;
-            Update(rollerWarehouseMutationDetail);
+            rollerWarehouseMutationDetail.IsConfirmed = false;
+            rollerWarehouseMutationDetail.ConfirmationDate = null;
+            UpdateObject(rollerWarehouseMutationDetail);
             return rollerWarehouseMutationDetail;
         }
 

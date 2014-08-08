@@ -70,33 +70,41 @@ namespace Service.Service
             return (rollerWarehouseMutation = _validator.ValidDeleteObject(rollerWarehouseMutation) ? _repository.SoftDeleteObject(rollerWarehouseMutation) : rollerWarehouseMutation);
         }
 
-        public RollerWarehouseMutation ConfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public RollerWarehouseMutation ConfirmObject(RollerWarehouseMutation rollerWarehouseMutation, DateTime ConfirmationDate, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
+                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
+                                                     IStockMutationService _stockMutationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                     ICoreIdentificationService _coreIdentificationService)
         {
             if (_validator.ValidConfirmObject(rollerWarehouseMutation, this, _rollerWarehouseMutationDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
+                IList<RollerWarehouseMutationDetail> rollerWarehouseMutationDetails = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
+                foreach (var detail in rollerWarehouseMutationDetails)
+                {
+                    _rollerWarehouseMutationDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService,
+                                                                        _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+                }
+                rollerWarehouseMutation.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(rollerWarehouseMutation);
             }
             return rollerWarehouseMutation;
         }
 
         public RollerWarehouseMutation UnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
+                                                      IStockMutationService _stockMutationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                      ICoreIdentificationService _coreIdentificationService)
         {
             if (_validator.ValidUnconfirmObject(rollerWarehouseMutation, this, _rollerWarehouseMutationDetailService,
                                                 _itemService, _barringService, _warehouseItemService))
             {
+                IList<RollerWarehouseMutationDetail> rollerWarehouseMutationDetails = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
+                foreach (var detail in rollerWarehouseMutationDetails)
+                {
+                    _rollerWarehouseMutationDetailService.UnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService,
+                                                                          _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+                }
                 _repository.UnconfirmObject(rollerWarehouseMutation);
-            }
-            return rollerWarehouseMutation;
-        }
-
-        public RollerWarehouseMutation CompleteObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
-        {
-            if (_validator.ValidCompleteObject(rollerWarehouseMutation, _rollerWarehouseMutationDetailService))
-            {
-                _repository.CompleteObject(rollerWarehouseMutation);
             }
             return rollerWarehouseMutation;
         }

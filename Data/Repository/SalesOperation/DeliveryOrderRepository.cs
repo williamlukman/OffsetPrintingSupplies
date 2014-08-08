@@ -28,16 +28,15 @@ namespace Data.Repository
             return deliveryOrder;
         }
 
-        public IList<DeliveryOrder> GetObjectsByContactId(int contactId)
+        public IList<DeliveryOrder> GetObjectsBySalesOrderId(int salesOrderId)
         {
-            return FindAll(d => d.ContactId == contactId && !d.IsDeleted).ToList();
+            return FindAll(d => d.SalesOrderId == salesOrderId && !d.IsDeleted).ToList();
         }
 
         public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder)
         {
             deliveryOrder.Code = SetObjectCode();
             deliveryOrder.IsDeleted = false;
-            deliveryOrder.IsCompleted = false;
             deliveryOrder.IsConfirmed = false;
             deliveryOrder.CreatedAt = DateTime.Now;
             return Create(deliveryOrder);
@@ -67,7 +66,6 @@ namespace Data.Repository
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder)
         {
             deliveryOrder.IsConfirmed = true;
-            deliveryOrder.ConfirmationDate = DateTime.Now;
             Update(deliveryOrder);
             return deliveryOrder;
         }
@@ -76,13 +74,6 @@ namespace Data.Repository
         {
             deliveryOrder.IsConfirmed = false;
             deliveryOrder.ConfirmationDate = null;
-            UpdateObject(deliveryOrder);
-            return deliveryOrder;
-        }
-
-        public DeliveryOrder CompleteObject(DeliveryOrder deliveryOrder)
-        {
-            deliveryOrder.IsCompleted = true;
             UpdateObject(deliveryOrder);
             return deliveryOrder;
         }

@@ -12,24 +12,22 @@ namespace Validation.Validation
     public class DeliveryOrderValidator : IDeliveryOrderValidator
     {
 
-        public DeliveryOrder VContact(DeliveryOrder deliveryOrder, IContactService _contactService)
+        public DeliveryOrder VHasSalesOrder(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
-            Contact contact = _contactService.GetObjectById(deliveryOrder.ContactId);
-            if (contact == null)
+            SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+            if (salesOrder == null)
             {
-                deliveryOrder.Errors.Add("ContactId", "Tidak terasosiasi dengan contact");
+                deliveryOrder.Errors.Add("SalesOrderId", "Tidak terasosiasi dengan sales order");
             }
             return deliveryOrder;
         }
 
-        public DeliveryOrder VDeliveryDate(DeliveryOrder deliveryOrder)
+        public DeliveryOrder VHasDeliveryDate(DeliveryOrder deliveryOrder)
         {
-            /* deliveryDate is never null
             if (deliveryOrder.DeliveryDate == null)
             {
                 deliveryOrder.Errors.Add("DeliveryDate", "Tidak boleh kosong");
             }
-            */
             return deliveryOrder;
         }
 
@@ -56,66 +54,64 @@ namespace Validation.Validation
             IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
             if (!details.Any())
             {
-                deliveryOrder.Errors.Add("DeliveryOrderDetail", "Tidak boleh tidak ada");
+                deliveryOrder.Errors.Add("Generic", "Tidak memiliki delivery order detail");
             }
             return deliveryOrder;
         }
 
-        public DeliveryOrder VHasItemQuantity(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public DeliveryOrder VHasNoDeliveryOrderDetail(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
             IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-            foreach (var detail in details)
+            if (details.Any())
             {
-                Item item = _itemService.GetObjectById(detail.ItemId);
-                if (item.Quantity < 0)
-                {
-                    deliveryOrder.Errors.Add ("Quantity", "Tidak boleh kurang dari 0");
-                }
+                deliveryOrder.Errors.Add("Generic", "Masih memiliki delivery order detail");
             }
             return deliveryOrder;
         }
 
-        public DeliveryOrder VAllDetailsHaveBeenFinished(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public DeliveryOrder VSalesOrderHasBeenConfirmed(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
-            IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-            foreach (var detail in details)
+            SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+            if (!salesOrder.IsConfirmed)
             {
-                if (!detail.IsFinished)
-                {
-                    deliveryOrder.Errors.Add("Generic", "Semua detail harus sudah selesai");
-                    return deliveryOrder;
-                }
+                deliveryOrder.Errors.Add("Generic", "Sales order belum terkonfirmasi");
+            }
+            return deliveryOrder;
+
+        }
+
+        public DeliveryOrder VHasConfirmationDate(DeliveryOrder obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
+        public DeliveryOrder VHasNoSalesInvoice(DeliveryOrder deliveryOrder, ISalesInvoiceService _salesInvoiceService)
+        {
+            IList<SalesInvoice> salesInvoices = _salesInvoiceService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+            if (salesInvoices.Any())
+            {
+                deliveryOrder.Errors.Add("Generic", "Sudah memiliki sales invoice");
             }
             return deliveryOrder;
         }
 
-        public DeliveryOrder VAllDetailsHaveNotBeenFinished(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
-            IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
-            foreach (var detail in details)
-            {
-                if (detail.IsFinished)
-                {
-                    deliveryOrder.Errors.Add("Generic", "Detail sudah selesai");
-                    return deliveryOrder;
-                }
-            }
-            return deliveryOrder;
-        }
-
-        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
-        {
-            VContact(deliveryOrder, _contactService);
+            VHasSalesOrder(deliveryOrder, _salesOrderService);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
-            VDeliveryDate(deliveryOrder);
+            VSalesOrderHasBeenConfirmed(deliveryOrder, _salesOrderService);
+            if (!isValid(deliveryOrder)) { return deliveryOrder; }
+            VHasDeliveryDate(deliveryOrder);
             return deliveryOrder;
         }
 
-        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
+        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
-            VContact(deliveryOrder, _contactService);
-            if (!isValid(deliveryOrder)) { return deliveryOrder; }
-            VDeliveryDate(deliveryOrder);
+            VCreateObject(deliveryOrder, _salesOrderService);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasNotBeenConfirmed(deliveryOrder);
             return deliveryOrder;
@@ -124,43 +120,39 @@ namespace Validation.Validation
         public DeliveryOrder VDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
             VHasNotBeenConfirmed(deliveryOrder);
+            if (!isValid(deliveryOrder)) { return deliveryOrder; }
+            VHasNoDeliveryOrderDetail(deliveryOrder, _deliveryOrderDetailService);
             return deliveryOrder;
         }
 
-        public DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
+            VHasConfirmationDate(deliveryOrder);
+            if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasNotBeenConfirmed(deliveryOrder);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasDeliveryOrderDetails(deliveryOrder, _deliveryOrderDetailService);
             return deliveryOrder;
         }
 
-        public DeliveryOrder VUnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public DeliveryOrder VUnconfirmObject(DeliveryOrder deliveryOrder, ISalesInvoiceService _salesInvoiceService)
         {
-            VHasItemQuantity(deliveryOrder, _deliveryOrderDetailService, _itemService);
-            if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasBeenConfirmed(deliveryOrder);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
-            VAllDetailsHaveNotBeenFinished(deliveryOrder, _deliveryOrderDetailService);
+            VHasNoSalesInvoice(deliveryOrder, _salesInvoiceService);
             return deliveryOrder;
         }
 
-        public DeliveryOrder VCompleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public bool ValidCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
-            VAllDetailsHaveBeenFinished(deliveryOrder, _deliveryOrderDetailService);
-            return deliveryOrder;
-        }
-
-        public bool ValidCreateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
-        {
-            VCreateObject(deliveryOrder, _contactService);
+            VCreateObject(deliveryOrder, _salesOrderService);
             return isValid(deliveryOrder);
         }
 
-        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, IContactService _contactService)
+        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
         {
             deliveryOrder.Errors.Clear();
-            VUpdateObject(deliveryOrder, _contactService);
+            VUpdateObject(deliveryOrder, _salesOrderService);
             return isValid(deliveryOrder);
         }
 
@@ -171,24 +163,17 @@ namespace Validation.Validation
             return isValid(deliveryOrder);
         }
 
-        public bool ValidConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public bool ValidConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
             deliveryOrder.Errors.Clear();
-            VConfirmObject(deliveryOrder, _deliveryOrderDetailService, _itemService);
+            VConfirmObject(deliveryOrder, _deliveryOrderDetailService);
             return isValid(deliveryOrder);
         }
 
-        public bool ValidUnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public bool ValidUnconfirmObject(DeliveryOrder deliveryOrder, ISalesInvoiceService _salesInvoiceService)
         {
             deliveryOrder.Errors.Clear();
-            VUnconfirmObject(deliveryOrder, _deliveryOrderDetailService, _itemService);
-            return isValid(deliveryOrder);
-        }
-
-        public bool ValidCompleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
-        {
-            deliveryOrder.Errors.Clear();
-            VCompleteObject(deliveryOrder, _deliveryOrderDetailService);
+            VUnconfirmObject(deliveryOrder, _salesInvoiceService);
             return isValid(deliveryOrder);
         }
 

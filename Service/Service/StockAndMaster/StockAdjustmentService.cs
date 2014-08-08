@@ -66,11 +66,17 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+        public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment, DateTime ConfirmationDate, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                              IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidConfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
             {
+                IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
+                foreach (var detail in stockAdjustmentDetails)
+                {
+                    _stockAdjustmentDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                }
+                stockAdjustment.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(stockAdjustment);
             }
             return stockAdjustment;
@@ -81,14 +87,14 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
             {
+                IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
+                foreach (var detail in stockAdjustmentDetails)
+                {
+                    _stockAdjustmentDetailService.UnconfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                }
                 _repository.UnconfirmObject(stockAdjustment);
             }
             return stockAdjustment;
-        }
-
-        public StockAdjustment CompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
-        {
-            return (stockAdjustment = _validator.ValidCompleteObject(stockAdjustment, _stockAdjustmentDetailService) ? _repository.CompleteObject(stockAdjustment) : stockAdjustment);
         }
     }
 }

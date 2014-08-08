@@ -15,8 +15,7 @@ namespace Core.Interface.Validation
         PurchaseInvoice VPurchaseReceivalHasNotBeenInvoiceCompleted(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService);
         PurchaseInvoice VHasInvoiceDate(PurchaseInvoice purchaseInvoice);
         PurchaseInvoice VHasDueDate(PurchaseInvoice purchaseInvoice);
-        PurchaseInvoice VHasTaxGreaterOrEqualZero(PurchaseInvoice purchaseInvoice);
-        PurchaseInvoice VHasDiscountGreaterOrEqualZero(PurchaseInvoice purchaseInvoice);
+        PurchaseInvoice VHasDiscountBetweenZeroAndHundred(PurchaseInvoice purchaseInvoice);
         PurchaseInvoice VHasPaymentVoucherDetails(PurchaseInvoice purchaseInvoice, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
         PurchaseInvoice VHasNotBeenConfirmed(PurchaseInvoice purchaseInvoice);
         PurchaseInvoice VHasBeenConfirmed(PurchaseInvoice purchaseInvoice);
@@ -27,6 +26,7 @@ namespace Core.Interface.Validation
         PurchaseInvoice VCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService);
         PurchaseInvoice VUpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         PurchaseInvoice VDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
+        PurchaseInvoice VHasConfirmationDate(PurchaseInvoice purchaseInvoice);
         PurchaseInvoice VConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                        IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseInvoice VUnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);

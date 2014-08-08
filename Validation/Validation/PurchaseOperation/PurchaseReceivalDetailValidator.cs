@@ -13,10 +13,10 @@ namespace Validation.Validation
     {
         public PurchaseReceivalDetail VHasPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService)
         {
-            PurchaseReceival pr = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
-            if (pr == null)
+            PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+            if (purchaseReceival == null)
             {
-                purchaseReceivalDetail.Errors.Add("PurchaseReceival", "Tidak boleh tidak ada");
+                purchaseReceivalDetail.Errors.Add("PurchaseReceivalId", "Tidak terasosiasi dengan purchase receival");
             }
             return purchaseReceivalDetail;
         }
@@ -26,73 +26,30 @@ namespace Validation.Validation
             Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
             if (item == null)
             {
-                purchaseReceivalDetail.Errors.Add("Item", "Tidak boleh tidak ada");
+                purchaseReceivalDetail.Errors.Add("ItemId", "Tidak terasosiasi dengan item");
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VContact(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, IContactService _contactService)
+        public PurchaseReceivalDetail VNonNegativeQuantity(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            PurchaseReceival pr = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
-            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
-            if (pod == null)
+            if (purchaseReceivalDetail.Quantity < 0)
             {
-                purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
-                return purchaseReceivalDetail;
-            }
-            PurchaseOrder po = _purchaseOrderService.GetObjectById(pod.PurchaseOrderId);
-            if (po.ContactId != pr.ContactId)
-            {
-                purchaseReceivalDetail.Errors.Add("Contact", "Tidak boleh merupakan kustomer yang berbeda dengan Purchase Order");
-            }
-            return purchaseReceivalDetail;
-        }
-
-        public PurchaseReceivalDetail VQuantityCreate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
-        {
-            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
-            if (pod == null)
-            {
-                purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
-                return purchaseReceivalDetail;
-            }
-            if (purchaseReceivalDetail.Quantity <= 0)
-            {
-                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
-                return purchaseReceivalDetail;
-            }
-            if (purchaseReceivalDetail.Quantity > pod.Quantity)
-            {
-                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh lebih dari quantity dari Purchase Order Detail");
-                return purchaseReceivalDetail;
-            }
-            return purchaseReceivalDetail;
-        }
-
-        public PurchaseReceivalDetail VQuantityUpdate(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
-        {
-            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
-            if (purchaseReceivalDetail.Quantity <= 0)
-            {
-                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh kurang dari atau sama dengan 0");
-            }
-            if (purchaseReceivalDetail.Quantity > pod.Quantity)
-            {
-                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh lebih besar dari quantity dari Purchase Order Detail");
+                purchaseReceivalDetail.Errors.Add("Quantity", "Tidak boleh negatif");
             }
             return purchaseReceivalDetail;
         }
 
         public PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            PurchaseOrderDetail pod = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
-            if (pod == null)
+            PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+            if (purchaseOrderDetail == null)
             {
-                purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh tidak ada");
+                purchaseReceivalDetail.Errors.Add("PurchaseOrderDetailId", "Tidak terasosiasi dengan purchase order detail");
             }
             return purchaseReceivalDetail;
         }
-        
+
         public PurchaseReceivalDetail VUniquePurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
             IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceivalDetail.PurchaseReceivalId);
@@ -100,36 +57,67 @@ namespace Validation.Validation
             {
                 if (detail.PurchaseOrderDetailId == purchaseReceivalDetail.PurchaseOrderDetailId && detail.Id != purchaseReceivalDetail.Id)
                 {
-                    purchaseReceivalDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh memiliki lebih dari 2 Purchase Receival Detail");
+                    purchaseReceivalDetail.Errors.Add("Generic", "Tidak boleh memiliki lebih dari 2 Purchase Receival Detail dalam satu purchase receival");
                 }
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VHasNotBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail VPurchaseOrderDetailHasBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            if (purchaseReceivalDetail.IsFinished)
+            PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+            if (!purchaseOrderDetail.IsConfirmed)
+            {
+                purchaseReceivalDetail.Errors.Add("Generic", "Purchase Order Detail belum dikonfirmasi");
+            }
+            return purchaseReceivalDetail;
+        }
+
+        public PurchaseReceivalDetail VPurchaseReceivalAndPurchaseOrderDetailHaveTheSamePurchaseOrder(PurchaseReceivalDetail purchaseReceivalDetail,
+                                                       IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+            PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+            if (purchaseOrderDetail.PurchaseOrderId != purchaseReceival.PurchaseOrderId)
+            {
+                purchaseReceivalDetail.Errors.Add("Generic", "Purchase receival dan purchase order detail memiliki purchase order yang berbeda");
+            }
+            return purchaseReceivalDetail;
+        }
+
+        public PurchaseReceivalDetail VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail,
+                                                        IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+            IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseOrderDetailId(purchaseReceivalDetail.PurchaseOrderDetailId);
+
+            int totalReceivalQuantity = 0;
+            foreach (var detail in details)
+            {
+                totalReceivalQuantity += detail.Quantity;
+            }
+            if (totalReceivalQuantity > purchaseOrderDetail.Quantity)
+            {
+                int maxquantity = totalReceivalQuantity - purchaseReceivalDetail.Quantity;
+                purchaseReceivalDetail.Errors.Add("Generic", "Hanya boleh maksimum " + maxquantity);
+            }
+            return purchaseReceivalDetail;
+        }
+
+        public PurchaseReceivalDetail VHasNotBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail)
+        {
+            if (purchaseReceivalDetail.IsConfirmed)
             {
                 purchaseReceivalDetail.Errors.Add("Generic", "Tidak boleh sudah selesai");
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VHasBeenFinished(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail VHasBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            if (!purchaseReceivalDetail.IsFinished)
+            if (!purchaseReceivalDetail.IsConfirmed)
             {
                 purchaseReceivalDetail.Errors.Add("Generic", "Belum selesai");
-            }
-            return purchaseReceivalDetail;
-        }
-
-        public PurchaseReceivalDetail VPurchaseReceivalHasNotBeenCompleted(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService)
-        {
-            PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
-            if (purchaseReceival.IsCompleted)
-            {
-                purchaseReceivalDetail.Errors.Add("Generic", "Purchase receival sudah complete");
             }
             return purchaseReceivalDetail;
         }
@@ -148,64 +136,94 @@ namespace Validation.Validation
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+        public PurchaseReceivalDetail VHasConfirmationDate(PurchaseReceivalDetail purchaseReceivalDetail)
+        {
+            if (purchaseReceivalDetail.ConfirmationDate == null)
+            {
+                purchaseReceivalDetail.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return purchaseReceivalDetail;
+        }
+
+        public PurchaseReceivalDetail VHasNoPurchaseInvoiceDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService)
+        {
+            IList<PurchaseInvoiceDetail> purchaseInvoiceDetails = _purchaseInvoiceDetailService.GetObjectsByPurchaseReceivalDetailId(purchaseReceivalDetail.Id);
+            if (purchaseInvoiceDetails.Any())
+            {
+                purchaseReceivalDetail.Errors.Add("Generic", "Sudah memiliki purchase invoice detail");
+            }
+            return purchaseReceivalDetail;
+        }
+        
+        public PurchaseReceivalDetail VCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                                    IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
             VHasPurchaseReceival(purchaseReceivalDetail, _purchaseReceivalService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasItem(purchaseReceivalDetail, _itemService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
-            VContact(purchaseReceivalDetail, _purchaseReceivalService, _purchaseOrderService, _purchaseOrderDetailService, _contactService);
+            VHasPurchaseOrderDetail(purchaseReceivalDetail, _purchaseOrderDetailService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
-            VQuantityCreate(purchaseReceivalDetail, _purchaseOrderDetailService);
+            VPurchaseOrderDetailHasBeenConfirmed(purchaseReceivalDetail, _purchaseOrderDetailService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VPurchaseReceivalAndPurchaseOrderDetailHaveTheSamePurchaseOrder(purchaseReceivalDetail, _purchaseReceivalService, _purchaseOrderDetailService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VNonNegativeQuantity(purchaseReceivalDetail);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VUniquePurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _itemService);
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+        public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                                    IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
-            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
+            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _itemService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
-            VHasNotBeenFinished(purchaseReceivalDetail);
+            VHasNotBeenConfirmed(purchaseReceivalDetail);
             return purchaseReceivalDetail;
         }
 
         public PurchaseReceivalDetail VDeleteObject(PurchaseReceivalDetail purchaseReceivalDetail)
         {
-            VHasNotBeenFinished(purchaseReceivalDetail);
+            VHasNotBeenConfirmed(purchaseReceivalDetail);
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VFinishObject(PurchaseReceivalDetail purchaseReceivalDetail)
+        public PurchaseReceivalDetail VConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail,
+                                                     IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                                     IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
-            VHasNotBeenFinished(purchaseReceivalDetail);
-            // TODO
-            //VPurchaseOrderHasBeenFinished(purchaseOrderDetail);
+            VHasConfirmationDate(purchaseReceivalDetail);
+            if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
+            VHasNotBeenConfirmed(purchaseReceivalDetail);
+            if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
+            VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService);
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail VUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        public PurchaseReceivalDetail VUnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
+                                                       IItemService _itemService)
         {
-            VPurchaseReceivalHasNotBeenCompleted(purchaseReceivalDetail, _purchaseReceivalService);
-            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasItemQuantity(purchaseReceivalDetail, _itemService);
+            if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
+            VHasNoPurchaseInvoiceDetail(purchaseReceivalDetail, _purchaseInvoiceDetailService);
             return purchaseReceivalDetail;
         }
 
-        public bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+        public bool ValidCreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                               IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
-            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
+            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _itemService);
             return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseReceivalService _purchaseReceivalService,
-                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+        public bool ValidUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                               IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
             purchaseReceivalDetail.Errors.Clear();
-            VUpdateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
+            VUpdateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _itemService);
             return isValid(purchaseReceivalDetail);
         }
 
@@ -216,17 +234,18 @@ namespace Validation.Validation
             return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidFinishObject(PurchaseReceivalDetail purchaseReceivalDetail)
+        public bool ValidConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                       IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             purchaseReceivalDetail.Errors.Clear();
-            VFinishObject(purchaseReceivalDetail);
+            VConfirmObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService);
             return isValid(purchaseReceivalDetail);
         }
 
-        public bool ValidUnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        public bool ValidUnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IItemService _itemService)
         {
             purchaseReceivalDetail.Errors.Clear();
-            VUnfinishObject(purchaseReceivalDetail, _purchaseReceivalService, _purchaseReceivalDetailService, _itemService);
+            VUnconfirmObject(purchaseReceivalDetail, _purchaseInvoiceDetailService, _itemService);
             return isValid(purchaseReceivalDetail);
         }
 

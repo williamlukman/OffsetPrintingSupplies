@@ -37,7 +37,6 @@ namespace Data.Repository
         {
             purchaseOrder.Code = SetObjectCode();
             purchaseOrder.IsDeleted = false;
-            purchaseOrder.IsCompleted = false;
             purchaseOrder.IsConfirmed = false;
             purchaseOrder.CreatedAt = DateTime.Now;
             return Create(purchaseOrder);
@@ -67,7 +66,6 @@ namespace Data.Repository
         public PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder)
         {
             purchaseOrder.IsConfirmed = true;
-            purchaseOrder.ConfirmationDate = DateTime.Now;
             Update(purchaseOrder);
             return purchaseOrder;
         }
@@ -75,13 +73,6 @@ namespace Data.Repository
         public PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder)
         {
             purchaseOrder.IsConfirmed = false;
-            UpdateObject(purchaseOrder);
-            return purchaseOrder;
-        }
-
-        public PurchaseOrder CompleteObject(PurchaseOrder purchaseOrder)
-        {
-            purchaseOrder.IsCompleted = true;
             UpdateObject(purchaseOrder);
             return purchaseOrder;
         }

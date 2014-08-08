@@ -36,48 +36,39 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public PurchaseReceivalDetail GetObjectByPurchaseOrderDetailId(int purchaseOrderDetailId)
+        public IList<PurchaseReceivalDetail> GetObjectsByPurchaseOrderDetailId(int purchaseOrderDetailId)
         {
-            return _repository.GetObjectByPurchaseOrderDetailId(purchaseOrderDetailId);
+            return _repository.GetObjectsByPurchaseOrderDetailId(purchaseOrderDetailId);
         }
 
         public PurchaseReceivalDetail CreateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
                                                      IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService,
-                                                     IItemService _itemService, IContactService _contactService)
+                                                     IItemService _itemService)
         {
             purchaseReceivalDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(purchaseReceivalDetail, this, _purchaseReceivalService,
-                                        _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService))
-            {
-                purchaseReceivalDetail.ContactId = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId).ContactId;
-                return _repository.CreateObject(purchaseReceivalDetail);
-            }
-            else
-            {
-                return purchaseReceivalDetail;
-            }
+            return (_validator.ValidCreateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _purchaseOrderDetailService, _itemService) ?
+                    _repository.CreateObject(purchaseReceivalDetail) : purchaseReceivalDetail);
         }
 
         public PurchaseReceivalDetail CreateObject(int purchaseReceivalId, int itemId, int quantity, int purchaseOrderDetailId,
                                                     IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            PurchaseReceivalDetail prd = new PurchaseReceivalDetail
+            PurchaseReceivalDetail purchaseReceivalDetail = new PurchaseReceivalDetail
             {
                 PurchaseReceivalId = purchaseReceivalId,
                 ItemId = itemId,
                 Quantity = quantity,
                 PurchaseOrderDetailId = purchaseOrderDetailId
             };
-            return this.CreateObject(prd, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService);
+            return this.CreateObject(purchaseReceivalDetail, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
         }
 
-
-        public PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail,
-                                                    IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                    IPurchaseOrderService _purchaseOrderService, IItemService _itemService, IContactService _contactService)
+        public PurchaseReceivalDetail UpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
+                                                   IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService,
+                                                   IItemService _itemService)
         {
-            return (_validator.ValidUpdateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService, _contactService) ?
+            return (_validator.ValidUpdateObject(purchaseReceivalDetail, this, _purchaseReceivalService, _purchaseOrderDetailService, _itemService) ?
                     _repository.UpdateObject(purchaseReceivalDetail) : purchaseReceivalDetail);
         }
 
@@ -91,12 +82,14 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PurchaseReceivalDetail FinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                   IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public PurchaseReceivalDetail ConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, DateTime ConfirmationDate, IPurchaseReceivalService _purchaseReceivalService,
+                                                    IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService,
+                                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidFinishObject(purchaseReceivalDetail))
+            if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService))
             {
-                purchaseReceivalDetail = _repository.FinishObject(purchaseReceivalDetail);
+                purchaseReceivalDetail.ConfirmationDate = ConfirmationDate;
+                purchaseReceivalDetail = _repository.ConfirmObject(purchaseReceivalDetail);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
@@ -113,12 +106,12 @@ namespace Service.Service
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail UnfinishObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+        public PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                                      IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(purchaseReceivalDetail, _purchaseReceivalService, this, _itemService))
+            if (_validator.ValidUnconfirmObject(purchaseReceivalDetail, _purchaseInvoiceDetailService, _itemService))
             {
-                purchaseReceivalDetail = _repository.UnfinishObject(purchaseReceivalDetail);
+                purchaseReceivalDetail = _repository.UnconfirmObject(purchaseReceivalDetail);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
@@ -138,7 +131,6 @@ namespace Service.Service
         public PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity)
         {
             purchaseReceivalDetail.PendingInvoicedQuantity -= Quantity;
-            purchaseReceivalDetail.InvoicedQuantity += Quantity;
             if (purchaseReceivalDetail.PendingInvoicedQuantity == 0) { purchaseReceivalDetail.IsAllInvoiced = true; }
             _repository.UpdateObject(purchaseReceivalDetail);
             return purchaseReceivalDetail;
@@ -151,7 +143,6 @@ namespace Service.Service
 
             purchaseReceivalDetail.IsAllInvoiced = false;
             purchaseReceivalDetail.PendingInvoicedQuantity += Quantity;
-            purchaseReceivalDetail.InvoicedQuantity -= Quantity;
             _repository.UpdateObject(purchaseReceivalDetail);
             return purchaseReceivalDetail;
         }

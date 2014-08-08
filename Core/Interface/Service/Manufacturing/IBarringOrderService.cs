@@ -17,7 +17,7 @@ namespace Core.Interface.Service
         BarringOrder CreateObject(BarringOrder barringOrder);
         BarringOrder UpdateObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder SoftDeleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
-        BarringOrder ConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        BarringOrder ConfirmObject(BarringOrder barringOrder, DateTime ConfirmationDate, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder UnconfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder CompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder AdjustQuantity(BarringOrder barringOrder);

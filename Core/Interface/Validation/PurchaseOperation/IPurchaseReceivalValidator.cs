@@ -9,25 +9,25 @@ namespace Core.Interface.Validation
 {
     public interface IPurchaseReceivalValidator
     {
-        PurchaseReceival VContact(PurchaseReceival purchaseReceival, IContactService _contactService);
-        PurchaseReceival VReceivalDate(PurchaseReceival purchaseReceival);
+        PurchaseReceival VHasPurchaseOrder(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
+        PurchaseReceival VHasReceivalDate(PurchaseReceival purchaseReceival);
         PurchaseReceival VHasNotBeenConfirmed(PurchaseReceival purchaseReceival);
         PurchaseReceival VHasBeenConfirmed(PurchaseReceival purchaseReceival);
+        PurchaseReceival VPurchaseOrderHasBeenConfirmed(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
         PurchaseReceival VHasPurchaseReceivalDetails(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseReceival VAllDetailsHaveBeenFinished(PurchaseReceival purchaseOrder, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseReceival VAllDetailsHaveNotBeenFinished(PurchaseReceival purchaseOrder, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IContactService _contactService);
-        PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, IContactService _contactService);
+        PurchaseReceival VHasNoPurchaseReceivalDetail(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        PurchaseReceival VHasConfirmationDate(PurchaseReceival purchaseReceival);
+        PurchaseReceival VHasNoPurchaseInvoice(PurchaseReceival purchaseReceival, IPurchaseInvoiceService _purchaseInvoiceService);
+        PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
+        PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
         PurchaseReceival VDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseReceival VConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseReceival VUnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
-        PurchaseReceival VCompleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        bool ValidCreateObject(PurchaseReceival purchaseReceival, IContactService _contactService);
-        bool ValidUpdateObject(PurchaseReceival purchaseReceival, IContactService _contactService);
+        PurchaseReceival VUnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseInvoiceService _purchaseInvoiceService);
+        bool ValidCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
+        bool ValidUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
         bool ValidDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         bool ValidConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        bool ValidUnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
-        bool ValidCompleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        bool ValidUnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseInvoiceService _purchaseInvoiceService);
         bool isValid(PurchaseReceival purchaseReceival);
         string PrintError(PurchaseReceival purchaseReceival);
     }

@@ -13,17 +13,19 @@ namespace Core.Interface.Service
         IPurchaseReceivalValidator GetValidator();
         IList<PurchaseReceival> GetAll();
         PurchaseReceival GetObjectById(int Id);
-        IList<PurchaseReceival> GetObjectsByContactId(int contactId);
-        PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, IContactService _contactService);
-        PurchaseReceival CreateObject(int warehouseId, int contactId, DateTime ReceivalDate, IContactService _contactService);
-        PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, IContactService _contactService);
+        IList<PurchaseReceival> GetObjectsByPurchaseOrderId(int purchaseOrderId);
+        PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
+        PurchaseReceival CreateObject(int warehouseId, int purchaseOrderId, DateTime ReceivalDate, IPurchaseOrderService _purchaseOrderService);
+        PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService);
         PurchaseReceival SoftDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         bool DeleteObject(int Id);
-        PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _prds,
-                                       IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService);
-        PurchaseReceival UnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _prds,
-                                         IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService);
-        PurchaseReceival CompleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, DateTime ConfirmationDate, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                       IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService,
+                                       IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        PurchaseReceival UnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                         IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
+                                         IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService,
+                                         IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         PurchaseReceival CheckAndSetInvoiceComplete(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseReceival UnsetInvoiceComplete(PurchaseReceival purchaseReceival);
     }

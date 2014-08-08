@@ -32,11 +32,11 @@ namespace Core.Interface.Service
         BarringOrderDetail PullOffTestObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail QCAndMarkObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail PackageObject(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
+        BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail, DateTime RejectedDate, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                         IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrderDetail UndoRejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                             IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
-        BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
+        BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, DateTime FinishedDate, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                         IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrderDetail UnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                           IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);

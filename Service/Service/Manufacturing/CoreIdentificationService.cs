@@ -103,12 +103,13 @@ namespace Service.Service
             return coreIdentification;
         }
 
-        public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
+        public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
                                                 IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
         {
             if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService))
             {
+                coreIdentification.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(coreIdentification);
             }
             return coreIdentification;

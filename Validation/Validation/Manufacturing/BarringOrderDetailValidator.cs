@@ -147,11 +147,29 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
+        public BarringOrderDetail VHasFinishedDate(BarringOrderDetail barringOrderDetail)
+        {
+            if (barringOrderDetail.FinishedDate == null)
+            {
+                barringOrderDetail.Errors.Add("FinishedDate", "Tidak boleh kosong");
+            }
+            return barringOrderDetail;
+        }
+
         public BarringOrderDetail VHasBeenRejected(BarringOrderDetail barringOrderDetail)
         {
             if (!barringOrderDetail.IsRejected)
             {
                 barringOrderDetail.Errors.Add("Generic", "Belum di reject");
+            }
+            return barringOrderDetail;
+        }
+
+        public BarringOrderDetail VHasRejectedDate(BarringOrderDetail barringOrderDetail)
+        {
+            if (barringOrderDetail.RejectedDate == null)
+            {
+                barringOrderDetail.Errors.Add("RejectedDate", "Tidak boleh kosong");
             }
             return barringOrderDetail;
         }
@@ -449,6 +467,8 @@ namespace Validation.Validation
 
         public BarringOrderDetail VFinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
+            VHasFinishedDate(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VBarringOrderHasBeenConfirmed(barringOrderDetail, _barringOrderService);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VHasNotBeenFinished(barringOrderDetail);
@@ -469,6 +489,8 @@ namespace Validation.Validation
 
         public BarringOrderDetail VRejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
+            VHasRejectedDate(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VHasNotBeenRejected(barringOrderDetail);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VBarringOrderHasNotBeenCompleted(barringOrderDetail, _barringOrderService);

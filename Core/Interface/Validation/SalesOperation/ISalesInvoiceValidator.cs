@@ -15,8 +15,7 @@ namespace Core.Interface.Validation
         SalesInvoice VDeliveryOrderHasNotBeenInvoiceCompleted(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
         SalesInvoice VHasInvoiceDate(SalesInvoice salesInvoice);
         SalesInvoice VHasDueDate(SalesInvoice salesInvoice);
-        SalesInvoice VHasTaxGreaterOrEqualZero(SalesInvoice salesInvoice);
-        SalesInvoice VHasDiscountGreaterOrEqualZero(SalesInvoice salesInvoice);
+        SalesInvoice VHasDiscountBetweenZeroAndHundred(SalesInvoice salesInvoice);
         SalesInvoice VHasReceiptVoucherDetails(SalesInvoice salesInvoice, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
         SalesInvoice VHasNotBeenConfirmed(SalesInvoice salesInvoice);
         SalesInvoice VHasBeenConfirmed(SalesInvoice salesInvoice);
@@ -27,6 +26,7 @@ namespace Core.Interface.Validation
         SalesInvoice VCreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
         SalesInvoice VUpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService);
         SalesInvoice VDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
+        SalesInvoice VHasConfirmationDate(SalesInvoice salesInvoice);
         SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                        IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService);
         SalesInvoice VUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);

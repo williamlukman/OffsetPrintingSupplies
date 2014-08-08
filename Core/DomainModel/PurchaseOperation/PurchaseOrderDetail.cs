@@ -14,15 +14,15 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
 
         public int Quantity { get; set; }
+        // TODO
+        // public bool IsAllReceived { get; set; }
+        // public int PendingReceivalQuantity { get; set; }
         public decimal Price { get; set; }
 
-        // TODO IsConfirmed
-        public bool IsFinished { get; set; }
-        public Nullable<DateTime> FinishDate { get; set; }
-
+        public bool IsConfirmed { get; set; }
+        public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
 

@@ -38,7 +38,7 @@ namespace Data.Repository
                               select obj.Code).FirstOrDefault();
             }
             purchaseOrderDetail.Code = SetObjectCode(ParentCode);
-            purchaseOrderDetail.IsFinished = false;
+            purchaseOrderDetail.IsConfirmed = false;
             purchaseOrderDetail.IsDeleted = false;
             purchaseOrderDetail.CreatedAt = DateTime.Now;
             return Create(purchaseOrderDetail);
@@ -65,18 +65,17 @@ namespace Data.Repository
             return (Delete(pod) == 1) ? true : false;
         }
 
-        public PurchaseOrderDetail FinishObject(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            purchaseOrderDetail.IsFinished = true;
-            purchaseOrderDetail.FinishDate = DateTime.Now;
+            purchaseOrderDetail.IsConfirmed = true;
             Update(purchaseOrderDetail);
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail UnfinishObject(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            purchaseOrderDetail.IsFinished = false;
-            purchaseOrderDetail.FinishDate = null;
+            purchaseOrderDetail.IsConfirmed = false;
+            purchaseOrderDetail.ConfirmationDate = null;
             UpdateObject(purchaseOrderDetail);
             return purchaseOrderDetail;
         }

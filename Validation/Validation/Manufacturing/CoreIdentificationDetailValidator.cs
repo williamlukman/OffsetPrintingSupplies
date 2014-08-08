@@ -191,6 +191,15 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail VHasFinishedDate(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (coreIdentificationDetail.FinishedDate == null)
+            {
+                coreIdentificationDetail.Errors.Add("FinishedDate", "Tidak boleh kosong");
+            }
+            return coreIdentificationDetail;
+        }
+
         public CoreIdentificationDetail VQuantityIsInStockForContact(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
@@ -240,6 +249,8 @@ namespace Validation.Validation
         public CoreIdentificationDetail VFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                           ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
+            VHasFinishedDate(coreIdentificationDetail);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VCoreIdentificationHasBeenConfirmed(coreIdentificationDetail, _coreIdentificationService);
             return coreIdentificationDetail;
         }

@@ -71,29 +71,37 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                    IStockMutationService _stockMutationService, IItemService _itemService)
+        public PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder, DateTime ConfirmationDate, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                    IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                    IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidConfirmObject(purchaseOrder, _purchaseOrderDetailService))
             {
+                IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
+                foreach (var detail in purchaseOrderDetails)
+                {
+                    _purchaseOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                }
+                purchaseOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(purchaseOrder);
             }
             return purchaseOrder;
         }
 
-        public PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                             IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService, IItemService _itemService)
+        public PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalService _purchaseReceivalService,
+                                             IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService,
+                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(purchaseOrder, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService))
+            if (_validator.ValidUnconfirmObject(purchaseOrder, _purchaseReceivalService))
             {
+                IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
+                foreach (var detail in purchaseOrderDetails)
+                {
+                    _purchaseOrderDetailService.UnconfirmObject(detail, _purchaseReceivalDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                }
                 _repository.UnconfirmObject(purchaseOrder);
             }
             return purchaseOrder;
-        }
-
-        public PurchaseOrder CompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
-        {
-            return (purchaseOrder = _validator.ValidCompleteObject(purchaseOrder, _purchaseOrderDetailService) ? _repository.CompleteObject(purchaseOrder) : purchaseOrder);
         }
     }
 }

@@ -195,6 +195,15 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VCompoundUsageIsLargerThanZero(RecoveryOrderDetail recoveryOrderDetail)
+        {
+            if (recoveryOrderDetail.CompoundUsage <= 0)
+            {
+                recoveryOrderDetail.Errors.Add("CompoundUsage", "Tidak boleh nol atau negatif");
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VHasNotBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail)
         {
             if (recoveryOrderDetail.IsVulcanized)
@@ -267,40 +276,6 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VNoAccessoriesOrAccessoriesHaveNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            if (recoveryOrderDetail.HasAccessory)
-            {
-                IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
-                foreach (var accessory in accessories)
-                {
-                    if (accessory.IsFinished)
-                    {
-                        recoveryOrderDetail.Errors.Add("Generic", "Accessories sudah selesai");
-                        return recoveryOrderDetail;
-                    }
-                }
-            }
-            return recoveryOrderDetail;
-        }
-
-        public RecoveryOrderDetail VAllAccessoriesHaveBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            if (recoveryOrderDetail.HasAccessory)
-            {
-                IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
-                foreach (var accessory in accessories)
-                {
-                    if (!accessory.IsFinished)
-                    {
-                        recoveryOrderDetail.Errors.Add("Generic", "Accessories belum selesai");
-                        return recoveryOrderDetail;
-                    }
-                }
-            }
-            return recoveryOrderDetail;
-        }
-
         public RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
             RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
@@ -358,7 +333,7 @@ namespace Validation.Validation
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VRecoveryOrderHasNotBeenConfirmed(recoveryOrderDetail, _recoveryOrderService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VNoAccessoriesOrAccessoriesHaveNotBeenFinished(recoveryOrderDetail, _recoveryAccessoryDetailService);
+            //VHasNoRecoveryAccessoryDetails(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 
@@ -372,7 +347,7 @@ namespace Validation.Validation
 
         public RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
-            VNoAccessoriesOrAccessoriesHaveNotBeenFinished(recoveryOrderDetail, _recoveryAccessoryDetailService);
+            // VNoAccessoriesOrAccessoriesHaveNotBeenFinished(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 
@@ -401,6 +376,8 @@ namespace Validation.Validation
             VHasBeenStrippedAndGlued(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            VCompoundUsageIsLargerThanZero(recoveryOrderDetail);
             return recoveryOrderDetail;
         }
 
@@ -464,15 +441,24 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VHasFinishedDate(RecoveryOrderDetail recoveryOrderDetail)
+        {
+            if (recoveryOrderDetail.FinishedDate == null)
+            {
+                recoveryOrderDetail.Errors.Add("FinishedDate", "Tidak boleh kosong");
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VFinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
+            VHasFinishedDate(recoveryOrderDetail);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenFinished(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasBeenPackaged(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
-            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VAllAccessoriesHaveBeenFinished(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 

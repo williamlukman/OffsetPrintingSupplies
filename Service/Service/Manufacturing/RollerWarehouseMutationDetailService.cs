@@ -85,20 +85,17 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public RollerWarehouseMutationDetail FinishObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
+        public RollerWarehouseMutationDetail ConfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, DateTime ConfirmationDate, IRollerWarehouseMutationService _rollerWarehouseMutationService,
                                                          IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService,
                                                          ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService)
         {
-            if (_validator.ValidFinishObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService))
             {
                 RollerWarehouseMutation rollerWarehouseMutation = _rollerWarehouseMutationService.GetObjectById(rollerWarehouseMutationDetail.RollerWarehouseMutationId);
 
-                _repository.FinishObject(rollerWarehouseMutationDetail);
-                if (_rollerWarehouseMutationService.GetValidator().ValidCompleteObject(rollerWarehouseMutation, this))
-                {
-                    _rollerWarehouseMutationService.CompleteObject(rollerWarehouseMutation, this);
-                }
-
+                rollerWarehouseMutationDetail.ConfirmationDate = ConfirmationDate;
+                _repository.ConfirmObject(rollerWarehouseMutationDetail);
+                
                 // Set IsDelivered = true
                 CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(rollerWarehouseMutationDetail.CoreIdentificationDetailId);
                 _coreIdentificationDetailService.DeliverObject(coreIdentificationDetail, _coreIdentificationService, this);
@@ -118,13 +115,13 @@ namespace Service.Service
             return rollerWarehouseMutationDetail;
         }
 
-        public RollerWarehouseMutationDetail UnfinishObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
+        public RollerWarehouseMutationDetail UnconfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
                                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService,
                                                             ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService)
         {
-            if (_validator.ValidUnfinishObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidUnconfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService))
             {
-                _repository.UnfinishObject(rollerWarehouseMutationDetail);
+                _repository.UnconfirmObject(rollerWarehouseMutationDetail);
 
                 // Set IsDelivered = false
                 CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(rollerWarehouseMutationDetail.CoreIdentificationDetailId);

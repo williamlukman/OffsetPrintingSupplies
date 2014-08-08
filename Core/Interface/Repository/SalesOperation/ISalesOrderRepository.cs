@@ -9,6 +9,8 @@ namespace Core.Interface.Repository
     public interface ISalesOrderRepository : IRepository<SalesOrder>
     {
         IList<SalesOrder> GetAll();
+        // TODO
+        // IList<SalesOrder> GetConfirmedObjects();
         SalesOrder GetObjectById(int Id);
         IList<SalesOrder> GetObjectsByContactId(int contactId);
         SalesOrder CreateObject(SalesOrder salesOrder);
@@ -17,7 +19,6 @@ namespace Core.Interface.Repository
         bool DeleteObject(int Id);
         SalesOrder ConfirmObject(SalesOrder salesOrder);
         SalesOrder UnconfirmObject(SalesOrder salesOrder);
-        SalesOrder CompleteObject(SalesOrder salesOrder);
         string SetObjectCode();
     }
 }

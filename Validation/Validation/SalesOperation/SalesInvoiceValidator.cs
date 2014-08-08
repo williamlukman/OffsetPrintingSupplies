@@ -69,20 +69,11 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
-        public SalesInvoice VHasTaxGreaterOrEqualZero(SalesInvoice salesInvoice)
+        public SalesInvoice VHasDiscountBetweenZeroAndHundred(SalesInvoice salesInvoice)
         {
-            if (salesInvoice.Tax < 0)
+            if (salesInvoice.Discount < 0 || salesInvoice.Discount > 100)
             {
-                salesInvoice.Errors.Add("Tax", "Harus lebih besar sama dengan 0");
-            }
-            return salesInvoice;
-        }
-
-        public SalesInvoice VHasDiscountGreaterOrEqualZero(SalesInvoice salesInvoice)
-        {
-            if (salesInvoice.Discount < 0)
-            {
-                salesInvoice.Errors.Add("Discount", "Harus lebih besar sama dengan 0");
+                salesInvoice.Errors.Add("Discount", "Harus antara 0 dan 100");
             }
             return salesInvoice;
         }
@@ -187,9 +178,7 @@ namespace Validation.Validation
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VHasDueDate(salesInvoice);
             if (!isValid(salesInvoice)) { return salesInvoice; }
-            VHasTaxGreaterOrEqualZero(salesInvoice);
-            if (!isValid(salesInvoice)) { return salesInvoice; }
-            VHasDiscountGreaterOrEqualZero(salesInvoice);
+            VHasDiscountBetweenZeroAndHundred(salesInvoice);
             return salesInvoice;
         }
 
@@ -215,9 +204,20 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
+        public SalesInvoice VHasConfirmationDate(SalesInvoice obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                               IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
+            VHasConfirmationDate(salesInvoice);
+            if (!isValid(salesInvoice)) { return salesInvoice; }
             VDeliveryOrderHasNotBeenInvoiceCompleted(salesInvoice, _deliveryOrderService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VHasNotBeenDeleted(salesInvoice);

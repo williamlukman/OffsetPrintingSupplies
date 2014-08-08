@@ -138,11 +138,12 @@ namespace Service.Service
             return (barringOrderDetail = _validator.ValidPackageObject(barringOrderDetail) ? _repository.PackageObject(barringOrderDetail) : barringOrderDetail);
         }
 
-        public BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
+        public BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail, DateTime RejectedDate, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                                IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidRejectObject(barringOrderDetail, _barringOrderService))
             {
+                barringOrderDetail.RejectedDate = RejectedDate;
                 _repository.RejectObject(barringOrderDetail);
 
                 // add barring order reject quantity
@@ -233,11 +234,12 @@ namespace Service.Service
             return barringOrderDetail;
         }
 
-        public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
+        public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, DateTime FinishedDate, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                                IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidFinishObject(barringOrderDetail, _barringOrderService))
             {
+                barringOrderDetail.FinishedDate = FinishedDate;
                 _repository.FinishObject(barringOrderDetail);
 
                 // add barring order quantity final
@@ -291,13 +293,13 @@ namespace Service.Service
         {
             if (_validator.ValidUnfinishObject(barringOrderDetail, _barringOrderService))
             {
-                _repository.FinishObject(barringOrderDetail);
+                _repository.UnfinishObject(barringOrderDetail);
                 // deduce barring order quantity final
                 BarringOrder barringOrder = _barringOrderService.GetObjectById(barringOrderDetail.BarringOrderId);
                 barringOrder.QuantityFinal -= 1;
                 _barringOrderService.AdjustQuantity(barringOrder);
 
-                // reverse stock mutation FinishObject
+                // reverse stock mutation
                 Barring barring = _barringService.GetObjectById(barringOrderDetail.BarringId);
                 WarehouseItem warehouseBarring = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, barring.Id);
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseBarring);

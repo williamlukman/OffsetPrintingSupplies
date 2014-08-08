@@ -125,8 +125,19 @@ namespace Validation.Validation
             return purchaseInvoiceDetail;
         }
 
+        public PurchaseInvoiceDetail VHasConfirmationDate(PurchaseInvoiceDetail obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public PurchaseInvoiceDetail VConfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
+            VHasConfirmationDate(purchaseInvoiceDetail);
+            if (!isValid(purchaseInvoiceDetail)) { return purchaseInvoiceDetail; }
             VHasNotBeenConfirmed(purchaseInvoiceDetail);
             if (!isValid(purchaseInvoiceDetail)) { return purchaseInvoiceDetail; }
             VQuantityIsLessThanOrEqualPendingInvoiceQuantity(purchaseInvoiceDetail, _purchaseReceivalDetailService);

@@ -25,7 +25,7 @@ namespace Core.DomainModel
         public bool IsDelivered { get; set; }
         public bool IsRollerBuilt { get; set; }
         public bool IsFinished { get; set; }
-        public Nullable<DateTime> FinishDate { get; set; }
+        public Nullable<DateTime> FinishedDate { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

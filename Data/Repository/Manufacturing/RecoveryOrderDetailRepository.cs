@@ -168,7 +168,6 @@ namespace Data.Repository
         public RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail)
         {
             recoveryOrderDetail.IsRejected = true;
-            recoveryOrderDetail.UpdatedAt = DateTime.Now;
             Update(recoveryOrderDetail);
             return recoveryOrderDetail;
         }
@@ -176,15 +175,14 @@ namespace Data.Repository
         public RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail)
         {
             recoveryOrderDetail.IsRejected = false;
-            recoveryOrderDetail.UpdatedAt = DateTime.Now;
-            Update(recoveryOrderDetail);
+            recoveryOrderDetail.RejectedDate = null;
+            UpdateObject(recoveryOrderDetail);
             return recoveryOrderDetail;
         }
 
         public RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail)
         {
             recoveryOrderDetail.IsFinished = true;
-            recoveryOrderDetail.FinishedDate = DateTime.Now;
             Update(recoveryOrderDetail);
             return recoveryOrderDetail;
         }

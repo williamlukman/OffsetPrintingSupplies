@@ -22,6 +22,7 @@ namespace Core.Interface.Validation
         PaymentVoucherDetail VCreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail VUpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail VDeleteObject(PaymentVoucherDetail paymentVoucherDetail);
+        PaymentVoucherDetail VHasConfirmationDate(PaymentVoucherDetail paymentVoucherDetail);
         PaymentVoucherDetail VConfirmObject(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService);
         PaymentVoucherDetail VUnconfirmObject(PaymentVoucherDetail paymentVoucherDetail);
         bool ValidCreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService);

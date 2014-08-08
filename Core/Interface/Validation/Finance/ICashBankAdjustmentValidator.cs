@@ -18,6 +18,7 @@ namespace Core.Interface.Validation
         CashBankAdjustment VCreateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         CashBankAdjustment VUpdateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         CashBankAdjustment VDeleteObject(CashBankAdjustment cashBankAdjustment);
+        CashBankAdjustment VHasConfirmationDate(CashBankAdjustment cashBankAdjusment);
         CashBankAdjustment VConfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         CashBankAdjustment VUnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         bool ValidCreateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);

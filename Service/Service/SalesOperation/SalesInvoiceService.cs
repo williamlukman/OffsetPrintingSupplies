@@ -47,14 +47,14 @@ namespace Service.Service
             return (_validator.ValidCreateObject(salesInvoice, _deliveryOrderService) ? _repository.CreateObject(salesInvoice) : salesInvoice);
         }
 
-        public SalesInvoice CreateObject(int deliveryOrderId, string description, int discount, int tax, DateTime InvoiceDate, DateTime DueDate, IDeliveryOrderService _deliveryOrderService)
+        public SalesInvoice CreateObject(int deliveryOrderId, string description, int discount, bool isTaxable, DateTime InvoiceDate, DateTime DueDate, IDeliveryOrderService _deliveryOrderService)
         {
             SalesInvoice salesInvoice = new SalesInvoice
             {
                 DeliveryOrderId = deliveryOrderId,
                 Description = description,
                 Discount = discount,
-                Tax = tax,
+                IsTaxable = isTaxable,
                 InvoiceDate = InvoiceDate,
                 DueDate = DueDate
             };
@@ -76,7 +76,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesInvoice ConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
+        public SalesInvoice ConfirmObject(SalesInvoice salesInvoice, DateTime ConfirmationDate, ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService,
                                              IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService)
         {
             if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService))
@@ -86,16 +86,18 @@ namespace Service.Service
                 IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
                 foreach (var detail in details)
                 {
-                    _salesInvoiceDetailService.ConfirmObject(detail, _deliveryOrderDetailService);
+                    _salesInvoiceDetailService.ConfirmObject(detail,ConfirmationDate, _deliveryOrderDetailService);
                 }
                 salesInvoice = CalculateAmountReceivable(salesInvoice, _salesInvoiceDetailService);
 
                 // confirm object
                 // create receivable
+                salesInvoice.ConfirmationDate = ConfirmationDate;
                 salesInvoice = _repository.ConfirmObject(salesInvoice);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
-                Receivable receivable = _receivableService.CreateObject(deliveryOrder.ContactId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.AmountReceivable, salesInvoice.DueDate);
+                SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+                Receivable receivable = _receivableService.CreateObject(salesOrder.ContactId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.AmountReceivable, salesInvoice.DueDate);
             }
             return salesInvoice;
         }
@@ -128,7 +130,9 @@ namespace Service.Service
             {
                 AmountReceivable += detail.Amount;
             }
-            salesInvoice.AmountReceivable = AmountReceivable - salesInvoice.Discount - salesInvoice.Tax;
+            decimal Discount = salesInvoice.Discount / 100 * AmountReceivable;
+            decimal TaxableAmount = AmountReceivable - Discount;
+            salesInvoice.AmountReceivable = TaxableAmount * (decimal)1.1; // 10% Tax
             _repository.Update(salesInvoice);
             return salesInvoice;
         }

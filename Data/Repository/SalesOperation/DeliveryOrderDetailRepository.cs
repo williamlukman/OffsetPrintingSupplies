@@ -41,7 +41,7 @@ namespace Data.Repository
                               select obj.Code).FirstOrDefault();
             }
             deliveryOrderDetail.Code = SetObjectCode(ParentCode);
-            deliveryOrderDetail.IsFinished = false;
+            deliveryOrderDetail.IsConfirmed = false;
             deliveryOrderDetail.IsDeleted = false;
             deliveryOrderDetail.IsAllInvoiced = false;
             deliveryOrderDetail.InvoicedQuantity = 0;
@@ -71,18 +71,17 @@ namespace Data.Repository
             return (Delete(dod) == 1) ? true : false;
         }
 
-        public DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail)
+        public DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail)
         {
-            deliveryOrderDetail.IsFinished = true;
-            deliveryOrderDetail.FinishDate = DateTime.Now;
+            deliveryOrderDetail.IsConfirmed = true;
             Update(deliveryOrderDetail);
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail UnfinishObject(DeliveryOrderDetail deliveryOrderDetail)
+        public DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail)
         {
-            deliveryOrderDetail.IsFinished = false;
-            deliveryOrderDetail.FinishDate = null;
+            deliveryOrderDetail.IsConfirmed = false;
+            deliveryOrderDetail.ConfirmationDate = null;
             UpdateObject(deliveryOrderDetail);
             return deliveryOrderDetail;
         }

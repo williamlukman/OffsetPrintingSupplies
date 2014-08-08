@@ -91,34 +91,6 @@ namespace Validation.Validation
             return stockAdjustment;
         }
 
-        public StockAdjustment VAllDetailsHaveBeenFinished(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
-        {
-            IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-            foreach (var detail in details)
-            {
-                if (!detail.IsFinished)
-                {
-                    stockAdjustment.Errors.Add("Generic", "Detail masih belum selesai");
-                    return stockAdjustment;
-                }
-            }
-            return stockAdjustment;
-        }
-
-        public StockAdjustment VAllDetailsHaveNotBeenFinished(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
-        {
-            IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
-            foreach (var detail in details)
-            {
-                if (detail.IsFinished)
-                {
-                    stockAdjustment.Errors.Add("Generic", "Detail sudah selesai");
-                    return stockAdjustment;
-                }
-            }
-            return stockAdjustment;
-        }
-
         public StockAdjustment VCreateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService)
         {
             VAdjustmentDate(stockAdjustment);
@@ -141,9 +113,20 @@ namespace Validation.Validation
             return stockAdjustment;
         }
 
+        public StockAdjustment VHasConfirmationDate(StockAdjustment obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public StockAdjustment VConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            VHasConfirmationDate(stockAdjustment);
+            if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VHasNotBeenConfirmed(stockAdjustment);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VHasStockAdjustmentDetails(stockAdjustment, _stockAdjustmentDetailService);
@@ -156,14 +139,6 @@ namespace Validation.Validation
                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasBeenConfirmed(stockAdjustment);
-            if (!isValid(stockAdjustment)) { return stockAdjustment; }
-            VAllDetailsHaveNotBeenFinished(stockAdjustment, _stockAdjustmentDetailService);
-            return stockAdjustment;
-        }
-
-        public StockAdjustment VCompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
-        {
-            VAllDetailsHaveBeenFinished(stockAdjustment, _stockAdjustmentDetailService);
             return stockAdjustment;
         }
 
@@ -200,13 +175,6 @@ namespace Validation.Validation
         {
             stockAdjustment.Errors.Clear();
             VUnconfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
-            return isValid(stockAdjustment);
-        }
-
-        public bool ValidCompleteObject(StockAdjustment stockAdjustment, IStockAdjustmentDetailService _stockAdjustmentDetailService)
-        {
-            stockAdjustment.Errors.Clear();
-            VCompleteObject(stockAdjustment, _stockAdjustmentDetailService);
             return isValid(stockAdjustment);
         }
 

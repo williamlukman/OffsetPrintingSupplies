@@ -19,10 +19,12 @@ namespace Core.Interface.Service
         SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder SoftDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         bool DeleteObject(int Id);
-        SalesOrder ConfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _sods,
-                                    IStockMutationService _stockMutationService, IItemService _itemService);
+        SalesOrder ConfirmObject(SalesOrder salesOrder, DateTime ConfirmationDate, ISalesOrderDetailService _salesOrderDetailService,
+                                 IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                 IWarehouseItemService _warehouseItemService);
         SalesOrder UnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,
-                                    IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService);
-        SalesOrder CompleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
+                                   IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                   IStockMutationService _stockMutationService,
+                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
     }
 }

@@ -69,7 +69,6 @@ namespace Data.Repository
         public BarringOrder ConfirmObject(BarringOrder barringOrder)
         {
             barringOrder.IsConfirmed = true;
-            barringOrder.ConfirmationDate = DateTime.Now;
             Update(barringOrder);
             return barringOrder;
         }
@@ -78,8 +77,7 @@ namespace Data.Repository
         {
             barringOrder.IsConfirmed = false;
             barringOrder.ConfirmationDate = null;
-            barringOrder.UpdatedAt = DateTime.Now;
-            Update(barringOrder);
+            UpdateObject(barringOrder);
             return barringOrder;
         }
 

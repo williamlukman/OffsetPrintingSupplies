@@ -14,8 +14,8 @@ namespace Core.Interface.Repository
         SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail SoftDeleteObject(SalesOrderDetail salesOrderDetail);
         bool DeleteObject(int Id);
-        SalesOrderDetail FinishObject(SalesOrderDetail salesOrderDetail);
-        SalesOrderDetail UnfinishObject(SalesOrderDetail salesOrderDetail);
+        SalesOrderDetail ConfirmObject(SalesOrderDetail salesOrderDetail);
+        SalesOrderDetail UnconfirmObject(SalesOrderDetail salesOrderDetail);
         string SetObjectCode(string ParentCode);
     }
 }

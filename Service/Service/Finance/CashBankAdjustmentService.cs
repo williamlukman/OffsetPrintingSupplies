@@ -71,7 +71,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, ICashMutationService _cashMutationService, ICashBankService _cashBankService)
+        public CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService)
         {
             if (_validator.ValidConfirmObject(cashBankAdjustment, _cashBankService))
             {
@@ -79,6 +79,7 @@ namespace Service.Service
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForCashBankAdjustment(cashBankAdjustment, cashBank);
                 // cashBank.Amount += cashBankAdjustment.Amount;
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                cashBankAdjustment.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(cashBankAdjustment);
             }
             return cashBankAdjustment;

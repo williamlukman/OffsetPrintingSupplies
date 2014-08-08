@@ -25,12 +25,6 @@ namespace Core.DomainModel
         public ICollection<CoreIdentification> CoreIdentifications { get; set; }
         public ICollection<BarringOrder> BarringOrders { get; set; }
         public ICollection<SalesOrder> SalesOrders { get; set; }
-        public ICollection<SalesOrderDetail> SalesOrderDetails { get; set; }
-        public ICollection<DeliveryOrder> DeliveryOrders { get; set; }
-        public ICollection<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
-        public ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
-        public ICollection<PurchaseReceival> PurchaseReceivals { get; set; }
-        public ICollection<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
     }
 }

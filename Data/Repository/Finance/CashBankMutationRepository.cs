@@ -80,7 +80,6 @@ namespace Data.Repository
         public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation)
         {
             cashBankMutation.IsConfirmed = true;
-            cashBankMutation.ConfirmationDate = DateTime.Now;
             Update(cashBankMutation);
             return cashBankMutation;
         }

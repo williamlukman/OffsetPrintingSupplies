@@ -13,8 +13,8 @@ namespace Core.DomainModel
         public string Code { get; set; }
 
         public decimal AmountPayable { get; set; }
-        public decimal Discount { get; set; }
-        public decimal Tax { get; set; }
+        public decimal Discount { get; set; } // 0 - 100 %
+        public bool IsTaxable { get; set; } // 10 %
         
         public DateTime InvoiceDate { get; set; }
         public DateTime DueDate { get; set; }

@@ -16,19 +16,19 @@ namespace Core.Interface.Service
         IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId);
         DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                         ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService);
+                                         ISalesOrderService _salesOrderService, IItemService _itemService);
         DeliveryOrderDetail CreateObject(int deliveryOrderId, int itemId, int quantity, int salesOrderDetailId,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                         ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService);
+                                         ISalesOrderService _salesOrderService, IItemService _itemService);
         DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                         ISalesOrderService _salesOrderService, IItemService _itemService, IContactService _contactService);
+                                         ISalesOrderService _salesOrderService, IItemService _itemService);
         DeliveryOrderDetail SoftDeleteObject(DeliveryOrderDetail deliveryOrderDetail);
         bool DeleteObject(int Id);
-        DeliveryOrderDetail FinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
+        DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail, DateTime ConfirmationDate, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                 IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        DeliveryOrderDetail UnfinishObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IStockMutationService _stockMutationService,
-                                           IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService,
+                                            IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity);
         DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity, IDeliveryOrderService _deliveryOrderService);
     }

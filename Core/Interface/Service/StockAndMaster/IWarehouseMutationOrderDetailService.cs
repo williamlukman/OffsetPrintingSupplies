@@ -21,9 +21,9 @@ namespace Core.Interface.Service
         WarehouseMutationOrderDetail UpdateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                   IItemService _itemService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationOrderDetail SoftDeleteObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService);
-        WarehouseMutationOrderDetail FinishObject(WarehouseMutationOrderDetail WarehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail WarehouseMutationOrderDetail, DateTime ConfirmationDate, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
-        WarehouseMutationOrderDetail UnfinishObject(WarehouseMutationOrderDetail WarehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail WarehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
         bool DeleteObject(int Id);
     }

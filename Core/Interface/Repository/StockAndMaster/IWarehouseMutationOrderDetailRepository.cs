@@ -14,8 +14,8 @@ namespace Core.Interface.Repository
         WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         WarehouseMutationOrderDetail UpdateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         WarehouseMutationOrderDetail SoftDeleteObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
-        WarehouseMutationOrderDetail FinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
-        WarehouseMutationOrderDetail UnfinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
+        WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
+        WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         bool DeleteObject(int Id);
     }
 }

@@ -16,12 +16,10 @@ namespace Core.DomainModel
         public int Quantity { get; set; }
         public decimal Price { get; set; }
 
-        public bool IsFinished { get; set; }
-        public Nullable<DateTime> FinishDate { get; set; }
-
+        public bool IsConfirmed { get; set; }
+        public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
 

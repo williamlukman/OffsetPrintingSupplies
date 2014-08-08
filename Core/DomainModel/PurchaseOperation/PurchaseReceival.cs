@@ -9,13 +9,12 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
-        public int ContactId { get; set; }
+        public int PurchaseOrderId { get; set; }
         public DateTime ReceivalDate { get; set; }
         public int WarehouseId { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
-        public bool IsCompleted { get; set; }
         public bool IsInvoiceCompleted { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

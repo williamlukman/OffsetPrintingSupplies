@@ -24,6 +24,7 @@ namespace Core.Interface.Validation
         PurchaseInvoiceDetail VUpdateObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                             IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseInvoiceDetail VDeleteObject(PurchaseInvoiceDetail purchaseInvoiceDetail);
+        PurchaseInvoiceDetail VHasConfirmationDate(PurchaseInvoiceDetail purchaseInvoiceDetail);
         PurchaseInvoiceDetail VConfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                              IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseInvoiceDetail VUnconfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail);

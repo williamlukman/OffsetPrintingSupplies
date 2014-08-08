@@ -79,18 +79,15 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public WarehouseMutationOrderDetail FinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, DateTime ConfirmationDate, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                          IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
-            if (_validator.ValidFinishObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
             {
                 WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
 
-                _repository.FinishObject(warehouseMutationOrderDetail);
-                if (_warehouseMutationOrderService.GetValidator().ValidCompleteObject(warehouseMutationOrder, this))
-                {
-                    _warehouseMutationOrderService.CompleteObject(warehouseMutationOrder, this);
-                }
+                warehouseMutationOrderDetail.ConfirmationDate = ConfirmationDate;
+                _repository.ConfirmObject(warehouseMutationOrderDetail);
 
                 // deduce warehouseFrom item
                 // add warehouseTo item
@@ -106,12 +103,12 @@ namespace Service.Service
             return warehouseMutationOrderDetail;
         }
 
-        public WarehouseMutationOrderDetail UnfinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
-            if (_validator.ValidUnfinishObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidUnconfirmObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
             {
-                _repository.UnfinishObject(warehouseMutationOrderDetail);
+                _repository.UnconfirmObject(warehouseMutationOrderDetail);
 
                 // reverse mutate item in warehousefrom and warehouseto
                 WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);

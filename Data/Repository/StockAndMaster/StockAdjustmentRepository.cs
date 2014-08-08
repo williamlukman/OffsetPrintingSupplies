@@ -34,7 +34,6 @@ namespace Data.Repository
             stockAdjustment.Code = SetObjectCode();
             stockAdjustment.IsDeleted = false;
             stockAdjustment.IsConfirmed = false;
-            stockAdjustment.IsCompleted = false;
             stockAdjustment.CreatedAt = DateTime.Now;
             return Create(stockAdjustment);
         }
@@ -57,7 +56,6 @@ namespace Data.Repository
         public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment)
         {
             stockAdjustment.IsConfirmed = true;
-            stockAdjustment.ConfirmationDate = DateTime.Now;
             Update(stockAdjustment);
             return stockAdjustment;
         }
@@ -66,14 +64,6 @@ namespace Data.Repository
         {
             stockAdjustment.IsConfirmed = false;
             stockAdjustment.ConfirmationDate = null;
-            stockAdjustment.UpdatedAt = DateTime.Now;
-            Update(stockAdjustment);
-            return stockAdjustment;
-        }
-
-        public StockAdjustment CompleteObject(StockAdjustment stockAdjustment)
-        {
-            stockAdjustment.IsCompleted = true;
             stockAdjustment.UpdatedAt = DateTime.Now;
             Update(stockAdjustment);
             return stockAdjustment;

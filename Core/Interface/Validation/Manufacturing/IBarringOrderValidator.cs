@@ -26,6 +26,7 @@ namespace Core.Interface.Validation
         BarringOrder VCreateObject(BarringOrder barringOrder, IBarringOrderService _barringOrderService);
         BarringOrder VUpdateObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringOrderService _barringOrderService);
         BarringOrder VDeleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
+        BarringOrder VHasConfirmationDate(BarringOrder barringOrder);
         BarringOrder VConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BarringOrder VUnconfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);
         BarringOrder VCompleteObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService);

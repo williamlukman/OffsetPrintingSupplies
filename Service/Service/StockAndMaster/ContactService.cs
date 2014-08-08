@@ -64,9 +64,11 @@ namespace Service.Service
             return (contact = _validator.ValidUpdateObject(contact, this) ? _repository.UpdateObject(contact) : contact);
         }
 
-        public Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService)
+        public Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+                                        IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
         {
-            return (contact = _validator.ValidDeleteObject(contact, _coreIdentificationService, _barringService) ? _repository.SoftDeleteObject(contact) : contact);
+            return (contact = _validator.ValidDeleteObject(contact, _coreIdentificationService, _barringService, _purchaseOrderService, _salesOrderService) ?
+                    _repository.SoftDeleteObject(contact) : contact);
         }
 
         public bool DeleteObject(int Id)

@@ -72,7 +72,6 @@ namespace Data.Repository
         public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher)
         {
             paymentVoucher.IsConfirmed = true;
-            paymentVoucher.ConfirmationDate = DateTime.Now;
             Update(paymentVoucher);
             return paymentVoucher;
         }

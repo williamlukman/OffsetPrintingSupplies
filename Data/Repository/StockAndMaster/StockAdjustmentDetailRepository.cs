@@ -39,7 +39,7 @@ namespace Data.Repository
                               select obj.Code).FirstOrDefault();
             }
             stockAdjustmentDetail.Code = SetObjectCode(ParentCode);
-            stockAdjustmentDetail.IsFinished = false;
+            stockAdjustmentDetail.IsConfirmed = false;
             stockAdjustmentDetail.IsDeleted = false;
             stockAdjustmentDetail.CreatedAt = DateTime.Now;
             return Create(stockAdjustmentDetail);
@@ -66,18 +66,17 @@ namespace Data.Repository
             return (Delete(stockAdjustmentDetail) == 1) ? true : false;
         }
 
-        public StockAdjustmentDetail FinishObject(StockAdjustmentDetail stockAdjustmentDetail)
+        public StockAdjustmentDetail ConfirmObject(StockAdjustmentDetail stockAdjustmentDetail)
         {
-            stockAdjustmentDetail.IsFinished = true;
-            stockAdjustmentDetail.FinishedDate = DateTime.Now;
+            stockAdjustmentDetail.IsConfirmed = true;
             Update(stockAdjustmentDetail);
             return stockAdjustmentDetail;
         }
 
-        public StockAdjustmentDetail UnfinishObject(StockAdjustmentDetail stockAdjustmentDetail)
+        public StockAdjustmentDetail UnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail)
         {
-            stockAdjustmentDetail.IsFinished = false;
-            stockAdjustmentDetail.FinishedDate = null;
+            stockAdjustmentDetail.IsConfirmed = false;
+            stockAdjustmentDetail.ConfirmationDate = null;
             stockAdjustmentDetail.UpdatedAt = DateTime.Now;
             Update(stockAdjustmentDetail);
             return stockAdjustmentDetail;

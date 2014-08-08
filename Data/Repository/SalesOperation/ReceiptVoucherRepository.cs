@@ -72,7 +72,6 @@ namespace Data.Repository
         public ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher)
         {
             receiptVoucher.IsConfirmed = true;
-            receiptVoucher.ConfirmationDate = DateTime.Now;
             Update(receiptVoucher);
             return receiptVoucher;
         }

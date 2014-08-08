@@ -72,7 +72,6 @@ namespace Data.Repository
         public CoreIdentification ConfirmObject(CoreIdentification coreIdentification)
         {
             coreIdentification.IsConfirmed = true;
-            coreIdentification.ConfirmationDate = DateTime.Now;
             Update(coreIdentification);
             return coreIdentification;
         }

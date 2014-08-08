@@ -9,25 +9,24 @@ namespace Core.Interface.Validation
 {
     public interface IPurchaseOrderValidator
     {
-        PurchaseOrder VContact(PurchaseOrder purchaseOrder, IContactService _contactService);
-        PurchaseOrder VPurchaseDate(PurchaseOrder purchaseOrder);
+        PurchaseOrder VHasContact(PurchaseOrder purchaseOrder, IContactService _contactService);
+        PurchaseOrder VHasPurchaseDate(PurchaseOrder purchaseOrder);
         PurchaseOrder VHasBeenConfirmed(PurchaseOrder purchaseOrder);
         PurchaseOrder VHasNotBeenConfirmed(PurchaseOrder purchaseOrder);
         PurchaseOrder VHasPurchaseOrderDetails(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        PurchaseOrder VAllDetailsHaveBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        PurchaseOrder VAllDetailsHaveNotBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
+        PurchaseOrder VHasNoPurchaseOrderDetail(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
+        PurchaseOrder VHasNoPurchaseReceival(PurchaseOrder purchaseOrder, IPurchaseReceivalService _purchaseReceivalService);
+        PurchaseOrder VHasConfirmationDate(PurchaseOrder purchaseOrder);
         PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder VDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseOrder VConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
-        PurchaseOrder VCompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
+        PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseReceivalService _purchaseReceivalService);
         bool ValidCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         bool ValidUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         bool ValidDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         bool ValidConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
-        bool ValidUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
-        bool ValidCompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
+        bool ValidUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseReceivalService _purchaseReceivalService);
         bool isValid(PurchaseOrder purchaseOrder);
         string PrintError(PurchaseOrder purchaseOrder);
     }

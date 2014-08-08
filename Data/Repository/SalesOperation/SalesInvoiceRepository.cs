@@ -67,7 +67,6 @@ namespace Data.Repository
         public SalesInvoice ConfirmObject(SalesInvoice salesInvoice)
         {
             salesInvoice.IsConfirmed = true;
-            salesInvoice.ConfirmationDate = DateTime.Now;
             Update(salesInvoice);
             return salesInvoice;
         }

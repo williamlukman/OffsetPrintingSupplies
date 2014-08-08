@@ -61,7 +61,6 @@ namespace Data.Repository
         public CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment)
         {
             cashBankAdjustment.IsConfirmed = true;
-            cashBankAdjustment.ConfirmationDate = DateTime.Now;
             Update(cashBankAdjustment);
             return cashBankAdjustment;
         }

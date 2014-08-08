@@ -37,7 +37,7 @@ namespace Data.Repository
 
         public WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
         {
-            warehouseMutationOrderDetail.IsFinished = false;
+            warehouseMutationOrderDetail.IsConfirmed = false;
             warehouseMutationOrderDetail.IsDeleted = false;
             warehouseMutationOrderDetail.CreatedAt = DateTime.Now;
             return Create(warehouseMutationOrderDetail);
@@ -64,18 +64,17 @@ namespace Data.Repository
             return (Delete(warehouseMutationOrderDetail) == 1) ? true : false;
         }
 
-        public WarehouseMutationOrderDetail FinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
         {
-            warehouseMutationOrderDetail.IsFinished = true;
-            warehouseMutationOrderDetail.FinishedDate = DateTime.Now;
+            warehouseMutationOrderDetail.IsConfirmed = true;
             Update(warehouseMutationOrderDetail);
             return warehouseMutationOrderDetail;
         }
 
-        public WarehouseMutationOrderDetail UnfinishObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
         {
-            warehouseMutationOrderDetail.IsFinished = false;
-            warehouseMutationOrderDetail.FinishedDate = null;
+            warehouseMutationOrderDetail.IsConfirmed = false;
+            warehouseMutationOrderDetail.ConfirmationDate = null;
             warehouseMutationOrderDetail.UpdatedAt = DateTime.Now;
             Update(warehouseMutationOrderDetail);
             return warehouseMutationOrderDetail;

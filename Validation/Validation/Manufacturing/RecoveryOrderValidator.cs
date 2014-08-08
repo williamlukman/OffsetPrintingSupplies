@@ -156,46 +156,6 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VAllAccessoriesHaveNotBeenFinished(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
-            IList<RecoveryAccessoryDetail> accessories = new List<RecoveryAccessoryDetail>();
-            foreach (var detail in details)
-            {
-                // populate accessories
-                _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(detail.Id).ToList().ForEach(x => accessories.Add(x));
-            }
-            foreach (var accessory in accessories)
-            {
-                if (accessory.IsFinished)
-                {
-                    recoveryOrder.Errors.Add("Generic", "Semua accessories tidak boleh telah dikonfirmasi");
-                    return recoveryOrder;
-                }
-            }
-            return recoveryOrder;
-        }
-
-        public RecoveryOrder VAllAccessoriesHaveBeenFinished(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
-            IList<RecoveryAccessoryDetail> accessories = new List<RecoveryAccessoryDetail>();
-            foreach (var detail in details)
-            {
-                // populate accessories
-                _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(detail.Id).ToList().ForEach(x => accessories.Add(x));
-            }
-            foreach (var accessory in accessories)
-            {
-                if (!accessory.IsFinished)
-                {
-                    recoveryOrder.Errors.Add("Generic", "Semua accessories harus telah selesai");
-                    return recoveryOrder;
-                }
-            }
-            return recoveryOrder;
-        }
-
         public RecoveryOrder VAllDetailsHaveBeenFinishedOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
@@ -262,15 +222,25 @@ namespace Validation.Validation
         {
             VHasNotBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllDetailsHaveNotBeenDisassembledNorRejected(recoveryOrder, _recoveryOrderDetailService);
-            if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllAccessoriesHaveNotBeenFinished(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
+            // TODO
+            // VHaveNoRecoveryOrderDetails(recoveryOrder, _recoveryOrderDetailService);
             return recoveryOrder;
+        }
+
+        public RecoveryOrder VHasConfirmationDate(RecoveryOrder obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
         }
 
         public RecoveryOrder VConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                             IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            VHasConfirmationDate(recoveryOrder);
+            if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VHasNotBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VHasRecoveryOrderDetails(recoveryOrder, _recoveryOrderDetailService);
@@ -286,10 +256,6 @@ namespace Validation.Validation
             VHasBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VHasNotBeenCompleted(recoveryOrder);
-            if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllDetailsHaveNotBeenDisassembledNorRejected(recoveryOrder, _recoveryOrderDetailService);
-            if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllAccessoriesHaveNotBeenFinished(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
             return recoveryOrder;
         }
 
@@ -306,8 +272,6 @@ namespace Validation.Validation
             VHasNotBeenCompleted(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VAllDetailsHaveBeenFinishedOrRejected(recoveryOrder, _recoveryOrderDetailService);
-            if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllAccessoriesHaveBeenFinished(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
             return recoveryOrder;
         }
 

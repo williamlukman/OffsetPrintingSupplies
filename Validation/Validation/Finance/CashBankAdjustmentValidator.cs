@@ -100,8 +100,19 @@ namespace Validation.Validation
             return cashBankAdjustment;
         }
 
+        public CashBankAdjustment VHasConfirmationDate(CashBankAdjustment obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public CashBankAdjustment VConfirmObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
         {
+            VHasConfirmationDate(cashBankAdjustment);
+            if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
             VHasNotBeenConfirmed(cashBankAdjustment);
             if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
             VNonNegativeNorZeroCashBankAmount(cashBankAdjustment, _cashBankService, true);

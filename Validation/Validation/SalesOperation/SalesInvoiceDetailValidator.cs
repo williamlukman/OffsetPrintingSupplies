@@ -126,8 +126,19 @@ namespace Validation.Validation
             return salesInvoiceDetail;
         }
 
+        public SalesInvoiceDetail VHasConfirmationDate(SalesInvoiceDetail obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public SalesInvoiceDetail VConfirmObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
+            VHasConfirmationDate(salesInvoiceDetail);
+            if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
             VHasNotBeenConfirmed(salesInvoiceDetail);
             if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
             VQuantityIsLessThanOrEqualPendingInvoiceQuantity(salesInvoiceDetail, _deliveryOrderDetailService);

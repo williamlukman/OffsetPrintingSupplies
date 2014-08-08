@@ -13,8 +13,8 @@ namespace Validation.Validation
     {
         public PurchaseOrderDetail VHasPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService)
         {
-            PurchaseOrder po = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
-            if (po == null)
+            PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
+            if (purchaseOrder == null)
             {
                 purchaseOrderDetail.Errors.Add("PurchaseOrder", "Tidak boleh tidak ada");
             }
@@ -31,7 +31,7 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VQuantity(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail VNonZeroNorNegativeQuantity(PurchaseOrderDetail purchaseOrderDetail)
         {
             if (purchaseOrderDetail.Quantity < 0)
             {
@@ -40,7 +40,7 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VPrice(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail VNonNegativePrice(PurchaseOrderDetail purchaseOrderDetail)
         {
             if (purchaseOrderDetail.Price <= 0)
             {
@@ -63,30 +63,29 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VHasBeenFinished(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail VHasConfirmationDate(PurchaseOrderDetail purchaseOrderDetail)
         {
-            if (!purchaseOrderDetail.IsFinished)
+            if (purchaseOrderDetail.ConfirmationDate == null)
+            {
+                purchaseOrderDetail.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return purchaseOrderDetail;
+        }
+
+        public PurchaseOrderDetail VHasBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail)
+        {
+            if (!purchaseOrderDetail.IsConfirmed)
             {
                 purchaseOrderDetail.Errors.Add("Generic", "Belum selesai");
             }
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VHasNotBeenFinished(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail VHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail)
         {
-            if (purchaseOrderDetail.IsFinished)
+            if (purchaseOrderDetail.IsConfirmed)
             {
                 purchaseOrderDetail.Errors.Add("Generic", "Sudah selesai");
-            }
-            return purchaseOrderDetail;
-        }
-
-        public PurchaseOrderDetail VPurchaseOrderHasNotBeenCompleted(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService)
-        {
-            PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
-            if (purchaseOrder.IsCompleted)
-            {
-                purchaseOrderDetail.Errors.Add("Generic", "Purchase order sudah complete");
             }
             return purchaseOrderDetail;
         }
@@ -103,20 +102,10 @@ namespace Validation.Validation
 
         public PurchaseOrderDetail VHasNoPurchaseReceivalDetail(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
-            PurchaseReceivalDetail purchaseReceivalDetail = _purchaseReceivalDetailService.GetObjectByPurchaseOrderDetailId(purchaseOrderDetail.Id);
-            if (purchaseReceivalDetail != null)
+            IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetObjectsByPurchaseOrderDetailId(purchaseOrderDetail.Id);
+            if (purchaseReceivalDetails.Any())
             {
                 purchaseOrderDetail.Errors.Add("Generic", "Tidak boleh terasosiasi dengan purchase receival");
-            }
-            return purchaseOrderDetail;
-        }
-
-        public PurchaseOrderDetail VPurchaseReceivalDetailHasBeenFinished(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
-        {
-            PurchaseReceivalDetail purchaseReceivalDetail = _purchaseReceivalDetailService.GetObjectByPurchaseOrderDetailId(purchaseOrderDetail.Id);
-            if (!purchaseReceivalDetail.IsFinished)
-            {
-                purchaseOrderDetail.Errors.Add("Generic", "Purchase Receival belum selesai");
             }
             return purchaseOrderDetail;
         }
@@ -127,9 +116,9 @@ namespace Validation.Validation
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
             VHasItem(purchaseOrderDetail, _itemService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
-            VQuantity(purchaseOrderDetail);
+            VNonZeroNorNegativeQuantity(purchaseOrderDetail);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
-            VPrice(purchaseOrderDetail);
+            VNonNegativePrice(purchaseOrderDetail);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
             VUniquePurchaseOrderDetail(purchaseOrderDetail, _purchaseOrderDetails, _itemService);
             return purchaseOrderDetail;
@@ -139,29 +128,31 @@ namespace Validation.Validation
         {
             VCreateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
-            VHasNotBeenFinished(purchaseOrderDetail);
+            VHasNotBeenConfirmed(purchaseOrderDetail);
             return purchaseOrderDetail;
         }
 
         public PurchaseOrderDetail VDeleteObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            VHasNotBeenFinished(purchaseOrderDetail);
+            VHasNotBeenConfirmed(purchaseOrderDetail);
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VFinishObject(PurchaseOrderDetail purchaseOrderDetail)
+        public PurchaseOrderDetail VConfirmObject(PurchaseOrderDetail purchaseOrderDetail)
         {
-            VHasNotBeenFinished(purchaseOrderDetail);
+            VHasConfirmationDate(purchaseOrderDetail);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VHasNotBeenConfirmed(purchaseOrderDetail);
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseReceivalDetailService _purchaseReceivalDetails, IItemService _itemService)
+        public PurchaseOrderDetail VUnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
-            VPurchaseOrderHasNotBeenCompleted(purchaseOrderDetail, _purchaseOrderService);
+            VHasConfirmationDate(purchaseOrderDetail);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
             VHasItemPendingReceival(purchaseOrderDetail, _itemService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
-            VHasNoPurchaseReceivalDetail(purchaseOrderDetail, _purchaseReceivalDetails);
+            VHasNoPurchaseReceivalDetail(purchaseOrderDetail, _purchaseReceivalDetailService);
             return purchaseOrderDetail;
         }
 
@@ -185,17 +176,17 @@ namespace Validation.Validation
             return isValid(purchaseOrderDetail);
         }
 
-        public bool ValidFinishObject(PurchaseOrderDetail purchaseOrderDetail)
+        public bool ValidConfirmObject(PurchaseOrderDetail purchaseOrderDetail)
         {
             purchaseOrderDetail.Errors.Clear();
-            VFinishObject(purchaseOrderDetail);
+            VConfirmObject(purchaseOrderDetail);
             return isValid(purchaseOrderDetail);
         }
 
-        public bool ValidUnfinishObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        public bool ValidUnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
         {
             purchaseOrderDetail.Errors.Clear();
-            VUnfinishObject(purchaseOrderDetail, _purchaseOrderService, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService);
+            VUnconfirmObject(purchaseOrderDetail, _purchaseReceivalDetailService, _itemService);
             return isValid(purchaseOrderDetail);
         }
 
@@ -217,6 +208,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

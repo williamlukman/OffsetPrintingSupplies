@@ -16,7 +16,7 @@ namespace Validation.Validation
             SalesOrder so = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
             if (so == null)
             {
-                salesOrderDetail.Errors.Add("SalesOrder", "Tidak boleh tidak ada");
+                salesOrderDetail.Errors.Add("SalesOrderId", "Tidak terasosiasi dengan sales order");
             }
             return salesOrderDetail;
         }
@@ -26,12 +26,12 @@ namespace Validation.Validation
             Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
             if (item == null)
             {
-                salesOrderDetail.Errors.Add("Item", "Tidak boleh tidak ada");
+                salesOrderDetail.Errors.Add("ItemId", "Tidak terasosiasi dengan item");
             }
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VQuantity(SalesOrderDetail salesOrderDetail)
+        public SalesOrderDetail VNonZeroNorNegativeQuantity(SalesOrderDetail salesOrderDetail)
         {
             if (salesOrderDetail.Quantity < 0)
             {
@@ -40,7 +40,7 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VPrice(SalesOrderDetail salesOrderDetail)
+        public SalesOrderDetail VNonNegativePrice(SalesOrderDetail salesOrderDetail)
         {
             if (salesOrderDetail.Price <= 0)
             {
@@ -63,30 +63,20 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VHasNotBeenFinished(SalesOrderDetail salesOrderDetail)
+        public SalesOrderDetail VHasNotBeenConfirmed(SalesOrderDetail salesOrderDetail)
         {
-            if (salesOrderDetail.IsFinished)
+            if (salesOrderDetail.IsConfirmed)
             {
                 salesOrderDetail.Errors.Add("Generic", "Tidak boleh sudah selesai");
             }
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VHasBeenFinished(SalesOrderDetail salesOrderDetail)
+        public SalesOrderDetail VHasBeenConfirmed(SalesOrderDetail salesOrderDetail)
         {
-            if (!salesOrderDetail.IsFinished)
+            if (!salesOrderDetail.IsConfirmed)
             {
                 salesOrderDetail.Errors.Add("Generic", "Belum selesai");
-            }
-            return salesOrderDetail;
-        }
-
-        public SalesOrderDetail VSalesOrderHasNotBeenCompleted(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService)
-        {
-            SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
-            if (salesOrder.IsCompleted)
-            {
-                salesOrderDetail.Errors.Add("Generic", "Sales order sudah complete");
             }
             return salesOrderDetail;
         }
@@ -111,17 +101,12 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VDeliveryOrderDetailHasBeenFinished(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public SalesOrderDetail VHasConfirmationDate(SalesOrderDetail salesOrderDetail)
         {
-            IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsBySalesOrderDetailId(salesOrderDetail.Id);
-            foreach (var deliveryOrderDetail in deliveryOrderDetails)
+            if (salesOrderDetail.ConfirmationDate == null)
             {
-                if (deliveryOrderDetail.IsFinished)
-                {
-                    return salesOrderDetail;
-                }
+                salesOrderDetail.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
             }
-            salesOrderDetail.Errors.Add("Generic", "Belum selesai");
             return salesOrderDetail;
         }
 
@@ -131,12 +116,11 @@ namespace Validation.Validation
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VHasItem(salesOrderDetail, _itemService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
-            VQuantity(salesOrderDetail);
+            VNonZeroNorNegativeQuantity(salesOrderDetail);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
-            VPrice(salesOrderDetail);
+            VNonNegativePrice(salesOrderDetail);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VUniqueSalesOrderDetail(salesOrderDetail, _salesOrderDetailService, _itemService);
-            // TODO
             //VQuantityIsLessThanItemQuantity
             return salesOrderDetail;
         }
@@ -145,25 +129,27 @@ namespace Validation.Validation
         {
             VCreateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
-            VHasNotBeenFinished(salesOrderDetail);
+            VHasNotBeenConfirmed(salesOrderDetail);
             return salesOrderDetail;
         }
 
         public SalesOrderDetail VDeleteObject(SalesOrderDetail salesOrderDetail)
         {
-            VHasNotBeenFinished(salesOrderDetail);
+            VHasNotBeenConfirmed(salesOrderDetail);
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VFinishObject(SalesOrderDetail salesOrderDetail)
+        public SalesOrderDetail VConfirmObject(SalesOrderDetail salesOrderDetail)
         {
-            VHasNotBeenFinished(salesOrderDetail);
+            VHasConfirmationDate(salesOrderDetail);
+            if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
+            VHasNotBeenConfirmed(salesOrderDetail);
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public SalesOrderDetail VUnconfirmObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
-            VSalesOrderHasNotBeenCompleted(salesOrderDetail, _salesOrderService);
+            VHasBeenConfirmed(salesOrderDetail);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VHasItemPendingDelivery(salesOrderDetail, _itemService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
@@ -191,17 +177,17 @@ namespace Validation.Validation
             return isValid(salesOrderDetail);
         }
 
-        public bool ValidFinishObject(SalesOrderDetail salesOrderDetail)
+        public bool ValidConfirmObject(SalesOrderDetail salesOrderDetail)
         {
             salesOrderDetail.Errors.Clear();
-            VFinishObject(salesOrderDetail);
+            VConfirmObject(salesOrderDetail);
             return isValid(salesOrderDetail);
         }
 
-        public bool ValidUnfinishObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
+        public bool ValidUnconfirmObject(SalesOrderDetail salesOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService)
         {
             salesOrderDetail.Errors.Clear();
-            VUnfinishObject(salesOrderDetail, _salesOrderService, _salesOrderDetailService, _deliveryOrderDetailService, _itemService);
+            VUnconfirmObject(salesOrderDetail, _deliveryOrderDetailService, _itemService);
             return isValid(salesOrderDetail);
         }
 

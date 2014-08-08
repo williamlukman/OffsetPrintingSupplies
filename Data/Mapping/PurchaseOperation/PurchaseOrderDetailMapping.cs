@@ -12,9 +12,6 @@ namespace Data.Mapping
         public PurchaseOrderDetailMapping()
         {
             HasKey(pod => pod.Id);
-            HasRequired(pod => pod.Contact)
-                .WithMany(c => c.PurchaseOrderDetails)
-                .HasForeignKey(pod => pod.ContactId);
             HasRequired(pod => pod.PurchaseOrder)
                 .WithMany(po => po.PurchaseOrderDetails)
                 .HasForeignKey(pod => pod.PurchaseOrderId);

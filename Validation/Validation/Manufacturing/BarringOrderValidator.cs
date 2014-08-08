@@ -119,7 +119,16 @@ namespace Validation.Validation
             }
             return barringOrder;
         }
-        
+
+        public BarringOrder VHasBeenConfirmationDate(BarringOrder barringOrder)
+        {
+            if (barringOrder.ConfirmationDate == null)
+            {
+                barringOrder.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return barringOrder;
+        }
+
         public BarringOrder VHasBeenConfirmed(BarringOrder barringOrder)
         {
             if (!barringOrder.IsConfirmed)
@@ -222,8 +231,19 @@ namespace Validation.Validation
             return barringOrder;
         }
 
+        public BarringOrder VHasConfirmationDate(BarringOrder obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+
         public BarringOrder VConfirmObject(BarringOrder barringOrder, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            VHasConfirmationDate(barringOrder);
+            if (!isValid(barringOrder)) { return barringOrder; }
             VHasNotBeenConfirmed(barringOrder);
             if (!isValid(barringOrder)) { return barringOrder; }
             VHasBarringOrderDetails(barringOrder, _barringOrderDetailService);

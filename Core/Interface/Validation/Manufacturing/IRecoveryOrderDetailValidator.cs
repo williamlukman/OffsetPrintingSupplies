@@ -19,6 +19,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasBeenDisassembled(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenStrippedAndGlued(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenWrapped(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VCompoundUsageIsLargerThanZero(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenFacedOff(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenConventionalGrinded (RecoveryOrderDetail recoveryOrderDetail);
@@ -27,6 +28,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasBeenPackaged(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenFinished(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasFinishedDate(RecoveryOrderDetail recoveryOrderDetail);
 
         RecoveryOrderDetail VHasNotBeenDisassembled(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenStrippedAndGlued(RecoveryOrderDetail recoveryOrderDetail);
@@ -40,8 +42,6 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasNotBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail VNoAccessoriesOrAccessoriesHaveNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        RecoveryOrderDetail VAllAccessoriesHaveBeenFinished(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenCompleted(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
 
@@ -53,8 +53,10 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VFinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VUnfinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
+        // TODO: Recheck Accessory process since IsFinished is removed
         RecoveryOrderDetail VAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+
         RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail);

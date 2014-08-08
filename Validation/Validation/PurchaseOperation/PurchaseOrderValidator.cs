@@ -11,24 +11,22 @@ namespace Validation.Validation
 {
     public class PurchaseOrderValidator : IPurchaseOrderValidator
     {
-        public PurchaseOrder VContact(PurchaseOrder purchaseOrder, IContactService _contactService)
+        public PurchaseOrder VHasContact(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            Contact c = _contactService.GetObjectById(purchaseOrder.ContactId);
-            if (c == null)
+            Contact contact = _contactService.GetObjectById(purchaseOrder.ContactId);
+            if (contact == null)
             {
-                purchaseOrder.Errors.Add("Contact", "Tidak boleh tidak ada");
+                purchaseOrder.Errors.Add("ContactId", "Tidak terasosiasi dengan contact");
             }
             return purchaseOrder;
         }
 
-        public PurchaseOrder VPurchaseDate(PurchaseOrder purchaseOrder)
+        public PurchaseOrder VHasPurchaseDate(PurchaseOrder purchaseOrder)
         {
-            /* purchaseDate is never null
             if (purchaseOrder.PurchaseDate == null)
             {
                 purchaseOrder.Errors.Add("PurchaseDate", "Tidak boleh tidak ada");
             }
-            */
             return purchaseOrder;
         }
 
@@ -55,44 +53,45 @@ namespace Validation.Validation
             IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
             if (!details.Any())
             {
-                purchaseOrder.Errors.Add("PurchaseOrder", "Tidak boleh memilik Purchase Order Details");
+                purchaseOrder.Errors.Add("PurchaseOrder", "Tidak memiliki Purchase Order Details");
             }
             return purchaseOrder;
         }
 
-        public PurchaseOrder VAllDetailsHaveBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public PurchaseOrder VHasNoPurchaseOrderDetail(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
-            foreach(var detail in details)
+            if (details.Any())
             {
-                if (!detail.IsFinished)
-                {
-                    purchaseOrder.Errors.Add("Generic", "Purchase Order Detail belum selesai");
-                    return purchaseOrder;
-                }
+                purchaseOrder.Errors.Add("PurchaseOrder", "Memiliki Purchase Order Details");
             }
             return purchaseOrder;
         }
 
-        public PurchaseOrder VAllDetailsHaveNotBeenFinished(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        public PurchaseOrder VHasNoPurchaseReceival(PurchaseOrder purchaseOrder, IPurchaseReceivalService _purchaseReceivalService)
         {
-            IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
-            foreach (var detail in details)
+            IList<PurchaseReceival> purchaseReceivals = _purchaseReceivalService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
+            if (purchaseReceivals.Any())
             {
-                if (detail.IsFinished)
-                {
-                    purchaseOrder.Errors.Add("Generic", "Purchase Order Detail sudah selesai");
-                    return purchaseOrder;
-                }
+                purchaseOrder.Errors.Add("Generic", "Memiliki asosiasi dengan purchase receival");
             }
             return purchaseOrder;
         }
 
+        public PurchaseOrder VHasConfirmationDate(PurchaseOrder obj)
+        {
+            if (obj.ConfirmationDate == null)
+            {
+                obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return obj;
+        }
+        
         public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            VContact(purchaseOrder, _contactService);
+            VHasContact(purchaseOrder, _contactService);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
-            VPurchaseDate(purchaseOrder);
+            VHasPurchaseDate(purchaseOrder);
             return purchaseOrder;
         }
 
@@ -107,28 +106,26 @@ namespace Validation.Validation
         public PurchaseOrder VDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
             VHasNotBeenConfirmed(purchaseOrder);
+            if (!isValid(purchaseOrder)) { return purchaseOrder; }
+            VHasNoPurchaseOrderDetail(purchaseOrder, _purchaseOrderDetailService);
             return purchaseOrder;
         }
 
         public PurchaseOrder VConfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
         {
+            VHasConfirmationDate(purchaseOrder);
+            if (!isValid(purchaseOrder)) { return purchaseOrder; }
             VHasNotBeenConfirmed(purchaseOrder);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
             VHasPurchaseOrderDetails(purchaseOrder, _purchaseOrderDetailService);            
             return purchaseOrder;
         }
 
-        public PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        public PurchaseOrder VUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseReceivalService _purchaseReceivalService)
         {
             VHasBeenConfirmed(purchaseOrder);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
-            VAllDetailsHaveNotBeenFinished(purchaseOrder, _purchaseOrderDetailService);
-            return purchaseOrder;
-        }
-
-        public PurchaseOrder VCompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
-        {
-            VAllDetailsHaveBeenFinished(purchaseOrder, _purchaseOrderDetailService);
+            VHasNoPurchaseReceival(purchaseOrder, _purchaseReceivalService);
             return purchaseOrder;
         }
 
@@ -159,17 +156,10 @@ namespace Validation.Validation
             return isValid(purchaseOrder);
         }
 
-        public bool ValidUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService)
+        public bool ValidUnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseReceivalService _purchaseReceivalService)
         {
             purchaseOrder.Errors.Clear();
-            VUnconfirmObject(purchaseOrder, _purchaseOrderDetailService, _purchaseReceivalDetailService, _itemService);
-            return isValid(purchaseOrder);
-        }
-
-        public bool ValidCompleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
-        {
-            purchaseOrder.Errors.Clear();
-            VCompleteObject(purchaseOrder, _purchaseOrderDetailService);
+            VUnconfirmObject(purchaseOrder, _purchaseReceivalService);
             return isValid(purchaseOrder);
         }
 

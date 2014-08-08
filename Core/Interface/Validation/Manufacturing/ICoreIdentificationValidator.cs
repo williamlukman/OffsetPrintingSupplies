@@ -24,6 +24,7 @@ namespace Core.Interface.Validation
         CoreIdentification VCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService);
         CoreIdentification VUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService);
         CoreIdentification VDeleteObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);
+        CoreIdentification VHasConfirmationDate(CoreIdentification coreIdentification);
         CoreIdentification VConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                           ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
         CoreIdentification VUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);

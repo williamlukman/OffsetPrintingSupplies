@@ -102,7 +102,6 @@ namespace Data.Repository
         public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder)
         {
             recoveryOrder.IsConfirmed = true;
-            recoveryOrder.ConfirmationDate = DateTime.Now;
             Update(recoveryOrder);
             return recoveryOrder;
         }

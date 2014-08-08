@@ -65,33 +65,36 @@ namespace Service.Service
             return (warehouseMutationOrder = _validator.ValidDeleteObject(warehouseMutationOrder) ? _repository.SoftDeleteObject(warehouseMutationOrder) : warehouseMutationOrder);
         }
 
-        public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
-                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, DateTime ConfirmationDate, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
+                                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
             if (_validator.ValidConfirmObject(warehouseMutationOrder, this, _warehouseMutationOrderDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
+                IList<WarehouseMutationOrderDetail> warehouseMutationOrderDetails = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
+                foreach (var detail in warehouseMutationOrderDetails)
+                {
+                    _warehouseMutationOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+                }
+                warehouseMutationOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(warehouseMutationOrder);
             }
             return warehouseMutationOrder;
         }
 
         public WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
-                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
+                                                      IStockMutationService _stockMutationService)
         {
             if (_validator.ValidUnconfirmObject(warehouseMutationOrder, this, _warehouseMutationOrderDetailService,
                                                 _itemService, _barringService, _warehouseItemService))
             {
+                IList<WarehouseMutationOrderDetail> warehouseMutationOrderDetails = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
+                foreach (var detail in warehouseMutationOrderDetails)
+                {
+                    _warehouseMutationOrderDetailService.UnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+                }
                 _repository.UnconfirmObject(warehouseMutationOrder);
-            }
-            return warehouseMutationOrder;
-        }
-
-        public WarehouseMutationOrder CompleteObject(WarehouseMutationOrder warehouseMutationOrder, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService)
-        {
-            if (_validator.ValidCompleteObject(warehouseMutationOrder, _warehouseMutationOrderDetailService))
-            {
-                _repository.CompleteObject(warehouseMutationOrder);
             }
             return warehouseMutationOrder;
         }
