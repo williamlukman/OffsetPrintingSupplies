@@ -68,6 +68,7 @@ namespace Service.Service
         public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, DateTime ConfirmationDate, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
+            warehouseMutationOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(warehouseMutationOrder, this, _warehouseMutationOrderDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
@@ -76,7 +77,6 @@ namespace Service.Service
                 {
                     _warehouseMutationOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService, _warehouseItemService, _stockMutationService);
                 }
-                warehouseMutationOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(warehouseMutationOrder);
             }
             return warehouseMutationOrder;

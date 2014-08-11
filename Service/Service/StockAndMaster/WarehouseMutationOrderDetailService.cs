@@ -82,11 +82,11 @@ namespace Service.Service
         public WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, DateTime ConfirmationDate, IWarehouseMutationOrderService _warehouseMutationOrderService,
                                                          IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
+            warehouseMutationOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService))
             {
                 WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
 
-                warehouseMutationOrderDetail.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(warehouseMutationOrderDetail);
 
                 // deduce warehouseFrom item

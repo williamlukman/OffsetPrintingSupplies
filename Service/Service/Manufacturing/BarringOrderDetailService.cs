@@ -141,9 +141,9 @@ namespace Service.Service
         public BarringOrderDetail RejectObject(BarringOrderDetail barringOrderDetail, DateTime RejectedDate, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                                IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            barringOrderDetail.RejectedDate = RejectedDate;
             if (_validator.ValidRejectObject(barringOrderDetail, _barringOrderService))
             {
-                barringOrderDetail.RejectedDate = RejectedDate;
                 _repository.RejectObject(barringOrderDetail);
 
                 // add barring order reject quantity
@@ -237,9 +237,9 @@ namespace Service.Service
         public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail, DateTime FinishedDate, IBarringOrderService _barringOrderService, IStockMutationService _stockMutationService,
                                                IBarringService _barringService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            barringOrderDetail.FinishedDate = FinishedDate;
             if (_validator.ValidFinishObject(barringOrderDetail, _barringOrderService))
             {
-                barringOrderDetail.FinishedDate = FinishedDate;
                 _repository.FinishObject(barringOrderDetail);
 
                 // add barring order quantity final

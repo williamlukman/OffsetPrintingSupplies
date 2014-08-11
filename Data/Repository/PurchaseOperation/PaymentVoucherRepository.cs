@@ -18,7 +18,12 @@ namespace Data.Repository
 
         public IList<PaymentVoucher> GetAll()
         {
-            return FindAll(pv => !pv.IsDeleted).ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<PaymentVoucher> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
         public PaymentVoucher GetObjectById(int Id)

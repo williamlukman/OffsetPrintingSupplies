@@ -22,6 +22,11 @@ namespace Data.Repository
             return FindAll(x => !x.IsDeleted).ToList();
         }
 
+        public IList<StockAdjustment> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
+
         public StockAdjustment GetObjectById(int Id)
         {
             StockAdjustment stockAdjustment = Find(x => x.Id == Id && !x.IsDeleted);

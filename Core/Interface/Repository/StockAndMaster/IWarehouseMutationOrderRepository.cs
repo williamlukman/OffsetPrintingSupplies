@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface IWarehouseMutationOrderRepository : IRepository<WarehouseMutationOrder>
     {
         IList<WarehouseMutationOrder> GetAll();
+        IList<WarehouseMutationOrder> GetAllByMonthCreated();
         WarehouseMutationOrder GetObjectById(int Id);
         Warehouse GetWarehouseFrom(WarehouseMutationOrder warehouseMutationOrder);
         Warehouse GetWarehouseTo(WarehouseMutationOrder warehouseMutationOrder);

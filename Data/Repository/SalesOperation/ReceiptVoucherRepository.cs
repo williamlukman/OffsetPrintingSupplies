@@ -21,6 +21,11 @@ namespace Data.Repository
             return FindAll(pv => !pv.IsDeleted).ToList();
         }
 
+        public IList<ReceiptVoucher> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
+
         public ReceiptVoucher GetObjectById(int Id)
         {
             ReceiptVoucher receiptVoucher = Find(pv => pv.Id == Id && !pv.IsDeleted);

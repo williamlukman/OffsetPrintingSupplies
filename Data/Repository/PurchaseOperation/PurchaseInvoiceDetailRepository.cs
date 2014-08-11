@@ -16,6 +16,15 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IList<PurchaseInvoiceDetail> GetAll()
+        {
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<PurchaseInvoiceDetail> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
         public IList<PurchaseInvoiceDetail> GetObjectsByPurchaseInvoiceId(int purchaseInvoiceId)
         {
             return FindAll(pid => pid.PurchaseInvoiceId == purchaseInvoiceId && !pid.IsDeleted).ToList();
@@ -89,7 +98,6 @@ namespace Data.Repository
             // Code: #{parent_object.code}/#{total_number_objects}
             int totalobject = FindAll().Count() + 1;
             string Code = ParentCode + "/#" + totalobject;
-            // TODO
             // string Code = DateTime.Now.Year + "." + DateTime.Now.Month + "." + totalforthemonth;
             return Code;
         } 

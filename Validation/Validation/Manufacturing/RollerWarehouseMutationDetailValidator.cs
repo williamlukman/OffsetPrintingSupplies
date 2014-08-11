@@ -163,8 +163,6 @@ namespace Validation.Validation
         {
             VHasConfirmationDate(rollerWarehouseMutationDetail);
             if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
-            VRollerWarehouseMutationHasBeenConfirmed(rollerWarehouseMutationDetail, _rollerWarehouseMutationService);
-            if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
             VNonNegativeStockQuantity(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService, true);
             return rollerWarehouseMutationDetail;
         }

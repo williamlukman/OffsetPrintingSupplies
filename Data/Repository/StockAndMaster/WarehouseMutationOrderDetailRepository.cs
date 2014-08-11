@@ -23,6 +23,11 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
+        public IList<WarehouseMutationOrderDetail> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
+
         public IList<WarehouseMutationOrderDetail> GetObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId)
         {
             return FindAll(x => x.WarehouseMutationOrderId == warehouseMutationOrderId && !x.IsDeleted).ToList();

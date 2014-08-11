@@ -17,6 +17,16 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IList<StockAdjustmentDetail> GetAll()
+        {
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<StockAdjustmentDetail> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
+
         public IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int stockAdjustmentId)
         {
             return FindAll(x => x.StockAdjustmentId == stockAdjustmentId && !x.IsDeleted).ToList();

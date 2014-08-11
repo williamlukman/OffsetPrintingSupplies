@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<DeliveryOrder> GetConfirmedObjects()
+        {
+            return _repository.GetConfirmedObjects();
+        }
+
         public DeliveryOrder GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -40,13 +45,13 @@ namespace Service.Service
             return _repository.GetObjectsBySalesOrderId(salesOrderId);
         }
 
-        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
+        public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
             deliveryOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(deliveryOrder, _salesOrderService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidCreateObject(deliveryOrder, _salesOrderService, _warehouseService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
         }
 
-        public DeliveryOrder CreateObject(int salesOrderId, int warehouseId, DateTime deliveryDate, ISalesOrderService _salesOrderService)
+        public DeliveryOrder CreateObject(int warehouseId, int salesOrderId, DateTime deliveryDate, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
             DeliveryOrder deliveryOrder = new DeliveryOrder
             {
@@ -54,12 +59,12 @@ namespace Service.Service
                 WarehouseId = warehouseId,
                 DeliveryDate = deliveryDate
             };
-            return this.CreateObject(deliveryOrder, _salesOrderService);
+            return this.CreateObject(deliveryOrder, _salesOrderService, _warehouseService);
         }
 
-        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService)
+        public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
-            return (_validator.ValidUpdateObject(deliveryOrder, _salesOrderService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidUpdateObject(deliveryOrder, _salesOrderService, _warehouseService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
         }
 
         public DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
@@ -73,9 +78,11 @@ namespace Service.Service
         }
 
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                           ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService, IItemService _itemService,
+                                           ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
+                                           IStockMutationService _stockMutationService, IItemService _itemService,
                                            IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            deliveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService))
             {
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
@@ -84,25 +91,26 @@ namespace Service.Service
                     _deliveryOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _salesOrderDetailService, _stockMutationService, _itemService,
                                                               _barringService, _warehouseItemService);
                 }
-                deliveryOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(deliveryOrder);
+                SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+                _salesOrderService.CheckAndSetDeliveryComplete(salesOrder, _salesOrderDetailService);
             }
             return deliveryOrder;
         }
 
         public DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                              ISalesInvoiceService _salesInvoiceService, ISalesInvoiceDetailService _salesInvoiceDetailService,
+                                             ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                              IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
                                              IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(deliveryOrder, _salesInvoiceService))
             {
-                // TODO
-                // Shouldn't we check the children unconfirm object validation too?
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var detail in deliveryOrderDetails)
                 {
-                    _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesInvoiceDetailService, _stockMutationService,
+                    _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesOrderService, _salesOrderDetailService,
+                                                                _salesInvoiceDetailService, _stockMutationService,
                                                                 _itemService, _barringService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(deliveryOrder);

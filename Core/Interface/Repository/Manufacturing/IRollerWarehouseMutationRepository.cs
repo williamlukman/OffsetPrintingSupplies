@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface IRollerWarehouseMutationRepository : IRepository<RollerWarehouseMutation>
     {
         IList<RollerWarehouseMutation> GetAll();
+        IList<RollerWarehouseMutation> GetAllByMonthCreated();
         IList<RollerWarehouseMutation> GetObjectsByCoreIdentificationId(int coreIdentificationId);
         RollerWarehouseMutation GetObjectById(int Id);
         Warehouse GetWarehouseFrom(RollerWarehouseMutation rollerWarehouseMutation);

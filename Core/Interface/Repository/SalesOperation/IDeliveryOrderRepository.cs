@@ -9,8 +9,10 @@ namespace Core.Interface.Repository
     public interface IDeliveryOrderRepository : IRepository<DeliveryOrder>
     {
         IList<DeliveryOrder> GetAll();
+        IList<DeliveryOrder> GetAllByMonthCreated();
         DeliveryOrder GetObjectById(int Id);
         IList<DeliveryOrder> GetObjectsBySalesOrderId(int salesOrderId);
+        IList<DeliveryOrder> GetConfirmedObjects();
         DeliveryOrder CreateObject(DeliveryOrder deliveryOrder);
         DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder);
         DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder);

@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface IPaymentVoucherRepository : IRepository<PaymentVoucher>
     {
         IList<PaymentVoucher> GetAll();
+        IList<PaymentVoucher> GetAllByMonthCreated();
         PaymentVoucher GetObjectById(int Id);
         IList<PaymentVoucher> GetObjectsByCashBankId(int cashBankId);
         IList<PaymentVoucher> GetObjectsByContactId(int contactId);

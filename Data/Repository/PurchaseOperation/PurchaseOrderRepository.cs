@@ -18,7 +18,12 @@ namespace Data.Repository
 
         public IList<PurchaseOrder> GetAll()
         {
-            return FindAll(po => !po.IsDeleted).ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<PurchaseOrder> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
         public PurchaseOrder GetObjectById(int Id)
@@ -31,6 +36,11 @@ namespace Data.Repository
         public IList<PurchaseOrder> GetObjectsByContactId(int contactId)
         {
             return FindAll(po => po.ContactId == contactId && !po.IsDeleted).ToList();
+        }
+
+        public IList<PurchaseOrder> GetConfirmedObjects()
+        {
+            return FindAll(x => x.IsConfirmed && !x.IsDeleted).ToList();
         }
 
         public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder)
@@ -73,6 +83,20 @@ namespace Data.Repository
         public PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder)
         {
             purchaseOrder.IsConfirmed = false;
+            UpdateObject(purchaseOrder);
+            return purchaseOrder;
+        }
+
+        public PurchaseOrder SetReceivalComplete(PurchaseOrder purchaseOrder)
+        {
+            purchaseOrder.IsReceivalCompleted = true;
+            UpdateObject(purchaseOrder);
+            return purchaseOrder;
+        }
+
+        public PurchaseOrder UnsetReceivalComplete(PurchaseOrder purchaseOrder)
+        {
+            purchaseOrder.IsReceivalCompleted = false;
             UpdateObject(purchaseOrder);
             return purchaseOrder;
         }

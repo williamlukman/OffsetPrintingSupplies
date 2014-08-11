@@ -41,7 +41,6 @@ namespace Service.Service
             salesOrderDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(salesOrderDetail, this, _salesOrderService, _itemService))
             {
-                salesOrderDetail.ContactId = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId).ContactId;
                 _repository.CreateObject(salesOrderDetail);
             }
             return salesOrderDetail;
@@ -77,9 +76,9 @@ namespace Service.Service
         public SalesOrderDetail ConfirmObject(SalesOrderDetail salesOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            salesOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesOrderDetail))
             {
-                salesOrderDetail.ConfirmationDate = ConfirmationDate;
                 salesOrderDetail = _repository.ConfirmObject(salesOrderDetail);
 
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
@@ -104,6 +103,25 @@ namespace Service.Service
                     //item.PendingDelivery -= salesOrderDetail.Quantity;
                 }
             }
+            return salesOrderDetail;
+        }
+
+        public SalesOrderDetail SetDeliveryComplete(SalesOrderDetail salesOrderDetail, int Quantity)
+        {
+            salesOrderDetail.PendingDeliveryQuantity -= Quantity;
+            if (salesOrderDetail.PendingDeliveryQuantity == 0) { salesOrderDetail.IsAllDelivered = true; }
+            _repository.UpdateObject(salesOrderDetail);
+            return salesOrderDetail;
+        }
+
+        public SalesOrderDetail UnsetDeliveryComplete(SalesOrderDetail salesOrderDetail, int Quantity, ISalesOrderService _salesOrderService)
+        {
+            SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
+            _salesOrderService.UnsetDeliveryComplete(salesOrder);
+
+            salesOrderDetail.IsAllDelivered = false;
+            salesOrderDetail.PendingDeliveryQuantity += Quantity;
+            _repository.UpdateObject(salesOrderDetail);
             return salesOrderDetail;
         }
     }

@@ -40,6 +40,11 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
+        public IList<PurchaseOrder> GetConfirmedObjects()
+        {
+            return _repository.GetConfirmedObjects();
+        }
+
         public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
             purchaseOrder.Errors = new Dictionary<String, String>();
@@ -75,6 +80,7 @@ namespace Service.Service
                                     IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
                                     IWarehouseItemService _warehouseItemService)
         {
+            purchaseOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseOrder, _purchaseOrderDetailService))
             {
                 IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
@@ -82,7 +88,6 @@ namespace Service.Service
                 {
                     _purchaseOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                 }
-                purchaseOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(purchaseOrder);
             }
             return purchaseOrder;
@@ -102,6 +107,25 @@ namespace Service.Service
                 _repository.UnconfirmObject(purchaseOrder);
             }
             return purchaseOrder;
+        }
+
+        public PurchaseOrder CheckAndSetReceivalComplete(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
+
+            foreach (var detail in details)
+            {
+                if (!detail.IsAllReceived)
+                {
+                    return purchaseOrder;
+                }
+            }
+            return _repository.SetReceivalComplete(purchaseOrder);
+        }
+
+        public PurchaseOrder UnsetReceivalComplete(PurchaseOrder purchaseOrder)
+        {
+            return _repository.UnsetReceivalComplete(purchaseOrder);
         }
     }
 }

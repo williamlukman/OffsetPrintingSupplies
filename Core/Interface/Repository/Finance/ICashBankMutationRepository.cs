@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface ICashBankMutationRepository : IRepository<CashBankMutation>
     {
         IList<CashBankMutation> GetAll();
+        IList<CashBankMutation> GetAllByMonthCreated();
         CashBankMutation GetObjectById(int Id);
         CashBank GetSourceCashBank(CashBankMutation cashBankMutation);
         CashBank GetTargetCashBank(CashBankMutation cashBankMutation);

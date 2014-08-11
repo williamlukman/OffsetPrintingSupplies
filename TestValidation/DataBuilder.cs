@@ -201,8 +201,8 @@ namespace TestValidation
             };
 
             itemCompound = _itemService.CreateObject(itemCompound, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
-            _itemService.AdjustQuantity(itemCompound, 1000);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound.Id), 1000);
+            _itemService.AdjustQuantity(itemCompound, 100000);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound.Id), 100000);
 
             itemCompound1 = new Item()
             {
@@ -213,8 +213,8 @@ namespace TestValidation
                 UoMId = _uomService.GetObjectByName("Tubs").Id
             };
             itemCompound1 = _itemService.CreateObject(itemCompound1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
-            _itemService.AdjustQuantity(itemCompound1, 2000);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound1.Id), 2000);
+            _itemService.AdjustQuantity(itemCompound1, 200000);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound1.Id), 200000);
 
             itemCompound2 = new Item()
             {
@@ -225,8 +225,8 @@ namespace TestValidation
                 UoMId = Tubs.Id
             };
             itemCompound2 = _itemService.CreateObject(itemCompound2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
-            _itemService.AdjustQuantity(itemCompound2, 2000);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound2.Id), 2000);
+            _itemService.AdjustQuantity(itemCompound2, 200000);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, itemCompound2.Id), 200000);
 
             itemAccessory1 = new Item()
             {
@@ -477,53 +477,53 @@ namespace TestValidation
             Item RollerUsedCore3 = _rollerBuilderService.GetRollerUsedCore(rollerBuilder3.Id);
             Item RollerUsedCore4 = _rollerBuilderService.GetRollerUsedCore(rollerBuilder4.Id);
 
-            _itemService.AdjustQuantity(NewCore, 5);
-            _itemService.AdjustQuantity(NewCore1, 5);
-            _itemService.AdjustQuantity(NewCore2, 5);
-            _itemService.AdjustQuantity(NewCore3, 5);
-            _itemService.AdjustQuantity(NewCore4, 5);
+            _itemService.AdjustQuantity(NewCore, 7);
+            _itemService.AdjustQuantity(NewCore1, 7);
+            _itemService.AdjustQuantity(NewCore2, 7);
+            _itemService.AdjustQuantity(NewCore3, 7);
+            _itemService.AdjustQuantity(NewCore4, 7);
 
-            _itemService.AdjustQuantity(UsedCore, 5);
-            _itemService.AdjustQuantity(UsedCore1, 5);
-            _itemService.AdjustQuantity(UsedCore2, 5);
-            _itemService.AdjustQuantity(UsedCore3, 5);
-            _itemService.AdjustQuantity(UsedCore4, 5);
+            _itemService.AdjustQuantity(UsedCore, 7);
+            _itemService.AdjustQuantity(UsedCore1, 7);
+            _itemService.AdjustQuantity(UsedCore2, 7);
+            _itemService.AdjustQuantity(UsedCore3, 7);
+            _itemService.AdjustQuantity(UsedCore4, 7);
 
-            _itemService.AdjustQuantity(RollerUsedCore, 5);
-            _itemService.AdjustQuantity(RollerUsedCore1, 5);
-            _itemService.AdjustQuantity(RollerUsedCore2, 5);
-            _itemService.AdjustQuantity(RollerUsedCore3, 5);
-            _itemService.AdjustQuantity(RollerUsedCore4, 5);
+            _itemService.AdjustQuantity(RollerUsedCore, 7);
+            _itemService.AdjustQuantity(RollerUsedCore1, 7);
+            _itemService.AdjustQuantity(RollerUsedCore2, 7);
+            _itemService.AdjustQuantity(RollerUsedCore3, 7);
+            _itemService.AdjustQuantity(RollerUsedCore4, 7);
 
-            _itemService.AdjustQuantity(RollerNewCore, 5);
-            _itemService.AdjustQuantity(RollerNewCore1, 5);
-            _itemService.AdjustQuantity(RollerNewCore2, 5);
-            _itemService.AdjustQuantity(RollerNewCore3, 5);
-            _itemService.AdjustQuantity(RollerNewCore4, 5);
+            _itemService.AdjustQuantity(RollerNewCore, 7);
+            _itemService.AdjustQuantity(RollerNewCore1, 7);
+            _itemService.AdjustQuantity(RollerNewCore2, 7);
+            _itemService.AdjustQuantity(RollerNewCore3, 7);
+            _itemService.AdjustQuantity(RollerNewCore4, 7);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore1.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore2.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore3.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, NewCore4.Id), 7);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore1.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore2.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore3.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, UsedCore4.Id), 7);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore1.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore2.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore3.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerNewCore4.Id), 7);
 
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore1.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore2.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore3.Id), 5);
-            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore4.Id), 5);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore1.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore2.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore3.Id), 7);
+            _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, RollerUsedCore4.Id), 7);
         }
 
         public void PopulateWarehouseMutationForRollerIdentificationAndRecovery()
@@ -594,14 +594,8 @@ namespace TestValidation
 
         public void PopulateCoreIdentifications()
         {
-            warehouseMutationOrder = _warehouseMutationOrderService.ConfirmObject(warehouseMutationOrder, _warehouseMutationOrderDetailService, _itemService, _barringService, _warehouseItemService);
-            wmoDetail1 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail1, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
-            wmoDetail2 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail2, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
-            wmoDetail3 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail3, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
-            wmoDetail4 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail4, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
-            wmoDetail5 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail5, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
-            wmoDetail6 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail6, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
-            wmoDetail7 = _warehouseMutationOrderDetailService.FinishObject(wmoDetail7, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, _stockMutationService);
+            warehouseMutationOrder = _warehouseMutationOrderService.ConfirmObject(warehouseMutationOrder, DateTime.Today, _warehouseMutationOrderDetailService, _itemService,
+                                                                                  _barringService, _warehouseItemService, _stockMutationService);
             
             coreIdentification = new CoreIdentification()
             {
@@ -748,17 +742,17 @@ namespace TestValidation
         
         public void PopulateRecoveryOrders()
         {
-            coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
-            coreIdentificationContact = _coreIdentificationService.ConfirmObject(coreIdentificationContact, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
-            coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
+            coreIdentification = _coreIdentificationService.ConfirmObject(coreIdentification, DateTime.Today, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
+            coreIdentificationContact = _coreIdentificationService.ConfirmObject(coreIdentificationContact, DateTime.Today, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
+            coreIdentificationInHouse = _coreIdentificationService.ConfirmObject(coreIdentificationInHouse, DateTime.Today, _coreIdentificationDetailService, _stockMutationService, _recoveryOrderService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService, _barringService);
 
-            coreIdentificationDetail = _coreIdentificationDetailService.FinishObject(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDContact1 = _coreIdentificationDetailService.FinishObject(coreIDContact1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDContact2 = _coreIdentificationDetailService.FinishObject(coreIDContact2, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDContact3 = _coreIdentificationDetailService.FinishObject(coreIDContact3, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDInHouse1 = _coreIdentificationDetailService.FinishObject(coreIDInHouse1, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDInHouse2 = _coreIdentificationDetailService.FinishObject(coreIDInHouse2, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            coreIDInHouse3 = _coreIdentificationDetailService.FinishObject(coreIDInHouse3, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIdentificationDetail = _coreIdentificationDetailService.FinishObject(coreIdentificationDetail, DateTime.Today, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDContact1 = _coreIdentificationDetailService.FinishObject(coreIDContact1, DateTime.Today, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDContact2 = _coreIdentificationDetailService.FinishObject(coreIDContact2, DateTime.Today, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDContact3 = _coreIdentificationDetailService.FinishObject(coreIDContact3, DateTime.Today, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse1 = _coreIdentificationDetailService.FinishObject(coreIDInHouse1, DateTime.Today, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse2 = _coreIdentificationDetailService.FinishObject(coreIDInHouse2, DateTime.Today, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            coreIDInHouse3 = _coreIdentificationDetailService.FinishObject(coreIDInHouse3, DateTime.Today, _coreIdentificationService, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
 
             recoveryOrder = new RecoveryOrder()
             {
@@ -860,12 +854,12 @@ namespace TestValidation
             // recoveryODContact2, recoveryODInHouse3 are rejected.
             // The rest are delivered back to localWarehouse to complete the batch.
             // New recovery orders are created to complete coreIdentificationInHouse and coreIdentificationContact
-            _recoveryOrderService.ConfirmObject(recoveryOrderContact, _coreIdentificationDetailService, _recoveryOrderDetailService,
+            _recoveryOrderService.ConfirmObject(recoveryOrderContact, DateTime.Today, _coreIdentificationDetailService, _recoveryOrderDetailService,
                                       _recoveryAccessoryDetailService, _coreBuilderService, _stockMutationService, _itemService,
                                       _barringService, _warehouseItemService, _warehouseService);
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact1);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact1);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact1);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact1, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact1);
@@ -875,7 +869,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact2);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact2);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact2, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2);
@@ -885,7 +879,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact3);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact3);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact3);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact3, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact3);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact3);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact3);
@@ -895,7 +889,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse1);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse1);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse1, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse1);
@@ -905,7 +899,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse2);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse2);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse2, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse2);
@@ -919,27 +913,26 @@ namespace TestValidation
                 Quantity = 1,
                 RecoveryOrderDetailId = recoveryODInHouse2.Id
             };
-            _recoveryAccessoryDetailService.CreateObject(accessory1, _recoveryOrderDetailService, _itemService, _itemTypeService);
-            _recoveryAccessoryDetailService.FinishObject(accessory1, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _warehouseItemService);
-
+            _recoveryAccessoryDetailService.CreateObject(accessory1, _recoveryOrderService, _recoveryOrderDetailService,
+                                                         _itemService, _itemTypeService, _warehouseItemService);
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3);
 
-            _recoveryOrderDetailService.FinishObject(recoveryODContact1, _coreIdentificationService, _coreIdentificationDetailService,
+            _recoveryOrderDetailService.FinishObject(recoveryODContact1, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                        _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
                                                        _itemService, _warehouseItemService, _barringService, _stockMutationService);
-            _recoveryOrderDetailService.RejectObject(recoveryODContact2, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+            _recoveryOrderDetailService.RejectObject(recoveryODContact2, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
                                                        _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
                                                        _warehouseItemService, _barringService, _stockMutationService);
-            _recoveryOrderDetailService.FinishObject(recoveryODContact3, _coreIdentificationService, _coreIdentificationDetailService,
+            _recoveryOrderDetailService.FinishObject(recoveryODContact3, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                        _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
                                                        _itemService, _warehouseItemService, _barringService, _stockMutationService);
-            _recoveryOrderDetailService.FinishObject(recoveryODInHouse1, _coreIdentificationService, _coreIdentificationDetailService,
+            _recoveryOrderDetailService.FinishObject(recoveryODInHouse1, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                        _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
                                                        _itemService, _warehouseItemService, _barringService, _stockMutationService);
-            _recoveryOrderDetailService.FinishObject(recoveryODInHouse2, _coreIdentificationService, _coreIdentificationDetailService,
+            _recoveryOrderDetailService.FinishObject(recoveryODInHouse2, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                        _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
                                                        _itemService, _warehouseItemService, _barringService, _stockMutationService);
-            _recoveryOrderDetailService.RejectObject(recoveryODInHouse3, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+            _recoveryOrderDetailService.RejectObject(recoveryODInHouse3, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
                                                        _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
                                                        _warehouseItemService, _barringService, _stockMutationService);
         }
@@ -972,10 +965,8 @@ namespace TestValidation
 
         public void PopulateRecoveryOrders3()
         {
-            _stockAdjustmentService.ConfirmObject(stockAdjustment, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            _stockAdjustmentDetailService.FinishObject(stockAD1, _stockAdjustmentService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            _stockAdjustmentDetailService.FinishObject(stockAD2, _stockAdjustmentService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-
+            _stockAdjustmentService.ConfirmObject(stockAdjustment, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            
             recoveryOrderContact2 = new RecoveryOrder()
             {
                 Code = "R002C2",
@@ -1019,14 +1010,14 @@ namespace TestValidation
 
         public void PopulateCoreIdentifications2()
         {
-            _recoveryOrderService.ConfirmObject(recoveryOrderContact2, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService,
+            _recoveryOrderService.ConfirmObject(recoveryOrderContact2, DateTime.Today, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService,
                                                 _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _warehouseService);
-            _recoveryOrderService.ConfirmObject(recoveryOrderInHouse2, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService,
+            _recoveryOrderService.ConfirmObject(recoveryOrderInHouse2, DateTime.Today, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService,
                                                 _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _warehouseService);
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse3b);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse3b);
@@ -1036,7 +1027,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact2b);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2b);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact2b);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact2b, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2b);
@@ -1044,10 +1035,10 @@ namespace TestValidation
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact2b);
             _recoveryOrderDetailService.PackageObject(recoveryODContact2b);
 
-            _recoveryOrderDetailService.FinishObject(recoveryODInHouse3b, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+            _recoveryOrderDetailService.FinishObject(recoveryODInHouse3b, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
                                                      _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
                                                      _barringService, _stockMutationService);
-            _recoveryOrderDetailService.FinishObject(recoveryODContact2b, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
+            _recoveryOrderDetailService.FinishObject(recoveryODContact2b, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
                                                      _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
                                                      _barringService, _stockMutationService);
         }
@@ -1097,15 +1088,9 @@ namespace TestValidation
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailContact3, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
-            _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationContact, _rollerWarehouseMutationDetailService, _itemService,
-                                                          _barringService, _warehouseItemService);
-            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailContact1, _rollerWarehouseMutationService, _itemService, _barringService,
-                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
-            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailContact2, _rollerWarehouseMutationService, _itemService, _barringService,
-                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
-            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailContact3, _rollerWarehouseMutationService, _itemService, _barringService,
-                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
-
+            _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationContact, DateTime.Today, _rollerWarehouseMutationDetailService, _itemService,
+                                                          _barringService, _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+            
             rollerWarehouseMutationInHouse = new RollerWarehouseMutation()
             {
                 CoreIdentificationId = coreIdentificationInHouse.Id,
@@ -1148,14 +1133,8 @@ namespace TestValidation
             _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse3, _rollerWarehouseMutationService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
-            _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationInHouse, _rollerWarehouseMutationDetailService, _itemService,
-                                                          _barringService, _warehouseItemService);
-            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailInHouse1, _rollerWarehouseMutationService, _itemService, _barringService,
-                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
-            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailInHouse2, _rollerWarehouseMutationService, _itemService, _barringService,
-                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
-            _rollerWarehouseMutationDetailService.FinishObject(rwmDetailInHouse3, _rollerWarehouseMutationService, _itemService, _barringService,
-                                                               _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+            _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationInHouse, DateTime.Today, _rollerWarehouseMutationDetailService, _itemService,
+                                                          _barringService, _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
         }
 
         public void PopulateBarring()

@@ -18,7 +18,12 @@ namespace Data.Repository
 
         public IList<SalesInvoice> GetAll()
         {
-            return FindAll(pi => !pi.IsDeleted).ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<SalesInvoice> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
         public SalesInvoice GetObjectById(int Id)

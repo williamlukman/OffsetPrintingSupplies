@@ -45,6 +45,11 @@ namespace Service.Service
             return _repository.GetAllObjectsByWarehouseId(WarehouseId);
         }
 
+        public IList<CoreIdentification> GetConfirmedObjects()
+        {
+            return _repository.GetConfirmedObjects();
+        }
+
         public CoreIdentification GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -107,9 +112,9 @@ namespace Service.Service
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
                                                 IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
         {
-            if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService))
+            coreIdentification.ConfirmationDate = ConfirmationDate;
+            if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _itemService, _warehouseItemService))
             {
-                coreIdentification.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(coreIdentification);
             }
             return coreIdentification;

@@ -14,6 +14,7 @@ namespace Core.Interface.Service
         IList<SalesOrder> GetAll();
         SalesOrder GetObjectById(int Id);
         IList<SalesOrder> GetObjectsByContactId(int contactId);
+        IList<SalesOrder> GetConfirmedObjects();
         SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService);
         SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService);
@@ -26,5 +27,7 @@ namespace Core.Interface.Service
                                    IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                    IStockMutationService _stockMutationService,
                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        SalesOrder CheckAndSetDeliveryComplete(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
+        SalesOrder UnsetDeliveryComplete(SalesOrder salesOrder);
     }
 }

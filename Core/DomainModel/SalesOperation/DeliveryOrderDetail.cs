@@ -13,10 +13,8 @@ namespace Core.DomainModel
         public int ItemId { get; set; }
         public int Quantity { get; set; }
         public bool IsAllInvoiced { get; set; }
-        public int InvoicedQuantity { get; set; }
         public int PendingInvoicedQuantity { get; set; }
         public int SalesOrderDetailId { get; set; }
-        public int ContactId { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

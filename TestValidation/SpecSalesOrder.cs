@@ -167,7 +167,7 @@ namespace TestValidation
                     salesOrderDetail1 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_batiktulis.Id, 5, 100000, _salesOrderService, _itemService);
                     salesOrderDetail2 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_sepatubola.Id, 12, 850000, _salesOrderService, _itemService);
                     salesOrder = _salesOrderService.SoftDeleteObject(salesOrder, _salesOrderDetailService);
-                    salesOrder.Errors.Count().should_be(0);
+                    salesOrder.Errors.Count().should_not_be(0);
                 };
 
                 it["delete_salesorderdetail"] = () =>
@@ -193,7 +193,7 @@ namespace TestValidation
                         salesOrderDetail2 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_sepatubola.Id, 12, 850000, _salesOrderService, _itemService);
                         Quantity1 = item_batiktulis.PendingDelivery;
                         Quantity2 = item_sepatubola.PendingDelivery;
-                        salesOrder = _salesOrderService.ConfirmObject(salesOrder, _salesOrderDetailService, _stockMutationService, _itemService);
+                        salesOrder = _salesOrderService.ConfirmObject(salesOrder, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                     };
 
                     it["confirmed_salesorder"] = () =>
@@ -201,16 +201,14 @@ namespace TestValidation
                         salesOrder.Errors.Count().should_be(0);
                     };
 
-                    it["finished_details"] = () =>
+                    it["check_detailsconfirmation"] = () =>
                     {
-                        salesOrderDetail1 = _salesOrderDetailService.FinishObject(salesOrderDetail1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                        salesOrderDetail2 = _salesOrderDetailService.FinishObject(salesOrderDetail2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                         IList<StockMutation> stockMutationsDetail1 = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(item_batiktulis.Id, Core.Constants.Constant.SourceDocumentDetailType.SalesOrderDetail, salesOrderDetail1.Id);
                         stockMutationsDetail1.Count().should_be(1);
                         IList<StockMutation> stockMutationsDetail2 = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(item_sepatubola.Id, Core.Constants.Constant.SourceDocumentDetailType.SalesOrderDetail, salesOrderDetail2.Id);
                         stockMutationsDetail2.Count().should_be(1);
-                        salesOrderDetail1.IsFinished.should_be(true);
-                        salesOrderDetail2.IsFinished.should_be(true);
+                        salesOrderDetail1.IsConfirmed.should_be(true);
+                        salesOrderDetail2.IsConfirmed.should_be(true);
                     };
 
                     it["delete_confirmed_salesorder"] = () =>
@@ -221,12 +219,10 @@ namespace TestValidation
 
                     it["unfinish_salesorderdetail"] = () =>
                     {
-                        salesOrderDetail1 = _salesOrderDetailService.FinishObject(salesOrderDetail1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                        salesOrderDetail2 = _salesOrderDetailService.FinishObject(salesOrderDetail2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                        salesOrderDetail1 = _salesOrderDetailService.UnfinishObject(salesOrderDetail1, _salesOrderService, _deliveryOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                        salesOrderDetail2 = _salesOrderDetailService.UnfinishObject(salesOrderDetail2, _salesOrderService, _deliveryOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                        salesOrderDetail1.IsFinished.should_be(false);
-                        salesOrderDetail2.IsFinished.should_be(false);
+                        _salesOrderService.UnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _stockMutationService,
+                                                           _itemService, _barringService, _warehouseItemService);
+                        salesOrderDetail1.IsConfirmed.should_be(false);
+                        salesOrderDetail2.IsConfirmed.should_be(false);
                         salesOrderDetail1.Errors.Count().should_be(0);
                         salesOrderDetail2.Errors.Count().should_be(0);
                         IList<StockMutation> stockMutationsDetail1 = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(item_batiktulis.Id, Core.Constants.Constant.SourceDocumentDetailType.SalesOrderDetail, salesOrderDetail1.Id);
@@ -237,8 +233,8 @@ namespace TestValidation
 
                     it["delete_unfinish_salesorderdetail"] = () =>
                     {
-                        salesOrderDetail2 = _salesOrderDetailService.FinishObject(salesOrderDetail2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                        salesOrderDetail2 = _salesOrderDetailService.UnfinishObject(salesOrderDetail2, _salesOrderService, _deliveryOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                        _salesOrderService.UnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _stockMutationService,
+                                                           _itemService, _barringService, _warehouseItemService);
                         salesOrderDetail2 = _salesOrderDetailService.SoftDeleteObject(salesOrderDetail2);
                         salesOrderDetail2.Errors.Count().should_be(0);
                         salesOrderDetail2.IsDeleted.should_be(true);
@@ -246,8 +242,6 @@ namespace TestValidation
 
                     it["should increase pending delivery in item"] = () =>
                     {
-                        salesOrderDetail1 = _salesOrderDetailService.FinishObject(salesOrderDetail1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                        salesOrderDetail2 = _salesOrderDetailService.FinishObject(salesOrderDetail2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                         Item NewItem1 = _itemService.GetObjectById(item_batiktulis.Id);
                         Item NewItem2 = _itemService.GetObjectById(item_sepatubola.Id);
 

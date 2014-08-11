@@ -57,14 +57,14 @@ namespace TestValidation
 
             it["confirms_barringorder"] = () =>
             {
-                d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
+                d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringOrderContact.IsConfirmed.should_be(true);
                 d.barringOrderContact.Errors.Count().should_be(0);
             };
 
             it["unconfirms_barring_order"] = () =>
             {
-                d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
+                d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringOrderContact.IsConfirmed.should_be(true);
                 d.barringOrderContact = d._barringOrderService.UnconfirmObject(d.barringOrderContact, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringOrderContact.IsConfirmed.should_be(false);
@@ -73,7 +73,7 @@ namespace TestValidation
 
             it["deletes_barringorder_with_processed_detail"] = () =>
             {
-                d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
+                d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
                 d.barringODContact1 = d._barringOrderDetailService.CutObject(d.barringODContact1);
                 d.barringODContact1 = d._barringOrderDetailService.SideSealObject(d.barringODContact1);
 
@@ -85,7 +85,7 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
+                    d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
 
                     d._barringOrderDetailService.CutObject(d.barringODContact1);
                     d._barringOrderDetailService.CutObject(d.barringODContact2);
@@ -174,10 +174,10 @@ namespace TestValidation
                         int barring2quantity = d.barring2.Quantity;
                         int barring1warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring1.Id).Quantity;
                         int barring2warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring2.Id).Quantity;
-                        d._barringOrderDetailService.FinishObject(d.barringODContact1, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
-                        d._barringOrderDetailService.FinishObject(d.barringODContact2, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
-                        d._barringOrderDetailService.FinishObject(d.barringODContact3, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
-                        d._barringOrderDetailService.RejectObject(d.barringODContact4, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
+                        d._barringOrderDetailService.FinishObject(d.barringODContact1, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
+                        d._barringOrderDetailService.FinishObject(d.barringODContact2, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
+                        d._barringOrderDetailService.FinishObject(d.barringODContact3, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
+                        d._barringOrderDetailService.RejectObject(d.barringODContact4, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
                         int blanket1quantityfinal = d.blanket1.Quantity;
                         int blanket2quantityfinal = d.blanket2.Quantity;
                         int bargenericquantityfinal = d.bargeneric.Quantity;

@@ -175,8 +175,6 @@ namespace Validation.Validation
         {
             VHasConfirmationDate(stockAdjustmentDetail);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
-            VStockAdjustmentHasBeenConfirmed(stockAdjustmentDetail, _stockAdjustmentService);
-            if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VNonNegativeStockQuantity(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService, true);
             return stockAdjustmentDetail;
         }

@@ -150,8 +150,6 @@ namespace Validation.Validation
         {
             VHasConfirmationDate(warehouseMutationOrderDetail);
             if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VWarehouseMutationOrderHasBeenConfirmed(warehouseMutationOrderDetail, _warehouseMutationOrderService);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
             VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, true);
             return warehouseMutationOrderDetail;
         }
