@@ -11,22 +11,17 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class MstWarehouseController : Controller
+    public class MstContactController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemTypeController");
-        private IWarehouseService _warehouseService;
-        private IWarehouseItemService _warehouseItemService;
-        private IItemService _itemService;
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ContactController");
+        private ICustomerService _customerService;
+        private IBarringService _barringService;
         private ICoreIdentificationService _coreIdentificationService;
-        private IBarringOrderService _barringOrderService;
-
-        public MstWarehouseController()
-        {  
-            _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-            _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
-             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
-            _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
-            _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+        public MstContactController()
+        {
+            _customerService = new CustomerService(new CustomerRepository(), new CustomerValidator());
+            _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
+            _barringService = new BarringService(new BarringRepository(),new BarringValidator());
         }
 
         public ActionResult Index()
@@ -34,16 +29,16 @@ namespace WebView.Controllers
             return View();
         }
 
-          public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
 
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query = _warehouseService.GetAll().Where(d =>d.IsDeleted ==false);
-
-            var list = query as IEnumerable<Warehouse>;
+            var query = _customerService.GetAll().Where(d => d.IsDeleted == false);
+            
+            var list = query as IEnumerable<Customer>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -73,23 +68,25 @@ namespace WebView.Controllers
                         id = item.Id,
                         cell = new object[] {
                             item.Id,
-                            item.Code,
                             item.Name,
-                            item.Description,
-                            item.IsMovingWarehouse,
+                            item.Address,
+                            item.CustomerNo,
+                            item.PIC,
+                            item.PICCustomerNo,
+                            item.Email,
                             item.CreatedAt,
-                            item.UpdatedAt
+                            item.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public dynamic Insert(Warehouse model)
+        public dynamic Insert(Customer model)
         {
             try
             {
-                model = _warehouseService.CreateObject(model,_warehouseItemService,_itemService);
+                model = _customerService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -103,15 +100,18 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(Warehouse model)
+        public dynamic Update(Customer model)
         {
             try
             {
-                var data = _warehouseService.GetObjectById(model.Id);
+                var data = _customerService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                data.Description = model.Description;
-                data.IsMovingWarehouse = model.IsMovingWarehouse;
-                model = _warehouseService.UpdateObject(data);
+                data.Address = model.Address;
+                data.CustomerNo = model.CustomerNo;
+                data.PIC = model.PIC;
+                data.PICCustomerNo = model.PICCustomerNo;
+                data.Email = model.Email;
+                model = _customerService.UpdateObject(data);
             }
             catch (Exception ex)
             {
@@ -125,12 +125,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(Warehouse model)
+        public dynamic Delete(Customer model)
         {
             try
             {
-                var data = _warehouseService.GetObjectById(model.Id);
-                model = _warehouseService.SoftDeleteObject(data,_warehouseItemService,_coreIdentificationService,_barringOrderService);
+                var data = _customerService.GetObjectById(model.Id);
+                model = _customerService.SoftDeleteObject(data, _coreIdentificationService, _barringService);
             }
             catch (Exception ex)
             {
@@ -143,5 +143,4 @@ namespace WebView.Controllers
             });
         }
     }
-    }
-
+}

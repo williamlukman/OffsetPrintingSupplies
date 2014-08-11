@@ -8,7 +8,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstWarehouse/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstContact/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -19,35 +19,23 @@
         ClearErrorMessage();
     }
 
-    function clearForm(form) {
-
-        $(':input', form).each(function () {
-            var type = this.type;
-            var tag = this.tagName.toLowerCase(); // normalize case
-            if (type == 'text' || type == 'password' || tag == 'textarea')
-                this.value = "";
-            else if (type == 'checkbox' || type == 'radio')
-                this.checked = false;
-            else if (tag == 'select')
-                this.selectedIndex = 0;
-        });
-    }
-
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
 
-    //GRID+++++++++++++++
+    //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstWarehouse/GetList',
+        url: base_url + 'MstContact/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Name', 'Description', 'Is Moving Warehouse','Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact No','Email', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 80 },
 				  { name: 'name', index: 'name', width: 80 },
-                  { name: 'description', index: 'description', width: 250 },
-                  { name: 'ismoving', index: 'ismoving', width: 60 },
+                  { name: 'address', index: 'address', width: 250 },
+                  { name: 'contactno', index: 'contactno', width: 80 },
+                  { name: 'pic', index: 'pic', width: 80 },
+                  { name: 'piccontactno', index: 'piccontactno', width: 80 },
+                  { name: 'email', index: 'email', width: 80 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -64,22 +52,23 @@
         height: $(window).height() - 200,
         gridComplete:
 		  function () {
-		      var ids = $(this).jqGrid('getDataIDs');
-		      for (var i = 0; i < ids.length; i++) {
-		          var cl = ids[i];
-		          row = $(this).getRowData(cl).ismoving;
-		          if (row == 'true') {
-		              row = "YES";
-		          } else {
-		              row = "NO";
-		          }
-		          $(this).jqGrid('setRowData', ids[i], { ismoving: row });
-		      }
+		      //var ids = $(this).jqGrid('getDataIDs');
+		      //for (var i = 0; i < ids.length; i++) {
+		      //    var cl = ids[i];
+		      //    rowDel = $(this).getRowData(cl).deletedimg;
+		      //    if (rowDel == 'true') {
+		      //        img = "<img src ='" + base_url + "content/assets/images/remove.png' title='Data has been deleted !' width='16px' height='16px'>";
+
+		      //    } else {
+		      //        img = "";
+		      //    }
+		      //    $(this).jqGrid('setRowData', ids[i], { deletedimg: img });
+		      //}
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -93,7 +82,6 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-      
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
     });
@@ -107,19 +95,12 @@
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $("#form_btn_save").data('kode', id);
             $('#id').val(ret.id);
-            $('#Code').val(ret.code);
             $('#Name').val(ret.name);
-            $('#Description').val(ret.description);
-            var e = document.getElementById("Moving");
-            if (ret.ismoving == 'YES')
-            {
-                e.selectedIndex = 0;
-            }
-            else
-            {
-                e.selectedIndex = 1;
-            }
-
+            $('#Address').val(ret.address);
+            $('#ContactNo').val(ret.contaactno);
+            $('#PIC').val(ret.pic);
+            $('#PICContactno').val(ret.piccontactno);
+            $('#Email').val(ret.email);
             $("#form_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -151,7 +132,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstWarehouse/Delete",
+            url: base_url + "MstContact/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -175,28 +156,27 @@
 
 
         ClearErrorMessage();
-        var e = document.getElementById("Moving");
-        var moving = e.options[e.selectedIndex].value;
+
         var submitURL = '';
         var id = $("#form_btn_save").data('kode');
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstWarehouse/Update';
+            submitURL = base_url + 'MstContact/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstWarehouse/Insert';
+            submitURL = base_url + 'MstContact/Insert';
         }
-        
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Code : $("#Name").val(),
-                Name: $("#Name").val(), Description: $("#Description").val(),
-                IsMovingWarehouse: $('#Moving').val()
+                Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
+                ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
+                Email: $("#Email").val()
             }),
             async: false,
             cache: false,
@@ -217,9 +197,9 @@
                     }
                     //var error = '';
                     //for (var key in result.model.Errors) {
-                    //    error = error + "<br>" + key + " " + result.model.Errors[key];
+                    //    error = error + "<br>" + key + " "+result.model.Errors[key];
                     //}
-                    //$.messager.alert('Warning', error, 'warning');
+                    //$.messager.alert('Warning',error, 'warning');
                 }
                 else {
                     ReloadGrid();
@@ -229,6 +209,19 @@
         });
     });
 
+    function clearForm(form) {
+
+        $(':input', form).each(function () {
+            var type = this.type;
+            var tag = this.tagName.toLowerCase(); // normalize case
+            if (type == 'text' || type == 'password' || tag == 'textarea')
+                this.value = "";
+            else if (type == 'checkbox' || type == 'radio')
+                this.checked = false;
+            else if (tag == 'select')
+                this.selectedIndex = 0;
+        });
+    }
 
 
 }); //END DOCUMENT READY

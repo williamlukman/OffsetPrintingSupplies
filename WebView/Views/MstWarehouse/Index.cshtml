@@ -11,7 +11,7 @@
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/masterwarehouse.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Master Item Type :.">
+    title=".: Master WareHouse :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -48,13 +48,13 @@
                             <td width="139" nowrap style="width: 100px">
                                 <label>Code</label></td>
                             <td width="226">
-                                <input id="Code" type="text" size="10" maxlength="60" align="left"/></td>
+                                <input id="Code" name ="Code" type="text" size="10" maxlength="60" align="left"/></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Name</label></td>
                             <td colspan="3">
-                                <input id="Name" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
                         </tr>
                         <tr>
                             <td valign="top">
@@ -68,7 +68,10 @@
                                 <label>Is Moving Warehouse</label>
                             </td>
                             <td>
-                                <input id="Moving" type="checkbox" />
+                                <SELECT id = Moving>
+                                <OPTION VALUE = "true" selected >Yes</OPTION>
+                                <OPTION VALUE = "false">No</OPTION>
+                                </SELECT>
                             </td>
                         </tr>
                     </table>

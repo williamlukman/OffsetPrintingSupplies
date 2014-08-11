@@ -177,23 +177,24 @@
             success: function (result) {
                 if (JSON.stringify(result.model.Errors) != '{}')
                 {
-                    //for (var key in result.model.Errors) {
-                    //    if (key != null && key != undefined && key != 'Generic') {
-                    //        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
-                    //        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
-                    //    }
-                    //    else {
-                    //        $.messager.alert('Warning', result.model.Errors[key], 'warning');
-                    //    }
-                    //}
-                    var error = '';
                     for (var key in result.model.Errors) {
-                        error = error + "<br>" + key + " "+result.model.Errors[key];
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                        }
                     }
-                    $.messager.alert('Warning',error, 'warning');
+                    //var error = '';
+                    //for (var key in result.model.Errors) {
+                    //    error = error + "<br>" + key + " "+result.model.Errors[key];
+                    //}
+                    //$.messager.alert('Warning',error, 'warning');
                 }
                 else {
                     ReloadGrid();
+                    $("#form_div").dialog('close')
                 }
             }
         });
@@ -209,7 +210,7 @@
             else if (type == 'checkbox' || type == 'radio')
                 this.checked = false;
             else if (tag == 'select')
-                this.selectedIndex = -1;
+                this.selectedIndex = 0;
         });
     }
 

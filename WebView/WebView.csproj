@@ -149,6 +149,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MstContactController.cs" />
     <Compile Include="Controllers\MstItemTypeController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
     <Compile Include="GeneralFunction.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\apps_js\MasterContact.js" />
     <Content Include="Content\apps_js\MasterItemType.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
     <Content Include="Content\apps_js\tools.js" />
@@ -1013,6 +1015,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\MstItemType\Index.cshtml" />
     <Content Include="Views\MstWarehouse\Index.cshtml" />
+    <Content Include="Views\MstContact\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
