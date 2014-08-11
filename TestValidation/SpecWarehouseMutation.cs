@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -123,9 +122,9 @@ namespace TestValidation
                     d.wmoDetail7 = d._warehouseMutationOrderDetailService.FinishObject(d.wmoDetail7, d._warehouseMutationOrderService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
                 };
 
-                it["validates_finish_details"] = () =>
+                it["validates_confirmeddetails"] = () =>
                 {
-                    d.warehouseMutationOrder.IsCompleted.should_be(true);
+                    d.warehouseMutationOrder.IsConfirmed.should_be(true);
                     d.warehouseMutationOrder.Errors.Count().should_be(0);
                 };
             };

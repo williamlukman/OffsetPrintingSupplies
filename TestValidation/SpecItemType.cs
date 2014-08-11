@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -52,7 +51,6 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);

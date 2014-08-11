@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -17,7 +16,7 @@ namespace NSpec
 
     public class SpecPurchaseOrder : nspec
     {
-        Customer customer;
+        Contact contact;
         PurchaseOrderDetail poDetail1;
         PurchaseOrderDetail poDetail2;
         PurchaseOrder newPO;
@@ -27,7 +26,7 @@ namespace NSpec
         ItemType type;
         Warehouse warehouse;
         IItemService itemService;
-        ICustomerService customerService;
+        IContactService contactService;
         IPurchaseOrderService poService;
         IPurchaseOrderDetailService poDetailService;
         IStockMutationService stockMutationService;
@@ -46,7 +45,7 @@ namespace NSpec
             {
                 db.DeleteAllTables();
                 itemService = new ItemService(new ItemRepository(), new ItemValidator());
-                customerService = new CustomerService(new CustomerRepository(), new CustomerValidator());
+                contactService = new ContactService(new ContactRepository(), new ContactValidator());
                 poService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
                 poDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
                 stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
@@ -62,16 +61,16 @@ namespace NSpec
                 };
                 _uomService.CreateObject(Pcs);
 
-                customer = new Customer()
+                contact = new Contact()
                 {
                     Name = "President of Indonesia",
                     Address = "Istana Negara Jl. Veteran No. 16 Jakarta Pusat",
-                    CustomerNo = "021 3863777",
+                    ContactNo = "021 3863777",
                     PIC = "Mr. President",
-                    PICCustomerNo = "021 3863777",
+                    PICContactNo = "021 3863777",
                     Email = "random@ri.gov.au"
                 };
-                customer = customerService.CreateObject(customer);
+                contact = contactService.CreateObject(contact);
 
                 type = _itemTypeService.CreateObject("Item", "Item");
 
@@ -79,7 +78,6 @@ namespace NSpec
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 warehouse = _warehouseService.CreateObject(warehouse, _warehouseItemService, itemService);
@@ -117,17 +115,17 @@ namespace NSpec
                 {
                     item1.Errors.Count().should_be(0);
                     item2.Errors.Count().should_be(0);
-                    customer.Errors.Count().should_be(0);
+                    contact.Errors.Count().should_be(0);
                 };
 
             it["creates_po"] = () =>
                 {
                     newPO = new PurchaseOrder
                     {
-                        CustomerId = customer.Id,
+                        ContactId = contact.Id,
                         PurchaseDate = DateTime.Now
                     };
-                    newPO = poService.CreateObject(newPO, customerService);
+                    newPO = poService.CreateObject(newPO, contactService);
                     newPO.Errors.Count().should_be(0);
                     poService.GetObjectById(newPO.Id).should_not_be_null();
                 };
@@ -138,10 +136,10 @@ namespace NSpec
                     {
                         newPO = new PurchaseOrder
                         {
-                            CustomerId = customer.Id,
+                            ContactId = contact.Id,
                             PurchaseDate = DateTime.Now
                         };
-                        newPO = poService.CreateObject(newPO, customerService);
+                        newPO = poService.CreateObject(newPO, contactService);
                     };
 
                     it["creates po detail"] = () =>
@@ -243,10 +241,10 @@ namespace NSpec
                 {
                     newPO = new PurchaseOrder
                     {
-                        CustomerId = customer.Id,
+                        ContactId = contact.Id,
                         PurchaseDate = DateTime.Now
                     };
-                    newPO = poService.CreateObject(newPO, customerService);
+                    newPO = poService.CreateObject(newPO, contactService);
 
                     poDetail1 = new PurchaseOrderDetail
                     {

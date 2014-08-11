@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -58,7 +57,6 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
@@ -113,7 +111,7 @@ namespace TestValidation
                     d._itemService.AdjustQuantity(d.itemCompound, 2);
                     d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.itemCompound.Id), 2);
 
-                    d.customer = d._customerService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+                    d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
                     d.machine = new Machine()
                     {
@@ -134,13 +132,13 @@ namespace TestValidation
                     d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                     d.coreIdentification = new CoreIdentification()
                     {
-                        CustomerId = d.customer.Id,
+                        ContactId = d.contact.Id,
                         Code = "CI0001",
                         Quantity = 1,
                         IdentifiedDate = DateTime.Now,
                         WarehouseId = d.localWarehouse.Id
                     };
-                    d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
+                    d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
                 };
 
                 it["delete_rollertype_with_coreidentificationdetail"] = () =>

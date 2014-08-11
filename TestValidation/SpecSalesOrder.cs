@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -17,7 +16,7 @@ namespace TestValidation
 
     public class SpecSalesOrder : nspec
     {
-        Customer customer;
+        Contact contact;
         Item item_sepatubola;
         Item item_batiktulis;
         SalesOrder salesOrder;
@@ -26,7 +25,7 @@ namespace TestValidation
         UoM Pcs;
         ItemType type;
         Warehouse warehouse;
-        ICustomerService _customerService;
+        IContactService _contactService;
         IItemService _itemService;
         ISalesOrderService _salesOrderService;
         ISalesOrderDetailService _salesOrderDetailService;
@@ -47,7 +46,7 @@ namespace TestValidation
             using (db)
             {
                 db.DeleteAllTables();
-                _customerService = new CustomerService(new CustomerRepository(), new CustomerValidator());
+                _contactService = new ContactService(new ContactRepository(), new ContactValidator());
                 _itemService = new ItemService(new ItemRepository(), new ItemValidator());
                 _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
                 _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
@@ -66,16 +65,16 @@ namespace TestValidation
                 };
                 _uomService.CreateObject(Pcs);
 
-                customer = new Customer()
+                contact = new Contact()
                 {
                     Name = "President of Indonesia",
                     Address = "Istana Negara Jl. Veteran No. 16 Jakarta Pusat",
-                    CustomerNo = "021 3863777",
+                    ContactNo = "021 3863777",
                     PIC = "Mr. President",
-                    PICCustomerNo = "021 3863777",
+                    PICContactNo = "021 3863777",
                     Email = "random@ri.gov.au"
                 };
-                customer = _customerService.CreateObject(customer);
+                contact = _contactService.CreateObject(contact);
 
                 type = _itemTypeService.CreateObject("Item", "Item");
 
@@ -83,7 +82,6 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 warehouse = _warehouseService.CreateObject(warehouse, _warehouseItemService, _itemService);
@@ -116,33 +114,33 @@ namespace TestValidation
 
         void salesorder_validation()
         {
-            it["validate_customer_and_items"] = () =>
+            it["validate_contact_and_items"] = () =>
             {
-                customer.Errors.Count().should_be(0);
+                contact.Errors.Count().should_be(0);
                 item_batiktulis.Errors.Count().should_be(0);
                 item_sepatubola.Errors.Count().should_be(0);
             };
 
             it["create_salesorder"] = () =>
             {
-                salesOrder = _salesOrderService.CreateObject(customer.Id, new DateTime(2000, 1, 1), _customerService);
+                salesOrder = _salesOrderService.CreateObject(contact.Id, new DateTime(2000, 1, 1), _contactService);
                 salesOrder.Errors.Count().should_be(0);
             };
 
-            it["create_salesorder_with_no_customerid"] = () =>
+            it["create_salesorder_with_no_contactid"] = () =>
             {
                 salesOrder = new SalesOrder()
                 {
                     SalesDate = DateTime.Now
                 };
-                _salesOrderService.CreateObject(salesOrder, _customerService);
+                _salesOrderService.CreateObject(salesOrder, _contactService);
                 salesOrder.Errors.Count().should_not_be(0);
             };
 
             it["create_salesorder_with_no_elements"] = () =>
             {
                 salesOrder = new SalesOrder();
-                _salesOrderService.CreateObject(salesOrder, _customerService);
+                _salesOrderService.CreateObject(salesOrder, _contactService);
                 salesOrder.Errors.Count().should_not_be(0);
             };
 
@@ -152,10 +150,10 @@ namespace TestValidation
                 {
                     salesOrder = new SalesOrder
                     {
-                        CustomerId = customer.Id,
+                        ContactId = contact.Id,
                         SalesDate = DateTime.Now
                     };
-                    salesOrder = _salesOrderService.CreateObject(salesOrder, _customerService);
+                    salesOrder = _salesOrderService.CreateObject(salesOrder, _contactService);
                 };
 
                 it["delete_salesorder"] = () =>

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Core.DomainModel;
 using NSpec;
 using Service.Service;
@@ -50,7 +49,6 @@ namespace TestValidation
                 {
                     Name = "Sentral Solusi Data",
                     Description = "Kali Besar Jakarta",
-                    IsMovingWarehouse = false,
                     Code = "LCL"
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
@@ -127,14 +125,14 @@ namespace TestValidation
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
                 d.coreIdentification = new CoreIdentification()
                 {
-                    CustomerId = null,
+                    ContactId = null,
                     Code = "CI0001",
                     Quantity = 1,
                     IsInHouse = true,
                     IdentifiedDate = DateTime.Now,
                     WarehouseId = d.localWarehouse.Id
                 };
-                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._customerService);
+                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
                 {
                     CoreIdentificationId = d.coreIdentification.Id,

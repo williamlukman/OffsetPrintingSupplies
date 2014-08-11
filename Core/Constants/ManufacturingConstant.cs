@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Constants
 {
@@ -29,6 +28,7 @@ namespace Core.Constants
         public class ItemTypeCase
         {
             public static string Accessory = "Accessory";
+            public static string Barring = "Barring";
             public static string Bearing = "Bearing";
             public static string Blanket = "Blanket";
             public static string Chemical = "Chemical";

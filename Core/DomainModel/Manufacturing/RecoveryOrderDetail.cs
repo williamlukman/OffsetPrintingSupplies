@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.DomainModel
 {
@@ -30,6 +29,7 @@ namespace Core.DomainModel
         public bool IsPackaged { get; set; }
 
         public bool IsRejected { get; set; }
+        public Nullable<DateTime> RejectedDate { get; set; }
         public bool IsFinished { get; set; }
         public Nullable<DateTime> FinishedDate { get; set; }
 

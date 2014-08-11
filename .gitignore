@@ -174,33 +174,28 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 
-# Bin files in Accounting project
-Accounting/bin/
-Accounting/obj/
+# Bin files in Core project
+Core/bin/
+Core/obj/
 
-# Bin files in Infoss
-Infoss/bin/
-Infoss/obj/
+# Bin files in Data project
+Data/bin/
+Data/obj/
 
-# Bin files in InfossAppService
-InfossAppService/bin/
-InfossAppService/obj/
+# Bin files in Service
+Service/bin/
+Service/obj/
 
-# Log Files
-Infoss/logs/
-Accounting/logs/
+# Bin files in Validation
+Validation/bin/
+Validation/obj/
 
+#Bin files in TestValidation
+TestValidation/bin/
+TestValidation/obj/
 
-# Tester Project
-TesterProject/bin/
-TesterProject/obj/
-
-# Tester Project.Tests
-TesterProject.Tests/bin/
-TesterProject.Tests/obj/
-
-# Database 
-Database/svc_database/obj/
-Database/svc_database/bin/
-
-infoss.v11.suo
+#Bin files in Main
+OffsetPrintingSupplies/bin/
+OffsetPrintingSupplies/obj/
+OffsetPrintingSupplies/Task.txt
+OffsetPrintingSupplies.v11.suo

@@ -40,39 +40,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validation\BarringOrderDetailValidator.cs" />
-    <Compile Include="Validation\BarringOrderValidator.cs" />
-    <Compile Include="Validation\BarringValidator.cs" />
-    <Compile Include="Validation\DeliveryOrderDetailValidator.cs" />
-    <Compile Include="Validation\DeliveryOrderValidator.cs" />
-    <Compile Include="Validation\PurchaseOrderDetailValidator.cs" />
-    <Compile Include="Validation\PurchaseOrderValidator.cs" />
-    <Compile Include="Validation\PurchaseReceivalDetailValidator.cs" />
-    <Compile Include="Validation\PurchaseReceivalValidator.cs" />
-    <Compile Include="Validation\RollerWarehouseMutationDetailValidator.cs" />
-    <Compile Include="Validation\RollerWarehouseMutationValidator.cs" />
-    <Compile Include="Validation\SalesOrderDetailValidator.cs" />
-    <Compile Include="Validation\SalesOrderValidator.cs" />
-    <Compile Include="Validation\UoMValidator.cs" />
-    <Compile Include="Validation\WarehouseMutationOrderValidator.cs" />
-    <Compile Include="Validation\WarehouseMutationOrderDetailValidator.cs" />
-    <Compile Include="Validation\StockAdjustmentDetailValidator.cs" />
-    <Compile Include="Validation\StockAdjustmentValidator.cs" />
-    <Compile Include="Validation\StockMutationValidator.cs" />
-    <Compile Include="Validation\WarehouseItemValidator.cs" />
-    <Compile Include="Validation\WarehouseValidator.cs" />
-    <Compile Include="Validation\RecoveryAccessoryDetailValidator.cs" />
-    <Compile Include="Validation\RecoveryOrderDetailValidator.cs" />
-    <Compile Include="Validation\RecoveryOrderValidator.cs" />
-    <Compile Include="Validation\CoreIdentificationValidator.cs" />
-    <Compile Include="Validation\CoreIdentificationDetailValidator.cs" />
-    <Compile Include="Validation\MachineValidator.cs" />
-    <Compile Include="Validation\RollerTypeValidator.cs" />
-    <Compile Include="Validation\CoreBuilderValidator.cs" />
-    <Compile Include="Validation\RollerBuilderValidator.cs" />
-    <Compile Include="Validation\CustomerValidator.cs" />
-    <Compile Include="Validation\ItemTypeValidator.cs" />
-    <Compile Include="Validation\ItemValidator.cs" />
+    <Compile Include="Validation\Finance\CashBankValidator.cs" />
+    <Compile Include="Validation\Finance\CashMutationValidator.cs" />
+    <Compile Include="Validation\Finance\CashBankAdjustmentValidator.cs" />
+    <Compile Include="Validation\Finance\CashBankMutationValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BarringOrderDetailValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BarringOrderValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PayableValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PaymentVoucherDetailValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PaymentVoucherValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PurchaseInvoiceDetailValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PurchaseInvoiceValidator.cs" />
+    <Compile Include="Validation\SalesOperation\ReceivableValidator.cs" />
+    <Compile Include="Validation\SalesOperation\ReceiptVoucherDetailValidator.cs" />
+    <Compile Include="Validation\SalesOperation\ReceiptVoucherValidator.cs" />
+    <Compile Include="Validation\SalesOperation\SalesInvoiceDetailValidator.cs" />
+    <Compile Include="Validation\SalesOperation\SalesInvoiceValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\BarringValidator.cs" />
+    <Compile Include="Validation\SalesOperation\DeliveryOrderDetailValidator.cs" />
+    <Compile Include="Validation\SalesOperation\DeliveryOrderValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PurchaseOrderDetailValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PurchaseOrderValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PurchaseReceivalDetailValidator.cs" />
+    <Compile Include="Validation\PurchaseOperation\PurchaseReceivalValidator.cs" />
+    <Compile Include="Validation\Manufacturing\RollerWarehouseMutationDetailValidator.cs" />
+    <Compile Include="Validation\Manufacturing\RollerWarehouseMutationValidator.cs" />
+    <Compile Include="Validation\SalesOperation\SalesOrderDetailValidator.cs" />
+    <Compile Include="Validation\SalesOperation\SalesOrderValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\UoMValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\WarehouseMutationOrderValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\WarehouseMutationOrderDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\StockAdjustmentDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\StockAdjustmentValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\StockMutationValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\WarehouseItemValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\WarehouseValidator.cs" />
+    <Compile Include="Validation\Manufacturing\RecoveryAccessoryDetailValidator.cs" />
+    <Compile Include="Validation\Manufacturing\RecoveryOrderDetailValidator.cs" />
+    <Compile Include="Validation\Manufacturing\RecoveryOrderValidator.cs" />
+    <Compile Include="Validation\Manufacturing\CoreIdentificationValidator.cs" />
+    <Compile Include="Validation\Manufacturing\CoreIdentificationDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\MachineValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\RollerTypeValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\CoreBuilderValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\RollerBuilderValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ContactValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ItemTypeValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ItemValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
@@ -88,6 +102,7 @@
       <Name>Service</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
