@@ -20,5 +20,6 @@ namespace Core.Interface.Repository
         RollerWarehouseMutation ConfirmObject(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation UnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation);
         bool DeleteObject(int Id);
+        string SetObjectCode();
     }
 }

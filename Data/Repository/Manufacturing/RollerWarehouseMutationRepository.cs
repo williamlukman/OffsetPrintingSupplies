@@ -68,6 +68,7 @@ namespace Data.Repository
 
         public RollerWarehouseMutation CreateObject(RollerWarehouseMutation rollerWarehouseMutation)
         {
+            rollerWarehouseMutation.Code = SetObjectCode();
             rollerWarehouseMutation.IsConfirmed = false;
             rollerWarehouseMutation.IsCompleted = false;
             rollerWarehouseMutation.IsDeleted = false;
@@ -117,6 +118,13 @@ namespace Data.Repository
         {
             RollerWarehouseMutation rollerWarehouseMutation =  Find(x => x.Id == Id);
             return (Delete(rollerWarehouseMutation) == 1) ? true : false;
+        }
+
+        public string SetObjectCode()
+        {
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = DateTime.Today.Year.ToString() + "." + DateTime.Today.Month.ToString() + "." + totalnumberinthemonth;
+            return Code;
         }
     }
 }

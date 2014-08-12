@@ -141,8 +141,8 @@ namespace Data.Context
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
         public DbSet<RollerBuilder> RollerBuilders { get; set; }
         public DbSet<RollerType> RollerTypes { get; set; }
-        public DbSet<RollerWarehouseMutationDetail> RolleWarehouseMutationDetail { get; set; }
-        public DbSet<RollerWarehouseMutation> RolleWarehouseMutation { get; set; }
+        public DbSet<RollerWarehouseMutationDetail> RollerWarehouseMutationDetails { get; set; }
+        public DbSet<RollerWarehouseMutation> RollerWarehouseMutations { get; set; }
         public DbSet<SalesInvoiceDetail> SalesInvoiceDetails { get; set; }
         public DbSet<SalesInvoice> SalesInvoices { get; set; }
         public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
