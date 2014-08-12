@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Master Item";
+    ViewBag.Title = "Master CoreBuilder";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,10 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/masteritem.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/mastercorebuilder.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Master Item :.">
+    title=".: Master CoreBuilder :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -27,7 +27,7 @@
 
 <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
-        title=".: Master Item :.">
+        title=".: Master CoreBuilder :.">
 
         <div id="form_toolbar" class="form_toolbar">
             <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
@@ -46,9 +46,29 @@
                         </tr>
                          <tr>
                             <td>
-                                <label>SKU</label></td>
+                                <label>Base Sku</label></td>
                             <td >
-                                <input id="SKU" name ="Sku" type="text" size="10" maxlength="60" align="left"/></td>
+                                <input id="BaseSku" name ="BaseSKU" type="text" size="10" maxlength="60" align="left"/></td>
+                        </tr>
+                          <tr>
+                            <td>
+                                <label>Sku UsedCore</label></td>
+                            <td >
+                                <input id="SkuUsedCore" name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/></td>
+                        </tr>
+                          <tr>
+                            <td>
+                                <label>Sku NewCore</label></td>
+                            <td >
+                                <input id="SkuNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/></td>
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>UoM</label></td>
+                            <td colspan="3">
+                                <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="UoMName" name="UoMId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
@@ -64,38 +84,15 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Item Type</label></td>
+                                <label>UsedCore Quantity</label></td>
                             <td colspan="3">
-                               <input id="ItemTypeId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                               <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                               <input id="ItemTypeName" name="ItemType" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                                         
+                        <input id="UsedCoreQuantity" name="UsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
                         </tr>
                          <tr>
                             <td>
-                                <label>UoM</label></td>
+                                <label>NewCore Quantity</label></td>
                             <td colspan="3">
-                                <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="UoMName" name="UoMId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Quantity</label></td>
-                            <td colspan="3">
-                        <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Pending Receival</label></td>
-                            <td colspan="3">
-                        <input id="PendingReceival" name="PendingReceival" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Pending Delivery</label></td>
-                            <td colspan="3">
-                        <input id="PendingDelivery" name="PendingDelivery" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                        <input id="NewCoreQuantity" name="NewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
                         </tr>
                     </table>
                 @*</fieldset>*@
@@ -119,19 +116,6 @@
     </div>
 <!-- End Dialog Box Delete-->
 
- <!-- Look Up ItemType -->
-    <div id="lookup_div_itemtype" class="easyui-dialog" title="List Item Type" style="padding: 0px 5px; height: 490px; width: 480px;"
-        data-options="iconCls:'icon-tip',modal:true">
-
-        <div id="lookup_toolbar_itemtype" class="grid_toolbar">
-            <a id="lookup_btn_add_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
-        </div>
-
-        <table id="lookup_table_itemtype" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_itemtype" class="scroll" style="text-align: center;"></div>
-    </div>
-<!-- END Look Up Item Type -->
 
  <!-- Look Up UoM -->
     <div id="lookup_div_uom" class="easyui-dialog" title="List UoM" style="padding: 0px 5px; height: 490px; width: 480px;"

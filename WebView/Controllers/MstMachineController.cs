@@ -19,13 +19,13 @@ namespace WebView.Controllers
         private IRollerBuilderService _rollerBuilderService;
         private ICoreIdentificationDetailService _coreIdentificationDetailService;
         private IBarringService _barringService;
-    
         public MstMachineController()
         {
             _MachineService = new MachineService(new MachineRepository(),new MachineValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
+            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
         }
 
 
@@ -114,11 +114,12 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
+                model.Errors.Add("Insert Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -135,11 +136,12 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
+                model.Errors.Add("Update Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -154,11 +156,12 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
+                model.Errors.Add("Delete Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
     }

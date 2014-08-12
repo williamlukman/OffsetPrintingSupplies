@@ -120,7 +120,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -142,7 +142,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -162,7 +162,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
     }

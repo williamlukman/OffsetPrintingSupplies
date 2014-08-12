@@ -151,6 +151,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MstCashBankController.cs" />
     <Compile Include="Controllers\MstContactController.cs" />
+    <Compile Include="Controllers\MstCoreBuilderController.cs" />
     <Compile Include="Controllers\MstItemController.cs" />
     <Compile Include="Controllers\MstItemTypeController.cs" />
     <Compile Include="Controllers\MstMachineController.cs" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <Content Include="Content\apps_js\MasterCashBank.js" />
     <Content Include="Content\apps_js\MasterContact.js" />
+    <Content Include="Content\apps_js\MasterCoreBuilder.js" />
     <Content Include="Content\apps_js\MasterItem.js" />
     <Content Include="Content\apps_js\MasterItemType.js" />
     <Content Include="Content\apps_js\MasterMachine.js" />
@@ -1031,6 +1033,7 @@
     <Content Include="Views\MstMachine\Index.cshtml" />
     <Content Include="Views\MstRollerType\Index.cshtml" />
     <Content Include="Views\MstCashBank\Index.cshtml" />
+    <Content Include="Views\MstCoreBuilder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
