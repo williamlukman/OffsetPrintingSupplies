@@ -11,25 +11,21 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class MstItemTypeController : Controller
+    public class MstCashBankController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemTypeController");
-        private IItemTypeService _itemTypeService;
-        private IItemService _itemService;
-         
-        public MstItemTypeController()
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CashBankController");
+        private ICashBankService _cashBankService;
+        private ICashMutationService _cashMutationService;
+        public MstCashBankController()
         {
-            _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());
-            _itemService = new ItemService(new ItemRepository(), new ItemValidator());
-
+            _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
+            _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
         }
-
 
         public ActionResult Index()
         {
             return View();
         }
-
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
@@ -37,9 +33,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query = _itemTypeService.GetAll().Where(d => d.IsDeleted == false);
-            
-            var list = query as IEnumerable<ItemType>;
+            var query = _cashBankService.GetAll().Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<CashBank>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -71,6 +67,7 @@ namespace WebView.Controllers
                             item.Id,
                             item.Name,
                             item.Description,
+                            item.Amount,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -80,10 +77,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            ItemType model = new ItemType();
+            CashBank model = new CashBank();
             try
             {
-                model = _itemTypeService.GetObjectById(Id);
+                model = _cashBankService.GetObjectById(Id);
 
             }
             catch (Exception ex)
@@ -99,16 +96,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Insert(ItemType model)
+        public dynamic Insert(CashBank model)
         {
             try
             {
-                model = _itemTypeService.CreateObject(model);
+                model = _cashBankService.CreateObject(model);
             }
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Insert Failed" +  ex);
             }
 
             return Json(new
@@ -118,19 +114,18 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(ItemType model)
+        public dynamic Update(CashBank model)
         {
             try
             {
-                var data = _itemTypeService.GetObjectById(model.Id);
+                var data = _cashBankService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                model = _itemTypeService.UpdateObject(data);
+                model = _cashBankService.UpdateObject(data);
             }
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Update Failed" + ex);
             }
 
             return Json(new
@@ -140,17 +135,16 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(ItemType model)
+        public dynamic Delete(CashBank model)
         {
             try
             {
-                var data = _itemTypeService.GetObjectById(model.Id);
-                model = _itemTypeService.SoftDeleteObject(data,_itemService);
+                var data = _cashBankService.GetObjectById(model.Id);
+                model = _cashBankService.SoftDeleteObject(data,_cashMutationService);
             }
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Delete Failed" + ex);
             }
 
             return Json(new

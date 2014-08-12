@@ -149,8 +149,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MstCashBankController.cs" />
     <Compile Include="Controllers\MstContactController.cs" />
+    <Compile Include="Controllers\MstItemController.cs" />
     <Compile Include="Controllers\MstItemTypeController.cs" />
+    <Compile Include="Controllers\MstMachineController.cs" />
+    <Compile Include="Controllers\MstRollerTypeController.cs" />
+    <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
     <Compile Include="GeneralFunction.cs" />
     <Compile Include="Global.asax.cs">
@@ -159,8 +164,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\apps_js\MasterCashBank.js" />
     <Content Include="Content\apps_js\MasterContact.js" />
+    <Content Include="Content\apps_js\MasterItem.js" />
     <Content Include="Content\apps_js\MasterItemType.js" />
+    <Content Include="Content\apps_js\MasterMachine.js" />
+    <Content Include="Content\apps_js\MasterRollerType.js" />
+    <Content Include="Content\apps_js\MasterUoM.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\useraccess.js" />
@@ -1016,6 +1026,11 @@
     <Content Include="Views\MstItemType\Index.cshtml" />
     <Content Include="Views\MstWarehouse\Index.cshtml" />
     <Content Include="Views\MstContact\Index.cshtml" />
+    <Content Include="Views\MstItem\Index.cshtml" />
+    <Content Include="Views\MstUoM\Index.cshtml" />
+    <Content Include="Views\MstMachine\Index.cshtml" />
+    <Content Include="Views\MstRollerType\Index.cshtml" />
+    <Content Include="Views\MstCashBank\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

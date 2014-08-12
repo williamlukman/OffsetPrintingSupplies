@@ -8,12 +8,12 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstCashBank/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
-        $('#Description').val('').text('').removeClass('errormessage');
-        $('#Name').val('').text('').removeClass('errormessage');
+        //$('#Description').val('').text('').removeClass('errormessage');
+       // $('#Name').val('').text('').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
         ClearErrorMessage();
@@ -21,17 +21,18 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    
+
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstItemType/GetList',
+        url: base_url + 'MstCashBank/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Description', 'Amount','Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 80 },
                   { name: 'description', index: 'description', width: 250 },
+                  { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -90,7 +91,7 @@
             vStatusSaving = 1;//edit data mode
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstItemType/GetInfo?Id=" + id,
+                url: base_url + "MstCashBank/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.model == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -108,6 +109,7 @@
                             $('#id').val(result.model.Id);
                             $('#Name').val(result.model.Name);
                             $('#Description').val(result.model.Description);
+                            $('#Amount').numberbox('setValue', (result.model.Amount));
                             $('#form_div').dialog('open');
                         }
                     }
@@ -117,7 +119,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -144,7 +145,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstItemType/Delete",
+            url: base_url + "MstCashBank/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -174,11 +175,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstItemType/Update';
+            submitURL = base_url + 'MstCashBank/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstItemType/Insert';
+            submitURL = base_url + 'MstCashBank/Insert';
         }
 
         $.ajax({
@@ -186,7 +187,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name :$("#Name").val(), Description: $("#Description").val()
+                Id: id, Name: $("#Name").val(), Description: $("#Description").val()
             }),
             async: false,
             cache: false,
@@ -195,8 +196,7 @@
                 return false;
             },
             success: function (result) {
-                if (JSON.stringify(result.model.Errors) != '{}')
-                {
+                if (JSON.stringify(result.model.Errors) != '{}') {
                     for (var key in result.model.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
                             $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
@@ -225,8 +225,9 @@
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case
-            if (type == 'text' || type == 'password' || tag == 'textarea')
+            if (type == 'text' || type == 'password' || tag == 'textarea') {
                 this.value = "";
+            }
             else if (type == 'checkbox' || type == 'radio')
                 this.checked = false;
             else if (tag == 'select')
@@ -234,5 +235,5 @@
         });
     }
 
-   
+
 }); //END DOCUMENT READY

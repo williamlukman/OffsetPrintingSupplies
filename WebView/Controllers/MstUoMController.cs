@@ -11,19 +11,18 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class MstItemTypeController : Controller
+    public class MstUoMController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemTypeController");
-        private IItemTypeService _itemTypeService;
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("UoMController");
+        private IUoMService _UoMService;
         private IItemService _itemService;
-         
-        public MstItemTypeController()
+
+        public MstUoMController()
         {
-            _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());
+            _UoMService = new UoMService(new UoMRepository(),new UoMValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
 
         }
-
 
         public ActionResult Index()
         {
@@ -37,9 +36,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query = _itemTypeService.GetAll().Where(d => d.IsDeleted == false);
-            
-            var list = query as IEnumerable<ItemType>;
+            var query = _UoMService.GetAll().Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<UoM>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -70,7 +69,6 @@ namespace WebView.Controllers
                         cell = new object[] {
                             item.Id,
                             item.Name,
-                            item.Description,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -80,10 +78,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            ItemType model = new ItemType();
+            UoM model = new UoM();
             try
             {
-                model = _itemTypeService.GetObjectById(Id);
+                model = _UoMService.GetObjectById(Id);
 
             }
             catch (Exception ex)
@@ -98,17 +96,17 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpPost]
-        public dynamic Insert(ItemType model)
+        public dynamic Insert(UoM model)
         {
             try
             {
-                model = _itemTypeService.CreateObject(model);
+                model = _UoMService.CreateObject(model);
             }
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Insert Failed" +  ex);
             }
 
             return Json(new
@@ -118,19 +116,17 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(ItemType model)
+        public dynamic Update(UoM model)
         {
             try
             {
-                var data = _itemTypeService.GetObjectById(model.Id);
+                var data = _UoMService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                data.Description = model.Description;
-                model = _itemTypeService.UpdateObject(data);
+                model = _UoMService.UpdateObject(data);
             }
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Update Failed" + ex);
             }
 
             return Json(new
@@ -140,17 +136,16 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(ItemType model)
+        public dynamic Delete(UoM model)
         {
             try
             {
-                var data = _itemTypeService.GetObjectById(model.Id);
-                model = _itemTypeService.SoftDeleteObject(data,_itemService);
+                var data = _UoMService.GetObjectById(model.Id);
+                model = _UoMService.SoftDeleteObject(data,_itemService);
             }
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Delete Failed" + ex);
             }
 
             return Json(new

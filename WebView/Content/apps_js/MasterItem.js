@@ -2,13 +2,14 @@
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
 		vCode;
+   
 
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -20,18 +21,29 @@
     }
 
     $("#form_div").dialog('close');
+    $("#lookup_div_itemtype").dialog('close');
+    $("#lookup_div_uom").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    
+
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstItemType/GetList',
+        url: base_url + 'MstItem/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
+                   'Category','UoM Id','UoM','Quantity','Pending Receival','Pending Delivery', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 80 },
-                  { name: 'description', index: 'description', width: 250 },
+				  { name: 'name', index: 'name', width: 100 },
+                  { name: 'itemtypeid', index: 'itemtypeid', width: 80 },
+                  { name: 'itemtype', index: 'itemtype', width: 100 },
+                  { name: 'sku', index: 'sku', width: 100 },
+                  { name: 'category', index: 'category', width: 100 },
+                  { name: 'uomid', index: 'uomid', width: 80 },
+                  { name: 'uom', index: 'uom', width: 100 },
+                  { name: 'quantity', index: 'quantity', width: 80 , integer: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, integer: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, integer: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -90,24 +102,32 @@
             vStatusSaving = 1;//edit data mode
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstItemType/GetInfo?Id=" + id,
+                url: base_url + "MstItem/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
-                        if (JSON.stringify(result.model.Errors) != '{}') {
+                        if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
-                            for (var key in result.model.Errors) {
+                            for (var key in result.Errors) {
                                 error = error + "<br>" + key + " " + result.model.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
-                            $("#form_btn_save").data('kode', result.model.Id);
-                            $('#id').val(result.model.Id);
-                            $('#Name').val(result.model.Name);
-                            $('#Description').val(result.model.Description);
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Name').val(result.Name);
+                            $('#SKU').val(result.Sku);
+                            $('#Category').val(result.Category);
+                            $('#ItemTypeId').val(result.ItemTypeId);
+                            $('#ItemTypeName').val(result.ItemType);
+                            $('#UoMId').val(result.UoMId);
+                            $('#UoMName').val(result.UoM);
+                            $('#Quantity').numberbox('setValue', (result.Quantity));
+                            $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
+                            $('#PendingReceival').numberbox('setValue', (result.PendingReceival));
                             $('#form_div').dialog('open');
                         }
                     }
@@ -144,7 +164,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstItemType/Delete",
+            url: base_url + "MstItem/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -174,11 +194,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstItemType/Update';
+            submitURL = base_url + 'MstItem/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstItemType/Insert';
+            submitURL = base_url + 'MstItem/Insert';
         }
 
         $.ajax({
@@ -186,7 +206,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name :$("#Name").val(), Description: $("#Description").val()
+                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(),
+                SKU: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val()
             }),
             async: false,
             cache: false,
@@ -195,9 +216,8 @@
                 return false;
             },
             success: function (result) {
-                if (JSON.stringify(result.model.Errors) != '{}')
-                {
-                    for (var key in result.model.Errors) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
                             $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
@@ -234,5 +254,118 @@
         });
     }
 
-   
+    // -------------------------------------------------------Look Up Itemtype-------------------------------------------------------
+    $('#btnItemType').click(function () {
+
+        var lookUpURL = base_url + 'MstItemType/GetList';
+        var lookupGrid = $('#lookup_table_itemtype');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_itemtype').dialog('open');
+    });
+
+    $("#lookup_table_itemtype").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Name', 'Description'],
+        colModel: [
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 },
+                  { name: 'address', index: 'address', width: 200 }],
+        page: '1',
+        pager: $('#lookup_pager_itemtype'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_itemtype").width() - 10,
+        height: $("#lookup_div_itemtype").height() - 110,
+    });
+    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_itemtype').click(function () {
+        $('#lookup_div_itemtype').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_itemtype').click(function () {
+        var id = jQuery("#lookup_table_itemtype").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_itemtype").jqGrid('getRowData', id);
+
+            $('#ItemTypeId').val(ret.id).data("kode", id);
+            $('#ItemTypeName').val(ret.name);
+
+            $('#lookup_div_itemtype').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+    
+    // ---------------------------------------------End Lookup ItemType----------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up uom-------------------------------------------------------
+    $('#btnUoM').click(function () {
+        var lookUpURL = base_url + 'MstUoM/GetList';
+        var lookupGrid = $('#lookup_table_uom');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_uom').dialog('open');
+    });
+
+    jQuery("#lookup_table_uom").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Name'],
+        colModel: [
+                  { name: 'id', index: 'contactcode', width: 80, align: 'right' },
+                  { name: 'name', index: 'contactname', width: 200 }],
+        page: '1',
+        pager: $('#lookup_pager_uom'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_uom").width() - 10,
+        height: $("#lookup_div_uom").height() - 110,
+    });
+    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_uom').click(function () {
+        $('#lookup_div_uom').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_uom').click(function () {
+        var id = jQuery("#lookup_table_uom").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_uom").jqGrid('getRowData', id);
+
+            $('#UoMId').val(ret.id).data("kode", id);
+            $('#UoMName').val(ret.name);
+
+            $('#lookup_div_uom').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup uom----------------------------------------------------------------
+
 }); //END DOCUMENT READY

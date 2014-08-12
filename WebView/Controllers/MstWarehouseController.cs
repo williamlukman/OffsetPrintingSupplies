@@ -76,13 +76,34 @@ namespace WebView.Controllers
                             item.Code,
                             item.Name,
                             item.Description,
-                            item.IsMovingWarehouse,
+                            
                             item.CreatedAt,
                             item.UpdatedAt
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
+
+          public dynamic GetInfo(int Id)
+          {
+              Warehouse model = new Warehouse();
+              try
+              {
+                  model = _warehouseService.GetObjectById(Id);
+                  
+              }  
+              catch (Exception ex)
+              {
+                  LOG.Error("GetInfo", ex);
+                  model.Errors.Add("Generic", "Error" + ex);
+              }
+
+              return Json(new
+              {
+                 model
+              }, JsonRequestBehavior.AllowGet);
+          }
+
 
         [HttpPost]
         public dynamic Insert(Warehouse model)
@@ -94,6 +115,7 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
+                model.Errors.Add("Generic", "Insert Failed" + ex);
             }
 
             return Json(new
@@ -110,12 +132,12 @@ namespace WebView.Controllers
                 var data = _warehouseService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                data.IsMovingWarehouse = model.IsMovingWarehouse;
                 model = _warehouseService.UpdateObject(data);
             }
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
+                model.Errors.Add("Generic", "Update Failed" + ex);
             }
 
             return Json(new
@@ -135,6 +157,7 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
+                model.Errors.Add("Generic", "Delete Failed" + ex);
             }
 
             return Json(new

@@ -30,12 +30,12 @@
         colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact No','Email', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 80 },
+				  { name: 'name', index: 'name', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
-                  { name: 'contactno', index: 'contactno', width: 80 },
-                  { name: 'pic', index: 'pic', width: 80 },
-                  { name: 'piccontactno', index: 'piccontactno', width: 80 },
-                  { name: 'email', index: 'email', width: 80 },
+                  { name: 'contactno', index: 'contactno', width: 180 },
+                  { name: 'pic', index: 'pic', width: 180 },
+                  { name: 'piccontactno', index: 'piccontactno', width: 180 },
+                  { name: 'email', index: 'email', width: 180 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -43,7 +43,7 @@
         pager: $('#pager'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'name',
+        sortname: 'id',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -92,16 +92,35 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             vStatusSaving = 1;//edit data mode
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $("#form_btn_save").data('kode', id);
-            $('#id').val(ret.id);
-            $('#Name').val(ret.name);
-            $('#Address').val(ret.address);
-            $('#ContactNo').val(ret.contaactno);
-            $('#PIC').val(ret.pic);
-            $('#PICContactno').val(ret.piccontactno);
-            $('#Email').val(ret.email);
-            $("#form_div").dialog("open");
+            $.ajax({
+                dataType: "json",
+                url: base_url + "MstContact/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.model == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.model.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.model.Errors) {
+                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#form_btn_save").data('kode', id);
+                            $('#id').val(result.model.Id);
+                            $('#Name').val(result.model.Name);
+                            $('#Address').val(result.model.Address);
+                            $('#ContactNo').val(result.model.ContactNo);
+                            $('#PIC').val(result.model.PIC);
+                            $('#PICContactNo').val(result.model.PICContactNo);
+                            $('#Email').val(result.model.Email);
+                            $("#form_div").dialog("open");
+                        }
+                    }
+                }
+            });
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }

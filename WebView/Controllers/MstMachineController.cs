@@ -11,17 +11,21 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class MstItemTypeController : Controller
+    public class MstMachineController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemTypeController");
-        private IItemTypeService _itemTypeService;
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("MachineController");
+        private IMachineService _MachineService;
         private IItemService _itemService;
-         
-        public MstItemTypeController()
+        private IRollerBuilderService _rollerBuilderService;
+        private ICoreIdentificationDetailService _coreIdentificationDetailService;
+        private IBarringService _barringService;
+    
+        public MstMachineController()
         {
-            _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());
+            _MachineService = new MachineService(new MachineRepository(),new MachineValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
-
+            _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
+            _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
         }
 
 
@@ -37,9 +41,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query = _itemTypeService.GetAll().Where(d => d.IsDeleted == false);
-            
-            var list = query as IEnumerable<ItemType>;
+            var query = _MachineService.GetAll().Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<Machine>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -69,6 +73,7 @@ namespace WebView.Controllers
                         id = item.Id,
                         cell = new object[] {
                             item.Id,
+                            item.Code,
                             item.Name,
                             item.Description,
                             item.CreatedAt,
@@ -80,11 +85,11 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            ItemType model = new ItemType();
+            Machine model = new Machine();
             try
             {
-                model = _itemTypeService.GetObjectById(Id);
-
+              model = _MachineService.GetObjectById(Id);
+           
             }
             catch (Exception ex)
             {
@@ -98,17 +103,17 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpPost]
-        public dynamic Insert(ItemType model)
+        public dynamic Insert(Machine model)
         {
             try
             {
-                model = _itemTypeService.CreateObject(model);
+                model = _MachineService.CreateObject(model);
             }
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Insert Failed" +  ex);
             }
 
             return Json(new
@@ -118,19 +123,18 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(ItemType model)
+        public dynamic Update(Machine model)
         {
             try
             {
-                var data = _itemTypeService.GetObjectById(model.Id);
+                var data = _MachineService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                model = _itemTypeService.UpdateObject(data);
+                model = _MachineService.UpdateObject(data);
             }
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Update Failed" + ex);
             }
 
             return Json(new
@@ -140,17 +144,16 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(ItemType model)
+        public dynamic Delete(Machine model)
         {
             try
             {
-                var data = _itemTypeService.GetObjectById(model.Id);
-                model = _itemTypeService.SoftDeleteObject(data,_itemService);
+                var data = _MachineService.GetObjectById(model.Id);
+                model = _MachineService.SoftDeleteObject(data,_rollerBuilderService,_coreIdentificationDetailService,_barringService);
             }
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Delete Failed" + ex);
             }
 
             return Json(new

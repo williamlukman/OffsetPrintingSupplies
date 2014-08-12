@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Master Item Type";
+    ViewBag.Title = "Master CashBank";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,10 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/masteritemtype.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/mastercashbank.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Master Item Type :.">
+    title=".: Master CashBank :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -27,7 +27,7 @@
 
 <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left;" data-options="modal:true" 
-        title=".: Master Item Type :.">
+        title=".: Master CashBank :.">
 
         <div id="form_toolbar" class="form_toolbar">
             <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
@@ -56,6 +56,12 @@
                             <td colspan="3"><label>
                               <textarea name="Description" name="Description" id ="Description" cols="60" rows="3"></textarea>
                             </label></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Amount</label></td>
+                            <td colspan="3">
+                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" disabled="disabled" />
                         </tr>
                     </table>
                 @*</fieldset>*@

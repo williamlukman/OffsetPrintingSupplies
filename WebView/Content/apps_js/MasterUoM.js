@@ -1,14 +1,11 @@
 ﻿$(document).ready(function () {
-    var vStatusSaving,//Status Saving data if its new or edit
-		vMainGrid,
-		vCode;
 
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstUoM/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -21,17 +18,16 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    
+
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstItemType/GetList',
+        url: base_url + 'MstUoM/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 80 },
-                  { name: 'description', index: 'description', width: 250 },
+				  { name: 'name', index: 'name', width: 180 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -82,6 +78,7 @@
         $('#form_div').dialog('open');
     });
 
+
     $('#btn_edit').click(function () {
         ClearData();
         clearForm("#frm");
@@ -90,7 +87,7 @@
             vStatusSaving = 1;//edit data mode
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstItemType/GetInfo?Id=" + id,
+                url: base_url + "MstUoM/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.model == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -107,7 +104,6 @@
                             $("#form_btn_save").data('kode', result.model.Id);
                             $('#id').val(result.model.Id);
                             $('#Name').val(result.model.Name);
-                            $('#Description').val(result.model.Description);
                             $('#form_div').dialog('open');
                         }
                     }
@@ -144,7 +140,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstItemType/Delete",
+            url: base_url + "MstUoM/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -174,11 +170,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstItemType/Update';
+            submitURL = base_url + 'MstUoM/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstItemType/Insert';
+            submitURL = base_url + 'MstUoM/Insert';
         }
 
         $.ajax({
@@ -186,7 +182,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name :$("#Name").val(), Description: $("#Description").val()
+                Id: id, Name: $("#Name").val(),
             }),
             async: false,
             cache: false,
@@ -195,8 +191,7 @@
                 return false;
             },
             success: function (result) {
-                if (JSON.stringify(result.model.Errors) != '{}')
-                {
+                if (JSON.stringify(result.model.Errors) != '{}') {
                     for (var key in result.model.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
                             $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
@@ -234,5 +229,5 @@
         });
     }
 
-   
+
 }); //END DOCUMENT READY

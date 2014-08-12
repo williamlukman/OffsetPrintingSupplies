@@ -14,14 +14,18 @@ namespace WebView.Controllers
     public class MstContactController : Controller
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ContactController");
-        private ICustomerService _customerService;
+        private IContactService _contactService;
         private IBarringService _barringService;
         private ICoreIdentificationService _coreIdentificationService;
+        private IPurchaseOrderService _purchaseOrderService;
+        private ISalesOrderService _salesOrderService;
         public MstContactController()
         {
-            _customerService = new CustomerService(new CustomerRepository(), new CustomerValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
             _barringService = new BarringService(new BarringRepository(),new BarringValidator());
+            _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
+            _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
         }
 
         public ActionResult Index()
@@ -36,9 +40,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query = _customerService.GetAll().Where(d => d.IsDeleted == false);
+            var query = _contactService.GetAll().Where(d => d.IsDeleted == false);
             
-            var list = query as IEnumerable<Customer>;
+            var list = query as IEnumerable<Contact>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -70,9 +74,9 @@ namespace WebView.Controllers
                             item.Id,
                             item.Name,
                             item.Address,
-                            item.CustomerNo,
+                            item.ContactNo,
                             item.PIC,
-                            item.PICCustomerNo,
+                            item.PICContactNo,
                             item.Email,
                             item.CreatedAt,
                             item.UpdatedAt,
@@ -81,12 +85,33 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+
+         public dynamic GetInfo(int Id)
+         {
+             Contact model = new Contact();
+             try
+             {
+                 model = _contactService.GetObjectById(Id);
+
+             }
+             catch (Exception ex)
+             {
+                 LOG.Error("GetInfo", ex);
+                 model.Errors.Add("Generic", "Error" + ex);
+             }
+
+             return Json(new
+             {
+                 model
+             }, JsonRequestBehavior.AllowGet);
+         }
+
         [HttpPost]
-        public dynamic Insert(Customer model)
+        public dynamic Insert(Contact model)
         {
             try
             {
-                model = _customerService.CreateObject(model);
+                model = _contactService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -100,18 +125,18 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(Customer model)
+        public dynamic Update(Contact model)
         {
             try
             {
-                var data = _customerService.GetObjectById(model.Id);
+                var data = _contactService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Address = model.Address;
-                data.CustomerNo = model.CustomerNo;
+                data.ContactNo = model.ContactNo;
                 data.PIC = model.PIC;
-                data.PICCustomerNo = model.PICCustomerNo;
+                data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
-                model = _customerService.UpdateObject(data);
+                model = _contactService.UpdateObject(data);
             }
             catch (Exception ex)
             {
@@ -125,12 +150,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(Customer model)
+        public dynamic Delete(Contact model)
         {
             try
             {
-                var data = _customerService.GetObjectById(model.Id);
-                model = _customerService.SoftDeleteObject(data, _coreIdentificationService, _barringService);
+                var data = _contactService.GetObjectById(model.Id);
+                model = _contactService.SoftDeleteObject(data, _coreIdentificationService, _barringService, _purchaseOrderService, _salesOrderService);
             }
             catch (Exception ex)
             {

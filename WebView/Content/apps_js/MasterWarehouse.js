@@ -41,13 +41,12 @@
     $("#list").jqGrid({
         url: base_url + 'MstWarehouse/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Name', 'Description', 'Is Moving Warehouse','Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Name', 'Description','Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
 				  { name: 'name', index: 'name', width: 80 },
                   { name: 'description', index: 'description', width: 250 },
-                  { name: 'ismoving', index: 'ismoving', width: 60 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -55,7 +54,7 @@
         pager: $('#pager'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'name',
+        sortname: 'id',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -104,23 +103,43 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             vStatusSaving = 1;//edit data mode
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $("#form_btn_save").data('kode', id);
-            $('#id').val(ret.id);
-            $('#Code').val(ret.code);
-            $('#Name').val(ret.name);
-            $('#Description').val(ret.description);
-            var e = document.getElementById("Moving");
-            if (ret.ismoving == 'YES')
-            {
-                e.selectedIndex = 0;
-            }
-            else
-            {
-                e.selectedIndex = 1;
-            }
+            $.ajax({
+                dataType: "json",
+                url: base_url + "MstWarehouse/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.model == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.model.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.model.Errors) {
+                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#form_btn_save").data('kode', result.model.Id);
+                            $('#id').val(result.model.Id);
+                            $('#Code').val(result.model.Code);
+                            $('#Name').val(result.model.Name);
+                            $('#Description').val(result.model.Description);
+                            $('#form_div').dialog('open');
+                        }
+                    }
+                }
+            });
+            //var e = document.getElementById("Moving");
+            //if (ret.ismoving == 'YES')
+            //{
+            //    e.selectedIndex = 0;
+            //}
+            //else
+            //{
+            //    e.selectedIndex = 1;
+            //}
 
-            $("#form_div").dialog("open");
+          
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
@@ -165,8 +184,9 @@
     });
 
     $('#form_btn_cancel').click(function () {
-        vStatusSaving = 0;
+        ClearData();
         clearForm('#frm');
+        vStatusSaving = 0; 
         $("#form_div").dialog('close');
     });
 
@@ -175,8 +195,8 @@
 
 
         ClearErrorMessage();
-        var e = document.getElementById("Moving");
-        var moving = e.options[e.selectedIndex].value;
+        //var e = document.getElementById("Moving");
+        //var moving = e.options[e.selectedIndex].value;
         var submitURL = '';
         var id = $("#form_btn_save").data('kode');
 
@@ -194,9 +214,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Code : $("#Name").val(),
+                Id: id, Code : $("#Code").val(),
                 Name: $("#Name").val(), Description: $("#Description").val(),
-                IsMovingWarehouse: $('#Moving').val()
             }),
             async: false,
             cache: false,
