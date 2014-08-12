@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.DomainModel.RetailSales;
 
 namespace Core.DomainModel
 {
@@ -22,6 +23,16 @@ namespace Core.DomainModel
         public int Quantity { get; set; }
         public int PendingDelivery { get; set; }
         public int PendingReceival { get; set; }
+
+        public string Description { get; set; }
+        public decimal SellingPrice { get; set; }
+        public Nullable<int> PriceMutationId { get; set; }
+        public decimal AvgPrice { get; set; }
+        public int CashBankId { get; set; }
+        public virtual PriceMutation PriceMutation { get; set; }
+        public virtual CashBank CashBank { get; set; }
+        public virtual ICollection<StockMutation> StockMutations { get; set; }
+        public virtual ICollection<PriceMutation> PriceMutations { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

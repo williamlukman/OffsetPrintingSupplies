@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\..\lib\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,6 +53,10 @@
     <Compile Include="Mapping\PurchaseOperation\PaymentVoucherMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceMapping.cs" />
+    <Compile Include="Mapping\RetailSales\GroupMapping.cs" />
+    <Compile Include="Mapping\RetailSales\PriceMutationMapping.cs" />
+    <Compile Include="Mapping\RetailSales\RetailSalesInvoiceDetailMapping.cs" />
+    <Compile Include="Mapping\RetailSales\RetailSalesInvoiceMapping.cs" />
     <Compile Include="Mapping\SalesOperation\DeliveryOrderDetailMapping.cs" />
     <Compile Include="Mapping\SalesOperation\DeliveryOrderMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PurchaseOrderDetailMapping.cs" />

@@ -6,6 +6,8 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Text;
+using Data.Mapping.RetailSales;
+using Core.DomainModel.RetailSales;
 
 namespace Data.Context
 {
@@ -40,12 +42,15 @@ namespace Data.Context
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
                                           "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine" };
+            IList<String> retailSalesNames = new List<String>()
+                                        { "Group", "PriceMutation", "RetailSalesInvoice", "RetailSalesInvoiceDetail"};
 
             financeNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
             salesOperationNames.ToList().ForEach(x => tableNames.Add(x));
             stockAndMasterNames.ToList().ForEach(x => tableNames.Add(x));
+            retailSalesNames.ToList().ForEach(x => tableNames.Add(x));
 
             foreach (var tableName in tableNames)
             {
@@ -105,6 +110,10 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new WarehouseItemMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationOrderMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationOrderDetailMapping());
+            modelBuilder.Configurations.Add(new GroupMapping());
+            modelBuilder.Configurations.Add(new PriceMutationMapping());
+            modelBuilder.Configurations.Add(new RetailSalesInvoiceMapping());
+            modelBuilder.Configurations.Add(new RetailSalesInvoiceDetailMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -155,5 +164,9 @@ namespace Data.Context
         public DbSet<WarehouseItem> WarehouseItems { get; set; }
         public DbSet<WarehouseMutationOrder> WarehouseMutationOrders { get; set; }
         public DbSet<WarehouseMutationOrderDetail> WarehouseMutationOrderDetails { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<PriceMutation> PriceMutations { get; set; }
+        public DbSet<RetailSalesInvoice> RetailSalesInvoices { get; set; }
+        public DbSet<RetailSalesInvoice> RetailSalesInvoiceDetails { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.DomainModel.RetailSales;
 
 namespace Core.DomainModel
 {
@@ -15,6 +16,9 @@ namespace Core.DomainModel
         public string PIC { get; set; }
         public string PICContactNo { get; set; }
         public string Email { get; set; }
+
+        public int GroupId { get; set; }
+        public virtual Group Group { get; set; }
         
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
