@@ -102,6 +102,12 @@ namespace Service.Service
                                           IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             rollerBuilder.Errors = new Dictionary<String, String>();
+            ItemType typeRoller = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller);
+            if (typeRoller == null)
+            {
+                rollerBuilder.Errors.Add("Generic", "ItemType [Roller] Legacy harus dibuat terlebih dahulu");
+            }
+
             Item RollerUsedCore = new Item()
             {
                 Name = rollerBuilder.Name,
@@ -140,7 +146,9 @@ namespace Service.Service
             }
             else
             {
-                rollerBuilder.Errors.Add("Generic", "Item tidak dapat di register");
+                if (RollerUsedCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerUsedCore.Errors.First().Key, RollerUsedCore.Errors.First().Value); }
+                else if (RollerNewCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerNewCore.Errors.First().Key, RollerNewCore.Errors.First().Value); }
+                else { rollerBuilder.Errors.Add("Generic", "Item tidak dapat di update"); }
             }
             return rollerBuilder;
         }
@@ -167,7 +175,9 @@ namespace Service.Service
             }
             else
             {
-                rollerBuilder.Errors.Add("Generic", "Item tidak dapat di update");
+                if (RollerUsedCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerUsedCore.Errors.First().Key, RollerUsedCore.Errors.First().Value); }
+                else if (RollerNewCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerNewCore.Errors.First().Key, RollerNewCore.Errors.First().Value); }
+                else { rollerBuilder.Errors.Add("Generic", "Item tidak dapat di update"); }
             }
             return rollerBuilder;
         }
@@ -191,7 +201,9 @@ namespace Service.Service
             }
             else
             {
-                rollerBuilder.Errors.Add("Generic", "Item tidak dapat di hapus");
+                if (RollerUsedCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerUsedCore.Errors.First().Key, RollerUsedCore.Errors.First().Value); }
+                else if (RollerNewCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerNewCore.Errors.First().Key, RollerNewCore.Errors.First().Value); }
+                else { rollerBuilder.Errors.Add("Generic", "Item tidak dapat di hapus"); }
             }
             return rollerBuilder;
         }
