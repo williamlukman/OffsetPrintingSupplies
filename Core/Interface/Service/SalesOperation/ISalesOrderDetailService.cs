@@ -22,5 +22,7 @@ namespace Core.Interface.Service
                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         SalesOrderDetail UnconfirmObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                         IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        SalesOrderDetail SetDeliveryComplete(SalesOrderDetail salesOrderDetail, int Quantity);
+        SalesOrderDetail UnsetDeliveryComplete(SalesOrderDetail salesOrderDetail, int Quantity, ISalesOrderService _salesOrderService);
     }
 }

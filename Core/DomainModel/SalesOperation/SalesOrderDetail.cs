@@ -11,9 +11,10 @@ namespace Core.DomainModel
         public string Code { get; set; }
         public int SalesOrderId { get; set; }
         public int ItemId { get; set; }
-        public int ContactId { get; set; }
 
         public int Quantity { get; set; }
+        public bool IsAllDelivered { get; set; }
+        public int PendingDeliveryQuantity { get; set; }
         public decimal Price { get; set; }
 
         public bool IsConfirmed { get; set; }
@@ -23,7 +24,6 @@ namespace Core.DomainModel
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
 
-        public virtual Contact Contact { get; set; }
         public virtual Item Item { get; set; }
         public virtual SalesOrder SalesOrder { get; set; }
         public Dictionary<String, String> Errors { get; set; }

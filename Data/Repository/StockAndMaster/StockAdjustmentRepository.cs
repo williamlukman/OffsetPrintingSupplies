@@ -22,6 +22,11 @@ namespace Data.Repository
             return FindAll(x => !x.IsDeleted).ToList();
         }
 
+        public IList<StockAdjustment> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
+
         public StockAdjustment GetObjectById(int Id)
         {
             StockAdjustment stockAdjustment = Find(x => x.Id == Id && !x.IsDeleted);
@@ -77,9 +82,8 @@ namespace Data.Repository
 
         public string SetObjectCode()
         {
-            // Code: #{year}/#{total_number
-            int totalobject = FindAll().Count() + 1;
-            string Code = "#" + DateTime.Now.Year.ToString() + "/#" + totalobject;
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = DateTime.Today.Year.ToString() + "." + DateTime.Today.Month.ToString() + "." + totalnumberinthemonth;
             return Code;
         }
     }

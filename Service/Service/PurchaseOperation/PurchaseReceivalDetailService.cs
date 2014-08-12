@@ -86,9 +86,9 @@ namespace Service.Service
                                                     IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService,
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            purchaseReceivalDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService))
             {
-                purchaseReceivalDetail.ConfirmationDate = ConfirmationDate;
                 purchaseReceivalDetail = _repository.ConfirmObject(purchaseReceivalDetail);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
@@ -102,12 +102,16 @@ namespace Service.Service
                     //item.Quantity += purchaseReceivalDetail.Quantity;
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
+                PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+                _purchaseOrderDetailService.SetReceivalComplete(purchaseOrderDetail, purchaseReceivalDetail.Quantity);
             }
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                                     IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
+                                                      IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                                      IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IStockMutationService _stockMutationService,
+                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(purchaseReceivalDetail, _purchaseInvoiceDetailService, _itemService))
             {
@@ -124,6 +128,8 @@ namespace Service.Service
                     //item.Quantity -= purchaseReceivalDetail.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
+                PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
+                _purchaseOrderDetailService.UnsetReceivalComplete(purchaseOrderDetail, purchaseReceivalDetail.Quantity, _purchaseOrderService);
             }
             return purchaseReceivalDetail;
         }

@@ -86,9 +86,9 @@ namespace Service.Service
         public DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail, DateTime ConfirmationDate, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                 IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            deliveryOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrderDetail, _deliveryOrderService, this, _salesOrderDetailService, _itemService, _warehouseItemService))
             {
-                deliveryOrderDetail.ConfirmationDate = ConfirmationDate;
                 deliveryOrderDetail = _repository.ConfirmObject(deliveryOrderDetail);
 
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);    
@@ -101,11 +101,16 @@ namespace Service.Service
                     //item.Quantity -= deliveryOrderDetail.Quantity;
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
+
+                SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+                _salesOrderDetailService.SetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity);
             }
             return deliveryOrderDetail;
+            ;
         }
 
         public DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
+                                                   ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                    ISalesInvoiceDetailService _salesInvoiceDetailService, IStockMutationService _stockMutationService,
                                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
@@ -122,6 +127,8 @@ namespace Service.Service
                     //item.Quantity += deliveryOrderDetail.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
+                SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+                _salesOrderDetailService.UnsetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity, _salesOrderService);
             }
             return deliveryOrderDetail;
         }
@@ -129,7 +136,6 @@ namespace Service.Service
         public DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity)
         {
             deliveryOrderDetail.PendingInvoicedQuantity -= Quantity;
-            deliveryOrderDetail.InvoicedQuantity += Quantity;
             if (deliveryOrderDetail.PendingInvoicedQuantity == 0) { deliveryOrderDetail.IsAllInvoiced = true; }
             _repository.UpdateObject(deliveryOrderDetail);
             return deliveryOrderDetail;
@@ -142,7 +148,6 @@ namespace Service.Service
 
             deliveryOrderDetail.IsAllInvoiced = false;
             deliveryOrderDetail.PendingInvoicedQuantity += Quantity;
-            deliveryOrderDetail.InvoicedQuantity -= Quantity;
             _repository.UpdateObject(deliveryOrderDetail);
             return deliveryOrderDetail;
         }

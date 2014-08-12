@@ -106,9 +106,9 @@ namespace Service.Service
         public PurchaseInvoiceDetail ConfirmObject(PurchaseInvoiceDetail purchaseInvoiceDetail, DateTime ConfirmationDate,
                                                    IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
+            purchaseInvoiceDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseInvoiceDetail, this, _purchaseReceivalDetailService))
             {
-                purchaseInvoiceDetail.ConfirmationDate = ConfirmationDate;
                 purchaseInvoiceDetail = _repository.ConfirmObject(purchaseInvoiceDetail);
                 // update purchase receival detail PendingInvoiceQuantity
                 PurchaseReceivalDetail purchaseReceivalDetail = _purchaseReceivalDetailService.GetObjectById(purchaseInvoiceDetail.PurchaseReceivalDetailId);

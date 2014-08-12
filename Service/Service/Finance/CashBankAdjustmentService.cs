@@ -73,13 +73,13 @@ namespace Service.Service
 
         public CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService)
         {
+            cashBankAdjustment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(cashBankAdjustment, _cashBankService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForCashBankAdjustment(cashBankAdjustment, cashBank);
                 // cashBank.Amount += cashBankAdjustment.Amount;
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
-                cashBankAdjustment.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(cashBankAdjustment);
             }
             return cashBankAdjustment;

@@ -21,6 +21,11 @@ namespace Data.Repository
             return FindAll(pv => !pv.IsDeleted).ToList();
         }
 
+        public IList<ReceiptVoucher> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
+
         public ReceiptVoucher GetObjectById(int Id)
         {
             ReceiptVoucher receiptVoucher = Find(pv => pv.Id == Id && !pv.IsDeleted);
@@ -101,9 +106,8 @@ namespace Data.Repository
 
         public string SetObjectCode()
         {
-            // Code: #{year}/#{total_number
-            int totalobject = FindAll().Count() + 1;
-            string Code = "#" + DateTime.Now.Year.ToString() + "/#" + totalobject;
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = DateTime.Today.Year.ToString() + "." + DateTime.Today.Month.ToString() + "." + totalnumberinthemonth;
             return Code;
         }
     }

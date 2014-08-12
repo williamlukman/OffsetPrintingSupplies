@@ -67,6 +67,7 @@ namespace Service.Service
 
         public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService)
         {
+            cashBankMutation.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(cashBankMutation, _cashBankService))
             {
                 CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
@@ -76,7 +77,6 @@ namespace Service.Service
                 {
                     _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
                 }
-                cashBankMutation.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(cashBankMutation);
             }
             return cashBankMutation;

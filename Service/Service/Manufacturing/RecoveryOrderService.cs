@@ -100,6 +100,7 @@ namespace Service.Service
                                              IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
+            recoveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService))
             {
                 IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
@@ -109,7 +110,6 @@ namespace Service.Service
                     CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(detail.CoreIdentificationDetailId);
                     _coreIdentificationDetailService.SetJobScheduled(coreIdentificationDetail, this, _recoveryOrderDetailService);
                 }
-                recoveryOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(recoveryOrder);
             }
             return recoveryOrder;

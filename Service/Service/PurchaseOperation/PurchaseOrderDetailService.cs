@@ -41,7 +41,6 @@ namespace Service.Service
             purchaseOrderDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService))
             {
-                purchaseOrderDetail.ContactId = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId).ContactId;
                 return _repository.CreateObject(purchaseOrderDetail);
             }
             else
@@ -81,9 +80,9 @@ namespace Service.Service
         public PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
                                                  IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            purchaseOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseOrderDetail))
             {
-                purchaseOrderDetail.ConfirmationDate = ConfirmationDate;
                 purchaseOrderDetail = _repository.ConfirmObject(purchaseOrderDetail);
 
                 Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
@@ -111,5 +110,25 @@ namespace Service.Service
             }
             return purchaseOrderDetail;
         }
+
+        public PurchaseOrderDetail SetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity)
+        {
+            purchaseOrderDetail.PendingReceivalQuantity -= Quantity;
+            if (purchaseOrderDetail.PendingReceivalQuantity == 0) { purchaseOrderDetail.IsAllReceived = true; }
+            _repository.UpdateObject(purchaseOrderDetail);
+            return purchaseOrderDetail;
+        }
+
+        public PurchaseOrderDetail UnsetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity, IPurchaseOrderService _purchaseOrderService)
+        {
+            PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
+            _purchaseOrderService.UnsetReceivalComplete(purchaseOrder);
+
+            purchaseOrderDetail.IsAllReceived = false;
+            purchaseOrderDetail.PendingReceivalQuantity += Quantity;
+            _repository.UpdateObject(purchaseOrderDetail);
+            return purchaseOrderDetail;
+        }
+
     }
 }

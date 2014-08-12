@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<SalesOrder> GetConfirmedObjects()
+        {
+            return _repository.GetConfirmedObjects();
+        }
+
         public SalesOrder GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -75,6 +80,7 @@ namespace Service.Service
                                         IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
                                         IWarehouseItemService _warehouseItemService)
         {
+            salesOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesOrder, _salesOrderDetailService))
             {
                 IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
@@ -83,7 +89,6 @@ namespace Service.Service
                     _salesOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService,
                                                            _barringService, _warehouseItemService);
                 }
-                salesOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(salesOrder);
             }
             return salesOrder;
@@ -104,6 +109,25 @@ namespace Service.Service
                 _repository.UnconfirmObject(salesOrder);
             }
             return salesOrder;
+        }
+
+        public SalesOrder CheckAndSetDeliveryComplete(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)
+        {
+            IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
+
+            foreach (var detail in details)
+            {
+                if (!detail.IsAllDelivered)
+                {
+                    return salesOrder;
+                }
+            }
+            return _repository.SetDeliveryComplete(salesOrder);
+        }
+
+        public SalesOrder UnsetDeliveryComplete(SalesOrder salesOrder)
+        {
+            return _repository.UnsetDeliveryComplete(salesOrder);
         }
     }
 }

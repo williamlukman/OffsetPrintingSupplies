@@ -8,6 +8,8 @@ namespace Core.Interface.Repository
 {
     public interface IReceiptVoucherDetailRepository : IRepository<ReceiptVoucherDetail>
     {
+        IList<ReceiptVoucherDetail> GetAll();
+        IList<ReceiptVoucherDetail> GetAllByMonthCreated();
         IList<ReceiptVoucherDetail> GetObjectsByReceiptVoucherId(int receiptVoucherId);
         IList<ReceiptVoucherDetail> GetObjectsByReceivableId(int receivableId);
         ReceiptVoucherDetail GetObjectById(int Id);

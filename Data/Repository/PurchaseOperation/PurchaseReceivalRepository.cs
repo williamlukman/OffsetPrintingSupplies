@@ -18,19 +18,29 @@ namespace Data.Repository
 
         public IList<PurchaseReceival> GetAll()
         {
-            return FindAll(pr => !pr.IsDeleted).ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<PurchaseReceival> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
         public PurchaseReceival GetObjectById(int Id)
         {
-            PurchaseReceival purchaseReceival = Find(pr => pr.Id == Id && !pr.IsDeleted);
+            PurchaseReceival purchaseReceival = Find(x => x.Id == Id && !x.IsDeleted);
             if (purchaseReceival != null) { purchaseReceival.Errors = new Dictionary<string, string>(); }
             return purchaseReceival;
         }
 
         public IList<PurchaseReceival> GetObjectsByPurchaseOrderId(int purchaseOrderId)
         {
-            return FindAll(pr => pr.PurchaseOrderId == purchaseOrderId && !pr.IsDeleted).ToList();
+            return FindAll(x => x.PurchaseOrderId == purchaseOrderId && !x.IsDeleted).ToList();
+        }
+
+        public IList<PurchaseReceival> GetConfirmedObjects()
+        {
+            return FindAll(x => x.IsConfirmed && !x.IsDeleted).ToList();
         }
 
         public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival)
@@ -95,9 +105,8 @@ namespace Data.Repository
 
         public string SetObjectCode()
         {
-            // Code: #{year}/#{total_number}
-            int totalobject = FindAll().Count() + 1;
-            string Code = "#" + DateTime.Now.Year.ToString() + "/#" + totalobject;
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = DateTime.Today.Year.ToString() + "." + DateTime.Today.Month.ToString() + "." + totalnumberinthemonth;
             return Code;
         }
     }

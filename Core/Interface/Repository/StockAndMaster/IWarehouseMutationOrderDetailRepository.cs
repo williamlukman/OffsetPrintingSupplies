@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface IWarehouseMutationOrderDetailRepository : IRepository<WarehouseMutationOrderDetail>
     {
         IList<WarehouseMutationOrderDetail> GetAll();
+        IList<WarehouseMutationOrderDetail> GetAllByMonthCreated();
         IList<WarehouseMutationOrderDetail> GetObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId);
         WarehouseMutationOrderDetail GetObjectById(int Id);
         WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
@@ -17,5 +18,6 @@ namespace Core.Interface.Repository
         WarehouseMutationOrderDetail ConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         WarehouseMutationOrderDetail UnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);
         bool DeleteObject(int Id);
+        string SetObjectCode(string ParentCode);
     }
 }

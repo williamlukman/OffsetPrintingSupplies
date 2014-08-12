@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface IStockAdjustmentRepository : IRepository<StockAdjustment>
     {
         IList<StockAdjustment> GetAll();
+        IList<StockAdjustment> GetAllByMonthCreated();
         StockAdjustment GetObjectById(int Id);
         StockAdjustment CreateObject(StockAdjustment stockAdjustment);
         StockAdjustment UpdateObject(StockAdjustment stockAdjustment);

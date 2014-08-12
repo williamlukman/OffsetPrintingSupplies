@@ -69,6 +69,7 @@ namespace Service.Service
         public StockAdjustment ConfirmObject(StockAdjustment stockAdjustment, DateTime ConfirmationDate, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                              IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            stockAdjustment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService))
             {
                 IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
@@ -76,7 +77,6 @@ namespace Service.Service
                 {
                     _stockAdjustmentDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                 }
-                stockAdjustment.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(stockAdjustment);
             }
             return stockAdjustment;

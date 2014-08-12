@@ -81,6 +81,7 @@ namespace Service.Service
 
         public ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, DateTime ConfirmationDate, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
         {
+            receiptVoucherDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(receiptVoucherDetail, _receivableService))
             {
                 ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
@@ -95,7 +96,6 @@ namespace Service.Service
                 }
                 _receivableService.UpdateObject(receivable);
 
-                receiptVoucherDetail.ConfirmationDate = ConfirmationDate;
                 receiptVoucherDetail = _repository.ConfirmObject(receiptVoucherDetail);
             }
             return receiptVoucherDetail;

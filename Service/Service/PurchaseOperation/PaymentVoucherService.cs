@@ -94,6 +94,7 @@ namespace Service.Service
         public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, DateTime ConfirmationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService)
         {
+            paymentVoucher.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(paymentVoucher, this, _paymentVoucherDetailService, _cashBankService, _payableService))
             {
                 IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
@@ -101,7 +102,6 @@ namespace Service.Service
                 {
                     _paymentVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _payableService);
                 }
-                paymentVoucher.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(paymentVoucher);
 
                 if (!paymentVoucher.IsGBCH)

@@ -47,6 +47,16 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
+        public RecoveryOrder VHasNoRecoveryOrderDetail(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
+            if (details.Any())
+            {
+                recoveryOrder.Errors.Add("Generic", "Tidak boleh terasosiasi dengan recovery order detail");
+            }
+            return recoveryOrder;
+        }
+
         public RecoveryOrder VHasQuantityReceived(RecoveryOrder recoveryOrder)
         {
             if (recoveryOrder.QuantityReceived <= 0)
@@ -222,8 +232,7 @@ namespace Validation.Validation
         {
             VHasNotBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            // TODO
-            // VHaveNoRecoveryOrderDetails(recoveryOrder, _recoveryOrderDetailService);
+            VHasNoRecoveryOrderDetail(recoveryOrder, _recoveryOrderDetailService);
             return recoveryOrder;
         }
 
@@ -256,6 +265,8 @@ namespace Validation.Validation
             VHasBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VHasNotBeenCompleted(recoveryOrder);
+            if (!isValid(recoveryOrder)) { return recoveryOrder; }
+            VAllDetailsHaveNotBeenDisassembledNorRejected(recoveryOrder, _recoveryOrderDetailService);
             return recoveryOrder;
         }
 

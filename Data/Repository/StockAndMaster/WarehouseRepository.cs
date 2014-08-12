@@ -74,7 +74,7 @@ namespace Data.Repository
 
         public bool IsCodeDuplicated(Warehouse warehouse)
         {
-            IQueryable<Warehouse> warehouses = FindAll(x => x.Code == warehouse.Code && x.Id != warehouse.Id);
+            IList<Warehouse> warehouses = FindAll(x => x.Code == warehouse.Code && x.Id != warehouse.Id).ToList();
             return (warehouses.Count() > 0 ? true : false);
         }
     }

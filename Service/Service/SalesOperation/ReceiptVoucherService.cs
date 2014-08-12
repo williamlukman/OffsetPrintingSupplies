@@ -94,6 +94,7 @@ namespace Service.Service
         public ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher, DateTime ConfirmationDate, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                             ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService)
         {
+            receiptVoucher.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(receiptVoucher, this, _receiptVoucherDetailService, _cashBankService, _receivableService))
             {
                 IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
@@ -101,7 +102,6 @@ namespace Service.Service
                 {
                     _receiptVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _receivableService);
                 }
-                receiptVoucher.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(receiptVoucher);
 
                 if (!receiptVoucher.IsGBCH)

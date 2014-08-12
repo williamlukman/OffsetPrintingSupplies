@@ -9,6 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int CoreIdentificationId { get; set; }
+        public string Code { get; set; }
 
         public int WarehouseFromId { get; set; }
         public int WarehouseToId { get; set; }

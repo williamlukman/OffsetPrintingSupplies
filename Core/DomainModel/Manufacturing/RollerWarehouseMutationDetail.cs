@@ -10,6 +10,7 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public int RollerWarehouseMutationId { get; set; }
         public int CoreIdentificationDetailId { get; set; }
+        public string Code { get; set; }
 
         public int ItemId { get; set; }
 

@@ -9,6 +9,8 @@ namespace Core.Interface.Repository
     public interface IPurchaseReceivalRepository : IRepository<PurchaseReceival>
     {
         IList<PurchaseReceival> GetAll();
+        IList<PurchaseReceival> GetAllByMonthCreated();
+        IList<PurchaseReceival> GetConfirmedObjects();
         PurchaseReceival GetObjectById(int Id);
         IList<PurchaseReceival> GetObjectsByPurchaseOrderId(int purchaseOrderId);
         PurchaseReceival CreateObject(PurchaseReceival purchaseReceival);

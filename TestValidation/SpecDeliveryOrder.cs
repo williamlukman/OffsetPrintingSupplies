@@ -33,6 +33,7 @@ namespace TestValidation
         SalesOrderDetail salesOrderDetail_botolaqua_so2;
         DeliveryOrder deliveryOrder1;
         DeliveryOrder deliveryOrder2;
+        DeliveryOrder deliveryOrder3;
         DeliveryOrderDetail deliveryOrderDetail_batiktulis_do1;
         DeliveryOrderDetail deliveryOrderDetail_busway_do1;
         DeliveryOrderDetail deliveryOrderDetail_botolaqua_do1;
@@ -47,6 +48,8 @@ namespace TestValidation
         IStockAdjustmentDetailService _stockAdjustmentDetailService;
         ISalesOrderService _salesOrderService;
         ISalesOrderDetailService _salesOrderDetailService;
+        ISalesInvoiceDetailService _salesInvoiceDetailService;
+        ISalesInvoiceService _salesInvoiceService;
         IDeliveryOrderService _deliveryOrderService;
         IDeliveryOrderDetailService _deliveryOrderDetailService;
         IUoMService _uomService;
@@ -66,6 +69,8 @@ namespace TestValidation
                 _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
                 _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
                 _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+                _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
+                _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
                 _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
                 _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
                 _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
@@ -148,8 +153,8 @@ namespace TestValidation
                 salesOrderDetail_batiktulis_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_batiktulis.Id, 40, 2000500, _salesOrderService, _itemService);
                 salesOrderDetail_busway_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_busway.Id, 3, 810000000, _salesOrderService, _itemService);
                 salesOrderDetail_botolaqua_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_botolaqua.Id, 340, 5500, _salesOrderService, _itemService);
-                salesOrder1 = _salesOrderService.ConfirmObject(salesOrder1, _salesOrderDetailService, _stockMutationService, _itemService);
-                salesOrder2 = _salesOrderService.ConfirmObject(salesOrder2, _salesOrderDetailService, _stockMutationService, _itemService);
+                salesOrder1 = _salesOrderService.ConfirmObject(salesOrder1, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                salesOrder2 = _salesOrderService.ConfirmObject(salesOrder2, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             }
         }
 
@@ -167,19 +172,12 @@ namespace TestValidation
 
             it["validates the item pending delivery"] = () =>
             {
-                salesOrderDetail_batiktulis_so1 = _salesOrderDetailService.FinishObject(salesOrderDetail_batiktulis_so1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                salesOrderDetail_busway_so1 = _salesOrderDetailService.FinishObject(salesOrderDetail_busway_so1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                salesOrderDetail_botolaqua_so1 = _salesOrderDetailService.FinishObject(salesOrderDetail_botolaqua_so1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                salesOrderDetail_batiktulis_so2 = _salesOrderDetailService.FinishObject(salesOrderDetail_batiktulis_so2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                salesOrderDetail_busway_so2 = _salesOrderDetailService.FinishObject(salesOrderDetail_busway_so2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                salesOrderDetail_botolaqua_so2 = _salesOrderDetailService.FinishObject(salesOrderDetail_botolaqua_so2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-
-                salesOrderDetail_batiktulis_so1.IsFinished.should_be(true);
-                salesOrderDetail_busway_so1.IsFinished.should_be(true);
-                salesOrderDetail_botolaqua_so1.IsFinished.should_be(true);
-                salesOrderDetail_batiktulis_so2.IsFinished.should_be(true);
-                salesOrderDetail_busway_so2.IsFinished.should_be(true);
-                salesOrderDetail_botolaqua_so2.IsFinished.should_be(true);
+                salesOrderDetail_batiktulis_so1.IsConfirmed.should_be(true);
+                salesOrderDetail_busway_so1.IsConfirmed.should_be(true);
+                salesOrderDetail_botolaqua_so1.IsConfirmed.should_be(true);
+                salesOrderDetail_batiktulis_so2.IsConfirmed.should_be(true);
+                salesOrderDetail_busway_so2.IsConfirmed.should_be(true);
+                salesOrderDetail_botolaqua_so2.IsConfirmed.should_be(true);
 
                 item_batiktulis.PendingDelivery.should_be(salesOrderDetail_batiktulis_so1.Quantity + salesOrderDetail_batiktulis_so2.Quantity);
                 item_busway.PendingDelivery.should_be(salesOrderDetail_busway_so1.Quantity + salesOrderDetail_busway_so2.Quantity);
@@ -190,31 +188,29 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    salesOrderDetail_batiktulis_so1 = _salesOrderDetailService.FinishObject(salesOrderDetail_batiktulis_so1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                    salesOrderDetail_busway_so1 = _salesOrderDetailService.FinishObject(salesOrderDetail_busway_so1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                    salesOrderDetail_botolaqua_so1 = _salesOrderDetailService.FinishObject(salesOrderDetail_botolaqua_so1, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                    salesOrderDetail_batiktulis_so2 = _salesOrderDetailService.FinishObject(salesOrderDetail_batiktulis_so2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                    salesOrderDetail_busway_so2 = _salesOrderDetailService.FinishObject(salesOrderDetail_busway_so2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                    salesOrderDetail_botolaqua_so2 = _salesOrderDetailService.FinishObject(salesOrderDetail_botolaqua_so2, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-
-                    deliveryOrder1 = _deliveryOrderService.CreateObject(warehouse.Id, contact.Id, new DateTime(2000, 1, 1), _contactService);
-                    deliveryOrder2 = _deliveryOrderService.CreateObject(warehouse.Id, contact.Id, new DateTime(2014, 5, 5), _contactService);
+                    deliveryOrder1 = _deliveryOrderService.CreateObject(warehouse.Id, salesOrder1.Id, new DateTime(2000, 1, 1), _salesOrderService, _warehouseService);
+                    deliveryOrder2 = _deliveryOrderService.CreateObject(warehouse.Id, salesOrder2.Id, new DateTime(2014, 5, 5), _salesOrderService, _warehouseService);
+                    deliveryOrder3 = _deliveryOrderService.CreateObject(warehouse.Id, salesOrder1.Id, new DateTime(2014, 5, 5), _salesOrderService, _warehouseService);
                     deliveryOrderDetail_batiktulis_do1 = _deliveryOrderDetailService.CreateObject(deliveryOrder1.Id, item_batiktulis.Id, 400, salesOrderDetail_batiktulis_so1.Id, _deliveryOrderService,
-                                                                                                  _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
+                                                                                                  _salesOrderDetailService, _salesOrderService, _itemService);
                     deliveryOrderDetail_busway_do1 = _deliveryOrderDetailService.CreateObject(deliveryOrder1.Id, item_busway.Id, 91, salesOrderDetail_busway_so1.Id, _deliveryOrderService,
-                                                                                                _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
+                                                                                                _salesOrderDetailService, _salesOrderService, _itemService);
                     deliveryOrderDetail_botolaqua_do1 = _deliveryOrderDetailService.CreateObject(deliveryOrder1.Id, item_botolaqua.Id, 2000, salesOrderDetail_botolaqua_so1.Id,  _deliveryOrderService,
-                                                                                                  _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
-                    deliveryOrderDetail_batiktulis_do2a = _deliveryOrderDetailService.CreateObject(deliveryOrder2.Id, item_batiktulis.Id, 100, salesOrderDetail_batiktulis_so1.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
+                                                                                                  _salesOrderDetailService, _salesOrderService, _itemService);
                     deliveryOrderDetail_batiktulis_do2b = _deliveryOrderDetailService.CreateObject(deliveryOrder2.Id, item_batiktulis.Id, 40, salesOrderDetail_batiktulis_so2.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
+                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
                     deliveryOrderDetail_busway_do2 = _deliveryOrderDetailService.CreateObject(deliveryOrder2.Id, item_busway.Id, 3, salesOrderDetail_busway_so2.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
+                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
                     deliveryOrderDetail_botolaqua_do2 = _deliveryOrderDetailService.CreateObject(deliveryOrder2.Id, item_botolaqua.Id, 340, salesOrderDetail_botolaqua_so2.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService, _contactService);
-                    deliveryOrder1 = _deliveryOrderService.ConfirmObject(deliveryOrder1, _deliveryOrderDetailService, _salesOrderDetailService, _stockMutationService, _itemService);
-                    deliveryOrder2 = _deliveryOrderService.ConfirmObject(deliveryOrder2, _deliveryOrderDetailService, _salesOrderDetailService, _stockMutationService, _itemService);
+                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
+                    deliveryOrderDetail_batiktulis_do2a = _deliveryOrderDetailService.CreateObject(deliveryOrder3.Id, item_batiktulis.Id, 100, salesOrderDetail_batiktulis_so1.Id, _deliveryOrderService,
+                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
+                    deliveryOrder1 = _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
+                                                                         _barringService, _warehouseItemService);
+                    deliveryOrder2 = _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
+                                                                         _barringService, _warehouseItemService);
+                    deliveryOrder3 = _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
+                                                                         _barringService, _warehouseItemService);
                 };
 
                 it["validates_deliveryorders"] = () =>
@@ -231,26 +227,15 @@ namespace TestValidation
 
                 it["unconfirm delivery order"] = () =>
                 {
-                    deliveryOrder1 = _deliveryOrderService.UnconfirmObject(deliveryOrder1, _deliveryOrderDetailService, _stockMutationService, _itemService);
+                    deliveryOrder1 = _deliveryOrderService.UnconfirmObject(deliveryOrder1, _deliveryOrderDetailService,
+                                                                           _salesInvoiceService, _salesInvoiceDetailService, _salesOrderService,
+                                                                           _salesOrderDetailService, _stockMutationService, _itemService,
+                                                                           _barringService, _warehouseItemService);
                     deliveryOrder1.Errors.Count().should_be(0);
                 };
 
                 it["validates item pending delivery"] = () =>
                 {
-                    deliveryOrderDetail_batiktulis_do1 = _deliveryOrderDetailService.FinishObject(deliveryOrderDetail_batiktulis_do1, _deliveryOrderService, _salesOrderDetailService, _stockMutationService,
-                                                                                                  _itemService, _barringService, _warehouseItemService);
-                    deliveryOrderDetail_busway_do1 = _deliveryOrderDetailService.FinishObject(deliveryOrderDetail_busway_do1, _deliveryOrderService, _salesOrderDetailService, _stockMutationService,
-                                                                                              _itemService, _barringService, _warehouseItemService);
-                    deliveryOrderDetail_botolaqua_do1 = _deliveryOrderDetailService.FinishObject(deliveryOrderDetail_botolaqua_do1, _deliveryOrderService, _salesOrderDetailService, _stockMutationService,
-                                                                                                 _itemService, _barringService, _warehouseItemService);
-                    deliveryOrderDetail_batiktulis_do2a = _deliveryOrderDetailService.FinishObject(deliveryOrderDetail_batiktulis_do2a, _deliveryOrderService, _salesOrderDetailService, _stockMutationService,
-                                                                                                   _itemService, _barringService, _warehouseItemService);
-                    deliveryOrderDetail_batiktulis_do2b = _deliveryOrderDetailService.FinishObject(deliveryOrderDetail_batiktulis_do2b, _deliveryOrderService, _salesOrderDetailService, _stockMutationService,
-                                                                                                  _itemService, _barringService, _warehouseItemService);
-                    deliveryOrderDetail_busway_do2 = _deliveryOrderDetailService.FinishObject(deliveryOrderDetail_busway_do2, _deliveryOrderService, _salesOrderDetailService, _stockMutationService,
-                                                                                                  _itemService, _barringService, _warehouseItemService);
-                    deliveryOrderDetail_botolaqua_do2 = _deliveryOrderDetailService.FinishObject(deliveryOrderDetail_botolaqua_do2, _deliveryOrderService, _salesOrderDetailService, _stockMutationService,
-                                                                                                  _itemService, _barringService, _warehouseItemService);
                     item_batiktulis.PendingDelivery.should_be(0);
                     item_busway.PendingDelivery.should_be(0);
                     item_botolaqua.PendingDelivery.should_be(0);

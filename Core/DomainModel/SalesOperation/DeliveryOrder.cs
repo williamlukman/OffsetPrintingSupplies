@@ -23,7 +23,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual ICollection<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
-        public virtual Contact Contact {get; set;}
+        public virtual SalesOrder SalesOrder {get; set;}
         public Dictionary<String, String> Errors { get; set; }
         public virtual Warehouse Warehouse { get; set; }
     }

@@ -79,6 +79,7 @@ namespace Service.Service
         public PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice, DateTime ConfirmationDate, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseOrderService _purchaseOrderService,
                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService)
         {
+            purchaseInvoice.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService))
             {
                 // confirm details
@@ -92,7 +93,6 @@ namespace Service.Service
 
                 // confirm object
                 // create payable
-                purchaseInvoice.ConfirmationDate = ConfirmationDate;
                 purchaseInvoice = _repository.ConfirmObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);

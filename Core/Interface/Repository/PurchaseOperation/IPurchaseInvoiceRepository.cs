@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface IPurchaseInvoiceRepository : IRepository<PurchaseInvoice>
     {
         IList<PurchaseInvoice> GetAll();
+        IList<PurchaseInvoice> GetAllByMonthCreated();
         PurchaseInvoice GetObjectById(int Id);
         IList<PurchaseInvoice> GetObjectsByPurchaseReceivalId(int purchaseReceivalId);
         PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice);

@@ -38,6 +38,11 @@ namespace Data.Repository
             return FindAll(x => x.WarehouseId == WarehouseId && !x.IsDeleted).ToList();
         }
 
+        public IList<CoreIdentification> GetConfirmedObjects()
+        {
+            return FindAll(x => x.IsConfirmed && !x.IsDeleted).ToList();
+        }
+
         public CoreIdentification GetObjectById(int Id)
         {
             CoreIdentification coreIdentification = Find(x => x.Id == Id && !x.IsDeleted);

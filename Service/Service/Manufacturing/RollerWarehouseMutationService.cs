@@ -75,6 +75,7 @@ namespace Service.Service
                                                      IStockMutationService _stockMutationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                      ICoreIdentificationService _coreIdentificationService)
         {
+            rollerWarehouseMutation.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(rollerWarehouseMutation, this, _rollerWarehouseMutationDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
@@ -84,7 +85,6 @@ namespace Service.Service
                     _rollerWarehouseMutationDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService,
                                                                         _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
                 }
-                rollerWarehouseMutation.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(rollerWarehouseMutation);
             }
             return rollerWarehouseMutation;
