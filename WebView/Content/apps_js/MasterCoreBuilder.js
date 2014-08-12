@@ -21,7 +21,6 @@
     }
 
     $("#form_div").dialog('close');
-    $("#lookup_div_itemtype").dialog('close');
     $("#lookup_div_uom").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
@@ -41,8 +40,8 @@
                   { name: 'basesku', index: 'basesku', width: 80 },
                   { name: 'skuusedcore', index: 'skuusedcore', width: 100 },
                   { name: 'skunewcore', index: 'skunewcore', width: 100 },
-                  { name: 'usedcorequantity', index: 'usedcorequantity', width: 117, integer: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'newcorequantity', index: 'newcorequantity', width: 117, integer: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'usedcorequantity', index: 'usedcorequantity', width: 117, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'newcorequantity', index: 'newcorequantity', width: 117, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -258,8 +257,8 @@
         mtype: 'GET',
         colNames: ['Id', 'Name'],
         colModel: [
-                  { name: 'id', index: 'contactcode', width: 80, align: 'right' },
-                  { name: 'name', index: 'contactname', width: 200 }],
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_uom'),
         rowNum: 20,

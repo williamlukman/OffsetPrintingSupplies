@@ -149,15 +149,18 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MstBarringController.cs" />
     <Compile Include="Controllers\MstCashBankController.cs" />
     <Compile Include="Controllers\MstContactController.cs" />
     <Compile Include="Controllers\MstCoreBuilderController.cs" />
     <Compile Include="Controllers\MstItemController.cs" />
     <Compile Include="Controllers\MstItemTypeController.cs" />
     <Compile Include="Controllers\MstMachineController.cs" />
+    <Compile Include="Controllers\MstRollerBuilderController.cs" />
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
+    <Compile Include="Controllers\TrStockAdjustmentController.cs" />
     <Compile Include="GeneralFunction.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -165,12 +168,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\apps_js\MasterBarring.js" />
     <Content Include="Content\apps_js\MasterCashBank.js" />
     <Content Include="Content\apps_js\MasterContact.js" />
     <Content Include="Content\apps_js\MasterCoreBuilder.js" />
     <Content Include="Content\apps_js\MasterItem.js" />
     <Content Include="Content\apps_js\MasterItemType.js" />
     <Content Include="Content\apps_js\MasterMachine.js" />
+    <Content Include="Content\apps_js\MasterRollerBuilder.js" />
     <Content Include="Content\apps_js\MasterRollerType.js" />
     <Content Include="Content\apps_js\MasterUoM.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
@@ -1034,6 +1039,8 @@
     <Content Include="Views\MstRollerType\Index.cshtml" />
     <Content Include="Views\MstCashBank\Index.cshtml" />
     <Content Include="Views\MstCoreBuilder\Index.cshtml" />
+    <Content Include="Views\MstRollerBuilder\Index.cshtml" />
+    <Content Include="Views\MstBarring\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
