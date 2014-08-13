@@ -151,7 +151,7 @@ namespace Service.Service
             return item;
         }
 
-        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
         {
             if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
             {
@@ -170,11 +170,16 @@ namespace Service.Service
                     _warehouseItemService.SoftDeleteObject(warehouseitem);
                 }
                 _repository.SoftDeleteObject(item);
+                IList<PriceMutation> priceMutations = _priceMutationService.GetActiveObjectsByItemId(item.Id);
+                foreach (var x in priceMutations)
+                {
+                    _priceMutationService.DeactivateObject(x, item.DeletedAt);
+                }
             }
             return item;
         }
 
-        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
         {
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
@@ -200,6 +205,11 @@ namespace Service.Service
                     _warehouseItemService.SoftDeleteObject(warehouseitem);
                 }
                 _repository.SoftDeleteObject(item);
+                IList<PriceMutation> priceMutations = _priceMutationService.GetActiveObjectsByItemId(item.Id);
+                foreach (var x in priceMutations)
+                {
+                    _priceMutationService.DeactivateObject(x, item.DeletedAt);
+                }
             }
             return item;
         }

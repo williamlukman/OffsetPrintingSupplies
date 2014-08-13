@@ -34,12 +34,17 @@ namespace Service.Service
             return _repository.GetObjectsByIsActive(IsActive, ExcludePriceMutationId, ItemId, GroupId);
         }
 
+        public IList<PriceMutation> GetActiveObjectsByItemId(int ItemId)
+        {
+            return _repository.GetActiveObjectsByItemId(ItemId);
+        }
+
         public PriceMutation GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
         }
 
-        public PriceMutation DeactivateObject(PriceMutation priceMutation, DateTime DeactivationDate)
+        public PriceMutation DeactivateObject(PriceMutation priceMutation, Nullable<DateTime> DeactivationDate)
         {
             priceMutation.DeactivatedAt = DeactivationDate;
             return _repository.DeactivateObject(priceMutation);

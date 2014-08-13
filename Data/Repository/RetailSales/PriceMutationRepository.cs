@@ -26,6 +26,11 @@ namespace Data.Repository
             return FindAll(x => x.IsActive == IsActive && x.ItemId == ItemId && x.GroupId == GroupId && x.Id != ExcludePriceMutationId).ToList();
         }
 
+        public IList<PriceMutation> GetActiveObjectsByItemId(int ItemId)
+        {
+            return FindAll(x => x.ItemId == ItemId && x.IsActive).ToList();
+        }
+
         public PriceMutation GetObjectById(int Id)
         {
             PriceMutation priceMutation = Find(x => x.Id == Id);

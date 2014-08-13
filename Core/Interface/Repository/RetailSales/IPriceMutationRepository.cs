@@ -10,6 +10,7 @@ namespace Core.Interface.Repository
     {
         IList<PriceMutation> GetAll();
         IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ExcludePriceMutationId, int ItemId, int GroupId);
+        IList<PriceMutation> GetActiveObjectsByItemId(int ItemId);
         PriceMutation GetObjectById(int Id);
         PriceMutation DeactivateObject(PriceMutation priceMutation);
         PriceMutation CreateObject(PriceMutation priceMutation);
