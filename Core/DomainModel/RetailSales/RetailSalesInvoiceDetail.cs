@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.DomainModel.RetailSales
+namespace Core.DomainModel
 {
     public partial class RetailSalesInvoiceDetail
     {
@@ -15,8 +14,8 @@ namespace Core.DomainModel.RetailSales
         
         public int Quantity { get; set; }
         public Nullable<decimal> CoGS { get; set; }
-        public decimal AssignedPrice { get; set; }
-        public bool IsManualPriceAssignment { get; set; }
+        //public decimal AssignedPrice { get; set; }
+        //public bool IsManualPriceAssignment { get; set; }
         public decimal Amount { get; set; }
 
         public DateTime CreatedAt { get; set; }

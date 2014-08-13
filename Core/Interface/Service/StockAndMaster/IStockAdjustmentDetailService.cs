@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IStockAdjustmentDetailValidator GetValidator();
         IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int stockAdjustmentId);
+        IList<StockAdjustmentDetail> GetObjectsByItemId(int itemId);
         StockAdjustmentDetail GetObjectById(int Id);
         StockAdjustmentDetail CreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
                                            IItemService _itemService, IWarehouseItemService _warehouseItemService);

@@ -61,33 +61,67 @@ namespace Service.Service
             return _repository.GetObjectBySku(Sku);
         }
 
-        public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
+                                 IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
             {
-                item = _repository.CreateObject(item);
+                Group group = _groupService.GetObjectByIsLegacy(true);
+                if (group != null)
+                {
+                    item = _repository.CreateObject(item);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, item.CreatedAt);
+                    item.PriceMutationId = priceMutation.Id;
+                    item = _repository.UpdateObject(item, null);
+                }
             }
             return item;
         }
 
-        public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                       IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateLegacyObject(item, _uomService, this, _itemTypeService))
             {
-                item = _repository.CreateObject(item);
+                Group group = _groupService.GetObjectByIsLegacy(true);
+                if (group != null)
+                {
+                    item = _repository.CreateObject(item);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, item.CreatedAt);
+                    item.PriceMutationId = priceMutation.Id;
+                    item = _repository.UpdateObject(item, null);
+                }
             }
             return item;
         }
 
-        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService)
+        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
-            return (item = _validator.ValidUpdateObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
+            if (_validator.ValidUpdateObject(item, _uomService, this, _itemTypeService))
+            {
+                Group group = _groupService.GetObjectByIsLegacy(true);
+                if (group != null)
+                {
+                    Item olditem = _repository.GetObjectById(item.Id);
+                    PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                    DateTime UpdatedAt = DateTime.Now;
+                    if (olditem.SellingPrice != item.SellingPrice)
+                    {
+                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, UpdatedAt);
+                        item.PriceMutationId = priceMutation.Id;
+                        _priceMutationService.DeactivateObject(oldpriceMutation, UpdatedAt);
+                    }
+                    item = _repository.UpdateObject(item, UpdatedAt);
+                }
+            }
+            return item;
         }
 
         public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                       IBarringService _barringService, IContactService _contactService, IMachineService _machineService)
+                                       IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
+                                       IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
@@ -97,12 +131,29 @@ namespace Service.Service
                 return barring;
             }
 
-            return (item = _validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
+            if(_validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService)) 
+            {
+                Group group = _groupService.GetObjectByIsLegacy(true);
+                if (group != null)
+                {
+                    Item olditem = _repository.GetObjectById(item.Id);
+                    PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                    DateTime UpdatedAt = DateTime.Now;
+                    if (olditem.SellingPrice != item.SellingPrice)
+                    {
+                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, UpdatedAt);
+                        item.PriceMutationId = priceMutation.Id;
+                        _priceMutationService.DeactivateObject(oldpriceMutation, UpdatedAt);
+                    }
+                    item = _repository.UpdateObject(item, UpdatedAt);
+                }
+            }
+            return item;
         }
 
-        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
-            if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService))
+            if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
             {
                 IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
                 foreach (var warehouseitem in allwarehouseitems)
@@ -123,7 +174,7 @@ namespace Service.Service
             return item;
         }
 
-        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
@@ -132,7 +183,7 @@ namespace Service.Service
                 return barring;
             }
 
-            if (_validator.ValidDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService))
+            if (_validator.ValidDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
             {
                 IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
                 foreach (var warehouseitem in allwarehouseitems)

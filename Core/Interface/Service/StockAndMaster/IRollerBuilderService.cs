@@ -23,15 +23,18 @@ namespace Core.Interface.Service
                                    int CD, int RD, int RL, int WL, int TL,
                                    IMachineService _machineService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                    ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
-                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
+                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                   IPriceMutationService _priceMutationService, IGroupService _groupService);
         RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService, IItemService _itemService,
                                    IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
-                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
+                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                   IPriceMutationService _priceMutationService, IGroupService _groupService);
         RollerBuilder UpdateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService, IItemService _itemService,
                                    IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);
         RollerBuilder SoftDeleteObject(RollerBuilder rollerBuilder, IItemService _itemService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                        ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService,
-                                       IItemTypeService _itemTypeService);
+                                       IItemTypeService _itemTypeService, IPurchaseOrderDetailService _purchaseOrderDetailService, 
+                                       IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService);
         bool DeleteObject(int Id);
         bool IsBaseSkuDuplicated(RollerBuilder rollerBuilder);
     }

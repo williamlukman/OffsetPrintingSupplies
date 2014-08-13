@@ -51,6 +51,9 @@
     <Compile Include="Service\PurchaseOperation\PaymentVoucherService.cs" />
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceService.cs" />
+    <Compile Include="Service\RetailSales\GroupItemPriceService.cs" />
+    <Compile Include="Service\RetailSales\PriceMutationService.cs" />
+    <Compile Include="Service\RetailSales\GroupService.cs" />
     <Compile Include="Service\SalesOperation\ReceivableService.cs" />
     <Compile Include="Service\SalesOperation\ReceiptVoucherDetailService.cs" />
     <Compile Include="Service\SalesOperation\ReceiptVoucherService.cs" />

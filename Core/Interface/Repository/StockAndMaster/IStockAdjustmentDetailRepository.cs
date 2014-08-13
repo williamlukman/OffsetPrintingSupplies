@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IList<StockAdjustmentDetail> GetAll();
         IList<StockAdjustmentDetail> GetAllByMonthCreated();
         IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int stockAdjustmentId);
+        IList<StockAdjustmentDetail> GetObjectsByItemId(int itemId);
         StockAdjustmentDetail GetObjectById(int Id);
         StockAdjustmentDetail CreateObject(StockAdjustmentDetail stockAdjustmentDetail);
         StockAdjustmentDetail UpdateObject(StockAdjustmentDetail stockAdjustmentDetail);

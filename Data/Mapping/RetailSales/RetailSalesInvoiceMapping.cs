@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Core.DomainModel.RetailSales;
+using Core.DomainModel;
 
-namespace Data.Mapping.RetailSales
+namespace Data.Mapping
 {
     public class RetailSalesInvoiceMapping : EntityTypeConfiguration<RetailSalesInvoice>
     {
@@ -16,6 +15,10 @@ namespace Data.Mapping.RetailSales
             HasMany(rsi => rsi.RetailSalesinvoiceDetails)
                 .WithRequired(rsid => rsid.RetailSalesInvoice)
                 .HasForeignKey(rsid => rsid.RetailSalesInvoiceId);
+            HasRequired(rsi => rsi.CashBank)
+                .WithMany()
+                .HasForeignKey(rsi => rsi.CashBankId)
+                .WillCascadeOnDelete(false);
             Ignore(rsi => rsi.Errors);
         }
     }

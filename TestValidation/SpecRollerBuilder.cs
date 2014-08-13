@@ -157,7 +157,8 @@ namespace TestValidation
             it["delete_rollerbuilder"] = () =>
             {
                 d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService,
-                                                                           d._coreBuilderService, d._warehouseItemService, d._stockMutationService, d._itemTypeService);
+                                                                           d._coreBuilderService, d._warehouseItemService, d._stockMutationService, d._itemTypeService,
+                                                                           d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_be(0);
             };
 
@@ -194,7 +195,8 @@ namespace TestValidation
                 recoveryOrderDetail.Errors.Count().should_be(0);
 
                 d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService,
-                                                                           d._stockMutationService, d._itemTypeService);
+                                                                           d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
+                                                                           d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_not_be(0);
             };
         }

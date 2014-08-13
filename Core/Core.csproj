@@ -53,6 +53,7 @@
     <Compile Include="DomainModel\PurchaseOperation\PurchaseInvoice.cs" />
     <Compile Include="DomainModel\PurchaseOperation\PurchaseInvoiceDetail.cs" />
     <Compile Include="DomainModel\RetailSales\Group.cs" />
+    <Compile Include="DomainModel\RetailSales\GroupItemPrice.cs" />
     <Compile Include="DomainModel\RetailSales\PriceMutation.cs" />
     <Compile Include="DomainModel\RetailSales\RetailSalesInvoice.cs" />
     <Compile Include="DomainModel\RetailSales\RetailSalesInvoiceDetail.cs" />
@@ -102,6 +103,11 @@
     <Compile Include="Interface\Repository\PurchaseOperation\IPaymentVoucherRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IPurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IPurchaseInvoiceRepository.cs" />
+    <Compile Include="Interface\Repository\RetailSales\IGroupItemPriceRepository.cs" />
+    <Compile Include="Interface\Repository\RetailSales\IGroupRepository.cs" />
+    <Compile Include="Interface\Repository\RetailSales\IPriceMutationRepository.cs" />
+    <Compile Include="Interface\Repository\RetailSales\IRetailSalesInvoiceDetailRepository.cs" />
+    <Compile Include="Interface\Repository\RetailSales\IRetailSalesInvoiceRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IDeliveryOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IDeliveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IPurchaseOrderDetailRepository.cs" />
@@ -151,6 +157,11 @@
     <Compile Include="Interface\Service\PurchaseOperation\IPaymentVoucherService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IPurchaseInvoiceDetailService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IPurchaseInvoiceService.cs" />
+    <Compile Include="Interface\Service\RetailSales\IGroupItemPriceService.cs" />
+    <Compile Include="Interface\Service\RetailSales\IGroupService.cs" />
+    <Compile Include="Interface\Service\RetailSales\IPriceMutationService.cs" />
+    <Compile Include="Interface\Service\RetailSales\IRetailSalesInvoiceDetailService.cs" />
+    <Compile Include="Interface\Service\RetailSales\IRetailSalesInvoiceService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IDeliveryOrderDetailService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IDeliveryOrderService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IPurchaseOrderDetailService.cs" />
@@ -198,6 +209,11 @@
     <Compile Include="Interface\Validation\PurchaseOperation\IPaymentVoucherValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IPurchaseInvoiceDetailValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IPurchaseInvoiceValidator.cs" />
+    <Compile Include="Interface\Validation\RetailSales\IGroupItemPriceValidator.cs" />
+    <Compile Include="Interface\Validation\RetailSales\IGroupValidator.cs" />
+    <Compile Include="Interface\Validation\RetailSales\IPriceMutationValidator.cs" />
+    <Compile Include="Interface\Validation\RetailSales\IRetailSalesInvoiceDetailValidator.cs" />
+    <Compile Include="Interface\Validation\RetailSales\IRetailSalesInvoiceValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IDeliveryOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IDeliveryOrderValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IPurchaseOrderDetailValidator.cs" />

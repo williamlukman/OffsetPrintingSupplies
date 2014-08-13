@@ -6,8 +6,6 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Text;
-using Data.Mapping.RetailSales;
-using Core.DomainModel.RetailSales;
 
 namespace Data.Context
 {
@@ -43,7 +41,7 @@ namespace Data.Context
                                           "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine" };
             IList<String> retailSalesNames = new List<String>()
-                                        { "Group", "PriceMutation", "RetailSalesInvoice", "RetailSalesInvoiceDetail"};
+                                        { "Group", "PriceMutation", "RetailSalesInvoice", "RetailSalesInvoiceDetail", "GroupItemPrice"};
 
             financeNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
@@ -114,6 +112,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new PriceMutationMapping());
             modelBuilder.Configurations.Add(new RetailSalesInvoiceMapping());
             modelBuilder.Configurations.Add(new RetailSalesInvoiceDetailMapping());
+            modelBuilder.Configurations.Add(new GroupItemPriceMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -168,5 +167,6 @@ namespace Data.Context
         public DbSet<PriceMutation> PriceMutations { get; set; }
         public DbSet<RetailSalesInvoice> RetailSalesInvoices { get; set; }
         public DbSet<RetailSalesInvoice> RetailSalesInvoiceDetails { get; set; }
+        public DbSet<GroupItemPrice> GroupItemPrices { get; set; }
     }
 }

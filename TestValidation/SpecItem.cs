@@ -51,7 +51,7 @@ namespace TestValidation
                     Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
 
                 d.localWarehouse = new Warehouse()
                 {
@@ -114,7 +114,8 @@ namespace TestValidation
 
             it["delete_item"] = () =>
             {
-                d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService);
+                d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService, 
+                                                         d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 d.item.Errors.Count().should_be(0);
             };
 
@@ -192,7 +193,8 @@ namespace TestValidation
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService);
 
-                compound = d._itemService.SoftDeleteObject(compound, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService);
+                compound = d._itemService.SoftDeleteObject(compound, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService,
+                                                           d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 compound.Errors.Count().should_not_be(0);
             };
         }

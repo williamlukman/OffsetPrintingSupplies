@@ -13,7 +13,9 @@ namespace Core.Interface.Repository
         IList<Item> GetObjectsByUoMId(int UoMId);
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);
+        Item CreateObject(Item item, DateTime CreationDate);
         Item CreateObject(Item item);
+        Item UpdateObject(Item item, Nullable<DateTime> UpdateDate);
         Item UpdateObject(Item item);
         Item SoftDeleteObject(Item item);
         bool DeleteObject(int Id);

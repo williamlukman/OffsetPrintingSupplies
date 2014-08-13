@@ -92,6 +92,15 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VNonNegativePrice(Item item)
+        {
+            if (item.SellingPrice < 0)
+            {
+                item.Errors.Add("SellingPrice", "Tidak boleh negatif");
+            }
+            return item;
+        }
+
         public Item VWarehouseQuantityMustBeZero(Item item, IWarehouseItemService _warehouseItemService)
         {
             IList<WarehouseItem> warehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
@@ -116,6 +125,36 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VHasNoPurchaseOrderDetails(Item item, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByItemId(item.Id);
+            if (purchaseOrderDetails.Any())
+            {
+                item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan purchase order detail");
+            }
+            return item;
+        }
+
+        public Item VHasNoStockAdjustmentDetails(Item item, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        {
+            IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByItemId(item.Id);
+            if (stockAdjustmentDetails.Any())
+            {
+                item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan stock adjustment detail");
+            }
+            return item;
+        }
+
+        public Item VHasNoSalesOrderDetails(Item item, ISalesOrderDetailService _salesOrderDetailService)
+        {
+            IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsByItemId(item.Id);
+            if (salesOrderDetails.Any())
+            {
+                item.Errors.Add("Generic", "Tidak boleh terasosiasi dengan sales order detail");
+            }
+            return item;
+        }
+
         public Item VCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             VHasUoM(item, _uomService);
@@ -127,6 +166,8 @@ namespace Validation.Validation
             VHasName(item);
             if (!isValid(item)) { return item; }
             VHasCategory(item);
+            if (!isValid(item)) { return item; }
+            VNonNegativePrice(item);
             return item;
         }
 
@@ -141,6 +182,8 @@ namespace Validation.Validation
             VHasName(item);
             if (!isValid(item)) { return item; }
             VHasCategory(item);
+            if (!isValid(item)) { return item; }
+            VNonNegativePrice(item);
             return item;
         }
 
@@ -154,21 +197,33 @@ namespace Validation.Validation
             return VCreateLegacyObject(item, _uomService, _itemService, _itemTypeService);
         }
 
-        public Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             VHasItemTypeAndNotLegacyItem(item, _itemTypeService);
             if (!isValid(item)) { return item; }
             VHasNoStockMutations(item, _stockMutationService);
             if (!isValid(item)) { return item; }
             VWarehouseQuantityMustBeZero(item, _warehouseItemService);
+            if (!isValid(item)) { return item; }
+            VHasNoPurchaseOrderDetails(item, _purchaseOrderDetailService);
+            if (!isValid(item)) { return item; }
+            VHasNoStockAdjustmentDetails(item, _stockAdjustmentDetailService);
+            if (!isValid(item)) { return item; }
+            VHasNoSalesOrderDetails(item, _salesOrderDetailService);
             return item;
         }
 
-        public Item VDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public Item VDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             VHasNoStockMutations(item, _stockMutationService);
             if (!isValid(item)) { return item; }
             VWarehouseQuantityMustBeZero(item, _warehouseItemService);
+            if (!isValid(item)) { return item; }
+            VHasNoPurchaseOrderDetails(item, _purchaseOrderDetailService);
+            if (!isValid(item)) { return item; }
+            VHasNoStockAdjustmentDetails(item, _stockAdjustmentDetailService);
+            if (!isValid(item)) { return item; }
+            VHasNoSalesOrderDetails(item, _salesOrderDetailService);
             return item;
         }
 
@@ -216,17 +271,17 @@ namespace Validation.Validation
             return isValid(item);
         }
 
-        public bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             item.Errors.Clear();
-            VDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService);
+            VDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService);
             return isValid(item);
         }
 
-        public bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             item.Errors.Clear();
-            VDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService);
+            VDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService);
             return isValid(item);
         }
 

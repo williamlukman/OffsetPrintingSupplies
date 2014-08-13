@@ -78,7 +78,8 @@ namespace Service.Service
                                           int CD, int RD, int RL, int WL, int TL,
                                           IMachineService _machineService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                           ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
-                                          IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+                                          IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                          IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
             RollerBuilder rollerBuilder = new RollerBuilder
             {
@@ -94,12 +95,13 @@ namespace Service.Service
                 TL = TL
             };
             return this.CreateObject(rollerBuilder, _machineService, _uomService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService,
-                                     _warehouseItemService, _warehouseService);
+                                     _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
         }
 
         public RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService,
                                           IItemService _itemService, IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService,
-                                          IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+                                          IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                          IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
             rollerBuilder.Errors = new Dictionary<String, String>();
             Item RollerUsedCore = new Item()
@@ -129,9 +131,9 @@ namespace Service.Service
             {
                 if (_validator.ValidCreateObject(rollerBuilder, this, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
-                    RollerUsedCore = _itemService.CreateLegacyObject(RollerUsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                    RollerUsedCore = _itemService.CreateLegacyObject(RollerUsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                     RollerUsedCore.Id = RollerUsedCore.Id;
-                    RollerNewCore = _itemService.CreateLegacyObject(RollerNewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                    RollerNewCore = _itemService.CreateLegacyObject(RollerNewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                     RollerNewCore.Id = RollerNewCore.Id;
                     rollerBuilder.RollerUsedCoreItemId = RollerUsedCore.Id;
                     rollerBuilder.RollerNewCoreItemId = RollerNewCore.Id;
@@ -174,13 +176,14 @@ namespace Service.Service
 
         public RollerBuilder SoftDeleteObject(RollerBuilder rollerBuilder, IItemService _itemService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                               ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService,
-                                              IItemTypeService _itemTypeService)
+                                              IItemTypeService _itemTypeService, IPurchaseOrderDetailService _purchaseOrderDetailService, 
+                                              IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             Item RollerUsedCore = _itemService.GetObjectById(rollerBuilder.RollerUsedCoreItemId);
             Item RollerNewCore = _itemService.GetObjectById(rollerBuilder.RollerNewCoreItemId);
 
-            if (_itemService.GetValidator().ValidDeleteLegacyObject(RollerUsedCore, _stockMutationService, _itemTypeService, _warehouseItemService) &&
-                _itemService.GetValidator().ValidDeleteLegacyObject(RollerUsedCore, _stockMutationService, _itemTypeService, _warehouseItemService))
+            if (_itemService.GetValidator().ValidDeleteLegacyObject(RollerUsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService) &&
+                _itemService.GetValidator().ValidDeleteLegacyObject(RollerUsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
             {
                 if (_validator.ValidDeleteObject(rollerBuilder, _recoveryOrderDetailService))
                 {

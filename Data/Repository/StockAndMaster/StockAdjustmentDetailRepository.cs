@@ -32,6 +32,11 @@ namespace Data.Repository
             return FindAll(x => x.StockAdjustmentId == stockAdjustmentId && !x.IsDeleted).ToList();
         }
 
+        public IList<StockAdjustmentDetail> GetObjectsByItemId(int itemId)
+        {
+            return FindAll(x => x.ItemId == itemId && !x.IsDeleted).ToList();
+        }
+
         public StockAdjustmentDetail GetObjectById(int Id)
         {
             StockAdjustmentDetail detail = Find(x => x.Id == Id && !x.IsDeleted);

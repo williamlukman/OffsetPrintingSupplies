@@ -51,7 +51,8 @@ namespace Service.Service
 
         public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category, int UoMId, IUoMService _uomService,
                                         IItemService _itemService, IItemTypeService _itemTypeService,
-                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                        IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
             CoreBuilder coreBuilder = new CoreBuilder
             {
@@ -62,11 +63,12 @@ namespace Service.Service
                 Category = Category,
                 UoMId = UoMId
             };
-            return this.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService, _warehouseService);
+            return this.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
         }
 
         public CoreBuilder CreateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
+                                        IPriceMutationService _priceMutationService, IGroupService _groupService)
         {
             coreBuilder.Errors = new Dictionary<String, String>();
             Item UsedCore = new Item()
@@ -96,9 +98,9 @@ namespace Service.Service
             {
                 if (_validator.ValidCreateObject(coreBuilder, this, _uomService, _itemService))
                 {
-                    UsedCore = _itemService.CreateLegacyObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                    UsedCore = _itemService.CreateLegacyObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                     UsedCore.Id = UsedCore.Id;
-                    NewCore = _itemService.CreateLegacyObject(NewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                    NewCore = _itemService.CreateLegacyObject(NewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                     NewCore.Id = NewCore.Id;
                     coreBuilder.UsedCoreItemId = UsedCore.Id;
                     coreBuilder.NewCoreItemId = NewCore.Id;
@@ -141,13 +143,14 @@ namespace Service.Service
         public CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, IRollerBuilderService _rollerBuilderService,
                                             ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService,
-                                            IStockMutationService _stockMutationService, IItemTypeService _itemTypeService)
+                                            IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, 
+                                            IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             Item NewCore = _itemService.GetObjectById(coreBuilder.NewCoreItemId);
 
-            if (_itemService.GetValidator().ValidDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService) &&
-                _itemService.GetValidator().ValidDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService))
+            if (_itemService.GetValidator().ValidDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService) &&
+                _itemService.GetValidator().ValidDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
             {
                 if (_validator.ValidDeleteObject(coreBuilder, _coreIdentificationDetailService, _rollerBuilderService))
                 {

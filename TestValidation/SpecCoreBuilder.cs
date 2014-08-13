@@ -135,7 +135,8 @@ namespace TestValidation
             {
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService,
-                                                                       d._stockMutationService, d._itemTypeService);
+                                                                       d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService, 
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 d.coreBuilder.Errors.Count().should_be(0);
             };
 
@@ -174,7 +175,8 @@ namespace TestValidation
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
 
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService,
-                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService);
+                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 d.coreBuilder.Errors.Count().should_not_be(0);
             };
         }

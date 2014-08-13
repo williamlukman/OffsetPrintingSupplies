@@ -51,6 +51,9 @@
     <Compile Include="Validation\PurchaseOperation\PaymentVoucherValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PurchaseInvoiceDetailValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PurchaseInvoiceValidator.cs" />
+    <Compile Include="Validation\RetailSales\GroupItemPriceValidator.cs" />
+    <Compile Include="Validation\RetailSales\PriceMutationValidator.cs" />
+    <Compile Include="Validation\RetailSales\GroupValidator.cs" />
     <Compile Include="Validation\SalesOperation\ReceivableValidator.cs" />
     <Compile Include="Validation\SalesOperation\ReceiptVoucherDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\ReceiptVoucherValidator.cs" />
