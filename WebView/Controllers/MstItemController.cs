@@ -129,6 +129,7 @@ namespace WebView.Controllers
         {
             try
             {
+
                 model = _itemService.CreateObject(model,_uoMService,_itemTypeService,_warehouseItemService,_warehouseService);
             }
             catch (Exception ex)

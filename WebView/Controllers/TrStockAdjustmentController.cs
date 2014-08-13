@@ -78,15 +78,62 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
+                            model.Code,
                             model.WarehouseId,
                             _warehouseService.GetObjectById(model.WarehouseId).Name,
                             model.AdjustmentDate,
                             model.Description,
-                            model.Code,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query =  _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(id).Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<StockAdjustmentDetail>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Code,
+                            model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Name,
+                            model.Quantity
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -241,13 +288,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Confirm(StockAdjustment model, DateTime ConfirmationDate)
+        public dynamic Confirm(StockAdjustment model)
         {
             try
             {
-
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.ConfirmObject(data, ConfirmationDate, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             }
             catch (Exception ex)
             {

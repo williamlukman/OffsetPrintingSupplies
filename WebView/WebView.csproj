@@ -179,6 +179,7 @@
     <Content Include="Content\apps_js\MasterRollerType.js" />
     <Content Include="Content\apps_js\MasterUoM.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
+    <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\useraccess.js" />
     <Content Include="Content\assets\images\emkl.png" />
@@ -1041,6 +1042,7 @@
     <Content Include="Views\MstCoreBuilder\Index.cshtml" />
     <Content Include="Views\MstRollerBuilder\Index.cshtml" />
     <Content Include="Views\MstBarring\Index.cshtml" />
+    <Content Include="Views\TrStockAdjustment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
