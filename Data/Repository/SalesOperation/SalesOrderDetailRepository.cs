@@ -51,6 +51,7 @@ namespace Data.Repository
             salesOrderDetail.IsConfirmed = false;
             salesOrderDetail.IsDeleted = false;
             salesOrderDetail.CreatedAt = DateTime.Now;
+            salesOrderDetail.PendingDeliveryQuantity = salesOrderDetail.Quantity;
             return Create(salesOrderDetail);
         }
 

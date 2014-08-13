@@ -82,6 +82,7 @@ namespace Service.Service
                 IList<RollerWarehouseMutationDetail> rollerWarehouseMutationDetails = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
                 foreach (var detail in rollerWarehouseMutationDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _rollerWarehouseMutationDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService,
                                                                         _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
                 }
@@ -101,6 +102,7 @@ namespace Service.Service
                 IList<RollerWarehouseMutationDetail> rollerWarehouseMutationDetails = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
                 foreach (var detail in rollerWarehouseMutationDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _rollerWarehouseMutationDetailService.UnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService,
                                                                           _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
                 }

@@ -23,12 +23,12 @@ namespace Validation.Validation
 
         public StockAdjustment VAdjustmentDate(StockAdjustment stockAdjustment)
         {
-           
+
             if (stockAdjustment.AdjustmentDate == null)
             {
                 stockAdjustment.Errors.Add("AdjustmentDate", "Tidak boleh tidak ada");
             }
-            
+
             return stockAdjustment;
         }
 

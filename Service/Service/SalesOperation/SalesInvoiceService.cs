@@ -87,6 +87,7 @@ namespace Service.Service
                 IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _salesInvoiceDetailService.ConfirmObject(detail,ConfirmationDate, _deliveryOrderDetailService);
                 }
                 salesInvoice = CalculateAmountReceivable(salesInvoice, _salesInvoiceDetailService);
@@ -111,6 +112,7 @@ namespace Service.Service
                 IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _salesInvoiceDetailService.UnconfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService);
                 }
                 _repository.UnconfirmObject(salesInvoice);

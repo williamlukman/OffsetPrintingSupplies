@@ -133,6 +133,7 @@ namespace Validation.Validation
             IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
             foreach (var detail in details)
             {
+                detail.ConfirmationDate = receiptVoucher.ConfirmationDate;
                 if (!_receiptVoucherDetailService.GetValidator().ValidConfirmObject(detail, _receivableService))
                 {
                     foreach (var error in detail.Errors)
