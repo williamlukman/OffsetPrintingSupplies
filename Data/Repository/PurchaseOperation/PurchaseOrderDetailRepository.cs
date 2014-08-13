@@ -51,6 +51,7 @@ namespace Data.Repository
             purchaseOrderDetail.IsConfirmed = false;
             purchaseOrderDetail.IsDeleted = false;
             purchaseOrderDetail.CreatedAt = DateTime.Now;
+            purchaseOrderDetail.PendingReceivalQuantity = purchaseOrderDetail.Quantity;
             return Create(purchaseOrderDetail);
         }
 

@@ -121,6 +121,7 @@ namespace Validation.Validation
             IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
             foreach (var detail in details)
             {
+                detail.ConfirmationDate = salesInvoice.ConfirmationDate;
                 _salesInvoiceDetailService.GetValidator().VConfirmObject(detail, _salesInvoiceDetailService, _deliveryOrderDetailService);
                 foreach (var error in detail.Errors)
                 {

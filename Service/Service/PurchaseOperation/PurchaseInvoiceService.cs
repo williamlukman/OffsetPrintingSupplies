@@ -87,6 +87,7 @@ namespace Service.Service
                 IList<PurchaseInvoiceDetail> details = _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(purchaseInvoice.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _purchaseInvoiceDetailService.ConfirmObject(detail, ConfirmationDate, _purchaseReceivalDetailService);
                 }
                 purchaseInvoice = CalculateAmountPayable(purchaseInvoice, _purchaseInvoiceDetailService);
@@ -111,6 +112,7 @@ namespace Service.Service
                 IList<PurchaseInvoiceDetail> details = _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(purchaseInvoice.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _purchaseInvoiceDetailService.UnconfirmObject(detail, _purchaseReceivalService, _purchaseReceivalDetailService);
                 }
                 _repository.UnconfirmObject(purchaseInvoice);

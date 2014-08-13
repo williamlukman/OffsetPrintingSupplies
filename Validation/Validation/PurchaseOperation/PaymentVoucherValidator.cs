@@ -133,6 +133,7 @@ namespace Validation.Validation
             IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
             foreach (var detail in details)
             {
+                detail.ConfirmationDate = paymentVoucher.ConfirmationDate;
                 if (!_paymentVoucherDetailService.GetValidator().ValidConfirmObject(detail, _payableService))
                 {
                     foreach (var error in detail.Errors)
