@@ -79,6 +79,7 @@ namespace Service.Service
         public SalesInvoice ConfirmObject(SalesInvoice salesInvoice, DateTime ConfirmationDate, ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService,
                                              IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService)
         {
+            salesInvoice.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService))
             {
                 // confirm details
@@ -86,13 +87,13 @@ namespace Service.Service
                 IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _salesInvoiceDetailService.ConfirmObject(detail,ConfirmationDate, _deliveryOrderDetailService);
                 }
                 salesInvoice = CalculateAmountReceivable(salesInvoice, _salesInvoiceDetailService);
 
                 // confirm object
                 // create receivable
-                salesInvoice.ConfirmationDate = ConfirmationDate;
                 salesInvoice = _repository.ConfirmObject(salesInvoice);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
@@ -111,6 +112,7 @@ namespace Service.Service
                 IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _salesInvoiceDetailService.UnconfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService);
                 }
                 _repository.UnconfirmObject(salesInvoice);

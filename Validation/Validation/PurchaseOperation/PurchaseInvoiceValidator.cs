@@ -16,7 +16,7 @@ namespace Validation.Validation
             PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
             if (purchaseReceival == null)
             {
-                purchaseInvoice.Errors.Add("Generic", "Tidak terasosiasi dengan Purchase Receival");
+                purchaseInvoice.Errors.Add("PurchaseReceivalId", "Tidak terasosiasi dengan Purchase Receival");
             }
             return purchaseInvoice;
         }
@@ -121,10 +121,11 @@ namespace Validation.Validation
             IList<PurchaseInvoiceDetail> details = _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(purchaseInvoice.Id);
             foreach (var detail in details)
             {
+                detail.ConfirmationDate = purchaseInvoice.ConfirmationDate;
                 _purchaseInvoiceDetailService.GetValidator().VConfirmObject(detail, _purchaseInvoiceDetailService, _purchaseReceivalDetailService);
                 foreach (var error in detail.Errors)
                 {
-                    purchaseInvoice.Errors.Add(error.Key, error.Value);
+                    purchaseInvoice.Errors.Add("Generic", error.Value);
                 }
                 if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             }
@@ -140,7 +141,7 @@ namespace Validation.Validation
                 {
                     foreach (var error in detail.Errors)
                     {
-                        purchaseInvoice.Errors.Add(error.Key, error.Value);
+                        purchaseInvoice.Errors.Add("Generic", error.Value);
                     }
                     if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
                 }
@@ -297,6 +298,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

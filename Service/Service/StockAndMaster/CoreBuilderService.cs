@@ -69,13 +69,20 @@ namespace Service.Service
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             coreBuilder.Errors = new Dictionary<String, String>();
+
+            ItemType typeCore = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core);
+            if (typeCore == null)
+            {
+                coreBuilder.Errors.Add("Generic", "ItemType [Core] Legacy harus dibuat terlebih dahulu");
+            }
+
             Item UsedCore = new Item()
             {
                 Name = coreBuilder.Name,
                 Category = coreBuilder.Category,
                 UoMId = coreBuilder.UoMId,
                 Quantity = 0,
-                ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
+                ItemTypeId = typeCore.Id,
                 Sku = coreBuilder.SkuUsedCore
             };
             UsedCore.Errors = new Dictionary<string, string>();
@@ -86,7 +93,7 @@ namespace Service.Service
                 Category = coreBuilder.Category,
                 UoMId = coreBuilder.UoMId,
                 Quantity = 0,
-                ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Core).Id,
+                ItemTypeId = typeCore.Id,
                 Sku = coreBuilder.SkuNewCore
             };
             NewCore.Errors = new Dictionary<string, string>();
@@ -107,7 +114,9 @@ namespace Service.Service
             }
             else
             {
-                coreBuilder.Errors.Add("Generic", "Item tidak dapat di register");
+                if (UsedCore.Errors.Count() > 0) { coreBuilder.Errors.Add(UsedCore.Errors.First().Key, UsedCore.Errors.First().Value); }
+                else if (NewCore.Errors.Count() > 0) { coreBuilder.Errors.Add(NewCore.Errors.First().Key, NewCore.Errors.First().Value); }
+                else { coreBuilder.Errors.Add("Generic", "Item tidak dapat di register"); }
             }
             return coreBuilder;
         }
@@ -133,7 +142,9 @@ namespace Service.Service
             }
             else
             {
-                coreBuilder.Errors.Add("Generic", "Item tidak dapat di update");
+                if (UsedCore.Errors.Count() > 0) { coreBuilder.Errors.Add(UsedCore.Errors.First().Key, UsedCore.Errors.First().Value); }
+                else if (NewCore.Errors.Count() > 0) { coreBuilder.Errors.Add(NewCore.Errors.First().Key, NewCore.Errors.First().Value); }
+                else { coreBuilder.Errors.Add("Generic", "Item tidak dapat di update"); }
             }
             return coreBuilder;
         }
@@ -158,7 +169,9 @@ namespace Service.Service
             }
             else
             {
-                coreBuilder.Errors.Add("Generic", "Item tidak dapat di hapus");
+                if (UsedCore.Errors.Count() > 0) { coreBuilder.Errors.Add(UsedCore.Errors.First().Key, UsedCore.Errors.First().Value); }
+                else if (NewCore.Errors.Count() > 0) { coreBuilder.Errors.Add(NewCore.Errors.First().Key, NewCore.Errors.First().Value); }
+                else { coreBuilder.Errors.Add("Generic", "Item tidak dapat di hapus"); }
             }
             return coreBuilder;
         }

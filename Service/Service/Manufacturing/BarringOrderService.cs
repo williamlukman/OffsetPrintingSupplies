@@ -74,9 +74,9 @@ namespace Service.Service
         public BarringOrder ConfirmObject(BarringOrder barringOrder, DateTime ConfirmationDate, IBarringOrderDetailService _barringOrderDetailService, IBarringService _barringService,
                                           IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            barringOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(barringOrder, _barringOrderDetailService, _barringService, _itemService, _warehouseItemService))
             {
-                barringOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(barringOrder);
             }
             return barringOrder;

@@ -14,6 +14,7 @@ namespace Core.Interface.Service
         IList<PurchaseOrder> GetAll();
         PurchaseOrder GetObjectById(int Id);
         IList<PurchaseOrder> GetObjectsByContactId(int contactId);
+        IList<PurchaseOrder> GetConfirmedObjects();
         PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService);
         PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
@@ -25,5 +26,7 @@ namespace Core.Interface.Service
         PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalService _purchaseReceivalService,
                                     IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService,
                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        PurchaseOrder CheckAndSetReceivalComplete(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
+        PurchaseOrder UnsetReceivalComplete(PurchaseOrder purchaseOrder);
     }
 }

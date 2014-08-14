@@ -94,14 +94,15 @@ namespace Service.Service
         public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, DateTime ConfirmationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService)
         {
+            paymentVoucher.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(paymentVoucher, this, _paymentVoucherDetailService, _cashBankService, _payableService))
             {
                 IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _paymentVoucherDetailService.ConfirmObject(detail, ConfirmationDate, this, _payableService);
                 }
-                paymentVoucher.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(paymentVoucher);
 
                 if (!paymentVoucher.IsGBCH)
@@ -122,6 +123,7 @@ namespace Service.Service
                 IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                 foreach (var detail in details)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _paymentVoucherDetailService.UnconfirmObject(detail, this, _payableService);
                 }
                 _repository.UnconfirmObject(paymentVoucher);
@@ -143,9 +145,9 @@ namespace Service.Service
                                               IPaymentVoucherDetailService _paymentVoucherDetailService, ICashMutationService _cashMutationService,
                                               ICashBankService _cashBankService, IPayableService _payableService)
         {
+            paymentVoucher.ReconciliationDate = ReconciliationDate;
             if (_validator.ValidReconcileObject(paymentVoucher))
             {
-                paymentVoucher.ReconciliationDate = ReconciliationDate;
                 _repository.ReconcileObject(paymentVoucher);
 
                 CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);

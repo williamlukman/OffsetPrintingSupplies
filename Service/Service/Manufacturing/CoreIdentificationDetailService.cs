@@ -130,6 +130,7 @@ namespace Service.Service
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
+            coreIdentificationDetail.FinishedDate = FinishedDate;
             if( _validator.ValidFinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
@@ -144,7 +145,6 @@ namespace Service.Service
                     StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
-                coreIdentificationDetail.FinishedDate = FinishedDate;
                 _repository.FinishObject(coreIdentificationDetail);
             }
             return coreIdentificationDetail;

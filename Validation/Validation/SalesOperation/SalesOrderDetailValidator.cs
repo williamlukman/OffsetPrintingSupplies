@@ -56,7 +56,7 @@ namespace Validation.Validation
             {
                 if (detail.ItemId == salesOrderDetail.ItemId && detail.Id != salesOrderDetail.Id)
                 {
-                    salesOrderDetail.Errors.Add("SalesOrderDetail", "Tidak boleh memiliki Sku yang sama dalam 1 Sales Order");
+                    salesOrderDetail.Errors.Add("Generic", "Tidak boleh memiliki Sku yang sama dalam 1 Sales Order");
                     return salesOrderDetail;
                 }
             }
@@ -86,7 +86,7 @@ namespace Validation.Validation
             Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
             if (item.PendingDelivery < salesOrderDetail.Quantity)
             {
-                salesOrderDetail.Errors.Add("Item.PendingDelivery", "Tidak boleh kurang dari quantity dari Sales Order Detail");
+                salesOrderDetail.Errors.Add("Generic", "Tidak boleh kurang dari quantity dari Sales Order Detail");
             }
             return salesOrderDetail;
         }

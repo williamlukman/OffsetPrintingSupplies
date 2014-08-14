@@ -82,6 +82,7 @@ namespace Service.Service
         public PaymentVoucherDetail ConfirmObject(PaymentVoucherDetail paymentVoucherDetail, DateTime ConfirmationDate,
                                                   IPaymentVoucherService _paymentVoucherService, IPayableService _payableService)
         {
+            paymentVoucherDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(paymentVoucherDetail, _payableService))
             {
                 PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
@@ -96,7 +97,6 @@ namespace Service.Service
                 }
                 _payableService.UpdateObject(payable);
 
-                paymentVoucherDetail.ConfirmationDate = ConfirmationDate;
                 paymentVoucherDetail = _repository.ConfirmObject(paymentVoucherDetail);
             }
             return paymentVoucherDetail;

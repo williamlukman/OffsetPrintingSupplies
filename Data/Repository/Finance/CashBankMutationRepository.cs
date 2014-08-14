@@ -20,7 +20,12 @@ namespace Data.Repository
 
         public IList<CashBankMutation> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<CashBankMutation> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
         public CashBankMutation GetObjectById(int Id)

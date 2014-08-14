@@ -68,7 +68,7 @@ namespace Validation.Validation
             {
                 if (detail.ItemId == stockAdjustmentDetail.ItemId && detail.Id != stockAdjustmentDetail.Id)
                 {
-                     stockAdjustmentDetail.Errors.Add("ItemId", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
+                     stockAdjustmentDetail.Errors.Add("Generic", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
                 }
             }
             return stockAdjustmentDetail;
@@ -174,8 +174,6 @@ namespace Validation.Validation
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(stockAdjustmentDetail);
-            if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
-            VStockAdjustmentHasBeenConfirmed(stockAdjustmentDetail, _stockAdjustmentService);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VNonNegativeStockQuantity(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService, true);
             return stockAdjustmentDetail;

@@ -75,16 +75,17 @@ namespace Service.Service
                                                      IStockMutationService _stockMutationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                      ICoreIdentificationService _coreIdentificationService)
         {
+            rollerWarehouseMutation.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(rollerWarehouseMutation, this, _rollerWarehouseMutationDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
                 IList<RollerWarehouseMutationDetail> rollerWarehouseMutationDetails = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
                 foreach (var detail in rollerWarehouseMutationDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _rollerWarehouseMutationDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService,
                                                                         _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
                 }
-                rollerWarehouseMutation.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(rollerWarehouseMutation);
             }
             return rollerWarehouseMutation;
@@ -101,6 +102,7 @@ namespace Service.Service
                 IList<RollerWarehouseMutationDetail> rollerWarehouseMutationDetails = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
                 foreach (var detail in rollerWarehouseMutationDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _rollerWarehouseMutationDetailService.UnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService,
                                                                           _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
                 }

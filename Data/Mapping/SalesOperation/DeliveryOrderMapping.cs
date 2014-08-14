@@ -15,6 +15,14 @@ namespace Data.Mapping
             HasMany(d => d.DeliveryOrderDetails)
                 .WithRequired(dod => dod.DeliveryOrder)
                 .HasForeignKey(dod => dod.DeliveryOrderId);
+            HasRequired(d => d.SalesOrder)
+                .WithMany()
+                .HasForeignKey(d => d.SalesOrderId)
+                .WillCascadeOnDelete(false);
+            HasRequired(d => d.Warehouse)
+                .WithMany()
+                .HasForeignKey(d => d.WarehouseId)
+                .WillCascadeOnDelete(false);
             Ignore(d => d.Errors);
         }
     }

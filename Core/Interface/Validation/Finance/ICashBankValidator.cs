@@ -12,7 +12,7 @@ namespace Core.Interface.Validation
     {
         CashBank VName(CashBank cashBank, ICashBankService _cashBankService);
         CashBank VHasNoCashMutation(CashBank cashBank, ICashMutationService _cashMutationService);
-        CashBank VNonNegativeNorZeroAmount(CashBank cashBank);
+        CashBank VNonNegativeAmount(CashBank cashBank);
         CashBank VCreateObject(CashBank cashBank, ICashBankService _cashBankService);
         CashBank VUpdateObject(CashBank cashBank, ICashBankService _cashBankService);
         CashBank VDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService);

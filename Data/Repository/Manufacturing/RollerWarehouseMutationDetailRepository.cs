@@ -20,7 +20,12 @@ namespace Data.Repository
 
         public IList<RollerWarehouseMutationDetail> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IList<RollerWarehouseMutationDetail> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
         public IList<RollerWarehouseMutationDetail> GetObjectsByRollerWarehouseMutationId(int rollerWarehouseMutationId)
@@ -42,6 +47,14 @@ namespace Data.Repository
 
         public RollerWarehouseMutationDetail CreateObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail)
         {
+            string ParentCode = "";
+            using (var db = GetContext())
+            {
+                ParentCode = (from obj in db.RollerWarehouseMutations
+                              where obj.Id == rollerWarehouseMutationDetail.RollerWarehouseMutationId
+                              select obj.Code).FirstOrDefault();
+            }
+            rollerWarehouseMutationDetail.Code = SetObjectCode(ParentCode);
             rollerWarehouseMutationDetail.IsConfirmed = false;
             rollerWarehouseMutationDetail.IsDeleted = false;
             rollerWarehouseMutationDetail.CreatedAt = DateTime.Now;
@@ -84,5 +97,11 @@ namespace Data.Repository
             return rollerWarehouseMutationDetail;
         }
 
+        public string SetObjectCode(string ParentCode)
+        {
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = ParentCode + totalnumberinthemonth;
+            return Code;
+        } 
     }
 }

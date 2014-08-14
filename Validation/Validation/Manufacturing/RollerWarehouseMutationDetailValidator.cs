@@ -89,7 +89,7 @@ namespace Validation.Validation
         {
             if (rollerWarehouseMutationDetail.IsConfirmed)
             {
-                rollerWarehouseMutationDetail.Errors.Add("IsConfirmed", "Tidak boleh sudah selesai.");
+                rollerWarehouseMutationDetail.Errors.Add("Generic", "Tidak boleh sudah selesai.");
             }
             return rollerWarehouseMutationDetail;
         }
@@ -98,7 +98,7 @@ namespace Validation.Validation
         {
             if (!rollerWarehouseMutationDetail.IsConfirmed)
             {
-                rollerWarehouseMutationDetail.Errors.Add("IsConfirmed", "Harus sudah selesai.");
+                rollerWarehouseMutationDetail.Errors.Add("Generic", "Harus sudah selesai.");
             }
             return rollerWarehouseMutationDetail;
         }
@@ -153,7 +153,7 @@ namespace Validation.Validation
         {
             if (rollerWarehouseMutationDetail.ConfirmationDate == null)
             {
-                rollerWarehouseMutationDetail.Errors.Add("ConfirmedDate", "Tidak boleh kosong");
+                rollerWarehouseMutationDetail.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
             }
             return rollerWarehouseMutationDetail;
         }
@@ -162,8 +162,6 @@ namespace Validation.Validation
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(rollerWarehouseMutationDetail);
-            if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
-            VRollerWarehouseMutationHasBeenConfirmed(rollerWarehouseMutationDetail, _rollerWarehouseMutationService);
             if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
             VNonNegativeStockQuantity(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService, true);
             return rollerWarehouseMutationDetail;

@@ -47,6 +47,16 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
+        public RecoveryOrder VHasNoRecoveryOrderDetail(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
+            if (details.Any())
+            {
+                recoveryOrder.Errors.Add("Generic", "Tidak boleh terasosiasi dengan recovery order detail");
+            }
+            return recoveryOrder;
+        }
+
         public RecoveryOrder VHasQuantityReceived(RecoveryOrder recoveryOrder)
         {
             if (recoveryOrder.QuantityReceived <= 0)
@@ -80,7 +90,8 @@ namespace Validation.Validation
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
             if (recoveryOrder.QuantityReceived != details.Count())
             {
-                recoveryOrder.Errors.Add("QuantityReceived", "Jumlah quantity received dan jumlah recovery order detail tidak sama");
+                recoveryOrder.Errors.Add("Generic", "Quantity Received = " +  recoveryOrder.QuantityReceived + ", " + 
+                                         "sementara jumlah roller = " + details.Count());
             }
             return recoveryOrder;
         }
@@ -222,8 +233,7 @@ namespace Validation.Validation
         {
             VHasNotBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            // TODO
-            // VHaveNoRecoveryOrderDetails(recoveryOrder, _recoveryOrderDetailService);
+            VHasNoRecoveryOrderDetail(recoveryOrder, _recoveryOrderDetailService);
             return recoveryOrder;
         }
 
@@ -256,6 +266,8 @@ namespace Validation.Validation
             VHasBeenConfirmed(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VHasNotBeenCompleted(recoveryOrder);
+            if (!isValid(recoveryOrder)) { return recoveryOrder; }
+            VAllDetailsHaveNotBeenDisassembledNorRejected(recoveryOrder, _recoveryOrderDetailService);
             return recoveryOrder;
         }
 

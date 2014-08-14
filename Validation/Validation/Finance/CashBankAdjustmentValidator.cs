@@ -61,12 +61,12 @@ namespace Validation.Validation
             CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
             if (CaseConfirm && cashBankAdjustment.Amount < 0)
             {
-                if (cashBank.Amount + cashBankAdjustment.Amount < 0)
+                if (cashBank.Amount - cashBankAdjustment.Amount < 0)
                 {
                     cashBankAdjustment.Errors.Add("Generic", "CashBank.Amount tidak boleh kurang dari adjustment amount");
                 }
             }
-            else if (cashBankAdjustment.Amount >= 0)
+            else if (!CaseConfirm && cashBankAdjustment.Amount > 0)
             {
                 if (cashBank.Amount - cashBankAdjustment.Amount < 0)
                 {
@@ -91,6 +91,8 @@ namespace Validation.Validation
         public CashBankAdjustment VUpdateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
         {
             VCreateObject(cashBankAdjustment, _cashBankService);
+            if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
+            VHasNotBeenConfirmed(cashBankAdjustment);
             return cashBankAdjustment;
         }
 

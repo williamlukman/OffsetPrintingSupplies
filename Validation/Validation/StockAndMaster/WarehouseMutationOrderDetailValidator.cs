@@ -49,7 +49,7 @@ namespace Validation.Validation
             {
                 if (detail.ItemId == warehouseMutationOrderDetail.ItemId && detail.Id != warehouseMutationOrderDetail.Id)
                 {
-                     warehouseMutationOrderDetail.Errors.Add("ItemId", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
+                     warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
                 }
             }
             return warehouseMutationOrderDetail;
@@ -93,14 +93,15 @@ namespace Validation.Validation
         }
 
         public WarehouseMutationOrderDetail VNonNegativeStockQuantity(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseConfirmOrConfirm)
+                                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseConfirm)
         {
-            int Quantity = CaseConfirmOrConfirm ? warehouseMutationOrderDetail.Quantity : ((-1) * warehouseMutationOrderDetail.Quantity);
             WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
             WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
-            if (warehouseItemFrom.Quantity + Quantity < 0)
+            WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, warehouseMutationOrderDetail.ItemId);
+            int Quantity = CaseConfirm ? warehouseItemFrom.Quantity : warehouseItemTo.Quantity;
+            if ( Quantity < warehouseMutationOrderDetail.Quantity)
             {
-                warehouseMutationOrderDetail.Errors.Add("Quantity", "Stock barang tidak boleh menjadi kurang dari 0");
+                warehouseMutationOrderDetail.Errors.Add("Quantity", "Stock barang tidak boleh kurang dari jumlah mutasi barang");
                 return warehouseMutationOrderDetail;
             }
             return warehouseMutationOrderDetail;
@@ -149,8 +150,6 @@ namespace Validation.Validation
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(warehouseMutationOrderDetail);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VWarehouseMutationOrderHasBeenConfirmed(warehouseMutationOrderDetail, _warehouseMutationOrderService);
             if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
             VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, true);
             return warehouseMutationOrderDetail;

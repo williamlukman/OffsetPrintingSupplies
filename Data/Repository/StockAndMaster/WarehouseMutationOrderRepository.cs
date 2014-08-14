@@ -23,6 +23,11 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
+        public IList<WarehouseMutationOrder> GetAllByMonthCreated()
+        {
+            return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
+        }
+
         public WarehouseMutationOrder GetObjectById(int Id)
         {
             WarehouseMutationOrder warehouseMutationOrder = Find(x => x.Id == Id && !x.IsDeleted);
@@ -58,6 +63,7 @@ namespace Data.Repository
 
         public WarehouseMutationOrder CreateObject(WarehouseMutationOrder warehouseMutationOrder)
         {
+            warehouseMutationOrder.Code = SetObjectCode();
             warehouseMutationOrder.IsConfirmed = false;
             warehouseMutationOrder.IsDeleted = false;
             warehouseMutationOrder.CreatedAt = DateTime.Now;
@@ -98,6 +104,13 @@ namespace Data.Repository
         {
             WarehouseMutationOrder warehouseMutationOrder =  Find(x => x.Id == Id);
             return (Delete(warehouseMutationOrder) == 1) ? true : false;
+        }
+
+        public string SetObjectCode()
+        {
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = DateTime.Today.Year.ToString() + "." + DateTime.Today.Month.ToString() + "." + totalnumberinthemonth;
+            return Code;
         }
     }
 }

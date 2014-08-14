@@ -169,9 +169,9 @@ namespace Service.Service
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
                                                 IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IStockMutationService _stockMutationService)
         {
+            recoveryOrderDetail.RejectedDate = RejectedDate;
             if (_validator.ValidRejectObject(recoveryOrderDetail, _recoveryOrderService))
             {
-                recoveryOrderDetail.RejectedDate = RejectedDate;
                 _repository.RejectObject(recoveryOrderDetail);
 
                 // add recovery order quantity reject
@@ -258,10 +258,10 @@ namespace Service.Service
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
                                                 IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IStockMutationService _stockMutationService)
         {
+            recoveryOrderDetail.FinishedDate = FinishedDate;
             if (_validator.ValidFinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService))
             {
                 // set object to finish
-                recoveryOrderDetail.FinishedDate = FinishedDate;
                 _repository.FinishObject(recoveryOrderDetail);
 
                 // add recovery order quantity final

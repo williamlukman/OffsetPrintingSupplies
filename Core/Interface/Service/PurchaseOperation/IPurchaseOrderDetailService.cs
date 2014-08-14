@@ -23,5 +23,7 @@ namespace Core.Interface.Service
         PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                            IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
                                            IWarehouseItemService _warehouseItemService);
-    }
+        PurchaseOrderDetail SetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity);
+        PurchaseOrderDetail UnsetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity, IPurchaseOrderService _purchaseOrderService);
+   }
 }

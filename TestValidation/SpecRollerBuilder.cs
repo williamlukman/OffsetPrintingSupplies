@@ -166,7 +166,7 @@ namespace TestValidation
                 d._itemService.AdjustQuantity(d._coreBuilderService.GetNewCore(d.coreBuilder.Id), 1);
                 d._itemService.AdjustQuantity(d._coreBuilderService.GetUsedCore(d.coreBuilder.Id), 1);
 
-                d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification,
+                d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, DateTime.Today, 
                                        d._coreIdentificationDetailService, d._stockMutationService, d._recoveryOrderService, d._recoveryOrderDetailService,
                                        d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
                 d.coreIdentification.Errors.Count().should_be(0);

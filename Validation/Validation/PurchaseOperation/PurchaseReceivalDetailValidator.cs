@@ -127,11 +127,11 @@ namespace Validation.Validation
             Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
             if (item.PendingReceival < 0)
             {
-                purchaseReceivalDetail.Errors.Add("Item.PendingReceival", "Tidak boleh kurang dari 0");
+                purchaseReceivalDetail.Errors.Add("Generic", "Item pendingReceival tidak boleh kurang dari 0");
             }
             if (item.Quantity < purchaseReceivalDetail.Quantity)
             {
-                purchaseReceivalDetail.Errors.Add("item.Quantity", "Tidak boleh kurang dari quantity dari Purchase Receival Detail");
+                purchaseReceivalDetail.Errors.Add("Generic", "item quantity tidak boleh kurang dari quantity dari Purchase Receival Detail");
             }
             return purchaseReceivalDetail;
         }

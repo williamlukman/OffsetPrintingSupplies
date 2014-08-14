@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class PurchaseReceivalValidator : IPurchaseReceivalValidator
     {
+        public PurchaseReceival VHasWarehouse(PurchaseReceival purchaseReceival, IWarehouseService _warehouseService)
+        {
+            Warehouse warehouse = _warehouseService.GetObjectById(purchaseReceival.WarehouseId);
+            if (warehouse == null)
+            {
+                purchaseReceival.Errors.Add("WarehouseId", "Tidak terasosiasi dengan warehouse");
+            }
+            return purchaseReceival;
+        }
+
         public PurchaseReceival VHasPurchaseOrder(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
         {
             PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
@@ -97,8 +107,10 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
+        public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
         {
+            VHasWarehouse(purchaseReceival, _warehouseService);
+            if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasPurchaseOrder(purchaseReceival, _purchaseOrderService);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasReceivalDate(purchaseReceival);
@@ -107,9 +119,9 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
+        public PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
         {
-            VCreateObject(purchaseReceival, _purchaseOrderService);
+            VCreateObject(purchaseReceival, _purchaseOrderService, _warehouseService);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasNotBeenConfirmed(purchaseReceival);
             return purchaseReceival;
@@ -141,16 +153,16 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public bool ValidCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
+        public bool ValidCreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
         {
-            VCreateObject(purchaseReceival, _purchaseOrderService);
+            VCreateObject(purchaseReceival, _purchaseOrderService, _warehouseService);
             return isValid(purchaseReceival);
         }
 
-        public bool ValidUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService)
+        public bool ValidUpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
         {
             purchaseReceival.Errors.Clear();
-            VUpdateObject(purchaseReceival, _purchaseOrderService);
+            VUpdateObject(purchaseReceival, _purchaseOrderService, _warehouseService);
             return isValid(purchaseReceival);
         }
 

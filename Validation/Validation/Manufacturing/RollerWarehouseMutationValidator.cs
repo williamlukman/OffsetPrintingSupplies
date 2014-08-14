@@ -49,6 +49,15 @@ namespace Validation.Validation
             return rollerWarehouseMutation;
         }
 
+        public RollerWarehouseMutation VHasMutationDate(RollerWarehouseMutation rollerWarehouseMutation)
+        {
+            if (rollerWarehouseMutation.MutationDate == null)
+            {
+                rollerWarehouseMutation.Errors.Add("MutationDate", "Tidak boleh kosong");
+            }
+            return rollerWarehouseMutation;
+        }
+
         public RollerWarehouseMutation VHasRollerWarehouseMutationDetails(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
             IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
@@ -63,7 +72,7 @@ namespace Validation.Validation
         {
             if (rollerWarehouseMutation.IsConfirmed)
             {
-                rollerWarehouseMutation.Errors.Add("IsConfirmed", "Tidak boleh sudah dikonfirmasi");
+                rollerWarehouseMutation.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi");
             }
             return rollerWarehouseMutation;
         }
@@ -72,7 +81,7 @@ namespace Validation.Validation
         {
             if (!rollerWarehouseMutation.IsConfirmed)
             {
-                rollerWarehouseMutation.Errors.Add("IsConfirmed", "Harus sudah dikonfirmasi");
+                rollerWarehouseMutation.Errors.Add("Generic", "Harus sudah dikonfirmasi");
             }
             return rollerWarehouseMutation;
         }

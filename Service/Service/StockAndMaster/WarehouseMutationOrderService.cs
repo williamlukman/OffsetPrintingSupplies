@@ -68,15 +68,16 @@ namespace Service.Service
         public WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder, DateTime ConfirmationDate, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService,
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService)
         {
+            warehouseMutationOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(warehouseMutationOrder, this, _warehouseMutationOrderDetailService,
                                               _itemService, _barringService, _warehouseItemService))
             {
                 IList<WarehouseMutationOrderDetail> warehouseMutationOrderDetails = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
                 foreach (var detail in warehouseMutationOrderDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _warehouseMutationOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService, _warehouseItemService, _stockMutationService);
                 }
-                warehouseMutationOrder.ConfirmationDate = ConfirmationDate;
                 _repository.ConfirmObject(warehouseMutationOrder);
             }
             return warehouseMutationOrder;
@@ -92,6 +93,7 @@ namespace Service.Service
                 IList<WarehouseMutationOrderDetail> warehouseMutationOrderDetails = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrder.Id);
                 foreach (var detail in warehouseMutationOrderDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _warehouseMutationOrderDetailService.UnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService, _stockMutationService);
                 }
                 _repository.UnconfirmObject(warehouseMutationOrder);
