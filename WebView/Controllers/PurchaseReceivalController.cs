@@ -11,26 +11,34 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class TrStockAdjustmentController : Controller
+    public class PurchaseReceivalController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("StockAdjustmentController");
-        private IStockAdjustmentService _stockAdjustmentService;
-        private IStockAdjustmentDetailService _stockAdjustmentDetailService;
-        private IWarehouseService _warehouseService;
+       private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PurchaseReceivalController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
+        private IPurchaseOrderService _purchaseOrderService;
+        private IPurchaseOrderDetailService _purchaseOrderDetailService;
+        private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
+        private IPurchaseReceivalService _purchaseReceivalService;
+        private IPurchaseInvoiceService _purchaseInvoiceService;
+        private IPurchaseInvoiceDetailService _purchaseInvoiceDetailService;
+        private IWarehouseService _warehouseService;
 
-        public TrStockAdjustmentController()
+        public PurchaseReceivalController()
         {
-            _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
-            _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
-            _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
+            _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
+            _purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
+            _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
+            _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
+            _purchaseInvoiceDetailService = new PurchaseInvoiceDetailService(new PurchaseInvoiceDetailRepository(), new PurchaseInvoiceDetailValidator());
+            _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
         }
 
 
@@ -46,9 +54,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _stockAdjustmentService.GetAll().Where(d => d.IsDeleted == false);
+            var query =  _purchaseReceivalService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<StockAdjustment>;
+            var list = query as IEnumerable<PurchaseReceival>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -79,10 +87,11 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.PurchaseOrderId,
+                            _purchaseOrderService.GetObjectById(model.PurchaseOrderId).Code,
+                            model.ReceivalDate,
                             model.WarehouseId,
                             _warehouseService.GetObjectById(model.WarehouseId).Name,
-                            model.AdjustmentDate,
-                            model.Description,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -99,9 +108,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(id).Where(d => d.IsDeleted == false);
+            var query =  _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(id).Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<StockAdjustmentDetail>;
+            var list = query as IEnumerable<PurchaseReceivalDetail>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -131,20 +140,23 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Code,
+                            model.PurchaseOrderDetailId,
+                            _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Code,
                             model.ItemId,
                             _itemService.GetObjectById(model.ItemId).Name,
-                            model.Quantity
+                            model.Quantity,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
+      
         public dynamic GetInfo(int Id)
         {
-            StockAdjustment model = new StockAdjustment();
+            PurchaseReceival model = new PurchaseReceival();
             try
             {
-                model = _stockAdjustmentService.GetObjectById(Id);
+                model = _purchaseReceivalService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -155,25 +167,49 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
-                model.WarehouseId,
-                Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
-                model.AdjustmentDate,
-                model.Description,
                 model.Code,
-                model.IsConfirmed,
-                model.ConfirmationDate,
-                model.CreatedAt,
-                model.UpdatedAt,
+                model.PurchaseOrderId,
+                PurchaseOrder = _purchaseOrderService.GetObjectById(model.PurchaseOrderId).Code,
+                model.ReceivalDate, 
+                model.WarehouseId, 
+                Warehouse =_warehouseService.GetObjectById(model.WarehouseId).Name,
+                model.Errors
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetInfoDetail(int Id)
+        {
+            PurchaseReceivalDetail model = new PurchaseReceivalDetail();
+            try
+            {
+                model = _purchaseReceivalDetailService.GetObjectById(Id);
+            
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("GetInfo", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Id,
+                model.Code,
+                model.PurchaseOrderDetailId,
+                PurchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Code,
+                model.ItemId,
+                Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public dynamic Insert(StockAdjustment model)
+        public dynamic Insert(PurchaseReceival model)
         {
             try
             {
-                model = _stockAdjustmentService.CreateObject(model,_warehouseService);
+             
+                model = _purchaseReceivalService.CreateObject(model,_purchaseOrderService,_warehouseService);
             }
             catch (Exception ex)
             {
@@ -188,11 +224,11 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic InsertDetail(StockAdjustmentDetail model)
+        public dynamic InsertDetail(PurchaseReceivalDetail model)
         {
             try
             {
-                model = _stockAdjustmentDetailService.CreateObject(model,_stockAdjustmentService,_itemService,_warehouseItemService);
+                model = _purchaseReceivalDetailService.CreateObject(model,_purchaseReceivalService,_purchaseOrderDetailService,_purchaseOrderService,_itemService);
             }
             catch (Exception ex)
             {
@@ -207,12 +243,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(StockAdjustment model)
+        public dynamic Update(PurchaseReceival model)
         {
             try
             {
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.UpdateObject(data,_warehouseService);
+                var data = _purchaseReceivalService.GetObjectById(model.Id);
+                data.PurchaseOrderId = model.PurchaseOrderId;
+                data.ReceivalDate = model.ReceivalDate;
+                data.WarehouseId = model.WarehouseId;
+                model = _purchaseReceivalService.UpdateObject(data,_purchaseOrderService,_warehouseService);
             }
             catch (Exception ex)
             {
@@ -227,12 +266,55 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UpdateDetail(StockAdjustmentDetail model)
+        public dynamic Delete(PurchaseReceival model)
         {
             try
             {
-                var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
-                model = _stockAdjustmentDetailService.UpdateObject(data,_stockAdjustmentService,_itemService,_warehouseItemService);
+                var data = _purchaseReceivalService.GetObjectById(model.Id);
+                model = _purchaseReceivalService.SoftDeleteObject(data,_purchaseReceivalDetailService);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Delete Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Errors
+            });
+        }
+
+        [HttpPost]
+        public dynamic DeleteDetail(PurchaseReceivalDetail model)
+        {
+            try
+            {
+                var data = _purchaseReceivalDetailService.GetObjectById(model.Id);
+                model = _purchaseReceivalDetailService.SoftDeleteObject(data);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Delete Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Errors
+            });
+        }
+
+        [HttpPost]
+        public dynamic UpdateDetail(PurchaseReceivalDetail model)
+        {
+            try
+            {
+                var data = _purchaseReceivalDetailService.GetObjectById(model.Id);
+                data.PurchaseOrderDetailId = model.PurchaseOrderDetailId;
+                data.ItemId = model.ItemId;
+                data.Quantity = model.Quantity;
+                model = _purchaseReceivalDetailService.UpdateObject(data,_purchaseReceivalService,_purchaseOrderDetailService,_purchaseOrderService,_itemService);
             }
             catch (Exception ex)
             {
@@ -248,36 +330,16 @@ namespace WebView.Controllers
 
 
         [HttpPost]
-        public dynamic Delete(StockAdjustment model)
+        public dynamic Confirm(PurchaseReceival model)
         {
             try
             {
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.SoftDeleteObject(data, _stockAdjustmentDetailService);
+                var data = _purchaseReceivalService.GetObjectById(model.Id);
+                model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
             }
             catch (Exception ex)
             {
-                LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-         
-        [HttpPost]
-        public dynamic DeleteDetail(StockAdjustmentDetail model)
-        {
-            try
-            {
-                var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
-                model = _stockAdjustmentDetailService.SoftDeleteObject(data);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Delete Failed", ex);
+                LOG.Error("Confirm Failed", ex);
                 model.Errors.Add("Generic", "Error : " + ex);
             }
 
@@ -288,37 +350,17 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Confirm(StockAdjustment model)
-        {
-            try
-            {
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic UnConfirm(StockAdjustment model, DateTime ConfirmationDate)
+        public dynamic UnConfirm(PurchaseReceival model)
         {
             try
             {
 
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                var data = _purchaseReceivalService.GetObjectById(model.Id);
+                model = _purchaseReceivalService.UnconfirmObject(data,_purchaseReceivalDetailService,_purchaseInvoiceService,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
             }
             catch (Exception ex)
             {
-                LOG.Error("Delete Failed", ex);
+                LOG.Error("Unconfirm Failed", ex);
                 model.Errors.Add("Generic", "Error : " + ex);
             }
 
@@ -331,4 +373,3 @@ namespace WebView.Controllers
 
     }
 }
-

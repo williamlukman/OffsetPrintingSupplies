@@ -3,17 +3,17 @@
 		vMainGrid,
 		vCode;
 
-    
+
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'StockAdjustment/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PurchaseOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'StockAdjustment/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PurchaseOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -35,28 +35,27 @@
                 this.selectedIndex = 0;
         });
     }
-    
+
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
-    $("#lookup_div_warehouse").dialog('close');
+    $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'StockAdjustment/GetList',
+        url: base_url + 'PurchaseOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse Id', 'Warehouse Name', 'AdjusmentDate', 'Description',
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'PurchaseDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'warehouseid', index: 'warehouseid', width: 100 },
-                  { name: 'warehousename', index: 'warehousename', width: 80 },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100 ,search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'description', index: 'description', width: 100 },
+				  { name: 'contactid', index: 'contactid', width: 100 },
+                  { name: 'contactname', index: 'contactname', width: 80 },
+                  { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -92,7 +91,7 @@
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
-   
+
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -106,12 +105,11 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-        $('#AdjustmentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#btnWarehouse').removeAttr('disabled');
-        $('#Description').removeAttr('disabled');
+        $('#PurchaseDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#btnContact').removeAttr('disabled');
         $('#tabledetail_div').hide();
-        $('#AdjustmentDateDiv').show();
-        $('#AdjustmentDateDiv2').hide();
+        $('#PurchaseDateDiv').show();
+        $('#PurchaseDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -124,7 +122,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfo?Id=" + id,
+                url: base_url + "PurchaseOrder/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -141,17 +139,13 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
-                            $('#Description').val(result.Description);
-                            $('#Code').val(result.Code);
-                            $('#AdjustmentDate').datebox('setValue', dateEnt(result.AdjustmentDate));
-                            $('#AdjustmentDate2').val(dateEnt(result.AdjustmentDate));
-                            $('#AdjustmentDateDiv2').show();
-                            $('#AdjustmentDateDiv').hide();
+                            $('#ContactId').val(result.ContactId);
+                            $('#Contact').val(result.Contact);
+                            $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
+                            $('#PurchaseDateDiv2').show();
+                            $('#PurchaseDateDiv').hide();
                             $('#form_btn_save').hide();
-                            $('#btnWarehouse').attr('disabled', true);
-                            $('#Description').attr('disabled', true);
+                            $('#btnContact').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -163,8 +157,8 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-       
-       
+
+
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -173,7 +167,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfo?Id=" + id,
+                url: base_url + "PurchaseOrder/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -190,16 +184,13 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
-                            $('#Description').val(result.Description);
-                            $('#Code').val(result.Code);
-                            $('#AdjustmentDate').datebox('setValue', dateEnt(result.AdjustmentDate));
-                            $('#btnWarehouse').removeAttr('disabled');
-                            $('#Description').removeAttr('disabled');
+                            $('#ContactId').val(result.ContactId);
+                            $('#Contact').val(result.Contact);
+                            $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
+                            $('#btnContact').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#AdjustmentDateDiv').show();
-                            $('#AdjustmentDateDiv2').hide();
+                            $('#PurchaseDateDiv2').show();
+                            $('#PurchaseDateDiv').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -222,7 +213,7 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-    
+
     $('#btn_unconfirm').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
@@ -230,7 +221,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "StockAdjustment/Unconfirm",
+                        url: base_url + "PurchaseOrder/Unconfirm",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -264,7 +255,7 @@
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
         $.ajax({
-            url: base_url + "StockAdjustment/Confirm",
+            url: base_url + "PurchaseOrder/Confirm",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -294,7 +285,7 @@
         $('#confirm_div').dialog('close');
     });
 
-   
+
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -317,7 +308,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "StockAdjustment/Delete",
+            url: base_url + "PurchaseOrder/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -355,18 +346,17 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#AdjustmentDate').datebox('getValue') == "")
-        {
-            return $($('#AdjustmentDate').addClass('errormessage').before('<span class="errormessage">**' + "Adjustment Date Belum Terisi" + '</span>'));
+        if ($('#PurchaseDate').datebox('getValue') == "") {
+            return $($('#PurchaseDate').addClass('errormessage').before('<span class="errormessage">**' + "Adjustment Date Belum Terisi" + '</span>'));
 
         }
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'StockAdjustment/Update';
+            submitURL = base_url + 'PurchaseOrder/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'StockAdjustment/Insert';
+            submitURL = base_url + 'PurchaseOrder/Insert';
         }
 
         $.ajax({
@@ -374,8 +364,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, WarehouseId: $("#WarehouseId").val(), AdjustmentDate: $('#AdjustmentDate').datebox('getValue'),
-                Description: $("#Description").val()
+                Id: id, ContactId: $("#ContactId").val(), PurchaseDate: $('#PurchaseDate').datebox('getValue'),
             }),
             async: false,
             cache: false,
@@ -407,13 +396,14 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity',
+        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity','Price',
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 80, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -446,7 +436,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfoDetail?Id=" + id,
+                url: base_url + "PurchaseOrder/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -464,6 +454,7 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
+                            $('#Price').val(result.Price);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -481,7 +472,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "StockAdjustment/DeleteDetail",
+                        url: base_url + "PurchaseOrder/DeleteDetail",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -520,14 +511,14 @@
 
         var submitURL = '';
         var id = $("#item_btn_submit").data('kode');
-       
+
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'StockAdjustment/UpdateDetail';
+            submitURL = base_url + 'PurchaseOrder/UpdateDetail';
         }
             // Insert
         else {
-            submitURL = base_url + 'StockAdjustment/InsertDetail';
+            submitURL = base_url + 'PurchaseOrder/InsertDetail';
         }
 
         $.ajax({
@@ -535,8 +526,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, StockAdjustmentId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").val()
+                Id: id, PurchaseOrderId: $("#id").val(), ItemId: $("#ItemId").val(),Quantity: $("#Quantity").val(),
+                Price : $("#Price").val()
             }),
             async: false,
             cache: false,
@@ -572,17 +563,17 @@
     });
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up warehouse-------------------------------------------------------
-    $('#btnWarehouse').click(function () {
-        var lookUpURL = base_url + 'MstWarehouse/GetList';
-        var lookupGrid = $('#lookup_table_warehouse');
+    // -------------------------------------------------------Look Up contact-------------------------------------------------------
+    $('#btnContact').click(function () {
+        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_warehouse').dialog('open');
+        $('#lookup_div_contact').dialog('open');
     });
 
-    jQuery("#lookup_table_warehouse").jqGrid({
+    jQuery("#lookup_table_contact").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
@@ -591,7 +582,7 @@
                   { name: 'id', index: 'id', width: 80, align: 'right' },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
-        pager: $('#lookup_pager_warehouse'),
+        pager: $('#lookup_pager_contact'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -599,34 +590,34 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_warehouse").width() - 10,
-        height: $("#lookup_div_warehouse").height() - 110,
+        width: $("#lookup_div_contact").width() - 10,
+        height: $("#lookup_div_contact").height() - 110,
     });
-    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_warehouse').click(function () {
-        $('#lookup_div_warehouse').dialog('close');
+    $('#lookup_btn_cancel_contact').click(function () {
+        $('#lookup_div_contact').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_warehouse').click(function () {
-        var id = jQuery("#lookup_table_warehouse").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_contact').click(function () {
+        var id = jQuery("#lookup_table_contact").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_warehouse").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
-            $('#WarehouseId').val(ret.id).data("kode", id);
-            $('#Warehouse').val(ret.name);
+            $('#ContactId').val(ret.id).data("kode", id);
+            $('#Contact').val(ret.name);
 
-            $('#lookup_div_warehouse').dialog('close');
+            $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup warehouse----------------------------------------------------------------
+    // ---------------------------------------------End Lookup contact----------------------------------------------------------------
 
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {

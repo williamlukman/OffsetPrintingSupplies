@@ -148,6 +148,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CashBankAdjustmentController.cs" />
+    <Compile Include="Controllers\CashBankMutationController.cs" />
+    <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MstBarringController.cs" />
     <Compile Include="Controllers\MstCashBankController.cs" />
@@ -160,7 +163,11 @@
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
-    <Compile Include="Controllers\TrStockAdjustmentController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
+    <Compile Include="Controllers\PurchaseReceivalController.cs" />
+    <Compile Include="Controllers\SalesOrderController.cs" />
+    <Compile Include="Controllers\StockAdjustmentController.cs" />
+    <Compile Include="Controllers\WarehouseMutationOrderController.cs" />
     <Compile Include="GeneralFunction.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -168,6 +175,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\apps_js\CashBankAdjustment.js" />
+    <Content Include="Content\apps_js\CashBankMutation.js" />
+    <Content Include="Content\apps_js\DeliveryOrder.js" />
     <Content Include="Content\apps_js\MasterBarring.js" />
     <Content Include="Content\apps_js\MasterCashBank.js" />
     <Content Include="Content\apps_js\MasterContact.js" />
@@ -179,9 +189,13 @@
     <Content Include="Content\apps_js\MasterRollerType.js" />
     <Content Include="Content\apps_js\MasterUoM.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
+    <Content Include="Content\apps_js\PurchaseOrder.js" />
+    <Content Include="Content\apps_js\PurchaseReceival.js" />
+    <Content Include="Content\apps_js\SalesOrder.js" />
     <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\useraccess.js" />
+    <Content Include="Content\apps_js\WarehouseMutationOrder.js" />
     <Content Include="Content\assets\images\emkl.png" />
     <Content Include="Content\assets\images\logoFEI.png" />
     <Content Include="Content\assets\images\logononame.png" />
@@ -1042,7 +1056,14 @@
     <Content Include="Views\MstCoreBuilder\Index.cshtml" />
     <Content Include="Views\MstRollerBuilder\Index.cshtml" />
     <Content Include="Views\MstBarring\Index.cshtml" />
-    <Content Include="Views\TrStockAdjustment\Index.cshtml" />
+    <Content Include="Views\StockAdjustment\Index.cshtml" />
+    <Content Include="Views\CashBankAdjustment\Index.cshtml" />
+    <Content Include="Views\CashBankMutation\Index.cshtml" />
+    <Content Include="Views\WarehouseMutationOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseOrder\Index.cshtml" />
+    <Content Include="Views\SalesOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseReceival\Index.cshtml" />
+    <Content Include="Views\DeliveryOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

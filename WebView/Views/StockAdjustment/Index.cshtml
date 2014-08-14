@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "StockAdjustment";
+    ViewBag.Title = "Stock Adjustment";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,12 +12,12 @@
 
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: StockAdjustment :.">
+    title=".: Stock Adjustment :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add Detail</a>
-        <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Edit</a>
+        <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
@@ -49,6 +49,14 @@
                             <td width="550">
                                 <input id="id" type="text" size="10" disabled="disabled"/></td>
                         </tr>
+                        <tr>
+                            <td>
+                             <label>Code</label>
+                            </td>
+                            <td>
+                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
+                        </tr>
                          <tr>
                             <td>
                                 <label>Warehouse</label></td>
@@ -63,7 +71,7 @@
                          <td>
                              <div id="AdjustmentDateDiv"><input id="AdjustmentDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                             </div>
-                             <div id="AdjustmentDateDiv2"><input id="AdjustmentDate2" type="text" size="10"/></div>
+                             <div id="AdjustmentDateDiv2"><input id="AdjustmentDate2" type="text" size="10" disabled="disabled"/></div>
                                
                                  </td>
                          </tr>
@@ -79,6 +87,7 @@
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
                             <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+                            <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
                                   <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -101,7 +110,7 @@
         <div id="item_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
-                      <td>
+                      <td width="139" nowrap style="width: 100px">
                           Item
                       </td>
                       <td>
@@ -125,17 +134,17 @@
 <!-- End Dialog Box Item-->
 
      <!-- Dialog Box Confirm-->
-    <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
-        data-options="modal:true" title=".: Confirm Adjustment :.">
+    <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
+        data-options="modal:true" title=".: Confirm Stock Adjustment :.">
 
         <div id="confirm_toolbar" class="form_toolbar">
             <a id="confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
             <a id="confirm_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
         </div>
         <div id="confirm_info">
-              <table  width="500px" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
-                      <td>
+                      <td width="139" nowrap style="width: 100px">
                           Id
                       </td>
                       <td>
@@ -149,6 +158,7 @@
                       <td>
                          <input id="ConfirmationDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                          <input name="ConfirmationDate" type="text" size="1" hidden="hidden"/>
+                         <input name="IsConfirmed" type="text" size="1" hidden="hidden"/>
                       </td>
                   </tr>
               </table>
@@ -174,7 +184,7 @@
 
 
  <!-- Look Up warehouse -->
-    <div id="lookup_div_warehouse" class="easyui-dialog" title="List warehouse" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <div id="lookup_div_warehouse" class="easyui-dialog" title="List Warehouse" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
         <div id="lookup_toolbar_warehouse" class="grid_toolbar">

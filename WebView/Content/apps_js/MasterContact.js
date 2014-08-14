@@ -164,6 +164,7 @@
                             $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
+                    $("#delete_confirm_div").dialog('close');
                 }
                 else {
                     ReloadGrid();

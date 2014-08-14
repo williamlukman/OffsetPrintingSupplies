@@ -1,49 +1,39 @@
 ﻿$(document).ready(function () {
-    var vStatusSaving,//Status Saving data if its new or edit
-		vMainGrid,
-		vCode;
-   
 
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'CashBankAdjustment/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
-        $('#Description').val('').text('').removeClass('errormessage');
-        $('#Name').val('').text('').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
-
         ClearErrorMessage();
     }
 
     $("#form_div").dialog('close');
-    $("#lookup_div_itemtype").dialog('close');
-    $("#lookup_div_uom").dialog('close');
+    $("#lookup_div_cashbank").dialog('close');
+    $("#confirm_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstItem/GetList',
+        url: base_url + 'CashBankAdjustment/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
-                   'Category','UoM Id','UoM','Quantity','Pending Receival','Pending Delivery', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'CashBank Id', 'CashBank Name', 'Amount',
+                   'Adjustment Date', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'itemtypeid', index: 'itemtypeid', width: 80 },
-                  { name: 'itemtype', index: 'itemtype', width: 100 },
-                  { name: 'sku', index: 'sku', width: 100 },
-                  { name: 'category', index: 'category', width: 100 },
-                  { name: 'uomid', index: 'uomid', width: 80 },
-                  { name: 'uom', index: 'uom', width: 100 },
-                  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+				  { name: 'code', index: 'code', width: 100 },
+                  { name: 'cashbankid', index: 'cashbankid', width: 80 },
+                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
+                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 80 },
+                  { name: 'confirmationdate', index: 'confirmationdate', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -59,8 +49,19 @@
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
-		  function () {
-		  }
+		   function () {
+		       var ids = $(this).jqGrid('getDataIDs');
+		       for (var i = 0; i < ids.length; i++) {
+		           var cl = ids[i];
+		           rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
+		           if (rowIsConfirmed == 'true') {
+		               rowIsConfirmed = "YES";
+		           } else {
+		               rowIsConfirmed = "NO";
+		           }
+		           $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
+		       }
+		   }
 
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
@@ -78,7 +79,7 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-        vStatusSaving = 0; //add data mode	
+        $('#AdjustmentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#form_div').dialog('open');
     });
 
@@ -89,7 +90,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstItem/GetInfo?Id=" + id,
+                url: base_url + "CashBankAdjustment/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -105,16 +106,11 @@
                         else {
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
-                            $('#Name').val(result.Name);
-                            $('#SKU').val(result.Sku);
-                            $('#Category').val(result.Category);
-                            $('#ItemTypeId').val(result.ItemTypeId);
-                            $('#ItemTypeName').val(result.ItemType);
-                            $('#UoMId').val(result.UoMId);
-                            $('#UoMName').val(result.UoM);
-                            $('#Quantity').numberbox('setValue', (result.Quantity));
-                            $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
-                            $('#PendingReceival').numberbox('setValue', (result.PendingReceival));
+                            $('#Code').val(result.Code);
+                            $('#CashBankId').val(result.CashBankId);
+                            $('#CashBank').val(result.CashBank);
+                            $('#Amount').numberbox('setValue', (result.Amount));
+                            $('#AdjustmentDate').datebox('setValue', dateEnt(result.AdjustmentDate));
                             $('#form_div').dialog('open');
                         }
                     }
@@ -125,6 +121,88 @@
         }
     });
 
+    $('#btn_confirm').click(function () {
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#list").jqGrid('getRowData', id);
+            $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+            $('#idconfirm').val(ret.id);
+            $("#confirm_div").dialog("open");
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#btn_unconfirm').click(function () {
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#list").jqGrid('getRowData', id);
+            $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: base_url + "CashBankAdjustment/Unconfirm",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            Id: id,
+                        }),
+                        success: function (result) {
+                            if (JSON.stringify(result.Errors) != '{}') {
+                                for (var key in result.Errors) {
+                                    if (key != null && key != undefined && key != 'Generic') {
+                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                    }
+                                    else {
+                                        $.messager.alert('Warning', result.Errors[key], 'warning');
+                                    }
+                                }
+                            }
+                            else {
+                                ReloadGrid();
+                                $("#delete_confirm_div").dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#confirm_btn_submit').click(function () {
+        ClearErrorMessage();
+        $.ajax({
+            url: base_url + "CashBankAdjustment/Confirm",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
+            }),
+            success: function (result) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                }
+                else {
+                    ReloadGrid();
+                    $("#confirm_div").dialog('close');
+                }
+            }
+        });
+    });
+
+    $('#confirm_btn_cancel').click(function () {
+        $('#confirm_div').dialog('close');
+    });
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -147,7 +225,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstItem/Delete",
+            url: base_url + "CashBankAdjustment/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -189,11 +267,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstItem/Update';
+            submitURL = base_url + 'CashBankAdjustment/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstItem/Insert';
+            submitURL = base_url + 'CashBankAdjustment/Insert';
         }
 
         $.ajax({
@@ -201,8 +279,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(),
-                SKU: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val()
+                Id: id, CashBankId: $("#CashBankId").val(), AdjustmentDate: $('#AdjustmentDate').datebox('getValue'),
+                Amount: $("#Amount").numberbox("getValue")
             }),
             async: false,
             cache: false,
@@ -244,18 +322,18 @@
         });
     }
 
-    // -------------------------------------------------------Look Up Itemtype-------------------------------------------------------
-    $('#btnItemType').click(function () {
+    // -------------------------------------------------------Look Up CashBank-------------------------------------------------------
+    $('#btnCashBank').click(function () {
 
-        var lookUpURL = base_url + 'MstItemType/GetList';
-        var lookupGrid = $('#lookup_table_itemtype');
+        var lookUpURL = base_url + 'MstCashBank/GetList';
+        var lookupGrid = $('#lookup_table_cashbank');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_itemtype').dialog('open');
+        $('#lookup_div_cashbank').dialog('open');
     });
 
-    $("#lookup_table_itemtype").jqGrid({
+    $("#lookup_table_cashbank").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
@@ -265,7 +343,7 @@
                   { name: 'name', index: 'name', width: 200 },
                   { name: 'address', index: 'address', width: 200 }],
         page: '1',
-        pager: $('#lookup_pager_itemtype'),
+        pager: $('#lookup_pager_cashbank'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -273,89 +351,34 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_itemtype").width() - 10,
-        height: $("#lookup_div_itemtype").height() - 110,
+        width: $("#lookup_div_cashbank").width() - 10,
+        height: $("#lookup_div_cashbank").height() - 110,
     });
-    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_itemtype').click(function () {
-        $('#lookup_div_itemtype').dialog('close');
+    $('#lookup_btn_cancel_cashbank').click(function () {
+        $('#lookup_div_cashbank').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_itemtype').click(function () {
-        var id = jQuery("#lookup_table_itemtype").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_cashbank').click(function () {
+        var id = jQuery("#lookup_table_cashbank").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_itemtype").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_cashbank").jqGrid('getRowData', id);
 
-            $('#ItemTypeId').val(ret.id).data("kode", id);
-            $('#ItemTypeName').val(ret.name);
+            $('#CashBankId').val(ret.id).data("kode", id);
+            $('#CashBank').val(ret.name);
 
-            $('#lookup_div_itemtype').dialog('close');
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        };
-    });
-
-    
-    // ---------------------------------------------End Lookup ItemType----------------------------------------------------------------
-
-    // -------------------------------------------------------Look Up uom-------------------------------------------------------
-    $('#btnUoM').click(function () {
-        var lookUpURL = base_url + 'MstUoM/GetList';
-        var lookupGrid = $('#lookup_table_uom');
-        lookupGrid.setGridParam({
-            url: lookUpURL
-        }).trigger("reloadGrid");
-        $('#lookup_div_uom').dialog('open');
-    });
-
-    jQuery("#lookup_table_uom").jqGrid({
-        url: base_url,
-        datatype: "json",
-        mtype: 'GET',
-        colNames: ['Id', 'Name'],
-        colModel: [
-                  { name: 'id', index: 'contactcode', width: 80, align: 'right' },
-                  { name: 'name', index: 'contactname', width: 200 }],
-        page: '1',
-        pager: $('#lookup_pager_uom'),
-        rowNum: 20,
-        rowList: [20, 30, 60],
-        sortname: 'id',
-        viewrecords: true,
-        scrollrows: true,
-        shrinkToFit: false,
-        sortorder: "ASC",
-        width: $("#lookup_div_uom").width() - 10,
-        height: $("#lookup_div_uom").height() - 110,
-    });
-    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-
-    // Cancel or CLose
-    $('#lookup_btn_cancel_uom').click(function () {
-        $('#lookup_div_uom').dialog('close');
-    });
-
-    // ADD or Select Data
-    $('#lookup_btn_add_uom').click(function () {
-        var id = jQuery("#lookup_table_uom").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#lookup_table_uom").jqGrid('getRowData', id);
-
-            $('#UoMId').val(ret.id).data("kode", id);
-            $('#UoMName').val(ret.name);
-
-            $('#lookup_div_uom').dialog('close');
+            $('#lookup_div_cashbank').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup uom----------------------------------------------------------------
+    // ---------------------------------------------End Lookup CashBank----------------------------------------------------------------
+
 
 }); //END DOCUMENT READY

@@ -33,7 +33,9 @@ namespace Data.Repository
 
         public DeliveryOrderDetail GetObjectById(int Id)
         {
-            return Find(x => x.Id == Id && !x.IsDeleted);
+            DeliveryOrderDetail deliveryOrderDetail = Find(x => x.Id == Id && !x.IsDeleted);
+            if (deliveryOrderDetail != null) { deliveryOrderDetail.Errors = new Dictionary<string, string>(); }
+            return deliveryOrderDetail;
         }
 
         public IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId)
