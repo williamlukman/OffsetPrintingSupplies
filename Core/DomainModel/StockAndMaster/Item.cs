@@ -23,6 +23,13 @@ namespace Core.DomainModel
         public int PendingDelivery { get; set; }
         public int PendingReceival { get; set; }
 
+        public string Description { get; set; }
+        public decimal SellingPrice { get; set; }
+        public int PriceMutationId { get; set; }
+        public decimal AvgPrice { get; set; }
+        public virtual ICollection<StockMutation> StockMutations { get; set; }
+        public virtual ICollection<PriceMutation> PriceMutations { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }

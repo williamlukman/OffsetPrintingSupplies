@@ -61,78 +61,92 @@ namespace Service.Service
             return _repository.GetObjectBySku(Sku);
         }
 
-        public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
+                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
             {
-                item = _repository.CreateObject(item);
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                if (contactGroup != null)
+                {
+                    item.CreatedAt = DateTime.Now;
+                    item = _repository.CreateObject(item);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
+                    item.PriceMutationId = priceMutation.Id;
+                    item = _repository.UpdateObject(item);
+                }
             }
             return item;
         }
 
-        public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateLegacyObject(item, _uomService, this, _itemTypeService))
             {
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 item = _repository.CreateObject(item);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
+                item.PriceMutationId = priceMutation.Id;
+                _repository.UpdateObject(item);
             }
             return item;
         }
 
-        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService)
+        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
-            return (item = _validator.ValidUpdateObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
+            if (_validator.ValidUpdateObject(item, _uomService, this, _itemTypeService))
+            {
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                Item olditem = _repository.GetObjectById(item.Id);
+                PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                item.UpdatedAt = DateTime.Now;
+                if (olditem.SellingPrice != item.SellingPrice)
+                {
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, (DateTime)item.UpdatedAt);
+                    item.PriceMutationId = priceMutation.Id;
+                    _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
+                }
+                item = _repository.UpdateObject(item);
+            }
+            return item;
         }
 
         public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                       IBarringService _barringService, IContactService _contactService, IMachineService _machineService)
+                                       IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
+                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
             {
                 _barringService.UpdateObject(barring, _barringService, _uomService, this, _itemTypeService,
-                                             _contactService, _machineService, _warehouseItemService, _warehouseService);
+                                             _contactService, _machineService, _warehouseItemService, _warehouseService,
+                                             _contactGroupService, _priceMutationService);
                 return barring;
             }
 
-            return (item = _validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService) ? _repository.UpdateObject(item) : item);
-        }
-
-        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
-        {
-            if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService))
+            if(_validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService)) 
             {
-                IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
-                foreach (var warehouseitem in allwarehouseitems)
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                Item olditem = _repository.GetObjectById(item.Id);
+                PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                if (olditem.SellingPrice != item.SellingPrice)
                 {
-                    IWarehouseItemValidator warehouseItemValidator = _warehouseItemService.GetValidator();
-                    if (!warehouseItemValidator.ValidDeleteObject(warehouseitem))
-                    {
-                        item.Errors.Add("Generic", "Tidak bisa menghapus item yang berhubungan dengan warehouse");
-                        return item;
-                    }
+                    DateTime priceMutationTimeStamp = DateTime.Now;
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, priceMutationTimeStamp);
+                    item.PriceMutationId = priceMutation.Id;
+                    _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }
-                foreach (var warehouseitem in allwarehouseitems)
-                {
-                    _warehouseItemService.SoftDeleteObject(warehouseitem);
-                }
-                _repository.SoftDeleteObject(item);
+                item = _repository.UpdateObject(item);
             }
             return item;
         }
 
-        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
         {
-            Barring barring = _barringService.GetObjectById(item.Id);
-            if (barring != null)
-            {
-                _barringService.SoftDeleteObject(barring, _itemTypeService, _warehouseItemService);
-                return barring;
-            }
-
-            if (_validator.ValidDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService))
+            if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
             {
                 IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
                 foreach (var warehouseitem in allwarehouseitems)
@@ -149,6 +163,46 @@ namespace Service.Service
                     _warehouseItemService.SoftDeleteObject(warehouseitem);
                 }
                 _repository.SoftDeleteObject(item);
+                IList<PriceMutation> priceMutations = _priceMutationService.GetActiveObjectsByItemId(item.Id);
+                foreach (var x in priceMutations)
+                {
+                    _priceMutationService.DeactivateObject(x, item.DeletedAt);
+                }
+            }
+            return item;
+        }
+
+        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
+        {
+            Barring barring = _barringService.GetObjectById(item.Id);
+            if (barring != null)
+            {
+                _barringService.SoftDeleteObject(barring, _itemTypeService, _warehouseItemService, _priceMutationService);
+                return barring;
+            }
+
+            if (_validator.ValidDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
+            {
+                IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
+                foreach (var warehouseitem in allwarehouseitems)
+                {
+                    IWarehouseItemValidator warehouseItemValidator = _warehouseItemService.GetValidator();
+                    if (!warehouseItemValidator.ValidDeleteObject(warehouseitem))
+                    {
+                        item.Errors.Add("Generic", "Tidak bisa menghapus item yang berhubungan dengan warehouse");
+                        return item;
+                    }
+                }
+                foreach (var warehouseitem in allwarehouseitems)
+                {
+                    _warehouseItemService.SoftDeleteObject(warehouseitem);
+                }
+                _repository.SoftDeleteObject(item);
+                IList<PriceMutation> priceMutations = _priceMutationService.GetActiveObjectsByItemId(item.Id);
+                foreach (var priceMutation in priceMutations)
+                {
+                    _priceMutationService.DeactivateObject(priceMutation, item.DeletedAt);
+                }
             }
             return item;
         }
@@ -169,6 +223,16 @@ namespace Service.Service
         {
             item.PendingDelivery += quantity;
             return (item = _validator.ValidAdjustPendingDelivery(item) ? _repository.UpdateObject(item) : item);
+        }
+
+        public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost)
+        {
+            // Use this function to calculate averageCost
+            int originalQuantity = item.Quantity;
+            decimal originalAvgCost = item.AvgPrice;
+            decimal avgCost = (originalQuantity + addedQuantity == 0) ? 0 :
+                ((originalQuantity * originalAvgCost) + (addedQuantity * addedAvgCost)) / (originalQuantity + addedQuantity);
+            return avgCost;
         }
 
         public bool DeleteObject(int Id)

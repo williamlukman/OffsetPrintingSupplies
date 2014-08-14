@@ -59,7 +59,8 @@ namespace Validation.Validation
                 !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.SalesOrder) &&
                 !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.DeliveryOrder) &&
                 !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrder) &&
-                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrderDetail))
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrderDetail) &&
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RetailSalesInvoice))
             {
                 stockMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.SourceDocumentType");
             }
@@ -73,7 +74,8 @@ namespace Validation.Validation
                 !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.SalesOrderDetail) &&
                 !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.DeliveryOrderDetail) &&
                 !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryOrderDetail) &&
-                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryAccessoryDetail))
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryAccessoryDetail) &&
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RetailSalesInvoiceDetail))
             {
                 stockMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.SourceDocumentDetailType");
             }

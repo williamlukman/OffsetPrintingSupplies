@@ -32,6 +32,11 @@ namespace Service.Service
             return _repository.GetObjectsByStockAdjustmentId(stockAdjustmentId);
         }
 
+        public IList<StockAdjustmentDetail> GetObjectsByItemId(int itemId)
+        {
+            return _repository.GetObjectsByItemId(itemId);
+        }
+
         public StockAdjustmentDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

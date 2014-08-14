@@ -19,6 +19,12 @@ namespace Data.Mapping
             HasMany(i => i.RecoveryAccessoryDetails)
                 .WithRequired(rad => rad.Item)
                 .HasForeignKey(rad => rad.ItemId);
+            HasMany(i => i.StockMutations)
+                .WithRequired(sm => sm.Item)
+                .HasForeignKey(sm => sm.ItemId);
+            HasMany(i => i.PriceMutations)
+                .WithRequired(pm => pm.Item)
+                .HasForeignKey(pm => pm.ItemId);
             Ignore(i => i.Errors);
         }
     }

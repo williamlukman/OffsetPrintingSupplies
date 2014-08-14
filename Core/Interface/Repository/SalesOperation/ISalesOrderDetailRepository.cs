@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IList<SalesOrderDetail> GetAll();
         IList<SalesOrderDetail> GetAllByMonthCreated();
         IList<SalesOrderDetail> GetObjectsBySalesOrderId(int salesOrderId);
+        IList<SalesOrderDetail> GetObjectsByItemId(int itemId);
         SalesOrderDetail GetObjectById(int Id);
         SalesOrderDetail CreateObject(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail);

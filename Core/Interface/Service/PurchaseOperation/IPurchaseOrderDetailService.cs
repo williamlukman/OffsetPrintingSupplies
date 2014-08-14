@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IPurchaseOrderDetailValidator GetValidator();
         IList<PurchaseOrderDetail> GetObjectsByPurchaseOrderId(int purchaseOrderId);
+        IList<PurchaseOrderDetail> GetObjectsByItemId(int itemId);
         PurchaseOrderDetail GetObjectById(int Id);
         PurchaseOrderDetail CreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
         PurchaseOrderDetail CreateObject(int purchaseOrderId, int itemId, int quantity, decimal Price, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
