@@ -37,6 +37,10 @@ namespace TestValidation
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
+
+        IPriceMutationService _priceMutationService;
+        IGroupService _groupService;
+
         int Quantity1;
         int Quantity2;
 
@@ -58,6 +62,9 @@ namespace TestValidation
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
                 _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+
+                _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+                _groupService = new GroupService(new GroupRepository(), new GroupValidator());
 
                 Pcs = new UoM()
                 {
@@ -94,7 +101,7 @@ namespace TestValidation
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
-                _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                 _itemService.AdjustQuantity(item_batiktulis, 1000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_batiktulis.Id), 1000);
 
@@ -106,7 +113,7 @@ namespace TestValidation
                     Sku = "sb123",
                     UoMId = Pcs.Id
                 };
-                _itemService.CreateObject(item_sepatubola, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                _itemService.CreateObject(item_sepatubola, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                 _itemService.AdjustQuantity(item_sepatubola, 1000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_sepatubola.Id), 1000);
             }

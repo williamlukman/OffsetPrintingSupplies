@@ -107,7 +107,7 @@ namespace TestValidation
                         Category = "cmp",
                         UoMId = d.Pcs.Id
                     };
-                    d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                    d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
                     d._itemService.AdjustQuantity(d.itemCompound, 2);
                     d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.itemCompound.Id), 2);
 
@@ -129,7 +129,7 @@ namespace TestValidation
                         Category = "X",
                         UoMId = d.Pcs.Id
                     };
-                    d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                    d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
                     d.coreIdentification = new CoreIdentification()
                     {
                         ContactId = d.contact.Id,
@@ -184,7 +184,8 @@ namespace TestValidation
                         UoMId = d.Pcs.Id
                     };
                     d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService,
-                                                                           d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService);
+                                                                           d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService,
+                                                                           d._priceMutationService, d._groupService);
                     d.typeDamp = d._rollerTypeService.SoftDeleteObject(d.typeDamp, d._rollerBuilderService, d._coreIdentificationDetailService);
                     d.typeDamp.Errors.Count().should_not_be(0);
                 };

@@ -58,6 +58,9 @@ namespace TestValidation
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
 
+        IPriceMutationService _priceMutationService;
+        IGroupService _groupService;
+
         void before_each()
         {
             var db = new OffsetPrintingSuppliesEntities();
@@ -80,6 +83,9 @@ namespace TestValidation
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
                 _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+
+                _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+                _groupService = new GroupService(new GroupRepository(), new GroupValidator());
 
                 Pcs = new UoM()
                 {
@@ -117,7 +123,7 @@ namespace TestValidation
                     UoMId = Pcs.Id
                 };
 
-                item_batiktulis = _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                item_batiktulis = _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                 _itemService.AdjustQuantity(item_batiktulis, 1000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_batiktulis.Id), 1000);
 
@@ -129,7 +135,7 @@ namespace TestValidation
                     Sku = "DKI002",
                     UoMId = Pcs.Id
                 };
-                item_busway = _itemService.CreateObject(item_busway, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                item_busway = _itemService.CreateObject(item_busway, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                 _itemService.AdjustQuantity(item_busway, 200);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_busway.Id), 200);
 
@@ -141,7 +147,7 @@ namespace TestValidation
                     Sku = "DKI003",
                     UoMId = Pcs.Id
                 };
-                item_botolaqua = _itemService.CreateObject(item_botolaqua, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                item_botolaqua = _itemService.CreateObject(item_botolaqua, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                 _itemService.AdjustQuantity(item_botolaqua, 20000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_botolaqua.Id), 20000);
 

@@ -73,7 +73,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
             }
         }
 
@@ -96,7 +96,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
                 coreBuilderCopySku.Errors.Count().should_not_be(0);
             };
 
@@ -111,7 +111,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService ,d._warehouseService);
+                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService , d._warehouseService, d._priceMutationService, d._groupService);
                 coreBuilderCopySkuNew.Errors.Count().should_not_be(0);
             };
 
@@ -127,7 +127,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
                 coreBuilderCopySkuUsed.Errors.Count().should_not_be(0);
             };
 

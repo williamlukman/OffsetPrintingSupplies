@@ -35,6 +35,10 @@ namespace NSpec
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
+
+        IPriceMutationService _priceMutationService;
+        IGroupService _groupService;
+
         int Quantity1;
         int Quantity2;
 
@@ -54,6 +58,9 @@ namespace NSpec
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
                 _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+
+                _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+                _groupService = new GroupService(new GroupRepository(), new GroupValidator());
 
                 Pcs = new UoM()
                 {
@@ -90,7 +97,7 @@ namespace NSpec
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
-                itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                 itemService.AdjustQuantity(item1, 1000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item1.Id), 1000);
 
@@ -102,7 +109,7 @@ namespace NSpec
                     Sku = "bg123",
                     UoMId = Pcs.Id
                 };
-                itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
                 itemService.AdjustQuantity(item2, 1000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item2.Id), 1000);
 
