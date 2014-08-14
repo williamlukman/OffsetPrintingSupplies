@@ -16,7 +16,7 @@ namespace Validation.Validation
             {
                 contact.Errors.Add("Name", "Tidak boleh kosong");
             }
-            if (_contactService.IsNameDuplicated(contact))
+            else if (_contactService.IsNameDuplicated(contact))
             {
                 contact.Errors.Add("Name", "Tidak boleh ada duplikasi");
             }

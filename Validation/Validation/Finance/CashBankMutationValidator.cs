@@ -24,7 +24,7 @@ namespace Validation.Validation
             CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
             if (sourceCashBank == null)
             {
-                cashBankMutation.Errors.Add("SourceCashBank", "Tidak terasosiasi dengan warehouse");
+                cashBankMutation.Errors.Add("SourceCashBankId", "Tidak terasosiasi dengan source cashbank");
             }
             return cashBankMutation;
         }
@@ -34,7 +34,7 @@ namespace Validation.Validation
             CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
             if (targetCashBank == null)
             {
-                cashBankMutation.Errors.Add("TargetCashBank", "Tidak terasosiasi dengan warehouse");
+                cashBankMutation.Errors.Add("TargetCashBankId", "Tidak terasosiasi dengan target cashbank");
             }
             return cashBankMutation;
         }
@@ -43,7 +43,7 @@ namespace Validation.Validation
         {
             if (cashBankMutation.IsConfirmed)
             {
-                cashBankMutation.Errors.Add("IsConfirmed", "Tidak boleh sudah dikonfirmasi");
+                cashBankMutation.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi");
             }
             return cashBankMutation;
         }
@@ -52,7 +52,7 @@ namespace Validation.Validation
         {
             if (!cashBankMutation.IsConfirmed)
             {
-                cashBankMutation.Errors.Add("IsConfirmed", "Harus sudah dikonfirmasi");
+                cashBankMutation.Errors.Add("Generic", "Harus sudah dikonfirmasi");
             }
             return cashBankMutation;
         }

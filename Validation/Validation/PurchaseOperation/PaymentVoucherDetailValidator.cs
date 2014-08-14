@@ -16,7 +16,7 @@ namespace Validation.Validation
             PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
             if (paymentVoucher == null)
             {
-                paymentVoucherDetail.Errors.Add("PaymentVoucher", "Tidak boleh tidak ada");
+                paymentVoucherDetail.Errors.Add("PaymentVoucherId", "Tidak boleh tidak ada");
             }
             return paymentVoucherDetail;
         }
@@ -26,7 +26,7 @@ namespace Validation.Validation
             Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
             if (payable == null)
             {
-                paymentVoucherDetail.Errors.Add("Payable", "Tidak boleh tidak ada");
+                paymentVoucherDetail.Errors.Add("PayableId", "Tidak boleh tidak ada");
             }
             return paymentVoucherDetail;
         }
@@ -125,6 +125,8 @@ namespace Validation.Validation
         public PaymentVoucherDetail VUpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
                                                   IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService)
         {
+            VHasNotBeenConfirmed(paymentVoucherDetail);
+            if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VCreateObject(paymentVoucherDetail, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService);
             return paymentVoucherDetail;    
         }

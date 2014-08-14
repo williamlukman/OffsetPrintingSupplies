@@ -208,6 +208,8 @@ namespace Validation.Validation
         public ReceiptVoucher VUpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                             IReceivableService _receivableService, IContactService _contactService, ICashBankService _cashBankService)
         {
+            VHasNotBeenConfirmed(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasNoReceiptVoucherDetail(receiptVoucher, _receiptVoucherDetailService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VCreateObject(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);

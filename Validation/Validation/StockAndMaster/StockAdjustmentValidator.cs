@@ -34,7 +34,7 @@ namespace Validation.Validation
         {
             if (stockAdjustment.IsConfirmed)
             {
-                stockAdjustment.Errors.Add("IsConfirmed", "Tidak boleh sudah dikonfirmasi");
+                stockAdjustment.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi");
             }
             return stockAdjustment;
         }
@@ -43,7 +43,7 @@ namespace Validation.Validation
         {
             if (!stockAdjustment.IsConfirmed)
             {
-                stockAdjustment.Errors.Add("IsConfirmed", "Harus sudah dikonfirmasi");
+                stockAdjustment.Errors.Add("Generic", "Harus sudah dikonfirmasi");
             }
             return stockAdjustment;
         }
@@ -71,18 +71,15 @@ namespace Validation.Validation
                 if (item.Quantity + stockAdjustmentDetailQuantity < 0)
                 {
                     stockAdjustment.Errors.Add("Generic", "Stock barang tidak boleh menjadi kurang dari 0");
-                    return stockAdjustment;
                 }
-                if (warehouseItem.Quantity + stockAdjustmentDetailQuantity < 0)
+                else if (warehouseItem.Quantity + stockAdjustmentDetailQuantity < 0)
                 {
                     stockAdjustmentDetail.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
-                    return stockAdjustment;
                 }
                 /*
-                if (_itemService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
+                else if (_itemService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
                 {
                     stockAdjustment.Errors.Add("Generic", "AvgCost tidak boleh kurang dari 0");
-                    return stockAdjustment;
                 }
                 */
             }

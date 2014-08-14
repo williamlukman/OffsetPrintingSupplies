@@ -64,7 +64,7 @@ namespace Validation.Validation
             if (recoveryOrderDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.BearingSeat &&
                 recoveryOrderDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrill)
             {
-                recoveryOrderDetail.Errors.Add("CoreTypeCase", "Hanya dapat diisi dengan 1 untuk Bearing Seat atau 2 untuk CentreDrill");
+                recoveryOrderDetail.Errors.Add("RepairRequestCase", "Hanya dapat diisi dengan 1 untuk Bearing Seat atau 2 untuk CentreDrill");
             }
             return recoveryOrderDetail;
         }

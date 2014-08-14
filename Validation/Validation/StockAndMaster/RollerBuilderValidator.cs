@@ -16,7 +16,7 @@ namespace Validation.Validation
             {
                 rollerBuilder.Errors.Add("BaseSku", "Tidak boleh kosong");
             }
-            if (_rollerBuilderService.IsBaseSkuDuplicated(rollerBuilder))
+            else if (_rollerBuilderService.IsBaseSkuDuplicated(rollerBuilder))
             {
                 rollerBuilder.Errors.Add("BaseSku", "Tidak boleh diduplikasi");
             }

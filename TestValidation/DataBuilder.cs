@@ -560,6 +560,7 @@ namespace TestValidation
             {
                 WarehouseFromId = localWarehouse.Id,
                 WarehouseToId = movingWarehouse.Id,
+                MutationDate = DateTime.Now
             };
             warehouseMutationOrder = _warehouseMutationOrderService.CreateObject(warehouseMutationOrder, _warehouseService);
 
@@ -1078,7 +1079,8 @@ namespace TestValidation
                 CoreIdentificationId = coreIdentificationContact.Id,
                 Quantity = 3,
                 WarehouseFromId = movingWarehouse.Id,
-                WarehouseToId = localWarehouse.Id
+                WarehouseToId = localWarehouse.Id,
+                MutationDate = DateTime.Today
             };
             _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationContact, _warehouseService, _coreIdentificationService);
 
@@ -1124,7 +1126,8 @@ namespace TestValidation
                 CoreIdentificationId = coreIdentificationInHouse.Id,
                 Quantity = 3,
                 WarehouseFromId = movingWarehouse.Id,
-                WarehouseToId = localWarehouse.Id
+                WarehouseToId = localWarehouse.Id,
+                MutationDate = DateTime.Today
             };
             _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationInHouse, _warehouseService, _coreIdentificationService);
 

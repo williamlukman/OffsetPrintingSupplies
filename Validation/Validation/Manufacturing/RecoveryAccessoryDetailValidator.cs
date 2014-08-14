@@ -81,6 +81,8 @@ namespace Validation.Validation
                                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
             VCreateObject(recoveryAccessoryDetail, _recoveryOrderService, _recoveryOrderDetailService, _itemService, _itemTypeService, _warehouseItemService);
+            if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
+            VRecoveryOrderDetailHasNotBeenFinishedNorRejected(recoveryAccessoryDetail, _recoveryOrderDetailService);
             return recoveryAccessoryDetail;
         }
 

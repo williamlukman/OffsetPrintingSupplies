@@ -27,6 +27,7 @@ namespace Core.Interface.Validation
         CoreIdentificationDetail VHasBeenDelivered(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VHasNotBeenDelivered(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VHasBeenRollerBuilt(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail VHasNotBeenFinished(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VHasFinishedDate(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VQuantityIsInStockForContact(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService,
                                                     IWarehouseItemService _warehouseItemService);

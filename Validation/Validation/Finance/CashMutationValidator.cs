@@ -17,7 +17,7 @@ namespace Validation.Validation
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
             if (cashBank == null)
             {
-                cashMutation.Errors.Add("CashBankId", "Tidak terasosiasi dengan cashBank");
+                cashMutation.Errors.Add("Generic", "Tidak terasosiasi dengan cashBank");
             }
             return cashMutation;
         }
@@ -27,7 +27,7 @@ namespace Validation.Validation
             if (!cashMutation.Status.Equals(Constant.MutationStatus.Addition) &&
                 !cashMutation.Status.Equals(Constant.MutationStatus.Deduction))
             {
-                cashMutation.Errors.Add("Status", "Harus merupakan bagian dari Constant.CashMutationStatus");
+                cashMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.CashMutationStatus");
             }
             return cashMutation;
         }
@@ -38,7 +38,7 @@ namespace Validation.Validation
                 !cashMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.PaymentVoucher) &&
                 !cashMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.ReceiptVoucher))
             {
-                cashMutation.Errors.Add("SourceDocumentType", "Harus merupakan bagian dari Constant.SourceDocumentType");
+                cashMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.SourceDocumentType");
             }
             return cashMutation;
         }
@@ -47,7 +47,7 @@ namespace Validation.Validation
         {
             if (cashMutation.Amount <= 0)
             {
-                cashMutation.Errors.Add("Amout", "Tidak boleh negatif atau 0");
+                cashMutation.Errors.Add("Generic", "Tidak boleh negatif atau 0");
             }
             return cashMutation;
         }
