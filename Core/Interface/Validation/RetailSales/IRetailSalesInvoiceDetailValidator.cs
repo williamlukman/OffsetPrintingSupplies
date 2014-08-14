@@ -9,19 +9,30 @@ namespace Core.Interface.Validation
 {
     public interface IRetailSalesInvoiceDetailValidator
     {
-        RetailSalesInvoiceDetail VConfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
-        RetailSalesInvoiceDetail VUnconfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
-        
-        RetailSalesInvoiceDetail VCreateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
-        RetailSalesInvoiceDetail VUpdateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
-        RetailSalesInvoiceDetail VDeleteObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
+        RetailSalesInvoiceDetail VIsNotConfirmed(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService);
+        RetailSalesInvoiceDetail VHasRetailSalesInvoice(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService);
+        RetailSalesInvoiceDetail VHasItem(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IItemService _itemService);
+        RetailSalesInvoiceDetail VUniqueItem(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService);
+        RetailSalesInvoiceDetail VIsValidQuantityOrdered(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService);
+        RetailSalesInvoiceDetail VIsValidQuantity(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService);
 
-        bool ValidConfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
-        bool ValidUnconfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
+        RetailSalesInvoiceDetail VConfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService);
+        RetailSalesInvoiceDetail VUnconfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
 
-        bool ValidCreateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
-        bool ValidUpdateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService);
-        bool ValidDeleteObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
+        RetailSalesInvoiceDetail VCreateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService,
+                                               IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        RetailSalesInvoiceDetail VUpdateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService,
+                                               IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        RetailSalesInvoiceDetail VDeleteObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService);
+
+        bool ValidConfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService);
+        bool ValidUnconfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
+
+        bool ValidCreateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService,
+                               IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        bool ValidUpdateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService,
+                               IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        bool ValidDeleteObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService);
         bool isValid(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
         string PrintError(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
     }

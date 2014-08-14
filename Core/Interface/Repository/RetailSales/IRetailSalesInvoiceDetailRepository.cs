@@ -9,6 +9,7 @@ namespace Core.Interface.Repository
     public interface IRetailSalesInvoiceDetailRepository : IRepository<RetailSalesInvoiceDetail>
     {
         IList<RetailSalesInvoiceDetail> GetAll();
+        IList<RetailSalesInvoiceDetail> GetObjectsByRetailSalesInvoiceId(int RetailSalesInvoiceId);
         RetailSalesInvoiceDetail GetObjectById(int Id);
         RetailSalesInvoiceDetail ConfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
         RetailSalesInvoiceDetail UnconfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail);

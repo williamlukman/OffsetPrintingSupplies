@@ -11,8 +11,7 @@ namespace Core.Interface.Repository
         IList<GroupItemPrice> GetAll();
         GroupItemPrice GetObjectById(int Id);
         GroupItemPrice CreateObject(GroupItemPrice groupItemPrice);
-        GroupItemPrice CreateObject(GroupItemPrice groupItemPrice, DateTime CreationDate);
-        GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice, Nullable<DateTime> UpdateDate);
+        GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice);
         GroupItemPrice SoftDeleteObject(GroupItemPrice groupItemPrice);
         bool DeleteObject(int Id);
     }

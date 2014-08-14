@@ -13,17 +13,21 @@ namespace Core.DomainModel
         public string Description { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
         public bool IsGroupPricing { get; set; }
+        public int ContactId { get; set; }
 
-        public Nullable<decimal> Discount { get; set; }
-        public Nullable<decimal> Tax { get; set; }
+        public decimal Discount { get; set; }
+        public decimal Tax { get; set; }
         public bool IsConfirmed { get; set; }
 
         public bool IsGBCH { get; set; }
         public string GBCH_No { get; set; }
         public Nullable<DateTime> GBCH_DueDate { get; set; }
         public Nullable<decimal> AmountPaid { get; set; }
+        public bool IsBank { get; set; }
         public bool IsFullPayment { get; set; }
+        public bool IsPaid { get; set; }
         public int CashBankId { get; set; }
+        public int WarehouseId { get; set; }
 
         public decimal Total { get; set; }
         public decimal CoGS { get; set; }
@@ -37,6 +41,7 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
 
         public virtual CashBank CashBank { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
         public virtual ICollection<RetailSalesInvoiceDetail> RetailSalesinvoiceDetails { get; set; }
     }
 }

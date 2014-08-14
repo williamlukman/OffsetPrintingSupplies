@@ -45,32 +45,15 @@ namespace Data.Repository
             return FindAll(i => i.Sku == Sku && !i.IsDeleted).FirstOrDefault();
         }
 
-        public Item CreateObject(Item item, DateTime CreationDate)
-        {
-            item.Quantity = 0;
-            item.IsDeleted = false;
-            item.CreatedAt = CreationDate;
-            return Create(item);
-        }
-
         public Item CreateObject(Item item)
         {
             item.Quantity = 0;
             item.IsDeleted = false;
-            item.CreatedAt = DateTime.Now;
             return Create(item);
-        }
-
-        public Item UpdateObject(Item item, Nullable<DateTime> UpdateDate)
-        {
-            item.UpdatedAt = UpdateDate;
-            Update(item);
-            return item;
         }
 
         public Item UpdateObject(Item item)
         {
-            item.UpdatedAt = DateTime.Now;
             Update(item);
             return item;
         }

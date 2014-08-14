@@ -70,10 +70,11 @@ namespace Service.Service
                 Group group = _groupService.GetObjectByIsLegacy(true);
                 if (group != null)
                 {
+                    item.CreatedAt = DateTime.Now;
                     item = _repository.CreateObject(item);
                     PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, item.CreatedAt);
                     item.PriceMutationId = priceMutation.Id;
-                    item = _repository.UpdateObject(item, null);
+                    item = _repository.UpdateObject(item);
                 }
             }
             return item;
@@ -88,10 +89,11 @@ namespace Service.Service
                 Group group = _groupService.GetObjectByIsLegacy(true);
                 if (group != null)
                 {
+                    item.CreatedAt = DateTime.Now;
                     item = _repository.CreateObject(item);
                     PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, item.CreatedAt);
                     item.PriceMutationId = priceMutation.Id;
-                    item = _repository.UpdateObject(item, null);
+                    item = _repository.UpdateObject(item);
                 }
             }
             return item;
@@ -106,14 +108,14 @@ namespace Service.Service
                 {
                     Item olditem = _repository.GetObjectById(item.Id);
                     PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
-                    DateTime UpdatedAt = DateTime.Now;
+                    item.UpdatedAt = DateTime.Now;
                     if (olditem.SellingPrice != item.SellingPrice)
                     {
-                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, UpdatedAt);
+                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, (DateTime)item.UpdatedAt);
                         item.PriceMutationId = priceMutation.Id;
-                        _priceMutationService.DeactivateObject(oldpriceMutation, UpdatedAt);
+                        _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
                     }
-                    item = _repository.UpdateObject(item, UpdatedAt);
+                    item = _repository.UpdateObject(item);
                 }
             }
             return item;
@@ -138,14 +140,14 @@ namespace Service.Service
                 {
                     Item olditem = _repository.GetObjectById(item.Id);
                     PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
-                    DateTime UpdatedAt = DateTime.Now;
+                    item.UpdatedAt = DateTime.Now;
                     if (olditem.SellingPrice != item.SellingPrice)
                     {
-                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, UpdatedAt);
+                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, (DateTime)item.UpdatedAt);
                         item.PriceMutationId = priceMutation.Id;
-                        _priceMutationService.DeactivateObject(oldpriceMutation, UpdatedAt);
+                        _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
                     }
-                    item = _repository.UpdateObject(item, UpdatedAt);
+                    item = _repository.UpdateObject(item);
                 }
             }
             return item;
@@ -230,6 +232,15 @@ namespace Service.Service
         {
             item.PendingDelivery += quantity;
             return (item = _validator.ValidAdjustPendingDelivery(item) ? _repository.UpdateObject(item) : item);
+        }
+
+        public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost)
+        {
+            int originalQuantity = item.Quantity;
+            decimal originalAvgCost = item.AvgPrice;
+            decimal avgCost = (originalQuantity + addedQuantity == 0) ? 0 :
+                ((originalQuantity * originalAvgCost) + (addedQuantity * addedAvgCost)) / (originalQuantity + addedQuantity);
+            return avgCost;
         }
 
         public bool DeleteObject(int Id)

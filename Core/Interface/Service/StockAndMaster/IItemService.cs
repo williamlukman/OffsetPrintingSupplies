@@ -31,6 +31,7 @@ namespace Core.Interface.Service
         Item AdjustQuantity(Item item, int quantity);
         Item AdjustPendingReceival(Item item, int quantity);
         Item AdjustPendingDelivery(Item item, int quantity);
+        decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Item item);
     }

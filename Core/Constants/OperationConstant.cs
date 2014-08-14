@@ -39,6 +39,8 @@ namespace Core.Constants
             public static string CashBankAdjustment = "CashBankAdjustment";
             public static string PaymentVoucher = "PaymentVoucher";
             public static string ReceiptVoucher = "ReceiptVoucher";
+
+            public static string RetailSalesInvoice = "RetailSalesInvoice";
         }
 
         public class SourceDocumentDetailType
@@ -54,6 +56,8 @@ namespace Core.Constants
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
             public static string WarehouseMutationOrderDetail = "WarehouseMutationOrderDetail";
+
+            public static string RetailSalesInvoiceDetail = "RetailSalesInvoiceDetail";
         }
 
         public class PayableSource
@@ -64,6 +68,7 @@ namespace Core.Constants
         public class ReceivableSource
         {
             public static string SalesInvoice = "SalesInvoice";
+            public static string RetailSalesInvoice = "RetailSalesInvoice";
         }
     }
 }

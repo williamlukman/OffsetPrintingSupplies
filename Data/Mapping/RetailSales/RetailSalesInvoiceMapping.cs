@@ -19,6 +19,10 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(rsi => rsi.CashBankId)
                 .WillCascadeOnDelete(false);
+            HasRequired(rsi => rsi.Warehouse)
+                .WithMany()
+                .HasForeignKey(rsi => rsi.WarehouseId)
+                .WillCascadeOnDelete(false);
             Ignore(rsi => rsi.Errors);
         }
     }

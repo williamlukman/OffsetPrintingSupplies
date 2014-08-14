@@ -15,7 +15,7 @@ namespace Core.Interface.Service
         IList<PriceMutation> GetActiveObjectsByItemId(int ItemId);
         PriceMutation GetObjectById(int Id);
         PriceMutation DeactivateObject(PriceMutation priceMutation, Nullable<DateTime> DeactivationDate);
-        PriceMutation CreateObject(Item item, int GroupId, DateTime CreationDate);
+        PriceMutation CreateObject(int ItemId, int GroupId, decimal Price, DateTime CreationDate);
         PriceMutation CreateObject(Item item, Group group, DateTime CreationDate);
         PriceMutation CreateObject(PriceMutation priceMutation);
         bool DeleteObject(int Id);

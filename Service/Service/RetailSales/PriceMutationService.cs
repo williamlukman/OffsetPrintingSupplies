@@ -50,13 +50,13 @@ namespace Service.Service
             return _repository.DeactivateObject(priceMutation);
         }
 
-        public PriceMutation CreateObject(Item item, int GroupId, DateTime CreationDate)
+        public PriceMutation CreateObject(int ItemId, int GroupId, decimal Price, DateTime CreationDate)
         {
             PriceMutation priceMutation = new PriceMutation()
             {
-                ItemId = item.Id,
+                ItemId = ItemId,
                 GroupId = GroupId,
-                Amount = item.SellingPrice,
+                Amount = Price,
                 CreatedAt = CreationDate
             };
             return this.CreateObject(priceMutation);
@@ -64,14 +64,7 @@ namespace Service.Service
 
         public PriceMutation CreateObject(Item item, Group group, DateTime CreationDate)
         {
-            PriceMutation priceMutation = new PriceMutation()
-            {
-                ItemId = item.Id,
-                GroupId = group.Id,
-                Amount = item.SellingPrice,
-                CreatedAt = CreationDate
-            };
-            return this.CreateObject(priceMutation);
+            return this.CreateObject(item.Id, group.Id, item.SellingPrice, CreationDate);
         }
 
         public PriceMutation CreateObject(PriceMutation priceMutation)
@@ -81,9 +74,10 @@ namespace Service.Service
             {
                 priceMutation = _repository.CreateObject(priceMutation);
                 IList<PriceMutation> priceMutations = _repository.GetObjectsByIsActive(true, priceMutation.Id, priceMutation.ItemId, priceMutation.GroupId);
-                foreach(var x in priceMutations)
+                foreach (var priceMutation2 in priceMutations)
                 {
-                    DeactivateObject(x, priceMutation.CreatedAt);
+                    priceMutation2.Errors = new Dictionary<String, String>();
+                    DeactivateObject(priceMutation2, priceMutation.CreatedAt);
                 }
             }
             return priceMutation;

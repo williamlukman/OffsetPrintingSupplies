@@ -31,27 +31,11 @@ namespace Data.Repository
         public GroupItemPrice CreateObject(GroupItemPrice groupItemPrice)
         {
             groupItemPrice.IsDeleted = false;
-            groupItemPrice.CreatedAt = DateTime.Now;
-            return Create(groupItemPrice);
-        }
-
-        public GroupItemPrice CreateObject(GroupItemPrice groupItemPrice, DateTime CreationDate)
-        {
-            groupItemPrice.IsDeleted = false;
-            groupItemPrice.CreatedAt = CreationDate;
             return Create(groupItemPrice);
         }
 
         public GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice)
         {
-            groupItemPrice.UpdatedAt = DateTime.Now;
-            Update(groupItemPrice);
-            return groupItemPrice;
-        }
-
-        public GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice, Nullable<DateTime> UpdateDate)
-        {
-            groupItemPrice.UpdatedAt = UpdateDate;
             Update(groupItemPrice);
             return groupItemPrice;
         }

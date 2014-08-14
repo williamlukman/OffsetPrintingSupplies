@@ -55,7 +55,7 @@ namespace Validation.Validation
         {
             if (_groupItemPriceService.IsGroupItemPriceDuplicated(groupItemPrice))
             {
-                groupItemPrice.Errors.Add("General", "Kombinasi ItemId & GroupId Tidak boleh ada duplikasi");
+                groupItemPrice.Errors.Add("Generic", "Kombinasi ItemId & GroupId Tidak boleh ada duplikasi");
             }
             return groupItemPrice;
         }

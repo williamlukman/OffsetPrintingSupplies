@@ -108,6 +108,8 @@
     <Compile Include="Repository\PurchaseOperation\PaymentVoucherRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceRepository.cs" />
+    <Compile Include="Repository\RetailSales\RetailSalesInvoiceDetailRepository.cs" />
+    <Compile Include="Repository\RetailSales\RetailSalesInvoiceRepository.cs" />
     <Compile Include="Repository\RetailSales\GroupItemPriceRepository.cs" />
     <Compile Include="Repository\RetailSales\GroupRepository.cs" />
     <Compile Include="Repository\RetailSales\PriceMutationRepository.cs" />

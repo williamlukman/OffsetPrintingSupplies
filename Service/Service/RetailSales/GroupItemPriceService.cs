@@ -40,10 +40,10 @@ namespace Service.Service
             if (_validator.ValidCreateObject(groupItemPrice, this, _groupService, _itemService))
             {
                 Item item = _itemService.GetObjectById(groupItemPrice.ItemId);
-                DateTime CreatedAt = DateTime.Now;
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item, groupItemPrice.GroupId, CreatedAt);
+                groupItemPrice.CreatedAt = DateTime.Now;
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, groupItemPrice.GroupId, item.SellingPrice, groupItemPrice.CreatedAt);
                 groupItemPrice.PriceMutationId = priceMutation.Id;
-                groupItemPrice = _repository.CreateObject(groupItemPrice, CreatedAt);
+                groupItemPrice = _repository.CreateObject(groupItemPrice);
             }
             return groupItemPrice;
         }
@@ -54,11 +54,11 @@ namespace Service.Service
             {
                 Item item = _itemService.GetObjectById(groupItemPrice.ItemId);
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
-                DateTime UpdateDate = DateTime.Now;
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item, groupItemPrice.GroupId, UpdateDate);
+                groupItemPrice.UpdatedAt = DateTime.Now;
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, groupItemPrice.GroupId, item.SellingPrice, (DateTime)groupItemPrice.UpdatedAt);
                 groupItemPrice.PriceMutationId = priceMutation.Id;
-                groupItemPrice = _repository.UpdateObject(groupItemPrice, UpdateDate);
-                _priceMutationService.DeactivateObject(oldpriceMutation, UpdateDate);
+                groupItemPrice = _repository.UpdateObject(groupItemPrice);
+                _priceMutationService.DeactivateObject(oldpriceMutation, groupItemPrice.UpdatedAt);
             }
             return groupItemPrice;
         }

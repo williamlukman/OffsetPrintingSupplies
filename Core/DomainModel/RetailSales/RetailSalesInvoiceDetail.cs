@@ -9,15 +9,15 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int ItemId { get; set; }
-        public Nullable<int> PriceMutationId { get; set; }
+        public int PriceMutationId { get; set; }
         public int RetailSalesInvoiceId { get; set; }
         
         public int Quantity { get; set; }
-        public Nullable<decimal> CoGS { get; set; }
+        public decimal CoGS { get; set; }
         //public decimal AssignedPrice { get; set; }
         //public bool IsManualPriceAssignment { get; set; }
         public decimal Amount { get; set; }
-
+        public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
