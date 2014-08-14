@@ -63,14 +63,6 @@ namespace TestValidation
         public IWarehouseMutationOrderService _warehouseMutationOrderService;
         public IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService;
 
-        //public IPurchaseOrderService _purchaseOrderService;
-        //public IPurchaseOrderDetailService _purchaseOrderDetailService;
-        //public IPurchaseReceivalService _purchaseReceivalService;
-        //public IPurchaseReceivalDetailService _purchaseReceivalDetailService;
-        //public ISalesOrderService _salesOrderService;
-        //public ISalesOrderDetailService _salesOrderDetailService;
-        //public IDeliveryOrderService _deliveryOrderService;
-        //public IDeliveryOrderDetailService _deliveryOrderDetailService;
         public IPriceMutationService _priceMutationService;
         public IGroupService _groupService;
 
@@ -128,8 +120,7 @@ namespace TestValidation
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
-            //_deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
-            //_deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
+            
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _machineService = new MachineService(new MachineRepository(), new MachineValidator());
@@ -138,10 +129,7 @@ namespace TestValidation
             _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
             _purchaseInvoiceDetailService = new PurchaseInvoiceDetailService(new PurchaseInvoiceDetailRepository(), new PurchaseInvoiceDetailValidator());
             _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
-            //_purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
-            //_purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
-            //_purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
-            //_purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
+            
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
             _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
@@ -154,8 +142,7 @@ namespace TestValidation
             _rollerWarehouseMutationService = new RollerWarehouseMutationService(new RollerWarehouseMutationRepository(), new RollerWarehouseMutationValidator());
             _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
-            //_salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
-            //_salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
@@ -165,14 +152,6 @@ namespace TestValidation
             _warehouseMutationOrderService = new WarehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
             _warehouseMutationOrderDetailService = new WarehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
 
-            //_purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
-            //_purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
-            //_purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
-            //_purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
-            //_salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
-            //_salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
-            //_deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
-            //_deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _groupService = new GroupService(new GroupRepository(), new GroupValidator());
 

@@ -226,7 +226,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+            blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
             _itemService.AdjustQuantity(blanket2, 100000);
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket2.Id), 100000);
 
@@ -239,7 +239,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+            blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
             _itemService.AdjustQuantity(blanket3, 100000);
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket3.Id), 100000);
 
