@@ -227,6 +227,7 @@ namespace Service.Service
 
         public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost)
         {
+            // Use this function to calculate averageCost
             int originalQuantity = item.Quantity;
             decimal originalAvgCost = item.AvgPrice;
             decimal avgCost = (originalQuantity + addedQuantity == 0) ? 0 :
