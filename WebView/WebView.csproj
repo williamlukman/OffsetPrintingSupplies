@@ -39,36 +39,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\infoss_multitenant\packages\References\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine">
+      <HintPath>..\packages\CrystalDecisions.CrystalReports.Engine.1.0.0\lib\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.ReportSource, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\infoss_multitenant\packages\References\CrystalDecisions.ReportSource.dll</HintPath>
+    <Reference Include="CrystalDecisions.ReportSource">
+      <HintPath>..\packages\CrystalDecisions.ReportSource.1.0.0\lib\CrystalDecisions.ReportSource.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.Shared, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\infoss_multitenant\packages\References\CrystalDecisions.Shared.dll</HintPath>
+    <Reference Include="CrystalDecisions.Shared">
+      <HintPath>..\packages\CrystalDecisions.Shared.1.0.0\lib\CrystalDecisions.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.Web, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\infoss_multitenant\packages\References\CrystalDecisions.Web.dll</HintPath>
+    <Reference Include="CrystalDecisions.Windows.Forms">
+      <HintPath>..\packages\CrystalDecisions.Windows.Forms.1.0.0\lib\CrystalDecisions.Windows.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\infoss_multitenant\packages\References\log4net.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Recaptcha">
-      <HintPath>..\..\infoss_multitenant\packages\References\Recaptcha.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic">
-      <HintPath>..\..\infoss_multitenant\packages\References\System.Linq.Dynamic.dll</HintPath>
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.2\lib\net40\System.Linq.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -1056,6 +1048,9 @@
       <Project>{5fce3a19-3b1d-4bd3-9752-274d5efe7f2f}</Project>
       <Name>Validation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

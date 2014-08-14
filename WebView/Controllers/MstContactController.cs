@@ -19,6 +19,8 @@ namespace WebView.Controllers
         private ICoreIdentificationService _coreIdentificationService;
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
+        private IPriceMutationService _priceMutationService;
+        private IContactGroupService _contactGroupService;
         public MstContactController()
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -26,6 +28,8 @@ namespace WebView.Controllers
             _barringService = new BarringService(new BarringRepository(),new BarringValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
+            _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
         }
 
         public ActionResult Index()
@@ -111,7 +115,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _contactService.CreateObject(model);
+                model = _contactService.CreateObject(model, _contactGroupService);
             }
             catch (Exception ex)
             {
@@ -136,7 +140,7 @@ namespace WebView.Controllers
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
-                model = _contactService.UpdateObject(data);
+                model = _contactService.UpdateObject(data,_contactGroupService);
             }
             catch (Exception ex)
             {
