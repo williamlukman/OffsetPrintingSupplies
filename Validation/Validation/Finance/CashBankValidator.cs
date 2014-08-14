@@ -34,7 +34,7 @@ namespace Validation.Validation
             return cashBank;
         }
 
-        public CashBank VNonNegativeNorZeroAmount(CashBank cashBank)
+        public CashBank VNonNegativeAmount(CashBank cashBank)
         {
             if (cashBank.Amount < 0)
             {
@@ -47,7 +47,7 @@ namespace Validation.Validation
         {
             VName(cashBank, _cashBankService);
             if (!isValid(cashBank)) { return cashBank; }
-            VNonNegativeNorZeroAmount(cashBank);
+            VNonNegativeAmount(cashBank);
             return cashBank;
         }
 
@@ -65,7 +65,7 @@ namespace Validation.Validation
 
         public CashBank VAdjustAmount(CashBank cashBank)
         {
-            VNonNegativeNorZeroAmount(cashBank);
+            VNonNegativeAmount(cashBank);
             return cashBank;
         }
 

@@ -34,7 +34,7 @@ namespace Validation.Validation
         {
             if (!purchaseOrder.IsConfirmed)
             {
-                purchaseOrder.Errors.Add("PurchaseOrder", "Belum dikonfirmasi");
+                purchaseOrder.Errors.Add("Generic", "Belum dikonfirmasi");
             }
             return purchaseOrder;
         }
@@ -43,7 +43,7 @@ namespace Validation.Validation
         {
             if (purchaseOrder.IsConfirmed)
             {
-                purchaseOrder.Errors.Add("PurchaseOrder", "Tidak boleh sudah dikonfirmasi");
+                purchaseOrder.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi");
             }
             return purchaseOrder;
         }
@@ -53,7 +53,7 @@ namespace Validation.Validation
             IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
             if (!details.Any())
             {
-                purchaseOrder.Errors.Add("PurchaseOrder", "Tidak memiliki Purchase Order Details");
+                purchaseOrder.Errors.Add("Generic", "Tidak memiliki Purchase Order Details");
             }
             return purchaseOrder;
         }
@@ -63,7 +63,7 @@ namespace Validation.Validation
             IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrder.Id);
             if (details.Any())
             {
-                purchaseOrder.Errors.Add("PurchaseOrder", "Memiliki Purchase Order Details");
+                purchaseOrder.Errors.Add("Generic", "Memiliki Purchase Order Details");
             }
             return purchaseOrder;
         }

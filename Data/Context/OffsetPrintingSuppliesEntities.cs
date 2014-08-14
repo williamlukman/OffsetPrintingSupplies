@@ -28,11 +28,11 @@ namespace Data.Context
                                           "CoreIdentificationDetail", "CoreIdentification",
                                           "BarringOrderDetail", "BarringOrder" };
             IList<String> purchaseOperationNames = new List<String>()
-                                        { "Payable", "PaymentVoucherDetail", "PaymentVoucher",
+                                        { "PaymentVoucherDetail", "PaymentVoucher", "Payable", 
                                           "PurchaseInvoiceDetail", "PurchaseInvoice",
                                           "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder" };
             IList<String> salesOperationNames = new List<String>()
-                                        { "Receivable", "ReceiptVoucherDetail", "ReceiptVoucher",
+                                        { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
                                           "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
             IList<String> stockAndMasterNames = new List<String>()
@@ -149,8 +149,8 @@ namespace Data.Context
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
         public DbSet<RollerBuilder> RollerBuilders { get; set; }
         public DbSet<RollerType> RollerTypes { get; set; }
-        public DbSet<RollerWarehouseMutationDetail> RolleWarehouseMutationDetail { get; set; }
-        public DbSet<RollerWarehouseMutation> RolleWarehouseMutation { get; set; }
+        public DbSet<RollerWarehouseMutationDetail> RollerWarehouseMutationDetails { get; set; }
+        public DbSet<RollerWarehouseMutation> RollerWarehouseMutations { get; set; }
         public DbSet<SalesInvoiceDetail> SalesInvoiceDetails { get; set; }
         public DbSet<SalesInvoice> SalesInvoices { get; set; }
         public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }

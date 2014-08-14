@@ -42,6 +42,14 @@ namespace Data.Repository
 
         public WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
         {
+            string ParentCode = "";
+            using (var db = GetContext())
+            {
+                ParentCode = (from obj in db.WarehouseMutationOrders
+                              where obj.Id == warehouseMutationOrderDetail.WarehouseMutationOrderId
+                              select obj.Code).FirstOrDefault();
+            }
+            warehouseMutationOrderDetail.Code = SetObjectCode(ParentCode);
             warehouseMutationOrderDetail.IsConfirmed = false;
             warehouseMutationOrderDetail.IsDeleted = false;
             warehouseMutationOrderDetail.CreatedAt = DateTime.Now;
@@ -85,5 +93,11 @@ namespace Data.Repository
             return warehouseMutationOrderDetail;
         }
 
+        public string SetObjectCode(string ParentCode)
+        {
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = ParentCode + totalnumberinthemonth;
+            return Code;
+        } 
     }
 }

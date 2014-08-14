@@ -16,7 +16,7 @@ namespace Validation.Validation
             DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
             if (deliveryOrder == null)
             {
-                salesInvoice.Errors.Add("Generic", "Tidak terasosiasi dengan Sales Receival");
+                salesInvoice.Errors.Add("DeliveryOrderId", "Tidak terasosiasi dengan Sales Receival");
             }
             return salesInvoice;
         }
@@ -121,10 +121,11 @@ namespace Validation.Validation
             IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
             foreach (var detail in details)
             {
+                detail.ConfirmationDate = salesInvoice.ConfirmationDate;
                 _salesInvoiceDetailService.GetValidator().VConfirmObject(detail, _salesInvoiceDetailService, _deliveryOrderDetailService);
                 foreach (var error in detail.Errors)
                 {
-                    salesInvoice.Errors.Add(error.Key, error.Value);
+                    salesInvoice.Errors.Add("Generic", error.Value);
                 }
                 if (!isValid(salesInvoice)) { return salesInvoice; }
             }
@@ -140,7 +141,7 @@ namespace Validation.Validation
                 {
                     foreach (var error in detail.Errors)
                     {
-                        salesInvoice.Errors.Add(error.Key, error.Value);
+                        salesInvoice.Errors.Add("Generic", error.Value);
                     }
                     if (!isValid(salesInvoice)) { return salesInvoice; }
                 }

@@ -19,5 +19,6 @@ namespace Core.Interface.Repository
         WarehouseMutationOrder ConfirmObject(WarehouseMutationOrder warehouseMutationOrder);
         WarehouseMutationOrder UnconfirmObject(WarehouseMutationOrder warehouseMutationOrder);
         bool DeleteObject(int Id);
+        string SetObjectCode();
     }
 }

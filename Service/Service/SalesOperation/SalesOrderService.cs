@@ -86,6 +86,7 @@ namespace Service.Service
                 IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
                 foreach (var detail in salesOrderDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _salesOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService,
                                                            _barringService, _warehouseItemService);
                 }
@@ -104,6 +105,7 @@ namespace Service.Service
                 IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
                 foreach (var detail in salesOrderDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _salesOrderDetailService.UnconfirmObject(detail, this, _deliveryOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(salesOrder);

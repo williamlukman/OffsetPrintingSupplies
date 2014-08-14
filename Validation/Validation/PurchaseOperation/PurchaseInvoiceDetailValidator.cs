@@ -26,7 +26,7 @@ namespace Validation.Validation
             PurchaseReceivalDetail prd = _purchaseReceivalDetailService.GetObjectById(purchaseInvoiceDetail.PurchaseReceivalDetailId);
             if (prd == null)
             {
-                purchaseInvoiceDetail.Errors.Add("PurchaseReceivalDetail", "Tidak boleh tidak ada");
+                purchaseInvoiceDetail.Errors.Add("PurchaseReceivalDetailId", "Tidak boleh tidak ada");
             }
             return purchaseInvoiceDetail;
         }
@@ -50,7 +50,7 @@ namespace Validation.Validation
             {
                 if (detail.PurchaseReceivalDetailId == purchaseInvoiceDetail.PurchaseReceivalDetailId && detail.Id != purchaseInvoiceDetail.Id)
                 {
-                    purchaseInvoiceDetail.Errors.Add("PurchaseInvoiceDetail", "Tidak boleh memiliki lebih dari 2 Purchase Receival Detail");
+                    purchaseInvoiceDetail.Errors.Add("Generic", "Tidak boleh memiliki lebih dari 2 Purchase Receival Detail");
                 }
             }
             return purchaseInvoiceDetail;
@@ -79,7 +79,7 @@ namespace Validation.Validation
         {
             if (!purchaseInvoiceDetail.IsConfirmed)
             {
-                purchaseInvoiceDetail.Errors.Add("IsConfirmed", "Belum dikonfirmasi");
+                purchaseInvoiceDetail.Errors.Add("Generic", "Belum dikonfirmasi");
             }
             return purchaseInvoiceDetail;
         }
@@ -88,7 +88,7 @@ namespace Validation.Validation
         {
             if (purchaseInvoiceDetail.IsConfirmed)
             {
-                purchaseInvoiceDetail.Errors.Add("IsConfirmed", "Sudah dikonfirmasi");
+                purchaseInvoiceDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
             }
             return purchaseInvoiceDetail;
         }

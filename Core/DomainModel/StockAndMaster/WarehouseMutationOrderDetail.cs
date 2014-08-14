@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
 namespace Core.DomainModel
 {
     public partial class WarehouseMutationOrderDetail
     {
         public int Id { get; set; }
         public int WarehouseMutationOrderId { get; set; }
+        public string Code { get; set; }
 
         public int ItemId { get; set; }
         public int Quantity { get; set; }

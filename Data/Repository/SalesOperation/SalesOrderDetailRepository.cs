@@ -56,6 +56,7 @@ namespace Data.Repository
             salesOrderDetail.IsConfirmed = false;
             salesOrderDetail.IsDeleted = false;
             salesOrderDetail.CreatedAt = DateTime.Now;
+            salesOrderDetail.PendingDeliveryQuantity = salesOrderDetail.Quantity;
             return Create(salesOrderDetail);
         }
 
@@ -97,9 +98,8 @@ namespace Data.Repository
 
         public string SetObjectCode(string ParentCode)
         {
-            // Code: #{parent_object.code}/#{total_number_objects}
-            int totalobject = FindAll().Count() + 1;
-            string Code = ParentCode + "/#" + totalobject;
+            int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
+            string Code = ParentCode + "." + totalnumberinthemonth;
             return Code;
         } 
 

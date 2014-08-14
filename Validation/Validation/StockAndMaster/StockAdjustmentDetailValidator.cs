@@ -68,7 +68,7 @@ namespace Validation.Validation
             {
                 if (detail.ItemId == stockAdjustmentDetail.ItemId && detail.Id != stockAdjustmentDetail.Id)
                 {
-                     stockAdjustmentDetail.Errors.Add("ItemId", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
+                     stockAdjustmentDetail.Errors.Add("Generic", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
                 }
             }
             return stockAdjustmentDetail;

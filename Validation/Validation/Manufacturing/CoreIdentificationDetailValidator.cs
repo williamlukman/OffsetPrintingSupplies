@@ -176,10 +176,9 @@ namespace Validation.Validation
         {
             if (coreIdentificationDetail.IsDelivered)
             {
-                coreIdentificationDetail.Errors.Add("Generic", "Item sudah dikirim");
+                coreIdentificationDetail.Errors.Add("Generic", "Roller sudah dikirim");
             }
             return coreIdentificationDetail;
-
         }
 
         public CoreIdentificationDetail VHasBeenRollerBuilt(CoreIdentificationDetail coreIdentificationDetail)
@@ -187,6 +186,15 @@ namespace Validation.Validation
             if (!coreIdentificationDetail.IsRollerBuilt)
             {
                 coreIdentificationDetail.Errors.Add("Generic", "Roller is not built yet");
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VHasNotBeenFinished(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (coreIdentificationDetail.IsFinished)
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "CoreIdentificationDetail sudah selesai");
             }
             return coreIdentificationDetail;
         }
@@ -243,6 +251,8 @@ namespace Validation.Validation
                                                       IRollerTypeService _rollerTypeService, IMachineService _machineService)
         {
             VCreateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _rollerTypeService, _machineService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasNotBeenFinished(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 

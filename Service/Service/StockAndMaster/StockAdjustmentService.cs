@@ -75,6 +75,7 @@ namespace Service.Service
                 IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
                 foreach (var detail in stockAdjustmentDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _stockAdjustmentDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(stockAdjustment);
@@ -90,6 +91,7 @@ namespace Service.Service
                 IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
                 foreach (var detail in stockAdjustmentDetails)
                 {
+                    detail.Errors = new Dictionary<string, string>();
                     _stockAdjustmentDetailService.UnconfirmObject(detail, this, _stockMutationService, _itemService, _barringService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(stockAdjustment);

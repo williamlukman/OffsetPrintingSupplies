@@ -133,6 +133,7 @@ namespace Validation.Validation
             IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
             foreach (var detail in details)
             {
+                detail.ConfirmationDate = paymentVoucher.ConfirmationDate;
                 if (!_paymentVoucherDetailService.GetValidator().ValidConfirmObject(detail, _payableService))
                 {
                     foreach (var error in detail.Errors)
@@ -207,6 +208,8 @@ namespace Validation.Validation
         public PaymentVoucher VUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
+            VHasNotBeenConfirmed(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasNoPaymentVoucherDetail(paymentVoucher, _paymentVoucherDetailService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VCreateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
