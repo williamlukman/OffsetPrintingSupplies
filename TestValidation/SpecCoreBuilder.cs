@@ -26,6 +26,8 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
 
+                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+
                 d.Pcs = new UoM()
                 {
                     Name = "Pcs"
@@ -52,7 +54,7 @@ namespace TestValidation
                     Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
                 d.localWarehouse = new Warehouse()
                 {
@@ -62,7 +64,7 @@ namespace TestValidation
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
-                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
 
                 d.coreBuilder = new CoreBuilder()
                 {
@@ -73,7 +75,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
             }
         }
 
@@ -96,7 +98,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                 coreBuilderCopySku.Errors.Count().should_not_be(0);
             };
 
@@ -111,7 +113,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService , d._warehouseService, d._priceMutationService, d._groupService);
+                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService , d._warehouseService, d._priceMutationService, d._contactGroupService);
                 coreBuilderCopySkuNew.Errors.Count().should_not_be(0);
             };
 
@@ -127,7 +129,7 @@ namespace TestValidation
                     Category = "X 1001",
                     UoMId = d.Pcs.Id
                 };
-                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                 coreBuilderCopySkuUsed.Errors.Count().should_not_be(0);
             };
 
@@ -135,8 +137,8 @@ namespace TestValidation
             {
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService,
-                                                                       d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService, 
-                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService);
+                                                                       d._stockMutationService, d._itemTypeService, d._barringService, d._purchaseOrderDetailService, 
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
                 d.coreBuilder.Errors.Count().should_be(0);
             };
 
@@ -175,8 +177,8 @@ namespace TestValidation
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
 
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService,
-                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
-                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService);
+                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._barringService, d._purchaseOrderDetailService,
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
                 d.coreBuilder.Errors.Count().should_not_be(0);
             };
         }

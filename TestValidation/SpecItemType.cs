@@ -28,6 +28,7 @@ namespace TestValidation
 
                 d = new DataBuilder();
 
+                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
                 d.Pcs = new UoM()
                 {
@@ -64,7 +65,7 @@ namespace TestValidation
                     UoMId = d.Pcs.Id,
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
             }
         }
 
@@ -112,7 +113,7 @@ namespace TestValidation
                     Sku = "G101",
                     UoMId = d.Pcs.Id
                 };
-                glue101 = d._itemService.CreateObject(glue101, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                glue101 = d._itemService.CreateObject(glue101, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                 d._itemService.AdjustQuantity(glue101, 100);
                 d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, glue101.Id), 100);
                 d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);

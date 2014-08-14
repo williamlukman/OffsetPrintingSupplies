@@ -19,13 +19,13 @@ namespace Core.Interface.Service
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);
         Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                          IPriceMutationService _priceMutationService, IGroupService _groupService);
+                          IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                IPriceMutationService _priceMutationService, IGroupService _groupService);
-        Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IGroupService _groupService);
+                                IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+        Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
                                        IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
-                                       IPriceMutationService _priceMutationService, IGroupService _groupService);
+                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService);
         Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService);
         Item AdjustQuantity(Item item, int quantity);

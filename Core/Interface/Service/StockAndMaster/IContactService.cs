@@ -13,9 +13,9 @@ namespace Core.Interface.Service
         IList<Contact> GetAll();
         Contact GetObjectById(int Id);
         Contact GetObjectByName(string Name);
-        Contact CreateObject(Contact contact);
-        Contact CreateObject(string Name, string Address, string ContactNo, string PIC, string PICContactNo, string Email);
-        Contact UpdateObject(Contact contact);
+        Contact CreateObject(Contact contact, IContactGroupService _contactGroupService);
+        Contact CreateObject(string Name, string Address, string ContactNo, string PIC, string PICContactNo, string Email, IContactGroupService _contactGroupService);
+        Contact UpdateObject(Contact contact, IContactGroupService _contactGroupService);
         Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
                                  IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService);
         bool DeleteObject(int Id);

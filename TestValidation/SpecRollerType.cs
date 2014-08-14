@@ -25,6 +25,8 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
+                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+
                 d.Pcs = new UoM()
                 {
                     Name = "Pcs"
@@ -51,7 +53,7 @@ namespace TestValidation
                     Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
                 d.localWarehouse = new Warehouse()
                 {
@@ -107,11 +109,11 @@ namespace TestValidation
                         Category = "cmp",
                         UoMId = d.Pcs.Id
                     };
-                    d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                    d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                     d._itemService.AdjustQuantity(d.itemCompound, 2);
                     d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.itemCompound.Id), 2);
 
-                    d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+                    d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
 
                     d.machine = new Machine()
                     {
@@ -129,7 +131,7 @@ namespace TestValidation
                         Category = "X",
                         UoMId = d.Pcs.Id
                     };
-                    d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                    d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                     d.coreIdentification = new CoreIdentification()
                     {
                         ContactId = d.contact.Id,
@@ -185,7 +187,7 @@ namespace TestValidation
                     };
                     d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService,
                                                                            d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService,
-                                                                           d._priceMutationService, d._groupService);
+                                                                           d._priceMutationService, d._contactGroupService);
                     d.typeDamp = d._rollerTypeService.SoftDeleteObject(d.typeDamp, d._rollerBuilderService, d._coreIdentificationDetailService);
                     d.typeDamp.Errors.Count().should_not_be(0);
                 };

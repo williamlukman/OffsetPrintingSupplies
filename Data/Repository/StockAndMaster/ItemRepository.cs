@@ -49,12 +49,14 @@ namespace Data.Repository
         {
             item.Quantity = 0;
             item.IsDeleted = false;
+            item.CreatedAt = DateTime.Now;
             return Create(item);
         }
 
         public Item UpdateObject(Item item)
         {
             Update(item);
+            item.UpdatedAt = DateTime.Now;
             return item;
         }
 

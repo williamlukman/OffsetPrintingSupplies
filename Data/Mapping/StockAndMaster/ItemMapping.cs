@@ -19,10 +19,6 @@ namespace Data.Mapping
             HasMany(i => i.RecoveryAccessoryDetails)
                 .WithRequired(rad => rad.Item)
                 .HasForeignKey(rad => rad.ItemId);
-            HasRequired(i => i.PriceMutation)
-                .WithMany()
-                .HasForeignKey(i => i.PriceMutationId)
-                .WillCascadeOnDelete(false);
             HasMany(i => i.StockMutations)
                 .WithRequired(sm => sm.Item)
                 .HasForeignKey(sm => sm.ItemId);

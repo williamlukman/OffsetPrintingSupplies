@@ -24,6 +24,7 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
+                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
                 d.Pcs = new UoM()
                 {
@@ -60,7 +61,7 @@ namespace TestValidation
                     UoMId = d.Pcs.Id,
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                 d.itemCompound = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
@@ -69,11 +70,11 @@ namespace TestValidation
                     Category = "cmp",
                     UoMId = d.Pcs.Id
                 };
-                d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                 d._itemService.AdjustQuantity(d.itemCompound, 2);
                 d._warehouseItemService.AdjustQuantity(d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.itemCompound.Id), 2);
 
-                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
 
                 d.machine = new Machine()
                 {
@@ -91,7 +92,7 @@ namespace TestValidation
                     Category = "X",
                     UoMId = d.Pcs.Id
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._groupService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     ContactId = d.contact.Id,
@@ -137,7 +138,7 @@ namespace TestValidation
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService,
                                                                        d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService,
-                                                                       d._priceMutationService, d._groupService);
+                                                                       d._priceMutationService, d._contactGroupService);
             }
         }
 
@@ -157,7 +158,7 @@ namespace TestValidation
 
             it["delete_rollerbuilder"] = () =>
             {
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService,
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._barringService, d._priceMutationService, d._recoveryOrderDetailService,
                                                                            d._coreBuilderService, d._warehouseItemService, d._stockMutationService, d._itemTypeService,
                                                                            d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_be(0);
@@ -195,7 +196,7 @@ namespace TestValidation
                 recoveryOrderDetail = d._recoveryOrderDetailService.CreateObject(recoveryOrderDetail, d._recoveryOrderService, d._coreIdentificationDetailService, d._rollerBuilderService);
                 recoveryOrderDetail.Errors.Count().should_be(0);
 
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService,
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._barringService, d._priceMutationService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService,
                                                                            d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
                                                                            d._stockAdjustmentDetailService, d._salesOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_not_be(0);
