@@ -197,7 +197,8 @@ namespace Validation.Validation
             return VCreateLegacyObject(item, _uomService, _itemService, _itemTypeService);
         }
 
-        public Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                  IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
         {
             VHasItemTypeAndNotLegacyItem(item, _itemTypeService);
             if (!isValid(item)) { return item; }

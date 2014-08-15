@@ -62,17 +62,17 @@ namespace Service.Service
         }
 
         public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
-                                 IPriceMutationService _priceMutationService, IGroupService _groupService)
+                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
             {
-                Group group = _groupService.GetObjectByIsLegacy(true);
-                if (group != null)
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                if (contactGroup != null)
                 {
                     item.CreatedAt = DateTime.Now;
                     item = _repository.CreateObject(item);
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, item.CreatedAt);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
                     item.PriceMutationId = priceMutation.Id;
                     item = _repository.UpdateObject(item);
                 }
@@ -81,74 +81,65 @@ namespace Service.Service
         }
 
         public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                       IPriceMutationService _priceMutationService, IGroupService _groupService)
+                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateLegacyObject(item, _uomService, this, _itemTypeService))
             {
-                Group group = _groupService.GetObjectByIsLegacy(true);
-                if (group != null)
-                {
-                    item.CreatedAt = DateTime.Now;
-                    item = _repository.CreateObject(item);
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, item.CreatedAt);
-                    item.PriceMutationId = priceMutation.Id;
-                    item = _repository.UpdateObject(item);
-                }
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                item = _repository.CreateObject(item);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
+                item.PriceMutationId = priceMutation.Id;
+                _repository.UpdateObject(item);
             }
             return item;
         }
 
-        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IGroupService _groupService)
+        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             if (_validator.ValidUpdateObject(item, _uomService, this, _itemTypeService))
             {
-                Group group = _groupService.GetObjectByIsLegacy(true);
-                if (group != null)
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                Item olditem = _repository.GetObjectById(item.Id);
+                PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                item.UpdatedAt = DateTime.Now;
+                if (olditem.SellingPrice != item.SellingPrice)
                 {
-                    Item olditem = _repository.GetObjectById(item.Id);
-                    PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
-                    item.UpdatedAt = DateTime.Now;
-                    if (olditem.SellingPrice != item.SellingPrice)
-                    {
-                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, (DateTime)item.UpdatedAt);
-                        item.PriceMutationId = priceMutation.Id;
-                        _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
-                    }
-                    item = _repository.UpdateObject(item);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, (DateTime)item.UpdatedAt);
+                    item.PriceMutationId = priceMutation.Id;
+                    _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
                 }
+                item = _repository.UpdateObject(item);
             }
             return item;
         }
 
         public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
                                        IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
-                                       IPriceMutationService _priceMutationService, IGroupService _groupService)
+                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
             {
                 _barringService.UpdateObject(barring, _barringService, _uomService, this, _itemTypeService,
-                                             _contactService, _machineService, _warehouseItemService, _warehouseService);
+                                             _contactService, _machineService, _warehouseItemService, _warehouseService,
+                                             _contactGroupService, _priceMutationService);
                 return barring;
             }
 
             if(_validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService)) 
             {
-                Group group = _groupService.GetObjectByIsLegacy(true);
-                if (group != null)
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                Item olditem = _repository.GetObjectById(item.Id);
+                PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                if (olditem.SellingPrice != item.SellingPrice)
                 {
-                    Item olditem = _repository.GetObjectById(item.Id);
-                    PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
-                    item.UpdatedAt = DateTime.Now;
-                    if (olditem.SellingPrice != item.SellingPrice)
-                    {
-                        PriceMutation priceMutation = _priceMutationService.CreateObject(item, group, (DateTime)item.UpdatedAt);
-                        item.PriceMutationId = priceMutation.Id;
-                        _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
-                    }
-                    item = _repository.UpdateObject(item);
+                    DateTime priceMutationTimeStamp = DateTime.Now;
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, priceMutationTimeStamp);
+                    item.PriceMutationId = priceMutation.Id;
+                    _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }
+                item = _repository.UpdateObject(item);
             }
             return item;
         }
@@ -186,7 +177,7 @@ namespace Service.Service
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
             {
-                _barringService.SoftDeleteObject(barring, _itemTypeService, _warehouseItemService);
+                _barringService.SoftDeleteObject(barring, _itemTypeService, _warehouseItemService, _priceMutationService);
                 return barring;
             }
 
@@ -208,9 +199,9 @@ namespace Service.Service
                 }
                 _repository.SoftDeleteObject(item);
                 IList<PriceMutation> priceMutations = _priceMutationService.GetActiveObjectsByItemId(item.Id);
-                foreach (var x in priceMutations)
+                foreach (var priceMutation in priceMutations)
                 {
-                    _priceMutationService.DeactivateObject(x, item.DeletedAt);
+                    _priceMutationService.DeactivateObject(priceMutation, item.DeletedAt);
                 }
             }
             return item;
@@ -236,6 +227,7 @@ namespace Service.Service
 
         public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost)
         {
+            // Use this function to calculate averageCost
             int originalQuantity = item.Quantity;
             decimal originalAvgCost = item.AvgPrice;
             decimal avgCost = (originalQuantity + addedQuantity == 0) ? 0 :

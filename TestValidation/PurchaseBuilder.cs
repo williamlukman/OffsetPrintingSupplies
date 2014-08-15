@@ -64,8 +64,9 @@ namespace TestValidation
         public IDeliveryOrderDetailService _deliveryOrderDetailService;
 
         public IPriceMutationService _priceMutationService;
-        public IGroupService _groupService;
+        public IContactGroupService _contactGroupService;
 
+        public ContactGroup baseGroup;
         public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
@@ -139,7 +140,7 @@ namespace TestValidation
             _warehouseMutationOrderDetailService = new WarehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
-            _groupService = new GroupService(new GroupRepository(), new GroupValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
@@ -166,6 +167,8 @@ namespace TestValidation
             typeInkDistHQ = _rollerTypeService.CreateObject("Ink Dist HQ", "Ink Dist HQ");
             typeDampFormDQ = _rollerTypeService.CreateObject("Damp Form DQ", "Damp Form DQ");
             typeInkFormY = _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
+
+            baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
         }
 
         public void PopulateData()
@@ -213,7 +216,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
+            blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(blanket1, 100000);
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket1.Id), 100000);
 
@@ -226,7 +229,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
+            blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(blanket2, 100000);
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket2.Id), 100000);
 
@@ -239,7 +242,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _groupService);
+            blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(blanket3, 100000);
             _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(localWarehouse.Id, blanket3.Id), 100000);
 
@@ -252,7 +255,7 @@ namespace TestValidation
                 PICContactNo = "021 3863777",
                 Email = "random@ri.gov.au"
             };
-            contact = _contactService.CreateObject(contact);
+            contact = _contactService.CreateObject(contact, _contactGroupService);
 
             cashBank = new CashBank()
             {

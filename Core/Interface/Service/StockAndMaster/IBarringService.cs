@@ -20,12 +20,14 @@ namespace Core.Interface.Service
         Barring GetObjectById(int Id);
         Barring GetObjectBySku(string Sku);
         Barring CreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                             IContactService _contactService, IMachineService _machineService, 
-                             IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
-        Barring UpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                             IContactService _contactService, IMachineService _machineService,
-                             IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
-        Barring SoftDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+                                    IContactService _contactService, IMachineService _machineService,
+                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                    IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+        Barring UpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService,
+                               IItemTypeService _itemTypeService, IContactService _contactService, IMachineService _machineService,
+                               IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                               IContactGroupService _contactGroupService, IPriceMutationService _priceMutationService);
+        Barring SoftDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPriceMutationService _priceMutationService);
         Barring AdjustQuantity(Barring barring, int quantity);
         Barring AdjustPendingReceival(Barring barring, int quantity);
         Barring AdjustPendingDelivery(Barring barring, int quantity);
