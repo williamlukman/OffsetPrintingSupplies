@@ -48,9 +48,9 @@ namespace Service.Service
             return groupItemPrice;
         }
 
-        public GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice, IItemService _itemService, IPriceMutationService _priceMutationService)
+        public GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice, int oldGroupId, int oldItemId, IItemService _itemService, IPriceMutationService _priceMutationService)
         {
-            if (_validator.ValidUpdateObject(groupItemPrice, this, _priceMutationService))
+            if (_validator.ValidUpdateObject(groupItemPrice, oldGroupId, oldItemId, this, _priceMutationService))
             {
                 Item item = _itemService.GetObjectById(groupItemPrice.ItemId);
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);

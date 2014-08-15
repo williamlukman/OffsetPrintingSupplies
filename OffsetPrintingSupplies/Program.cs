@@ -25,11 +25,11 @@ namespace OffsetPrintingSupplies
                 //DataBuilder d = new DataBuilder();
                 //PurchaseBuilder p = new PurchaseBuilder();
                 //SalesBuilder s = new SalesBuilder();
-                RetailSalesBuilder rs = new RetailSalesBuilder();
+                RetailSalesBuilder rsb = new RetailSalesBuilder();
 
                 //SalesFunction(s);
                 //PurchaseFunction(p);
-                RetailSalesFunction(rs);
+                RetailSalesFunction(rsb);
                 //DataFunction(d);
             }
         }
@@ -44,9 +44,34 @@ namespace OffsetPrintingSupplies
             s.PopulateData();
         }
 
-        public static void RetailSalesFunction(RetailSalesBuilder rs)
+        public static void RetailSalesFunction(RetailSalesBuilder rsb)
         {
-            rs.PopulateData();
+            rsb.PopulateData();
+
+            // ---
+            Receivable receivables1 = rsb._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, rsb.rsi1.Id);
+            Receivable receivables2 = rsb._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, rsb.rsi2.Id);
+            Receivable receivables3 = rsb._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, rsb.rsi3.Id);
+
+            IList<ReceiptVoucherDetail> receiptVoucherDetails1 = rsb._receiptVoucherDetailService.GetObjectsByReceivableId(receivables1.Id);
+            IList<ReceiptVoucherDetail> receiptVoucherDetails2 = rsb._receiptVoucherDetailService.GetObjectsByReceivableId(receivables2.Id);
+            IList<ReceiptVoucherDetail> receiptVoucherDetails3 = rsb._receiptVoucherDetailService.GetObjectsByReceivableId(receivables3.Id);
+
+            foreach (var receiptVoucherDetail in receiptVoucherDetails1)
+            {
+                if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("1:FALSE");
+            }
+
+            foreach (var receiptVoucherDetail in receiptVoucherDetails2)
+            {
+                if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("2:FALSE");
+            }
+
+            foreach (var receiptVoucherDetail in receiptVoucherDetails3)
+            {
+                if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("3:FALSE");
+            }
+            // ---
         }
 
         public static void DataFunction(DataBuilder d)
@@ -233,11 +258,10 @@ namespace OffsetPrintingSupplies
                     };
                     item = d._itemService.CreateObject(item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
+                    int oldItemId = d.groupItemPrice1.ItemId;
+                    int oldGroupId = d.groupItemPrice1.ContactGroupId;
                     d.groupItemPrice1.ItemId = item.Id;
-                    d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d._itemService, d._priceMutationService);
-
-
-
+                    d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, oldGroupId, oldItemId, d._itemService, d._priceMutationService);
 
                     Console.WriteLine("{0}", d.groupItemPrice1.Errors.FirstOrDefault());
                 }

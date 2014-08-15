@@ -33,18 +33,18 @@ namespace Validation.Validation
             return groupItemPrice;
         }
 
-        public GroupItemPrice VSameGroupId(GroupItemPrice groupItemPrice, GroupItemPrice oldgroupItemPrice)
+        public GroupItemPrice VSameGroupId(GroupItemPrice groupItemPrice, int oldGroupId)
         {
-            if (groupItemPrice.ContactGroupId != oldgroupItemPrice.ContactGroupId)
+            if (groupItemPrice.ContactGroupId != oldGroupId)
             {
                 groupItemPrice.Errors.Add("ContactGroupId", "Tidak boleh beda");
             }
             return groupItemPrice;
         }
 
-        public GroupItemPrice VSameItemId(GroupItemPrice groupItemPrice, GroupItemPrice oldgroupItemPrice)
+        public GroupItemPrice VSameItemId(GroupItemPrice groupItemPrice, int oldItemId)
         {
-            if (groupItemPrice.ItemId != oldgroupItemPrice.ItemId)
+            if (groupItemPrice.ItemId != oldItemId)
             {
                 groupItemPrice.Errors.Add("ItemId", "Tidak boleh beda");
             }
@@ -92,13 +92,13 @@ namespace Validation.Validation
             return groupItemPrice;
         }
 
-        public GroupItemPrice VUpdateObject(GroupItemPrice groupItemPrice, IGroupItemPriceService _groupItemPriceService, IPriceMutationService _priceMutationService)
+        public GroupItemPrice VUpdateObject(GroupItemPrice groupItemPrice, int oldGroupId, int oldItemId, IGroupItemPriceService _groupItemPriceService, IPriceMutationService _priceMutationService)
         {
             // TODO Bugfix: oldgroupItemPrice seems to have the same content with groupItemPrice causing new itemid/groupid looks the same with old id
-            GroupItemPrice oldgroupItemPrice = _groupItemPriceService.GetObjectById(groupItemPrice.Id);
-            VSameGroupId(groupItemPrice, oldgroupItemPrice);
+            //GroupItemPrice oldgroupItemPrice = _groupItemPriceService.GetObjectById(groupItemPrice.Id);
+            VSameGroupId(groupItemPrice, oldGroupId);
             if (!isValid(groupItemPrice)) { return groupItemPrice; }
-            VSameItemId(groupItemPrice, oldgroupItemPrice);
+            VSameItemId(groupItemPrice, oldItemId);
             if (!isValid(groupItemPrice)) { return groupItemPrice; }
             VHasDifferentPrice(groupItemPrice, _priceMutationService);
             if (!isValid(groupItemPrice)) { return groupItemPrice; }
@@ -118,10 +118,10 @@ namespace Validation.Validation
             return isValid(groupItemPrice);
         }
 
-        public bool ValidUpdateObject(GroupItemPrice groupItemPrice, IGroupItemPriceService _groupItemPriceService, IPriceMutationService _priceMutationService)
+        public bool ValidUpdateObject(GroupItemPrice groupItemPrice, int oldGroupId, int oldItemId, IGroupItemPriceService _groupItemPriceService, IPriceMutationService _priceMutationService)
         {
             groupItemPrice.Errors.Clear();
-            VUpdateObject(groupItemPrice, _groupItemPriceService, _priceMutationService);
+            VUpdateObject(groupItemPrice, oldGroupId, oldItemId, _groupItemPriceService, _priceMutationService);
             return isValid(groupItemPrice);
         }
 

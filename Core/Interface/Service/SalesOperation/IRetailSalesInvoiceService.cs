@@ -26,7 +26,7 @@ namespace Core.Interface.Service
                                            IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                            IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                            IBarringService _barringService, IStockMutationService _stockMutationService);
-        RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, ICashBankService _cashBankService, IReceivableService _receivableService,
+        RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, decimal AmountPaid, ICashBankService _cashBankService, IReceivableService _receivableService,
                                       IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                       IContactService _contactService, ICashMutationService _cashMutationService);
         RetailSalesInvoice UnpaidObject(RetailSalesInvoice retailSalesInvoice, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,

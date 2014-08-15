@@ -13,7 +13,7 @@ namespace Core.Interface.Service
         IList<GroupItemPrice> GetAll();
         GroupItemPrice GetObjectById(int Id);
         GroupItemPrice CreateObject(GroupItemPrice groupItemPrice, IContactGroupService _contactGroupService, IItemService _itemService, IPriceMutationService _priceMutationService);
-        GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice, IItemService _itemService, IPriceMutationService _priceMutationService);
+        GroupItemPrice UpdateObject(GroupItemPrice groupItemPrice, int oldGroupId, int oldItemId, IItemService _itemService, IPriceMutationService _priceMutationService);
         GroupItemPrice SoftDeleteObject(GroupItemPrice groupItemPrice);
         bool DeleteObject(int Id);
         bool IsGroupItemPriceDuplicated(GroupItemPrice groupItemPrice);

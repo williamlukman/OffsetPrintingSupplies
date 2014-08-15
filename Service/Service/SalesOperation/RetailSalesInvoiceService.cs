@@ -69,7 +69,7 @@ namespace Service.Service
                     retailSalesInvoice.Total += retailSalesInvoiceDetail.Amount;
                     retailSalesInvoice.CoGS += retailSalesInvoiceDetail.CoGS;
                 }
-                retailSalesInvoice.Total = retailSalesInvoice.Total - (retailSalesInvoice.Total * retailSalesInvoice.Discount) + (retailSalesInvoice.Total * retailSalesInvoice.Tax);
+                retailSalesInvoice.Total = retailSalesInvoice.Total - (retailSalesInvoice.Total * retailSalesInvoice.Discount/100) + (retailSalesInvoice.Total * retailSalesInvoice.Tax/100);
                 Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate);
                 foreach (var retailSalesInvoiceDetail in retailSalesInvoiceDetails)
                 {
@@ -102,12 +102,13 @@ namespace Service.Service
             return retailSalesInvoice;
         }
 
-        public RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, ICashBankService _cashBankService, IReceivableService _receivableService, 
+        public RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, decimal AmountPaid, ICashBankService _cashBankService, IReceivableService _receivableService, 
                                              IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, 
                                              IContactService _contactService, ICashMutationService _cashMutationService)
         {
             if (_validator.ValidPaidObject(retailSalesInvoice, _cashBankService, _receiptVoucherService))
             {
+                retailSalesInvoice.AmountPaid = AmountPaid;
                 if (!retailSalesInvoice.IsGBCH)
                 {
                     retailSalesInvoice.GBCH_No = null;
@@ -118,7 +119,8 @@ namespace Service.Service
                 {
                     ReceiptVoucher receiptVoucher = _receiptVoucherService.CreateObject(retailSalesInvoice.CashBankId, retailSalesInvoice.ContactId, DateTime.Now, retailSalesInvoice.Total, 
                                                                             retailSalesInvoice.IsGBCH, (DateTime)retailSalesInvoice.DueDate, retailSalesInvoice.IsBank, _receiptVoucherDetailService, 
-                                                                            _receivableService, _contactService, _cashBankService ); 
+                                                                            _receivableService, _contactService, _cashBankService );
+                    ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.CreateObject(receiptVoucher.Id, receivable.Id, (decimal)retailSalesInvoice.AmountPaid, "Automatic Payment", _receiptVoucherService, _cashBankService, _receivableService);
                     retailSalesInvoice = _repository.PaidObject(retailSalesInvoice);
                     _receiptVoucherService.ConfirmObject(receiptVoucher, (DateTime)retailSalesInvoice.ConfirmationDate, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService);
                 }
@@ -131,6 +133,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnpaidObject(retailSalesInvoice))
             {
+                Receivable receivable = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id);
                 IList<ReceiptVoucher> receiptVouchers = _receiptVoucherService.GetObjectsByCashBankId(retailSalesInvoice.CashBankId);
                 foreach (var receiptVoucher in receiptVouchers)
                 {
@@ -138,6 +141,12 @@ namespace Service.Service
                     _receiptVoucherService.UnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService);
                     _receiptVoucherService.SoftDeleteObject(receiptVoucher, _receiptVoucherDetailService);
                 }
+                IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceivableId(receivable.Id);
+                foreach (var receiptVoucherDetail in receiptVoucherDetails)
+                {
+                    _receiptVoucherDetailService.SoftDeleteObject(receiptVoucherDetail);
+                }
+                retailSalesInvoice.AmountPaid = 0;
                 retailSalesInvoice = _repository.UnpaidObject(retailSalesInvoice);
             }
             return retailSalesInvoice;

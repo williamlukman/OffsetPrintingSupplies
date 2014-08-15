@@ -70,7 +70,7 @@ namespace Service.Service
                     retailPurchaseInvoice.Total += retailPurchaseInvoiceDetail.Amount;
                     retailPurchaseInvoice.CoGS += retailPurchaseInvoiceDetail.CoGS;
                 }
-                retailPurchaseInvoice.Total = retailPurchaseInvoice.Total - (retailPurchaseInvoice.Total * retailPurchaseInvoice.Discount) + (retailPurchaseInvoice.Total * retailPurchaseInvoice.Tax);
+                retailPurchaseInvoice.Total = retailPurchaseInvoice.Total - (retailPurchaseInvoice.Total * retailPurchaseInvoice.Discount/100) + (retailPurchaseInvoice.Total * retailPurchaseInvoice.Tax/100);
                 Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate);
                 foreach (var retailPurchaseInvoiceDetail in retailPurchaseInvoiceDetails)
                 {
@@ -103,11 +103,12 @@ namespace Service.Service
             return retailPurchaseInvoice;
         }
 
-        public RetailPurchaseInvoice PaidObject(RetailPurchaseInvoice retailPurchaseInvoice, ICashBankService _cashBankService, IPayableService _payableService, 
+        public RetailPurchaseInvoice PaidObject(RetailPurchaseInvoice retailPurchaseInvoice, decimal AmountPaid, ICashBankService _cashBankService, IPayableService _payableService, 
                                              IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService, ICashMutationService _cashMutationService)
         {
             if (_validator.ValidPaidObject(retailPurchaseInvoice, _cashBankService, _paymentVoucherService))
             {
+                retailPurchaseInvoice.AmountPaid = AmountPaid;
                 if (!retailPurchaseInvoice.IsGBCH)
                 {
                     retailPurchaseInvoice.GBCH_No = null;
@@ -118,7 +119,8 @@ namespace Service.Service
                 {
                     PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject(retailPurchaseInvoice.CashBankId, retailPurchaseInvoice.ContactId, DateTime.Now, retailPurchaseInvoice.Total, 
                                                                             retailPurchaseInvoice.IsGBCH, (DateTime)retailPurchaseInvoice.DueDate, retailPurchaseInvoice.IsBank, _paymentVoucherDetailService, 
-                                                                            _payableService, _contactService, _cashBankService ); 
+                                                                            _payableService, _contactService, _cashBankService );
+                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, (decimal)retailPurchaseInvoice.AmountPaid, "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
                     retailPurchaseInvoice = _repository.PaidObject(retailPurchaseInvoice);
                     _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)paymentVoucher.ConfirmationDate, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
                 }
@@ -130,6 +132,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnpaidObject(retailPurchaseInvoice))
             {
+                Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id);
                 IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId(retailPurchaseInvoice.CashBankId);
                 foreach (var paymentVoucher in paymentVouchers)
                 {
@@ -137,6 +140,12 @@ namespace Service.Service
                     _paymentVoucherService.UnconfirmObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
                     _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                 }
+                IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPayableId(payable.Id);
+                foreach (var paymentVoucherDetail in paymentVoucherDetails)
+                {
+                    _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail);
+                }
+                retailPurchaseInvoice.AmountPaid = 0;
                 retailPurchaseInvoice = _repository.UnpaidObject(retailPurchaseInvoice);
             }
             return retailPurchaseInvoice;

@@ -140,7 +140,7 @@ namespace TestValidation
             it["update_with_zero_price"] = () =>
             {
                 d.groupItemPrice1.Price = 0;
-                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d._itemService, d._priceMutationService);
+                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d.groupItemPrice1.ContactGroupId, d.groupItemPrice1.ItemId, d._itemService, d._priceMutationService);
                 d.groupItemPrice1.Errors.Count().should_not_be(0);
             };
 
@@ -148,7 +148,7 @@ namespace TestValidation
             {
                 PriceMutation pricemutation1 = d._priceMutationService.GetObjectsByIsActive(true, d.item.Id, d.baseGroup.Id, 0).FirstOrDefault();
                 d.groupItemPrice1.Price = pricemutation1.Amount;
-                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d._itemService, d._priceMutationService);
+                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d.groupItemPrice1.ContactGroupId, d.groupItemPrice1.ItemId, d._itemService, d._priceMutationService);
                 d.groupItemPrice1.Errors.Count().should_not_be(0);
             };
 
@@ -164,8 +164,10 @@ namespace TestValidation
                 };
                 item = d._itemService.CreateObject(item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
+                int oldGroupId = d.groupItemPrice1.ContactGroupId;
+                int oldItemId = d.groupItemPrice1.ItemId;
                 d.groupItemPrice1.ItemId = item.Id;
-                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d._itemService, d._priceMutationService);
+                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, oldGroupId, oldItemId, d._itemService, d._priceMutationService);
                 d.groupItemPrice1.Errors.Count().should_not_be(0);
             };
 
@@ -173,8 +175,10 @@ namespace TestValidation
             {
                 ContactGroup contactgroup = d._contactGroupService.CreateObject("Admin", "Administrators");
 
+                int oldGroupId = d.groupItemPrice1.ContactGroupId;
+                int oldItemId = d.groupItemPrice1.ItemId;
                 d.groupItemPrice1.ContactGroupId = contactgroup.Id;
-                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d._itemService, d._priceMutationService);
+                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, oldGroupId, oldItemId, d._itemService, d._priceMutationService);
                 d.groupItemPrice1.Errors.Count().should_not_be(0);
             };
         }

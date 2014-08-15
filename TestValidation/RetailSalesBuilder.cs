@@ -76,18 +76,13 @@ namespace TestValidation
         public UoM Pcs, Boxes, Tubs;
 
         public Warehouse localWarehouse;
-        public Contact baseContact, contact, contact2;
+        public Contact baseContact, contact, contact2, contact3;
         public Item blanket1, blanket2, blanket3;
         public StockAdjustment stockAdjustment;
         public StockAdjustmentDetail stockAD1, stockAD2;
-        public CashBank cashBank, pettyCash;
-        public CashBankAdjustment cashBankAdjustment;
-        /*public SalesOrder so1, so2;
-        public SalesOrderDetail so1a, so1b, so1c, so2a, so2b;
-        public DeliveryOrder do1, do2, do3;
-        public DeliveryOrderDetail do1a, do1b, do2a, do2b, do1a2, do1c;
-        public SalesInvoice si1, si2, si3;
-        public SalesInvoiceDetail si1a, si1b, si2a, si2b, si1a2, si1c;*/
+        public CashBank cashBank, cashBank2;
+        public CashBankAdjustment cashBankAdjustment, cashBankAdjustment2;
+        
         public ReceiptVoucher rv;
         public ReceiptVoucherDetail rvd1, rvd2, rvd3;
         public RetailSalesInvoice rsi1,rsi2,rsi3;
@@ -219,7 +214,8 @@ namespace TestValidation
                 Name = "Blanket1",
                 Category = "Blanket",
                 Sku = "BLK1",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 10000
             };
 
             blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -232,7 +228,8 @@ namespace TestValidation
                 Name = "Blanket2",
                 Category = "Blanket",
                 Sku = "BLK2",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 20000
             };
 
             blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -245,7 +242,8 @@ namespace TestValidation
                 Name = "Blanket3",
                 Category = "Blanket",
                 Sku = "BLK3",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 30000
             };
 
             blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -261,9 +259,20 @@ namespace TestValidation
                 PICContactNo = "021 3863777",
                 Email = "random@ri.gov.au"
             };
-            contact = _contactService.CreateObject(contact, _contactGroupService);
+            _contactService.CreateObject(contact, _contactGroupService);
 
             contact2 = new Contact()
+            {
+                Name = "Wakil President of Indonesia",
+                Address = "Istana Negara Jl. Veteran No. 16 Jakarta Pusat",
+                ContactNo = "021 3863777",
+                PIC = "Mr. Wakil President",
+                PICContactNo = "021 3863777",
+                Email = "random@ri.gov.au"
+            };
+            _contactService.CreateObject(contact2, _contactGroupService);
+
+            contact3 = new Contact()
             {
                 Name = "Roma Irama",
                 Address = "Istana Negara Jl. Veteran No.20 Jakarta Pusat",
@@ -273,15 +282,23 @@ namespace TestValidation
                 Email = "raja@dangdut.com",
                 ContactGroupId = group2.Id,
             };
-            contact2 = _contactService.CreateObject(contact2, _contactGroupService);
+            _contactService.CreateObject(contact3, _contactGroupService);
 
             cashBank = new CashBank()
+            {
+                Name = "Kontan",
+                Description = "Bayar kontan",
+                IsBank = false
+            };
+            _cashBankService.CreateObject(cashBank);
+
+            cashBank2 = new CashBank()
             {
                 Name = "Rekening BRI",
                 Description = "Untuk cashflow",
                 IsBank = true
             };
-            _cashBankService.CreateObject(cashBank);
+            _cashBankService.CreateObject(cashBank2);
 
             cashBankAdjustment = new CashBankAdjustment()
             {
@@ -290,7 +307,17 @@ namespace TestValidation
                 AdjustmentDate = DateTime.Today,
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
+
+            cashBankAdjustment2 = new CashBankAdjustment()
+            {
+                CashBankId = cashBank2.Id,
+                Amount = 1000000000,
+                AdjustmentDate = DateTime.Today,
+            };
+            _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
+
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService);
         }
 
         public void PopulateRetailSalesData()
@@ -298,6 +325,7 @@ namespace TestValidation
             TimeSpan salesDate = new TimeSpan(10, 0, 0, 0);
             TimeSpan dueDate = new TimeSpan(3, 0, 0 ,0);
             
+            // Cash with GroupPricing
             rsi1 = new RetailSalesInvoice()
             {
                 SalesDate = DateTime.Today.Subtract(salesDate),
@@ -307,6 +335,7 @@ namespace TestValidation
             };
             _retailSalesInvoiceService.CreateObject(rsi1, _warehouseService);
 
+            // Cash with GroupPricing
             rsi2 = new RetailSalesInvoice()
             {
                 SalesDate = DateTime.Today.Subtract(salesDate),
@@ -319,11 +348,12 @@ namespace TestValidation
             };
             _retailSalesInvoiceService.CreateObject(rsi2, _warehouseService);
 
+            // Bank without GroupPricing
             rsi3 = new RetailSalesInvoice()
             {
                 SalesDate = DateTime.Today.Subtract(salesDate),
                 WarehouseId = localWarehouse.Id,
-                CashBankId = cashBank.Id,
+                CashBankId = cashBank2.Id,
                 DueDate = DateTime.Today.Subtract(dueDate),
                 IsGBCH = true,
                 GBCH_DueDate = DateTime.Today.Subtract(dueDate),
@@ -357,11 +387,11 @@ namespace TestValidation
 
             _retailSalesInvoiceService.ConfirmObject(rsi1, rsi1.SalesDate, contact.Id, _retailSalesInvoiceDetailService,_contactService,_priceMutationService,_receivableService,_retailSalesInvoiceService,_warehouseItemService,_warehouseService,_itemService,_barringService,_stockMutationService);
             _retailSalesInvoiceService.ConfirmObject(rsi2, rsi2.SalesDate, contact2.Id, _retailSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _retailSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
-            _retailSalesInvoiceService.ConfirmObject(rsi3, rsi3.SalesDate, contact.Id, _retailSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _retailSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+            _retailSalesInvoiceService.ConfirmObject(rsi3, rsi3.SalesDate, contact3.Id, _retailSalesInvoiceDetailService, _contactService, _priceMutationService, _receivableService, _retailSalesInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
 
-            _retailSalesInvoiceService.PaidObject(rsi1, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
-            _retailSalesInvoiceService.PaidObject(rsi2, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
-            _retailSalesInvoiceService.PaidObject(rsi3, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
+            _retailSalesInvoiceService.PaidObject(rsi1, 200000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
+            _retailSalesInvoiceService.PaidObject(rsi2, rsi2.Total, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
+            _retailSalesInvoiceService.PaidObject(rsi3, 300000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
 
         }
 
