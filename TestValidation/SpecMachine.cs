@@ -27,6 +27,8 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
 
+                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+
                 d.Pcs = new UoM()
                 {
                     Name = "Pcs"
@@ -61,7 +63,7 @@ namespace TestValidation
                     Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
                 d.machine = new Machine()
                 {
@@ -122,7 +124,7 @@ namespace TestValidation
                     Category = "X",
                     UoMId = d.Pcs.Id
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     ContactId = null,

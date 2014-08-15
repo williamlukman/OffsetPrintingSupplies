@@ -183,6 +183,8 @@ namespace Validation.Validation
         public CoreIdentification VUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService)
         {
             VCreateObject(coreIdentification, _coreIdentificationService, _contactService);
+            if (!isValid(coreIdentification)) { return coreIdentification; }
+            VHasNotBeenConfirmed(coreIdentification);
             return coreIdentification;
         }
 

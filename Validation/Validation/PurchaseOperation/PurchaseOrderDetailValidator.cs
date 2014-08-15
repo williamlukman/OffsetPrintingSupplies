@@ -16,7 +16,7 @@ namespace Validation.Validation
             PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
             if (purchaseOrder == null)
             {
-                purchaseOrderDetail.Errors.Add("PurchaseOrder", "Tidak boleh tidak ada");
+                purchaseOrderDetail.Errors.Add("PurchaseOrderId", "Tidak terasosiasi dengan purchase order");
             }
             return purchaseOrderDetail;
         }
@@ -26,7 +26,7 @@ namespace Validation.Validation
             Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
             if (item == null)
             {
-                purchaseOrderDetail.Errors.Add("Item", "Tidak boleh tidak ada");
+                purchaseOrderDetail.Errors.Add("ItemId", "Tidak terasosiasi dengan item");
             }
             return purchaseOrderDetail;
         }
@@ -56,7 +56,7 @@ namespace Validation.Validation
             {
                 if (detail.ItemId == purchaseOrderDetail.ItemId && detail.Id != purchaseOrderDetail.Id)
                 {
-                    purchaseOrderDetail.Errors.Add("PurchaseOrderDetail", "Tidak boleh memiliki Sku yang sama dalam 1 Purchase Order");
+                    purchaseOrderDetail.Errors.Add("Generic", "Detail tidak boleh memiliki Sku yang sama dalam 1 Purchase Order");
                     return purchaseOrderDetail;
                 }
             }
@@ -95,7 +95,7 @@ namespace Validation.Validation
             Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
             if (item.PendingReceival < purchaseOrderDetail.Quantity)
             {
-                purchaseOrderDetail.Errors.Add("Item.PendingReceival", "Tidak boleh kurang dari quantity");
+                purchaseOrderDetail.Errors.Add("Generic", "Item pending receival tidak boleh kurang dari quantity");
             }
             return purchaseOrderDetail;
         }

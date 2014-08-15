@@ -27,7 +27,7 @@ namespace Validation.Validation
             DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(salesInvoiceDetail.DeliveryOrderDetailId);
             if (deliveryOrderDetail == null)
             {
-                salesInvoiceDetail.Errors.Add("DeliveryOrderDetail", "Tidak boleh tidak ada");
+                salesInvoiceDetail.Errors.Add("DeliveryOrderDetailId", "Tidak boleh tidak ada");
             }
             return salesInvoiceDetail;
         }
@@ -51,7 +51,7 @@ namespace Validation.Validation
             {
                 if (detail.DeliveryOrderDetailId == salesInvoiceDetail.DeliveryOrderDetailId && detail.Id != salesInvoiceDetail.Id)
                 {
-                    salesInvoiceDetail.Errors.Add("SalesInvoiceDetail", "Tidak boleh memiliki lebih dari 2 Sales Receival Detail");
+                    salesInvoiceDetail.Errors.Add("Generic", "Tidak boleh memiliki lebih dari 2 Sales Receival Detail");
                 }
             }
             return salesInvoiceDetail;
@@ -80,7 +80,7 @@ namespace Validation.Validation
         {
             if (!salesInvoiceDetail.IsConfirmed)
             {
-                salesInvoiceDetail.Errors.Add("IsConfirmed", "Belum dikonfirmasi");
+                salesInvoiceDetail.Errors.Add("Generic", "Belum dikonfirmasi");
             }
             return salesInvoiceDetail;
         }
@@ -89,7 +89,7 @@ namespace Validation.Validation
         {
             if (salesInvoiceDetail.IsConfirmed)
             {
-                salesInvoiceDetail.Errors.Add("IsConfirmed", "Sudah dikonfirmasi");
+                salesInvoiceDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
             }
             return salesInvoiceDetail;
         }

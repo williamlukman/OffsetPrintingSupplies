@@ -91,6 +91,8 @@ namespace Validation.Validation
         public CashBankAdjustment VUpdateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService)
         {
             VCreateObject(cashBankAdjustment, _cashBankService);
+            if (!isValid(cashBankAdjustment)) { return cashBankAdjustment; }
+            VHasNotBeenConfirmed(cashBankAdjustment);
             return cashBankAdjustment;
         }
 

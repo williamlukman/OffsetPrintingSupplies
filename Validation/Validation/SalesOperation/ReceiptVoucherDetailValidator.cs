@@ -16,7 +16,7 @@ namespace Validation.Validation
             ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
             if (receiptVoucher == null)
             {
-                receiptVoucherDetail.Errors.Add("ReceiptVoucher", "Tidak boleh tidak ada");
+                receiptVoucherDetail.Errors.Add("ReceiptVoucherId", "Tidak boleh tidak ada");
             }
             return receiptVoucherDetail;
         }
@@ -26,7 +26,7 @@ namespace Validation.Validation
             Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
             if (receivable == null)
             {
-                receiptVoucherDetail.Errors.Add("Receivable", "Tidak boleh tidak ada");
+                receiptVoucherDetail.Errors.Add("ReceivableId", "Tidak boleh tidak ada");
             }
             return receiptVoucherDetail;
         }
@@ -125,6 +125,8 @@ namespace Validation.Validation
         public ReceiptVoucherDetail VUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
                                                   IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService)
         {
+            VHasNotBeenConfirmed(receiptVoucherDetail);
+            if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VCreateObject(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService);
             return receiptVoucherDetail;    
         }

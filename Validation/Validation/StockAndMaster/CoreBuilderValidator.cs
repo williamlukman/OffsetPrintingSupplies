@@ -17,7 +17,7 @@ namespace Validation.Validation
             {
                 coreBuilder.Errors.Add("BaseSku", "Tidak boleh kosong");
             }
-            if (_coreBuilderService.IsBaseSkuDuplicated(coreBuilder))
+            else if (_coreBuilderService.IsBaseSkuDuplicated(coreBuilder))
             {
                 coreBuilder.Errors.Add("BaseSku", "Tidak boleh diduplikasi");
             }

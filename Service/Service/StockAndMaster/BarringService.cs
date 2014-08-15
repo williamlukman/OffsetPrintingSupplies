@@ -66,25 +66,45 @@ namespace Service.Service
 
         public Barring CreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                     IContactService _contactService, IMachineService _machineService,
-                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                    IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             barring.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _contactService, _machineService))
             {
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 barring = _repository.CreateObject(barring);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(barring, contactGroup, barring.CreatedAt);
+                barring.PriceMutationId = priceMutation.Id;
+                barring = _repository.UpdateObject(barring);
             }
             return barring;
         }
 
-        public Barring UpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                    IContactService _contactService, IMachineService _machineService,
-                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
-        {        
-            return (barring = _validator.ValidUpdateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _contactService, _machineService) ?
-                              _repository.UpdateObject(barring) : barring);
+        public Barring UpdateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService,
+                                    IItemTypeService _itemTypeService, IContactService _contactService, IMachineService _machineService,
+                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                    IContactGroupService _contactGroupService, IPriceMutationService _priceMutationService)
+        {
+            if (_validator.ValidUpdateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _contactService, _machineService))
+            {
+                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                Barring oldbarring = _repository.GetObjectById(barring.Id);
+                PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(barring.PriceMutationId);
+                if (oldbarring.SellingPrice != barring.SellingPrice)
+                {
+                    DateTime priceMutationTimeStamp = DateTime.Now;
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(oldbarring, contactGroup, priceMutationTimeStamp);
+                    barring.PriceMutationId = priceMutation.Id;
+                    _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
+                }
+                _repository.UpdateObject(barring);
+            }
+            return barring;
         }
 
-        public Barring SoftDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public Barring SoftDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                        IPriceMutationService _priceMutationService)
         {
             if (_validator.ValidDeleteObject(barring, _itemTypeService, _warehouseItemService))
             {
@@ -103,6 +123,11 @@ namespace Service.Service
                     _warehouseItemService.SoftDeleteObject(warehouseitem);
                 }
                 _repository.SoftDeleteObject(barring);
+                IList<PriceMutation> priceMutations = _priceMutationService.GetActiveObjectsByItemId(barring.Id);
+                foreach (var priceMutation in priceMutations)
+                {
+                    _priceMutationService.DeactivateObject(priceMutation, barring.DeletedAt);
+                }
             }
             return barring;
         }

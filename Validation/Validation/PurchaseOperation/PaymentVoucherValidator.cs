@@ -208,6 +208,8 @@ namespace Validation.Validation
         public PaymentVoucher VUpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
+            VHasNotBeenConfirmed(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasNoPaymentVoucherDetail(paymentVoucher, _paymentVoucherDetailService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VCreateObject(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);

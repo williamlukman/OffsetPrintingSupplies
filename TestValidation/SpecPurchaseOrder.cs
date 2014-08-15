@@ -16,6 +16,7 @@ namespace NSpec
 
     public class SpecPurchaseOrder : nspec
     {
+        ContactGroup baseGroup;
         Contact contact;
         PurchaseOrderDetail poDetail1;
         PurchaseOrderDetail poDetail2;
@@ -35,6 +36,10 @@ namespace NSpec
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
+
+        IPriceMutationService _priceMutationService;
+        IContactGroupService _contactGroupService;
+
         int Quantity1;
         int Quantity2;
 
@@ -55,6 +60,11 @@ namespace NSpec
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
                 _barringService = new BarringService(new BarringRepository(), new BarringValidator());
 
+                _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+                _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+
+                baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+
                 Pcs = new UoM()
                 {
                     Name = "Pcs"
@@ -70,7 +80,7 @@ namespace NSpec
                     PICContactNo = "021 3863777",
                     Email = "random@ri.gov.au"
                 };
-                contact = contactService.CreateObject(contact);
+                contact = contactService.CreateObject(contact, _contactGroupService);
 
                 type = _itemTypeService.CreateObject("Item", "Item");
 
@@ -90,7 +100,7 @@ namespace NSpec
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
-                itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
                 itemService.AdjustQuantity(item1, 1000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item1.Id), 1000);
 
@@ -102,7 +112,7 @@ namespace NSpec
                     Sku = "bg123",
                     UoMId = Pcs.Id
                 };
-                itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService);
+                itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
                 itemService.AdjustQuantity(item2, 1000);
                 _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item2.Id), 1000);
 

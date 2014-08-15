@@ -16,7 +16,7 @@ namespace Validation.Validation
             {
                 rollerType.Errors.Add("Name", "Tidak boleh kosong");
             }
-            if (_rollerTypeService.IsNameDuplicated(rollerType))
+            else if (_rollerTypeService.IsNameDuplicated(rollerType))
             {
                 rollerType.Errors.Add("Name", "Tidak boleh diduplikasi");
             }

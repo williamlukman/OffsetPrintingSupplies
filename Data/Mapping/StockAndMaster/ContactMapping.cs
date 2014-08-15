@@ -27,6 +27,9 @@ namespace Data.Mapping
             HasMany(c => c.SalesOrders)
                 .WithRequired(so => so.Contact)
                 .HasForeignKey(so => so.ContactId);
+            HasRequired(c => c.ContactGroup)
+                .WithMany(cg => cg.Contacts)
+                .HasForeignKey(c => c.ContactGroupId);
             Ignore(c => c.Errors);
         }
     }

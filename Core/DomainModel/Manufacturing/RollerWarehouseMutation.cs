@@ -13,6 +13,7 @@ namespace Core.DomainModel
 
         public int WarehouseFromId { get; set; }
         public int WarehouseToId { get; set; }
+        public DateTime MutationDate { get; set; }
 
         public int Quantity { get; set; }
 

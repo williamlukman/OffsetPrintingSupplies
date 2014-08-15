@@ -90,7 +90,8 @@ namespace Validation.Validation
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
             if (recoveryOrder.QuantityReceived != details.Count())
             {
-                recoveryOrder.Errors.Add("QuantityReceived", "Jumlah quantity received dan jumlah recovery order detail tidak sama");
+                recoveryOrder.Errors.Add("Generic", "Quantity Received = " +  recoveryOrder.QuantityReceived + ", " + 
+                                         "sementara jumlah roller = " + details.Count());
             }
             return recoveryOrder;
         }

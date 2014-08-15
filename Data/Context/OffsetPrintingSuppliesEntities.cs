@@ -29,17 +29,17 @@ namespace Data.Context
                                           "BarringOrderDetail", "BarringOrder" };
             IList<String> purchaseOperationNames = new List<String>()
                                         { "PaymentVoucherDetail", "PaymentVoucher", "Payable", 
-                                          "PurchaseInvoiceDetail", "PurchaseInvoice",
+                                          "RetailPurchaseInvoice", "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail", "PurchaseInvoice",
                                           "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder" };
             IList<String> salesOperationNames = new List<String>()
                                         { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
-                                          "SalesInvoiceDetail", "SalesInvoice",
+                                          "RetailSalesInvoice", "RetailSalesInvoiceDetail", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
             IList<String> stockAndMasterNames = new List<String>()
-                                        { "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
+                                        {  "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
-                                          "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
-                                          "RollerType", "Machine" };
+                                          "Warehouse", "Barring", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
+                                          "RollerType", "Machine", "ContactGroup"};
 
             financeNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
@@ -71,12 +71,15 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new DeliveryOrderMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new ContactMapping());
+            modelBuilder.Configurations.Add(new ContactGroupMapping());
+            modelBuilder.Configurations.Add(new GroupItemPriceMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
             modelBuilder.Configurations.Add(new MachineMapping());
             modelBuilder.Configurations.Add(new PayableMapping());
             modelBuilder.Configurations.Add(new PaymentVoucherDetailMapping());
             modelBuilder.Configurations.Add(new PaymentVoucherMapping());
+            modelBuilder.Configurations.Add(new PriceMutationMapping());
             modelBuilder.Configurations.Add(new PurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new PurchaseInvoiceMapping());
             modelBuilder.Configurations.Add(new PurchaseOrderMapping());
@@ -89,6 +92,10 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new RecoveryAccessoryDetailMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderDetailMapping());
+            modelBuilder.Configurations.Add(new RetailPurchaseInvoiceMapping());
+            modelBuilder.Configurations.Add(new RetailPurchaseInvoiceDetailMapping());
+            modelBuilder.Configurations.Add(new RetailSalesInvoiceMapping());
+            modelBuilder.Configurations.Add(new RetailSalesInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new RollerBuilderMapping());
             modelBuilder.Configurations.Add(new RollerTypeMapping());
             modelBuilder.Configurations.Add(new RollerWarehouseMutationMapping());
@@ -119,8 +126,10 @@ namespace Data.Context
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<ContactGroup> ContactGroups { get; set; }
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
+        public DbSet<GroupItemPrice> GroupItemPrices { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<Machine> Machines { get; set; }
@@ -155,5 +164,10 @@ namespace Data.Context
         public DbSet<WarehouseItem> WarehouseItems { get; set; }
         public DbSet<WarehouseMutationOrder> WarehouseMutationOrders { get; set; }
         public DbSet<WarehouseMutationOrderDetail> WarehouseMutationOrderDetails { get; set; }
+        public DbSet<PriceMutation> PriceMutations { get; set; }
+        public DbSet<RetailPurchaseInvoice> RetailPurchaseInvoices { get; set; }
+        public DbSet<RetailPurchaseInvoiceDetail> RetailPurchaseInvoiceDetails { get; set; }
+        public DbSet<RetailSalesInvoice> RetailSalesInvoices { get; set; }
+        public DbSet<RetailSalesInvoiceDetail> RetailSalesInvoiceDetails { get; set; }
     }
 }

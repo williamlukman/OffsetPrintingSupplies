@@ -31,6 +31,11 @@ namespace Service.Service
             return _repository.GetObjectsBySalesOrderId(salesOrderId);
         }
 
+        public IList<SalesOrderDetail> GetObjectsByItemId(int itemId)
+        {
+            return _repository.GetObjectsByItemId(itemId);
+        }
+
         public SalesOrderDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

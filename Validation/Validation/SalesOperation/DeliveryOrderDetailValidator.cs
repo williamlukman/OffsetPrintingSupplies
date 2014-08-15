@@ -16,7 +16,7 @@ namespace Validation.Validation
             DeliveryOrder deliveryOrder = _purchaseReceivalService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
             if (deliveryOrder == null)
             {
-                deliveryOrderDetail.Errors.Add("DeliveryOrder", "Tidak boleh tidak ada");
+                deliveryOrderDetail.Errors.Add("DeliveryOrderId", "Tidak boleh tidak ada");
             }
             return deliveryOrderDetail;
         }
@@ -26,7 +26,7 @@ namespace Validation.Validation
             Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
             if (item == null)
             {
-                deliveryOrderDetail.Errors.Add("Item", "Tidak boleh tidak ada");
+                deliveryOrderDetail.Errors.Add("ItemId", "Tidak boleh tidak ada");
             }
             return deliveryOrderDetail;
         }
@@ -46,7 +46,7 @@ namespace Validation.Validation
             SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
             if (salesOrderDetail == null)
             {
-                deliveryOrderDetail.Errors.Add("SalesOrderDetail", "Tidak boleh tidak ada");
+                deliveryOrderDetail.Errors.Add("SalesOrderDetailId", "Tidak boleh tidak ada");
             }
             return deliveryOrderDetail;
         }
@@ -58,7 +58,7 @@ namespace Validation.Validation
             {
                 if (detail.SalesOrderDetailId == deliveryOrderDetail.SalesOrderDetailId && detail.Id != deliveryOrderDetail.Id)
                 {
-                    deliveryOrderDetail.Errors.Add("SalesOrderDetail", "Tidak boleh memiliki lebih dari 2 Delivery Order Detail");
+                    deliveryOrderDetail.Errors.Add("Generic", "Tidak boleh memiliki lebih dari 2 Delivery Order Detail");
                     return deliveryOrderDetail;
                 }
             }

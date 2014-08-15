@@ -26,8 +26,9 @@ namespace OffsetPrintingSupplies
                 PurchaseBuilder p = new PurchaseBuilder();
                 SalesBuilder s = new SalesBuilder();
 
-                SalesFunction(s);
-                // PurchaseFunction(p);
+                DataFunction(d);
+                //SalesFunction(s);
+                //PurchaseFunction(p);
             }
         }
 
@@ -43,6 +44,7 @@ namespace OffsetPrintingSupplies
 
         public static void DataFunction(DataBuilder d)
         {
+            /*
             d.PopulateData();
                 
             if (d.itemCompound.Errors.Count() > 0) { Console.WriteLine("Error"); };
@@ -75,82 +77,93 @@ namespace OffsetPrintingSupplies
             if (d.recoveryODInHouse1.Errors.Count() > 0) { Console.WriteLine("Error"); };
             if (d.recoveryODInHouse2.Errors.Count() > 0) { Console.WriteLine("Error"); };
             if (d.recoveryODInHouse3.Errors.Count() > 0) { Console.WriteLine("Error"); };
+            */
+                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
-            int blanket1quantityPRE = d.blanket1.Quantity;
-            int blanket2quantityPRE = d.blanket2.Quantity; // 5?
-            int bargenericquantityPRE = d.bargeneric.Quantity;
-            int barleft1quantityPRE = d.barleft1.Quantity;
-            int barright1quantityPRE = d.barright1.Quantity;
-            int barring1quantityPRE = d.barring1.Quantity;
-            int barring2quantityPRE = d.barring2.Quantity;
+                d.Pcs = new UoM()
+                {
+                    Name = "Pcs"
+                };
+                d._uomService.CreateObject(d.Pcs);
 
-            d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
+                d.Boxes = new UoM()
+                {
+                    Name = "Boxes"
+                };
+                d._uomService.CreateObject(d.Boxes);
 
-            d._barringOrderDetailService.CutObject(d.barringODContact1);
-            d._barringOrderDetailService.CutObject(d.barringODContact2);
-            d._barringOrderDetailService.CutObject(d.barringODContact3);
-            d._barringOrderDetailService.CutObject(d.barringODContact4);
-            d._barringOrderDetailService.SideSealObject(d.barringODContact1);
-            d._barringOrderDetailService.PrepareObject(d.barringODContact1);
-            d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODContact1);
-            d._barringOrderDetailService.MountObject(d.barringODContact1);
-            d._barringOrderDetailService.HeatPressObject(d.barringODContact1);
-            d._barringOrderDetailService.PullOffTestObject(d.barringODContact1);
-            d._barringOrderDetailService.QCAndMarkObject(d.barringODContact1);
-            d._barringOrderDetailService.PackageObject(d.barringODContact1);
-            d._barringOrderDetailService.AddLeftBar(d.barringODContact1, d._barringService);
-            d._barringOrderDetailService.AddRightBar(d.barringODContact1, d._barringService);
+                d.Tubs = new UoM()
+                {
+                    Name = "Tubs"
+                };
+                d._uomService.CreateObject(d.Tubs);
 
-            d._barringOrderDetailService.SideSealObject(d.barringODContact2);
-            d._barringOrderDetailService.PrepareObject(d.barringODContact2);
-            d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODContact2);
-            d._barringOrderDetailService.MountObject(d.barringODContact2);
-            d._barringOrderDetailService.HeatPressObject(d.barringODContact2);
-            d._barringOrderDetailService.PullOffTestObject(d.barringODContact2);
-            d._barringOrderDetailService.QCAndMarkObject(d.barringODContact2);
-            d._barringOrderDetailService.PackageObject(d.barringODContact2);
-            d._barringOrderDetailService.AddLeftBar(d.barringODContact2, d._barringService);
-            d._barringOrderDetailService.AddRightBar(d.barringODContact2, d._barringService);
+                d.item = new Item()
+                {
+                    ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
+                    Sku = "ABC1001",
+                    Name = "ABC",
+                    Category = "ABC123",
+                    UoMId = d.Pcs.Id
+                };
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
-            d._barringOrderDetailService.SideSealObject(d.barringODContact3);
-            d._barringOrderDetailService.PrepareObject(d.barringODContact3);
-            d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODContact3);
-            d._barringOrderDetailService.MountObject(d.barringODContact3);
-            d._barringOrderDetailService.HeatPressObject(d.barringODContact3);
-            d._barringOrderDetailService.PullOffTestObject(d.barringODContact3);
-            d._barringOrderDetailService.QCAndMarkObject(d.barringODContact3);
-            d._barringOrderDetailService.PackageObject(d.barringODContact3);
-            d._barringOrderDetailService.AddLeftBar(d.barringODContact3, d._barringService);
-            d._barringOrderDetailService.AddRightBar(d.barringODContact3, d._barringService);
+                d.localWarehouse = new Warehouse()
+                {
+                    Name = "Sentral Solusi Data",
+                    Description = "Kali Besar Jakarta",
+                    Code = "LCL"
+                };
+                d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
-            d._barringOrderDetailService.SideSealObject(d.barringODContact4);
-            d._barringOrderDetailService.PrepareObject(d.barringODContact4);
-            d._barringOrderDetailService.ApplyTapeAdhesiveToObject(d.barringODContact4);
-            d._barringOrderDetailService.MountObject(d.barringODContact4);
-            d._barringOrderDetailService.HeatPressObject(d.barringODContact4);
-            d._barringOrderDetailService.PullOffTestObject(d.barringODContact4);
-            d._barringOrderDetailService.QCAndMarkObject(d.barringODContact4);
-            d._barringOrderDetailService.AddLeftBar(d.barringODContact4, d._barringService);
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
 
-            int blanket1quantity = d.blanket1.Quantity;
-            int blanket2quantity = d.blanket2.Quantity; // 5?
-            int bargenericquantity = d.bargeneric.Quantity;
-            int barleft1quantity = d.barleft1.Quantity;
-            int barright1quantity = d.barright1.Quantity;
-            int barring1quantity = d.barring1.Quantity;
-            int barring2quantity = d.barring2.Quantity;
-            int barring1warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring1.Id).Quantity;
-            int barring2warehousequantity = d._warehouseItemService.FindOrCreateObject(d.localWarehouse.Id, d.barring2.Id).Quantity;
-            d._barringOrderDetailService.FinishObject(d.barringODContact1, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
-            d._barringOrderDetailService.FinishObject(d.barringODContact2, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
-            d._barringOrderDetailService.FinishObject(d.barringODContact3, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
-            d._barringOrderDetailService.RejectObject(d.barringODContact4, DateTime.Today, d._barringOrderService, d._stockMutationService, d._barringService, d._itemService, d._warehouseItemService);
-            int blanket1quantityfinal = d.blanket1.Quantity;
-            int blanket2quantityfinal = d.blanket2.Quantity; // 3 ?
-            int bargenericquantityfinal = d.bargeneric.Quantity;
-            int barleft1quantityfinal = d.barleft1.Quantity;
-            int barright1quantityfinal = d.barright1.Quantity;
+                d.coreBuilder = new CoreBuilder()
+                {
+                    BaseSku = "CORE1001",
+                    SkuNewCore = "CORE1001N",
+                    SkuUsedCore = "CORE1001U",
+                    Name = "Core X 1001",
+                    Category = "X 1001",
+                    UoMId = d.Pcs.Id
+                };
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
+            d.machine = new Machine()
+                {
+                    Code = "M00001",
+                    Name = "Machine 00001",
+                    Description = "Machine"
+                };
+                d.machine = d._machineService.CreateObject(d.machine);
+                d.coreIdentification = new CoreIdentification()
+                {
+                    ContactId = d.contact.Id,
+                    Code = "CI0001",
+                    Quantity = 1,
+                    IdentifiedDate = DateTime.Now,
+                    WarehouseId = d.localWarehouse.Id
+                };
+                d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
+                d.coreIdentificationDetail = new CoreIdentificationDetail()
+                {
+                    CoreIdentificationId = d.coreIdentification.Id,
+                    DetailId = 1,
+                    MaterialCase = 2,
+                    CoreBuilderId = d.coreBuilder.Id,
+                    RollerTypeId = d._rollerTypeService.GetObjectByName("Found DT").Id,
+                    MachineId = d.machine.Id,
+                    RD = 12,
+                    CD = 12,
+                    RL = 12,
+                    WL = 12,
+                    TL = 12
+                };
+                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
+
+                d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService,
+                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService);
             Console.WriteLine("Press any key to stop...");
             Console.ReadKey();
         }

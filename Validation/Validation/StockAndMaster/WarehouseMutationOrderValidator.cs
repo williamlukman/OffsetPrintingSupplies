@@ -50,11 +50,20 @@ namespace Validation.Validation
             return warehouseMutationOrder;
         }
 
+        public WarehouseMutationOrder VHasMutationDate(WarehouseMutationOrder warehouseMutationOrder)
+        {
+            if (warehouseMutationOrder.MutationDate == null)
+            {
+                warehouseMutationOrder.Errors.Add("MutationDate", "Tidak boleh kosong");
+            }
+            return warehouseMutationOrder;
+        }
+
         public WarehouseMutationOrder VHasNotBeenConfirmed(WarehouseMutationOrder warehouseMutationOrder)
         {
             if (warehouseMutationOrder.IsConfirmed)
             {
-                warehouseMutationOrder.Errors.Add("IsConfirmed", "Tidak boleh sudah dikonfirmasi");
+                warehouseMutationOrder.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi");
             }
             return warehouseMutationOrder;
         }
@@ -63,7 +72,7 @@ namespace Validation.Validation
         {
             if (!warehouseMutationOrder.IsConfirmed)
             {
-                warehouseMutationOrder.Errors.Add("IsConfirmed", "Harus sudah dikonfirmasi");
+                warehouseMutationOrder.Errors.Add("Generic", "Harus sudah dikonfirmasi");
             }
             return warehouseMutationOrder;
         }
@@ -91,6 +100,8 @@ namespace Validation.Validation
             VHasWarehouseFrom(warehouseMutationOrder, _warehouseService);
             if (!isValid(warehouseMutationOrder)) { return warehouseMutationOrder; }
             VHasWarehouseTo(warehouseMutationOrder, _warehouseService);
+            if (!isValid(warehouseMutationOrder)) { return warehouseMutationOrder; }
+            VHasMutationDate(warehouseMutationOrder);
             return warehouseMutationOrder;
         }
 

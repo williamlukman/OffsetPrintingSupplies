@@ -30,7 +30,7 @@ namespace Validation.Validation
             {
                 barring.Errors.Add("Sku", "Tidak boleh kosong");
             }
-            if (_barringService.IsSkuDuplicated(barring))
+            else if (_barringService.IsSkuDuplicated(barring))
             {
                 barring.Errors.Add("Sku", "Tidak boleh diduplikasi");
             }
@@ -132,7 +132,7 @@ namespace Validation.Validation
             {
                 barring.Errors.Add("AC", "Tidak boleh negatif atau 0");
             }
-            if (barring.AR <= 0)
+            else if (barring.AR <= 0)
             {
                 barring.Errors.Add("AR", "Tidak boleh negatif atau 0");
             }

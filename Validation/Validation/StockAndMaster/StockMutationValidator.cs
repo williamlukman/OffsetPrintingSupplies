@@ -16,7 +16,7 @@ namespace Validation.Validation
             Warehouse warehouse = _warehouseService.GetObjectById(stockMutation.WarehouseId);
             if (warehouse == null)
             {
-                stockMutation.Errors.Add("WarehouseId", "Tidak terasosiasi dengan warehouse");
+                stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan warehouse");
             }
             return stockMutation;
         }
@@ -26,7 +26,7 @@ namespace Validation.Validation
             WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
             if (warehouseItem == null)
             {
-                stockMutation.Errors.Add("WarehouseItemId", "Tidak terasosiasi dengan item di warehouse");
+                stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan item di warehouse");
             }
             return stockMutation;
         }
@@ -37,7 +37,7 @@ namespace Validation.Validation
                 !stockMutation.ItemCase.Equals (Constant.ItemCase.PendingDelivery) &&
                 !stockMutation.ItemCase.Equals (Constant.ItemCase.PendingReceival))
             {
-                stockMutation.Errors.Add("ItemCase", "Harus merupakan bagian dari Constant.ItemCase");
+                stockMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.ItemCase");
             }
             return stockMutation;
         }
@@ -47,7 +47,7 @@ namespace Validation.Validation
             if (!stockMutation.Status.Equals(Constant.MutationStatus.Addition) &&
                 !stockMutation.Status.Equals(Constant.MutationStatus.Deduction))
             {
-                stockMutation.Errors.Add("Status", "Harus merupakan bagian dari Constant.MutationStatus");
+                stockMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.MutationStatus");
             }
             return stockMutation;
         }
@@ -59,9 +59,10 @@ namespace Validation.Validation
                 !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.SalesOrder) &&
                 !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.DeliveryOrder) &&
                 !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrder) &&
-                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrderDetail))
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RecoveryOrderDetail) &&
+                !stockMutation.SourceDocumentType.Equals(Constant.SourceDocumentType.RetailSalesInvoice))
             {
-                stockMutation.Errors.Add("SourceDocumentType", "Harus merupakan bagian dari Constant.SourceDocumentType");
+                stockMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.SourceDocumentType");
             }
             return stockMutation;
         }
@@ -73,9 +74,10 @@ namespace Validation.Validation
                 !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.SalesOrderDetail) &&
                 !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.DeliveryOrderDetail) &&
                 !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryOrderDetail) &&
-                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryAccessoryDetail))
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RecoveryAccessoryDetail) &&
+                !stockMutation.SourceDocumentDetailType.Equals(Constant.SourceDocumentDetailType.RetailSalesInvoiceDetail))
             {
-                stockMutation.Errors.Add("SourceDocumentDetailType", "Harus merupakan bagian dari Constant.SourceDocumentDetailType");
+                stockMutation.Errors.Add("Generic", "Harus merupakan bagian dari Constant.SourceDocumentDetailType");
             }
             return stockMutation;
         }
@@ -84,7 +86,7 @@ namespace Validation.Validation
         {
             if (stockMutation.Quantity <= 0)
             {
-                stockMutation.Errors.Add("Quantity", "Tidak boleh negatif atau 0");
+                stockMutation.Errors.Add("Generic", "Tidak boleh negatif atau 0");
             }
             return stockMutation;
         }

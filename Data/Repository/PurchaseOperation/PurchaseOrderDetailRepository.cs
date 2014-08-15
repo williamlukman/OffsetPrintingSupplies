@@ -31,6 +31,11 @@ namespace Data.Repository
             return FindAll(pod => pod.PurchaseOrderId == purchaseOrderId && !pod.IsDeleted).ToList();
         }
 
+        public IList<PurchaseOrderDetail> GetObjectsByItemId(int itemId)
+        {
+            return FindAll(x => x.ItemId == itemId && !x.IsDeleted).ToList();
+        }
+
         public PurchaseOrderDetail GetObjectById(int Id)
         {
             PurchaseOrderDetail detail = Find(pod => pod.Id == Id);

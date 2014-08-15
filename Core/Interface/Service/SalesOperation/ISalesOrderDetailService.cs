@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         ISalesOrderDetailValidator GetValidator();
         IList<SalesOrderDetail> GetObjectsBySalesOrderId(int salesOrderId);
+        IList<SalesOrderDetail> GetObjectsByItemId(int itemId);
         SalesOrderDetail GetObjectById(int Id);
         SalesOrderDetail CreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService);
         SalesOrderDetail CreateObject(int salesOrderId, int itemId, int quantity, decimal Price, ISalesOrderService _salesOrderService, IItemService _itemService);

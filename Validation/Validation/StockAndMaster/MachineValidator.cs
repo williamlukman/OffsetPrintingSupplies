@@ -25,7 +25,7 @@ namespace Validation.Validation
             {
                 machine.Errors.Add("Code", "Tidak boleh kosong");
             }
-            if (_machineService.IsCodeDuplicated(machine))
+            else if (_machineService.IsCodeDuplicated(machine))
             {
                 machine.Errors.Add("Code", "Tidak boleh diduplikasi");
             }
