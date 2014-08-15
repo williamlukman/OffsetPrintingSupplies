@@ -163,6 +163,7 @@
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
+    <Compile Include="Controllers\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseReceivalController.cs" />
     <Compile Include="Controllers\SalesOrderController.cs" />
@@ -189,6 +190,7 @@
     <Content Include="Content\apps_js\MasterRollerType.js" />
     <Content Include="Content\apps_js\MasterUoM.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
+    <Content Include="Content\apps_js\PurchaseInvoice.js" />
     <Content Include="Content\apps_js\PurchaseOrder.js" />
     <Content Include="Content\apps_js\PurchaseReceival.js" />
     <Content Include="Content\apps_js\SalesOrder.js" />
@@ -1064,6 +1066,7 @@
     <Content Include="Views\SalesOrder\Index.cshtml" />
     <Content Include="Views\PurchaseReceival\Index.cshtml" />
     <Content Include="Views\DeliveryOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseInvoice\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
