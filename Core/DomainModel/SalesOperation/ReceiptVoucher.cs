@@ -8,13 +8,13 @@ namespace Core.DomainModel
     public partial class ReceiptVoucher
     {
         public int Id { get; set; }
-        public int ContactId { get; set; }
+        public int ContactId { get; set; } // Nullable ?
         public int CashBankId { get; set; }
         public string Code { get; set; }
         public DateTime ReceiptDate { get; set; }
         public bool IsGBCH { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
-        public bool IsBank { get; set; }
+        //public bool IsBank { get; set; } // Moved to CashBank
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }
 

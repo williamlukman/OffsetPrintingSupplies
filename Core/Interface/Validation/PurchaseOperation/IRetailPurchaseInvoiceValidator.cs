@@ -32,7 +32,7 @@ namespace Core.Interface.Validation
         RetailPurchaseInvoice VIsValidAmountPaid(RetailPurchaseInvoice retailPurchaseInvoice);
         RetailPurchaseInvoice VIsValidFullPayment(RetailPurchaseInvoice retailPurchaseInvoice);
         RetailPurchaseInvoice VHasCashBank(RetailPurchaseInvoice retailPurchaseInvoice, ICashBankService _cashBankService);
-        RetailPurchaseInvoice VIsCashBankTypeBank(RetailPurchaseInvoice retailPurchaseInvoice);
+        RetailPurchaseInvoice VIsCashBankTypeBank(RetailPurchaseInvoice retailPurchaseInvoice, ICashBankService _cashBankService);
 
         RetailPurchaseInvoice VConfirmObject(RetailPurchaseInvoice retailPurchaseInvoice, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService,
                                                  IRetailPurchaseInvoiceService _retailPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService);
