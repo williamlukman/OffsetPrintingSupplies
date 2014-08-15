@@ -21,6 +21,14 @@ namespace WebView.Controllers
         private IWarehouseService _warehouseService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
+        private IContactService _contactService;
+        private IPriceMutationService _priceMutationService;
+        private IContactGroupService _contactGroupService;
+        private IPurchaseOrderDetailService _purchaseOrderDetailService;
+        private IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+        private IMachineService _machineService;
+
         public MstItemController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -30,6 +38,13 @@ namespace WebView.Controllers
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(),new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
+            _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+            _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
+            _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
+            _machineService = new MachineService(new MachineRepository(),new MachineValidator());
         }
 
         public ActionResult Index()
@@ -130,7 +145,8 @@ namespace WebView.Controllers
             try
             {
 
-                model = _itemService.CreateObject(model,_uoMService,_itemTypeService,_warehouseItemService,_warehouseService);
+                model = _itemService.CreateObject(model,_uoMService,_itemTypeService,_warehouseItemService,
+                    _warehouseService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -154,7 +170,7 @@ namespace WebView.Controllers
                 data.Category = model.Category;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
-                model = _itemService.UpdateObject(data,_uoMService,_itemTypeService);
+                model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -173,7 +189,9 @@ namespace WebView.Controllers
             try
             {
                 var data = _itemService.GetObjectById(model.Id);
-                model = _itemService.SoftDeleteObject(data,_stockMutationService,_itemTypeService,_warehouseItemService,_barringService);
+                model = _itemService.SoftDeleteObject(data,_stockMutationService,_itemTypeService,
+                    _warehouseItemService,_barringService,_purchaseOrderDetailService,_stockAdjustmentDetailService,
+                    _salesOrderDetailService,_priceMutationService);
             }
             catch (Exception ex)
             {

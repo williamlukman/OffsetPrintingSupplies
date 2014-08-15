@@ -11,9 +11,9 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class PurchaseInvoiceController : Controller
+    public class SalesInvoiceController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PurchaseInvoiceController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("SalesInvoiceController");
         private IPurchaseOrderService _purchaseOrderService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IPurchaseInvoiceService _purchaseInvoiceService;
@@ -23,8 +23,16 @@ namespace WebView.Controllers
         private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IPayableService _payableService;
         private IItemService _itemService;
-
-        public PurchaseInvoiceController()
+        private ISalesInvoiceService _salesInvoiceService;
+        private ISalesInvoiceDetailService _salesInvoiceDetailService;
+        private IDeliveryOrderDetailService _deliveryOrderDetailService;
+        private IReceiptVoucherDetailService _receiptVoucherDetailService;
+        private IReceivableService _receivableService;
+        private ISalesOrderService _salesOrderService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+        private IDeliveryOrderService _deliveryOrderService;
+        
+        public SalesInvoiceController()
         {
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
@@ -35,7 +43,19 @@ namespace WebView.Controllers
             _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
+            _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
+            _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
+            _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
+            _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
+            _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
+            _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
+        
+        
         }
+
 
 
         public ActionResult Index()
@@ -50,9 +70,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _purchaseInvoiceService.GetAll().Where(d => d.IsDeleted == false);
+            var query =  _salesInvoiceService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<PurchaseInvoice>;
+            var list = query as IEnumerable<SalesInvoice>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -83,14 +103,14 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.PurchaseReceivalId,
-                            _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
+                            model.DeliveryOrderId,
+                            _deliveryOrderService.GetObjectById(model.DeliveryOrderId).Code,
                             model.Description,
                             model.Discount,
                             model.IsTaxable,
                             model.InvoiceDate,
                             model.DueDate,
-                            model.AmountPayable,
+                            model.AmountReceivable,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -107,9 +127,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(id).Where(d => d.IsDeleted == false);
+            var query =  _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(id).Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<PurchaseInvoiceDetail>;
+            var list = query as IEnumerable<SalesInvoiceDetail>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -139,10 +159,11 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Code,
-                            model.PurchaseReceivalDetailId,
-                            _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).Code,
-                            _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId,
-                            _itemService.GetObjectById( _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId).Name,
+                            model.DeliveryOrderDetailId,
+                            _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).Code,
+                              _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).ItemId,
+                            _itemService.GetObjectById( _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).ItemId).Name,
+                          
                             model.Quantity,
                             model.Amount,
                       }
@@ -153,10 +174,10 @@ namespace WebView.Controllers
       
         public dynamic GetInfo(int Id)
         {
-            PurchaseInvoice model = new PurchaseInvoice();
+            SalesInvoice model = new SalesInvoice();
             try
             {
-                model = _purchaseInvoiceService.GetObjectById(Id);
+                model = _salesInvoiceService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -168,24 +189,24 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                model.PurchaseReceivalId,
-                PurchaseReceival = _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
+                model.DeliveryOrderId,
+                DeliveryOrder = _deliveryOrderService.GetObjectById(model.DeliveryOrderId).Code,
+                model.AmountReceivable,
                 model.Discount,
                 model.Description,
                 model.IsTaxable,
                 model.InvoiceDate,
                 model.DueDate,
-                model.AmountPayable,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         public dynamic GetInfoDetail(int Id)
         {
-            PurchaseInvoiceDetail model = new PurchaseInvoiceDetail();
+            SalesInvoiceDetail model = new SalesInvoiceDetail();
             try
             {
-                model = _purchaseInvoiceDetailService.GetObjectById(Id);
+                model = _salesInvoiceDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -197,10 +218,8 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                model.PurchaseReceivalDetailId,
-                PurchaseReceival = _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).Code,
-                ItemId = _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId,
-                Item = _itemService.GetObjectById(_purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId).Name,
+                model.DeliveryOrderDetailId,
+                DeliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).Code,
                 model.Quantity,
                 model.Amount,
                 model.Errors
@@ -208,12 +227,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Insert(PurchaseInvoice model)
+        public dynamic Insert(SalesInvoice model)
         {
             try
             {
              
-                model = _purchaseInvoiceService.CreateObject(model,_purchaseReceivalService);
+                model = _salesInvoiceService.CreateObject(model,_deliveryOrderService);
             }
             catch (Exception ex)
             {
@@ -228,13 +247,13 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic InsertDetail(PurchaseInvoiceDetail model)
+        public dynamic InsertDetail(SalesInvoiceDetail model)
         {
             decimal amount = 0;
             try
             {
-                model = _purchaseInvoiceDetailService.CreateObject(model,_purchaseInvoiceService,_purchaseOrderDetailService,_purchaseReceivalDetailService);
-                amount = _purchaseInvoiceService.GetObjectById(model.PurchaseInvoiceId).AmountPayable;
+                model = _salesInvoiceDetailService.CreateObject(model,_salesInvoiceService,_salesOrderDetailService,_deliveryOrderDetailService);
+                amount = _salesInvoiceService.GetObjectById(model.SalesInvoiceId).AmountReceivable;
             }
             catch (Exception ex)
             {
@@ -251,18 +270,18 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(PurchaseInvoice model)
+        public dynamic Update(SalesInvoice model)
         {
             try
             {
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                data.PurchaseReceivalId = model.PurchaseReceivalId;
+                var data = _salesInvoiceService.GetObjectById(model.Id);
+                data.DeliveryOrderId = model.DeliveryOrderId;
                 data.Description = model.Description;
                 data.Discount = model.Discount;
                 data.IsTaxable = model.IsTaxable;
                 data.InvoiceDate = model.InvoiceDate;
                 data.DueDate = model.DueDate;
-                model = _purchaseInvoiceService.UpdateObject(data,_purchaseReceivalService,_purchaseInvoiceDetailService);
+                model = _salesInvoiceService.UpdateObject(data,_deliveryOrderService,_salesInvoiceDetailService);
             }
             catch (Exception ex)
             {
@@ -273,17 +292,17 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                model.AmountPayable
+                model.AmountReceivable
             });
         }
 
         [HttpPost]
-        public dynamic Delete(PurchaseInvoice model)
+        public dynamic Delete(SalesInvoice model)
         {
             try
             {
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.SoftDeleteObject(data,_purchaseInvoiceDetailService);
+                var data = _salesInvoiceService.GetObjectById(model.Id);
+                model = _salesInvoiceService.SoftDeleteObject(data,_salesInvoiceDetailService);
             }
             catch (Exception ex)
             {
@@ -298,14 +317,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic DeleteDetail(PurchaseInvoiceDetail model)
+        public dynamic DeleteDetail(SalesInvoiceDetail model)
         {
             decimal amount = 0;
             try
             {
-                var data = _purchaseInvoiceDetailService.GetObjectById(model.Id);
-                model = _purchaseInvoiceDetailService.SoftDeleteObject(data,_purchaseInvoiceService);
-                amount = _purchaseInvoiceService.GetObjectById(model.PurchaseInvoiceId).AmountPayable;
+                var data = _salesInvoiceDetailService.GetObjectById(model.Id);
+                model = _salesInvoiceDetailService.SoftDeleteObject(data,_salesInvoiceService);
+                amount = _salesInvoiceService.GetObjectById(model.SalesInvoiceId).AmountReceivable;
             }
             catch (Exception ex)
             {
@@ -321,16 +340,17 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UpdateDetail(PurchaseInvoiceDetail model)
+        public dynamic UpdateDetail(SalesInvoiceDetail model)
         {
             decimal amount = 0;
             try
             {
-                var data = _purchaseInvoiceDetailService.GetObjectById(model.Id);
-                data.PurchaseReceivalDetailId = model.PurchaseReceivalDetailId;
+                var data = _salesInvoiceDetailService.GetObjectById(model.Id);
                 data.Quantity = model.Quantity;
-                model = _purchaseInvoiceDetailService.UpdateObject(data,_purchaseInvoiceService,_purchaseOrderDetailService,_purchaseReceivalDetailService);
-                amount = _purchaseInvoiceService.GetObjectById(model.PurchaseInvoiceId).AmountPayable;
+                data.DeliveryOrderDetailId = model.DeliveryOrderDetailId;
+                model = _salesInvoiceDetailService.UpdateObject(data,_salesInvoiceService,_salesOrderDetailService,
+                    _deliveryOrderDetailService);
+                amount = _salesInvoiceService.GetObjectById(model.SalesInvoiceId).AmountReceivable;
             }
             catch (Exception ex)
             {
@@ -347,12 +367,13 @@ namespace WebView.Controllers
 
 
         [HttpPost]
-        public dynamic Confirm(PurchaseInvoice model)
+        public dynamic Confirm(SalesInvoice model)
         {
             try
             {
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseReceivalService,_purchaseReceivalDetailService,_payableService);
+                var data = _salesInvoiceService.GetObjectById(model.Id);
+                model = _salesInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_salesInvoiceDetailService,
+                    _salesOrderService,_deliveryOrderService,_deliveryOrderDetailService,_receivableService);
             }
             catch (Exception ex)
             {
@@ -367,13 +388,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UnConfirm(PurchaseInvoice model)
+        public dynamic UnConfirm(SalesInvoice model)
         {
             try
             {
 
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.UnconfirmObject(data,_purchaseInvoiceDetailService,_purchaseReceivalService,_purchaseReceivalDetailService,_paymentVoucherDetailService,_payableService);
+                var data = _salesInvoiceService.GetObjectById(model.Id);
+                model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService,_deliveryOrderService,
+                    _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService);
+
             }
             catch (Exception ex)
             {
@@ -390,4 +413,3 @@ namespace WebView.Controllers
 
     }
 }
-

@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PurchaseInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'SalesInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PurchaseInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'SalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -40,23 +40,22 @@
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
-    $("#lookup_div_purchasereceival").dialog('close');
-    $("#lookup_div_warehouse").dialog('close');
+    $("#lookup_div_deliveryorder").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'PurchaseInvoice/GetList',
+        url: base_url + 'SalesInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'PurchaseReceipt Id', 'PurchaseReceipt Code', 'Description', 'Discount(%)', 'Tax',
-                   'Invoice Date','Due Date', 'Amount Payable',
+        colNames: ['ID', 'Code', 'DeliveryOrder Id', 'DeliveryOrder Code', 'Description', 'Discount(%)', 'Tax',
+                   'Invoice Date', 'Due Date', 'Amount Payable',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'purchasereceiptid', index: 'purchasereceiptid', width: 100 },
-                  { name: 'purchasereceipt', index: 'purchasereceipt', width: 100 },
+				  { name: 'deliveryorderid', index: 'deliveryorderid', width: 100 },
+                  { name: 'deliveryorder', index: 'deliveryorder', width: 100 },
                   { name: 'description', index: 'description', width: 100 },
                   { name: 'discount', index: 'discount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'istax', index: 'istax', width: 100 },
@@ -122,7 +121,7 @@
         clearForm('#frm');
         $('#InvoiceDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#btnPurchaseReceival').removeAttr('disabled');
+        $('#btnDeliveryOrder').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#InvoiceDateDiv').show();
         $('#InvoiceDateDiv2').hide();
@@ -140,7 +139,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "PurchaseInvoice/GetInfo?Id=" + id,
+                url: base_url + "SalesInvoice/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -157,11 +156,11 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#PurchaseReceivalId').val(result.PurchaseReceivalId);
-                            $('#PurchaseReceival').val(result.PurchaseReceival);
+                            $('#DeliveryOrderId').val(result.DeliveryOrderId);
+                            $('#DeliveryOrder').val(result.DeliveryOrder);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
-                            $('#AmountPayable').val(result.AmountPayable);
+                            $('#AmountReceivable').val(result.AmountReceivable);
                             var e = document.getElementById("IsTax");
                             if (result.IsTaxable == true) {
                                 e.selectedIndex = 0;
@@ -178,7 +177,7 @@
                             $('#DueDateDiv').show();
                             $('#DueDateDiv2').hide();
                             $('#form_btn_save').hide();
-                            $('#btnPurchaseReceival').attr('disabled', true);
+                            $('#btnDeliveryOrder').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -200,7 +199,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "PurchaseInvoice/GetInfo?Id=" + id,
+                url: base_url + "SalesInvoice/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -217,11 +216,11 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#PurchaseReceivalId').val(result.PurchaseReceivalId);
-                            $('#PurchaseReceival').val(result.PurchaseReceival);
+                            $('#DeliveryOrderId').val(result.DeliveryOrderId);
+                            $('#DeliveryOrder').val(result.DeliveryOrder);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
-                            $('#AmountPayable').val(result.AmountPayable);
+                            $('#AmountReceivable').val(result.AmountReceivable);
                             var e = document.getElementById("IsTax");
                             if (result.IsTaxable == true) {
                                 e.selectedIndex = 0;
@@ -238,7 +237,7 @@
                             $('#DueDateDiv').show();
                             $('#DueDateDiv2').hide();
                             $('#form_btn_save').hide();
-                            $('#btnPurchaseReceival').removeAttr('disabled');
+                            $('#btnDeliveryOrder').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -270,7 +269,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "PurchaseInvoice/Unconfirm",
+                        url: base_url + "SalesInvoice/Unconfirm",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -304,7 +303,7 @@
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
         $.ajax({
-            url: base_url + "PurchaseInvoice/Confirm",
+            url: base_url + "SalesInvoice/Confirm",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -357,7 +356,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "PurchaseInvoice/Delete",
+            url: base_url + "SalesInvoice/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -401,11 +400,11 @@
         }
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'PurchaseInvoice/Update';
+            submitURL = base_url + 'SalesInvoice/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'PurchaseInvoice/Insert';
+            submitURL = base_url + 'SalesInvoice/Insert';
         }
 
         var e = document.getElementById("IsTax");
@@ -416,7 +415,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, PurchaseReceivalId: $("#PurchaseReceivalId").val(), Description: $("#Description").val(),
+                Id: id, DeliveryOrderId: $("#DeliveryOrderId").val(), Description: $("#Description").val(),
                 Discount: $("#Discount").numberbox("getValue"), IsTaxable: moving,
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
@@ -450,16 +449,16 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Purchase Receival Detail Id', 'Purchase Receival Detail Code', 'Item Id', 'Item Name', 'Quantity', 'Amount'
+        colNames: ['Code', 'DeliveryOrder Detail Id', 'DeliveryOrder Detail Code', 'Item Id', 'Item Name', 'Quantity', 'Amount'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'purchasereceivaldetailid', index: 'purchasereceivaldetailid', width: 130, sortable: false, hidden: true },
-                  { name: 'purchasereceivaldetailcode', index: 'purchasereceivaldetailcode', width: 130, sortable: false },
+                  { name: 'deliveryorderdetailid', index: 'deliveryorderdetailid', width: 130, sortable: false, hidden: true },
+                  { name: 'deliveryorderdetailcode', index: 'deliveryorderdetailcode', width: 130, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 80, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } ,sortable: false },
+                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -492,7 +491,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "PurchaseInvoice/GetInfoDetail?Id=" + id,
+                url: base_url + "SalesInvoice/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -529,7 +528,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "PurchaseInvoice/DeleteDetail",
+                        url: base_url + "SalesInvoice/DeleteDetail",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -548,7 +547,7 @@
                                 }
                             }
                             else {
-                                $('#AmountPayable').val(result.AmountPayable);
+                                $('#AmountReceivable').val(result.AmountReceivable);
                                 ReloadGridDetail();
                                 $("#delete_confirm_div").dialog('close');
                             }
@@ -572,11 +571,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'PurchaseInvoice/UpdateDetail';
+            submitURL = base_url + 'SalesInvoice/UpdateDetail';
         }
             // Insert
         else {
-            submitURL = base_url + 'PurchaseInvoice/InsertDetail';
+            submitURL = base_url + 'SalesInvoice/InsertDetail';
         }
 
         $.ajax({
@@ -584,7 +583,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, PurchaseInvoiceId: $("#id").val(), PurchaseReceivalDetailId: $("#PurchaseReceivalDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+                Id: id, SalesInvoiceId: $("#id").val(), DeliveryOrderDetailId: $("#DeliveryOrderDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
             }),
             async: false,
             cache: false,
@@ -605,7 +604,7 @@
                     }
                 }
                 else {
-                    $('#AmountPayable').val(result.AmountPayable);
+                    $('#AmountReceivable').val(result.AmountReceivable);
                     ReloadGridDetail();
                     $("#item_div").dialog('close')
                 }
@@ -621,17 +620,17 @@
     });
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up purchasereceival-------------------------------------------------------
-    $('#btnPurchaseReceival').click(function () {
-        var lookUpURL = base_url + 'PurchaseReceival/GetListConfirmed';
-        var lookupGrid = $('#lookup_table_purchasereceival');
+    // -------------------------------------------------------Look Up deliveryorder-------------------------------------------------------
+    $('#btnDeliveryOrder').click(function () {
+        var lookUpURL = base_url + 'DeliveryOrder/GetListConfirmed';
+        var lookupGrid = $('#lookup_table_deliveryorder');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_purchasereceival').dialog('open');
+        $('#lookup_div_deliveryorder').dialog('open');
     });
 
-    jQuery("#lookup_table_purchasereceival").jqGrid({
+    jQuery("#lookup_table_deliveryorder").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
@@ -651,7 +650,7 @@
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
-        pager: $('#lookup_pager_purchasereceival'),
+        pager: $('#lookup_pager_deliveryorder'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -659,37 +658,37 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_purchasereceival").width() - 10,
-        height: $("#lookup_div_purchasereceival").height() - 110,
+        width: $("#lookup_div_deliveryorder").width() - 10,
+        height: $("#lookup_div_deliveryorder").height() - 110,
     });
-    $("#lookup_table_purchasereceival").jqGrid('navGrid', '#lookup_toolbar_purchasereceival', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_deliveryorder").jqGrid('navGrid', '#lookup_toolbar_deliveryorder', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_purchasereceival').click(function () {
-        $('#lookup_div_purchasereceival').dialog('close');
+    $('#lookup_btn_cancel_deliveryorder').click(function () {
+        $('#lookup_div_deliveryorder').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_purchasereceival').click(function () {
-        var id = jQuery("#lookup_table_purchasereceival").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_deliveryorder').click(function () {
+        var id = jQuery("#lookup_table_deliveryorder").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_purchasereceival").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_deliveryorder").jqGrid('getRowData', id);
 
-            $('#PurchaseReceivalId').val(ret.id).data("kode", id);
-            $('#PurchaseReceival').val(ret.code);
-            $('#lookup_div_purchasereceival').dialog('close');
+            $('#DeliveryOrderId').val(ret.id).data("kode", id);
+            $('#DeliveryOrder').val(ret.code);
+            $('#lookup_div_deliveryorder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup purchasereceival----------------------------------------------------------------
+    // ---------------------------------------------End Lookup deliveryorder----------------------------------------------------------------
 
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
-        var lookUpURL = base_url + 'PurchaseReceival/GetListDetail?Id=' + $("#PurchaseReceivalId").val();
+        var lookUpURL = base_url + 'DeliveryOrder/GetListDetail?Id=' + $("#DeliveryOrderId").val();
         var lookupGrid = $('#lookup_table_item');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -736,7 +735,7 @@
         var id = jQuery("#lookup_table_item").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
-            $('#PurchaseReceivalDetailId').val(id);
+            $('#DeliveryOrderDetailId').val(id);
             $('#ItemId').val(ret.itemid);
             $('#Item').val(ret.itemname);
 
@@ -749,5 +748,5 @@
 
     // ---------------------------------------------End Lookup item----------------------------------------------------------------
 
-    
+
 }); //END DOCUMENT READY

@@ -8,7 +8,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstContact/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstContactGroup/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -21,23 +21,17 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    $("#lookup_div_contactgroup").dialog('close');
+
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstContact/GetList',
+        url: base_url + 'MstContactGroup/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact No','Email','ContactGroup Id','ContactGroup Name', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 180 },
-                  { name: 'address', index: 'address', width: 250 },
-                  { name: 'contactno', index: 'contactno', width: 180 },
-                  { name: 'pic', index: 'pic', width: 180 },
-                  { name: 'piccontactno', index: 'piccontactno', width: 180 },
-                  { name: 'email', index: 'email', width: 180 },
-                  { name: 'contactgroupid', index: 'contactgroupid', width: 180 },
-                  { name: 'contactgroup', index: 'contactgroup', width: 180 },
+				  { name: 'name', index: 'name', width: 80 },
+                  { name: 'description', index: 'description', width: 250 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -96,31 +90,25 @@
             vStatusSaving = 1;//edit data mode
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstContact/GetInfo?Id=" + id,
+                url: base_url + "MstContactGroup/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
-                        if (JSON.stringify(result.model.Errors) != '{}') {
+                        if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
-                            for (var key in result.model.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
-                            $("#form_btn_save").data('kode', id);
-                            $('#id').val(result.model.Id);
-                            $('#Name').val(result.model.Name);
-                            $('#Address').val(result.model.Address);
-                            $('#ContactNo').val(result.model.ContactNo);
-                            $('#PIC').val(result.model.PIC);
-                            $('#PICContactNo').val(result.model.PICContactNo);
-                            $('#Email').val(result.model.Email);
-                            $('#ContactGroupId').val(result.model.ContactGroupId);
-                            $('#ContactGroup').val(result.model.ContactGroup);
-                            $("#form_div").dialog("open");
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Name').val(result.Name);
+                            $('#Description').val(result.Description);
+                            $('#form_div').dialog('open');
                         }
                     }
                 }
@@ -130,12 +118,17 @@
         }
     });
 
+
     $('#btn_del').click(function () {
         clearForm("#frm");
 
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
+            //if (ret.deletedimg != '') {
+            //    $.messager.alert('Warning', 'RECORD HAS BEEN DELETED !', 'warning');
+            //    return;
+            //}
             $('#delete_confirm_btn_submit').data('Id', ret.id);
             $("#delete_confirm_div").dialog("open");
         } else {
@@ -151,7 +144,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstContact/Delete",
+            url: base_url + "MstContactGroup/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -165,7 +158,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
                         }
                     }
                     $("#delete_confirm_div").dialog('close');
@@ -195,11 +188,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstContact/Update';
+            submitURL = base_url + 'MstContactGroup/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstContact/Insert';
+            submitURL = base_url + 'MstContactGroup/Insert';
         }
 
         $.ajax({
@@ -207,9 +200,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
-                ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
-                Email: $("#Email").val(), ContactGroupId: $("#ContactGroupId").val()
+                Id: id, Name: $("#Name").val(), Description: $("#Description").val()
             }),
             async: false,
             cache: false,
@@ -225,7 +216,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
                         }
                     }
                 }
@@ -251,61 +242,5 @@
         });
     }
 
-
-    // -------------------------------------------------------Look Up contactgroup-------------------------------------------------------
-    $('#btnContactGroup').click(function () {
-        var lookUpURL = base_url + 'MstContactGroup/GetList';
-        var lookupGrid = $('#lookup_table_contactgroup');
-        lookupGrid.setGridParam({
-            url: lookUpURL
-        }).trigger("reloadGrid");
-        $('#lookup_div_contactgroup').dialog('open');
-    });
-
-    jQuery("#lookup_table_contactgroup").jqGrid({
-        url: base_url,
-        datatype: "json",
-        mtype: 'GET',
-        colNames: ['Id', 'Name'],
-        colModel: [
-                  { name: 'id', index: 'contactcode', width: 80, align: 'right' },
-                  { name: 'name', index: 'contactname', width: 200 }],
-        page: '1',
-        pager: $('#lookup_pager_contactgroup'),
-        rowNum: 20,
-        rowList: [20, 30, 60],
-        sortname: 'id',
-        viewrecords: true,
-        scrollrows: true,
-        shrinkToFit: false,
-        sortorder: "ASC",
-        width: $("#lookup_div_contactgroup").width() - 10,
-        height: $("#lookup_div_contactgroup").height() - 110,
-    });
-    $("#lookup_table_contactgroup").jqGrid('navGrid', '#lookup_toolbar_contactgroup', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-
-    // Cancel or CLose
-    $('#lookup_btn_cancel_contactgroup').click(function () {
-        $('#lookup_div_contactgroup').dialog('close');
-    });
-
-    // ADD or Select Data
-    $('#lookup_btn_add_contactgroup').click(function () {
-        var id = jQuery("#lookup_table_contactgroup").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#lookup_table_contactgroup").jqGrid('getRowData', id);
-
-            $('#ContactGroupId').val(ret.id).data("kode", id);
-            $('#ContactGroup').val(ret.name);
-
-            $('#lookup_div_contactgroup').dialog('close');
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        };
-    });
-
-
-    // ---------------------------------------------End Lookup contactgroup----------------------------------------------------------------
 
 }); //END DOCUMENT READY

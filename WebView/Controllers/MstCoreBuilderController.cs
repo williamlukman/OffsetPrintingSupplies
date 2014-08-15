@@ -25,6 +25,14 @@ namespace WebView.Controllers
         private IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
+        private IBarringService _barringService;
+        private IContactService _contactService;
+        private IPriceMutationService _priceMutationService;
+        private IContactGroupService _contactGroupService;
+        private IPurchaseOrderDetailService _purchaseOrderDetailService;
+        private IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+        private IMachineService _machineService;
 
         public MstCoreBuilderController()
         {
@@ -39,6 +47,14 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
+              _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
+            _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+            _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
+            _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
+            _machineService = new MachineService(new MachineRepository(),new MachineValidator());
         }
 
         public ActionResult Index()
@@ -136,7 +152,8 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _coreBuilderService.CreateObject(model,_uomService,_itemService,_itemTypeService,_warehouseItemService,_warehouseService);
+                model = _coreBuilderService.CreateObject(model,_uomService,_itemService,_itemTypeService,
+                    _warehouseItemService,_warehouseService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -157,7 +174,8 @@ namespace WebView.Controllers
             {
                 var data = _coreBuilderService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                model = _coreBuilderService.UpdateObject(data,_uomService,_itemService,_itemTypeService);
+                model = _coreBuilderService.UpdateObject(data,_uomService,_itemService,_itemTypeService,_warehouseItemService
+                    ,_warehouseService,_barringService,_contactService,_machineService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -177,7 +195,10 @@ namespace WebView.Controllers
             try
             {
                 var data = _coreBuilderService.GetObjectById(model.Id);
-                model = _coreBuilderService.SoftDeleteObject(data, _itemService, _rollerBuilderService, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService, _warehouseItemService, _stockMutationService, _itemTypeService);
+                model = _coreBuilderService.SoftDeleteObject(data, _itemService, _rollerBuilderService, 
+                    _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService, 
+                    _warehouseItemService, _stockMutationService, _itemTypeService,_barringService,_purchaseOrderDetailService
+                    ,_stockAdjustmentDetailService,_salesOrderDetailService,_priceMutationService);
             }
             catch (Exception ex)
             {

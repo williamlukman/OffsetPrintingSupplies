@@ -155,6 +155,7 @@
     <Compile Include="Controllers\MstBarringController.cs" />
     <Compile Include="Controllers\MstCashBankController.cs" />
     <Compile Include="Controllers\MstContactController.cs" />
+    <Compile Include="Controllers\MstContactGroupController.cs" />
     <Compile Include="Controllers\MstCoreBuilderController.cs" />
     <Compile Include="Controllers\MstItemController.cs" />
     <Compile Include="Controllers\MstItemTypeController.cs" />
@@ -163,9 +164,11 @@
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
+    <Compile Include="Controllers\PaymentVoucherController.cs" />
     <Compile Include="Controllers\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseReceivalController.cs" />
+    <Compile Include="Controllers\SalesInvoiceController.cs" />
     <Compile Include="Controllers\SalesOrderController.cs" />
     <Compile Include="Controllers\StockAdjustmentController.cs" />
     <Compile Include="Controllers\WarehouseMutationOrderController.cs" />
@@ -182,6 +185,7 @@
     <Content Include="Content\apps_js\MasterBarring.js" />
     <Content Include="Content\apps_js\MasterCashBank.js" />
     <Content Include="Content\apps_js\MasterContact.js" />
+    <Content Include="Content\apps_js\MasterContactGroup.js" />
     <Content Include="Content\apps_js\MasterCoreBuilder.js" />
     <Content Include="Content\apps_js\MasterItem.js" />
     <Content Include="Content\apps_js\MasterItemType.js" />
@@ -190,9 +194,11 @@
     <Content Include="Content\apps_js\MasterRollerType.js" />
     <Content Include="Content\apps_js\MasterUoM.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
+    <Content Include="Content\apps_js\PaymentVoucher.js" />
     <Content Include="Content\apps_js\PurchaseInvoice.js" />
     <Content Include="Content\apps_js\PurchaseOrder.js" />
     <Content Include="Content\apps_js\PurchaseReceival.js" />
+    <Content Include="Content\apps_js\SalesInvoice.js" />
     <Content Include="Content\apps_js\SalesOrder.js" />
     <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
@@ -1067,6 +1073,9 @@
     <Content Include="Views\PurchaseReceival\Index.cshtml" />
     <Content Include="Views\DeliveryOrder\Index.cshtml" />
     <Content Include="Views\PurchaseInvoice\Index.cshtml" />
+    <Content Include="Views\MstContactGroup\Index.cshtml" />
+    <Content Include="Views\SalesInvoice\Index.cshtml" />
+    <Content Include="Views\PaymentVoucher\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

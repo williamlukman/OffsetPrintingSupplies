@@ -22,6 +22,8 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IBarringService _barringService;
         private IContactService _contactService;
+        private IContactGroupService _contactGroupService;
+        private IPriceMutationService _priceMutationService;
        
         public MstBarringController()
         {
@@ -33,6 +35,8 @@ namespace WebView.Controllers
              _machineService = new MachineService(new MachineRepository(), new MachineValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
             _contactService = new ContactService(new ContactRepository(),new ContactValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+            _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
         }
         public ActionResult Index()
         {
@@ -267,7 +271,9 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _barringService.CreateObject(model,_barringService,_uomService,_itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,_warehouseService);
+                model = _barringService.CreateObject(model,_barringService,_uomService,
+                    _itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,
+                    _warehouseService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -288,7 +294,7 @@ namespace WebView.Controllers
             {
                 var data = _barringService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                model = _barringService.UpdateObject(data,_barringService,_uomService,_itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,_warehouseService);
+                model = _barringService.UpdateObject(data,_barringService,_uomService,_itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,_warehouseService,_contactGroupService,_priceMutationService);
             }
             catch (Exception ex)
             {
@@ -308,7 +314,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _barringService.GetObjectById(model.Id);
-                model = _barringService.SoftDeleteObject(data,_itemTypeService,_warehouseItemService);
+                model = _barringService.SoftDeleteObject(data,_itemTypeService,_warehouseItemService
+                    ,_priceMutationService);
             }
             catch (Exception ex)
             {

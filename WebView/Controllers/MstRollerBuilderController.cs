@@ -25,6 +25,14 @@ namespace WebView.Controllers
         private IStockMutationService _stockMutationService;
         private IMachineService _machineService;
         private IRollerTypeService _rollerTypeService;
+        private IBarringService _barringService;
+        private IContactService _contactService;
+        private IPriceMutationService _priceMutationService;
+        private IContactGroupService _contactGroupService;
+        private IPurchaseOrderDetailService _purchaseOrderDetailService;
+        private IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+
 
         public MstRollerBuilderController()
         {
@@ -39,6 +47,14 @@ namespace WebView.Controllers
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _machineService = new MachineService(new MachineRepository(), new MachineValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
+            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
+            _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+            _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
+            _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
+        
         }
 
         public ActionResult Index()
@@ -218,7 +234,9 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _rollerBuilderService.CreateObject(model,_machineService,_uomService,_itemService,_itemTypeService,_coreBuilderService,_rollerTypeService,_warehouseItemService,_warehouseService);
+                model = _rollerBuilderService.CreateObject(model,_machineService,
+                    _uomService,_itemService,_itemTypeService,_coreBuilderService,
+                    _rollerTypeService,_warehouseItemService,_warehouseService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -239,7 +257,9 @@ namespace WebView.Controllers
             {
                 var data = _rollerBuilderService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                model = _rollerBuilderService.UpdateObject(data,_machineService,_uomService,_itemService,_itemTypeService,_coreBuilderService,_rollerTypeService);
+                model = _rollerBuilderService.UpdateObject(data,_machineService,_uomService,_itemService,
+                    _itemTypeService,_coreBuilderService,_rollerTypeService,_warehouseItemService,_warehouseService,
+                    _barringService,_contactService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -259,7 +279,10 @@ namespace WebView.Controllers
             try
             {
                 var data = _rollerBuilderService.GetObjectById(model.Id);
-                model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_recoveryOrderDetailService,_coreBuilderService,_warehouseItemService,_stockMutationService,_itemTypeService);
+                model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_barringService,
+                    _priceMutationService,_recoveryOrderDetailService,_coreBuilderService,
+                    _warehouseItemService,_stockMutationService,_itemTypeService,_purchaseOrderDetailService,
+                    _stockAdjustmentDetailService,_salesOrderDetailService);
             }
             catch (Exception ex)
             {

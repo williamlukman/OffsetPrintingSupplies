@@ -19,6 +19,7 @@ namespace WebView.Controllers
         private ICoreIdentificationService _coreIdentificationService;
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
+        private IContactGroupService _contactGroupService;
 
         public MstContactController()
         {
@@ -27,6 +28,7 @@ namespace WebView.Controllers
             _barringService = new BarringService(new BarringRepository(),new BarringValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
         }
 
         public ActionResult Index()
@@ -67,20 +69,22 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Name,
-                            item.Address,
-                            item.ContactNo,
-                            item.PIC,
-                            item.PICContactNo,
-                            item.Email,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.Name,
+                            model.Address,
+                            model.ContactNo,
+                            model.PIC,
+                            model.PICContactNo,
+                            model.Email,
+                            model.ContactGroupId,
+                            _contactGroupService.GetObjectById(model.ContactGroupId).Name,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -93,7 +97,6 @@ namespace WebView.Controllers
              try
              {
                  model = _contactService.GetObjectById(Id);
-
              }
              catch (Exception ex)
              {
@@ -103,7 +106,15 @@ namespace WebView.Controllers
 
              return Json(new
              {
-                 model
+                 model.Id,
+                 model.Name,
+                 model.Address,
+                 model.ContactNo,
+                 model.PIC,
+                 model.PICContactNo,
+                 model.Email,
+                 model.ContactGroupId,
+                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId).Name
              }, JsonRequestBehavior.AllowGet);
          }
 
@@ -112,7 +123,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _contactService.CreateObject(model);
+                model = _contactService.CreateObject(model,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -138,7 +149,8 @@ namespace WebView.Controllers
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
-                model = _contactService.UpdateObject(data);
+                data.ContactGroupId = model.ContactGroupId;
+                model = _contactService.UpdateObject(data,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -158,8 +170,10 @@ namespace WebView.Controllers
             try
             {
                 var data = _contactService.GetObjectById(model.Id);
-                model = _contactService.SoftDeleteObject(data, _coreIdentificationService, _barringService, _purchaseOrderService, _salesOrderService);
+                model = _contactService.SoftDeleteObject(data, _coreIdentificationService, 
+                    _barringService, _purchaseOrderService, _salesOrderService);
             }
+
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);

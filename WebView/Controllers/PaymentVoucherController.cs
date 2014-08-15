@@ -11,9 +11,9 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class PurchaseInvoiceController : Controller
+    public class PaymentVoucherController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PurchaseInvoiceController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PaymentVoucherController");
         private IPurchaseOrderService _purchaseOrderService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IPurchaseInvoiceService _purchaseInvoiceService;
@@ -23,9 +23,15 @@ namespace WebView.Controllers
         private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IPayableService _payableService;
         private IItemService _itemService;
+        private IPaymentVoucherService _paymentVoucherService;
+        private ICashBankService _cashBankService;
+        private ICashMutationService _cashMutationService;
+        private IContactService _contactService;
 
-        public PurchaseInvoiceController()
+        public PaymentVoucherController()
         {
+            _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
+            _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
@@ -35,6 +41,8 @@ namespace WebView.Controllers
             _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
         }
 
 
@@ -50,9 +58,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _purchaseInvoiceService.GetAll().Where(d => d.IsDeleted == false);
+            var query =  _paymentVoucherService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<PurchaseInvoice>;
+            var list = query as IEnumerable<PaymentVoucher>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -83,14 +91,17 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.PurchaseReceivalId,
-                            _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
-                            model.Description,
-                            model.Discount,
-                            model.IsTaxable,
-                            model.InvoiceDate,
+                            model.ContactId,
+                            _contactService.GetObjectById(model.ContactId).Name,
+                            model.CashBankId,
+                            _cashBankService.GetObjectById(model.CashBankId).Name,
+                            model.PaymentDate,
+                            model.IsGBCH,
                             model.DueDate,
-                            model.AmountPayable,
+                            model.IsBank,
+                            model.TotalAmount,
+                            model.IsReconciled,
+                            model.ReconciliationDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -100,16 +111,16 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
+        public dynamic GetListPayable(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
 
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(id).Where(d => d.IsDeleted == false);
+            var query = _payableService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<PurchaseInvoiceDetail>;
+            var list = query as IEnumerable<Payable>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -139,12 +150,64 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Code,
-                            model.PurchaseReceivalDetailId,
-                            _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).Code,
-                            _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId,
-                            _itemService.GetObjectById( _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId).Name,
-                            model.Quantity,
+                            model.ContactId,
+                            _contactService.GetObjectById(model.ContactId).Name,
+                            model.PayableSource,
+                            model.PayableSourceId,
+                            model.DueDate,
                             model.Amount,
+                            model.RemainingAmount,
+                            model.PendingClearanceAmount,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query =  _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(id).Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<PaymentVoucherDetail>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Code,
+                            model.PayableId,
+                            _payableService.GetObjectById(model.PayableId).Code,
+                            model.Amount,
+                            model.Description,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -153,10 +216,10 @@ namespace WebView.Controllers
       
         public dynamic GetInfo(int Id)
         {
-            PurchaseInvoice model = new PurchaseInvoice();
+            PaymentVoucher model = new PaymentVoucher();
             try
             {
-                model = _purchaseInvoiceService.GetObjectById(Id);
+                model = _paymentVoucherService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -168,24 +231,25 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                model.PurchaseReceivalId,
-                PurchaseReceival = _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
-                model.Discount,
-                model.Description,
-                model.IsTaxable,
-                model.InvoiceDate,
+                model.ContactId,
+                Contact = _contactService.GetObjectById(model.ContactId).Name,
+                model.CashBankId,
+                CashBank = _cashBankService.GetObjectById(model.CashBankId).Name,
+                model.PaymentDate,
+                model.IsGBCH,
                 model.DueDate,
-                model.AmountPayable,
+                model.IsBank,
+                model.TotalAmount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         public dynamic GetInfoDetail(int Id)
         {
-            PurchaseInvoiceDetail model = new PurchaseInvoiceDetail();
+            PaymentVoucherDetail model = new PaymentVoucherDetail();
             try
             {
-                model = _purchaseInvoiceDetailService.GetObjectById(Id);
+                model = _paymentVoucherDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -197,23 +261,22 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                model.PurchaseReceivalDetailId,
-                PurchaseReceival = _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).Code,
-                ItemId = _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId,
-                Item = _itemService.GetObjectById(_purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId).Name,
-                model.Quantity,
+                model.PayableId,
+                Payable =_payableService.GetObjectById(model.PayableId).Code,
                 model.Amount,
+                model.Description,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public dynamic Insert(PurchaseInvoice model)
+        public dynamic Insert(PaymentVoucher model)
         {
             try
             {
              
-                model = _purchaseInvoiceService.CreateObject(model,_purchaseReceivalService);
+                model = _paymentVoucherService.CreateObject(model,_paymentVoucherDetailService,_payableService
+                    ,_contactService,_cashBankService);
             }
             catch (Exception ex)
             {
@@ -228,13 +291,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic InsertDetail(PurchaseInvoiceDetail model)
+        public dynamic InsertDetail(PaymentVoucherDetail model)
         {
             decimal amount = 0;
             try
             {
-                model = _purchaseInvoiceDetailService.CreateObject(model,_purchaseInvoiceService,_purchaseOrderDetailService,_purchaseReceivalDetailService);
-                amount = _purchaseInvoiceService.GetObjectById(model.PurchaseInvoiceId).AmountPayable;
+                model = _paymentVoucherDetailService.CreateObject(model,_paymentVoucherService,_cashBankService,_payableService
+                   );
+                amount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -251,18 +315,20 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(PurchaseInvoice model)
+        public dynamic Update(PaymentVoucher model)
         {
             try
             {
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                data.PurchaseReceivalId = model.PurchaseReceivalId;
-                data.Description = model.Description;
-                data.Discount = model.Discount;
-                data.IsTaxable = model.IsTaxable;
-                data.InvoiceDate = model.InvoiceDate;
+                var data = _paymentVoucherService.GetObjectById(model.Id);
+                data.ContactId = model.ContactId;
+                data.CashBankId = model.CashBankId;
+                data.PaymentDate = model.PaymentDate;
+                data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
-                model = _purchaseInvoiceService.UpdateObject(data,_purchaseReceivalService,_purchaseInvoiceDetailService);
+                data.IsBank = model.IsBank;
+                data.TotalAmount = model.TotalAmount;
+                model = _paymentVoucherService.UpdateObject(data,_paymentVoucherDetailService,_payableService,
+                    _contactService,_cashBankService);
             }
             catch (Exception ex)
             {
@@ -273,17 +339,17 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                model.AmountPayable
+                model.TotalAmount
             });
         }
 
         [HttpPost]
-        public dynamic Delete(PurchaseInvoice model)
+        public dynamic Delete(PaymentVoucher model)
         {
             try
             {
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.SoftDeleteObject(data,_purchaseInvoiceDetailService);
+                var data = _paymentVoucherService.GetObjectById(model.Id);
+                model = _paymentVoucherService.SoftDeleteObject(data,_paymentVoucherDetailService);
             }
             catch (Exception ex)
             {
@@ -298,14 +364,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic DeleteDetail(PurchaseInvoiceDetail model)
+        public dynamic DeleteDetail(PaymentVoucherDetail model)
         {
             decimal amount = 0;
             try
             {
-                var data = _purchaseInvoiceDetailService.GetObjectById(model.Id);
-                model = _purchaseInvoiceDetailService.SoftDeleteObject(data,_purchaseInvoiceService);
-                amount = _purchaseInvoiceService.GetObjectById(model.PurchaseInvoiceId).AmountPayable;
+                var data = _paymentVoucherDetailService.GetObjectById(model.Id);
+                model = _paymentVoucherDetailService.SoftDeleteObject(data);
+                amount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -321,16 +387,17 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UpdateDetail(PurchaseInvoiceDetail model)
+        public dynamic UpdateDetail(PaymentVoucherDetail model)
         {
             decimal amount = 0;
             try
             {
-                var data = _purchaseInvoiceDetailService.GetObjectById(model.Id);
-                data.PurchaseReceivalDetailId = model.PurchaseReceivalDetailId;
-                data.Quantity = model.Quantity;
-                model = _purchaseInvoiceDetailService.UpdateObject(data,_purchaseInvoiceService,_purchaseOrderDetailService,_purchaseReceivalDetailService);
-                amount = _purchaseInvoiceService.GetObjectById(model.PurchaseInvoiceId).AmountPayable;
+                var data = _paymentVoucherDetailService.GetObjectById(model.Id);
+                data.PayableId = model.PayableId;
+                data.Amount = model.Amount;
+                data.Description = model.Description;
+                model = _paymentVoucherDetailService.UpdateObject(data,_paymentVoucherService,_cashBankService,_payableService);
+                amount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -347,12 +414,13 @@ namespace WebView.Controllers
 
 
         [HttpPost]
-        public dynamic Confirm(PurchaseInvoice model)
+        public dynamic Confirm(PaymentVoucher model)
         {
             try
             {
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseReceivalService,_purchaseReceivalDetailService,_payableService);
+                var data = _paymentVoucherService.GetObjectById(model.Id);
+                model = _paymentVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,
+                    _paymentVoucherDetailService,_cashBankService,_payableService,_cashMutationService);
             }
             catch (Exception ex)
             {
@@ -367,13 +435,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UnConfirm(PurchaseInvoice model)
+        public dynamic UnConfirm(PaymentVoucher model)
         {
             try
             {
 
-                var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.UnconfirmObject(data,_purchaseInvoiceDetailService,_purchaseReceivalService,_purchaseReceivalDetailService,_paymentVoucherDetailService,_payableService);
+                var data = _paymentVoucherService.GetObjectById(model.Id);
+                model = _paymentVoucherService.UnconfirmObject(data,_paymentVoucherDetailService,_cashBankService,
+                    _payableService,_cashMutationService);
             }
             catch (Exception ex)
             {
@@ -387,7 +456,49 @@ namespace WebView.Controllers
             });
         }
 
+        [HttpPost]
+        public dynamic Reconcile(PaymentVoucher model)
+        {
+            try
+            {
+                var data = _paymentVoucherService.GetObjectById(model.Id);
+                model = _paymentVoucherService.ReconcileObject(data,model.ReconciliationDate.Value,_paymentVoucherDetailService,
+                    _cashMutationService,_cashBankService,_payableService);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Reconcile Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
 
+            return Json(new
+            {
+                model.Errors
+            });
+        }
+
+        [HttpPost]
+        public dynamic UnReconcile(PaymentVoucher model)
+        {
+            try
+            {
+                var data = _paymentVoucherService.GetObjectById(model.Id);
+                model = _paymentVoucherService.UnreconcileObject(data,_paymentVoucherDetailService,_cashMutationService,
+                    _cashBankService,_payableService
+                    );
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("UnReconcile Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Errors
+            });
+        }
     }
 }
+
 

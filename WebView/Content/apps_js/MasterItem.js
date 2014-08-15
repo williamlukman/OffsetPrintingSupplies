@@ -202,7 +202,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(),
-                SKU: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val()
+                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(),
             }),
             async: false,
             cache: false,

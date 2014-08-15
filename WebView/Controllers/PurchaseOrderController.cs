@@ -23,6 +23,7 @@ namespace WebView.Controllers
         private IContactService _contactService;
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         private IPurchaseReceivalService _purchaseReceivalService;
+        private IContactGroupService _contactGroupService;
 
         public PurchaseOrderController()
         {
@@ -35,7 +36,9 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
             _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
+     
         }
+
 
 
         public ActionResult Index()
