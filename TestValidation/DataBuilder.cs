@@ -65,8 +65,10 @@ namespace TestValidation
 
         public IPriceMutationService _priceMutationService;
         public IContactGroupService _contactGroupService;
+        public IGroupItemPriceService _groupItemPriceService;
 
-        public ContactGroup baseGroup;
+        public ContactGroup baseGroup, contactGroup1;
+        public GroupItemPrice groupItemPrice1;
         public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
@@ -160,6 +162,7 @@ namespace TestValidation
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+            _groupItemPriceService = new GroupItemPriceService(new GroupItemPriceRepository(), new GroupItemPriceValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");

@@ -15,10 +15,10 @@ namespace Data.Mapping
             HasMany(rsi => rsi.RetailSalesinvoiceDetails)
                 .WithRequired(rsid => rsid.RetailSalesInvoice)
                 .HasForeignKey(rsid => rsid.RetailSalesInvoiceId);
-            HasRequired(rsi => rsi.CashBank)
+            /*HasRequired(rsi => rsi.CashBank)
                 .WithMany()
                 .HasForeignKey(rsi => rsi.CashBankId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(false);*/
             HasRequired(rsi => rsi.Warehouse)
                 .WithMany()
                 .HasForeignKey(rsi => rsi.WarehouseId)

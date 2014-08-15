@@ -39,7 +39,7 @@ namespace Validation.Validation
 
         public RetailPurchaseInvoice VIsValidDiscount(RetailPurchaseInvoice retailPurchaseInvoice)
         {
-            if (retailPurchaseInvoice.Discount >= 0 && retailPurchaseInvoice.Discount <= 100)
+            if (retailPurchaseInvoice.Discount < 0 || retailPurchaseInvoice.Discount > 100)
             {
                 retailPurchaseInvoice.Errors.Add("Discount", "Harus diantara 0 sampai 100");
             }
@@ -48,7 +48,7 @@ namespace Validation.Validation
 
         public RetailPurchaseInvoice VIsValidTax(RetailPurchaseInvoice retailPurchaseInvoice)
         {
-            if (retailPurchaseInvoice.Tax >= 0 && retailPurchaseInvoice.Tax <= 100)
+            if (retailPurchaseInvoice.Tax < 0 || retailPurchaseInvoice.Tax > 100)
             {
                 retailPurchaseInvoice.Errors.Add("Tax", "Harus diantara 0 sampai 100");
             }
@@ -247,9 +247,10 @@ namespace Validation.Validation
             return retailPurchaseInvoice;
         }
 
-        public RetailPurchaseInvoice VIsCashBankTypeBank(RetailPurchaseInvoice retailPurchaseInvoice)
+        public RetailPurchaseInvoice VIsCashBankTypeBank(RetailPurchaseInvoice retailPurchaseInvoice, ICashBankService _cashBankService)
         {
-            if (!retailPurchaseInvoice.IsBank)
+            CashBank cashBank = _cashBankService.GetObjectById(retailPurchaseInvoice.CashBankId);
+            if (!cashBank.IsBank)
             {
                 retailPurchaseInvoice.Errors.Add("Generic", "CashBank bukan tipe Bank");
                 return retailPurchaseInvoice;
@@ -310,7 +311,7 @@ namespace Validation.Validation
                 if (!isValid(retailPurchaseInvoice)) { return retailPurchaseInvoice; }
                 VHasCashBank(retailPurchaseInvoice, _cashBankService);
                 if (!isValid(retailPurchaseInvoice)) { return retailPurchaseInvoice; }
-                VIsCashBankTypeBank(retailPurchaseInvoice);
+                VIsCashBankTypeBank(retailPurchaseInvoice, _cashBankService);
             }
             if (!isValid(retailPurchaseInvoice)) { return retailPurchaseInvoice; }
             VIsValidAmountPaid(retailPurchaseInvoice);

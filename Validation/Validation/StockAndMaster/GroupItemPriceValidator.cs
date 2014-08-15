@@ -22,9 +22,9 @@ namespace Validation.Validation
         public GroupItemPrice VHasDifferentPrice(GroupItemPrice groupItemPrice, IPriceMutationService _priceMutationService)
         {
             IList<PriceMutation> priceMutations = _priceMutationService.GetObjectsByIsActive(true, groupItemPrice.ItemId, groupItemPrice.ContactGroupId, 0);
-            foreach (var x in priceMutations)
+            foreach (var priceMutation in priceMutations)
             {
-                if (groupItemPrice.Price == x.Amount)
+                if (groupItemPrice.Price == priceMutation.Amount)
                 {
                     groupItemPrice.Errors.Add("Price", "Tidak boleh sama dengan current active price");
                     return groupItemPrice;
@@ -94,6 +94,7 @@ namespace Validation.Validation
 
         public GroupItemPrice VUpdateObject(GroupItemPrice groupItemPrice, IGroupItemPriceService _groupItemPriceService, IPriceMutationService _priceMutationService)
         {
+            // TODO Bugfix: oldgroupItemPrice seems to have the same content with groupItemPrice causing new itemid/groupid looks the same with old id
             GroupItemPrice oldgroupItemPrice = _groupItemPriceService.GetObjectById(groupItemPrice.Id);
             VSameGroupId(groupItemPrice, oldgroupItemPrice);
             if (!isValid(groupItemPrice)) { return groupItemPrice; }

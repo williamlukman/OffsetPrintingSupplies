@@ -39,7 +39,7 @@ namespace Validation.Validation
 
         public RetailSalesInvoice VIsValidDiscount(RetailSalesInvoice retailSalesInvoice)
         {
-            if (retailSalesInvoice.Discount >= 0 && retailSalesInvoice.Discount <= 100)
+            if (retailSalesInvoice.Discount < 0 || retailSalesInvoice.Discount > 100)
             {
                 retailSalesInvoice.Errors.Add("Discount", "Harus diantara 0 sampai 100");
             }
@@ -48,7 +48,7 @@ namespace Validation.Validation
 
         public RetailSalesInvoice VIsValidTax(RetailSalesInvoice retailSalesInvoice)
         {
-            if (retailSalesInvoice.Tax >= 0 && retailSalesInvoice.Tax <= 100)
+            if (retailSalesInvoice.Tax < 0 || retailSalesInvoice.Tax > 100)
             {
                 retailSalesInvoice.Errors.Add("Tax", "Harus diantara 0 sampai 100");
             }
@@ -104,7 +104,7 @@ namespace Validation.Validation
             IList<RetailSalesInvoiceDetail> retailSalesInvoiceDetails = _retailSalesInvoiceDetailService.GetObjectsByRetailSalesInvoiceId(retailSalesInvoice.Id);
             if (!retailSalesInvoiceDetails.Any())
             {
-                retailSalesInvoice.Errors.Add("Generic", "Tidak ada");
+                retailSalesInvoice.Errors.Add("Generic", "RetailSalesInvoiceDetils Tidak ada");
             }
             return retailSalesInvoice;
         }
@@ -247,9 +247,10 @@ namespace Validation.Validation
             return retailSalesInvoice;
         }
 
-        public RetailSalesInvoice VIsCashBankTypeBank(RetailSalesInvoice retailSalesInvoice)
+        public RetailSalesInvoice VIsCashBankTypeBank(RetailSalesInvoice retailSalesInvoice, ICashBankService _cashBankService)
         {
-            if (!retailSalesInvoice.IsBank)
+            CashBank cashBank = _cashBankService.GetObjectById(retailSalesInvoice.CashBankId);
+            if (!cashBank.IsBank)
             {
                 retailSalesInvoice.Errors.Add("Generic", "CashBank bukan tipe Bank");
                 return retailSalesInvoice;
@@ -310,7 +311,7 @@ namespace Validation.Validation
                 if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
                 VHasCashBank(retailSalesInvoice, _cashBankService);
                 if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
-                VIsCashBankTypeBank(retailSalesInvoice);
+                VIsCashBankTypeBank(retailSalesInvoice, _cashBankService);
             }
             if (!isValid(retailSalesInvoice)) { return retailSalesInvoice; }
             VIsValidAmountPaid(retailSalesInvoice);

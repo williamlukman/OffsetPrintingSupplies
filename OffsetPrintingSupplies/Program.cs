@@ -22,13 +22,15 @@ namespace OffsetPrintingSupplies
             {
                 db.DeleteAllTables();
 
-                DataBuilder d = new DataBuilder();
-                PurchaseBuilder p = new PurchaseBuilder();
-                SalesBuilder s = new SalesBuilder();
+                //DataBuilder d = new DataBuilder();
+                //PurchaseBuilder p = new PurchaseBuilder();
+                //SalesBuilder s = new SalesBuilder();
+                RetailSalesBuilder rs = new RetailSalesBuilder();
 
-                DataFunction(d);
                 //SalesFunction(s);
                 //PurchaseFunction(p);
+                RetailSalesFunction(rs);
+                //DataFunction(d);
             }
         }
 
@@ -40,6 +42,11 @@ namespace OffsetPrintingSupplies
         public static void SalesFunction(SalesBuilder s)
         {
             s.PopulateData();
+        }
+
+        public static void RetailSalesFunction(RetailSalesBuilder rs)
+        {
+            rs.PopulateData();
         }
 
         public static void DataFunction(DataBuilder d)
@@ -162,8 +169,80 @@ namespace OffsetPrintingSupplies
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
 
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService,
-                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
-                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService);
+                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._barringService, d._purchaseOrderDetailService,
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
+                
+                // Begin Test
+                var db = new OffsetPrintingSuppliesEntities();
+                using (db)
+                {
+                    db.DeleteAllTables();
+                    d = new DataBuilder();
+
+                    d.Pcs = new UoM()
+                    {
+                        Name = "Pcs"
+                    };
+                    d._uomService.CreateObject(d.Pcs);
+
+                    d.Boxes = new UoM()
+                    {
+                        Name = "Boxes"
+                    };
+                    d._uomService.CreateObject(d.Boxes);
+
+                    d.Tubs = new UoM()
+                    {
+                        Name = "Tubs"
+                    };
+                    d._uomService.CreateObject(d.Tubs);
+
+                    d.item = new Item()
+                    {
+                        ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
+                        Sku = "ABC1001",
+                        Name = "ABC",
+                        Category = "ABC123",
+                        UoMId = d.Pcs.Id
+                    };
+                    d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+
+                    d.groupItemPrice1 = new GroupItemPrice()
+                    {
+                        Price = 1000,
+                        ItemId = d.item.Id,
+                        ContactGroupId = d.baseGroup.Id
+                    };
+                    d.groupItemPrice1 = d._groupItemPriceService.CreateObject(d.groupItemPrice1, d._contactGroupService, d._itemService, d._priceMutationService);
+                    
+                    GroupItemPrice groupitemprice2 = new GroupItemPrice()
+                    {
+                        Price = 2000,
+                        ItemId = d.item.Id,
+                        ContactGroupId = d.baseGroup.Id
+                    };
+                    groupitemprice2 = d._groupItemPriceService.CreateObject(groupitemprice2, d._contactGroupService, d._itemService, d._priceMutationService);
+
+                    Item item = new Item()
+                    {
+                        ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
+                        Sku = "ABC1002",
+                        Name = "CBA",
+                        Category = "ABC123",
+                        UoMId = d.Pcs.Id
+                    };
+                    item = d._itemService.CreateObject(item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+
+                    d.groupItemPrice1.ItemId = item.Id;
+                    d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d._itemService, d._priceMutationService);
+
+
+
+
+                    Console.WriteLine("{0}", d.groupItemPrice1.Errors.FirstOrDefault());
+                }
+
+            // End of Test
             Console.WriteLine("Press any key to stop...");
             Console.ReadKey();
         }

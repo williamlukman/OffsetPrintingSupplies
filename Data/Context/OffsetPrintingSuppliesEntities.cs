@@ -33,12 +33,12 @@ namespace Data.Context
                                           "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder" };
             IList<String> salesOperationNames = new List<String>()
                                         { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
-                                          "RetailSalesInvoice", "RetailSalesInvoiceDetail", "SalesInvoiceDetail", "SalesInvoice",
+                                          "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
             IList<String> stockAndMasterNames = new List<String>()
-                                        {  "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
+                                        { "GroupItemPrice", "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
-                                          "Warehouse", "Barring", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
+                                          "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
 
             financeNames.ToList().ForEach(x => tableNames.Add(x));

@@ -47,6 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecGroupItemPrice.cs" />
+    <Compile Include="RetailSalesBuilder.cs" />
+    <Compile Include="SpecRetailSalesInvoice.cs" />
+    <Compile Include="SpecContactGroup.cs" />
     <Compile Include="SpecSalesInvoice.cs" />
     <Compile Include="SalesBuilder.cs" />
     <Compile Include="PurchaseBuilder.cs" />

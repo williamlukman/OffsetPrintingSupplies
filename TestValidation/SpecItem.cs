@@ -25,7 +25,7 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
 
-                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+                //d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
                 d.Pcs = new UoM()
                 {
@@ -102,6 +102,25 @@ namespace TestValidation
                 sameskuitem.Errors.Count().should_not_be(0);
             };
 
+            context["when creating item"] = () =>
+            {
+                before = () =>
+                {
+                    
+                };
+
+                it["should create PriceMutation"] = () =>
+                {
+                    d._priceMutationService.GetObjectById(d.item.PriceMutationId).should_not_be_null();
+                };
+
+                it["should have 1 active PriceMutation"] = () =>
+                {
+                    d._priceMutationService.GetObjectsByIsActive(true, d.item.Id, d.baseGroup.Id, 0).Count().should_be(1);
+                };
+
+            };
+
             it["adjust_quantity_valid"] = () =>
             {
                 d.item = d._itemService.AdjustQuantity(d.item, 10);
@@ -119,6 +138,21 @@ namespace TestValidation
                 d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService, 
                                                          d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
                 d.item.Errors.Count().should_be(0);
+            };
+
+            context["when deleting item"] = () =>
+            {
+                before = () =>
+                {
+                    d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService,
+                                                         d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
+                };
+
+                it["should not have active PriceMutation"] = () =>
+                {
+                    d._priceMutationService.GetObjectsByIsActive(true, d.item.Id, d.baseGroup.Id, 0).Count().should_be(0);
+                };
+
             };
 
             it["delete_item_with_compound_inrollerbuilder"] = () =>
