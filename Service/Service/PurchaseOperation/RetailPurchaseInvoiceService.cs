@@ -67,17 +67,14 @@ namespace Service.Service
                 retailPurchaseInvoice.CoGS = 0;
                 foreach (var retailPurchaseInvoiceDetail in retailPurchaseInvoiceDetails)
                 {
+                    retailPurchaseInvoiceDetail.Errors = new Dictionary<string, string>();
+                    _retailPurchaseInvoiceDetailService.ConfirmObject(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService, _warehouseItemService,
+                                                                   _warehouseService, _itemService, _barringService, _stockMutationService);
                     retailPurchaseInvoice.Total += retailPurchaseInvoiceDetail.Amount;
                     retailPurchaseInvoice.CoGS += retailPurchaseInvoiceDetail.CoGS;
                 }
                 retailPurchaseInvoice.Total = retailPurchaseInvoice.Total - (retailPurchaseInvoice.Total * retailPurchaseInvoice.Discount/100) + (retailPurchaseInvoice.Total * retailPurchaseInvoice.Tax/100);
                 Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate);
-                foreach (var retailPurchaseInvoiceDetail in retailPurchaseInvoiceDetails)
-                {
-                    retailPurchaseInvoiceDetail.Errors = new Dictionary<string,string>();
-                    _retailPurchaseInvoiceDetailService.ConfirmObject(retailPurchaseInvoiceDetail,_retailPurchaseInvoiceService,_warehouseItemService,
-                                                                   _warehouseService, _itemService, _barringService, _stockMutationService);
-                }
                 retailPurchaseInvoice = _repository.ConfirmObject(retailPurchaseInvoice);
             }
             return retailPurchaseInvoice;
@@ -108,6 +105,8 @@ namespace Service.Service
         {
             if (_validator.ValidPaidObject(retailPurchaseInvoice, _cashBankService, _paymentVoucherService))
             {
+                CashBank cashBank = _cashBankService.GetObjectById((int)retailPurchaseInvoice.CashBankId);
+                retailPurchaseInvoice.IsBank = cashBank.IsBank;
                 retailPurchaseInvoice.AmountPaid = AmountPaid;
                 if (!retailPurchaseInvoice.IsGBCH)
                 {
@@ -125,7 +124,7 @@ namespace Service.Service
                 PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, (decimal)retailPurchaseInvoice.AmountPaid, 
                                                                             "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
                 retailPurchaseInvoice = _repository.PaidObject(retailPurchaseInvoice);
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)paymentVoucher.ConfirmationDate, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)retailPurchaseInvoice.ConfirmationDate, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
             }
             return retailPurchaseInvoice;
         }

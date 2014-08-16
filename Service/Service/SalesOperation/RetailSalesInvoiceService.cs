@@ -66,17 +66,14 @@ namespace Service.Service
                 retailSalesInvoice.CoGS = 0;
                 foreach (var retailSalesInvoiceDetail in retailSalesInvoiceDetails)
                 {
+                    retailSalesInvoiceDetail.Errors = new Dictionary<string, string>();
+                    _retailSalesInvoiceDetailService.ConfirmObject(retailSalesInvoiceDetail, _retailSalesInvoiceService, _warehouseItemService,
+                                                                   _warehouseService, _itemService, _barringService, _stockMutationService);
                     retailSalesInvoice.Total += retailSalesInvoiceDetail.Amount;
                     retailSalesInvoice.CoGS += retailSalesInvoiceDetail.CoGS;
                 }
                 retailSalesInvoice.Total = retailSalesInvoice.Total - (retailSalesInvoice.Total * retailSalesInvoice.Discount/100) + (retailSalesInvoice.Total * retailSalesInvoice.Tax/100);
                 Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate);
-                foreach (var retailSalesInvoiceDetail in retailSalesInvoiceDetails)
-                {
-                    retailSalesInvoiceDetail.Errors = new Dictionary<string,string>();
-                    _retailSalesInvoiceDetailService.ConfirmObject(retailSalesInvoiceDetail,_retailSalesInvoiceService,_warehouseItemService,
-                                                                   _warehouseService, _itemService, _barringService, _stockMutationService);
-                }
                 retailSalesInvoice = _repository.ConfirmObject(retailSalesInvoice);
             }
             return retailSalesInvoice;
@@ -108,6 +105,8 @@ namespace Service.Service
         {
             if (_validator.ValidPaidObject(retailSalesInvoice, _cashBankService, _receiptVoucherService))
             {
+                CashBank cashBank = _cashBankService.GetObjectById((int)retailSalesInvoice.CashBankId);
+                retailSalesInvoice.IsBank = cashBank.IsBank;
                 retailSalesInvoice.AmountPaid = AmountPaid;
                 if (!retailSalesInvoice.IsGBCH)
                 {

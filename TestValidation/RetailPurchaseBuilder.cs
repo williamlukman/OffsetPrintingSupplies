@@ -13,7 +13,7 @@ using Validation.Validation;
 
 namespace TestValidation
 {
-    public class PurchaseBuilder
+    public class RetailPurchaseBuilder
     {
         public IBarringService _barringService;
         public IBarringOrderService _barringOrderService;
@@ -65,8 +65,10 @@ namespace TestValidation
 
         public IPriceMutationService _priceMutationService;
         public IContactGroupService _contactGroupService;
+        public IRetailPurchaseInvoiceService _retailPurchaseInvoiceService;
+        public IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService;
 
-        public ContactGroup baseGroup;
+        public ContactGroup baseGroup, group2;
         public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
@@ -74,22 +76,19 @@ namespace TestValidation
         public UoM Pcs, Boxes, Tubs;
 
         public Warehouse localWarehouse;
-        public Contact contact;
+        public Contact baseContact, contact, contact2, contact3;
         public Item blanket1, blanket2, blanket3;
         public StockAdjustment stockAdjustment;
         public StockAdjustmentDetail stockAD1, stockAD2;
-        public CashBank cashBank, pettyCash;
-        public CashBankAdjustment cashBankAdjustment;
-        public PurchaseOrder po1, po2;
-        public PurchaseOrderDetail po1a, po1b, po1c, po2a, po2b;
-        public PurchaseReceival pr1, pr2, pr3;
-        public PurchaseReceivalDetail pr1a, pr1b, pr2a, pr2b, pr1a2, pr1c;
-        public PurchaseInvoice pi1, pi2, pi3;
-        public PurchaseInvoiceDetail pi1a, pi1b, pi2a, pi2b, pi1a2, pi1c;
+        public CashBank cashBank, cashBank2;
+        public CashBankAdjustment cashBankAdjustment, cashBankAdjustment2;
+        
         public PaymentVoucher pv;
         public PaymentVoucherDetail pvd1, pvd2, pvd3;
+        public RetailPurchaseInvoice rpi1,rpi2,rpi3;
+        public RetailPurchaseInvoiceDetail rpid1,rpid2,rpid3;
 
-        public PurchaseBuilder()
+        public RetailPurchaseBuilder()
         {
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
             _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
@@ -141,6 +140,8 @@ namespace TestValidation
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+            _retailPurchaseInvoiceService = new RetailPurchaseInvoiceService(new RetailPurchaseInvoiceRepository(), new RetailPurchaseInvoiceValidator());
+            _retailPurchaseInvoiceDetailService = new RetailPurchaseInvoiceDetailService(new RetailPurchaseInvoiceDetailRepository(), new RetailPurchaseInvoiceDetailValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
@@ -169,14 +170,14 @@ namespace TestValidation
             typeInkFormY = _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
 
             baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+            group2 = _contactGroupService.CreateObject("Pedagang", "Group Pedagang", false);
+            baseContact = _contactService.CreateObject("BaseName", "BaseAddr", "BaseNo", "BasePIC", "BasePICNo", "BaseEmail", _contactGroupService);
         }
 
         public void PopulateData()
         {
             PopulateMasterData();
-            PopulateOrderAndReceivalData();
-            PopulateInvoiceData();
-            PopulatePaymentVouher();
+            PopulateRetailPurchaseData();
         }
 
         public void PopulateMasterData()
@@ -213,7 +214,9 @@ namespace TestValidation
                 Name = "Blanket1",
                 Category = "Blanket",
                 Sku = "BLK1",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 10000,
+                AvgPrice = 10000
             };
 
             blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -226,7 +229,9 @@ namespace TestValidation
                 Name = "Blanket2",
                 Category = "Blanket",
                 Sku = "BLK2",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 20000,
+                AvgPrice = 20000
             };
 
             blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -239,7 +244,9 @@ namespace TestValidation
                 Name = "Blanket3",
                 Category = "Blanket",
                 Sku = "BLK3",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 30000,
+                AvgPrice = 30000
             };
 
             blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -255,318 +262,141 @@ namespace TestValidation
                 PICContactNo = "021 3863777",
                 Email = "random@ri.gov.au"
             };
-            contact = _contactService.CreateObject(contact, _contactGroupService);
+            _contactService.CreateObject(contact, _contactGroupService);
+
+            contact2 = new Contact()
+            {
+                Name = "Wakil President of Indonesia",
+                Address = "Istana Negara Jl. Veteran No. 16 Jakarta Pusat",
+                ContactNo = "021 3863777",
+                PIC = "Mr. Wakil President",
+                PICContactNo = "021 3863777",
+                Email = "random@ri.gov.au"
+            };
+            _contactService.CreateObject(contact2, _contactGroupService);
+
+            contact3 = new Contact()
+            {
+                Name = "Roma Irama",
+                Address = "Istana Negara Jl. Veteran No.20 Jakarta Pusat",
+                ContactNo = "021 5551234",
+                PIC = "Mr. King",
+                PICContactNo = "021 5551234",
+                Email = "raja@dangdut.com",
+                ContactGroupId = group2.Id,
+            };
+            _contactService.CreateObject(contact3, _contactGroupService);
 
             cashBank = new CashBank()
+            {
+                Name = "Kontan",
+                Description = "Bayar kontan",
+                IsBank = false
+            };
+            _cashBankService.CreateObject(cashBank);
+
+            cashBank2 = new CashBank()
             {
                 Name = "Rekening BRI",
                 Description = "Untuk cashflow",
                 IsBank = true
             };
-            _cashBankService.CreateObject(cashBank);
+            _cashBankService.CreateObject(cashBank2);
 
             cashBankAdjustment = new CashBankAdjustment()
             {
                 CashBankId = cashBank.Id,
                 Amount = 1000000000,
-                AdjustmentDate = DateTime.Today
+                AdjustmentDate = DateTime.Today,
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
+
+            cashBankAdjustment2 = new CashBankAdjustment()
+            {
+                CashBankId = cashBank2.Id,
+                Amount = 1000000000,
+                AdjustmentDate = DateTime.Today,
+            };
+            _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
+
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Now, _cashMutationService, _cashBankService);
         }
 
-        public void PopulateOrderAndReceivalData()
+        public void PopulateRetailPurchaseData()
         {
-            TimeSpan purchaseDate = new TimeSpan(10, 0, 0, 0);
-            TimeSpan receivedDate = new TimeSpan(3, 0, 0 ,0);
-            TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
-            po1 = new PurchaseOrder()
+            TimeSpan salesDate = new TimeSpan(10, 0, 0, 0);
+            TimeSpan dueDate = new TimeSpan(3, 0, 0 ,0);
+            
+            // Cash with GroupPricing
+            rpi1 = new RetailPurchaseInvoice()
             {
-                PurchaseDate = DateTime.Today.Subtract(purchaseDate),
-                ContactId = contact.Id
-            };
-            _purchaseOrderService.CreateObject(po1, _contactService);
-
-            po2 = new PurchaseOrder()
-            {
-                PurchaseDate = DateTime.Today.Subtract(purchaseDate),
-                ContactId = contact.Id
-            };
-            _purchaseOrderService.CreateObject(po2, _contactService);
-
-            po1a = new PurchaseOrderDetail()
-            {
-                ItemId = blanket1.Id,
-                PurchaseOrderId = po1.Id,
-                Quantity = 300,
-                Price = 50000
-            };
-            _purchaseOrderDetailService.CreateObject(po1a, _purchaseOrderService, _itemService);
-
-            po1b = new PurchaseOrderDetail()
-            {
-                ItemId = blanket2.Id,
-                PurchaseOrderId = po1.Id,
-                Quantity = 250,
-                Price = 72000
-            };
-            _purchaseOrderDetailService.CreateObject(po1b, _purchaseOrderService, _itemService);
-
-            po1c = new PurchaseOrderDetail()
-            {
-                ItemId = blanket3.Id,
-                PurchaseOrderId = po1.Id,
-                Quantity = 100,
-                Price = 100000
-            };
-            _purchaseOrderDetailService.CreateObject(po1c, _purchaseOrderService, _itemService);
-
-            po2a = new PurchaseOrderDetail()
-            {
-                ItemId = blanket1.Id,
-                PurchaseOrderId = po2.Id,
-                Quantity = 300,
-                Price = 50000
-            };
-            _purchaseOrderDetailService.CreateObject(po2a, _purchaseOrderService, _itemService);
-
-            po2b = new PurchaseOrderDetail()
-            {
-                ItemId = blanket2.Id,
-                PurchaseOrderId = po2.Id,
-                Quantity = 250,
-                Price = 72000
-            };
-            _purchaseOrderDetailService.CreateObject(po2b, _purchaseOrderService, _itemService);
-
-            _purchaseOrderService.ConfirmObject(po1, po1.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            _purchaseOrderService.ConfirmObject(po2, po2.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-
-            pr1 = new PurchaseReceival()
-            {
-                PurchaseOrderId = po1.Id,
-                ReceivalDate = DateTime.Now.Subtract(receivedDate),
-                WarehouseId = localWarehouse.Id
-            };
-            _purchaseReceivalService.CreateObject(pr1, _purchaseOrderService, _warehouseService);
-
-            pr2 = new PurchaseReceival()
-            {
-                PurchaseOrderId = po2.Id,
-                ReceivalDate = DateTime.Now.Subtract(receivedDate),
-                WarehouseId = localWarehouse.Id
-            };
-            _purchaseReceivalService.CreateObject(pr2, _purchaseOrderService, _warehouseService);
-
-            pr1a = new PurchaseReceivalDetail()
-            {
-                PurchaseOrderDetailId = po1a.Id,
-                PurchaseReceivalId = pr1.Id,
-                ItemId = po1a.ItemId,
-                Quantity = po1a.Quantity - 100
-            };
-            _purchaseReceivalDetailService.CreateObject(pr1a, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-
-            pr1b = new PurchaseReceivalDetail()
-            {
-                PurchaseOrderDetailId = po1b.Id,
-                PurchaseReceivalId = pr1.Id,
-                ItemId = po1b.ItemId,
-                Quantity = po1b.Quantity
-            };
-            _purchaseReceivalDetailService.CreateObject(pr1b, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-
-            pr2a = new PurchaseReceivalDetail()
-            {
-                PurchaseOrderDetailId = po2a.Id,
-                PurchaseReceivalId = pr2.Id,
-                ItemId = po2a.ItemId,
-                Quantity = po2a.Quantity
-            };
-            _purchaseReceivalDetailService.CreateObject(pr2a, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-
-            pr2b = new PurchaseReceivalDetail()
-            {
-                PurchaseOrderDetailId = po2b.Id,
-                PurchaseReceivalId = pr2.Id,
-                ItemId = po2b.ItemId,
-                Quantity = po2b.Quantity
-            };
-            _purchaseReceivalDetailService.CreateObject(pr2b, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-
-            pr3 = new PurchaseReceival()
-            {
-                PurchaseOrderId = po1.Id,
-                ReceivalDate = DateTime.Now.Subtract(lateReceivedDate),
-                WarehouseId = localWarehouse.Id
-            };
-            _purchaseReceivalService.CreateObject(pr3, _purchaseOrderService, _warehouseService);
-
-            pr1c = new PurchaseReceivalDetail()
-            {
-                PurchaseReceivalId = pr3.Id,
-                PurchaseOrderDetailId = po1c.Id,
-                Quantity = po1c.Quantity,
-                ItemId = po1c.ItemId
-            };
-            _purchaseReceivalDetailService.CreateObject(pr1c, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-
-            pr1a2 = new PurchaseReceivalDetail()
-            {
-                PurchaseReceivalId = pr3.Id,
-                PurchaseOrderDetailId = po1a.Id,
-                Quantity = 100,
-                ItemId = po1a.ItemId
-            };
-            _purchaseReceivalDetailService.CreateObject(pr1a2, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-
-        }
-
-        public void PopulateInvoiceData()
-        {
-            TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
-            TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
-            _purchaseReceivalService.ConfirmObject(pr1, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                       _itemService, _barringService, _warehouseItemService);
-            _purchaseReceivalService.ConfirmObject(pr2, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                   _itemService, _barringService, _warehouseItemService);
-            _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService,
-                                                   _stockMutationService, _itemService, _barringService, _warehouseItemService);
-
-            pi1 = new PurchaseInvoice()
-            {
-                InvoiceDate = DateTime.Today,
-                Description = "Pembayaran PR1",
-                PurchaseReceivalId = pr1.Id,
-                IsTaxable = true,
-                Discount = 0,
-                DueDate = DateTime.Today.AddDays(14)
-            };
-            pi1 = _purchaseInvoiceService.CreateObject(pi1, _purchaseReceivalService);
-
-            pi1a = new PurchaseInvoiceDetail()
-            {
-                PurchaseInvoiceId = pi1.Id,
-                PurchaseReceivalDetailId = pr1a.Id,
-                Quantity = pr1a.Quantity
-            };
-            pi1a = _purchaseInvoiceDetailService.CreateObject(pi1a, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
-
-            pi1b = new PurchaseInvoiceDetail()
-            {
-                PurchaseInvoiceId = pi1.Id,
-                PurchaseReceivalDetailId = pr1b.Id,
-                Quantity = pr1b.Quantity
-            };
-            pi1b = _purchaseInvoiceDetailService.CreateObject(pi1b, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
-
-            pi2 = new PurchaseInvoice()
-            {
-                InvoiceDate = DateTime.Today,
-                Description = "Pembayaran PR2",
-                PurchaseReceivalId = pr2.Id,
-                IsTaxable = true,
-                Discount = 5,
-                DueDate = DateTime.Today.AddDays(14)
-            };
-            pi2 = _purchaseInvoiceService.CreateObject(pi2, _purchaseReceivalService);
-
-            pi2a = new PurchaseInvoiceDetail()
-            {
-                PurchaseInvoiceId = pi2.Id,
-                PurchaseReceivalDetailId = pr2a.Id,
-                Quantity = pr2a.Quantity
-            };
-            pi2a = _purchaseInvoiceDetailService.CreateObject(pi2a, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
-
-            pi2b = new PurchaseInvoiceDetail()
-            {
-                PurchaseInvoiceId = pi2.Id,
-                PurchaseReceivalDetailId = pr2b.Id,
-                Quantity = pr2b.Quantity
-            };
-            pi2b = _purchaseInvoiceDetailService.CreateObject(pi2b, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
-
-            pi3 = new PurchaseInvoice()
-            {
-                InvoiceDate = DateTime.Today,
-                Description = "Pembayaran PR3",
-                PurchaseReceivalId = pr3.Id,
-                IsTaxable = true,
-                Discount = 0,
-                DueDate = DateTime.Today.AddDays(14)
-            };
-            pi3 = _purchaseInvoiceService.CreateObject(pi3, _purchaseReceivalService);
-
-            pi1a2 = new PurchaseInvoiceDetail()
-            {
-                PurchaseInvoiceId = pi3.Id,
-                PurchaseReceivalDetailId = pr1a2.Id,
-                Quantity = pr1a2.Quantity
-            };
-            pi1a2 = _purchaseInvoiceDetailService.CreateObject(pi1a2, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
-
-            pi1c = new PurchaseInvoiceDetail()
-            {
-                PurchaseInvoiceId = pi3.Id,
-                PurchaseReceivalDetailId = pr1c.Id,
-                Quantity = pr1c.Quantity
-            };
-            pi1c = _purchaseInvoiceDetailService.CreateObject(pi1c, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
-
-        }
-
-        void PopulatePaymentVouher()
-        {
-            _purchaseInvoiceService.ConfirmObject(pi1, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
-                                                  _purchaseReceivalDetailService, _payableService);
-            _purchaseInvoiceService.ConfirmObject(pi2, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
-                                                  _purchaseReceivalDetailService, _payableService);
-            _purchaseInvoiceService.ConfirmObject(pi3, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
-                                                  _purchaseReceivalDetailService, _payableService);
-
-            pv = new PaymentVoucher()
-            {
-                ContactId = contact.Id,
+                PurchaseDate = DateTime.Today.Subtract(salesDate),
+                WarehouseId = localWarehouse.Id,
                 CashBankId = cashBank.Id,
-                PaymentDate = DateTime.Today.AddDays(14),
+                DueDate = DateTime.Today.Subtract(dueDate)
+            };
+            _retailPurchaseInvoiceService.CreateObject(rpi1, _warehouseService);
+
+            // Cash with GroupPricing
+            rpi2 = new RetailPurchaseInvoice()
+            {
+                PurchaseDate = DateTime.Today.Subtract(salesDate),
+                WarehouseId = localWarehouse.Id,
+                CashBankId = cashBank.Id,
+                DueDate = DateTime.Today.Subtract(dueDate),
+                IsGroupPricing = true,
+                Discount = 25,
+                Tax = 10,
+            };
+            _retailPurchaseInvoiceService.CreateObject(rpi2, _warehouseService);
+
+            // Bank without GroupPricing
+            rpi3 = new RetailPurchaseInvoice()
+            {
+                PurchaseDate = DateTime.Today.Subtract(salesDate),
+                WarehouseId = localWarehouse.Id,
+                CashBankId = cashBank2.Id,
+                DueDate = DateTime.Today.Subtract(dueDate),
                 IsGBCH = true,
-                //IsBank = true,
-                DueDate = DateTime.Today.AddDays(14),
-                TotalAmount = pi1.AmountPayable + pi2.AmountPayable + pi3.AmountPayable
+                GBCH_DueDate = DateTime.Today.Subtract(dueDate),
+                GBCH_No = "G0001"
             };
-            _paymentVoucherService.CreateObject(pv, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+            _retailPurchaseInvoiceService.CreateObject(rpi3, _warehouseService);
 
-            pvd1 = new PaymentVoucherDetail()
+            rpid1 = new RetailPurchaseInvoiceDetail()
             {
-                PaymentVoucherId = pv.Id,
-                PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi1.Id).Id,
-                Amount = pi1.AmountPayable,
-                Description = "Payment buat Purchase Invoice 1"
+                RetailPurchaseInvoiceId = rpi1.Id,
+                Quantity = 100,
+                ItemId = blanket1.Id,
             };
-            _paymentVoucherDetailService.CreateObject(pvd1, _paymentVoucherService, _cashBankService, _payableService);
+            _retailPurchaseInvoiceDetailService.CreateObject(rpid1,_retailPurchaseInvoiceService,_itemService,_warehouseItemService,_priceMutationService);
 
-            pvd2 = new PaymentVoucherDetail()
+            rpid2 = new RetailPurchaseInvoiceDetail()
             {
-                PaymentVoucherId = pv.Id,
-                PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi2.Id).Id,
-                Amount = pi2.AmountPayable,
-                Description = "Payment buat Purchase Invoice 2"
+                RetailPurchaseInvoiceId = rpi2.Id,
+                Quantity = 100,
+                ItemId = blanket1.Id,
             };
-            _paymentVoucherDetailService.CreateObject(pvd2, _paymentVoucherService, _cashBankService, _payableService);
+            _retailPurchaseInvoiceDetailService.CreateObject(rpid2, _retailPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
 
-            pvd3 = new PaymentVoucherDetail()
+            rpid3 = new RetailPurchaseInvoiceDetail()
             {
-                PaymentVoucherId = pv.Id,
-                PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi3.Id).Id,
-                Amount = pi3.AmountPayable,
-                Description = "Payment buat Purchase Invoice 3"
+                RetailPurchaseInvoiceId = rpi3.Id,
+                Quantity = 100,
+                ItemId = blanket1.Id,
             };
-            _paymentVoucherDetailService.CreateObject(pvd3, _paymentVoucherService, _cashBankService, _payableService);
+            _retailPurchaseInvoiceDetailService.CreateObject(rpid3, _retailPurchaseInvoiceService, _itemService, _warehouseItemService, _priceMutationService);
 
-            _paymentVoucherService.ConfirmObject(pv, DateTime.Today, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+            _retailPurchaseInvoiceService.ConfirmObject(rpi1, rpi1.PurchaseDate, contact.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+            _retailPurchaseInvoiceService.ConfirmObject(rpi2, rpi2.PurchaseDate, contact2.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+            _retailPurchaseInvoiceService.ConfirmObject(rpi3, rpi3.PurchaseDate, contact3.Id, _retailPurchaseInvoiceDetailService, _contactService, _priceMutationService, _payableService, _retailPurchaseInvoiceService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
 
-            _paymentVoucherService.ReconcileObject(pv, DateTime.Today.AddDays(10), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService);
+            _retailPurchaseInvoiceService.PaidObject(rpi1, 200000, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService);
+            _retailPurchaseInvoiceService.PaidObject(rpi2, rpi2.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService);
+            _retailPurchaseInvoiceService.PaidObject(rpi3, rpi3.Total, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, _contactService, _cashMutationService);
         }
+
+        
     }
 }

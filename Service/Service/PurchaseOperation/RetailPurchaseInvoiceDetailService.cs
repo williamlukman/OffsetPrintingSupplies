@@ -87,7 +87,7 @@ namespace Service.Service
                 {
                     ItemId = retailPurchaseInvoiceDetail.ItemId,
                     ItemCase = Core.Constants.Constant.ItemCase.Ready,
-                    Status = Core.Constants.Constant.MutationStatus.Deduction,
+                    Status = Core.Constants.Constant.MutationStatus.Addition,
                     Quantity = retailPurchaseInvoiceDetail.Quantity,
                     SourceDocumentId = retailPurchaseInvoice.Id,
                     SourceDocumentType = Core.Constants.Constant.SourceDocumentType.RetailPurchaseInvoice,
