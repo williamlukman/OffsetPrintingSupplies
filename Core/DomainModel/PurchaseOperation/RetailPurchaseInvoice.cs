@@ -26,7 +26,7 @@ namespace Core.DomainModel
         public bool IsBank { get; set; }
         public bool IsFullPayment { get; set; }
         public bool IsPaid { get; set; }
-        public int CashBankId { get; set; }
+        public Nullable<int> CashBankId { get; set; }
         public int WarehouseId { get; set; }
 
         public decimal Total { get; set; }

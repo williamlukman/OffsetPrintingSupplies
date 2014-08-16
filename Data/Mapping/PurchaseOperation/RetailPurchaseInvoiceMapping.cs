@@ -18,7 +18,7 @@ namespace Data.Mapping
             HasRequired(psi => psi.CashBank)
                 .WithMany()
                 .HasForeignKey(psi => psi.CashBankId)
-                .WillCascadeOnDelete(false);
+                .WillCascadeOnDelete(true);  // Need to be True if CashBank Table is deleted before RetailPurchaseInvoice table deleted
             HasRequired(psi => psi.Warehouse)
                 .WithMany()
                 .HasForeignKey(psi => psi.WarehouseId)

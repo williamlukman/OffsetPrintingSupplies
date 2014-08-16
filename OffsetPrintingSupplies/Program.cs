@@ -27,10 +27,10 @@ namespace OffsetPrintingSupplies
                 //SalesBuilder s = new SalesBuilder();
                 RetailSalesBuilder rsb = new RetailSalesBuilder();
 
-                //SalesFunction(s);
-                //PurchaseFunction(p);
-                RetailSalesFunction(rsb);
                 //DataFunction(d);
+                //PurchaseFunction(p);
+                //SalesFunction(s);
+                RetailSalesFunction(rsb);
             }
         }
 
@@ -72,6 +72,22 @@ namespace OffsetPrintingSupplies
                 if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("3:FALSE");
             }
             // ---
+            rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi1, rsb._receiptVoucherService, rsb._receiptVoucherDetailService, 
+                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+            rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi2, rsb._receiptVoucherService, rsb._receiptVoucherDetailService,
+                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+            rsb._retailSalesInvoiceService.UnpaidObject(rsb.rsi3, rsb._receiptVoucherService, rsb._receiptVoucherDetailService,
+                                                        rsb._cashBankService, rsb._receivableService, rsb._cashMutationService);
+
+            rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi1, rsb._retailSalesInvoiceDetailService, rsb._receivableService, 
+                                                           rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService, 
+                                                           rsb._itemService, rsb._barringService, rsb._stockMutationService);
+            rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi2, rsb._retailSalesInvoiceDetailService, rsb._receivableService,
+                                                           rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService,
+                                                           rsb._itemService, rsb._barringService, rsb._stockMutationService);
+            rsb._retailSalesInvoiceService.UnconfirmObject(rsb.rsi3, rsb._retailSalesInvoiceDetailService, rsb._receivableService,
+                                                           rsb._receiptVoucherDetailService, rsb._warehouseItemService, rsb._warehouseService,
+                                                           rsb._itemService, rsb._barringService, rsb._stockMutationService);
         }
 
         public static void DataFunction(DataBuilder d)
@@ -261,6 +277,7 @@ namespace OffsetPrintingSupplies
                     int oldItemId = d.groupItemPrice1.ItemId;
                     int oldGroupId = d.groupItemPrice1.ContactGroupId;
                     d.groupItemPrice1.ItemId = item.Id;
+                    GroupItemPrice oldone = d._groupItemPriceService.GetObjectById(d.groupItemPrice1.Id); // TODO : Check why oldone.ItemId have the same new value with d.groupItemPrice1.ItemId
                     d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, oldGroupId, oldItemId, d._itemService, d._priceMutationService);
 
                     Console.WriteLine("{0}", d.groupItemPrice1.Errors.FirstOrDefault());

@@ -64,10 +64,14 @@ namespace TestValidation
                 rsb.rsi1.IsPaid.should_be_true();
                 rsb.rsi2.IsPaid.should_be_true();
                 rsb.rsi3.IsPaid.should_be_true();
+
+                rsb.rsi1.IsFullPayment.should_be_false();
+                rsb.rsi2.IsFullPayment.should_be_true();
+                rsb.rsi3.IsFullPayment.should_be_true();
                 
             };
 
-            it["validates_receivables"] = () =>
+            it["validates_receivables_and_receiptvouchers"] = () =>
             {
                 Receivable receivables1 = rsb._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, rsb.rsi1.Id);
                 Receivable receivables2 = rsb._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, rsb.rsi2.Id);
@@ -87,6 +91,7 @@ namespace TestValidation
                 {
                     receiptVoucherDetail.IsConfirmed.should_be_true();
                     receivables2.RemainingAmount.should_be(rsb.rsi2.Total - receiptVoucherDetail.Amount);
+                    
                 }
                 
                 foreach (var receiptVoucherDetail in receiptVoucherDetails3)
@@ -120,6 +125,13 @@ namespace TestValidation
                     rsb.rsi1.IsPaid.should_be_false();
                     rsb.rsi2.IsPaid.should_be_false();
                     rsb.rsi3.IsPaid.should_be_false();
+
+                    rsb.rsi2.IsFullPayment.should_be_false();
+                    rsb.rsi3.IsFullPayment.should_be_false();
+
+                    rsb.rsi1.AmountPaid.should_be(0);
+                    rsb.rsi2.AmountPaid.should_be(0);
+                    rsb.rsi3.AmountPaid.should_be(0);
                 };
 
                 context["when_unconfirm_retailsalesinvoice"] = () =>

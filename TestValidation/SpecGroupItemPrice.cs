@@ -167,6 +167,7 @@ namespace TestValidation
                 int oldGroupId = d.groupItemPrice1.ContactGroupId;
                 int oldItemId = d.groupItemPrice1.ItemId;
                 d.groupItemPrice1.ItemId = item.Id;
+                GroupItemPrice oldone = d._groupItemPriceService.GetObjectById(d.groupItemPrice1.Id); // TODO : Check why oldone.ItemId have the same new value with d.groupItemPrice1.ItemId
                 d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, oldGroupId, oldItemId, d._itemService, d._priceMutationService);
                 d.groupItemPrice1.Errors.Count().should_not_be(0);
             };

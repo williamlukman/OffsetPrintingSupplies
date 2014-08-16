@@ -215,7 +215,8 @@ namespace TestValidation
                 Category = "Blanket",
                 Sku = "BLK1",
                 UoMId = Pcs.Id,
-                SellingPrice = 10000
+                SellingPrice = 10000,
+                AvgPrice = 10000
             };
 
             blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -229,7 +230,8 @@ namespace TestValidation
                 Category = "Blanket",
                 Sku = "BLK2",
                 UoMId = Pcs.Id,
-                SellingPrice = 20000
+                SellingPrice = 20000,
+                AvgPrice = 20000
             };
 
             blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -243,7 +245,8 @@ namespace TestValidation
                 Category = "Blanket",
                 Sku = "BLK3",
                 UoMId = Pcs.Id,
-                SellingPrice = 30000
+                SellingPrice = 30000,
+                AvgPrice = 30000
             };
 
             blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -391,8 +394,7 @@ namespace TestValidation
 
             _retailSalesInvoiceService.PaidObject(rsi1, 200000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
             _retailSalesInvoiceService.PaidObject(rsi2, rsi2.Total, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
-            _retailSalesInvoiceService.PaidObject(rsi3, 300000, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
-
+            _retailSalesInvoiceService.PaidObject(rsi3, rsi3.Total, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, _contactService, _cashMutationService);
         }
 
         
