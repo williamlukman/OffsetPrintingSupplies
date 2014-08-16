@@ -14,7 +14,7 @@ namespace Core.DomainModel
         public DateTime PaymentDate { get; set; }
         public bool IsGBCH { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
-        public bool IsBank { get; set; }
+        //public bool IsBank { get; set; } // Moved to CashBank
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }
 

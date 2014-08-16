@@ -12,7 +12,7 @@ namespace Core.Interface.Validation
         PaymentVoucher VHasContact(PaymentVoucher paymentVoucher, IContactService _contactService);
         PaymentVoucher VHasCashBank(PaymentVoucher paymentVoucher, ICashBankService _cashBankService);
         PaymentVoucher VHasPaymentDate(PaymentVoucher paymentVoucher);
-        PaymentVoucher VIfGBCHThenIsBank(PaymentVoucher paymentVoucher);
+        PaymentVoucher VIfGBCHThenIsBank(PaymentVoucher paymentVoucher, ICashBankService _cashBankService);
         PaymentVoucher VIfGBCHThenHasDueDate(PaymentVoucher paymentVoucher);
         PaymentVoucher VHasNoPaymentVoucherDetail(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
         PaymentVoucher VHasPaymentVoucherDetails(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
