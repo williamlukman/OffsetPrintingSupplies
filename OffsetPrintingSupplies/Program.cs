@@ -25,14 +25,14 @@ namespace OffsetPrintingSupplies
                 //DataBuilder d = new DataBuilder();
                 PurchaseBuilder p = new PurchaseBuilder();
                 //SalesBuilder s = new SalesBuilder();
-                //RetailSalesBuilder rsb = new RetailSalesBuilder();
                 //RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
+                //RetailSalesBuilder rsb = new RetailSalesBuilder();
 
                 //DataFunction(d);
                 PurchaseFunction(p);
                 //SalesFunction(s);
-                //RetailSalesFunction(rsb);
                 //RetailPurchaseFunction(rpb);
+                //RetailSalesFunction(rsb);
             }
         }
 

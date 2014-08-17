@@ -232,6 +232,7 @@ namespace Service.Service
             decimal originalAvgCost = item.AvgPrice;
             decimal avgCost = (originalQuantity + addedQuantity == 0) ? 0 :
                 ((originalQuantity * originalAvgCost) + (addedQuantity * addedAvgCost)) / (originalQuantity + addedQuantity);
+            //if (originalAvgCost == 0) avgCost = addedAvgCost;
             return avgCost;
         }
 

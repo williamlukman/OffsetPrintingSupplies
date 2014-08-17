@@ -213,7 +213,9 @@ namespace TestValidation
                 Name = "Blanket1",
                 Category = "Blanket",
                 Sku = "BLK1",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 50000,
+                AvgPrice = 50000
             };
 
             blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -226,7 +228,9 @@ namespace TestValidation
                 Name = "Blanket2",
                 Category = "Blanket",
                 Sku = "BLK2",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 72000,
+                AvgPrice = 72000
             };
 
             blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -239,7 +243,9 @@ namespace TestValidation
                 Name = "Blanket3",
                 Category = "Blanket",
                 Sku = "BLK3",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 100000,
+                AvgPrice = 100000
             };
 
             blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);

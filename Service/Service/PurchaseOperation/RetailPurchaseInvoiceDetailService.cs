@@ -96,6 +96,11 @@ namespace Service.Service
                     WarehouseId = retailPurchaseInvoice.WarehouseId,
                     WarehouseItemId = warehouseItem.Id
                 };
+
+                decimal itemPrice = retailPurchaseInvoiceDetail.Amount / retailPurchaseInvoiceDetail.Quantity;
+                item.AvgPrice = _itemService.CalculateAvgPrice(item, retailPurchaseInvoiceDetail.Quantity, itemPrice);
+                //_itemService.GetRepository().Update(item);
+
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 stockMutation.CreatedAt = (DateTime)retailPurchaseInvoice.ConfirmationDate;
                 _stockMutationService.UpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
@@ -111,6 +116,11 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(retailPurchaseInvoiceDetail))
             {
+                Item item = _itemService.GetObjectById(retailPurchaseInvoiceDetail.ItemId);
+                decimal itemPrice = retailPurchaseInvoiceDetail.Amount / retailPurchaseInvoiceDetail.Quantity;
+                item.AvgPrice = _itemService.CalculateAvgPrice(item, retailPurchaseInvoiceDetail.Quantity * (-1), itemPrice);
+                //_itemService.GetRepository().Update(item);
+
                 IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(retailPurchaseInvoiceDetail.ItemId, Core.Constants.Constant.SourceDocumentDetailType.RetailPurchaseInvoiceDetail, retailPurchaseInvoiceDetail.Id);
                 foreach (var stockMutation in stockMutations)
                 {
