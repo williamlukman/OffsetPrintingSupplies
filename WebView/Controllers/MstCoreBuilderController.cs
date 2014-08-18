@@ -33,7 +33,12 @@ namespace WebView.Controllers
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
         private IMachineService _machineService;
-
+        private ContactGroup baseGroup;
+        private IRollerTypeService _rollerTypeService;
+        private ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
+                        typeConsumable, typeGlue, typeUnderpacking, typeRoller;
+        private RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
+                        typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
         public MstCoreBuilderController()
         {
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
@@ -55,6 +60,7 @@ namespace WebView.Controllers
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
             _machineService = new MachineService(new MachineRepository(),new MachineValidator());
+               _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
         }
 
         public ActionResult Index()
@@ -108,8 +114,8 @@ namespace WebView.Controllers
                             item.BaseSku,
                             item.SkuUsedCore,
                             item.SkuNewCore,
-                            _itemService.GetObjectById(item.UsedCoreItemId).Quantity,
-                            _itemService.GetObjectById(item.NewCoreItemId).Quantity,
+                            //_itemService.GetObjectById(item.UsedCoreItemId).Quantity,
+                            //_itemService.GetObjectById(item.NewCoreItemId).Quantity,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }

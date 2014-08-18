@@ -99,6 +99,8 @@ namespace WebView.Controllers
                             item.UoMId,
                             _uoMService.GetObjectById(item.UoMId).Name,
                             item.Quantity,
+                            item.SellingPrice,
+                            item.AvgPrice,
                             item.PendingReceival,
                             item.PendingDelivery,
                             item.CreatedAt,
@@ -132,6 +134,7 @@ namespace WebView.Controllers
                 model.ItemTypeId,
                 ItemType = _itemTypeService.GetObjectById(model.ItemTypeId).Name,
                 model.Quantity,
+                model.SellingPrice,
                 model.PendingDelivery,
                 model.PendingReceival,
                 model.Category,
@@ -170,6 +173,7 @@ namespace WebView.Controllers
                 data.Category = model.Category;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
+                data.SellingPrice = model.SellingPrice;
                 model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)

@@ -150,6 +150,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
+    <Compile Include="Controllers\CoreIdentificationController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MstBarringController.cs" />
@@ -168,6 +169,8 @@
     <Compile Include="Controllers\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseReceivalController.cs" />
+    <Compile Include="Controllers\ReceiptVoucherController.cs" />
+    <Compile Include="Controllers\RollerWarehouseMutationController.cs" />
     <Compile Include="Controllers\SalesInvoiceController.cs" />
     <Compile Include="Controllers\SalesOrderController.cs" />
     <Compile Include="Controllers\StockAdjustmentController.cs" />
@@ -181,6 +184,7 @@
   <ItemGroup>
     <Content Include="Content\apps_js\CashBankAdjustment.js" />
     <Content Include="Content\apps_js\CashBankMutation.js" />
+    <Content Include="Content\apps_js\CoreIdentification.js" />
     <Content Include="Content\apps_js\DeliveryOrder.js" />
     <Content Include="Content\apps_js\MasterBarring.js" />
     <Content Include="Content\apps_js\MasterCashBank.js" />
@@ -198,6 +202,7 @@
     <Content Include="Content\apps_js\PurchaseInvoice.js" />
     <Content Include="Content\apps_js\PurchaseOrder.js" />
     <Content Include="Content\apps_js\PurchaseReceival.js" />
+    <Content Include="Content\apps_js\ReceiptVoucher.js" />
     <Content Include="Content\apps_js\SalesInvoice.js" />
     <Content Include="Content\apps_js\SalesOrder.js" />
     <Content Include="Content\apps_js\StockAdjustment.js" />
@@ -1076,6 +1081,8 @@
     <Content Include="Views\MstContactGroup\Index.cshtml" />
     <Content Include="Views\SalesInvoice\Index.cshtml" />
     <Content Include="Views\PaymentVoucher\Index.cshtml" />
+    <Content Include="Views\ReceiptVoucher\Index.cshtml" />
+    <Content Include="Views\CoreIdentification\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

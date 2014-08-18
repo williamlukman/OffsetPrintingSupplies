@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Payment Voucher";
+    ViewBag.Title = "Receipt Voucher";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,7 +8,7 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/paymentvoucher.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/receiptvoucher.js")"></script>
 
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
@@ -79,10 +79,10 @@
                         </td>
                             </tr>
                         <tr>
-                            <td>PaymentDate</td>
+                            <td>ReceiptDate</td>
                             <td colspan="5">
-                                <div id="PaymentDateDiv"><input id="PaymentDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
-                                <div id="PaymentDateDiv2"><input id="PaymentDate2" type="text" size="10" disabled="disabled"/></div>
+                                <div id="ReceiptDateDiv"><input id="ReceiptDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
+                                <div id="ReceiptDateDiv2"><input id="ReceiptDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                         </tr>
                        <tr>
@@ -132,7 +132,7 @@
 
  <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
-        data-options="modal:true" title=".: Input Payable :.">
+        data-options="modal:true" title=".: Input Receivable:.">
 
         <div id="item_toolbar" class="form_toolbar">
             <a id="item_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
@@ -142,13 +142,13 @@
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
                       <td width="139" nowrap style="width: 100px">
-                          Payable
+                          Receivable
                       </td>
                       <td>
-                         <input id="PayableId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                         <input id="btnPayable" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                         <input id="Payable" name="PayableId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                         <input id="PaymentVoucherDetailId" name="PaymentVoucherDetailId" type="text" size ="10" hidden="hidden" />
+                         <input id="ReceivableId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="btnReceivable" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                         <input id="Receivable" name="ReceivableId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                         <input id="ReceiptVoucherDetailId" name="ReceiptVoucherDetailId" type="text" size ="10" hidden="hidden" />
                       </td>
                   </tr>
                     <tr>
@@ -286,18 +286,18 @@
     </div>
 <!-- END Look Up cashbank -->
 
-     <!-- Look Up payable -->
-    <div id="lookup_div_payable" class="easyui-dialog" title="List Payable" style="padding: 0px 5px; height: 490px; width: 480px;"
+     <!-- Look Up receivable -->
+    <div id="lookup_div_receivable" class="easyui-dialog" title="List Receivable" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
-        <div id="lookup_toolbar_payable" class="grid_toolbar">
-            <a id="lookup_btn_add_payable" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_payable" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        <div id="lookup_toolbar_receivable" class="grid_toolbar">
+            <a id="lookup_btn_add_receivable" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_receivable" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
         </div>
 
-        <table id="lookup_table_payable" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_payable" class="scroll" style="text-align: center;"></div>
+        <table id="lookup_table_receivable" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_receivable" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up payable -->
+<!-- END Look Up receivable -->
   </div>
 
