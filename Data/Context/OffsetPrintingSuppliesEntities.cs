@@ -36,7 +36,7 @@ namespace Data.Context
                                           "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
             IList<String> stockAndMasterNames = new List<String>()
-                                        { "GroupItemPrice", "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
+                                        { "GroupItemPrice", "QuantityPricing", "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
                                           "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
@@ -112,6 +112,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new WarehouseItemMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationOrderMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationOrderDetailMapping());
+            modelBuilder.Configurations.Add(new QuantityPricingMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -169,5 +170,6 @@ namespace Data.Context
         public DbSet<RetailPurchaseInvoiceDetail> RetailPurchaseInvoiceDetails { get; set; }
         public DbSet<RetailSalesInvoice> RetailSalesInvoices { get; set; }
         public DbSet<RetailSalesInvoiceDetail> RetailSalesInvoiceDetails { get; set; }
+        public DbSet<QuantityPricing> QuantityPricings { get; set; }
     }
 }

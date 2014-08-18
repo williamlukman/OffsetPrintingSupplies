@@ -22,16 +22,16 @@ namespace OffsetPrintingSupplies
             {
                 db.DeleteAllTables();
 
-                //DataBuilder d = new DataBuilder();
+                DataBuilder d = new DataBuilder();
                 //PurchaseBuilder p = new PurchaseBuilder();
                 //SalesBuilder s = new SalesBuilder();
-                RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
+                //RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
                 //RetailSalesBuilder rsb = new RetailSalesBuilder();
 
-                //DataFunction(d);
+                DataFunction(d);
                 //PurchaseFunction(p);
                 //SalesFunction(s);
-                RetailPurchaseFunction(rpb);
+                //RetailPurchaseFunction(rpb);
                 //RetailSalesFunction(rsb);
             }
         }
@@ -144,143 +144,6 @@ namespace OffsetPrintingSupplies
         public static void DataFunction(DataBuilder d)
         {
             d.PopulateData();
-
-            d.item = new Item()
-            {
-                ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
-                Sku = "ABC1001",
-                Name = "ABC",
-                Category = "ABC123",
-                UoMId = d.Pcs.Id
-            };
-            d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-
-            d.localWarehouse = new Warehouse()
-            {
-                Name = "Sentral Solusi Data",
-                Description = "Kali Besar Jakarta",
-                Code = "LCL"
-            };
-            d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
-
-            d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
-
-            d.coreBuilder = new CoreBuilder()
-            {
-                BaseSku = "CORE1001",
-                SkuNewCore = "CORE1001N",
-                SkuUsedCore = "CORE1001U",
-                Name = "Core X 1001",
-                Category = "X 1001",
-                UoMId = d.Pcs.Id
-            };
-            d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-
-            d.machine = new Machine()
-            {
-                Code = "M00001",
-                Name = "Machine 00001",
-                Description = "Machine"
-            };
-            d.machine = d._machineService.CreateObject(d.machine);
-            d.coreIdentification = new CoreIdentification()
-            {
-                ContactId = d.contact.Id,
-                Code = "CI0001",
-                Quantity = 1,
-                IdentifiedDate = DateTime.Now,
-                WarehouseId = d.localWarehouse.Id
-            };
-            d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
-            d.coreIdentificationDetail = new CoreIdentificationDetail()
-            {
-                CoreIdentificationId = d.coreIdentification.Id,
-                DetailId = 1,
-                MaterialCase = 2,
-                CoreBuilderId = d.coreBuilder.Id,
-                RollerTypeId = d._rollerTypeService.GetObjectByName("Found DT").Id,
-                MachineId = d.machine.Id,
-                RD = 12,
-                CD = 12,
-                RL = 12,
-                WL = 12,
-                TL = 12
-            };
-            d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
-
-            d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService,
-                                                                   d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._barringService, d._purchaseOrderDetailService,
-                                                                   d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
-
-            // Begin Test
-            var db = new OffsetPrintingSuppliesEntities();
-            using (db)
-            {
-                db.DeleteAllTables();
-                d = new DataBuilder();
-
-                d.Pcs = new UoM()
-                {
-                    Name = "Pcs"
-                };
-                d._uomService.CreateObject(d.Pcs);
-
-                d.Boxes = new UoM()
-                {
-                    Name = "Boxes"
-                };
-                d._uomService.CreateObject(d.Boxes);
-
-                d.Tubs = new UoM()
-                {
-                    Name = "Tubs"
-                };
-                d._uomService.CreateObject(d.Tubs);
-
-                d.item = new Item()
-                {
-                    ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1001",
-                    Name = "ABC",
-                    Category = "ABC123",
-                    UoMId = d.Pcs.Id
-                };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-
-                d.groupItemPrice1 = new GroupItemPrice()
-                {
-                    Price = 1000,
-                    ItemId = d.item.Id,
-                    ContactGroupId = d.baseGroup.Id
-                };
-                d.groupItemPrice1 = d._groupItemPriceService.CreateObject(d.groupItemPrice1, d._contactGroupService, d._itemService, d._priceMutationService);
-
-                GroupItemPrice groupitemprice2 = new GroupItemPrice()
-                {
-                    Price = 2000,
-                    ItemId = d.item.Id,
-                    ContactGroupId = d.baseGroup.Id
-                };
-                groupitemprice2 = d._groupItemPriceService.CreateObject(groupitemprice2, d._contactGroupService, d._itemService, d._priceMutationService);
-
-                Item item = new Item()
-                {
-                    ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
-                    Sku = "ABC1002",
-                    Name = "CBA",
-                    Category = "ABC123",
-                    UoMId = d.Pcs.Id
-                };
-                item = d._itemService.CreateObject(item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
-
-                int oldItemId = d.groupItemPrice1.ItemId;
-                int oldGroupId = d.groupItemPrice1.ContactGroupId;
-                d.groupItemPrice1.ItemId = item.Id;
-                GroupItemPrice oldone = d._groupItemPriceService.GetObjectById(d.groupItemPrice1.Id); // TODO : Check why oldone.ItemId have the same new value with d.groupItemPrice1.ItemId
-                d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, oldGroupId, oldItemId, d._itemService, d._priceMutationService);
-
-                Console.WriteLine("{0}", d.groupItemPrice1.Errors.FirstOrDefault());
-            }    
 
             // End of Test
             Console.WriteLine("Press any key to stop...");
