@@ -65,7 +65,7 @@ namespace Validation.Validation
             foreach (var stockAdjustmentDetail in details)
             {
                 int stockAdjustmentDetailQuantity = stockAdjustmentDetail.Quantity;
-                //decimal stockAdjustmentDetailPrice = stockAdjustmentDetail.Price;
+                decimal stockAdjustmentDetailPrice = stockAdjustmentDetail.Price;
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
                 if (item.Quantity + stockAdjustmentDetailQuantity < 0)
@@ -76,12 +76,12 @@ namespace Validation.Validation
                 {
                     stockAdjustmentDetail.Errors.Add("Generic", "Stock di dalam warehouse tidak boleh kurang dari 0");
                 }
-                /*
-                else if (_itemService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
+                
+                else if (_itemService.CalculateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
                 {
-                    stockAdjustment.Errors.Add("Generic", "AvgCost tidak boleh kurang dari 0");
+                    stockAdjustment.Errors.Add("Generic", "AvgPrice tidak boleh kurang dari 0");
                 }
-                */
+                
             }
             return stockAdjustment;
         }

@@ -237,7 +237,9 @@ namespace TestValidation
                 Name = "Compound RB else",
                 Category = "Compound",
                 Sku = "CMP123",
-                UoMId = Tubs.Id
+                UoMId = Tubs.Id,
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
 
             itemCompound = _itemService.CreateObject(itemCompound, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -250,7 +252,9 @@ namespace TestValidation
                 Name = "Compound RB1",
                 Category = "Compound",
                 Sku = "CMP101",
-                UoMId = _uomService.GetObjectByName("Tubs").Id
+                UoMId = _uomService.GetObjectByName("Tubs").Id,
+                SellingPrice = 30000,
+                AvgPrice = 10000
             };
             itemCompound1 = _itemService.CreateObject(itemCompound1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(itemCompound1, 200000);
@@ -262,7 +266,9 @@ namespace TestValidation
                 Name = "Compound RB2",
                 Category = "Compound",
                 Sku = "CMP102",
-                UoMId = Tubs.Id
+                UoMId = Tubs.Id,
+                SellingPrice = 40000,
+                AvgPrice = 10000
             };
             itemCompound2 = _itemService.CreateObject(itemCompound2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(itemCompound2, 200000);
@@ -274,7 +280,9 @@ namespace TestValidation
                 Name = "Accessory Sample 1",
                 Category = "Accessory",
                 Sku = "ACC001",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 50000,
+                AvgPrice = 10000
             };
             itemAccessory1 = _itemService.CreateObject(itemAccessory1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(itemAccessory1, 5);
@@ -286,7 +294,9 @@ namespace TestValidation
                 Name = "Accessory Sample 2",
                 Category = "Accessory",
                 Sku = "ACC002",
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             itemAccessory2 = _itemService.CreateObject(itemAccessory2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(itemAccessory2, 5);
@@ -996,7 +1006,8 @@ namespace TestValidation
             {
                 ItemId = coreBuilder2.UsedCoreItemId,
                 Quantity = 1,
-                StockAdjustmentId = stockAdjustment.Id
+                StockAdjustmentId = stockAdjustment.Id,
+                Price = 0
             };
             stockAD1 = _stockAdjustmentDetailService.CreateObject(stockAD1, _stockAdjustmentService, _itemService, _warehouseItemService);
 
@@ -1004,7 +1015,8 @@ namespace TestValidation
             {
                 ItemId = coreBuilder3.UsedCoreItemId,
                 Quantity = 1,
-                StockAdjustmentId = stockAdjustment.Id
+                StockAdjustmentId = stockAdjustment.Id,
+                Price = 0
             };
             stockAD2 = _stockAdjustmentDetailService.CreateObject(stockAD2, _stockAdjustmentService, _itemService, _warehouseItemService);
         }
@@ -1193,7 +1205,9 @@ namespace TestValidation
                 Category = "bar",
                 Name = "Bar Generic",
                 UoMId = Pcs.Id,
-                Sku = "BGEN"
+                Sku = "BGEN",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(bargeneric, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(bargeneric, 5);
@@ -1205,7 +1219,9 @@ namespace TestValidation
                 Category = "bar",
                 Name = "Bar Left 1",
                 UoMId = Pcs.Id,
-                Sku = "BL1"
+                Sku = "BL1",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(barleft1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(barleft1, 2);
@@ -1217,7 +1233,9 @@ namespace TestValidation
                 Category = "bar",
                 Name = "Bar Left 2",
                 UoMId = Pcs.Id,
-                Sku = "BL2"
+                Sku = "BL2",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(barleft2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(barleft2, 5);
@@ -1229,7 +1247,9 @@ namespace TestValidation
                 Category = "bar",
                 Name = "Bar Right 1",
                 UoMId = Pcs.Id,
-                Sku = "BR1"
+                Sku = "BR1",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(barright1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(barright1, 2);
@@ -1241,7 +1261,9 @@ namespace TestValidation
                 Category = "bar",
                 Name = "Bar Right 2",
                 UoMId = Pcs.Id,
-                Sku = "BR2"
+                Sku = "BR2",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(barright2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(barright2, 2);
@@ -1253,7 +1275,9 @@ namespace TestValidation
                 Category = "Blanket",
                 Name = "Blanket1",
                 UoMId = Pcs.Id,
-                Sku = "BLK1"
+                Sku = "BLK1",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(blanket1, 10);
@@ -1265,7 +1289,9 @@ namespace TestValidation
                 Category = "Blanket",
                 Name = "Blanket2",
                 UoMId = Pcs.Id,
-                Sku = "BLK2"
+                Sku = "BLK2",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(blanket2, 4);
@@ -1277,7 +1303,9 @@ namespace TestValidation
                 Category = "Blanket",
                 Name = "Blanket3",
                 UoMId = Pcs.Id,
-                Sku = "BLK3"
+                Sku = "BLK3",
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
             _itemService.AdjustQuantity(blanket3, 3);
@@ -1299,7 +1327,9 @@ namespace TestValidation
                 ContactId = contact.Id,
                 KS = 1,
                 thickness = 1,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _barringService.CreateObject(barring1, _barringService, _uomService, _itemService, _itemTypeService, _contactService,
                                          _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -1322,7 +1352,9 @@ namespace TestValidation
                 ContactId = contact.Id,
                 KS = 1,
                 thickness = 1,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _barringService.CreateObject(barring2, _barringService, _uomService, _itemService, _itemTypeService, _contactService,
                                          _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -1345,7 +1377,9 @@ namespace TestValidation
                 ContactId = contact.Id,
                 KS = 1,
                 thickness = 1,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                SellingPrice = 20000,
+                AvgPrice = 10000
             };
             _barringService.CreateObject(barring3, _barringService, _uomService, _itemService, _itemTypeService, _contactService,
                                          _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);

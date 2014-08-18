@@ -50,16 +50,16 @@ namespace Validation.Validation
             return stockAdjustmentDetail;
         }
 
-        /*
-        public StockAdjustmentDetail VNonZeroNorNegativePrice(StockAdjustmentDetail stockAdjustmentDetail)
+
+        public StockAdjustmentDetail VNonNegativePrice(StockAdjustmentDetail stockAdjustmentDetail) // VNonZeroNorNegativePrice
         {
-            if (stockAdjustmentDetail.Price <= 0)
+            if (stockAdjustmentDetail.Price < 0)
             {
-                stockAdjustmentDetail.Errors.Add("Price", "Harus lebih besar dari 0");
+                stockAdjustmentDetail.Errors.Add("Price", "Harus lebih besar atau sama dengan 0");
             }
             return stockAdjustmentDetail;
         }
-        */
+        
 
         public StockAdjustmentDetail VUniqueItem(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService, IItemService _itemService)
         {
@@ -107,7 +107,7 @@ namespace Validation.Validation
                                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool ToConfirm)
         {
             int stockAdjustmentDetailQuantity = ToConfirm ? stockAdjustmentDetail.Quantity : ((-1) * stockAdjustmentDetail.Quantity);
-            //decimal stockAdjustmentDetailPrice = ToConfirm ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+            decimal stockAdjustmentDetailPrice = ToConfirm ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
             Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
             StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
             WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
@@ -120,12 +120,12 @@ namespace Validation.Validation
             {
                 stockAdjustmentDetail.Errors.Add("Quantity", "Stock di dalam warehouse tidak boleh kurang dari 0");
             }
-            /*
-            if (_itemService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
+            
+            if (_itemService.CalculateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice) < 0)
             {
-                stockAdjustmentDetail.Errors.Add("AvgCost", "Tidak boleh kurang dari 0");
+                stockAdjustmentDetail.Errors.Add("AvgPrice", "Tidak boleh kurang dari 0");
             }
-            */
+            
             return stockAdjustmentDetail;
         }
 
@@ -139,8 +139,8 @@ namespace Validation.Validation
             VHasWarehouseItem(stockAdjustmentDetail, _stockAdjustmentService, _warehouseItemService);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VNonZeroQuantity(stockAdjustmentDetail);
-            // if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
-            // VNonZeroNorNegativePrice(stockAdjustmentDetail);
+            if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
+            VNonNegativePrice(stockAdjustmentDetail); // VNonZeroNorNegativePrice
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VUniqueItem(stockAdjustmentDetail, _stockAdjustmentDetailService, _itemService);
             return stockAdjustmentDetail;
