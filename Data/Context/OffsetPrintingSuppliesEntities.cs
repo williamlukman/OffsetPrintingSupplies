@@ -34,7 +34,7 @@ namespace Data.Context
             IList<String> salesOperationNames = new List<String>()
                                         { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
                                           "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
-                                          "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
+                                          "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder", "CashSalesInvoiceDetail", "CashSalesInvoice"};
             IList<String> stockAndMasterNames = new List<String>()
                                         { "GroupItemPrice", "QuantityPricing", "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
@@ -113,6 +113,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new WarehouseMutationOrderMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationOrderDetailMapping());
             modelBuilder.Configurations.Add(new QuantityPricingMapping());
+            modelBuilder.Configurations.Add(new CashSalesInvoiceMapping());
+            modelBuilder.Configurations.Add(new CashSalesInvoiceDetailMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -171,5 +173,7 @@ namespace Data.Context
         public DbSet<RetailSalesInvoice> RetailSalesInvoices { get; set; }
         public DbSet<RetailSalesInvoiceDetail> RetailSalesInvoiceDetails { get; set; }
         public DbSet<QuantityPricing> QuantityPricings { get; set; }
+        public DbSet<CashSalesInvoice> CashSalesInvoices { get; set; }
+        public DbSet<CashSalesInvoiceDetail> CashSalesInvoiceDetails { get; set; }
     }
 }

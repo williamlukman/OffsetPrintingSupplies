@@ -21,9 +21,21 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
+        public IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId)
+        {
+            return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted).ToList();
+        }
+
         public QuantityPricing GetObjectById(int Id)
         {
             QuantityPricing quantityPricing = Find(x => x.Id == Id && !x.IsDeleted);
+            if (quantityPricing != null) { quantityPricing.Errors = new Dictionary<string, string>(); }
+            return quantityPricing;
+        }
+
+        public QuantityPricing GetObjectByItemTypeIdAndQuantity(int ItemTypeId, int Quantity)
+        {
+            QuantityPricing quantityPricing = Find(x => x.ItemTypeId == ItemTypeId && Quantity >= x.MinQuantity && (x.IsInfiniteMaxQuantity || Quantity <= x.MinQuantity) && !x.IsDeleted);
             if (quantityPricing != null) { quantityPricing.Errors = new Dictionary<string, string>(); }
             return quantityPricing;
         }

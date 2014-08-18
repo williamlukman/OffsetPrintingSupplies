@@ -29,9 +29,19 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId)
+        {
+            return _repository.GetObjectsByItemTypeId(ItemTypeId);
+        }
+
         public QuantityPricing GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
+        }
+
+        public QuantityPricing GetObjectByItemTypeIdAndQuantity(int ItemTypeId, int Quantity)
+        {
+            return _repository.GetObjectByItemTypeIdAndQuantity(ItemTypeId, Quantity);
         }
 
         public QuantityPricing CreateObject(QuantityPricing quantityPricing, IItemTypeService _itemTypeService)

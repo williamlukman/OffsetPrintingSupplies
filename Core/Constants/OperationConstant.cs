@@ -7,6 +7,8 @@ namespace Core.Constants
 {
     public partial class Constant
     {
+        public static string BaseContact = "Base";
+
         public class GroupType
         {
             public static string Base = "Base";
@@ -44,6 +46,7 @@ namespace Core.Constants
             public static string SalesOrder = "SalesOrder";
             public static string StockAdjustment = "StockAdjustment";
             public static string WarehouseMutationOrder = "WarehouseMutationOrder";
+            public static string CashSalesInvoice = "CashSalesInvoice";
         }
 
         public class SourceDocumentDetailType
@@ -61,6 +64,7 @@ namespace Core.Constants
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
             public static string WarehouseMutationOrderDetail = "WarehouseMutationOrderDetail";
+            public static string CashSalesInvoiceDetail = "CashSalesInvoiceDetail";
         }
 
         public class PayableSource
@@ -73,6 +77,7 @@ namespace Core.Constants
         {
             public static string SalesInvoice = "SalesInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
+            public static string CashSalesInvoice = "CashSalesInvoice";
         }
     }
 }

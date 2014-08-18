@@ -9,7 +9,7 @@ namespace Core.Interface.Repository
     public interface IPriceMutationRepository : IRepository<PriceMutation>
     {
         IList<PriceMutation> GetAll();
-        IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ExcludePriceMutationId, int ItemId, int GroupId);
+        IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ExcludePriceMutationId, int ItemId/*, int GroupId*/);
         IList<PriceMutation> GetActiveObjectsByItemId(int ItemId);
         PriceMutation GetObjectById(int Id);
         PriceMutation DeactivateObject(PriceMutation priceMutation);

@@ -29,9 +29,9 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
-        public IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ItemId, int GroupId, int ExcludePriceMutationId)
+        public IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ItemId/*, int GroupId*/, int ExcludePriceMutationId)
         {
-            return _repository.GetObjectsByIsActive(IsActive, ExcludePriceMutationId, ItemId, GroupId);
+            return _repository.GetObjectsByIsActive(IsActive, ExcludePriceMutationId, ItemId/*, GroupId*/);
         }
 
         public IList<PriceMutation> GetActiveObjectsByItemId(int ItemId)
@@ -55,7 +55,7 @@ namespace Service.Service
             PriceMutation priceMutation = new PriceMutation()
             {
                 ItemId = ItemId,
-                ContactGroupId = ContactGroupId,
+                //ContactGroupId = ContactGroupId,
                 Amount = Price,
                 CreatedAt = CreationDate
             };
@@ -73,7 +73,7 @@ namespace Service.Service
             if (_validator.ValidCreateObject(priceMutation, this))
             {
                 priceMutation = _repository.CreateObject(priceMutation);
-                IList<PriceMutation> priceMutations = _repository.GetObjectsByIsActive(true, priceMutation.Id, priceMutation.ItemId, priceMutation.ContactGroupId);
+                IList<PriceMutation> priceMutations = _repository.GetObjectsByIsActive(true, priceMutation.Id, priceMutation.ItemId/*, priceMutation.ContactGroupId*/);
                 foreach (var priceMutation2 in priceMutations)
                 {
                     priceMutation2.Errors = new Dictionary<String, String>();

@@ -53,6 +53,8 @@
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceService.cs" />
+    <Compile Include="Service\SalesOperation\CashSalesInvoiceService.cs" />
+    <Compile Include="Service\SalesOperation\CashSalesInvoiceDetailService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceDetailService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceService.cs" />
     <Compile Include="Service\StockAndMaster\QuantityPricingService.cs" />

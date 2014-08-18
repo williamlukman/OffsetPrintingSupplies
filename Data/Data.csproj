@@ -56,6 +56,8 @@
     <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\CashSalesInvoiceMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\CashSalesInvoiceDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactGroupMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\QuantityPricingMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\GroupItemPriceMapping.cs" />
@@ -114,6 +116,8 @@
     <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceRepository.cs" />
+    <Compile Include="Repository\SalesOperation\CashSalesInvoiceDetailRepository.cs" />
+    <Compile Include="Repository\SalesOperation\CashSalesInvoiceRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceRepository.cs" />
     <Compile Include="Repository\StockAndMaster\QuantityPricingRepository.cs" />

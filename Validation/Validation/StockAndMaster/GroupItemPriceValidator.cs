@@ -21,7 +21,7 @@ namespace Validation.Validation
 
         public GroupItemPrice VHasDifferentPrice(GroupItemPrice groupItemPrice, IPriceMutationService _priceMutationService)
         {
-            IList<PriceMutation> priceMutations = _priceMutationService.GetObjectsByIsActive(true, groupItemPrice.ItemId, groupItemPrice.ContactGroupId, 0);
+            IList<PriceMutation> priceMutations = _priceMutationService.GetObjectsByIsActive(true, groupItemPrice.ItemId/*, groupItemPrice.ContactGroupId*/, 0);
             foreach (var priceMutation in priceMutations)
             {
                 if (groupItemPrice.Price == priceMutation.Amount)

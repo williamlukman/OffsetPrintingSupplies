@@ -11,7 +11,9 @@ namespace Core.Interface.Service
     {
         IQuantityPricingValidator GetValidator();
         IList<QuantityPricing> GetAll();
+        IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId);
         QuantityPricing GetObjectById(int Id);
+        QuantityPricing GetObjectByItemTypeIdAndQuantity(int ItemTypeId, int Quantity);
         QuantityPricing CreateObject(QuantityPricing quantityPricing, IItemTypeService _itemTypeService);
         QuantityPricing UpdateObject(QuantityPricing quantityPricing, int oldItemTypeId, IItemTypeService _itemTypeService);
         QuantityPricing SoftDeleteObject(QuantityPricing quantityPricing);

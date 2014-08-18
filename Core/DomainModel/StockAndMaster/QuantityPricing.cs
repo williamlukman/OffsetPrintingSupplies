@@ -12,7 +12,7 @@ namespace Core.DomainModel
         //public int PriceMutationId { get; set; }
         //public decimal Price { get; set; }
         public decimal Discount { get; set; }
-        public bool IsMinimumQuantity { get; set; }
+        //public bool IsMinimumQuantity { get; set; }
         public int MinQuantity { get; set; }
         public bool IsInfiniteMaxQuantity { get; set; }
         public int MaxQuantity { get; set; }

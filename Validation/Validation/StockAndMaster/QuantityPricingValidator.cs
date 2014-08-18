@@ -40,7 +40,7 @@ namespace Validation.Validation
 
         public QuantityPricing VIsValidMinQuantity(QuantityPricing quantityPricing)
         {
-            if (quantityPricing.IsMinimumQuantity && quantityPricing.MinQuantity <= 1)
+            if (quantityPricing.MinQuantity <= 1)
             {
                 quantityPricing.Errors.Add("MinQuantity", "Harus lebih besar dari 1");
             }
@@ -73,8 +73,8 @@ namespace Validation.Validation
             if (!isValid(quantityPricing)) { return quantityPricing; }
             VIsValidDiscount(quantityPricing);
             if (!isValid(quantityPricing)) { return quantityPricing; }
-            VHasUniqueCombination(quantityPricing, _quantityPricingService);
-            if (!isValid(quantityPricing)) { return quantityPricing; }
+            //VHasUniqueCombination(quantityPricing, _quantityPricingService);
+            //if (!isValid(quantityPricing)) { return quantityPricing; }
             VIsValidItemType(quantityPricing, _itemTypeService);
             return quantityPricing;
         }

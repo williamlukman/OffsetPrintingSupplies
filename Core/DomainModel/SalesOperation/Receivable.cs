@@ -17,6 +17,7 @@ namespace Core.DomainModel
         public decimal Amount { get; set; }
         public decimal RemainingAmount { get; set; }
         public decimal PendingClearanceAmount { get; set; }
+        public decimal AllowanceAmount { get; set; }
         public bool IsCompleted { get; set; }
         public Nullable<DateTime> CompletionDate { get; set; }
         public bool IsDeleted { get; set; }

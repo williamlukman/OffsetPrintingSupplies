@@ -11,7 +11,7 @@ namespace Core.Interface.Service
     {
         IPriceMutationValidator GetValidator();
         IList<PriceMutation> GetAll();
-        IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ItemId, int ContactGroupId, int ExcludePriceMutationId);
+        IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ItemId/*, int ContactGroupId*/, int ExcludePriceMutationId);
         IList<PriceMutation> GetActiveObjectsByItemId(int ItemId);
         PriceMutation GetObjectById(int Id);
         PriceMutation DeactivateObject(PriceMutation priceMutation, Nullable<DateTime> DeactivationDate);

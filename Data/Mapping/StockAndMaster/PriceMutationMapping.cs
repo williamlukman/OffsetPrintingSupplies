@@ -15,9 +15,9 @@ namespace Data.Mapping
             HasRequired(pm => pm.Item)
                 .WithMany(i => i.PriceMutations)
                 .HasForeignKey(pm => pm.ItemId);
-            HasRequired(pm => pm.ContactGroup)
+            /*HasRequired(pm => pm.ContactGroup)
                 .WithMany()
-                .HasForeignKey(pm => pm.ContactGroupId);
+                .HasForeignKey(pm => pm.ContactGroupId);*/
             Ignore(pm => pm.Errors);
         }
     }
