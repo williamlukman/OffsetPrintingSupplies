@@ -232,8 +232,14 @@ namespace Service.Service
             decimal originalAvgCost = item.AvgPrice;
             decimal avgCost = (originalQuantity + addedQuantity == 0) ? 0 :
                 ((originalQuantity * originalAvgCost) + (addedQuantity * addedAvgCost)) / (originalQuantity + addedQuantity);
-            //if (originalAvgCost == 0) avgCost = addedAvgCost;
             return avgCost;
+        }
+
+        public decimal CalculateAndUpdateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost)
+        {
+            item.AvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgCost);
+            _repository.Update(item);
+            return item.AvgPrice;
         }
 
         public bool DeleteObject(int Id)

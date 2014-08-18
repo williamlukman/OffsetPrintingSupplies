@@ -98,8 +98,7 @@ namespace Service.Service
                 };
 
                 decimal itemPrice = retailPurchaseInvoiceDetail.Amount / retailPurchaseInvoiceDetail.Quantity;
-                item.AvgPrice = _itemService.CalculateAvgPrice(item, retailPurchaseInvoiceDetail.Quantity, itemPrice);
-                //_itemService.GetRepository().Update(item);
+                item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, retailPurchaseInvoiceDetail.Quantity, itemPrice);
 
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 stockMutation.CreatedAt = (DateTime)retailPurchaseInvoice.ConfirmationDate;
@@ -118,8 +117,7 @@ namespace Service.Service
             {
                 Item item = _itemService.GetObjectById(retailPurchaseInvoiceDetail.ItemId);
                 decimal itemPrice = retailPurchaseInvoiceDetail.Amount / retailPurchaseInvoiceDetail.Quantity;
-                item.AvgPrice = _itemService.CalculateAvgPrice(item, retailPurchaseInvoiceDetail.Quantity * (-1), itemPrice);
-                //_itemService.GetRepository().Update(item);
+                item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, retailPurchaseInvoiceDetail.Quantity * (-1), itemPrice);
 
                 IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(retailPurchaseInvoiceDetail.ItemId, Core.Constants.Constant.SourceDocumentDetailType.RetailPurchaseInvoiceDetail, retailPurchaseInvoiceDetail.Id);
                 foreach (var stockMutation in stockMutations)

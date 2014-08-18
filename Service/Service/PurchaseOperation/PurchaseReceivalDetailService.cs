@@ -97,10 +97,7 @@ namespace Service.Service
                 foreach (var stockMutation in stockMutations)
                 {
                     decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
-                    item.AvgPrice = _itemService.CalculateAvgPrice(item, purchaseReceivalDetail.Quantity, itemPrice);
-                    //item.PendingReceival -= purchaseReceivalDetail.Quantity;
-                    //item.Quantity += purchaseReceivalDetail.Quantity;
-                    //_itemService.GetRepository().Update(item);
+                    item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, purchaseReceivalDetail.Quantity, itemPrice);
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
                 PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
@@ -124,10 +121,7 @@ namespace Service.Service
                 foreach (var stockMutation in stockMutations)
                 {
                     decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
-                    item.AvgPrice = _itemService.CalculateAvgPrice(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
-                    //item.PendingReceival += purchaseReceivalDetail.Quantity;
-                    //item.Quantity -= purchaseReceivalDetail.Quantity;
-                    //_itemService.GetRepository().Update(item);
+                    item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
                 PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
