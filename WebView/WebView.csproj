@@ -171,6 +171,7 @@
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseReceivalController.cs" />
     <Compile Include="Controllers\ReceiptVoucherController.cs" />
+    <Compile Include="Controllers\RecoveryWorkOrderController.cs" />
     <Compile Include="Controllers\RollerWarehouseMutationController.cs" />
     <Compile Include="Controllers\SalesInvoiceController.cs" />
     <Compile Include="Controllers\SalesOrderController.cs" />
@@ -205,6 +206,7 @@
     <Content Include="Content\apps_js\PurchaseOrder.js" />
     <Content Include="Content\apps_js\PurchaseReceival.js" />
     <Content Include="Content\apps_js\ReceiptVoucher.js" />
+    <Content Include="Content\apps_js\RecoveryWorkOrder.js" />
     <Content Include="Content\apps_js\RollerWarehouseMutation.js" />
     <Content Include="Content\apps_js\SalesInvoice.js" />
     <Content Include="Content\apps_js\SalesOrder.js" />
@@ -1088,6 +1090,7 @@
     <Content Include="Views\CoreIdentification\Index.cshtml" />
     <Content Include="Views\RollerWarehouseMutation\Index.cshtml" />
     <Content Include="Views\BarringWorkOrder\Index.cshtml" />
+    <Content Include="Views\RecoveryWorkOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

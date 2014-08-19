@@ -110,6 +110,66 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+
+        public dynamic GetListAccessory(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query = _itemService.GetAllAccessories(_itemService,_itemTypeService).Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<Item>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from item in list
+                    select new
+                    {
+                        id = item.Id,
+                        cell = new object[] {
+                            item.Id,
+                            item.Name,
+                            item.ItemTypeId,
+                            _itemTypeService.GetObjectById(item.ItemTypeId).Name,
+                            item.Sku,
+                            item.Category,
+                            item.UoMId,
+                            _uoMService.GetObjectById(item.UoMId).Name,
+                            item.Quantity,
+                            item.SellingPrice,
+                            item.AvgPrice,
+                            item.PendingReceival,
+                            item.PendingDelivery,
+                            item.CreatedAt,
+                            item.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+
         public dynamic GetInfo(int Id)
         {
             Item model = new Item();
