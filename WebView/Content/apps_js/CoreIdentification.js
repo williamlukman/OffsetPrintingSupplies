@@ -172,8 +172,8 @@
                             }
                             $('#IdentifiedDate').datebox('setValue', dateEnt(result.IdentifiedDate));
                             $('#IdentifiedDate2').val(dateEnt(result.IdentifiedDate));
-                            $('#IdentifiedDateDiv').show();
-                            $('#IdentifiedDateDiv2').hide();
+                            $('#IdentifiedDateDiv').hide();
+                            $('#IdentifiedDateDiv2').show();
                             $('#form_btn_save').hide();
                             $('#btnWarehouse').attr('disabled', true);
                             $('#btnContact').attr('disabled', true);
@@ -226,8 +226,8 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#IndentifiedDate').datebox('setValue', dateEnt(result.IndentifiedDate));
-                            $('#IndentifiedDate2').val(dateEnt(result.IndentifiedDate));
+                            $('#IdentifiedDate').datebox('setValue', dateEnt(result.IdentifiedDate));
+                            $('#IdentifiedDatee2').val(dateEnt(result.IdentifiedDate));
                             $('#IdentifiedDateDiv').show();
                             $('#IdentifiedDateDiv2').hide();
                             $('#form_btn_save').hide();
@@ -340,14 +340,14 @@
         }
     });
 
-    $('#btn_unfinished').click(function () {
-        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+    $('#btn_unfinish_detail').click(function () {
+        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.finished('Confirm', 'Are you sure you want to unfinished record?', function (r) {
+            $.messager.confirm('Confirm', 'Are you sure you want to unfinish record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "CoreIdentification/Unfinished",
+                        url: base_url + "CoreIdentification/Unfinish",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -366,8 +366,7 @@
                                 }
                             }
                             else {
-                                ReloadGrid();
-                                $("#delete_finished_div").dialog('close');
+                                ReloadGridDetail();
                             }
                         }
                     });
@@ -494,7 +493,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Code: $("#Code").val(), WarehouseId: $("#WarehouseId").val(), ContactId: $("#ContactId").val(),
-                IsInHouse: moving, Quantity: $("#Quantity").val(),
+                IsInHouse: moving, Quantity: $("#Quantity").numberbox('getValue'),
                 IdentifiedDate: $('#IdentifiedDate').datebox('getValue'),
             }),
             async: false,
@@ -527,12 +526,11 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Detail Id', 'RollerIdentificationId','Material Case', 'CoreBuilder Id', 'CoreBuilder Name', 'RollerType Id', 'RollerType Name'
+        colNames: ['Detail Id', 'RollerIdentificationId','Material Case', 'CoreBuilder Id', 'CoreBuilder Name', 'RollerType Id', 'RollerType Name'
                   ,'Machine Id','Machine Name','RD','CD','RL','WL','TL','Is Finished','Finished Date'
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'detailid', index: 'detailid', width: 130, sortable: false, hidden: true },
+                  { name: 'detailid', index: 'detailid', width: 130, sortable: false},
                   { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
                   { name: 'materialcase', index: 'materialcase', width: 130, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false },
@@ -562,6 +560,19 @@
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowIsConfirmed = $(this).getRowData(cl).isfinished;
+		          if (rowIsConfirmed == 'true') {
+		              rowIsConfirmed = "YES";
+		          } else {
+		              rowIsConfirmed = "NO";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isfinished: rowIsConfirmed });
+
+		          
+		      }
 		  }
     });//END GRID Detail
     $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
@@ -595,11 +606,26 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#ItemId').val(result.ItemId);
-                            $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
-                            $('#CoreIdentificationOrderDetailId').val(result.CoreIdentificationOrderDetailId);
+                            $('#DetailId').val(result.DetailId);
+                            var e = document.getElementById("MaterialCase");
+                            if (result.MaterialCase == 1) {
+                                e.selectedIndex = 0;
+                            }
+                            else {
+                                e.selectedIndex = 1;
+                            }
+                            $('#CoreIdentificationId').val(result.CoreIdentificationId);
+                            $('#CoreBuilderId').val(result.CoreBuilderId);
+                            $('#CoreBuilder').val(result.CoreBuilder);
+                            $('#RollerTypeId').val(result.RollerTypeId);
+                            $('#RollerType').val(result.RollerType);
+                            $('#MachineId').val(result.MachineId);
+                            $('#Machine').val(result.MachineId);
+                            $('#RD').val(result.RD);
+                            $('#CD').val(result.CD);
+                            $('#RL').val(result.RL);
+                            $('#WL').val(result.WL);
+                            $('#TL').val(result.TL);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -676,8 +702,8 @@
             data: JSON.stringify({
                 Id: id, DetailId: $("#DetailId").val(), CoreIdentificationId: $("#id").val(),
                 MaterialCase: moving, CoreBuilderId: $("#CoreBuilderId").val(), RollerTypeId: $("#RollerTypeId").val(),
-                MachineId: $("#MachineId").val(), RD: $("#RD").val(), CD: $("#CD").val(), RL: $("#RL").val(),
-                WL: $("#WL").val(), TL: $("#TL").val(),
+                MachineId: $("#MachineId").val(), RD: $("#RD").numberbox('getValue'), CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'),
+                WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'),
             }),
             async: false,
             cache: false,

@@ -23,7 +23,6 @@ namespace WebView.Controllers
         private IContactService _contactService;
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         private IPurchaseReceivalService _purchaseReceivalService;
-        private IContactGroupService _contactGroupService;
 
         public PurchaseOrderController()
         {

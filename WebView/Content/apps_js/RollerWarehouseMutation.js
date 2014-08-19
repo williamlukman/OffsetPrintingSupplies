@@ -3,17 +3,17 @@
 		vMainGrid,
 		vCode;
 
-    
+
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'StockAdjustment/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'RollerWarehouseMutation/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'StockAdjustment/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'RollerWarehouseMutation/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -35,28 +35,39 @@
                 this.selectedIndex = 0;
         });
     }
-    
-    $("#item_div").dialog('close');
+
+    $("#coreidentification_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
-    $("#lookup_div_item").dialog('close');
-    $("#lookup_div_warehouse").dialog('close');
+    $("#item_div").dialog('close');
+    $("#lookup_div_coreidentification").dialog('close');
+    $("#lookup_div_coreidentificationdetail").dialog('close');
+    $("#lookup_div_warehouseto").dialog('close');
+    $("#lookup_div_warehousefrom").dialog('close');
+    $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'StockAdjustment/GetList',
+        url: base_url + 'RollerWarehouseMutation/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse Id', 'Warehouse Name', 'AdjusmentDate', 'Description',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'RollerIdentification Id', 'RollerIdentification Code', 'WarehouseFrom Id',
+                    'WarehouseFrom Code', 'WarehouseFrom Name', 'WarehouseTo Id', 'WarehouseTo Code',
+                    'WarehouseTo Name','Quantity','Is Confirmed','Confirmation Date','Created At','Updated At'
+        ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'warehouseid', index: 'warehouseid', width: 100 },
-                  { name: 'warehousename', index: 'warehousename', width: 80 },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100 ,search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'description', index: 'description', width: 100 },
+				  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 100 },
+                  { name: 'rolleridentificationcode', index: 'rolleridentificationcode', width: 100 },
+                  { name: 'warehousefromid', index: 'warehousefromid', width: 100 },
+                  { name: 'warehousefromcode', index: 'warehousefromcode', width: 100 },
+                  { name: 'warehousefrom', index: 'warehousefrom', width: 100 },
+                  { name: 'warehousetoid', index: 'warehousetoid', width: 100 },
+                  { name: 'warehousetocode', index: 'warehousetocode', width: 100 },
+                  { name: 'warehouseto', index: 'warehouseto', width: 100 },
+                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -92,7 +103,7 @@
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
-   
+
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -106,12 +117,14 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-        $('#AdjustmentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#btnWarehouse').removeAttr('disabled');
-        $('#Description').removeAttr('disabled');
+        $('#btnWarehouseFrom').removeAttr('disabled');
+        $('#btnWarehouseTo').removeAttr('disabled');
+        $('#btnCoreIdentification').removeAttr('disabled');
+        $('#Quantity').removeAttr('disabled');
+        $('#MutationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#MutationDateDiv').show();
+        $('#MutationDateDiv2').hide();
         $('#tabledetail_div').hide();
-        $('#AdjustmentDateDiv').show();
-        $('#AdjustmentDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -124,7 +137,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfo?Id=" + id,
+                url: base_url + "RollerWarehouseMutation/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -141,17 +154,22 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
-                            $('#Description').val(result.Description);
-                            $('#Code').val(result.Code);
-                            $('#AdjustmentDate').datebox('setValue', dateEnt(result.AdjustmentDate));
-                            $('#AdjustmentDate2').val(dateEnt(result.AdjustmentDate));
-                            $('#AdjustmentDateDiv2').show();
-                            $('#AdjustmentDateDiv').hide();
+                            $('#CoreIdentificationId').val(result.CoreIdentificationId);
+                            $('#CoreIdentification').val(result.CoreIdentification);
+                            $('#WarehouseFromId').val(result.WarehouseFromId);
+                            $('#WarehouseFrom').val(result.WarehouseFrom);
+                            $('#WarehouseToId').val(result.WarehouseToId);
+                            $('#WarehouseTo').val(result.WarehouseTo);
+                            $('#Quantity').val(result.Quantity);
                             $('#form_btn_save').hide();
-                            $('#btnWarehouse').attr('disabled', true);
-                            $('#Description').attr('disabled', true);
+                            $('#btnCoreIdentification').attr('disabled', true);
+                            $('#btnWarehouseFrom').attr('disabled', true);
+                            $('#btnWarehouseTo').attr('disabled', true);
+                            $('#Quantity').attr('disabled', true);
+                            $('#MutationDate').datebox('setValue', dateEnt(result.MutationDate));
+                            $('#MutationDate2').val(dateEnt(result.MutationDate));
+                            $('#MutationDateDiv2').show();
+                            $('#MutationDateDiv').hide();
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -163,8 +181,8 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-       
-       
+
+
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -173,7 +191,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfo?Id=" + id,
+                url: base_url + "RollerWarehouseMutation/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -190,16 +208,22 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
-                            $('#Description').val(result.Description);
-                            $('#Code').val(result.Code);
-                            $('#AdjustmentDate').datebox('setValue', dateEnt(result.AdjustmentDate));
-                            $('#btnWarehouse').removeAttr('disabled');
-                            $('#Description').removeAttr('disabled');
+                            $('#CoreIdentificationId').val(result.CoreIdentificationId);
+                            $('#CoreIdentification').val(result.CoreIdentification);
+                            $('#WarehouseFromId').val(result.WarehouseFromId);
+                            $('#WarehouseFrom').val(result.WarehouseFrom);
+                            $('#WarehouseToId').val(result.WarehouseToId);
+                            $('#WarehouseTo').val(result.WarehouseTo);
+                            $('#Quantity').val(result.Quantity);
+                            $('#MutationDate').datebox('setValue', dateEnt(result.MutationDate));
+                            $('#MutationDate2').val(dateEnt(result.MutationDate));
+                            $('#MutationDateDiv2').hide();
+                            $('#MutationDateDiv').show();
+                            $('#btnWarehouseFrom').removeAttr('disabled');
+                            $('#btnWarehouseTo').removeAttr('disabled');
+                            $('#btnCoreIdentification').removeAttr('disabled');
+                            $('#Quantity').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#AdjustmentDateDiv').show();
-                            $('#AdjustmentDateDiv2').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -222,7 +246,7 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-    
+
     $('#btn_unconfirm').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
@@ -230,7 +254,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "StockAdjustment/Unconfirm",
+                        url: base_url + "RollerWarehouseMutation/Unconfirm",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -264,7 +288,7 @@
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
         $.ajax({
-            url: base_url + "StockAdjustment/Confirm",
+            url: base_url + "RollerWarehouseMutation/Confirm",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -294,7 +318,7 @@
         $('#confirm_div').dialog('close');
     });
 
-   
+
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -317,7 +341,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "StockAdjustment/Delete",
+            url: base_url + "RollerWarehouseMutation/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -355,18 +379,13 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#AdjustmentDate').datebox('getValue') == "")
-        {
-            return $($('#AdjustmentDate').addClass('errormessage').before('<span class="errormessage">**' + "Adjustment Date Belum Terisi" + '</span>'));
-
-        }
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'StockAdjustment/Update';
+            submitURL = base_url + 'RollerWarehouseMutation/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'StockAdjustment/Insert';
+            submitURL = base_url + 'RollerWarehouseMutation/Insert';
         }
 
         $.ajax({
@@ -374,8 +393,9 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, WarehouseId: $("#WarehouseId").val(), AdjustmentDate: $('#AdjustmentDate').datebox('getValue'),
-                Description: $("#Description").val()
+                Id: id, CoreIdentificationId: $("#CoreIdentificationId").val(),
+                WarehouseToId: $("#WarehouseToId").val(), WarehouseFromId: $("#WarehouseFromId").val(),
+                Quantity: $('#Quantity').numberbox('getValue'), MutationDate: $('#MutationDate').datebox('getValue'),
             }),
             async: false,
             cache: false,
@@ -407,13 +427,14 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity',
+        colNames: ['Code', 'RollerWarehouseMutation Id','RollerIdentificationDetail Id','Item Id', 'Item Name'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'rollerwarehousemutationid', index: 'rollerwarehousemutationid', width: 100, sortable: false },
+                  { name: 'rolleridentificationdetailid', index: 'rolleridentificationdetailid', width: 100, sortable: false },
+				  { name: 'coreidentificationid', index: 'coreidentificationid', width: 100, sortable: false },
+                  { name: 'coreidentificationname', index: 'coreidentificationname', width: 80, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -446,7 +467,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfoDetail?Id=" + id,
+                url: base_url + "RollerWarehouseMutation/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -461,9 +482,8 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#ItemId').val(result.ItemId);
-                            $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
+                            $('#CoreIdentificationDetailId').val(result.CoreIdentificationDetailId);
+                            $('#CoreIdentificationDetail').val(result.Item);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -481,7 +501,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "StockAdjustment/DeleteDetail",
+                        url: base_url + "RollerWarehouseMutation/DeleteDetail",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -512,7 +532,7 @@
         }
     });
     //--------------------------------------------------------Dialog Item-------------------------------------------------------------
-    // item_btn_submit
+    // coreidentification_btn_submit
 
     $("#item_btn_submit").click(function () {
 
@@ -520,14 +540,14 @@
 
         var submitURL = '';
         var id = $("#item_btn_submit").data('kode');
-       
+
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'StockAdjustment/UpdateDetail';
+            submitURL = base_url + 'RollerWarehouseMutation/UpdateDetail';
         }
             // Insert
         else {
-            submitURL = base_url + 'StockAdjustment/InsertDetail';
+            submitURL = base_url + 'RollerWarehouseMutation/InsertDetail';
         }
 
         $.ajax({
@@ -535,8 +555,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, StockAdjustmentId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").numberbox('getValue')
+                Id: id, CoreIdentificationDetailId: $("#CoreIdentificationDetailId").val(), RollerWarehouseMutationId: $("#id").val(),
+                ItemId : $("#CoreIdentificationDetailId").val()
             }),
             async: false,
             cache: false,
@@ -565,24 +585,24 @@
     });
 
 
-    // item_btn_cancel
+    // coreidentification_btn_cancel
     $('#item_btn_cancel').click(function () {
         clearForm('#item_div');
         $("#item_div").dialog('close');
     });
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up warehouse-------------------------------------------------------
-    $('#btnWarehouse').click(function () {
+    // -------------------------------------------------------Look Up warehouseto-------------------------------------------------------
+    $('#btnWarehouseTo').click(function () {
         var lookUpURL = base_url + 'MstWarehouse/GetList';
-        var lookupGrid = $('#lookup_table_warehouse');
+        var lookupGrid = $('#lookup_table_warehouseto');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_warehouse').dialog('open');
+        $('#lookup_div_warehouseto').dialog('open');
     });
 
-    jQuery("#lookup_table_warehouse").jqGrid({
+    jQuery("#lookup_table_warehouseto").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
@@ -591,7 +611,7 @@
                   { name: 'id', index: 'id', width: 80, align: 'right' },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
-        pager: $('#lookup_pager_warehouse'),
+        pager: $('#lookup_pager_warehouseto'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -599,46 +619,47 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_warehouse").width() - 10,
-        height: $("#lookup_div_warehouse").height() - 110,
+        width: $("#lookup_div_warehouseto").width() - 10,
+        height: $("#lookup_div_warehouseto").height() - 110,
     });
-    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_warehouseto").jqGrid('navGrid', '#lookup_toolbar_warehouseto', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_warehouse').click(function () {
-        $('#lookup_div_warehouse').dialog('close');
+    $('#lookup_btn_cancel_warehouseto').click(function () {
+        $('#lookup_div_warehouseto').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_warehouse').click(function () {
-        var id = jQuery("#lookup_table_warehouse").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_warehouseto').click(function () {
+        var id = jQuery("#lookup_table_warehouseto").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_warehouse").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_warehouseto").jqGrid('getRowData', id);
 
-            $('#WarehouseId').val(ret.id).data("kode", id);
-            $('#Warehouse').val(ret.name);
+            $('#WarehouseToId').val(ret.id).data("kode", id);
+            $('#WarehouseTo').val(ret.name);
 
-            $('#lookup_div_warehouse').dialog('close');
+            $('#lookup_div_warehouseto').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup warehouse----------------------------------------------------------------
+    // ---------------------------------------------End Lookup warehouseto----------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up item-------------------------------------------------------
-    $('#btnItem').click(function () {
-        var lookUpURL = base_url + 'MstItem/GetList';
-        var lookupGrid = $('#lookup_table_item');
+
+    // -------------------------------------------------------Look Up warehousefrom-------------------------------------------------------
+    $('#btnWarehouseFrom').click(function () {
+        var lookUpURL = base_url + 'MstWarehouse/GetList';
+        var lookupGrid = $('#lookup_table_warehousefrom');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_item').dialog('open');
+        $('#lookup_div_warehousefrom').dialog('open');
     });
 
-    jQuery("#lookup_table_item").jqGrid({
+    jQuery("#lookup_table_warehousefrom").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
@@ -647,7 +668,7 @@
                   { name: 'id', index: 'id', width: 80, align: 'right' },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
-        pager: $('#lookup_pager_item'),
+        pager: $('#lookup_pager_warehousefrom'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -655,34 +676,163 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_item").width() - 10,
-        height: $("#lookup_div_item").height() - 110,
+        width: $("#lookup_div_warehousefrom").width() - 10,
+        height: $("#lookup_div_warehousefrom").height() - 110,
     });
-    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_warehousefrom").jqGrid('navGrid', '#lookup_toolbar_warehousefrom', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_item').click(function () {
-        $('#lookup_div_item').dialog('close');
+    $('#lookup_btn_cancel_warehousefrom').click(function () {
+        $('#lookup_div_warehousefrom').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_item').click(function () {
-        var id = jQuery("#lookup_table_item").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_warehousefrom').click(function () {
+        var id = jQuery("#lookup_table_warehousefrom").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_warehousefrom").jqGrid('getRowData', id);
+           
+            $('#WarehouseFromId').val(ret.id).data("kode", id);
+            $('#WarehouseFrom').val(ret.name);
 
-            $('#ItemId').val(ret.id).data("kode", id);
-            $('#Item').val(ret.name);
-
-            $('#lookup_div_item').dialog('close');
+            $('#lookup_div_warehousefrom').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup item----------------------------------------------------------------
+    // ---------------------------------------------End Lookup warehousefrom----------------------------------------------------------------
 
+
+    // -------------------------------------------------------Look Up coreidentification-------------------------------------------------------
+    $('#btnCoreIdentification').click(function () {
+        var lookUpURL = base_url + 'CoreIdentification/GetList';
+        var lookupGrid = $('#lookup_table_coreidentification');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_coreidentification').dialog('open');
+    });
+
+    jQuery("#lookup_table_coreidentification").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Name'],
+        colModel: [
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 }],
+        page: '1',
+        pager: $('#lookup_pager_coreidentification'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_coreidentification").width() - 10,
+        height: $("#lookup_div_coreidentification").height() - 110,
+    });
+    $("#lookup_table_coreidentification").jqGrid('navGrid', '#lookup_toolbar_coreidentification', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_coreidentification').click(function () {
+        $('#lookup_div_coreidentification').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_coreidentification').click(function () {
+        var id = jQuery("#lookup_table_coreidentification").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_coreidentification").jqGrid('getRowData', id);
+        
+            $('#CoreIdentificationId').val(ret.id).data("kode", id);
+            $('#CoreIdentification').val(ret.name);
+
+            $('#lookup_div_coreidentification').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup coreidentification----------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up coreidentificationdetail-------------------------------------------------------
+    $('#btnCoreIdentificationDetail').click(function () {
+        var lookUpURL = base_url + 'CoreIdentification/GetListDetail?Id=' + $('#CoreIdentificationId').val();
+        var lookupGrid = $('#lookup_table_coreidentificationdetail');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_coreidentificationdetail').dialog('open');
+    });
+
+    jQuery("#lookup_table_coreidentificationdetail").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Detail Id', 'RollerIdentificationId', 'Material Case', 'CoreBuilder Id', 'CoreBuilder Name', 'RollerType Id', 'RollerType Name'
+                  , 'Machine Id', 'Machine Name', 'RD', 'CD', 'RL', 'WL', 'TL', 'Is Finished', 'Finished Date'
+        ],
+        colModel: [
+                  { name: 'detailid', index: 'detailid', width: 130, sortable: false },
+                  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
+                  { name: 'materialcase', index: 'materialcase', width: 130, sortable: false },
+                  { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false },
+                  { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
+                  { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false },
+                  { name: 'rollertypename', index: 'rollertypename', width: 80, sortable: false },
+                  { name: 'machineid', index: 'machineid', width: 80, sortable: false },
+                  { name: 'machinename', index: 'machinename', width: 80, sortable: false },
+                  { name: 'rd', index: 'rd', width: 80, sortable: false },
+                  { name: 'cd', index: 'cd', width: 80, sortable: false },
+                  { name: 'rl', index: 'rl', width: 80, sortable: false },
+                  { name: 'wl', index: 'wl', width: 80, sortable: false },
+                  { name: 'tl', index: 'tl', width: 80, sortable: false },
+                  { name: 'isfinished', index: 'isfinished', width: 80, sortable: false },
+                  { name: 'finisheddate', index: 'finisheddate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_coreidentificationdetail'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_coreidentificationdetail").width() - 10,
+        height: $("#lookup_div_coreidentificationdetail").height() - 110,
+    });
+    $("#lookup_table_coreidentificationdetail").jqGrid('navGrid', '#lookup_toolbar_coreidentificationdetail', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_coreidentificationdetail').click(function () {
+        $('#lookup_div_coreidentificationdetail').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_coreidentificationdetail').click(function () {
+        var id = jQuery("#lookup_table_coreidentificationdetail").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_coreidentificationdetail").jqGrid('getRowData', id);
+
+            $('#CoreIdentificationDetailId').val(id).data("kode", id);
+            $('#CoreIdentificationDetail').val(ret.corebuildername);
+
+            $('#lookup_div_coreidentificationdetail').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup coreidentificationdetail----------------------------------------------------------------
 
 }); //END DOCUMENT READY

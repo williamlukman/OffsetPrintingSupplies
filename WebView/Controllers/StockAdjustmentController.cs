@@ -233,6 +233,7 @@ namespace WebView.Controllers
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 data.AdjustmentDate = model.AdjustmentDate;
                 data.Description = model.Description;
+                data.WarehouseId = model.WarehouseId;
                 model = _stockAdjustmentService.UpdateObject(data,_warehouseService);
             }
             catch (Exception ex)

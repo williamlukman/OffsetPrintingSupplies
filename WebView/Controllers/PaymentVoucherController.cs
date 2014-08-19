@@ -293,12 +293,10 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic InsertDetail(PaymentVoucherDetail model)
         {
-            decimal amount = 0;
             try
             {
                 model = _paymentVoucherDetailService.CreateObject(model,_paymentVoucherService,_cashBankService,_payableService
                    );
-                amount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -310,7 +308,6 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                AmountPayable = amount
             });
         }
 
@@ -339,7 +336,6 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                model.TotalAmount
             });
         }
 
@@ -366,12 +362,10 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic DeleteDetail(PaymentVoucherDetail model)
         {
-            decimal amount = 0;
             try
             {
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
                 model = _paymentVoucherDetailService.SoftDeleteObject(data);
-                amount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -382,14 +376,12 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                AmountPayable = amount
             });
         }
 
         [HttpPost]
         public dynamic UpdateDetail(PaymentVoucherDetail model)
         {
-            decimal amount = 0;
             try
             {
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
@@ -397,7 +389,6 @@ namespace WebView.Controllers
                 data.Amount = model.Amount;
                 data.Description = model.Description;
                 model = _paymentVoucherDetailService.UpdateObject(data,_paymentVoucherService,_cashBankService,_payableService);
-                amount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -408,7 +399,6 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                AmountPayable = amount
             });
         }
 

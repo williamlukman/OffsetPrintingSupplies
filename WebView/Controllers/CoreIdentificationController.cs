@@ -149,7 +149,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                         model.DetailId,
                         model.CoreIdentificationId,
-                        model.MaterialCase,
+                        model.MaterialCase == 1 ? "New" : "Used",
                         model.CoreBuilderId,
                         _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                         model.RollerTypeId,
@@ -220,7 +220,7 @@ namespace WebView.Controllers
                 model.CoreIdentificationId,
                 model.MaterialCase,
                 model.CoreBuilderId,
-                _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
+                CoreBuilder = _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                 model.RollerTypeId,
                 RollerType = _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
                 model.MachineId,
@@ -290,7 +290,8 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.IsInHouse = model.IsInHouse;
                 data.IdentifiedDate = model.IdentifiedDate;
-                model = _coreIdentificationService.UpdateObject(data,_contactService);
+                data.Quantity = model.Quantity;
+                model = _coreIdentificationService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
             {
@@ -301,7 +302,6 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                model.Quantity
             });
         }
 
@@ -435,7 +435,6 @@ namespace WebView.Controllers
         {
             try
             {
-
                 var data = _coreIdentificationDetailService.GetObjectById(model.Id);
                 model = _coreIdentificationDetailService.FinishObject(data,model.FinishedDate.Value,_coreIdentificationService,_coreBuilderService,_stockMutationService
                     ,_itemService,_barringService,_warehouseItemService);
@@ -443,6 +442,27 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Unconfirm Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Errors
+            });
+        }
+
+        [HttpPost]
+        public dynamic UnFinish(CoreIdentificationDetail model)
+        {
+            try
+            {
+                var data = _coreIdentificationDetailService.GetObjectById(model.Id);
+                model = _coreIdentificationDetailService.UnfinishObject(data,_coreIdentificationService,_coreBuilderService,_stockMutationService
+                    ,_itemService,_barringService,_warehouseItemService);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Unfinish Failed", ex);
                 model.Errors.Add("Generic", "Error : " + ex);
             }
 

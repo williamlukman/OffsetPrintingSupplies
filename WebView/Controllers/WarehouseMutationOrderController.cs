@@ -83,6 +83,7 @@ namespace WebView.Controllers
                             _warehouseService.GetObjectById(model.WarehouseFromId).Name,
                             model.WarehouseToId,
                             _warehouseService.GetObjectById(model.WarehouseToId).Name,
+                            model.MutationDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -160,6 +161,7 @@ namespace WebView.Controllers
                 WarehouseFrom = _warehouseService.GetObjectById(model.WarehouseFromId).Name,
                 model.WarehouseToId,
                 WarehouseTo = _warehouseService.GetObjectById(model.WarehouseToId).Name,
+                model.MutationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -234,6 +236,7 @@ namespace WebView.Controllers
                 var data = _warehouseMutationOrderService.GetObjectById(model.Id);
                 data.WarehouseFromId = model.WarehouseFromId;
                 data.WarehouseToId = model.WarehouseToId;
+                data.MutationDate = model.MutationDate;
                 model = _warehouseMutationOrderService.UpdateObject(data,_warehouseService);
             }
             catch (Exception ex)

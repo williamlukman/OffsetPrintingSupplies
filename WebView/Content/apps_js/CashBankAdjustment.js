@@ -280,7 +280,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, CashBankId: $("#CashBankId").val(), AdjustmentDate: $('#AdjustmentDate').datebox('getValue'),
-                Amount: $("#Amount").numberbox("getValue")
+                Amount: $("#Amount").numberbox('getValue')
             }),
             async: false,
             cache: false,

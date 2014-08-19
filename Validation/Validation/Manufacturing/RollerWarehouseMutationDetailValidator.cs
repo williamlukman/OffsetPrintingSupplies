@@ -89,7 +89,7 @@ namespace Validation.Validation
         {
             if (rollerWarehouseMutationDetail.IsConfirmed)
             {
-                rollerWarehouseMutationDetail.Errors.Add("Generic", "Tidak boleh sudah selesai.");
+                rollerWarehouseMutationDetail.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi.");
             }
             return rollerWarehouseMutationDetail;
         }
@@ -98,7 +98,7 @@ namespace Validation.Validation
         {
             if (!rollerWarehouseMutationDetail.IsConfirmed)
             {
-                rollerWarehouseMutationDetail.Errors.Add("Generic", "Harus sudah selesai.");
+                rollerWarehouseMutationDetail.Errors.Add("Generic", "Harus sudah dikonfirmasi.");
             }
             return rollerWarehouseMutationDetail;
         }

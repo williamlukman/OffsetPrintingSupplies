@@ -417,7 +417,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, PurchaseReceivalId: $("#PurchaseReceivalId").val(), Description: $("#Description").val(),
-                Discount: $("#Discount").numberbox("getValue"), IsTaxable: moving,
+                Discount: $("#Discount").numberbox('getValue'), IsTaxable: moving,
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,

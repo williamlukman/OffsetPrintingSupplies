@@ -49,7 +49,7 @@
     $("#list").jqGrid({
         url: base_url + 'WarehouseMutationOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse From Id', 'Warehouse From Name', 'Warehouse To Id', 'Warehouse To Name',
+        colNames: ['ID', 'Code', 'Warehouse From Id', 'Warehouse From Name', 'Warehouse To Id', 'Warehouse To Name','Mutation Date',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
@@ -58,6 +58,7 @@
                   { name: 'warehousetoname', index: 'warehousename', width: 150 },
                   { name: 'warehousefromid', index: 'warehouseid', width: 150 , align: "center"},
                   { name: 'warehousefromname', index: 'warehousename', width: 150 },
+                  { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -109,6 +110,9 @@
         clearForm('#frm');
         $('#btnWarehouseTo').removeAttr('disabled');
         $('#btnWarehouseFrom').removeAttr('disabled');
+        $('#MutationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#MutationDateDiv').show();
+        $('#MutationDateDiv2').hide();
         $('#tabledetail_div').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
@@ -144,6 +148,10 @@
                             $('#WarehouseToId').val(result.WarehouseToId);
                             $('#WarehouseTo').val(result.WarehouseTo);
                             $('#form_btn_save').hide();
+                            $('#MutationDate').datebox('setValue', dateEnt(result.MutationDate));
+                            $('#MutationDate2').val(dateEnt(result.MutationDate));
+                            $('#MutationDateDiv2').show();
+                            $('#MutationDateDiv').hide();
                             $('#btnWarehouseTo').attr('disabled', true);
                             $('#btnWarehouseFrom').attr('disabled', true);
                             $('#tabledetail_div').show();
@@ -188,6 +196,10 @@
                             $('#WarehouseFrom').val(result.WarehouseFrom);
                             $('#WarehouseToId').val(result.WarehouseToId);
                             $('#WarehouseTo').val(result.WarehouseTo);
+                            $('#MutationDate').datebox('setValue', dateEnt(result.MutationDate));
+                            $('#MutationDate2').val(dateEnt(result.MutationDate));
+                            $('#MutationDateDiv2').hide();
+                            $('#MutationDateDiv').show();
                             $('#btnWarehouseTo').removeAttr('disabled');
                             $('#btnWarehouseFrom').removeAttr('disabled');
                             $('#tabledetail_div').hide();
@@ -359,7 +371,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, WarehouseFromId: $("#WarehouseFromId").val(), WarehouseToId: $("#WarehouseToId").val()
+                Id: id, WarehouseFromId: $("#WarehouseFromId").val(), WarehouseToId: $("#WarehouseToId").val(),
+                MutationDate : $("#MutationDate").datebox('getValue')
             }),
             async: false,
             cache: false,
@@ -520,7 +533,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, WarehouseMutationOrderId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").val()
+                Quantity: $("#Quantity").numberbox('getValue')
             }),
             async: false,
             cache: false,

@@ -18,6 +18,10 @@ namespace Data.Mapping
             HasRequired(bo => bo.Contact)
                 .WithMany(c => c.BarringOrders)
                 .HasForeignKey(bo => bo.ContactId);
+            HasRequired(bo => bo.Warehouse)
+                .WithMany()
+                .HasForeignKey(bo => bo.WarehouseId)
+                .WillCascadeOnDelete(false);
             Ignore(bo => bo.Errors);
         }
     }

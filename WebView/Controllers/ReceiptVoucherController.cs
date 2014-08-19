@@ -297,12 +297,10 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic InsertDetail(ReceiptVoucherDetail model)
         {
-            decimal amount = 0;
             try
             {
                 model = _receiptVoucherDetailService.CreateObject(model,_receiptVoucherService,_cashBankService,_receivableService
                    );
-                amount = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -314,7 +312,6 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                AmountPayable = amount
             });
         }
 
@@ -343,7 +340,6 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                model.TotalAmount
             });
         }
 
@@ -370,12 +366,10 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic DeleteDetail(ReceiptVoucherDetail model)
         {
-            decimal amount = 0;
             try
             {
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
                 model = _receiptVoucherDetailService.SoftDeleteObject(data);
-                amount = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -386,14 +380,12 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                AmountPayable = amount
             });
         }
 
         [HttpPost]
         public dynamic UpdateDetail(ReceiptVoucherDetail model)
         {
-            decimal amount = 0;
             try
             {
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
@@ -401,7 +393,6 @@ namespace WebView.Controllers
                 data.Amount = model.Amount;
                 data.Description = model.Description;
                 model = _receiptVoucherDetailService.UpdateObject(data,_receiptVoucherService,_cashBankService,_receivableService);
-                amount = _receiptVoucherService.GetObjectById(model.ReceiptVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -412,7 +403,6 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                AmountPayable = amount
             });
         }
 

@@ -282,7 +282,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, SourceCashBankId: $("#SourceCashBankId").val(), TargetCashBankId: $("#TargetCashBankId").val(),
-                Amount: $("#Amount").numberbox("getValue")
+                Amount: $("#Amount").numberbox('getValue')
             }),
             async: false,
             cache: false,

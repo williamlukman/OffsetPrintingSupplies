@@ -148,6 +148,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BarringWorkOrderController.cs" />
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\CoreIdentificationController.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\apps_js\BarringWorkOrder.js" />
     <Content Include="Content\apps_js\CashBankAdjustment.js" />
     <Content Include="Content\apps_js\CashBankMutation.js" />
     <Content Include="Content\apps_js\CoreIdentification.js" />
@@ -203,6 +205,7 @@
     <Content Include="Content\apps_js\PurchaseOrder.js" />
     <Content Include="Content\apps_js\PurchaseReceival.js" />
     <Content Include="Content\apps_js\ReceiptVoucher.js" />
+    <Content Include="Content\apps_js\RollerWarehouseMutation.js" />
     <Content Include="Content\apps_js\SalesInvoice.js" />
     <Content Include="Content\apps_js\SalesOrder.js" />
     <Content Include="Content\apps_js\StockAdjustment.js" />
@@ -1083,6 +1086,8 @@
     <Content Include="Views\PaymentVoucher\Index.cshtml" />
     <Content Include="Views\ReceiptVoucher\Index.cshtml" />
     <Content Include="Views\CoreIdentification\Index.cshtml" />
+    <Content Include="Views\RollerWarehouseMutation\Index.cshtml" />
+    <Content Include="Views\BarringWorkOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1109,6 +1114,9 @@
       <Name>Validation</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -1125,7 +1133,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>52383</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61688/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

@@ -541,7 +541,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, PurchaseReceivalId: $("#id").val(), PurchaseOrderDetailId: $("#PurchaseOrderDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+                Id: id, PurchaseReceivalId: $("#id").val(), PurchaseOrderDetailId: $("#PurchaseOrderDetailId").val(), ItemId: $("#ItemId").val(),
+                Quantity: $("#Quantity").numberbox('getValue'),
             }),
             async: false,
             cache: false,

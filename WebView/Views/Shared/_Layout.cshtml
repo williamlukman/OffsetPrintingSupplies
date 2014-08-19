@@ -222,19 +222,12 @@
                                     </li>
                                     <li><a href="#">Manufacturing</a>
                                         <ul>
-                                            <li><a href="@Url.Action("Index", "CoreIdentification")">Core Identification</a></li>
-                                            <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
-                                            <li><a href="@Url.Action("Index", "TemporaryReceipt")">Temporary Receipt</a>
-                                            <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
-                                            <li><a href="@Url.Action("Index", "TemporaryPayment")">Temporary Payment</a></li>
-                                            <li><a href="@Url.Action("Index", "CashAdvance")">Cash Advance</a></li>
-                                            <li><a href="@Url.Action("Index", "CashAdvanceSettlement")">Cash Advance Settlement</a></li>
+                                            <li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification</a></li>
+                                            <li><a href="@Url.Action("Index", "RollerWarehouseMutation")">Roller Warehouse Mutation</a></li>
+                                            <li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Recovery Work Order</a></li>
+                                            <li><a href="@Url.Action("Index", "BarringWorkOrder")">Barring Work Order</a></li>
                                             <li><a href="#">Valid Combination</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "ValidCombinationBalanceCashCompany")">Balance Cash Per Company</a></li>
-                                                    <li><a href="@Url.Action("Index", "ValidCombinationBankCompany")">Bank Per Company</a></li>
-                                                    <li><a href="@Url.Action("Index", "ValidCombinationCashCompany")">Cash Per Company</a></li>
-                                                    <li><a href="@Url.Action("Index", "ValidCombination")">General Ledger</a></li>
                                                     <li><a href="@Url.Action("Index", "ValidCombinationContact")">Contact</a></li>
                                                 </ul>
                                             </li>
@@ -252,17 +245,22 @@
                                               <li><a href="#">Warehouse</a>
                                                 <ul>
                                                     <li><a href="@Url.Action("Index", "WarehouseMutationOrder")">Warehouse Mutation</a></li>
+
                                                 </ul>
                                             </li>
                                              <li><a href="#">Purchase</a>
                                                 <ul>
                                                     <li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
                                                     <li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
-                                                    <li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
                                                     <li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
                                                     <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Invoice</a></li>
+                                                </ul>
+                                            </li>
+                                               <li><a href="#">Sales</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
+                                                    <li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
+                                                    <li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
                                                     <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Invoice</a></li>
                                                 </ul>
                                             </li>

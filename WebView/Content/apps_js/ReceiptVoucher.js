@@ -146,6 +146,7 @@
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
+        $('#TotalAmount').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
         $('#IsBank').removeAttr('disabled');
         $('#tabledetail_div').hide();
@@ -212,6 +213,7 @@
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
                             $('#btnCashBank').attr('disabled', true);
+                            $('#TotalAmount').attr('disabled', true);
                             $('#IsGBCH').attr('disabled', true);
                             $('#IsBank').attr('disabled', true);
                             $('#tabledetail_div').show();
@@ -280,10 +282,11 @@
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
                             $('#form_btn_save').hide();
-                            $('#btnContact').attr('disabled', true);
-                            $('#btnCashBank').attr('disabled', true);
-                            $('#IsGBCH').attr('disabled', true);
-                            $('#IsBank').attr('disabled', true);
+                            $('#btnContact').removeAttr('disabled');
+                            $('#btnCashBank').removeAttr('disabled');
+                            $('#TotalAmount').removeAttr('disabled');
+                            $('#IsGBCH').removeAttr('disabled');
+                            $('#IsBank').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_div').dialog('open');
                         }
@@ -546,7 +549,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, IsBank: bank,
+                IsGBCH: gbch, IsBank: bank, TotalAmount: $("#TotalAmount").numberbox('getValue'),
                 ReceiptDate: $('#ReceiptDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,
@@ -675,7 +678,6 @@
                                 }
                             }
                             else {
-                                $('#AmountReceivable').val(result.AmountReceivable);
                                 ReloadGridDetail();
                                 $("#delete_confirm_div").dialog('close');
                             }
@@ -732,7 +734,6 @@
                     }
                 }
                 else {
-                    $('#AmountReceivable').val(result.AmountReceivable);
                     ReloadGridDetail();
                     $("#item_div").dialog('close')
                 }
