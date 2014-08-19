@@ -55,6 +55,8 @@
     <Compile Include="Validation\PurchaseOperation\RetailPurchaseInvoiceValidator.cs" />
     <Compile Include="Validation\SalesOperation\CashSalesInvoiceDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\CashSalesInvoiceValidator.cs" />
+    <Compile Include="Validation\SalesOperation\CashSalesReturnDetailValidator.cs" />
+    <Compile Include="Validation\SalesOperation\CashSalesReturnValidator.cs" />
     <Compile Include="Validation\SalesOperation\RetailSalesInvoiceDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\RetailSalesInvoiceValidator.cs" />
     <Compile Include="Validation\StockAndMaster\QuantityPricingValidator.cs" />

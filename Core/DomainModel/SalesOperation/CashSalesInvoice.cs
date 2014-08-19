@@ -38,6 +38,7 @@ namespace Core.DomainModel
 
         public virtual CashBank CashBank { get; set; }
         public virtual Warehouse Warehouse { get; set; }
-        public virtual ICollection<CashSalesInvoiceDetail> CashSalesinvoiceDetails { get; set; }
+        public virtual ICollection<CashSalesInvoiceDetail> CashSalesInvoiceDetails { get; set; }
+        public virtual ICollection<CashSalesReturn> CashSalesReturns { get; set; }
     }
 }

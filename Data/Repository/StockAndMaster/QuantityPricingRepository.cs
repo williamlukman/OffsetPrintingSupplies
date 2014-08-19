@@ -35,7 +35,9 @@ namespace Data.Repository
 
         public QuantityPricing GetObjectByItemTypeIdAndQuantity(int ItemTypeId, int Quantity)
         {
-            QuantityPricing quantityPricing = Find(x => x.ItemTypeId == ItemTypeId && Quantity >= x.MinQuantity && (x.IsInfiniteMaxQuantity || Quantity <= x.MinQuantity) && !x.IsDeleted);
+            // Using Find() seems to gets an exception error if there are more than 1 records found (ie. overlapping Min & Max Quantity)
+            IList<QuantityPricing> quantityPricings = FindAll(x => x.ItemTypeId == ItemTypeId && Quantity >= x.MinQuantity && (x.IsInfiniteMaxQuantity || Quantity <= x.MaxQuantity) && !x.IsDeleted).ToList();
+            QuantityPricing quantityPricing = quantityPricings.FirstOrDefault();
             if (quantityPricing != null) { quantityPricing.Errors = new Dictionary<string, string>(); }
             return quantityPricing;
         }

@@ -41,7 +41,7 @@ namespace Service.Service
         }
 
         public CashSalesInvoiceDetail CreateObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, 
-                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService, IPriceMutationService _priceMutationService, 
+                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService, 
                                                      IQuantityPricingService _quantityPricingService)
         {
             cashSalesInvoiceDetail.Errors = new Dictionary<String, String>();
@@ -49,12 +49,19 @@ namespace Service.Service
             {
                 Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
                 QuantityPricing quantityPricing = _quantityPricingService.GetObjectByItemTypeIdAndQuantity(item.ItemTypeId, cashSalesInvoiceDetail.Quantity);
-                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                if (quantityPricing == null)
+                {
+                    cashSalesInvoiceDetail.Amount = item.SellingPrice * cashSalesInvoiceDetail.Quantity;
+                }
+                else
+                {
+                    cashSalesInvoiceDetail.Amount = (item.SellingPrice * (100 - quantityPricing.Discount) / 100) * cashSalesInvoiceDetail.Quantity;
+                }
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 cashSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
-                cashSalesInvoiceDetail.Amount = (priceMutation.Amount * (100 - quantityPricing.Discount) / 100) * cashSalesInvoiceDetail.Quantity;
+                
                 cashSalesInvoiceDetail = _repository.CreateObject(cashSalesInvoiceDetail);
-                cashSalesInvoice.Total += cashSalesInvoiceDetail.Amount;
+                cashSalesInvoice.Total = CalculateTotal(cashSalesInvoice.Id);
                 _cashSalesInvoiceService.GetRepository().Update(cashSalesInvoice);
             }
             return cashSalesInvoiceDetail;
@@ -73,7 +80,7 @@ namespace Service.Service
                 cashSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 cashSalesInvoiceDetail.Amount = (priceMutation.Amount * (100 - quantityPricing.Discount) / 100) * cashSalesInvoiceDetail.Quantity;
                 cashSalesInvoiceDetail = _repository.UpdateObject(cashSalesInvoiceDetail);
-                cashSalesInvoice.Total += cashSalesInvoiceDetail.Amount;
+                cashSalesInvoice.Total = CalculateTotal(cashSalesInvoice.Id);
                 _cashSalesInvoiceService.GetRepository().Update(cashSalesInvoice);
             }
             return cashSalesInvoiceDetail;
@@ -137,6 +144,17 @@ namespace Service.Service
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
+        }
+
+        public decimal CalculateTotal(int CashSalesInvoiceId)
+        {
+            IList<CashSalesInvoiceDetail> cashSalesInvoiceDetails = GetObjectsByCashSalesInvoiceId(CashSalesInvoiceId);
+            decimal Total = 0;
+            foreach (var CashSalesInvoiceDetail in cashSalesInvoiceDetails)
+            {
+                Total += CashSalesInvoiceDetail.Amount;
+            }
+            return Total;
         }
     }
 }

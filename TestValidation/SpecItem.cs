@@ -116,7 +116,7 @@ namespace TestValidation
 
                 it["should have 1 active PriceMutation"] = () =>
                 {
-                    d._priceMutationService.GetObjectsByIsActive(true, d.item.Id, d.baseGroup.Id, 0).Count().should_be(1);
+                    d._priceMutationService.GetObjectsByIsActive(true, d.item.Id/*, d.baseGroup.Id*/, 0).Count().should_be(1);
                 };
 
             };
@@ -150,7 +150,7 @@ namespace TestValidation
 
                 it["should not have active PriceMutation"] = () =>
                 {
-                    d._priceMutationService.GetObjectsByIsActive(true, d.item.Id, d.baseGroup.Id, 0).Count().should_be(0);
+                    d._priceMutationService.GetObjectsByIsActive(true, d.item.Id, /*d.baseGroup.Id,*/ 0).Count().should_be(0);
                 };
 
             };

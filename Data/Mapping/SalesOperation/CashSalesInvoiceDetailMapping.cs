@@ -13,7 +13,7 @@ namespace Data.Mapping
         {
             HasKey(csid => csid.Id);
             HasRequired(csid => csid.CashSalesInvoice)
-                .WithMany(csi => csi.CashSalesinvoiceDetails)
+                .WithMany(csi => csi.CashSalesInvoiceDetails)
                 .HasForeignKey(csid => csid.CashSalesInvoiceId)
                 .WillCascadeOnDelete(true); // Need to be True if RetailSalesInvoice table is deleted first (ie. when CashBank table deleted leading to RetailSalesInvoice deletion also)
             HasRequired(csid => csid.PriceMutation)

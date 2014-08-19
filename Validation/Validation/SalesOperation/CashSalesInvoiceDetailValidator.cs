@@ -56,7 +56,7 @@ namespace Validation.Validation
             return cashSalesInvoiceDetail;
         }
 
-        public CashSalesInvoiceDetail VHasQuantityPricing(CashSalesInvoiceDetail cashSalesInvoiceDetail, IItemService _itemService, IQuantityPricingService _quantityPricingService)
+        /*public CashSalesInvoiceDetail VHasQuantityPricing(CashSalesInvoiceDetail cashSalesInvoiceDetail, IItemService _itemService, IQuantityPricingService _quantityPricingService)
         {
             Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
             IList<QuantityPricing> quantityPricings = _quantityPricingService.GetObjectsByItemTypeId(item.ItemTypeId);
@@ -65,7 +65,7 @@ namespace Validation.Validation
                 cashSalesInvoiceDetail.Errors.Add("Generic", "Tidak ada QuantityPricing terasosiasi");
             }
             return cashSalesInvoiceDetail;
-        }
+        }*/
 
         public CashSalesInvoiceDetail VIsValidQuantityOrdered(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService)
         {
@@ -114,8 +114,8 @@ namespace Validation.Validation
             VHasItem(cashSalesInvoiceDetail, _itemService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VUniqueItem(cashSalesInvoiceDetail, _cashSalesInvoiceDetailService, _itemService);
-            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
-            VHasQuantityPricing(cashSalesInvoiceDetail, _itemService, _quantityPricingService);
+            //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
+            //VHasQuantityPricing(cashSalesInvoiceDetail, _itemService, _quantityPricingService);
             return cashSalesInvoiceDetail;
         }
 

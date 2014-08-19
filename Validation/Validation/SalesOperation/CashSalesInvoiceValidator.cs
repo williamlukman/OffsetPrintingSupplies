@@ -57,7 +57,7 @@ namespace Validation.Validation
 
         public CashSalesInvoice VIsValidAllowance(CashSalesInvoice cashSalesInvoice)
         {
-            if (cashSalesInvoice.Tax < 0 || cashSalesInvoice.Allowance > cashSalesInvoice.Total)
+            if (cashSalesInvoice.Allowance < 0 || cashSalesInvoice.Allowance > cashSalesInvoice.Total)
             {
                 cashSalesInvoice.Errors.Add("Allowance", "Harus diantara 0 sampai Total");
             }
@@ -80,6 +80,16 @@ namespace Validation.Validation
             if (cashSalesInvoiceDetails.Any())
             {
                 cashSalesInvoice.Errors.Add("Generic", "Tidak boleh terasosiasi dengan CashSalesInvoiceDetails");
+            }
+            return cashSalesInvoice;
+        }
+
+        public CashSalesInvoice VHasNoCashSalesReturns(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService)
+        {
+            IList<CashSalesReturn> cashSalesReturns = _cashSalesReturnService.GetObjectsByCashSalesInvoiceId(cashSalesInvoice.Id);
+            if (cashSalesReturns.Any())
+            {
+                cashSalesInvoice.Errors.Add("Generic", "Tidak boleh terasosiasi dengan CashSalesReturns");
             }
             return cashSalesInvoice;
         }
@@ -240,7 +250,7 @@ namespace Validation.Validation
         }
 
         public CashSalesInvoice VConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                                 ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService)
+                                                 ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService)
         {
             VHasCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -255,6 +265,10 @@ namespace Validation.Validation
             VIsValidTax(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasConfirmationDate(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VHasCashBank(cashSalesInvoice, _cashBankService);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VIsCashBankTypeNotBank(cashSalesInvoice, _cashBankService);
             return cashSalesInvoice;
         }
 
@@ -273,7 +287,7 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService)
+        public CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService)
         {
             VIsNotPaid(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -286,6 +300,8 @@ namespace Validation.Validation
             VIsValidAllowance(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsValidAmountPaid(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VHasNoCashSalesReturns(cashSalesInvoice, _cashSalesReturnService);
             if (cashSalesInvoice.IsFullPayment)
             {
                 if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
@@ -329,11 +345,11 @@ namespace Validation.Validation
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
-                                       ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService, IContactService _contactService)
+        public bool ValidConfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesInvoiceService _cashSalesInvoiceService, 
+                                       IWarehouseItemService _warehouseItemService, IContactService _contactService, ICashBankService _cashBankService)
         {
             cashSalesInvoice.Errors.Clear();
-            VConfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _contactService);
+            VConfirmObject(cashSalesInvoice, _cashSalesInvoiceDetailService, _cashSalesInvoiceService, _warehouseItemService, _contactService, _cashBankService);
             return isValid(cashSalesInvoice);
         }
 
@@ -345,10 +361,10 @@ namespace Validation.Validation
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService)
+        public bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService)
         {
             cashSalesInvoice.Errors.Clear();
-            VPaidObject(cashSalesInvoice, _cashBankService, _receiptVoucherService);
+            VPaidObject(cashSalesInvoice, _cashBankService, _receiptVoucherService, _cashSalesReturnService);
             return isValid(cashSalesInvoice);
         }
 

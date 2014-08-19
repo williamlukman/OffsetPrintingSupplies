@@ -58,6 +58,8 @@
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceMapping.cs" />
     <Compile Include="Mapping\SalesOperation\CashSalesInvoiceMapping.cs" />
     <Compile Include="Mapping\SalesOperation\CashSalesInvoiceDetailMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\CashSalesReturnMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\CashSalesReturnDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactGroupMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\QuantityPricingMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\GroupItemPriceMapping.cs" />
@@ -118,6 +120,8 @@
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceRepository.cs" />
     <Compile Include="Repository\SalesOperation\CashSalesInvoiceDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\CashSalesInvoiceRepository.cs" />
+    <Compile Include="Repository\SalesOperation\CashSalesReturnRepository.cs" />
+    <Compile Include="Repository\SalesOperation\CashSalesReturnDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceRepository.cs" />
     <Compile Include="Repository\StockAndMaster\QuantityPricingRepository.cs" />
@@ -139,7 +143,7 @@
     <Compile Include="Repository\Manufacturing\RollerWarehouseMutationDetailRepository.cs" />
     <Compile Include="Repository\Manufacturing\RollerWarehouseMutationRepository.cs" />
     <Compile Include="Repository\SalesOperation\SalesOrderDetailRepository.cs" />
-    <Compile Include="Repository\SalesOperation\SalesOrderRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\SalesOrderRepository.cs" />
     <Compile Include="Repository\StockAndMaster\UoMRepository.cs" />
     <Compile Include="Repository\StockAndMaster\StockAdjustmentDetailRepository.cs" />
     <Compile Include="Repository\StockAndMaster\StockAdjustmentRepository.cs" />

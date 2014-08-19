@@ -56,6 +56,8 @@
     <Compile Include="DomainModel\PurchaseOperation\RetailPurchaseInvoiceDetail.cs" />
     <Compile Include="DomainModel\SalesOperation\CashSalesInvoiceDetail.cs" />
     <Compile Include="DomainModel\SalesOperation\CashSalesInvoice.cs" />
+    <Compile Include="DomainModel\SalesOperation\CashSalesReturn.cs" />
+    <Compile Include="DomainModel\SalesOperation\CashSalesReturnDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ContactGroup.cs" />
     <Compile Include="DomainModel\StockAndMaster\QuantityPricing.cs" />
     <Compile Include="DomainModel\StockAndMaster\GroupItemPrice.cs" />
@@ -110,6 +112,8 @@
     <Compile Include="Interface\Repository\PurchaseOperation\IPurchaseInvoiceRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IRetailPurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IRetailPurchaseInvoiceRepository.cs" />
+    <Compile Include="Interface\Repository\SalesOperation\ICashSalesReturnDetailRepository.cs" />
+    <Compile Include="Interface\Repository\SalesOperation\ICashSalesReturnRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ICashSalesInvoiceRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ICashSalesInvoiceDetailRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IQuantityPricingRepository.cs" />
@@ -169,6 +173,8 @@
     <Compile Include="Interface\Service\PurchaseOperation\IPurchaseInvoiceService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IRetailPurchaseInvoiceDetailService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IRetailPurchaseInvoiceService.cs" />
+    <Compile Include="Interface\Service\SalesOperation\ICashSalesReturnDetailService.cs" />
+    <Compile Include="Interface\Service\SalesOperation\ICashSalesReturnService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ICashSalesInvoiceService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ICashSalesInvoiceDetailService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IQuantityPricingService.cs" />
@@ -226,6 +232,8 @@
     <Compile Include="Interface\Validation\PurchaseOperation\IPurchaseInvoiceValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IRetailPurchaseInvoiceDetailValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IRetailPurchaseInvoiceValidator.cs" />
+    <Compile Include="Interface\Validation\SalesOperation\ICashSalesReturnDetailValidator.cs" />
+    <Compile Include="Interface\Validation\SalesOperation\ICashSalesReturnValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ICashSalesInvoiceValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ICashSalesInvoiceDetailValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IQuantityPricingValidator.cs" />

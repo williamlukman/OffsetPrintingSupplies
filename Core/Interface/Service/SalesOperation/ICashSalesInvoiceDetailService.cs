@@ -14,7 +14,7 @@ namespace Core.Interface.Service
         IList<CashSalesInvoiceDetail> GetObjectsByCashSalesInvoiceId(int cashSalesInvoiceId);
         CashSalesInvoiceDetail GetObjectById(int Id);
         CashSalesInvoiceDetail CreateObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService,
-                                              IItemService _itemService, IWarehouseItemService _warehouseItemService, IPriceMutationService _priceMutationService,
+                                              IItemService _itemService, IWarehouseItemService _warehouseItemService,
                                               IQuantityPricingService _quantityPricingService);
         CashSalesInvoiceDetail UpdateObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService,
                                               IItemService _itemService, IWarehouseItemService _warehouseItemService, IPriceMutationService _priceMutationService,
@@ -25,5 +25,6 @@ namespace Core.Interface.Service
         CashSalesInvoiceDetail UnconfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, IWarehouseItemService _warehouseItemService,
                                                  IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
         bool DeleteObject(int Id);
+        decimal CalculateTotal(int CashSalesInvoiceId);
     }
 }

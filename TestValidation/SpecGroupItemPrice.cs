@@ -132,7 +132,7 @@ namespace TestValidation
 
                 it["should have 1 active PriceMutation"] = () =>
                 {
-                    d._priceMutationService.GetObjectsByIsActive(true, d.groupItemPrice1.ItemId, d.groupItemPrice1.ContactGroupId, 0).Count().should_be(1);
+                    d._priceMutationService.GetObjectsByIsActive(true, d.groupItemPrice1.ItemId, /*d.groupItemPrice1.ContactGroupId,*/ 0).Count().should_be(1);
                 };
 
             };
@@ -146,7 +146,7 @@ namespace TestValidation
 
             it["update_with_active_price"] = () =>
             {
-                PriceMutation pricemutation1 = d._priceMutationService.GetObjectsByIsActive(true, d.item.Id, d.baseGroup.Id, 0).FirstOrDefault();
+                PriceMutation pricemutation1 = d._priceMutationService.GetObjectsByIsActive(true, d.item.Id/*, d.baseGroup.Id*/, 0).FirstOrDefault();
                 d.groupItemPrice1.Price = pricemutation1.Amount;
                 d.groupItemPrice1 = d._groupItemPriceService.UpdateObject(d.groupItemPrice1, d.groupItemPrice1.ContactGroupId, d.groupItemPrice1.ItemId, d._itemService, d._priceMutationService);
                 d.groupItemPrice1.Errors.Count().should_not_be(0);

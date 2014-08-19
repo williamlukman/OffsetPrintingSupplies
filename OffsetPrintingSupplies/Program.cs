@@ -22,17 +22,19 @@ namespace OffsetPrintingSupplies
             {
                 db.DeleteAllTables();
 
-                DataBuilder d = new DataBuilder();
+                //DataBuilder d = new DataBuilder();
                 //PurchaseBuilder p = new PurchaseBuilder();
                 //SalesBuilder s = new SalesBuilder();
                 //RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
                 //RetailSalesBuilder rsb = new RetailSalesBuilder();
+                CashSalesBuilder csb = new CashSalesBuilder();
 
-                DataFunction(d);
+                //DataFunction(d);
                 //PurchaseFunction(p);
                 //SalesFunction(s);
                 //RetailPurchaseFunction(rpb);
                 //RetailSalesFunction(rsb);
+                CashSalesFunction(csb);
             }
         }
 
@@ -47,6 +49,59 @@ namespace OffsetPrintingSupplies
         public static void SalesFunction(SalesBuilder s)
         {
             s.PopulateData();
+        }
+
+        public static void CashSalesFunction(CashSalesBuilder b)
+        {
+            b.PopulateData();
+
+            // ---
+            Receivable receivables1 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi1.Id);
+            Receivable receivables2 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi2.Id);
+            Receivable receivables3 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi3.Id);
+
+            IList<ReceiptVoucherDetail> receiptVoucherDetails1 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables1.Id);
+            IList<ReceiptVoucherDetail> receiptVoucherDetails2 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables2.Id);
+            //IList<ReceiptVoucherDetail> receiptVoucherDetails3 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables3.Id);
+
+            foreach (var receiptVoucherDetail in receiptVoucherDetails1)
+            {
+                if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("1:FALSE");
+            }
+
+            foreach (var receiptVoucherDetail in receiptVoucherDetails2)
+            {
+                if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("2:FALSE");
+            }
+
+            /*foreach (var receiptVoucherDetail in receiptVoucherDetails3)
+            {
+                if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("3:FALSE");
+            }*/
+            // ---
+            Console.WriteLine("Press any key...");
+            Console.ReadKey();
+            // ---
+            b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService,
+                                                        b._cashBankService, b._receivableService, b._cashMutationService);
+            b._cashSalesInvoiceService.UnpaidObject(b.csi2, b._receiptVoucherService, b._receiptVoucherDetailService,
+                                                        b._cashBankService, b._receivableService, b._cashMutationService);
+            b._cashSalesInvoiceService.UnpaidObject(b.csi3, b._receiptVoucherService, b._receiptVoucherDetailService,
+                                                        b._cashBankService, b._receivableService, b._cashMutationService);
+
+            b._cashSalesInvoiceService.UnconfirmObject(b.csi1, b._cashSalesInvoiceDetailService, b._receivableService,
+                                                           b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
+                                                           b._itemService, b._barringService, b._stockMutationService);
+            b._cashSalesInvoiceService.UnconfirmObject(b.csi2, b._cashSalesInvoiceDetailService, b._receivableService,
+                                                           b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
+                                                           b._itemService, b._barringService, b._stockMutationService);
+            b._cashSalesInvoiceService.UnconfirmObject(b.csi3, b._cashSalesInvoiceDetailService, b._receivableService,
+                                                           b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
+                                                           b._itemService, b._barringService, b._stockMutationService);
+
+            // End of Test
+            Console.WriteLine("Press any key to stop...");
+            Console.ReadKey();
         }
 
         public static void RetailSalesFunction(RetailSalesBuilder rsb)

@@ -7,7 +7,8 @@ namespace Core.Constants
 {
     public partial class Constant
     {
-        public static string BaseContact = "Base";
+        public static string BaseContact = "BaseContact";
+        public static TimeSpan PaymentDueDateTimeSpan = new TimeSpan(14, 0, 0);
 
         public class GroupType
         {
@@ -47,6 +48,7 @@ namespace Core.Constants
             public static string StockAdjustment = "StockAdjustment";
             public static string WarehouseMutationOrder = "WarehouseMutationOrder";
             public static string CashSalesInvoice = "CashSalesInvoice";
+            public static string CashSalesReturn = "CashSalesReturn";
         }
 
         public class SourceDocumentDetailType
@@ -65,12 +67,14 @@ namespace Core.Constants
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
             public static string WarehouseMutationOrderDetail = "WarehouseMutationOrderDetail";
             public static string CashSalesInvoiceDetail = "CashSalesInvoiceDetail";
+            public static string CashSalesReturnDetail = "CashSalesReturnDetail";
         }
 
         public class PayableSource
         {
             public static string PurchaseInvoice = "PurchaseInvoice";
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
+            public static string CashSalesReturn = "CashSalesReturn";
         }
 
         public class ReceivableSource
