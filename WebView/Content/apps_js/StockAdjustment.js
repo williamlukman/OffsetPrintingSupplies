@@ -106,7 +106,7 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-        $('#AdjustmentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#AdjustmentDate').datebox('setValue', dateEnt($.datepicker.formatDate('mm/dd/yy', new Date())));
         $('#btnWarehouse').removeAttr('disabled');
         $('#Description').removeAttr('disabled');
         $('#tabledetail_div').hide();

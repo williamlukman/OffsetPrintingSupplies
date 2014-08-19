@@ -328,6 +328,89 @@
         $('#confirm_div').dialog('close');
     });
 
+    $('#btn_finish_detail').click(function () {
+        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
+            $('#FinishedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+            $('#idfinished').val(id);
+            $("#finished_div").dialog("open");
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#btn_unfinished').click(function () {
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#list").jqGrid('getRowData', id);
+            $.messager.finished('Confirm', 'Are you sure you want to unfinished record?', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: base_url + "CoreIdentification/Unfinished",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            Id: id,
+                        }),
+                        success: function (result) {
+                            if (JSON.stringify(result.Errors) != '{}') {
+                                for (var key in result.Errors) {
+                                    if (key != null && key != undefined && key != 'Generic') {
+                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                    }
+                                    else {
+                                        $.messager.alert('Warning', result.Errors[key], 'warning');
+                                    }
+                                }
+                            }
+                            else {
+                                ReloadGrid();
+                                $("#delete_finished_div").dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#finished_btn_submit').click(function () {
+        ClearErrorMessage();
+        $.ajax({
+            url: base_url + "CoreIdentification/Finish",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'),
+            }),
+            success: function (result) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                }
+                else {
+                    ReloadGrid();
+                    $("#finished_div").dialog('close');
+                }
+            }
+        });
+    });
+
+    $('#finished_btn_cancel').click(function () {
+        $('#finished_div').dialog('close');
+    });
+
 
 
     $('#btn_del').click(function () {
@@ -444,16 +527,27 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'CoreIdentification Receival Detail Id', 'CoreIdentification Receival Detail Code', 'Item Id', 'Item Name', 'Quantity', 'Amount'
+        colNames: ['Code', 'Detail Id', 'RollerIdentificationId','Material Case', 'CoreBuilder Id', 'CoreBuilder Name', 'RollerType Id', 'RollerType Name'
+                  ,'Machine Id','Machine Name','RD','CD','RL','WL','TL','Is Finished','Finished Date'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'coreidentificationreceivaldetailid', index: 'coreidentificationreceivaldetailid', width: 130, sortable: false, hidden: true },
-                  { name: 'coreidentificationreceivaldetailcode', index: 'coreidentificationreceivaldetailcode', width: 130, sortable: false },
-                  { name: 'itemid', index: 'itemid', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'detailid', index: 'detailid', width: 130, sortable: false, hidden: true },
+                  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
+                  { name: 'materialcase', index: 'materialcase', width: 130, sortable: false },
+                  { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false },
+                  { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
+                  { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false },
+                  { name: 'rollertypename', index: 'rollertypename', width: 80, sortable: false },
+                  { name: 'machineid', index: 'machineid', width: 80, sortable: false },
+                  { name: 'machinename', index: 'machinename', width: 80, sortable: false },
+                  { name: 'rd', index: 'rd', width: 80, sortable: false },
+                  { name: 'cd', index: 'cd', width: 80, sortable: false },
+                  { name: 'rl', index: 'rl', width: 80, sortable: false },
+                  { name: 'wl', index: 'wl', width: 80, sortable: false },
+                  { name: 'tl', index: 'tl', width: 80, sortable: false },
+                  { name: 'isfinished', index: 'isfinished', width: 80, sortable: false },
+                  { name: 'finisheddate', index: 'finisheddate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -580,7 +674,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, DetailId: $("#DetailId").val(),
+                Id: id, DetailId: $("#DetailId").val(), CoreIdentificationId: $("#id").val(),
                 MaterialCase: moving, CoreBuilderId: $("#CoreBuilderId").val(), RollerTypeId: $("#RollerTypeId").val(),
                 MachineId: $("#MachineId").val(), RD: $("#RD").val(), CD: $("#CD").val(), RL: $("#RL").val(),
                 WL: $("#WL").val(), TL: $("#TL").val(),

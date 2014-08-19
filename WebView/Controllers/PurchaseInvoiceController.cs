@@ -349,16 +349,16 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic Confirm(PurchaseInvoice model)
         {
-            try
-            {
+            //try
+            //{
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
                 model = _purchaseInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseReceivalService,_purchaseReceivalDetailService,_payableService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Confirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    LOG.Error("Confirm Failed", ex);
+            //    model.Errors.Add("Generic", "Error : " + ex);
+            //}
 
             return Json(new
             {

@@ -161,6 +161,7 @@ namespace WebView.Controllers
                         model.RL,
                         model.WL,
                         model.TL,
+                        model.IsFinished,
                         model.FinishedDate,
                       }
                     }).ToArray()
@@ -430,13 +431,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Finish(CoreIdentification model)
+        public dynamic Finish(CoreIdentificationDetail model)
         {
             try
             {
 
-                var data = _coreIdentificationService.GetObjectById(model.Id);
-                model = _coreIdentificationService.CompleteObject(data,_coreIdentificationDetailService);
+                var data = _coreIdentificationDetailService.GetObjectById(model.Id);
+                model = _coreIdentificationDetailService.FinishObject(data,model.FinishedDate.Value,_coreIdentificationService,_coreBuilderService,_stockMutationService
+                    ,_itemService,_barringService,_warehouseItemService);
             }
             catch (Exception ex)
             {
