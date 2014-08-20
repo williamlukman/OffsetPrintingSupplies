@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Warehouse Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/warehouseitem.js")"></script>
+
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: @ViewBag.Title :.">
+    
+        <table width="100%">
+        <tr>
+            <td width="30%">
+                <div id="panel" class="easyui-panel">
+                    <div id="toolbar" class="form_toolbar">
+                        <div style="float: left">
+                            <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
+                            <a id="btn_warehouse" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Warehouse</a>
+                            <a id="btn_item" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Item</a>
+                        </div>
+                    </div>
+                     <div id="table_div">
+                        <table id="list"></table>
+                        <div id="pager" class="scroll" style="text-align: center;"></div>
+                    </div>
+                </div>
+            </td>
+            <td width ="70%">
+                <div id="detail_panel" class="easyui-panel">
+                    <div id="detail_toolbar" class="form_toolbar">
+                        <div style="float: left">
+                            <a id="detail_btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
+                        </div>
+                    </div>
+                    <table id="list_detail" class="scroll list_master" cellpadding="0" cellspacing="0"></table>
+                    <div id="pager_detail" class="scroll" style="text-align: center;"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </div>
