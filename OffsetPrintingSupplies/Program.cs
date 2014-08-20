@@ -27,14 +27,16 @@ namespace OffsetPrintingSupplies
                 //SalesBuilder s = new SalesBuilder();
                 //RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
                 //RetailSalesBuilder rsb = new RetailSalesBuilder();
-                CashSalesBuilder csb = new CashSalesBuilder();
+                //CashSalesBuilder csb = new CashSalesBuilder();
+                CustomPurchaseBuilder cpb = new CustomPurchaseBuilder();
 
                 //DataFunction(d);
                 //PurchaseFunction(p);
                 //SalesFunction(s);
                 //RetailPurchaseFunction(rpb);
                 //RetailSalesFunction(rsb);
-                CashSalesFunction(csb);
+                //CashSalesFunction(csb);
+                CustomPurchaseFunction(cpb);
             }
         }
 
@@ -194,6 +196,52 @@ namespace OffsetPrintingSupplies
             rpb._retailPurchaseInvoiceService.UnconfirmObject(rpb.rpi3, rpb._retailPurchaseInvoiceDetailService, rpb._payableService,
                                                            rpb._paymentVoucherDetailService, rpb._warehouseItemService, rpb._warehouseService,
                                                            rpb._itemService, rpb._barringService, rpb._stockMutationService);
+        }
+
+        public static void CustomPurchaseFunction(CustomPurchaseBuilder cpb)
+        {
+            cpb.PopulateData();
+
+            // ---
+            Payable payables1 = cpb._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, cpb.cpi1.Id);
+            Payable payables2 = cpb._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, cpb.cpi2.Id);
+            Payable payables3 = cpb._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, cpb.cpi3.Id);
+
+            IList<PaymentVoucherDetail> paymentVoucherDetails1 = cpb._paymentVoucherDetailService.GetObjectsByPayableId(payables1.Id);
+            IList<PaymentVoucherDetail> paymentVoucherDetails2 = cpb._paymentVoucherDetailService.GetObjectsByPayableId(payables2.Id);
+            IList<PaymentVoucherDetail> paymentVoucherDetails3 = cpb._paymentVoucherDetailService.GetObjectsByPayableId(payables3.Id);
+
+            foreach (var paymentVoucherDetail in paymentVoucherDetails1)
+            {
+                if (!paymentVoucherDetail.IsConfirmed) Console.WriteLine("1:FALSE");
+            }
+
+            foreach (var paymentVoucherDetail in paymentVoucherDetails2)
+            {
+                if (!paymentVoucherDetail.IsConfirmed) Console.WriteLine("2:FALSE");
+            }
+
+            foreach (var paymentVoucherDetail in paymentVoucherDetails3)
+            {
+                if (!paymentVoucherDetail.IsConfirmed) Console.WriteLine("3:FALSE");
+            }
+            // ---
+            cpb._customPurchaseInvoiceService.UnpaidObject(cpb.cpi1, cpb._paymentVoucherService, cpb._paymentVoucherDetailService,
+                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService);
+            cpb._customPurchaseInvoiceService.UnpaidObject(cpb.cpi2, cpb._paymentVoucherService, cpb._paymentVoucherDetailService,
+                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService);
+            cpb._customPurchaseInvoiceService.UnpaidObject(cpb.cpi3, cpb._paymentVoucherService, cpb._paymentVoucherDetailService,
+                                                        cpb._cashBankService, cpb._payableService, cpb._cashMutationService);
+
+            cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi1, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
+                                                           cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService);
+            cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi2, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
+                                                           cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService);
+            cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi3, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
+                                                           cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService);
         }
 
         public static void DataFunction(DataBuilder d)

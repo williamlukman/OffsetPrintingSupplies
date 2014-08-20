@@ -49,6 +49,7 @@ namespace Core.Constants
             public static string WarehouseMutationOrder = "WarehouseMutationOrder";
             public static string CashSalesInvoice = "CashSalesInvoice";
             public static string CashSalesReturn = "CashSalesReturn";
+            public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
         }
 
         public class SourceDocumentDetailType
@@ -68,6 +69,7 @@ namespace Core.Constants
             public static string WarehouseMutationOrderDetail = "WarehouseMutationOrderDetail";
             public static string CashSalesInvoiceDetail = "CashSalesInvoiceDetail";
             public static string CashSalesReturnDetail = "CashSalesReturnDetail";
+            public static string CustomPurchaseInvoiceDetail = "CustomPurchaseInvoiceDetail";
         }
 
         public class PayableSource
@@ -75,6 +77,7 @@ namespace Core.Constants
             public static string PurchaseInvoice = "PurchaseInvoice";
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
             public static string CashSalesReturn = "CashSalesReturn";
+            public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
         }
 
         public class ReceivableSource

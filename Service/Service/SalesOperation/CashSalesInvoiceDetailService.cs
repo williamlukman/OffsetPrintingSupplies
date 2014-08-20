@@ -150,9 +150,9 @@ namespace Service.Service
         {
             IList<CashSalesInvoiceDetail> cashSalesInvoiceDetails = GetObjectsByCashSalesInvoiceId(CashSalesInvoiceId);
             decimal Total = 0;
-            foreach (var CashSalesInvoiceDetail in cashSalesInvoiceDetails)
+            foreach (var cashSalesInvoiceDetail in cashSalesInvoiceDetails)
             {
-                Total += CashSalesInvoiceDetail.Amount;
+                Total += cashSalesInvoiceDetail.Amount;
             }
             return Total;
         }
