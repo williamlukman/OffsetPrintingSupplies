@@ -11,11 +11,14 @@ namespace Core.Interface.Validation
     {
         RecoveryOrderDetail VHasRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VHasCoreIdentificationDetail(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        RecoveryOrderDetail VCoreIdentificationDetailHasNotBeenRollerBuilt(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService);
+        RecoveryOrderDetail VCoreIdentificationDetailHasNotBeenJobScheduled(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService);
         RecoveryOrderDetail VHasRollerBuilder(RecoveryOrderDetail recoveryOrderDetail, IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail VHasCoreTypeCase(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasAcc(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasRepairRequestCase(RecoveryOrderDetail recoveryOrderDetail);
-
+        RecoveryOrderDetail VHasCompoundQuantity(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
+                                                 IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         RecoveryOrderDetail VHasBeenDisassembled(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenStrippedAndGlued(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenWrapped(RecoveryOrderDetail recoveryOrderDetail);
@@ -45,6 +48,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VRecoveryOrderHasBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenCompleted(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
+        RecoveryOrderDetail VHasAccessoryAndHasRecoveryAccessoryDetail(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
         RecoveryOrderDetail VCreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                           IRollerBuilderService _rollerBuilderService);
@@ -54,13 +58,13 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VFinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VUnfinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
-        // TODO: Recheck Accessory process since IsFinished is removed
         RecoveryOrderDetail VAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
         RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRollerBuilderService _rollerBuilderService,
+                                        IItemService _itemService, IWarehouseItemService _warehouseItemService);
         RecoveryOrderDetail VVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VFaceOffObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VConventionalGrindObject(RecoveryOrderDetail recoveryOrderDetail);
@@ -82,7 +86,8 @@ namespace Core.Interface.Validation
         bool ValidRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         bool ValidDisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         bool ValidStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
-        bool ValidWrapObject(RecoveryOrderDetail recoveryOrderDetail);
+        bool ValidWrapObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRollerBuilderService _rollerBuilderService,
+                             IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidFaceOffObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidConventionalGrindObject(RecoveryOrderDetail recoveryOrderDetail);

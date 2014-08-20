@@ -30,6 +30,26 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VCoreIdentificationDetailHasNotBeenRollerBuilt(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        {
+            CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+            if (coreIdentificationDetail.IsRollerBuilt)
+            {
+                recoveryOrderDetail.Errors.Add("Generic", "Core sudah di recovery process");
+            }
+            return recoveryOrderDetail;
+        }
+
+        public RecoveryOrderDetail VCoreIdentificationDetailHasNotBeenJobScheduled(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        {
+            CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+            if (coreIdentificationDetail.IsJobScheduled)
+            {
+                recoveryOrderDetail.Errors.Add("Generic", "Core sedang dalam pengerjaan");
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VHasRollerBuilder(RecoveryOrderDetail recoveryOrderDetail, IRollerBuilderService _rollerBuilderService)
         {
             RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
@@ -65,6 +85,20 @@ namespace Validation.Validation
                 recoveryOrderDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrill)
             {
                 recoveryOrderDetail.Errors.Add("RepairRequestCase", "Hanya dapat diisi dengan 1 untuk Bearing Seat atau 2 untuk CentreDrill");
+            }
+            return recoveryOrderDetail;
+        }
+
+        public RecoveryOrderDetail VHasCompoundQuantity(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
+                                                        IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        {
+            RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
+            RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
+            Item compound = _itemService.GetObjectById(rollerBuilder.CompoundId);
+            WarehouseItem warehouseCompound = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compound.Id);
+            if (recoveryOrderDetail.CompoundUsage > warehouseCompound.Quantity)
+            {
+                recoveryOrderDetail.Errors.Add("CompoundUsage", "Tidak boleh melebihi jumlah di warehouse sebesar " + warehouseCompound.Quantity); 
             }
             return recoveryOrderDetail;
         }
@@ -306,12 +340,26 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VHasAccessoryAndHasRecoveryAccessoryDetail(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
+            if (recoveryOrderDetail.HasAccessory && !accessories.Any())
+            {
+                recoveryOrderDetail.Errors.Add("Generic", "Recovery Order Detail HasAccessory = true, tetapi tidak memiliki accessory");
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VCreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService)
         {
             VHasRecoveryOrder(recoveryOrderDetail, _recoveryOrderService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasCoreIdentificationDetail(recoveryOrderDetail, _coreIdentificationDetailService);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            VCoreIdentificationDetailHasNotBeenRollerBuilt(recoveryOrderDetail, _coreIdentificationDetailService);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            VCoreIdentificationDetailHasNotBeenJobScheduled(recoveryOrderDetail, _coreIdentificationDetailService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasRollerBuilder(recoveryOrderDetail, _rollerBuilderService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
@@ -357,7 +405,6 @@ namespace Validation.Validation
 
         public RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
-            // VNoAccessoriesOrAccessoriesHaveNotBeenFinished(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 
@@ -381,7 +428,8 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRollerBuilderService _rollerBuilderService,
+                                               IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasNotBeenWrapped(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
@@ -390,6 +438,8 @@ namespace Validation.Validation
             VHasNotBeenRejected(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VCompoundUsageIsLargerThanZero(recoveryOrderDetail);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            VHasCompoundQuantity(recoveryOrderDetail, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             return recoveryOrderDetail;
         }
 
@@ -471,6 +521,8 @@ namespace Validation.Validation
             VHasBeenPackaged(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            VHasAccessoryAndHasRecoveryAccessoryDetail(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 
@@ -548,10 +600,11 @@ namespace Validation.Validation
             return isValid(recoveryOrderDetail);
         }
 
-        public bool ValidWrapObject(RecoveryOrderDetail recoveryOrderDetail)
+        public bool ValidWrapObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRollerBuilderService _rollerBuilderService,
+                                    IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryOrderDetail.Errors.Clear();
-            VWrapObject(recoveryOrderDetail);
+            VWrapObject(recoveryOrderDetail, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             return isValid(recoveryOrderDetail);
         }
 

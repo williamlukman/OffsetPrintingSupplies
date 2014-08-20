@@ -47,7 +47,6 @@ namespace Data.Repository
 
         public RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail)
         {
-            recoveryOrderDetail.HasAccessory = false;
             recoveryOrderDetail.IsDisassembled = false;
             recoveryOrderDetail.IsStrippedAndGlued = false;
             recoveryOrderDetail.IsWrapped = false;

@@ -444,11 +444,11 @@
         shrinkToFit: false,
         sortorder: "ASC",
         width: $(window).width() - 600,
-        height: $(window).height() - 550,
+        height: $(window).height() - 500,
         gridComplete:
 		  function () {
 		  }
-    });//END GRID Detail
+    });//END GRID Acessory
     $("#listaccessory").jqGrid('navGrid', '#pageraccessory', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
@@ -500,7 +500,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "RecoveryWorkOrder/DeleteDetail",
+                        url: base_url + "RecoveryWorkOrder/DeleteAccessory",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -531,7 +531,7 @@
     });
 
     //--------------------------------------------------------Dialog @Accessory-------------------------------------------------------------
-    // coreidentification_btn_submit
+    // accessory_btn_submit
 
     $("#accessory_btn_submit").click(function () {
 
@@ -583,7 +583,7 @@
     });
 
 
-    // coreidentification_btn_cancel
+    // accessory_btn_cancel
     $('#accessory_btn_cancel').click(function () {
         clearForm('#accessory_div');
         $("#accessory_div").dialog('close');
@@ -633,7 +633,7 @@
         shrinkToFit: false,
         sortorder: "ASC",
         width: $(window).width() - 600,
-        height: $(window).height() - 550,
+        height: $(window).height() - 500,
         onSelectRow: function (id) {
             var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
             if (id) {
@@ -737,9 +737,12 @@
                             else {
                                 g.selectedIndex = 1;
                             }
-                            $('#CoreIdentificationDetailId').val(result.BarringId);
-                            $('#RollerBuilderId').val(result.Barring);
-                            $('#Acc').val(result.BarringLeftBarId);
+                            $('#CoreIdentificationDetailId').val(result.CoreIdentificationDetailId);
+                            $('#CoreIdentificationDetail').val(result.DetailId);
+                            $('#CoreBuilderName').val(result.CoreBuilderName);
+                            $('#RollerBuilderId').val(result.RollerBuilderId);
+                            $('#RollerBuilder').val(result.RollerBuilder);
+                            $('#Acc').val(result.Acc);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -926,7 +929,7 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idrejected').val(), RejectedDate: $('#FinishedDate').datebox('getValue'),
+                Id: $('#idrejected').val(), RejectedDate: $('#RejectedDate').datebox('getValue'),
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
@@ -1434,7 +1437,8 @@
             var ret = jQuery("#lookup_table_coreidentificationdetail").jqGrid('getRowData', id);
 
             $('#CoreIdentificationDetailId').val(id).data("kode", id);
-            $('#CoreIdentificationDetail').val(ret.rolleridentificationid);
+            $('#CoreIdentificationDetail').val(ret.detailid);
+            $('#CoreBuilderName').val(ret.corebuildername);
 
             $('#lookup_div_coreidentificationdetail').dialog('close');
         } else {
@@ -1464,7 +1468,6 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-
                   { name: 'name', index: 'name', width: 200 }
         ],
 

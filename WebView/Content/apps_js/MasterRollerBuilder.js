@@ -37,7 +37,7 @@
                    'Base Sku', 'Sku Roller UsedCore', 'Sku Roller NewCore',
                    'Machine Id', 'Machine Name', 'RollerType Id', 'RollerType Name',
                    'Compound Id', 'Compound Name', 'CoreBuilder Id', 'CoreBuilder Name',
-                   'RD', 'CD', 'RL', 'WL', 'Tl',
+                   'RD', 'CD', 'RL', 'WL', 'TL',
                    'Roller UsedCore QTY', 'Roller NewCore QTY', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },

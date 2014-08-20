@@ -15,7 +15,17 @@ namespace Validation.Validation
             RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
             if (detail == null)
             {
-                recoveryAccessoryDetail.Errors.Add("RecoveryOrderDetailId", "Tidak terasosiasi dengan Recovery Order Detail");
+                recoveryAccessoryDetail.Errors.Add("Generic", "Tidak terasosiasi dengan Recovery Order Detail");
+            }
+            return recoveryAccessoryDetail;
+        }
+
+        public RecoveryAccessoryDetail VRecoveryOrderDetailHasAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        {
+            RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
+            if (!detail.HasAccessory)
+            {
+                recoveryAccessoryDetail.Errors.Add("Generic", "Recovery Order Detail HasAccessory = false, tidak dapat membuat accessory");
             }
             return recoveryAccessoryDetail;
         }
@@ -66,6 +76,8 @@ namespace Validation.Validation
                                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
         {
             VHasRecoveryOrderDetail(recoveryAccessoryDetail, _recoveryOrderDetailService);
+            if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
+            VRecoveryOrderDetailHasAccessory(recoveryAccessoryDetail, _recoveryOrderDetailService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }
             VIsAccessory(recoveryAccessoryDetail, _itemService, _itemTypeService);
             if (!isValid(recoveryAccessoryDetail)) { return recoveryAccessoryDetail; }

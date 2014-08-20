@@ -399,7 +399,7 @@
                     }
                 }
                 else {
-                    ReloadGrid();
+                    ReloadGridDetail();
                     $("#finished_div").dialog('close');
                 }
             }

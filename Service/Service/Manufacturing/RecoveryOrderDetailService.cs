@@ -129,10 +129,11 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidStripAndGlueObject(recoveryOrderDetail) ? _repository.StripAndGlueObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, int CompoundUsage)
+        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, int CompoundUsage, IRecoveryOrderService _recoveryOrderService,
+                                              IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryOrderDetail.CompoundUsage = CompoundUsage;
-            return (recoveryOrderDetail = _validator.ValidWrapObject(recoveryOrderDetail) ? _repository.WrapObject(recoveryOrderDetail) : recoveryOrderDetail);
+            return (recoveryOrderDetail = _validator.ValidWrapObject(recoveryOrderDetail, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService) ? _repository.WrapObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
         public RecoveryOrderDetail VulcanizeObject(RecoveryOrderDetail recoveryOrderDetail)

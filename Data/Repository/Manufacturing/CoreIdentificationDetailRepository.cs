@@ -89,7 +89,6 @@ namespace Data.Repository
         public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail)
         {
             coreIdentificationDetail.IsFinished = true;
-            coreIdentificationDetail.FinishedDate = DateTime.Now;
             Update(coreIdentificationDetail);
             return coreIdentificationDetail;
         }

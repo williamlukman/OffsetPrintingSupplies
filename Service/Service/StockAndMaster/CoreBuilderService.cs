@@ -116,8 +116,8 @@ namespace Service.Service
             }
             else
             {
-                if (UsedCore.Errors.Count() > 0) { coreBuilder.Errors.Add(UsedCore.Errors.First().Key, UsedCore.Errors.First().Value); }
-                else if (NewCore.Errors.Count() > 0) { coreBuilder.Errors.Add(NewCore.Errors.First().Key, NewCore.Errors.First().Value); }
+                if (UsedCore.Errors.Count() > 0) { coreBuilder.Errors.Add("Generic", UsedCore.Errors.Keys.First() + ": " + UsedCore.Errors.Values.First()); }
+                else if (NewCore.Errors.Count() > 0) { coreBuilder.Errors.Add("Generic", NewCore.Errors.Keys.First() + ": " + NewCore.Errors.Values.First()); }
                 else { coreBuilder.Errors.Add("Generic", "Item tidak dapat di register"); }
             }
             return coreBuilder;

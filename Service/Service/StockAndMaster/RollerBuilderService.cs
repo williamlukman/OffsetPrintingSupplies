@@ -148,8 +148,8 @@ namespace Service.Service
             }
             else
             {
-                if (RollerUsedCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerUsedCore.Errors.First().Key, RollerUsedCore.Errors.First().Value); }
-                else if (RollerNewCore.Errors.Count() > 0) { rollerBuilder.Errors.Add(RollerNewCore.Errors.First().Key, RollerNewCore.Errors.First().Value); }
+                if (RollerUsedCore.Errors.Count() > 0) { rollerBuilder.Errors.Add("Generic", RollerUsedCore.Errors.Keys.First() + ": " + RollerUsedCore.Errors.Values.First()); }
+                else if (RollerNewCore.Errors.Count() > 0) { rollerBuilder.Errors.Add("Generic", RollerNewCore.Errors.Keys.First() + ": " + RollerNewCore.Errors.Values.First()); }
                 else { rollerBuilder.Errors.Add("Generic", "Item tidak dapat di update"); }
             }
             return rollerBuilder;

@@ -21,6 +21,22 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail VDetailsDoNotExceedCoreIdentificationQuantity(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                                                      ICoreIdentificationDetailService _coreIdentificationDetailService, bool CaseCreate)
+        {
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+            IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentificationDetail.CoreIdentificationId);
+            if (coreIdentification.Quantity < details.Count())
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Jumlah detail harus " + coreIdentification.Quantity);
+            }
+            else if (CaseCreate && coreIdentification.Quantity == details.Count())
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Jumlah detail harus " + coreIdentification.Quantity);
+            }
+            return coreIdentificationDetail;
+        }
+
         public CoreIdentificationDetail VHasUniqueDetailId(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentificationDetail.CoreIdentificationId);
@@ -243,6 +259,9 @@ namespace Validation.Validation
             VHasMeasurement(coreIdentificationDetail);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VHasRollerType(coreIdentificationDetail, _rollerTypeService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            // specific for create, with CaseCreate = true
+            VDetailsDoNotExceedCoreIdentificationQuantity(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, true);
             return coreIdentificationDetail;
         }
 
@@ -250,7 +269,22 @@ namespace Validation.Validation
                                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
                                                       IRollerTypeService _rollerTypeService, IMachineService _machineService)
         {
-            VCreateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _rollerTypeService, _machineService);
+            VHasCoreIdentification(coreIdentificationDetail, _coreIdentificationService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasUniqueDetailId(coreIdentificationDetail, _coreIdentificationDetailService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasMaterialCase(coreIdentificationDetail);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasCoreBuilder(coreIdentificationDetail, _coreBuilderService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasMachine(coreIdentificationDetail, _machineService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasMeasurement(coreIdentificationDetail);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasRollerType(coreIdentificationDetail, _rollerTypeService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            // specific for update, with CaseCreate = false
+            VDetailsDoNotExceedCoreIdentificationQuantity(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, false);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VHasNotBeenFinished(coreIdentificationDetail);
             return coreIdentificationDetail;

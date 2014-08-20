@@ -272,6 +272,9 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.CoreIdentificationDetailId,
+                DetailId = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
+                CoreBuilderName = _coreBuilderService.GetObjectById(_coreIdentificationDetailService.GetObjectById(
+                                   model.CoreIdentificationDetailId).CoreBuilderId).Name,
                 model.RollerBuilderId,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                 model.CoreTypeCase,
@@ -519,7 +522,8 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(Id);
                 if (Progress == "IsDisassembled") { model = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
                 else if (Progress == "IsStrippedAndGlued") { model = _recoveryOrderDetailService.StripAndGlueObject(data); }
-                else if (Progress == "IsWrapped") { model = _recoveryOrderDetailService.WrapObject(data, CompoundUsage); }
+                else if (Progress == "IsWrapped") { model = _recoveryOrderDetailService.WrapObject(data, CompoundUsage,
+                                                            _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService); }
                 else if (Progress == "IsVulcanized") { model = _recoveryOrderDetailService.VulcanizeObject(data); }
                 else if (Progress == "IsFacedOff") { model = _recoveryOrderDetailService.FaceOffObject(data); }
                 else if (Progress == "IsConventionalGrinded") { model = _recoveryOrderDetailService.ConventionalGrindObject(data); }

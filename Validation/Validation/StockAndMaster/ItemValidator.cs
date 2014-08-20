@@ -15,7 +15,7 @@ namespace Validation.Validation
             ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
             if (itemType == null)
             {
-                item.Errors.Add("ItemType", "Tidak boleh tidak ada");
+                item.Errors.Add("Generic", "Tidak boleh tidak ada");
             }
             return item;
         }
@@ -25,11 +25,11 @@ namespace Validation.Validation
             ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
             if (itemType == null)
             {
-                item.Errors.Add("ItemType", "Tidak boleh tidak ada");
+                item.Errors.Add("Generic", "Tidak boleh tidak ada");
             }
             else if (itemType.IsLegacy)
             {
-                item.Errors.Add("ItemType", "Tidak boleh memilih Legacy item type");
+                item.Errors.Add("Generic", "Tidak boleh memilih Legacy item type");
             }
             return item;
         }

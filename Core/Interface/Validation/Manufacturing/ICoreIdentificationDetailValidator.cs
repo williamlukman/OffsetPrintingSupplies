@@ -10,6 +10,8 @@ namespace Core.Interface.Validation
     public interface ICoreIdentificationDetailValidator
     {
         CoreIdentificationDetail VHasCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
+        CoreIdentificationDetail VDetailsDoNotExceedCoreIdentificationQuantity(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                                               ICoreIdentificationDetailService _coreIdentificationDetailService, bool CaseCreate);
         CoreIdentificationDetail VHasUniqueDetailId(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationDetailService _coreIdentificationDetailService);
         CoreIdentificationDetail VHasMaterialCase(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VHasCoreBuilder(CoreIdentificationDetail coreIdentificationDetail, ICoreBuilderService _coreBuilderService);

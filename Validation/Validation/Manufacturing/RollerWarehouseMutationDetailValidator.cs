@@ -79,7 +79,7 @@ namespace Validation.Validation
             {
                 if (detail.CoreIdentificationDetailId == rollerWarehouseMutationDetail.CoreIdentificationDetailId && detail.Id != rollerWarehouseMutationDetail.Id)
                 {
-                     rollerWarehouseMutationDetail.Errors.Add("ItemId", "Tidak boleh ada duplikasi core identification detail dalam 1 Roller Warehouse Mutation");
+                     rollerWarehouseMutationDetail.Errors.Add("Generic", "Tidak boleh ada duplikasi core identification detail dalam 1 Roller Warehouse Mutation");
                 }
             }
             return rollerWarehouseMutationDetail;
@@ -139,9 +139,10 @@ namespace Validation.Validation
             int Quantity = CaseConfirm ? 1 : -1;
             RollerWarehouseMutation rollerWarehouseMutation = _rollerWarehouseMutationService.GetObjectById(rollerWarehouseMutationDetail.RollerWarehouseMutationId);
             WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(rollerWarehouseMutation.WarehouseFromId, rollerWarehouseMutationDetail.ItemId);
+            Item item = _itemService.GetObjectById(warehouseItemFrom.ItemId);
             if (warehouseItemFrom.Quantity + Quantity < 0)
             {
-                rollerWarehouseMutationDetail.Errors.Add("Quantity", "Stock barang tidak boleh menjadi kurang dari 0");
+                rollerWarehouseMutationDetail.Errors.Add("Generic", "Stock barang " + item.Name + "di warehouse terpilih tinggal " + warehouseItemFrom.Quantity);
                 return rollerWarehouseMutationDetail;
             }
             return rollerWarehouseMutationDetail;

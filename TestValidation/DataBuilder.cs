@@ -902,7 +902,7 @@ namespace TestValidation
                                       _barringService, _warehouseItemService, _warehouseService);
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact1, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact1);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact1, 20);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact1, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact1);
@@ -912,7 +912,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact2, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact2, 20);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact2, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2);
@@ -922,7 +922,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact3, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact3);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact3, 20);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact3, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact3);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact3);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact3);
@@ -932,7 +932,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse1, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse1);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse1, 20);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse1, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse1);
@@ -942,7 +942,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse2, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse2);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse2, 20);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse2, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse2);
@@ -1060,7 +1060,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3b, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse3b);
-            _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b, 20);
+            _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse3b);
@@ -1070,7 +1070,7 @@ namespace TestValidation
 
             _recoveryOrderDetailService.DisassembleObject(recoveryODContact2b, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2b);
-            _recoveryOrderDetailService.WrapObject(recoveryODContact2b, 20);
+            _recoveryOrderDetailService.WrapObject(recoveryODContact2b, 20, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2b);

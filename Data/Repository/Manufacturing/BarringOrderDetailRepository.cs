@@ -212,7 +212,6 @@ namespace Data.Repository
         public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail)
         {
             barringOrderDetail.IsFinished = true;
-            barringOrderDetail.FinishedDate = DateTime.Now;
             Update(barringOrderDetail);
             return barringOrderDetail;
         }
