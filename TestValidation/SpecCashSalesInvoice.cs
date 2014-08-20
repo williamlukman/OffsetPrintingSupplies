@@ -78,35 +78,27 @@ namespace TestValidation
 
             it["validates_receivables_and_receiptvouchers"] = () =>
             {
-                Receivable receivables1 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi1.Id);
-                Receivable receivables2 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi2.Id);
-                Receivable receivables3 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi3.Id);
+                Receivable receivable1 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi1.Id);
+                Receivable receivable2 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi2.Id);
+                Receivable receivable3 = b._receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.CashSalesInvoice, b.csi3.Id);
 
-                IList<ReceiptVoucherDetail> receiptVoucherDetails1 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables1.Id);
-                IList<ReceiptVoucherDetail> receiptVoucherDetails2 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables2.Id);
-                //IList<ReceiptVoucherDetail> receiptVoucherDetails3 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables3.Id);
+                IList<ReceiptVoucherDetail> receiptVoucherDetails1 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivable1.Id);
+                IList<ReceiptVoucherDetail> receiptVoucherDetails2 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivable2.Id);
+                //IList<ReceiptVoucherDetail> receiptVoucherDetails3 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivable3.Id);
 
                 foreach (var receiptVoucherDetail in receiptVoucherDetails1)
                 {
                     receiptVoucherDetail.IsConfirmed.should_be_true();
-                    receivables1.RemainingAmount.should_be(b.csi1.Total - receiptVoucherDetail.Amount);
+                    receivable1.RemainingAmount.should_be(b.csi1.Total - receiptVoucherDetail.Amount);
                 }
 
                 foreach (var receiptVoucherDetail in receiptVoucherDetails2)
                 {
                     receiptVoucherDetail.IsConfirmed.should_be_true();
-                    receivables2.RemainingAmount.should_be(b.csi2.Total - receiptVoucherDetail.Amount);
+                    receivable2.RemainingAmount.should_be(b.csi2.Total - receiptVoucherDetail.Amount);
                     
                 }
                 
-                /*
-                foreach (var receiptVoucherDetail in receiptVoucherDetails3)
-                {
-                    receiptVoucherDetail.IsConfirmed.should_be_true();
-                    receivables3.RemainingAmount.should_be(b.csi3.Total - receiptVoucherDetail.Amount);
-                    receivables3.PendingClearanceAmount.should_be(receiptVoucherDetail.Amount);
-                }
-                 */
                 receiptVoucherDetails1.Count().should_be(1);
                 receiptVoucherDetails2.Count().should_be(1);
                 //receiptVoucherDetails3.Count().should_be(0);
@@ -187,7 +179,21 @@ namespace TestValidation
                     b.csr1.Total.should_be(b.csrd1.Quantity * (b.csid1.Amount/b.csid1.Quantity)); // Item price = 10000
                 };
 
-                
+                it["validates_payables_and_paymentvouchers"] = () =>
+                {
+                    Payable payable1 = b._payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, b.csr1.Id);
+                    
+                    IList<PaymentVoucherDetail> paymentVoucherDetails1 = b._paymentVoucherDetailService.GetObjectsByPayableId(payable1.Id);
+                    
+                    foreach (var paymentVoucherDetail in paymentVoucherDetails1)
+                    {
+                        paymentVoucherDetail.IsConfirmed.should_be_true();
+                        payable1.RemainingAmount.should_be(b.csr1.Total - (paymentVoucherDetail.Amount + b.csr1.Allowance));
+                    }
+
+                    paymentVoucherDetails1.Count().should_be(1);
+                    
+                };  
 
             };
         }
