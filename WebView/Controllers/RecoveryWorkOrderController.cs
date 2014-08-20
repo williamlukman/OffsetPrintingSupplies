@@ -517,7 +517,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _recoveryOrderDetailService.GetObjectById(Id);
-                if (Progress == "IsDisassembled") { model = _recoveryOrderDetailService.DisassembleObject(data); }
+                if (Progress == "IsDisassembled") { model = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
                 else if (Progress == "IsStrippedAndGlued") { model = _recoveryOrderDetailService.StripAndGlueObject(data); }
                 else if (Progress == "IsWrapped") { model = _recoveryOrderDetailService.WrapObject(data, CompoundUsage); }
                 else if (Progress == "IsVulcanized") { model = _recoveryOrderDetailService.VulcanizeObject(data); }

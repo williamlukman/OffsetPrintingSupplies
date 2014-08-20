@@ -20,6 +20,26 @@ namespace Validation.Validation
             return rollerWarehouseMutation;
         }
 
+        public RollerWarehouseMutation VCoreIdentificationHasBeenConfirmed(RollerWarehouseMutation rollerWarehouseMutation, ICoreIdentificationService _coreIdentificationService)
+        {
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(rollerWarehouseMutation.CoreIdentificationId);
+            if (!coreIdentification.IsConfirmed)
+            {
+                rollerWarehouseMutation.Errors.Add("Generic", "Core Identification belum dikonfirmasi");
+            }
+            return rollerWarehouseMutation;
+        }
+
+        public RollerWarehouseMutation VCoreIdentificationHasNotBeenCompleted(RollerWarehouseMutation rollerWarehouseMutation, ICoreIdentificationService _coreIdentificationService)
+        {
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(rollerWarehouseMutation.CoreIdentificationId);
+            if (coreIdentification.IsCompleted)
+            {
+                rollerWarehouseMutation.Errors.Add("CoreIdentificationId", "Core Identification sudah complete (semua detail sudah terkirim)");
+            }
+            return rollerWarehouseMutation;
+        }
+
         public RollerWarehouseMutation VHasDifferentWarehouse(RollerWarehouseMutation rollerWarehouseMutation)
         {
             if (rollerWarehouseMutation.WarehouseFromId == rollerWarehouseMutation.WarehouseToId)
@@ -68,6 +88,16 @@ namespace Validation.Validation
             return rollerWarehouseMutation;
         }
 
+        public RollerWarehouseMutation VQuantityIsEqualTheNumberOfDetails(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
+        {
+            IList<RollerWarehouseMutationDetail> details = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(rollerWarehouseMutation.Id);
+            if (rollerWarehouseMutation.Quantity != details.Count())
+            {
+                rollerWarehouseMutation.Errors.Add("Generic", "jumlah Quantity " + rollerWarehouseMutation.Quantity + "harus sama dengan jumlah detail " + details.Count());
+            }
+            return rollerWarehouseMutation;
+        }
+        
         public RollerWarehouseMutation VHasNotBeenConfirmed(RollerWarehouseMutation rollerWarehouseMutation)
         {
             if (rollerWarehouseMutation.IsConfirmed)
@@ -120,11 +150,15 @@ namespace Validation.Validation
         {
             VHasCoreIdentification(rollerWarehouseMutation, _coreIdentificationService);
             if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
-            VHasDifferentWarehouse(rollerWarehouseMutation);
+            VCoreIdentificationHasBeenConfirmed(rollerWarehouseMutation, _coreIdentificationService);
+            if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
+            VCoreIdentificationHasNotBeenCompleted(rollerWarehouseMutation, _coreIdentificationService);
             if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
             VHasWarehouseFrom(rollerWarehouseMutation, _warehouseService);
             if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
             VHasWarehouseTo(rollerWarehouseMutation, _warehouseService);
+            if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
+            VHasDifferentWarehouse(rollerWarehouseMutation);
             return rollerWarehouseMutation;
         }
 
@@ -159,6 +193,8 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(rollerWarehouseMutation);
             if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
             VHasRollerWarehouseMutationDetails(rollerWarehouseMutation, _rollerWarehouseMutationDetailService);
+            if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
+            VQuantityIsEqualTheNumberOfDetails(rollerWarehouseMutation, _rollerWarehouseMutationDetailService);
             if (!isValid(rollerWarehouseMutation)) { return rollerWarehouseMutation; }
             VDetailsAreVerifiedConfirmable(rollerWarehouseMutation, _rollerWarehouseMutationService, _rollerWarehouseMutationDetailService, _itemService, _barringService, _warehouseItemService);
             return rollerWarehouseMutation;

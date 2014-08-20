@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         IList<CoreIdentification> GetAllObjectsByContactId(int ContactId);
         IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId);
         IList<CoreIdentification> GetConfirmedObjects();
+        IList<CoreIdentification> GetConfirmedNotCompletedObjects();
         CoreIdentification GetObjectById(int Id);
         CoreIdentification CreateObject(CoreIdentification coreIdentification, IContactService _contactService);
         CoreIdentification CreateObjectForContact(int ContactId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, IContactService _contactService);

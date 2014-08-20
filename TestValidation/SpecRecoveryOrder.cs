@@ -106,7 +106,7 @@ namespace TestValidation
                 d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                                                 d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                 d._barringService, d._warehouseItemService, d._warehouseService);
-                d.recoveryODContact1 = d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1);
+                d.recoveryODContact1 = d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1, d._recoveryOrderService);
                 d.recoveryODContact1 = d._recoveryOrderDetailService.StripAndGlueObject(d.recoveryODContact1);
                 d.recoveryODContact1 = d._recoveryOrderDetailService.WrapObject(d.recoveryODContact1, 20);
 
@@ -121,12 +121,12 @@ namespace TestValidation
                     d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                           d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                           d._barringService, d._warehouseItemService, d._warehouseService);
-                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1);
-                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact2);
-                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact3);
-                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse1);
-                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse2);
-                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse3);
+                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1, d._recoveryOrderService);
+                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact2, d._recoveryOrderService);
+                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact3, d._recoveryOrderService);
+                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse1, d._recoveryOrderService);
+                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse2, d._recoveryOrderService);
+                    d._recoveryOrderDetailService.DisassembleObject(d.recoveryODInHouse3, d._recoveryOrderService);
                 };
 
                 it["validates_recoveryorderdetails"] = () =>

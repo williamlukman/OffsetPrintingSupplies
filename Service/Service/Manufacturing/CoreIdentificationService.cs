@@ -50,6 +50,11 @@ namespace Service.Service
             return _repository.GetConfirmedObjects();
         }
 
+        public IList<CoreIdentification> GetConfirmedNotCompletedObjects()
+        {
+            return _repository.GetConfirmedNotCompletedObjects();
+        }
+
         public CoreIdentification GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);

@@ -43,6 +43,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasNotBeenFinished(RecoveryOrderDetail recoveryOrderDetail);
 
         RecoveryOrderDetail VRecoveryOrderHasNotBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
+        RecoveryOrderDetail VRecoveryOrderHasBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VRecoveryOrderHasNotBeenCompleted(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
 
         RecoveryOrderDetail VCreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
@@ -57,7 +58,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
 
-        RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail VStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VWrapObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
@@ -79,7 +80,7 @@ namespace Core.Interface.Validation
 
         bool ValidAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         bool ValidRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        bool ValidDisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
+        bool ValidDisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         bool ValidStripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidWrapObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);

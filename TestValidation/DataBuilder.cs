@@ -900,7 +900,7 @@ namespace TestValidation
             _recoveryOrderService.ConfirmObject(recoveryOrderContact, DateTime.Today, _coreIdentificationDetailService, _recoveryOrderDetailService,
                                       _recoveryAccessoryDetailService, _coreBuilderService, _stockMutationService, _itemService,
                                       _barringService, _warehouseItemService, _warehouseService);
-            _recoveryOrderDetailService.DisassembleObject(recoveryODContact1);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODContact1, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact1);
             _recoveryOrderDetailService.WrapObject(recoveryODContact1, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact1);
@@ -910,7 +910,7 @@ namespace TestValidation
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact1);
             _recoveryOrderDetailService.PackageObject(recoveryODContact1);
 
-            _recoveryOrderDetailService.DisassembleObject(recoveryODContact2);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODContact2, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2);
             _recoveryOrderDetailService.WrapObject(recoveryODContact2, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2);
@@ -920,7 +920,7 @@ namespace TestValidation
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact2);
             _recoveryOrderDetailService.PackageObject(recoveryODContact2);
 
-            _recoveryOrderDetailService.DisassembleObject(recoveryODContact3);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODContact3, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact3);
             _recoveryOrderDetailService.WrapObject(recoveryODContact3, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact3);
@@ -930,7 +930,7 @@ namespace TestValidation
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact3);
             _recoveryOrderDetailService.PackageObject(recoveryODContact3);
 
-            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse1, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse1);
             _recoveryOrderDetailService.WrapObject(recoveryODInHouse1, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse1);
@@ -940,7 +940,7 @@ namespace TestValidation
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse1);
             _recoveryOrderDetailService.PackageObject(recoveryODInHouse1);
 
-            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse2, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse2);
             _recoveryOrderDetailService.WrapObject(recoveryODInHouse2, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse2);
@@ -958,7 +958,7 @@ namespace TestValidation
             };
             _recoveryAccessoryDetailService.CreateObject(accessory1, _recoveryOrderService, _recoveryOrderDetailService,
                                                          _itemService, _itemTypeService, _warehouseItemService);
-            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3, _recoveryOrderService);
 
             _recoveryOrderDetailService.FinishObject(recoveryODContact1, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                        _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
@@ -1058,7 +1058,7 @@ namespace TestValidation
             _recoveryOrderService.ConfirmObject(recoveryOrderInHouse2, DateTime.Today, _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService,
                                                 _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService, _warehouseService);
 
-            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3b, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.WrapObject(recoveryODInHouse3b, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse3b);
@@ -1068,7 +1068,7 @@ namespace TestValidation
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.PackageObject(recoveryODInHouse3b);
 
-            _recoveryOrderDetailService.DisassembleObject(recoveryODContact2b);
+            _recoveryOrderDetailService.DisassembleObject(recoveryODContact2b, _recoveryOrderService);
             _recoveryOrderDetailService.StripAndGlueObject(recoveryODContact2b);
             _recoveryOrderDetailService.WrapObject(recoveryODContact2b, 20);
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2b);

@@ -286,6 +286,16 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VRecoveryOrderHasBeenConfirmed(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
+        {
+            RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
+            if (!recoveryOrder.IsConfirmed)
+            {
+                recoveryOrderDetail.Errors.Add("Generic", "Recovery Order belum dikonfirmasi");
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VRecoveryOrderHasNotBeenCompleted(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
             RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
@@ -351,8 +361,10 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail VDisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
+            VRecoveryOrderHasBeenConfirmed(recoveryOrderDetail, _recoveryOrderService);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenDisassembled(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
@@ -522,10 +534,10 @@ namespace Validation.Validation
             return isValid(recoveryOrderDetail);
         }
 
-        public bool ValidDisassembleObject(RecoveryOrderDetail recoveryOrderDetail)
+        public bool ValidDisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
             recoveryOrderDetail.Errors.Clear();
-            VDisassembleObject(recoveryOrderDetail);
+            VDisassembleObject(recoveryOrderDetail, _recoveryOrderService);
             return isValid(recoveryOrderDetail);
         }
 

@@ -326,6 +326,8 @@ namespace Validation.Validation
             VHasBarringOrder(barringOrderDetail, _barringOrderService);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VHasBarring(barringOrderDetail, _barringService);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
+            VBarringOrderHasNotBeenConfirmed(barringOrderDetail, _barringOrderService);
             return barringOrderDetail;
         }
 
@@ -492,6 +494,8 @@ namespace Validation.Validation
             VHasRejectedDate(barringOrderDetail);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VHasNotBeenRejected(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
+            VHasNotBeenFinished(barringOrderDetail);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VBarringOrderHasNotBeenCompleted(barringOrderDetail, _barringOrderService);
             return barringOrderDetail;

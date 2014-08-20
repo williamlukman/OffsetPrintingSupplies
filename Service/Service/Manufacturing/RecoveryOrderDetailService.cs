@@ -119,9 +119,9 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidRemoveAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService) ? _repository.RemoveAccessory(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
-            return (recoveryOrderDetail = _validator.ValidDisassembleObject(recoveryOrderDetail) ? _repository.DisassembleObject(recoveryOrderDetail) : recoveryOrderDetail);
+            return (recoveryOrderDetail = _validator.ValidDisassembleObject(recoveryOrderDetail, _recoveryOrderService) ? _repository.DisassembleObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
         public RecoveryOrderDetail StripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail)
