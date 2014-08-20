@@ -467,8 +467,12 @@ namespace TestValidation
                                                   _cashSalesReturnService, _warehouseItemService, _warehouseService,
                                                   _itemService, _barringService, _stockMutationService);
 
-            _cashSalesReturnService.PaidObject(csr1, 50000, _cashBankService, _payableService, _paymentVoucherService,
+            _cashSalesReturnService.PaidObject(csr1, /*50000,*/ _cashBankService, _payableService, _paymentVoucherService,
                                                _paymentVoucherDetailService, _contactService, _cashMutationService);
+
+            //_cashSalesReturnService.UnpaidObject(csr1, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+
+            
         }
 
         

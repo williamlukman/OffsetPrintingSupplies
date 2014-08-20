@@ -73,7 +73,8 @@ namespace Service.Service
                     retailPurchaseInvoice.Total += retailPurchaseInvoiceDetail.Amount;
                     retailPurchaseInvoice.CoGS += retailPurchaseInvoiceDetail.CoGS;
                 }
-                retailPurchaseInvoice.Total = retailPurchaseInvoice.Total - (retailPurchaseInvoice.Total * retailPurchaseInvoice.Discount/100) + (retailPurchaseInvoice.Total * retailPurchaseInvoice.Tax/100);
+                // Tax dihitung setelah discount
+                retailPurchaseInvoice.Total = (retailPurchaseInvoice.Total * (100 - retailPurchaseInvoice.Discount) / 100) * (100 - retailPurchaseInvoice.Tax) / 100;
                 Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate);
                 retailPurchaseInvoice = _repository.ConfirmObject(retailPurchaseInvoice);
             }

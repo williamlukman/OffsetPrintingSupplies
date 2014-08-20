@@ -37,7 +37,7 @@ namespace Core.Interface.Validation
         CashSalesInvoice VUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
                                           IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
         CashSalesInvoice VPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService);
-        CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice);
+        CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService);
 
         CashSalesInvoice VCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
         CashSalesInvoice VUpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
@@ -48,7 +48,7 @@ namespace Core.Interface.Validation
         bool ValidUnconfirmObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, 
                                   IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool ValidPaidObject(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService, ICashSalesReturnService _cashSalesReturnService);
-        bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice);
+        bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService);
 
         bool ValidCreateObject(CashSalesInvoice cashSalesInvoice, IWarehouseService _warehouseService);
         bool ValidUpdateObject(CashSalesInvoice cashSalesInvoice, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);

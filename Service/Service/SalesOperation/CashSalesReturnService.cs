@@ -64,10 +64,9 @@ namespace Service.Service
                                                 IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
         {
             cashSalesReturn.ConfirmationDate = ConfirmationDate;
+            cashSalesReturn.Allowance = Allowance;
             if (_validator.ValidConfirmObject(cashSalesReturn, _cashSalesReturnDetailService, _cashSalesReturnService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService))
             {
-                cashSalesReturn.ConfirmationDate = ConfirmationDate;
-                cashSalesReturn.Allowance = Allowance;
                 IList<CashSalesReturnDetail> cashSalesReturnDetails = _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(cashSalesReturn.Id);
                 foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
                 {
@@ -76,14 +75,14 @@ namespace Service.Service
                                                                 _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
                 }
                 // DueDate untuk Payable dari mana ?
-                // Payable tidak punya Allowance ?
                 Contact contact = _contactService.GetObjectByName(Core.Constants.Constant.BaseContact);
-                Payable payable = _payableService.CreateObject(contact.Id, Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id, cashSalesReturn.Total - Allowance, ConfirmationDate.Add(Core.Constants.Constant.PaymentDueDateTimeSpan));
+                Payable payable = _payableService.CreateObject(contact.Id, Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id, cashSalesReturn.Total, ConfirmationDate.Add(Core.Constants.Constant.PaymentDueDateTimeSpan));
                 cashSalesReturn = _repository.ConfirmObject(cashSalesReturn);
             }
             else
             {
                 cashSalesReturn.ConfirmationDate = null;
+                cashSalesReturn.Allowance = 0;
             }
             return cashSalesReturn;
         }
@@ -112,7 +111,7 @@ namespace Service.Service
             return cashSalesReturn;
         }
 
-        public CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, decimal Allowance, ICashBankService _cashBankService, IPayableService _payableService, 
+        public CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ ICashBankService _cashBankService, IPayableService _payableService, 
                                              IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, 
                                              IContactService _contactService, ICashMutationService _cashMutationService)
         {
@@ -122,15 +121,14 @@ namespace Service.Service
                 //cashSalesReturn.Allowance = Allowance;
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id);
                 payable.AllowanceAmount = cashSalesReturn.Allowance;
-                if (cashSalesReturn.Allowance < cashSalesReturn.Total)
-                {
-                    PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId, payable.ContactId, DateTime.Now, cashSalesReturn.Total - cashSalesReturn.Allowance,
+                payable.RemainingAmount = payable.Amount - payable.AllowanceAmount;
+                _payableService.UpdateObject(payable);
+                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)cashSalesReturn.CashBankId, payable.ContactId, DateTime.Now, payable.RemainingAmount,
                                                                                 false, payable.DueDate, cashBank.IsBank, _paymentVoucherDetailService,
                                                                                 _payableService, _contactService, _cashBankService);
-                    PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, cashSalesReturn.Total - cashSalesReturn.Allowance,
+                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount,
                                                                                 "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
-                    _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.ConfirmationDate, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
-                }
+                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)cashSalesReturn.ConfirmationDate, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
                 cashSalesReturn = _repository.PaidObject(cashSalesReturn);
             }
             return cashSalesReturn;
@@ -142,7 +140,6 @@ namespace Service.Service
             if (_validator.ValidUnpaidObject(cashSalesReturn))
             {
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CashSalesReturn, cashSalesReturn.Id);
-                payable.AllowanceAmount = 0;
                 IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)cashSalesReturn.CashBankId);
                 foreach (var paymentVoucher in paymentVouchers)
                 {
@@ -159,7 +156,9 @@ namespace Service.Service
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);
                     }
                 }
-                //cashSalesReturn.Allowance = 0;
+                payable.AllowanceAmount = 0;
+                _payableService.UpdateObject(payable);
+                cashSalesReturn.Allowance = 0;
                 cashSalesReturn = _repository.UnpaidObject(cashSalesReturn);
             }
             return cashSalesReturn;

@@ -265,10 +265,10 @@ namespace Validation.Validation
             VIsValidTax(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VHasConfirmationDate(cashSalesInvoice);
-            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VHasCashBank(cashSalesInvoice, _cashBankService);
-            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VIsCashBankTypeNotBank(cashSalesInvoice, _cashBankService);
+            //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            //VHasCashBank(cashSalesInvoice, _cashBankService);
+            //if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            //VIsCashBankTypeNotBank(cashSalesInvoice, _cashBankService);
             return cashSalesInvoice;
         }
 
@@ -310,9 +310,10 @@ namespace Validation.Validation
             return cashSalesInvoice;
         }
 
-        public CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice)
+        public CashSalesInvoice VUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService)
         {
             VIsPaid(cashSalesInvoice);
+            VHasNoCashSalesReturns(cashSalesInvoice, _cashSalesReturnService);
             return cashSalesInvoice;
         }
 
@@ -368,10 +369,10 @@ namespace Validation.Validation
             return isValid(cashSalesInvoice);
         }
 
-        public bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice)
+        public bool ValidUnpaidObject(CashSalesInvoice cashSalesInvoice, ICashSalesReturnService _cashSalesReturnService)
         {
             cashSalesInvoice.Errors.Clear();
-            VUnpaidObject(cashSalesInvoice);
+            VUnpaidObject(cashSalesInvoice, _cashSalesReturnService);
             return isValid(cashSalesInvoice);
         }
 

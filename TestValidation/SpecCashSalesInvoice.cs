@@ -55,7 +55,7 @@ namespace TestValidation
             {
                 b.csi1.IsConfirmed.should_be_true();
                 b.csi2.IsConfirmed.should_be_true();
-                b.csi3.IsConfirmed.should_be_false();
+                b.csi3.IsConfirmed.should_be_true();
 
             };
 
@@ -84,34 +84,41 @@ namespace TestValidation
 
                 IList<ReceiptVoucherDetail> receiptVoucherDetails1 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivable1.Id);
                 IList<ReceiptVoucherDetail> receiptVoucherDetails2 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivable2.Id);
-                //IList<ReceiptVoucherDetail> receiptVoucherDetails3 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivable3.Id);
+                IList<ReceiptVoucherDetail> receiptVoucherDetails3 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivable3.Id);
 
                 foreach (var receiptVoucherDetail in receiptVoucherDetails1)
                 {
                     receiptVoucherDetail.IsConfirmed.should_be_true();
-                    receivable1.RemainingAmount.should_be(b.csi1.Total - receiptVoucherDetail.Amount);
+                    receivable1.RemainingAmount.should_be(b.csi1.Total - (receiptVoucherDetail.Amount + receivable1.AllowanceAmount));
                 }
 
                 foreach (var receiptVoucherDetail in receiptVoucherDetails2)
                 {
                     receiptVoucherDetail.IsConfirmed.should_be_true();
-                    receivable2.RemainingAmount.should_be(b.csi2.Total - receiptVoucherDetail.Amount);
+                    receivable2.RemainingAmount.should_be(b.csi2.Total - (receiptVoucherDetail.Amount + receivable2.AllowanceAmount));
                     
                 }
-                
+
+                foreach (var receiptVoucherDetail in receiptVoucherDetails3)
+                {
+                    receiptVoucherDetail.IsConfirmed.should_be_true();
+                    receivable3.RemainingAmount.should_be(b.csi3.Total - (receiptVoucherDetail.Amount + receivable3.AllowanceAmount));
+
+                }
+
                 receiptVoucherDetails1.Count().should_be(1);
                 receiptVoucherDetails2.Count().should_be(1);
-                //receiptVoucherDetails3.Count().should_be(0);
+                receiptVoucherDetails3.Count().should_be(0);
             };
 
             context["when_unpaid_cashsalesinvoice"] = () =>
             {
                 before = () =>
                 {
-                    b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService);
-                    b._cashSalesInvoiceService.UnpaidObject(b.csi2, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService);
-                    b._cashSalesInvoiceService.UnpaidObject(b.csi3, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService);
-                    b.csi1.Errors.Count().should_be(0);
+                    b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+                    b._cashSalesInvoiceService.UnpaidObject(b.csi2, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+                    b._cashSalesInvoiceService.UnpaidObject(b.csi3, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+                    b.csi1.Errors.Count().should_not_be(0); // Already have CashSalesReturn
                     b.csi2.Errors.Count().should_be(0);
                     b.csi3.Errors.Count().should_not_be(0);
                     b.csid1.Errors.Count().should_be(0);
@@ -121,14 +128,14 @@ namespace TestValidation
 
                 it["validates_unpaid_cashsalesinvoice"] = () =>
                 {
-                    b.csi1.IsPaid.should_be_false();
+                    b.csi1.IsPaid.should_be_true(); // Already have CashSalesReturn
                     b.csi2.IsPaid.should_be_false();
                     b.csi3.IsPaid.should_be_false();
 
                     b.csi2.IsFullPayment.should_be_false();
                     b.csi3.IsFullPayment.should_be_false();
 
-                    b.csi1.AmountPaid.should_be(0);
+                    b.csi1.AmountPaid.should_not_be(0);
                     b.csi2.AmountPaid.should_be(0);
                     b.csi3.AmountPaid.should_be_null();
                 };
@@ -140,9 +147,9 @@ namespace TestValidation
                         b._cashSalesInvoiceService.UnconfirmObject(b.csi1, b._cashSalesInvoiceDetailService, b._receivableService, b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService, b._barringService, b._stockMutationService);
                         b._cashSalesInvoiceService.UnconfirmObject(b.csi2, b._cashSalesInvoiceDetailService, b._receivableService, b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService, b._barringService, b._stockMutationService);
                         b._cashSalesInvoiceService.UnconfirmObject(b.csi3, b._cashSalesInvoiceDetailService, b._receivableService, b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService, b._barringService, b._stockMutationService);
-                        b.csi1.Errors.Count().should_be(0);
+                        b.csi1.Errors.Count().should_not_be(0);
                         b.csi2.Errors.Count().should_be(0);
-                        b.csi3.Errors.Count().should_not_be(0);
+                        b.csi3.Errors.Count().should_be(0);
                         b.csid1.Errors.Count().should_be(0);
                         b.csid2.Errors.Count().should_be(0);
                         b.csid3.Errors.Count().should_be(0);
@@ -150,7 +157,7 @@ namespace TestValidation
 
                     it["validates_unconfirmed_cashsalesinvoice"] = () =>
                     {
-                        b.csi1.IsConfirmed.should_be_false();
+                        b.csi1.IsConfirmed.should_be_true();
                         b.csi2.IsConfirmed.should_be_false();
                         b.csi3.IsConfirmed.should_be_false();
                     };
@@ -188,12 +195,70 @@ namespace TestValidation
                     foreach (var paymentVoucherDetail in paymentVoucherDetails1)
                     {
                         paymentVoucherDetail.IsConfirmed.should_be_true();
-                        payable1.RemainingAmount.should_be(b.csr1.Total - (paymentVoucherDetail.Amount + b.csr1.Allowance));
+                        payable1.RemainingAmount.should_be(b.csr1.Total - (paymentVoucherDetail.Amount + payable1.AllowanceAmount));
                     }
 
                     paymentVoucherDetails1.Count().should_be(1);
                     
-                };  
+                };
+
+                it["validates_unpaid_cashsalesinvoice_with_cashsalesreturn"] = () =>
+                {
+                    b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+                    
+                    b.csi1.Errors.Count().should_not_be(0);
+                };
+
+                context["when_unpaid_cashsalesreturn"] = () =>
+                {
+                    before = () =>
+                    {
+                        b._cashSalesReturnService.UnpaidObject(b.csr1, b._paymentVoucherService, b._paymentVoucherDetailService, b._cashBankService, b._payableService, b._cashMutationService);
+                        b.csr1.Errors.Count().should_be(0);
+                        b.csrd1.Errors.Count().should_be(0);
+                    };
+
+                    it["validates_unpaid_cashsalesreturn"] = () =>
+                    {
+                        b.csr1.IsPaid.should_be_false();
+                    };
+
+                    context["when_unconfirm_cashsalesreturn"] = () =>
+                    {
+                        before = () =>
+                        {
+                            b._cashSalesReturnService.UnconfirmObject(b.csr1, b._cashSalesReturnDetailService, b._cashSalesInvoiceDetailService, b._payableService, b._paymentVoucherDetailService, b._warehouseItemService, b._warehouseService, b._itemService, b._barringService, b._stockMutationService);
+                            
+                            b.csr1.Errors.Count().should_be(0);
+
+                            b.csrd1.Errors.Count().should_be(0);
+                        };
+
+                        it["validates_unconfirmed_cashsalesreturn"] = () =>
+                        {
+                            b.csr1.IsConfirmed.should_be_false();
+                        };
+
+                        it["validates_delete_cashsalesreturn"] = () =>
+                        {
+                            b._cashSalesReturnDetailService.SoftDeleteObject(b.csrd1, b._cashSalesReturnService);
+                            b._cashSalesReturnService.SoftDeleteObject(b.csr1, b._cashSalesReturnDetailService);
+                            b.csrd1.Errors.Count().should_be(0);
+                            b.csr1.Errors.Count().should_be(0);
+                        };
+
+                        it["validates_unpaid_cashsalesinvoice_after_cashsalesreturn_deleted"] = () =>
+                        {
+                            b._cashSalesReturnDetailService.SoftDeleteObject(b.csrd1, b._cashSalesReturnService);
+                            b._cashSalesReturnService.SoftDeleteObject(b.csr1, b._cashSalesReturnDetailService);
+                            b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService, b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
+
+                            b.csi1.Errors.Count().should_be(0);
+                        };
+
+                    };
+
+                };
 
             };
         }

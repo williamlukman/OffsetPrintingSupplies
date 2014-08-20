@@ -78,7 +78,7 @@ namespace Service.Service
         }
 
         public CustomPurchaseInvoiceDetail ConfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, 
-                                                      IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                      IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService)
         {
             if(_validator.ValidConfirmObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService))
             {
@@ -103,6 +103,8 @@ namespace Service.Service
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity, itemPrice);
 
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, 0, item.SellingPrice, DateTime.Now);
+
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 stockMutation.CreatedAt = (DateTime)customPurchaseInvoice.ConfirmationDate;
                 _stockMutationService.UpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
@@ -114,15 +116,17 @@ namespace Service.Service
         }
 
         public CustomPurchaseInvoiceDetail UnconfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, IWarehouseItemService _warehouseItemService,
-                                                      IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                      IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService, IPriceMutationService _priceMutationService)
         {
             if (_validator.ValidUnconfirmObject(customPurchaseInvoiceDetail))
             {
                 Item item = _itemService.GetObjectById(customPurchaseInvoiceDetail.ItemId);
+                CustomPurchaseInvoiceDetail hiCustomPurchaseInvoiceDetail = GetAll().Where(x => x.ItemId == item.Id).OrderByDescending(x => x.Price).FirstOrDefault();
+                item.SellingPrice = hiCustomPurchaseInvoiceDetail.Price * (100 + item.Margin) / 100;
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
-                // How to Reverse SellingPrice ?
-                item.SellingPrice = itemPrice;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity * (-1), itemPrice);
+
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, 0, item.SellingPrice, DateTime.Now);
 
                 IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(customPurchaseInvoiceDetail.ItemId, Core.Constants.Constant.SourceDocumentDetailType.CustomPurchaseInvoiceDetail, customPurchaseInvoiceDetail.Id);
                 foreach (var stockMutation in stockMutations)

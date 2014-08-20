@@ -29,7 +29,7 @@ namespace Core.Interface.Service
                                                   IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
                                                   IBarringService _barringService, IStockMutationService _stockMutationService);
-        CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, decimal Allowance, ICashBankService _cashBankService, IPayableService _payableService,
+        CashSalesReturn PaidObject(CashSalesReturn cashSalesReturn, /*decimal Allowance,*/ ICashBankService _cashBankService, IPayableService _payableService,
                                              IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                              IContactService _contactService, ICashMutationService _cashMutationService);
         CashSalesReturn UnpaidObject(CashSalesReturn cashSalesReturn, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService,

@@ -138,9 +138,9 @@ namespace TestValidation
                 {
                     before = () =>
                     {
-                        cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi1, cpb._customPurchaseInvoiceDetailService, cpb._payableService, cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService, cpb._itemService, cpb._barringService, cpb._stockMutationService);
-                        cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi2, cpb._customPurchaseInvoiceDetailService, cpb._payableService, cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService, cpb._itemService, cpb._barringService, cpb._stockMutationService);
-                        cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi3, cpb._customPurchaseInvoiceDetailService, cpb._payableService, cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService, cpb._itemService, cpb._barringService, cpb._stockMutationService);
+                        cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi1, cpb._customPurchaseInvoiceDetailService, cpb._payableService, cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService, cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
+                        cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi2, cpb._customPurchaseInvoiceDetailService, cpb._payableService, cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService, cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
+                        cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi3, cpb._customPurchaseInvoiceDetailService, cpb._payableService, cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService, cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
                         cpb.cpi1.Errors.Count().should_be(0);
                         cpb.cpi2.Errors.Count().should_be(0);
                         cpb.cpi3.Errors.Count().should_be(0);

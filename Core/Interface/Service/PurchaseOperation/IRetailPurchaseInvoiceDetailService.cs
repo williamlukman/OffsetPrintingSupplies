@@ -23,5 +23,6 @@ namespace Core.Interface.Service
         RetailPurchaseInvoiceDetail UnconfirmObject(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IWarehouseItemService _warehouseItemService,
                                                  IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
         bool DeleteObject(int Id);
+        decimal CalculateTotal(int RetailPurchaseInvoiceId);
     }
 }

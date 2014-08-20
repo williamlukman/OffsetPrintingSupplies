@@ -31,7 +31,7 @@ namespace Core.Interface.Service
                                       IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                       IContactService _contactService, ICashMutationService _cashMutationService, ICashSalesReturnService _cashSalesReturnService);
         CashSalesInvoice UnpaidObject(CashSalesInvoice cashSalesInvoice, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                        ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService);
+                                        ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService, ICashSalesReturnService _cashSalesReturnService);
         bool DeleteObject(int Id);
     }
 }

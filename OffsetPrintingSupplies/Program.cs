@@ -27,16 +27,16 @@ namespace OffsetPrintingSupplies
                 //SalesBuilder s = new SalesBuilder();
                 //RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
                 //RetailSalesBuilder rsb = new RetailSalesBuilder();
-                //CashSalesBuilder csb = new CashSalesBuilder();
-                CustomPurchaseBuilder cpb = new CustomPurchaseBuilder();
+                CashSalesBuilder csb = new CashSalesBuilder();
+                //CustomPurchaseBuilder cpb = new CustomPurchaseBuilder();
 
                 //DataFunction(d);
                 //PurchaseFunction(p);
                 //SalesFunction(s);
                 //RetailPurchaseFunction(rpb);
                 //RetailSalesFunction(rsb);
-                //CashSalesFunction(csb);
-                CustomPurchaseFunction(cpb);
+                CashSalesFunction(csb);
+                //CustomPurchaseFunction(cpb);
             }
         }
 
@@ -64,7 +64,7 @@ namespace OffsetPrintingSupplies
 
             IList<ReceiptVoucherDetail> receiptVoucherDetails1 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables1.Id);
             IList<ReceiptVoucherDetail> receiptVoucherDetails2 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables2.Id);
-            //IList<ReceiptVoucherDetail> receiptVoucherDetails3 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables3.Id);
+            IList<ReceiptVoucherDetail> receiptVoucherDetails3 = b._receiptVoucherDetailService.GetObjectsByReceivableId(receivables3.Id);
 
             foreach (var receiptVoucherDetail in receiptVoucherDetails1)
             {
@@ -76,20 +76,20 @@ namespace OffsetPrintingSupplies
                 if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("2:FALSE");
             }
 
-            /*foreach (var receiptVoucherDetail in receiptVoucherDetails3)
+            foreach (var receiptVoucherDetail in receiptVoucherDetails3)
             {
                 if (!receiptVoucherDetail.IsConfirmed) Console.WriteLine("3:FALSE");
-            }*/
+            }
             // ---
             Console.WriteLine("Press any key...");
             Console.ReadKey();
             // ---
             b._cashSalesInvoiceService.UnpaidObject(b.csi1, b._receiptVoucherService, b._receiptVoucherDetailService,
-                                                        b._cashBankService, b._receivableService, b._cashMutationService);
+                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
             b._cashSalesInvoiceService.UnpaidObject(b.csi2, b._receiptVoucherService, b._receiptVoucherDetailService,
-                                                        b._cashBankService, b._receivableService, b._cashMutationService);
+                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
             b._cashSalesInvoiceService.UnpaidObject(b.csi3, b._receiptVoucherService, b._receiptVoucherDetailService,
-                                                        b._cashBankService, b._receivableService, b._cashMutationService);
+                                                        b._cashBankService, b._receivableService, b._cashMutationService, b._cashSalesReturnService);
 
             b._cashSalesInvoiceService.UnconfirmObject(b.csi1, b._cashSalesInvoiceDetailService, b._receivableService,
                                                            b._receiptVoucherDetailService, b._warehouseItemService, b._warehouseService,
@@ -235,13 +235,13 @@ namespace OffsetPrintingSupplies
 
             cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi1, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
                                                            cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
-                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService);
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
             cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi2, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
                                                            cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
-                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService);
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
             cpb._customPurchaseInvoiceService.UnconfirmObject(cpb.cpi3, cpb._customPurchaseInvoiceDetailService, cpb._payableService,
                                                            cpb._paymentVoucherDetailService, cpb._warehouseItemService, cpb._warehouseService,
-                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService);
+                                                           cpb._itemService, cpb._barringService, cpb._stockMutationService, cpb._priceMutationService);
         }
 
         public static void DataFunction(DataBuilder d)

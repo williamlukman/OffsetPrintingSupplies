@@ -52,7 +52,7 @@ namespace Service.Service
                 retailPurchaseInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 retailPurchaseInvoiceDetail.Amount = priceMutation.Amount * retailPurchaseInvoiceDetail.Quantity;
                 retailPurchaseInvoiceDetail = _repository.CreateObject(retailPurchaseInvoiceDetail);
-                retailPurchaseInvoice.Total += retailPurchaseInvoiceDetail.Amount;
+                retailPurchaseInvoice.Total = CalculateTotal(retailPurchaseInvoice.Id);
                 _retailPurchaseInvoiceService.GetRepository().UpdateObject(retailPurchaseInvoice);
             }
             return retailPurchaseInvoiceDetail;
@@ -69,7 +69,7 @@ namespace Service.Service
                 retailPurchaseInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 retailPurchaseInvoiceDetail.Amount = priceMutation.Amount * retailPurchaseInvoiceDetail.Quantity;
                 retailPurchaseInvoiceDetail = _repository.UpdateObject(retailPurchaseInvoiceDetail);
-                retailPurchaseInvoice.Total += retailPurchaseInvoiceDetail.Amount;
+                retailPurchaseInvoice.Total = CalculateTotal(retailPurchaseInvoice.Id);
                 _retailPurchaseInvoiceService.GetRepository().UpdateObject(retailPurchaseInvoice);
             }
             return retailPurchaseInvoiceDetail;
@@ -141,6 +141,17 @@ namespace Service.Service
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
+        }
+
+        public decimal CalculateTotal(int RetailPurchaseInvoiceId)
+        {
+            IList<RetailPurchaseInvoiceDetail> retailPurchaseInvoiceDetails = GetObjectsByRetailPurchaseInvoiceId(RetailPurchaseInvoiceId);
+            decimal Total = 0;
+            foreach (var retailPurchaseInvoiceDetail in retailPurchaseInvoiceDetails)
+            {
+                Total += retailPurchaseInvoiceDetail.Amount;
+            }
+            return Total;
         }
     }
 }

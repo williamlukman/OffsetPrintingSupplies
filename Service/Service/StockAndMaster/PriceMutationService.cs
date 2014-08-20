@@ -72,6 +72,7 @@ namespace Service.Service
             priceMutation.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(priceMutation, this))
             {
+                //priceMutation.CreatedAt = DateTime.Now;
                 priceMutation = _repository.CreateObject(priceMutation);
                 IList<PriceMutation> priceMutations = _repository.GetObjectsByIsActive(true, priceMutation.Id, priceMutation.ItemId/*, priceMutation.ContactGroupId*/);
                 foreach (var priceMutation2 in priceMutations)
