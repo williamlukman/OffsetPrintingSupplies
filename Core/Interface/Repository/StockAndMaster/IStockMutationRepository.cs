@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IStockMutationRepository : IRepository<StockMutation>
     {
+        IQueryable<StockMutation> GetQueryable();
         IList<StockMutation> GetAll();
         IList<StockMutation> GetObjectsByItemId(int itemId);
         IList<StockMutation> GetObjectsByWarehouseId(int warehouseId);

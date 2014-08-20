@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface IPurchaseReceivalService
     {
         IPurchaseReceivalValidator GetValidator();
+        IQueryable<PurchaseReceival> GetQueryable();
         IList<PurchaseReceival> GetAll();
         PurchaseReceival GetObjectById(int Id);
         IList<PurchaseReceival> GetObjectsByPurchaseOrderId(int purchaseOrderId);

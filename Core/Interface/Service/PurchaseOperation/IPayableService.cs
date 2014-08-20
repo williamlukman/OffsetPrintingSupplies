@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IPayableService
     {
+        IQueryable<Payable> GetQueryable();
         IPayableValidator GetValidator();
         IList<Payable> GetAll();
         IList<Payable> GetObjectsByContactId(int contactId);

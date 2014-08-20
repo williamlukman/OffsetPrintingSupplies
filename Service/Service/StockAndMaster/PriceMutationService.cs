@@ -24,6 +24,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<PriceMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<PriceMutation> GetAll()
         {
             return _repository.GetAll();

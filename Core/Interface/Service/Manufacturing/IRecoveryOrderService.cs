@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IRecoveryOrderService
     {
         IRecoveryOrderValidator GetValidator();
+        IQueryable<RecoveryOrder> GetQueryable();
         IList<RecoveryOrder> GetAll();
         IList<RecoveryOrder> GetAllObjectsInHouse();
         IList<RecoveryOrder> GetAllObjectsByContactId(int ContactId);

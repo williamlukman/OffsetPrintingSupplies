@@ -74,7 +74,7 @@ namespace TestValidation
             it["deletes_barringorder_with_processed_detail"] = () =>
             {
                 d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-                d.barringODContact1 = d._barringOrderDetailService.CutObject(d.barringODContact1);
+                d.barringODContact1 = d._barringOrderDetailService.CutObject(d.barringODContact1, d._barringOrderService);
                 d.barringODContact1 = d._barringOrderDetailService.SideSealObject(d.barringODContact1);
 
                 d.barringOrderContact = d._barringOrderService.SoftDeleteObject(d.barringOrderContact, d._barringOrderDetailService);
@@ -87,10 +87,10 @@ namespace TestValidation
                 {
                     d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
 
-                    d._barringOrderDetailService.CutObject(d.barringODContact1);
-                    d._barringOrderDetailService.CutObject(d.barringODContact2);
-                    d._barringOrderDetailService.CutObject(d.barringODContact3);
-                    d._barringOrderDetailService.CutObject(d.barringODContact4);
+                    d._barringOrderDetailService.CutObject(d.barringODContact1, d._barringOrderService);
+                    d._barringOrderDetailService.CutObject(d.barringODContact2, d._barringOrderService);
+                    d._barringOrderDetailService.CutObject(d.barringODContact3, d._barringOrderService);
+                    d._barringOrderDetailService.CutObject(d.barringODContact4, d._barringOrderService);
                 };
 
                 it["validates_barringorderdetails"] = () =>

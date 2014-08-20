@@ -16,6 +16,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<ReceiptVoucher> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<ReceiptVoucher> GetAll()
         {
             return FindAll(pv => !pv.IsDeleted).ToList();

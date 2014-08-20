@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface ICashBankService
     {
         ICashBankValidator GetValidator();
+        IQueryable<CashBank> GetQueryable();
         IList<CashBank> GetAll();
         CashBank GetObjectById(int Id);
         CashBank GetObjectByName(string Name);

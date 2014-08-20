@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IBarringValidator GetValidator();
         IBarringRepository GetRepository();
+        IQueryable<Barring> GetQueryable();
         IList<Barring> GetAll();
         IList<Barring> GetObjectsByItemTypeId(int ItemTypeId);
         IList<Barring> GetObjectsByUoMId(int UoMId);

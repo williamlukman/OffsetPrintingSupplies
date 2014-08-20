@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IRollerBuilderRepository : IRepository<RollerBuilder>
     {
+        IQueryable<RollerBuilder> GetQueryable();
         IList<RollerBuilder> GetAll();
         IList<RollerBuilder> GetObjectsByCompoundId(int compoundId);
         IList<RollerBuilder> GetObjectsByCoreBuilderId(int coreBuilderId);

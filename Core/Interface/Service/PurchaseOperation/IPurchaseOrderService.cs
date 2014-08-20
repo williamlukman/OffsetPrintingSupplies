@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface IPurchaseOrderService
     {
         IPurchaseOrderValidator GetValidator();
+        IQueryable<PurchaseOrder> GetQueryable();
         IList<PurchaseOrder> GetAll();
         PurchaseOrder GetObjectById(int Id);
         IList<PurchaseOrder> GetObjectsByContactId(int contactId);

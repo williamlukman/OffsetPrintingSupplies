@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IStockAdjustmentRepository : IRepository<StockAdjustment>
     {
+        IQueryable<StockAdjustment> GetQueryable();
         IList<StockAdjustment> GetAll();
         IList<StockAdjustment> GetAllByMonthCreated();
         StockAdjustment GetObjectById(int Id);

@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<CoreIdentificationDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CoreIdentificationDetail> GetAll()
         {
             return _repository.GetAll();

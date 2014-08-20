@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IRollerTypeRepository : IRepository<RollerType>
     {
+        IQueryable<RollerType> GetQueryable();
         IList<RollerType> GetAll();
         RollerType GetObjectById(int Id);
         RollerType CreateObject(RollerType rollerType);

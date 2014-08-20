@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface IWarehouseService
     {
         IWarehouseValidator GetValidator();
+        IQueryable<Warehouse> GetQueryable();
         IList<Warehouse> GetAll();
         Warehouse GetObjectById(int Id);
         Warehouse GetObjectByCode(string Code);

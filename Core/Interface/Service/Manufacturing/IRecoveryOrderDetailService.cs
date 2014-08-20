@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IRecoveryOrderDetailValidator GetValidator();
         IRecoveryOrderDetailRepository GetRepository();
+        IQueryable<RecoveryOrderDetail> GetQueryable();
         IList<RecoveryOrderDetail> GetAll();
         IList<RecoveryOrderDetail> GetObjectsByRecoveryOrderId(int recoveryOrderId);
         IList<RecoveryOrderDetail> GetObjectsByCoreIdentificationDetailId(int coreIdentificationDetailId);

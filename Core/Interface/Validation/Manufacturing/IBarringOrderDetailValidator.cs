@@ -54,7 +54,7 @@ namespace Core.Interface.Validation
         BarringOrderDetail VRemoveLeftBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VAddRightBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VRemoveRightBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail VCutObject(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail VCutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         BarringOrderDetail VSideSealObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VPrepareObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VApplyTapeAdhesiveToObject(BarringOrderDetail barringOrderDetail);
@@ -76,7 +76,7 @@ namespace Core.Interface.Validation
         bool ValidRemoveLeftBar(BarringOrderDetail barringOrderDetail);
         bool ValidAddRightBar(BarringOrderDetail barringOrderDetail);
         bool ValidRemoveRightBar(BarringOrderDetail barringOrderDetail);
-        bool ValidCutObject(BarringOrderDetail barringOrderDetail);
+        bool ValidCutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderSerivce);
         bool ValidSideSealObject(BarringOrderDetail barringOrderDetail);
         bool ValidPrepareObject(BarringOrderDetail barringOrderDetail);
         bool ValidApplyTapeAdhesiveToObject(BarringOrderDetail barringOrderDetail);

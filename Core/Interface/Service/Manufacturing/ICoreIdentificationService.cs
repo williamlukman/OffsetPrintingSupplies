@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface ICoreIdentificationService
     {
         ICoreIdentificationValidator GetValidator();
+        IQueryable<CoreIdentification> GetQueryable();
         IList<CoreIdentification> GetAll();
         IList<CoreIdentification> GetAllObjectsInHouse();
         IList<CoreIdentification> GetAllObjectsByContactId(int ContactId);

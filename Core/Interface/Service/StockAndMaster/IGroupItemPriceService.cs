@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IGroupItemPriceService
     {
         IGroupItemPriceValidator GetValidator();
+        IQueryable<GroupItemPrice> GetQueryable();
         IList<GroupItemPrice> GetAll();
         GroupItemPrice GetObjectById(int Id);
         GroupItemPrice CreateObject(GroupItemPrice groupItemPrice, IContactGroupService _contactGroupService, IItemService _itemService, IPriceMutationService _priceMutationService);

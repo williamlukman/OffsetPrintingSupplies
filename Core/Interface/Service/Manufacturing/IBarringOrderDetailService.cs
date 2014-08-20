@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IBarringOrderDetailValidator GetValidator();
         IBarringOrderDetailRepository GetRepository();
+        IQueryable<BarringOrderDetail> GetQueryable();
         IList<BarringOrderDetail> GetAll();
         IList<BarringOrderDetail> GetObjectsByBarringOrderId(int barringOrderId);
         BarringOrderDetail GetObjectById(int Id);
@@ -23,7 +24,7 @@ namespace Core.Interface.Service
         BarringOrderDetail RemoveLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
         BarringOrderDetail AddRightBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
         BarringOrderDetail RemoveRightBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
-        BarringOrderDetail CutObject(BarringOrderDetail barringOrderDetail);
+        BarringOrderDetail CutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         BarringOrderDetail SideSealObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail PrepareObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail ApplyTapeAdhesiveToObject(BarringOrderDetail barringOrderDetail);

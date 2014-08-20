@@ -25,6 +25,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<CoreIdentification> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CoreIdentification> GetAll()
         {
             return _repository.GetAll();

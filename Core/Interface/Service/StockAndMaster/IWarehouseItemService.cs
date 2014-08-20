@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IWarehouseItemValidator GetValidator();
         IWarehouseItemRepository GetRepository();
+        IQueryable<WarehouseItem> GetQueryable();
         IList<WarehouseItem> GetAll();
         IList<WarehouseItem> GetObjectsByWarehouseId(int warehouseId);
         IList<WarehouseItem> GetObjectsByItemId(int itemId);

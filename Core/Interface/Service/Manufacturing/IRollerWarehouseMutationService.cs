@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IRollerWarehouseMutationService
     {
+        IQueryable<RollerWarehouseMutation> GetQueryable();
         IRollerWarehouseMutationValidator GetValidator();
         IList<RollerWarehouseMutation> GetAll();
         IList<RollerWarehouseMutation> GetObjectsByCoreIdentificationId(int coreIdentificationId);

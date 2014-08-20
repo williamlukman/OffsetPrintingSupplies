@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IReceivableRepository : IRepository<Receivable>
     {
+        IQueryable<Receivable> GetQueryable();
         IList<Receivable> GetAll();
         IList<Receivable> GetAllByMonthCreated();
         IList<Receivable> GetObjectsByContactId(int contactId);

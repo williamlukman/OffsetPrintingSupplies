@@ -25,6 +25,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<PurchaseReceival> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<PurchaseReceival> GetAll()
         {
             return _repository.GetAll();

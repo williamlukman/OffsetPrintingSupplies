@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface IWarehouseMutationOrderService
     {
         IWarehouseMutationOrderValidator GetValidator();
+        IQueryable<WarehouseMutationOrder> GetQueryable();
         IList<WarehouseMutationOrder> GetAll();
         WarehouseMutationOrder GetObjectById(int Id);
         Warehouse GetWarehouseFrom(WarehouseMutationOrder warehouseMutationOrder);

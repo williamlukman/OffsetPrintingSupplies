@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<Barring> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<Barring> GetAll()
         {
             return (from x in Context.Items.OfType<Barring>() where !x.IsDeleted select x).ToList();

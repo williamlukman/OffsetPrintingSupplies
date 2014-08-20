@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IBarringRepository : IRepository<Barring>
     {
+        IQueryable<Barring> GetQueryable();
         IList<Barring> GetAll();
         IList<Barring> GetObjectsByItemTypeId(int ItemTypeId);
         IList<Barring> GetObjectsByUoMId(int UoMId);

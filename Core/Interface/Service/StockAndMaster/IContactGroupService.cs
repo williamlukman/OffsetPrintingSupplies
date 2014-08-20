@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IContactGroupService
     {
         IContactGroupValidator GetValidator();
+        IQueryable<ContactGroup> GetQueryable();
         IList<ContactGroup> GetAll();
         ContactGroup GetObjectById(int Id);
         ContactGroup GetObjectByIsLegacy(bool IsLegacy);

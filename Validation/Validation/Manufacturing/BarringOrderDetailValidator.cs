@@ -379,11 +379,13 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
-        public BarringOrderDetail VCutObject(BarringOrderDetail barringOrderDetail)
+        public BarringOrderDetail VCutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
             VHasNotBeenCut(barringOrderDetail);
             if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
             VHasNotBeenRejected(barringOrderDetail);
+            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
+            VBarringOrderHasBeenConfirmed(barringOrderDetail, _barringOrderService);
             return barringOrderDetail;
         }
 
@@ -557,10 +559,10 @@ namespace Validation.Validation
             return isValid(barringOrderDetail);
         }
 
-        public bool ValidCutObject(BarringOrderDetail barringOrderDetail)
+        public bool ValidCutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
             barringOrderDetail.Errors.Clear();
-            VCutObject(barringOrderDetail);
+            VCutObject(barringOrderDetail, _barringOrderService);
             return isValid(barringOrderDetail);
         }
 

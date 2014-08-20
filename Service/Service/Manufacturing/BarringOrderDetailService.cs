@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<BarringOrderDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<BarringOrderDetail> GetAll()
         {
             return _repository.GetAll();
@@ -93,9 +98,9 @@ namespace Service.Service
                                          _repository.RemoveRightBar(barringOrderDetail) : barringOrderDetail);
         }
 
-        public BarringOrderDetail CutObject(BarringOrderDetail barringOrderDetail)
+        public BarringOrderDetail CutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
-            return (barringOrderDetail = _validator.ValidCutObject(barringOrderDetail) ? _repository.CutObject(barringOrderDetail) : barringOrderDetail);
+            return (barringOrderDetail = _validator.ValidCutObject(barringOrderDetail, _barringOrderService) ? _repository.CutObject(barringOrderDetail) : barringOrderDetail);
         }
 
         public BarringOrderDetail SideSealObject(BarringOrderDetail barringOrderDetail)

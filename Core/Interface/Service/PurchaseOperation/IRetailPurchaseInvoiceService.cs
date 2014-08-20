@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IRetailPurchaseInvoiceValidator GetValidator();
         IRetailPurchaseInvoiceRepository GetRepository();
+        IQueryable<RetailPurchaseInvoice> GetQueryable();
         IList<RetailPurchaseInvoice> GetAll();
         RetailPurchaseInvoice GetObjectById(int Id);
         RetailPurchaseInvoice CreateObject(RetailPurchaseInvoice retailPurchaseInvoice, IWarehouseService _warehouseService);

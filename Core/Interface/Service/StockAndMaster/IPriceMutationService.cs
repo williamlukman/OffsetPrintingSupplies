@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IPriceMutationService
     {
         IPriceMutationValidator GetValidator();
+        IQueryable<PriceMutation> GetQueryable();
         IList<PriceMutation> GetAll();
         IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ItemId, int ContactGroupId, int ExcludePriceMutationId);
         IList<PriceMutation> GetActiveObjectsByItemId(int ItemId);

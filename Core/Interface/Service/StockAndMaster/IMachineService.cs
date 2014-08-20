@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IMachineService
     {
         IMachineValidator GetValidator();
+        IQueryable<Machine> GetQueryable();
         IList<Machine> GetAll();
         Machine GetObjectById(int Id);
         Machine GetObjectByCode(string Code);

@@ -25,6 +25,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<RecoveryOrder> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<RecoveryOrder> GetAll()
         {
             return _repository.GetAll();

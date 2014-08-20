@@ -370,7 +370,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _barringOrderDetailService.GetObjectById(Id);
-                if (Progress == "IsCut") { model = _barringOrderDetailService.CutObject(data); }
+                if (Progress == "IsCut") { model = _barringOrderDetailService.CutObject(data, _barringOrderService); }
                 else if (Progress == "IsSideSealed") { model = _barringOrderDetailService.SideSealObject(data); }
                 else if (Progress == "IsBarPrepared") { model = _barringOrderDetailService.PrepareObject(data); }
                 else if (Progress == "IsAdhesiveTapeApplied") { model = _barringOrderDetailService.ApplyTapeAdhesiveToObject(data); }

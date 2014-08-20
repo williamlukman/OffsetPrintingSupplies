@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IWarehouseRepository : IRepository<Warehouse>
     {
+        IQueryable<Warehouse> GetQueryable();
         IList<Warehouse> GetAll();
         Warehouse GetObjectById(int Id);
         Warehouse GetObjectByCode(string Code);

@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface ISalesOrderDetailRepository : IRepository<SalesOrderDetail>
     {
+        IQueryable<SalesOrderDetail> GetQueryable();
         IList<SalesOrderDetail> GetAll();
         IList<SalesOrderDetail> GetAllByMonthCreated();
         IList<SalesOrderDetail> GetObjectsBySalesOrderId(int salesOrderId);

@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IItemTypeRepository : IRepository<ItemType>
     {
+        IQueryable<ItemType> GetQueryable();
         IList<ItemType> GetAll();
         ItemType GetObjectById(int Id);
         ItemType CreateObject(ItemType itemType);

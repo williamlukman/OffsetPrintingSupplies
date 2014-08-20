@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         ICoreIdentificationDetailValidator GetValidator();
         ICoreIdentificationDetailRepository GetRepository();
+        IQueryable<CoreIdentificationDetail> GetQueryable();
         IList<CoreIdentificationDetail> GetAll();
         IList<CoreIdentificationDetail> GetObjectsByCoreIdentificationId(int CoreIdentificationId);
         IList<CoreIdentificationDetail> GetObjectsByCoreBuilderId(int CoreBuilderId);

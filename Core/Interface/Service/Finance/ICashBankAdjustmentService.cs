@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface ICashBankAdjustmentService
     {
         ICashBankAdjustmentValidator GetValidator();
+        IQueryable<CashBankAdjustment> GetQueryable();
         IList<CashBankAdjustment> GetAll();
         IList<CashBankAdjustment> GetObjectsByCashBankId(int cashBankId);
         CashBankAdjustment GetObjectById(int Id);

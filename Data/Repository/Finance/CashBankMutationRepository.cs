@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<CashBankMutation> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<CashBankMutation> GetAll()
         {
             return FindAll(x => !x.IsDeleted).ToList();

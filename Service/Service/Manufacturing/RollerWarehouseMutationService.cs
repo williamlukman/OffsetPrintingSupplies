@@ -29,6 +29,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<RollerWarehouseMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<RollerWarehouseMutation> GetAll()
         {
             return _repository.GetAll();

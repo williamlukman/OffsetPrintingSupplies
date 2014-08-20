@@ -24,6 +24,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<Machine> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<Machine> GetAll()
         {
             return _repository.GetAll();

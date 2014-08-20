@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IRollerBuilderService
     {
         IRollerBuilderValidator GetValidator();
+        IQueryable<RollerBuilder> GetQueryable();
         IList<RollerBuilder> GetAll();
         IList<RollerBuilder> GetObjectsByCompoundId(int compoundId);
         IList<RollerBuilder> GetObjectsByCoreBuilderId(int coreBuilderId);

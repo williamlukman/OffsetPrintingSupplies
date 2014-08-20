@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IItemTypeService
     {
         IItemTypeValidator GetValidator();
+        IQueryable<ItemType> GetQueryable();
         IList<ItemType> GetAll();
         ItemType GetObjectById(int Id);
         ItemType GetObjectByName(string Name);

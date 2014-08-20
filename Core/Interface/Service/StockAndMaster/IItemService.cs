@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         IItemValidator GetValidator();
         IItemRepository GetRepository();
+        IQueryable<Item> GetQueryable();
         IList<Item> GetAll();
         IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
