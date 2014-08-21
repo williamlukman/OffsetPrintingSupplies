@@ -166,6 +166,8 @@
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
+    <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
+    <Compile Include="Controllers\WarehouseItemController.cs" />
     <Compile Include="Controllers\PaymentVoucherController.cs" />
     <Compile Include="Controllers\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchaseOrderController.cs" />
@@ -213,6 +215,7 @@
     <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\useraccess.js" />
+    <Content Include="Content\apps_js\WarehouseItem.js" />
     <Content Include="Content\apps_js\WarehouseMutationOrder.js" />
     <Content Include="Content\assets\images\emkl.png" />
     <Content Include="Content\assets\images\logoFEI.png" />
@@ -1091,6 +1094,7 @@
     <Content Include="Views\RollerWarehouseMutation\Index.cshtml" />
     <Content Include="Views\BarringWorkOrder\Index.cshtml" />
     <Content Include="Views\RecoveryWorkOrder\Index.cshtml" />
+    <Content Include="Views\WarehouseItem\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
