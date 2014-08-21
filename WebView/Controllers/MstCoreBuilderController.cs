@@ -112,10 +112,10 @@ namespace WebView.Controllers
                             item.UoMId,
                             _uomService.GetObjectById(item.UoMId).Name,
                             item.BaseSku,
-                            item.SkuUsedCore,
+                            item.SkuUsedCore, 
                             item.SkuNewCore,
-                            //_itemService.GetObjectById(item.UsedCoreItemId).Quantity,
-                            //_itemService.GetObjectById(item.NewCoreItemId).Quantity,
+                            _itemService.GetObjectById(item.UsedCoreItemId).Quantity,
+                            _itemService.GetObjectById(item.NewCoreItemId).Quantity,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }

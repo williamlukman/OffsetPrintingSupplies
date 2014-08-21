@@ -12,7 +12,8 @@ using Validation.Validation;
 namespace WebView.Controllers
 {
     public class RecoveryWorkOrderController : Controller
-    {private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkOrderController");
+    {
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkOrderController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
