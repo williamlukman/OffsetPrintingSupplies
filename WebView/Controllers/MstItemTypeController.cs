@@ -84,7 +84,6 @@ namespace WebView.Controllers
             try
             {
                 model = _itemTypeService.GetObjectById(Id);
-
             }
             catch (Exception ex)
             {
@@ -94,7 +93,10 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Id,
+                model.Name,
+                model.Description,
+                model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -113,7 +115,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -135,7 +137,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -155,7 +157,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
     }

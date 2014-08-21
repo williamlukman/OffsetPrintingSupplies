@@ -11,7 +11,7 @@
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/masteritemtype.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Master Item Type :.">
+    title=".: @ViewBag.Title :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -26,8 +26,8 @@
     </div>
 
 <!-- Dialog Box -->
-    <div id="form_div" class="easyui-dialog" style="text-align: left;" data-options="modal:true" 
-        title=".: Master Item Type :.">
+    <div id="form_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px" data-options="modal:true" 
+        title=".: @ViewBag.Title :.">
 
         <div id="form_toolbar" class="form_toolbar">
             <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>

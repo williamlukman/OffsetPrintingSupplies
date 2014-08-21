@@ -39,29 +39,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\References\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+    <Reference Include="CrystalDecisions.ReportSource, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\References\CrystalDecisions.ReportSource.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+    <Reference Include="CrystalDecisions.Shared, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\References\CrystalDecisions.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.Web">
+    <Reference Include="CrystalDecisions.Web, Version=11.5.3700.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\References\CrystalDecisions.Web.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\References\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Recaptcha">
       <HintPath>..\packages\References\Recaptcha.dll</HintPath>
     </Reference>
@@ -69,8 +67,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Linq.Dynamic, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Linq.Dynamic">
       <HintPath>..\packages\References\System.Linq.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
@@ -94,6 +91,9 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
@@ -148,16 +148,38 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\MstCashSalesInvoiceController.cs" />
+    <Compile Include="Controllers\BarringWorkOrderController.cs" />
+    <Compile Include="Controllers\CashBankAdjustmentController.cs" />
+    <Compile Include="Controllers\CashBankMutationController.cs" />
+    <Compile Include="Controllers\CoreIdentificationController.cs" />
+    <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MstBarringController.cs" />
     <Compile Include="Controllers\MstCashBankController.cs" />
+    <Compile Include="Controllers\CashSalesInvoiceController.cs" />
     <Compile Include="Controllers\MstContactController.cs" />
+    <Compile Include="Controllers\MstContactGroupController.cs" />
+    <Compile Include="Controllers\MstCoreBuilderController.cs" />
     <Compile Include="Controllers\MstItemController.cs" />
     <Compile Include="Controllers\MstItemTypeController.cs" />
     <Compile Include="Controllers\MstMachineController.cs" />
+    <Compile Include="Controllers\MstRollerBuilderController.cs" />
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
+    <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
+    <Compile Include="Controllers\WarehouseItemController.cs" />
+    <Compile Include="Controllers\PaymentVoucherController.cs" />
+    <Compile Include="Controllers\PurchaseInvoiceController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
+    <Compile Include="Controllers\PurchaseReceivalController.cs" />
+    <Compile Include="Controllers\ReceiptVoucherController.cs" />
+    <Compile Include="Controllers\RecoveryWorkOrderController.cs" />
+    <Compile Include="Controllers\RollerWarehouseMutationController.cs" />
+    <Compile Include="Controllers\SalesInvoiceController.cs" />
+    <Compile Include="Controllers\SalesOrderController.cs" />
+    <Compile Include="Controllers\StockAdjustmentController.cs" />
+    <Compile Include="Controllers\WarehouseMutationOrderController.cs" />
     <Compile Include="GeneralFunction.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -165,17 +187,38 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\apps_js\MasterCashSalesInvoice.js" />
+    <Content Include="Content\apps_js\BarringWorkOrder.js" />
+    <Content Include="Content\apps_js\CashBankAdjustment.js" />
+    <Content Include="Content\apps_js\CashBankMutation.js" />
+    <Content Include="Content\apps_js\CoreIdentification.js" />
+    <Content Include="Content\apps_js\DeliveryOrder.js" />
+    <Content Include="Content\apps_js\MasterBarring.js" />
     <Content Include="Content\apps_js\MasterCashBank.js" />
+    <Content Include="Content\apps_js\CashSalesInvoice.js" />
     <Content Include="Content\apps_js\MasterContact.js" />
+    <Content Include="Content\apps_js\MasterContactGroup.js" />
+    <Content Include="Content\apps_js\MasterCoreBuilder.js" />
     <Content Include="Content\apps_js\MasterItem.js" />
     <Content Include="Content\apps_js\MasterItemType.js" />
     <Content Include="Content\apps_js\MasterMachine.js" />
+    <Content Include="Content\apps_js\MasterRollerBuilder.js" />
     <Content Include="Content\apps_js\MasterRollerType.js" />
     <Content Include="Content\apps_js\MasterUoM.js" />
     <Content Include="Content\apps_js\MasterWarehouse.js" />
+    <Content Include="Content\apps_js\PaymentVoucher.js" />
+    <Content Include="Content\apps_js\PurchaseInvoice.js" />
+    <Content Include="Content\apps_js\PurchaseOrder.js" />
+    <Content Include="Content\apps_js\PurchaseReceival.js" />
+    <Content Include="Content\apps_js\ReceiptVoucher.js" />
+    <Content Include="Content\apps_js\RecoveryWorkOrder.js" />
+    <Content Include="Content\apps_js\RollerWarehouseMutation.js" />
+    <Content Include="Content\apps_js\SalesInvoice.js" />
+    <Content Include="Content\apps_js\SalesOrder.js" />
+    <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\useraccess.js" />
+    <Content Include="Content\apps_js\WarehouseItem.js" />
+    <Content Include="Content\apps_js\WarehouseMutationOrder.js" />
     <Content Include="Content\assets\images\emkl.png" />
     <Content Include="Content\assets\images\logoFEI.png" />
     <Content Include="Content\assets\images\logononame.png" />
@@ -1033,7 +1076,28 @@
     <Content Include="Views\MstMachine\Index.cshtml" />
     <Content Include="Views\MstRollerType\Index.cshtml" />
     <Content Include="Views\MstCashBank\Index.cshtml" />
-    <Content Include="Views\MstCashSalesInvoice\Index.cshtml" />
+    <Content Include="Views\MstCoreBuilder\Index.cshtml" />
+    <Content Include="Views\MstRollerBuilder\Index.cshtml" />
+    <Content Include="Views\MstBarring\Index.cshtml" />
+    <Content Include="Views\StockAdjustment\Index.cshtml" />
+    <Content Include="Views\CashBankAdjustment\Index.cshtml" />
+    <Content Include="Views\CashBankMutation\Index.cshtml" />
+    <Content Include="Views\WarehouseMutationOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseOrder\Index.cshtml" />
+    <Content Include="Views\SalesOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseReceival\Index.cshtml" />
+    <Content Include="Views\DeliveryOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseInvoice\Index.cshtml" />
+    <Content Include="Views\MstContactGroup\Index.cshtml" />
+    <Content Include="Views\SalesInvoice\Index.cshtml" />
+    <Content Include="Views\PaymentVoucher\Index.cshtml" />
+    <Content Include="Views\ReceiptVoucher\Index.cshtml" />
+    <Content Include="Views\CoreIdentification\Index.cshtml" />
+    <Content Include="Views\RollerWarehouseMutation\Index.cshtml" />
+    <Content Include="Views\BarringWorkOrder\Index.cshtml" />
+    <Content Include="Views\RecoveryWorkOrder\Index.cshtml" />
+    <Content Include="Views\WarehouseItem\Index.cshtml" />
+    <Content Include="Views\CashSalesInvoice\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1079,7 +1143,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1391</DevelopmentServerPort>
+          <DevelopmentServerPort>52383</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61688/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

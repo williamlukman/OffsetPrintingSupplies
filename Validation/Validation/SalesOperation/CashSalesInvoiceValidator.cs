@@ -329,9 +329,9 @@ namespace Validation.Validation
         {
             VIsNotDeleted(cashSalesInvoice);
             if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
-            VHasNoCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService);
-            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
             VIsNotConfirmed(cashSalesInvoice);
+            if (!isValid(cashSalesInvoice)) { return cashSalesInvoice; }
+            VHasNoCashSalesInvoiceDetails(cashSalesInvoice, _cashSalesInvoiceDetailService);
             return cashSalesInvoice;
         }
 

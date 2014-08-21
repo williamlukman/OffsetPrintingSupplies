@@ -105,11 +105,12 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
+                model.Errors.Add("Insert Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -126,11 +127,12 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
+                model.Errors.Add("Update Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -145,11 +147,12 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
+                model.Errors.Add("Delete Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
     }

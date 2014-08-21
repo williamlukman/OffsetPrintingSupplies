@@ -206,84 +206,78 @@
                                     <li><a href="#">Home</a></li>
                                     <li><a href="#">Master</a>
                                         <ul>
+                                               <li><a href="#">Data</a>
+                                                <ul>
                                                <li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>
-                                               <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstItemType")">Item Type</a> </li>
+                                               <li><a href="@Url.Action("Index", "MstContactGroup")">Contact Group</a> </li>
+                                               <li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>
                                                <li><a href="@Url.Action("Index", "MstMachine")">Machine</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstRollerType")">Roller Type</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstItemType")">Item Type</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstBarring")">Barring</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstCashBank")">CashBank</a> </li>
-                                               <li><a href="@Url.Action("Index", "MstCashSalesInvoice")">CashSalesInvoice</a> </li>
-
-                                           
-                                           
-                                        @*    <li><a href="#">Link Account</a>
-                                                <ul>
-                                                    <li><a href="@Url.Action("LinkTR", "AccountLink")">Link Account TR</a></li>
-                                                    <li><a href="@Url.Action("LinkTP", "AccountLink")">Link Account TP</a></li>
+                                               <li><a href="@Url.Action("Index", "MstRollerType")">RollerType</a> </li>
+                                               <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
                                                 </ul>
-                                            </li>*@
+                                            </li>
+                                                <li><a href="#">Finance</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Index", "MstCashBank")">CashBank</a> </li>
+                                                    <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
+                                                    <li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
+                                                    
+                                                </ul>
+                                            </li>
+                                               <li><a href="#">Stock</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Index", "MstBarring")">Barring</a> </li>
+                                                    <li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>
+                                                    <li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>
+                                                   <li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>
+                                                    <li><a href="@Url.Action("Index", "StockAdjustment")">Stock Adjustment</a></li>
+                                                   <li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>
+                                                    <li><a href="@Url.Action("Index", "WarehouseItem")">Warehouse Item</a> </li>
+                                                   <li><a href="@Url.Action("Index", "WarehouseMutationOrder")">Warehouse Mutation</a></li>
+                                                </ul>
+                                            </li>
                                         </ul>
+                                        
                                     </li>
-                                    <li><a href="#">Cashier</a>
+                                    <li><a href="#">Manufacturing</a>
                                         <ul>
-                                            <li><a href="@Url.Action("Index", "OfficialReceipt")">Official Receipt</a></li>
-                                            <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
-                                            <li><a href="@Url.Action("Index", "TemporaryReceipt")">Temporary Receipt</a>
-                                            <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
-                                            <li><a href="@Url.Action("Index", "TemporaryPayment")">Temporary Payment</a></li>
-                                            <li><a href="@Url.Action("Index", "CashAdvance")">Cash Advance</a></li>
-                                            <li><a href="@Url.Action("Index", "CashAdvanceSettlement")">Cash Advance Settlement</a></li>
-                                            <li><a href="#">Valid Combination</a>
+                                            <li><a href="#">Barring</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "ValidCombinationBalanceCashCompany")">Balance Cash Per Company</a></li>
-                                                    <li><a href="@Url.Action("Index", "ValidCombinationBankCompany")">Bank Per Company</a></li>
-                                                    <li><a href="@Url.Action("Index", "ValidCombinationCashCompany")">Cash Per Company</a></li>
-                                                    <li><a href="@Url.Action("Index", "ValidCombination")">General Ledger</a></li>
-                                                    <li><a href="@Url.Action("Index", "ValidCombinationContact")">Contact</a></li>
+                                            <li><a href="@Url.Action("Index", "BarringWorkOrder")">Barring Work Order</a></li>
                                                 </ul>
+                                            </li>
+                                           <li><a href="#">Roller Recovery</a>
+                                             <ul>
+                                            <li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification</a></li>
+                                            <li><a href="@Url.Action("Index", "RollerWarehouseMutation")">Roller Warehouse Mutation</a></li>
+                                            <li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Recovery Work Order</a></li>
+                                             </ul>
                                             </li>
                                         </ul>
                                     </li>
                                     <li><a href="#">Transaction</a>
                                         <ul>
-                                            <li><a href="@Url.Action("Index", "GeneralInvoice")">General Invoice</a></li>
-                                            <li><a href="#">Verify</a>
+                                             <li><a href="#">Purchase</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Memorial", "Verify")">Memorial</a></li>
-                                                    <li><a href="@Url.Action("OfficialReceipt", "Verify")">Official Receipt</a></li>
-                                                    <li><a href="@Url.Action("TemporaryReceipt", "Verify")">Temporary Receipt</a></li>
-                                                    <li><a href="@Url.Action("ReceiptVoucher", "Verify")">Receipt Voucher</a></li>
-                                                    <li><a href="@Url.Action("TemporaryPayment", "Verify")">Temporary Payment</a></li>
-                                                    <li><a href="@Url.Action("PaymentVoucher", "Verify")">Payment Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
+                                                    <li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
+                                                    <li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
+                                                    <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Invoice</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="@Url.Action("Index", "AdjustmentAP")" >Adjustment AP</a></li>
-                                            <li><a href="@Url.Action("Index", "Memorial")" >Memorial</a>
+                                               <li><a href="#">Sales</a>
                                                 <ul>
-                                                    <li><a href="@Url.Action("Index", "OutstandingIncomeEPL")">Outstanding Income EPL</a></li>
-                                                    <li><a href="@Url.Action("Index", "IncomeNextPeriod")">Income Next Period</a></li>
-                                                    <li><a href="@Url.Action("Index", "CostEPLNextPeriod")">Cost EPL Next Period</a></li>
-                                                    <li><a href="@Url.Action("Index", "OutstandingCostAgent")">Outstanding Cost Agent</a></li>
+                                                    <li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
+                                                    <li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
+                                                    <li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
+                                                    <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Invoice</a></li>
+                                                    <li><a href="@Url.Action("Index", "CashSalesInvoice")">Cash Sales Invoice</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="@Url.Action("Index", "DueDate")" >Due Date</a></li>
-                                            <li><a href="@Url.Action("Index", "PostingProcess")">Posting</a></li>
-                                            <li><a href="@Url.Action("Index", "DailyClosing")">Daily Closing</a></li>
-                                            <li><a href="@Url.Action("Restore", "DailyClosing")">Restore Daily Closing</a></li>
-                                            <li><a href="@Url.Action("Index", "ClosingMonthly")">Closing Monthly</a></li>
-                                            <li><a href="@Url.Action("Restore", "ClosingMonthly")">Restore Closing Monthly</a></li>
-                                            <li><a href="@Url.Action("Journal", "Invoice")">Invoice Journal</a></li>
-                                            <li><a href="@Url.Action("Journal", "PaymentRequest")">Payment Request Journal</a></li>
                                         </ul>
                                     </li>
                                     <li><a href="#">Report</a>
-                                        <ul>
+                                        @*<ul>
                                             <li><a href="#">Finance Report</a>
                                                 <ul>
                                                     <li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>
@@ -342,7 +336,7 @@
                                             </li>
                                             <li><a href="#">Validitas Posting</a>
                                             </li>
-                                        </ul>
+                                        </ul>*@
                                     </li>
                                     <li id="menu-item-51"><a href="#">Setting</a>
                                         <ul>

@@ -31,7 +31,9 @@
         url: base_url + 'MstItem/GetList',
         datatype: "json",
         colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
-                   'Category','UoM Id','UoM','Quantity','Pending Receival','Pending Delivery', 'Created At', 'Updated At'],
+                   'Category', 'UoM Id', 'UoM', 'Quantity',
+                   'Selling Price', 'AvgPrice',
+                   'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 100 },
@@ -41,9 +43,11 @@
                   { name: 'category', index: 'category', width: 100 },
                   { name: 'uomid', index: 'uomid', width: 80 },
                   { name: 'uom', index: 'uom', width: 100 },
-                  { name: 'quantity', index: 'quantity', width: 80 , integer: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, integer: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, integer: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'sellingprice', index: 'sellingprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'avgprice', index: 'avgprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -60,18 +64,6 @@
         height: $(window).height() - 200,
         gridComplete:
 		  function () {
-		      //var ids = $(this).jqGrid('getDataIDs');
-		      //for (var i = 0; i < ids.length; i++) {
-		      //    var cl = ids[i];
-		      //    rowDel = $(this).getRowData(cl).deletedimg;
-		      //    if (rowDel == 'true') {
-		      //        img = "<img src ='" + base_url + "content/assets/images/remove.png' title='Data has been deleted !' width='16px' height='16px'>";
-
-		      //    } else {
-		      //        img = "";
-		      //    }
-		      //    $(this).jqGrid('setRowData', ids[i], { deletedimg: img });
-		      //}
 		  }
 
     });//END GRID
@@ -99,7 +91,6 @@
         clearForm("#frm");
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
-            vStatusSaving = 1;//edit data mode
             $.ajax({
                 dataType: "json",
                 url: base_url + "MstItem/GetInfo?Id=" + id,
@@ -126,6 +117,7 @@
                             $('#UoMId').val(result.UoMId);
                             $('#UoMName').val(result.UoM);
                             $('#Quantity').numberbox('setValue', (result.Quantity));
+                            $('#SellingPrice').numberbox('setValue', (result.SellingPrice));
                             $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
                             $('#PendingReceival').numberbox('setValue', (result.PendingReceival));
                             $('#form_div').dialog('open');
@@ -145,10 +137,6 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
-            //if (ret.deletedimg != '') {
-            //    $.messager.alert('Warning', 'RECORD HAS BEEN DELETED !', 'warning');
-            //    return;
-            //}
             $('#delete_confirm_btn_submit').data('Id', ret.id);
             $("#delete_confirm_div").dialog("open");
         } else {
@@ -171,8 +159,22 @@
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
             success: function (result) {
-                ReloadGrid();
-                $("#delete_confirm_div").dialog('close');
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                    $("#delete_confirm_div").dialog('close');
+                }
+                else {
+                    ReloadGrid();
+                    $("#delete_confirm_div").dialog('close');
+                }
             }
         });
     });
@@ -184,8 +186,6 @@
     });
 
     $("#form_btn_save").click(function () {
-
-
 
         ClearErrorMessage();
 
@@ -206,8 +206,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(),
-                SKU: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val()
+                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").val(),
+                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(),
             }),
             async: false,
             cache: false,
@@ -219,18 +219,13 @@
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
-                    //var error = '';
-                    //for (var key in result.model.Errors) {
-                    //    error = error + "<br>" + key + " "+result.model.Errors[key];
-                    //}
-                    //$.messager.alert('Warning',error, 'warning');
                 }
                 else {
                     ReloadGrid();

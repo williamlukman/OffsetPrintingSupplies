@@ -21,11 +21,14 @@ namespace WebView.Controllers
         private IWarehouseService _warehouseService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
+        private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
         private IContactGroupService _contactGroupService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
-        private ISalesOrderDetailService _salesOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+        private IMachineService _machineService;
+
         public MstItemController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -35,11 +38,13 @@ namespace WebView.Controllers
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(),new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
-            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
+            _machineService = new MachineService(new MachineRepository(),new MachineValidator());
         }
 
         public ActionResult Index()
@@ -94,6 +99,8 @@ namespace WebView.Controllers
                             item.UoMId,
                             _uoMService.GetObjectById(item.UoMId).Name,
                             item.Quantity,
+                            item.SellingPrice,
+                            item.AvgPrice,
                             item.PendingReceival,
                             item.PendingDelivery,
                             item.CreatedAt,
@@ -102,6 +109,66 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
+
+
+        public dynamic GetListAccessory(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query = _itemService.GetAllAccessories(_itemService,_itemTypeService).Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<Item>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from item in list
+                    select new
+                    {
+                        id = item.Id,
+                        cell = new object[] {
+                            item.Id,
+                            item.Name,
+                            item.ItemTypeId,
+                            _itemTypeService.GetObjectById(item.ItemTypeId).Name,
+                            item.Sku,
+                            item.Category,
+                            item.UoMId,
+                            _uoMService.GetObjectById(item.UoMId).Name,
+                            item.Quantity,
+                            item.SellingPrice,
+                            item.AvgPrice,
+                            item.PendingReceival,
+                            item.PendingDelivery,
+                            item.CreatedAt,
+                            item.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
 
         public dynamic GetInfo(int Id)
         {
@@ -127,6 +194,7 @@ namespace WebView.Controllers
                 model.ItemTypeId,
                 ItemType = _itemTypeService.GetObjectById(model.ItemTypeId).Name,
                 model.Quantity,
+                model.SellingPrice,
                 model.PendingDelivery,
                 model.PendingReceival,
                 model.Category,
@@ -139,7 +207,9 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _itemService.CreateObject(model,_uoMService,_itemTypeService,_warehouseItemService,_warehouseService,_priceMutationService,_contactGroupService);
+
+                model = _itemService.CreateObject(model,_uoMService,_itemTypeService,_warehouseItemService,
+                    _warehouseService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -163,6 +233,7 @@ namespace WebView.Controllers
                 data.Category = model.Category;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
+                data.SellingPrice = model.SellingPrice;
                 model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
@@ -182,8 +253,9 @@ namespace WebView.Controllers
             try
             {
                 var data = _itemService.GetObjectById(model.Id);
-                model = _itemService.SoftDeleteObject(data,_stockMutationService,_itemTypeService,_warehouseItemService,_barringService,
-                                                      _purchaseOrderDetailService,_stockAdjustmentDetailService,_salesOrderDetailService,_priceMutationService);
+                model = _itemService.SoftDeleteObject(data,_stockMutationService,_itemTypeService,
+                    _warehouseItemService,_barringService,_purchaseOrderDetailService,_stockAdjustmentDetailService,
+                    _salesOrderDetailService,_priceMutationService);
             }
             catch (Exception ex)
             {

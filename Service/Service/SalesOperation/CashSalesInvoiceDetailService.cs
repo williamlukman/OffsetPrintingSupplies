@@ -75,10 +75,17 @@ namespace Service.Service
             {
                 Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
                 QuantityPricing quantityPricing = _quantityPricingService.GetObjectByItemTypeIdAndQuantity(item.ItemTypeId, cashSalesInvoiceDetail.Quantity);
-                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                //PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+                if (quantityPricing == null)
+                {
+                    cashSalesInvoiceDetail.Amount = item.SellingPrice * cashSalesInvoiceDetail.Quantity;
+                }
+                else
+                {
+                    cashSalesInvoiceDetail.Amount = (item.SellingPrice * (100 - quantityPricing.Discount) / 100) * cashSalesInvoiceDetail.Quantity;
+                }
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 cashSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
-                cashSalesInvoiceDetail.Amount = (priceMutation.Amount * (100 - quantityPricing.Discount) / 100) * cashSalesInvoiceDetail.Quantity;
                 cashSalesInvoiceDetail = _repository.UpdateObject(cashSalesInvoiceDetail);
                 cashSalesInvoice.Total = CalculateTotal(cashSalesInvoice.Id);
                 _cashSalesInvoiceService.GetRepository().Update(cashSalesInvoice);
@@ -137,8 +144,13 @@ namespace Service.Service
 
         public CashSalesInvoiceDetail SoftDeleteObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService)
         {
-            return (cashSalesInvoiceDetail = _validator.ValidDeleteObject(cashSalesInvoiceDetail, _cashSalesInvoiceService) ?
-                    _repository.SoftDeleteObject(cashSalesInvoiceDetail) : cashSalesInvoiceDetail);
+            if(_validator.ValidDeleteObject(cashSalesInvoiceDetail, _cashSalesInvoiceService)) {
+                CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
+                _repository.SoftDeleteObject(cashSalesInvoiceDetail);
+                cashSalesInvoice.Total = CalculateTotal(cashSalesInvoice.Id);
+                _cashSalesInvoiceService.GetRepository().Update(cashSalesInvoice);
+            };
+            return cashSalesInvoiceDetail;
         }
 
         public bool DeleteObject(int Id)

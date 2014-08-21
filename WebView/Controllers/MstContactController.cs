@@ -19,8 +19,8 @@ namespace WebView.Controllers
         private ICoreIdentificationService _coreIdentificationService;
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
-        private IPriceMutationService _priceMutationService;
         private IContactGroupService _contactGroupService;
+
         public MstContactController()
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -28,7 +28,6 @@ namespace WebView.Controllers
             _barringService = new BarringService(new BarringRepository(),new BarringValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
-            _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
         }
 
@@ -70,20 +69,22 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Name,
-                            item.Address,
-                            item.ContactNo,
-                            item.PIC,
-                            item.PICContactNo,
-                            item.Email,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.Name,
+                            model.Address,
+                            model.ContactNo,
+                            model.PIC,
+                            model.PICContactNo,
+                            model.Email,
+                            model.ContactGroupId,
+                            _contactGroupService.GetObjectById(model.ContactGroupId).Name,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -96,17 +97,24 @@ namespace WebView.Controllers
              try
              {
                  model = _contactService.GetObjectById(Id);
-
              }
              catch (Exception ex)
              {
                  LOG.Error("GetInfo", ex);
-                 model.Errors.Add("Generic", "Error" + ex);
+                 model.Errors.Add("Generic", "Error : " + ex);
              }
 
              return Json(new
              {
-                 model
+                 model.Id,
+                 model.Name,
+                 model.Address,
+                 model.ContactNo,
+                 model.PIC,
+                 model.PICContactNo,
+                 model.Email,
+                 model.ContactGroupId,
+                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId).Name
              }, JsonRequestBehavior.AllowGet);
          }
 
@@ -115,16 +123,17 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _contactService.CreateObject(model, _contactGroupService);
+                model = _contactService.CreateObject(model,_contactGroupService);
             }
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
+                model.Errors.Add("Insert Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -140,16 +149,18 @@ namespace WebView.Controllers
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
+                data.ContactGroupId = model.ContactGroupId;
                 model = _contactService.UpdateObject(data,_contactGroupService);
             }
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
+                model.Errors.Add("Update Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
 
@@ -159,16 +170,19 @@ namespace WebView.Controllers
             try
             {
                 var data = _contactService.GetObjectById(model.Id);
-                model = _contactService.SoftDeleteObject(data, _coreIdentificationService, _barringService, _purchaseOrderService, _salesOrderService);
+                model = _contactService.SoftDeleteObject(data, _coreIdentificationService, 
+                    _barringService, _purchaseOrderService, _salesOrderService);
             }
+
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
+                model.Errors.Add("Delete Failed", "Error : " + ex);
             }
 
             return Json(new
             {
-                model
+                model.Errors
             });
         }
     }

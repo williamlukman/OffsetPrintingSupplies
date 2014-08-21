@@ -1,0 +1,283 @@
+﻿@{
+    ViewBag.Title = "Master Barring";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/masterBarring.js")"></script>
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: Master Barring :.">
+<div id="toolbar" class="form_toolbar">
+        <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
+        <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+        <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit Data</a>
+        <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+    </div>
+
+    <div id="table_div">
+        <table id="list"></table>
+        <div id="pager" class="scroll" style="text-align: center;"></div>
+    </div>
+
+<!-- Dialog Box -->
+    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
+        title=".: Master Barring :.">
+
+        <div id="form_toolbar" class="form_toolbar">
+            <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
+            <a id="form_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+
+        <div style="overflow: auto">
+            <form id="frm">
+                @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
+                    <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
+                        <tr nowrap>
+                            <td width="139" nowrap style="width: 100px">
+                                <label>ID</label></td>
+                            <td width="550">
+                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                        </tr>
+                          <tr>
+                            <td>
+                                <label>SKU</label></td>
+                            <td >
+                                <input id="Sku" name ="Sku" type="text" size="10" maxlength="60" align="left"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Name</label></td>
+                            <td colspan="3">
+                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Category</label></td>
+                            <td colspan="3">
+                                <input id="Category" name="Category" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Item Type</label></td>
+                            <td colspan="3">
+                               <input id="ItemTypeId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                               <input id="ItemType" name="ItemTypeId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                         
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>UoM</label></td>
+                            <td colspan="3">
+                                <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="UoM" name="UoMId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Quantity</label></td>
+                            <td colspan="3">
+                        <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Roll No</label></td>
+                            <td >
+                                <input id="RollNo" name ="RollNo" type="text" size="10" maxlength="60" align="left"/></td>
+                        </tr>
+                           <tr>
+                            <td>
+                                <label>Contact</label></td>
+                            <td colspan="3">
+                                <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Contact" name="ContactId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                          <tr>
+                            <td>
+                                <label>Machine</label></td>
+                            <td colspan="3">
+                                <input id="MachineId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnMachine" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Machine" name="MachineId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Blanket Item</label></td>
+                            <td colspan="3">
+                                <input id="BlanketItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnBlanketItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="BlanketItem" name="BlanketItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Left Bar Item</label></td>
+                            <td colspan="3">
+                                <input id="LeftBarItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnLeftBarItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="LeftBarItem" name="LeftBarId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>Right Bar Item</label></td>
+                            <td colspan="3">
+                                <input id="RightBarItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnRightBarItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="RightBarItem" name="RightBarId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>AC</label></td>
+                            <td colspan="3">
+                        <input id="AC" name="AC" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>AR</label></td>
+                            <td colspan="3">
+                        <input id="AR" name="AR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>Thickness</label></td>
+                            <td colspan="3">
+                        <input id="thickness" name="thickness" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>KS</label></td>
+                            <td colspan="3">
+                        <input id="KS" name="KS" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                        </tr>
+                    </table>
+                @*</fieldset>*@
+            </form>
+        </div>
+    </div>
+<!-- End Dialog Box -->
+
+<!-- Dialog Box  Delete-->
+    <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
+        data-options="modal:true" title=".: Confirmation :.">
+
+        <div id="delete_confirm_toolbar" class="form_toolbar">
+            <a id="delete_confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="delete_confirm_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+        <div id="delete_confirm_info">
+            <span>Are you sure to delete the selected record?</span>
+            <input id="delete_confirm_id" type="hidden" />
+        </div>
+    </div>
+<!-- End Dialog Box Delete-->
+
+
+ <!-- Look Up machine -->
+    <div id="lookup_div_machine" class="easyui-dialog" title="List Machine" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_machine" class="grid_toolbar">
+            <a id="lookup_btn_add_machine" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_machine" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_machine" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_machine" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up machine -->
+
+    
+ <!-- Look Up blanket -->
+    <div id="lookup_div_blanket" class="easyui-dialog" title="List Blanket" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_blanket" class="grid_toolbar">
+            <a id="lookup_btn_add_blanket" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_blanket" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_blanket" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_blanket" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up blanket -->
+
+    
+ <!-- Look Up leftbaritem -->
+    <div id="lookup_div_leftbaritem" class="easyui-dialog" title="List Left Bar Item" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_leftbaritem" class="grid_toolbar">
+            <a id="lookup_btn_add_leftbaritem" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_leftbaritem" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_leftbaritem" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_leftbaritem" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up leftbaritem -->
+
+    
+ <!-- Look Up rightbaritem -->
+    <div id="lookup_div_rightbaritem" class="easyui-dialog" title="List Right Bar Item" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_rightbaritem" class="grid_toolbar">
+            <a id="lookup_btn_add_rightbaritem" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_rightbaritem" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_rightbaritem" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_rightbaritem" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up rightbaritem -->
+
+ <!-- Look Up contact -->
+    <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_contact" class="grid_toolbar">
+            <a id="lookup_btn_add_contact" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_contact" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_contact" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_contact" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up contact -->
+
+ <!-- Look Up UoM -->
+    <div id="lookup_div_uom" class="easyui-dialog" title="List UoM" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_uom" class="grid_toolbar">
+            <a id="lookup_btn_add_uom" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_uom" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_uom" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_uom" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up UoM -->
+
+<!-- Look Up ItemType -->
+    <div id="lookup_div_itemtype" class="easyui-dialog" title="List Item Type" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_itemtype" class="grid_toolbar">
+            <a id="lookup_btn_add_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_itemtype" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_itemtype" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up Item Type -->
+
+  </div>
+

@@ -92,22 +92,22 @@
                 dataType: "json",
                 url: base_url + "MstItemType/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
-                        if (JSON.stringify(result.model.Errors) != '{}') {
+                        if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
-                            for (var key in result.model.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
-                            $("#form_btn_save").data('kode', result.model.Id);
-                            $('#id').val(result.model.Id);
-                            $('#Name').val(result.model.Name);
-                            $('#Description').val(result.model.Description);
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Name').val(result.Name);
+                            $('#Description').val(result.Description);
                             $('#form_div').dialog('open');
                         }
                     }
@@ -151,8 +151,22 @@
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
             success: function (result) {
-                ReloadGrid();
-                $("#delete_confirm_div").dialog('close');
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                        }
+                    }
+                    $("#delete_confirm_div").dialog('close');
+                }
+                else {
+                    ReloadGrid();
+                    $("#delete_confirm_div").dialog('close');
+                }
             }
         });
     });
@@ -195,22 +209,17 @@
                 return false;
             },
             success: function (result) {
-                if (JSON.stringify(result.model.Errors) != '{}')
+                if (JSON.stringify(result.Errors) != '{}')
                 {
-                    for (var key in result.model.Errors) {
+                    for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
                             $.messager.alert('Warning', result.model.Errors[key], 'warning');
                         }
                     }
-                    //var error = '';
-                    //for (var key in result.model.Errors) {
-                    //    error = error + "<br>" + key + " "+result.model.Errors[key];
-                    //}
-                    //$.messager.alert('Warning',error, 'warning');
                 }
                 else {
                     ReloadGrid();

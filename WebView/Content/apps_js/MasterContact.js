@@ -21,13 +21,13 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#lookup_div_contactgroup").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact No','Email', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact No','Email','ContactGroup Id','ContactGroup Name', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
@@ -36,6 +36,8 @@
                   { name: 'pic', index: 'pic', width: 180 },
                   { name: 'piccontactno', index: 'piccontactno', width: 180 },
                   { name: 'email', index: 'email', width: 180 },
+                  { name: 'contactgroupid', index: 'contactgroupid', width: 180 },
+                  { name: 'contactgroup', index: 'contactgroup', width: 180 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -116,6 +118,8 @@
                             $('#PIC').val(result.model.PIC);
                             $('#PICContactNo').val(result.model.PICContactNo);
                             $('#Email').val(result.model.Email);
+                            $('#ContactGroupId').val(result.model.ContactGroupId);
+                            $('#ContactGroup').val(result.model.ContactGroup);
                             $("#form_div").dialog("open");
                         }
                     }
@@ -132,10 +136,6 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
-            //if (ret.deletedimg != '') {
-            //    $.messager.alert('Warning', 'RECORD HAS BEEN DELETED !', 'warning');
-            //    return;
-            //}
             $('#delete_confirm_btn_submit').data('Id', ret.id);
             $("#delete_confirm_div").dialog("open");
         } else {
@@ -158,8 +158,22 @@
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
             success: function (result) {
-                ReloadGrid();
-                $("#delete_confirm_div").dialog('close');
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                    $("#delete_confirm_div").dialog('close');
+                }
+                else {
+                    ReloadGrid();
+                    $("#delete_confirm_div").dialog('close');
+                }
             }
         });
     });
@@ -195,7 +209,7 @@
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
-                Email: $("#Email").val()
+                Email: $("#Email").val(), ContactGroupId: $("#ContactGroupId").val()
             }),
             async: false,
             cache: false,
@@ -204,21 +218,16 @@
                 return false;
             },
             success: function (result) {
-                if (JSON.stringify(result.model.Errors) != '{}') {
-                    for (var key in result.model.Errors) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
-                    //var error = '';
-                    //for (var key in result.model.Errors) {
-                    //    error = error + "<br>" + key + " "+result.model.Errors[key];
-                    //}
-                    //$.messager.alert('Warning',error, 'warning');
                 }
                 else {
                     ReloadGrid();
@@ -242,5 +251,61 @@
         });
     }
 
+
+    // -------------------------------------------------------Look Up contactgroup-------------------------------------------------------
+    $('#btnContactGroup').click(function () {
+        var lookUpURL = base_url + 'MstContactGroup/GetList';
+        var lookupGrid = $('#lookup_table_contactgroup');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_contactgroup').dialog('open');
+    });
+
+    jQuery("#lookup_table_contactgroup").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Name'],
+        colModel: [
+                  { name: 'id', index: 'contactcode', width: 80, align: 'right' },
+                  { name: 'name', index: 'contactname', width: 200 }],
+        page: '1',
+        pager: $('#lookup_pager_contactgroup'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_contactgroup").width() - 10,
+        height: $("#lookup_div_contactgroup").height() - 110,
+    });
+    $("#lookup_table_contactgroup").jqGrid('navGrid', '#lookup_toolbar_contactgroup', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_contactgroup').click(function () {
+        $('#lookup_div_contactgroup').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_contactgroup').click(function () {
+        var id = jQuery("#lookup_table_contactgroup").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_contactgroup").jqGrid('getRowData', id);
+
+            $('#ContactGroupId').val(ret.id).data("kode", id);
+            $('#ContactGroup').val(ret.name);
+
+            $('#lookup_div_contactgroup').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup contactgroup----------------------------------------------------------------
 
 }); //END DOCUMENT READY

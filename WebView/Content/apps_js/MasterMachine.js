@@ -130,10 +130,6 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
-            //if (ret.deletedimg != '') {
-            //    $.messager.alert('Warning', 'RECORD HAS BEEN DELETED !', 'warning');
-            //    return;
-            //}
             $('#delete_confirm_btn_submit').data('Id', ret.id);
             $("#delete_confirm_div").dialog("open");
         } else {
@@ -156,8 +152,22 @@
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
             success: function (result) {
-                ReloadGrid();
-                $("#delete_confirm_div").dialog('close');
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                    $("#delete_confirm_div").dialog('close');
+                }
+                else {
+                    ReloadGrid();
+                    $("#delete_confirm_div").dialog('close');
+                }
             }
         });
     });
@@ -200,21 +210,16 @@
                 return false;
             },
             success: function (result) {
-                if (JSON.stringify(result.model.Errors) != '{}') {
-                    for (var key in result.model.Errors) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.model.Errors[key] + '</span>');
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
-                    //var error = '';
-                    //for (var key in result.model.Errors) {
-                    //    error = error + "<br>" + key + " " + result.model.Errors[key];
-                    //}
-                    //$.messager.alert('Warning', error, 'warning');
                 }
                 else {
                     ReloadGrid();
