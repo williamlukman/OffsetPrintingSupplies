@@ -25,10 +25,16 @@ namespace Core.Interface.Service
                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                       IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
-                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
-        Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService);
-        Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService);
+                                IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
+                                IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+        Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                              IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                              IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                              IPriceMutationService _priceMutationService);
+        Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                    IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                    IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                    IPriceMutationService _priceMutationService, IBarringOrderDetailService _barringOrderDetailService);
         Item AdjustQuantity(Item item, int quantity);
         Item AdjustPendingReceival(Item item, int quantity);
         Item AdjustPendingDelivery(Item item, int quantity);

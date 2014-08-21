@@ -116,7 +116,8 @@ namespace TestValidation
                     WL = 12,
                     TL = 12
                 };
-                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
+                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail,
+                                             d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);
 
                 d.rollerBuilder = new RollerBuilder()
                 {
@@ -160,7 +161,7 @@ namespace TestValidation
             {
                 d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._barringService, d._priceMutationService, d._recoveryOrderDetailService,
                                                                            d._coreBuilderService, d._warehouseItemService, d._stockMutationService, d._itemTypeService,
-                                                                           d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService);
+                                                                           d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService, d._barringOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_be(0);
             };
 
@@ -198,7 +199,7 @@ namespace TestValidation
 
                 d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._barringService, d._priceMutationService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService,
                                                                            d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
-                                                                           d._stockAdjustmentDetailService, d._salesOrderDetailService);
+                                                                           d._stockAdjustmentDetailService, d._salesOrderDetailService, d._barringOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_not_be(0);
             };
         }

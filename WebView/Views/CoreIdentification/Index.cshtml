@@ -101,8 +101,6 @@
                         <div id="toolbardetail" class="grid_toolbar">
                             <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
-                            <a id="btn_finish_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Finish</a>
-                            <a id="btn_unfinish_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unfinish</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                        
                         </div>
@@ -260,41 +258,6 @@
         </div>
     </div>
 <!-- End Dialog Box Confirm-->
-
-
- <!-- Dialog Box Finish-->
-    <div id="finished_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Finished @ViewBag.Title :.">
-
-        <div id="finished_toolbar" class="form_toolbar">
-            <a id="finished_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
-            <a id="finished_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
-        </div>
-        <div id="finished_info">
-              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
-                      <td width="139" nowrap style="width: 100px">
-                          Id
-                      </td>
-                      <td>
-                         <input id="idfinished" type="text" size="10" disabled="disabled"/>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>
-                          Finish Date
-                      </td>
-                      <td>
-                         <input id="FinishedDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                         <input name="FinishedDate" type="text" size="1" hidden="hidden"/>
-                         <input name="IsFinished" type="text" size="1" hidden="hidden"/>
-                      </td>
-                  </tr>
-              </table>
-          
-        </div>
-    </div>
-<!-- End Dialog Box Finish-->
 
 <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"

@@ -66,8 +66,8 @@ namespace Service.Service
             return _repository.GetObjectBySku(Sku);
         }
 
-        public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
-                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+        public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                 IWarehouseService _warehouseService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
@@ -85,8 +85,8 @@ namespace Service.Service
             return item;
         }
 
-        public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+        public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                       IWarehouseService _warehouseService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateLegacyObject(item, _uomService, this, _itemTypeService))
@@ -100,7 +100,8 @@ namespace Service.Service
             return item;
         }
 
-        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+        public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService,
+                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             if (_validator.ValidUpdateObject(item, _uomService, this, _itemTypeService))
             {
@@ -119,9 +120,9 @@ namespace Service.Service
             return item;
         }
 
-        public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                       IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
-                                       IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+        public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                       IWarehouseService _warehouseService, IBarringService _barringService, IContactService _contactService,
+                                       IMachineService _machineService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
         {
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
@@ -149,7 +150,9 @@ namespace Service.Service
             return item;
         }
 
-        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
+        public Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                     IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                     ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
         {
             if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
             {
@@ -177,12 +180,16 @@ namespace Service.Service
             return item;
         }
 
-        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
+        public Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                           IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                           ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService, IBarringOrderDetailService _barringOrderDetailService)
         {
             Barring barring = _barringService.GetObjectById(item.Id);
             if (barring != null)
             {
-                _barringService.SoftDeleteObject(barring, _itemTypeService, _warehouseItemService, _priceMutationService);
+                _barringService.SoftDeleteObject(barring, _itemTypeService, _warehouseItemService, _priceMutationService,
+                                                 _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService,
+                                                 _stockMutationService, _barringOrderDetailService);
                 return barring;
             }
 

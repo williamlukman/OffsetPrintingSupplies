@@ -118,13 +118,19 @@ namespace Service.Service
             return coreIdentification;
         }
 
-        public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
-                                                IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+        public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                IStockMutationService _stockMutationService, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                                ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
         {
             coreIdentification.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _itemService, _warehouseItemService))
             {
+                IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+                foreach (var detail in details)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    _coreIdentificationDetailService.ConfirmObject(detail, ConfirmationDate, this, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                }
                 _repository.ConfirmObject(coreIdentification);
             }
             return coreIdentification;
@@ -136,6 +142,12 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(coreIdentification, _recoveryOrderService))
             {
+                IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+                foreach (var detail in details)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    _coreIdentificationDetailService.UnconfirmObject(detail, this, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                }
                 _repository.UnconfirmObject(coreIdentification);
             }
             return coreIdentification;

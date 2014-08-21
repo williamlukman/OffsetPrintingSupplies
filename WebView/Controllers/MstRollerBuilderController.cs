@@ -32,7 +32,7 @@ namespace WebView.Controllers
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
-
+        private IBarringOrderDetailService _barringOrderDetailService;
 
         public MstRollerBuilderController()
         {
@@ -54,7 +54,7 @@ namespace WebView.Controllers
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
-        
+            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
         }
 
         public ActionResult Index()
@@ -282,7 +282,7 @@ namespace WebView.Controllers
                 model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_barringService,
                     _priceMutationService,_recoveryOrderDetailService,_coreBuilderService,
                     _warehouseItemService,_stockMutationService,_itemTypeService,_purchaseOrderDetailService,
-                    _stockAdjustmentDetailService,_salesOrderDetailService);
+                    _stockAdjustmentDetailService,_salesOrderDetailService, _barringOrderDetailService);
             }
             catch (Exception ex)
             {

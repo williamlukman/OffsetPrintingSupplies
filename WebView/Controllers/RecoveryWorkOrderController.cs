@@ -160,7 +160,6 @@ namespace WebView.Controllers
                             model.CoreTypeCase,
                             model.Acc,
                             model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
-                            model.HasAccessory,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
@@ -280,7 +279,6 @@ namespace WebView.Controllers
                 model.CoreTypeCase,
                 model.Acc,
                 RepairRequestCase = model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
-                model.HasAccessory,
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
                 model.IsWrapped,
@@ -474,7 +472,6 @@ namespace WebView.Controllers
                 data.CoreTypeCase = model.CoreTypeCase;
                 data.Acc = model.Acc;
                 data.RepairRequestCase = model.RepairRequestCase;
-                data.HasAccessory = model.HasAccessory;
                 model = _recoveryOrderDetailService.UpdateObject(data,_recoveryOrderService,_coreIdentificationDetailService,_rollerBuilderService);
             }
             catch (Exception ex)

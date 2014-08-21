@@ -142,13 +142,6 @@ namespace WebView.Controllers
                             model.BarringOrderId,
                             model.BarringId,
                             _barringService.GetObjectById(model.BarringId).Name,
-                            model.IsBarRequired,
-                            model.HasLeftBar,
-                            model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Id.ToString(),
-                            model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Name.ToString(),
-                            model.HasRightBar,
-                            model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Id.ToString(),
-                            model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Name.ToString(),
                             model.IsCut,
                             model.IsSideSealed,
                             model.IsBarPrepared,
@@ -215,13 +208,10 @@ namespace WebView.Controllers
                 model.BarringOrderId,
                 model.BarringId,
                 Barring =  _barringService.GetObjectById(model.BarringId).Name,
-                model.IsBarRequired,
-                model.HasLeftBar,
-                BarringLeftBarId = model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Id.ToString(),
-                BarringLeftBar = model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Name.ToString(),
-                model.HasRightBar,
-                BarringRightBarId = model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Id.ToString(),
-                BarringRightBar = model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Name.ToString(),
+                BarringLeftBarId = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Id.ToString(),
+                BarringLeftBar = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name.ToString(),
+                BarringRightBarId = _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Id.ToString(),
+                BarringRightBar = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name.ToString(),
                 model.IsCut,
                 model.IsSideSealed,
                 model.IsBarPrepared,
@@ -346,9 +336,6 @@ namespace WebView.Controllers
             {
                 var data = _barringOrderDetailService.GetObjectById(model.Id);
                 data.BarringId = model.BarringId;
-                data.IsBarRequired = model.IsBarRequired;
-                data.HasLeftBar = model.HasLeftBar;
-                data.HasRightBar = model.HasRightBar;
                 model = _barringOrderDetailService.UpdateObject(data,_barringOrderService,_barringService);
             }
             catch (Exception ex)

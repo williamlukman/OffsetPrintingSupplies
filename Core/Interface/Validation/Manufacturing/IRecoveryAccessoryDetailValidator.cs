@@ -10,7 +10,6 @@ namespace Core.Interface.Validation
     public interface IRecoveryAccessoryDetailValidator
     {
         RecoveryAccessoryDetail VHasRecoveryOrderDetail(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        RecoveryAccessoryDetail VRecoveryOrderDetailHasAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RecoveryAccessoryDetail VIsAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService);
         RecoveryAccessoryDetail VNonNegativeNorZeroQuantity(RecoveryAccessoryDetail recoveryAccessoryDetail);
         RecoveryAccessoryDetail VQuantityInStock(RecoveryAccessoryDetail recoveryAccessoryDetail, IRecoveryOrderService _recoveryOrderService,

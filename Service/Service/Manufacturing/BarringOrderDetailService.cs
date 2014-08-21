@@ -45,6 +45,11 @@ namespace Service.Service
             return _repository.GetObjectsByBarringOrderId(barringOrderId);
         }
 
+        public IList<BarringOrderDetail> GetObjectsByBarringId(int barringId)
+        {
+            return _repository.GetObjectsByBarringId(barringId);
+        }
+
         public BarringOrderDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -72,30 +77,6 @@ namespace Service.Service
         {
             return (barringOrderDetail = _validator.ValidDeleteObject(barringOrderDetail, _barringOrderService) ?
                                           _repository.SoftDeleteObject(barringOrderDetail) : barringOrderDetail);
-        }
-
-        public BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService)
-        {
-            return (barringOrderDetail = _validator.ValidAddLeftBar(barringOrderDetail) ?
-                                         _repository.AddLeftBar(barringOrderDetail) : barringOrderDetail);
-        }
-
-        public BarringOrderDetail RemoveLeftBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService)
-        {
-            return (barringOrderDetail = _validator.ValidRemoveLeftBar(barringOrderDetail) ?
-                                         _repository.RemoveLeftBar(barringOrderDetail) : barringOrderDetail);
-        }
-
-        public BarringOrderDetail AddRightBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService)
-        {
-            return (barringOrderDetail = _validator.ValidAddRightBar(barringOrderDetail) ?
-                                         _repository.AddRightBar(barringOrderDetail) : barringOrderDetail);
-        }
-
-        public BarringOrderDetail RemoveRightBar(BarringOrderDetail barringOrderDetail, IBarringService _barringService)
-        {
-            return (barringOrderDetail = _validator.ValidRemoveRightBar(barringOrderDetail) ?
-                                         _repository.RemoveRightBar(barringOrderDetail) : barringOrderDetail);
         }
 
         public BarringOrderDetail CutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
@@ -165,22 +146,19 @@ namespace Service.Service
                 Barring barring = _barringService.GetObjectById(barringOrderDetail.BarringId);
                 bool CaseAddition = false;
 
-                if (barringOrderDetail.IsBarRequired)
+                if (barring.HasLeftBar)
                 {
-                    Item leftbar = (barringOrderDetail.HasLeftBar && barring.LeftBarItemId != null) ? _itemService.GetObjectById((int)barring.LeftBarItemId) : null;
-                    Item rightbar = (barringOrderDetail.HasRightBar && barring.RightBarItemId != null) ? _itemService.GetObjectById((int)barring.RightBarItemId) : null;
-                    if (leftbar != null)
-                    {
-                        WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
-                        StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar, CaseAddition);
-                        _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
-                    }
-                    if (rightbar != null)
-                    {
-                        WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
-                        StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar, CaseAddition);
-                        _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
-                    }
+                    Item leftbar = _barringService.GetLeftBarItem(barring);
+                    WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
+                    StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar, CaseAddition);
+                    _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
+                }
+                if (barring.HasRightBar)
+                {
+                    Item rightbar = _barringService.GetRightBarItem(barring);
+                    WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
+                    StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar, CaseAddition);
+                    _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                 }
 
                 // deduce blanket quantity
@@ -205,27 +183,24 @@ namespace Service.Service
 
                 // reverse stock mutation of RejectObject
                 Barring barring = _barringService.GetObjectById(barringOrderDetail.BarringId);
-                if (barringOrderDetail.IsBarRequired)
+                if (barring.HasLeftBar)
                 {
-                    Item leftbar = (barringOrderDetail.HasLeftBar && barring.LeftBarItemId != null) ? _itemService.GetObjectById((int)barring.LeftBarItemId) : null;
-                    Item rightbar = (barringOrderDetail.HasRightBar && barring.RightBarItemId != null) ? _itemService.GetObjectById((int)barring.RightBarItemId) : null;
-                    if (leftbar != null)
+                    Item leftbar = _barringService.GetLeftBarItem(barring);
+                    WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
+                    IList<StockMutation> stockMutationLeftBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar);
+                    foreach (var stockMutationLeftBar in stockMutationLeftBars)
                     {
-                        WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
-                        IList<StockMutation> stockMutationLeftBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar);
-                        foreach (var stockMutationLeftBar in stockMutationLeftBars)
-                        {
-                            _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
-                        }
+                        _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
                     }
-                    if (rightbar != null)
+                }
+                if (barring.HasRightBar)
+                {
+                    Item rightbar = _barringService.GetRightBarItem(barring);
+                    WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
+                    IList<StockMutation> stockMutationRightBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar);
+                    foreach (var stockMutationRightBar in stockMutationRightBars)
                     {
-                        WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
-                        IList<StockMutation> stockMutationRightBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar);
-                        foreach (var stockMutationRightBar in stockMutationRightBars)
-                        {
-                            _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
-                        }
+                        _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                     }
                 }
 
@@ -267,22 +242,19 @@ namespace Service.Service
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
 
                 // deduce bars quantity
-                if (barringOrderDetail.IsBarRequired)
+                if (barring.HasLeftBar)
                 {
-                    Item leftbar = (barringOrderDetail.HasLeftBar && barring.LeftBarItemId != null) ? _itemService.GetObjectById((int)barring.LeftBarItemId) : null;
-                    Item rightbar = (barringOrderDetail.HasRightBar && barring.RightBarItemId != null) ? _itemService.GetObjectById((int)barring.RightBarItemId) : null;
-                    if (leftbar != null)
-                    {
-                        WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
-                        StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar, CaseAdditionElse);
-                        _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
-                    }
-                    if (rightbar != null)
-                    {
-                        WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
-                        StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar, CaseAdditionElse);
-                        _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
-                    }
+                    Item leftbar = _barringService.GetLeftBarItem(barring);
+                    WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
+                    StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar, CaseAdditionElse);
+                    _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
+                }
+                if (barring.HasRightBar)
+                {
+                    Item rightbar = _barringService.GetRightBarItem(barring);
+                    WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
+                    StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar, CaseAdditionElse);
+                    _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                 }
 
                 // deduce blanket quantity
@@ -313,27 +285,24 @@ namespace Service.Service
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
 
-                if (barringOrderDetail.IsBarRequired)
+                if (barring.HasLeftBar)
                 {
-                    Item leftbar = (barringOrderDetail.HasLeftBar && barring.LeftBarItemId != null) ? _itemService.GetObjectById((int)barring.LeftBarItemId) : null;
-                    Item rightbar = (barringOrderDetail.HasRightBar && barring.RightBarItemId != null) ? _itemService.GetObjectById((int)barring.RightBarItemId) : null;
-                    if (leftbar != null)
+                    Item leftbar = _barringService.GetLeftBarItem(barring);
+                    WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
+                    IList<StockMutation> stockMutationLeftBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar);
+                    foreach (var stockMutationLeftBar in stockMutationLeftBars)
                     {
-                        WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, leftbar.Id);
-                        IList<StockMutation> stockMutationLeftBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseLeftBar);
-                        foreach (var stockMutationLeftBar in stockMutationLeftBars)
-                        {
-                            _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
-                        }
+                        _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _barringService, _warehouseItemService);
                     }
-                    if (rightbar != null)
+                }
+                if (barring.HasRightBar)
+                {
+                    Item rightbar = _barringService.GetRightBarItem(barring);
+                    WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
+                    IList<StockMutation> stockMutationRightBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar);
+                    foreach (var stockMutationRightBar in stockMutationRightBars)
                     {
-                        WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(barringOrder.WarehouseId, rightbar.Id);
-                        IList<StockMutation> stockMutationRightBars = _stockMutationService.SoftDeleteStockMutationForBarringOrder(barringOrderDetail, warehouseRightBar);
-                        foreach (var stockMutationRightBar in stockMutationRightBars)
-                        {
-                            _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
-                        }
+                        _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _barringService, _warehouseItemService);
                     }
                 }
 

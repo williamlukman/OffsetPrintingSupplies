@@ -120,8 +120,6 @@ namespace TestValidation
                         d._barringOrderDetailService.PullOffTestObject(d.barringODContact1);
                         d._barringOrderDetailService.QCAndMarkObject(d.barringODContact1);
                         d._barringOrderDetailService.PackageObject(d.barringODContact1);
-                        d._barringOrderDetailService.AddLeftBar(d.barringODContact1, d._barringService);
-                        d._barringOrderDetailService.AddRightBar(d.barringODContact1, d._barringService);
 
                         d._barringOrderDetailService.SideSealObject(d.barringODContact2);
                         d._barringOrderDetailService.PrepareObject(d.barringODContact2);
@@ -131,8 +129,6 @@ namespace TestValidation
                         d._barringOrderDetailService.PullOffTestObject(d.barringODContact2);
                         d._barringOrderDetailService.QCAndMarkObject(d.barringODContact2);
                         d._barringOrderDetailService.PackageObject(d.barringODContact2);
-                        d._barringOrderDetailService.AddLeftBar(d.barringODContact2, d._barringService);
-                        d._barringOrderDetailService.AddRightBar(d.barringODContact2, d._barringService);
 
                         d._barringOrderDetailService.SideSealObject(d.barringODContact3);
                         d._barringOrderDetailService.PrepareObject(d.barringODContact3);
@@ -142,8 +138,6 @@ namespace TestValidation
                         d._barringOrderDetailService.PullOffTestObject(d.barringODContact3);
                         d._barringOrderDetailService.QCAndMarkObject(d.barringODContact3);
                         d._barringOrderDetailService.PackageObject(d.barringODContact3);
-                        d._barringOrderDetailService.AddLeftBar(d.barringODContact3, d._barringService);
-                        d._barringOrderDetailService.AddRightBar(d.barringODContact3, d._barringService);
 
                         d._barringOrderDetailService.SideSealObject(d.barringODContact4);
                         d._barringOrderDetailService.PrepareObject(d.barringODContact4);
@@ -152,7 +146,6 @@ namespace TestValidation
                         d._barringOrderDetailService.HeatPressObject(d.barringODContact4);
                         d._barringOrderDetailService.PullOffTestObject(d.barringODContact4);
                         d._barringOrderDetailService.QCAndMarkObject(d.barringODContact4);
-                        d._barringOrderDetailService.AddLeftBar(d.barringODContact4, d._barringService);
                     };
 
                     it["validates_barringorderdetails"] = () =>
@@ -187,7 +180,7 @@ namespace TestValidation
                         blanket2quantityfinal.should_be(blanket2quantity - 2);
                         bargenericquantityfinal.should_be(bargenericquantity - 4);
                         barleft1quantityfinal.should_be(barleft1quantity - 2);
-                        barright1quantityfinal.should_be(barright1quantity - 1);
+                        barright1quantityfinal.should_be(barright1quantity - 2);
                         d.barringOrderContact.IsCompleted.should_be(true);
                         int barring1quantityfinal = d.barring1.Quantity;
                         int barring2quantityfinal = d.barring2.Quantity;

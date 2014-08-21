@@ -166,7 +166,8 @@ namespace Service.Service
                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService,
                                             IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IBarringService _barringService,
                                             IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                            ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
+                                            ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService,
+                                            IBarringOrderDetailService _barringOrderDetailService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             Item NewCore = _itemService.GetObjectById(coreBuilder.NewCoreItemId);
@@ -177,9 +178,9 @@ namespace Service.Service
                 if (_validator.ValidDeleteObject(coreBuilder, _coreIdentificationDetailService, _rollerBuilderService))
                 {
                     _itemService.SoftDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _barringService, _purchaseOrderDetailService,
-                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService);
+                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _barringOrderDetailService);
                     _itemService.SoftDeleteLegacyObject(NewCore, _stockMutationService, _itemTypeService, _warehouseItemService, _barringService, _purchaseOrderDetailService,
-                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService);
+                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _barringOrderDetailService);
                     _repository.SoftDeleteObject(coreBuilder);
                 }
             }

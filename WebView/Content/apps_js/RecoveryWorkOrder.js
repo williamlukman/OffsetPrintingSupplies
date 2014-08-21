@@ -595,7 +595,7 @@
         url: base_url,
         datatype: "json",
         colNames: ['CoreIdentificationDetailId', 'RollerBuilder Id', 'RollerBuilder Name', 'CoreTypeCase', 'Acc', 'RepairRequestCase',
-                    'HasAccessory', 'IsDisassembled', 'IsStrippedAndGlued', 'IsWrapped',
+                    'IsDisassembled', 'IsStrippedAndGlued', 'IsWrapped',
                     'CompoundUsage', 'IsVulcanized', 'IsFacedOff', 'IsConventionalGrinded',
                     'IsCWCGrinded', 'IsPolishedAndQC', 'IsPackaged', 'IsRejected', 'Rejected Date', 'Is Finished', 'Finished Date'
         ],
@@ -729,13 +729,6 @@
                             }
                             else {
                                 f.selectedIndex = 1;
-                            }
-                            var g = document.getElementById("HasAccessory");
-                            if (result.HasAccessory == true) {
-                                g.selectedIndex = 0;
-                            }
-                            else {
-                                g.selectedIndex = 1;
                             }
                             $('#CoreIdentificationDetailId').val(result.CoreIdentificationDetailId);
                             $('#CoreIdentificationDetail').val(result.DetailId);
@@ -1144,8 +1137,6 @@
         var coretypecase = e.options[e.selectedIndex].value;
         var f = document.getElementById("RepairRequestCase");
         var repairrequestcase = f.options[f.selectedIndex].value;
-        var g = document.getElementById("HasAccessory");
-        var hasaccessory = g.options[g.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
@@ -1153,7 +1144,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, CoreIdentificationDetailId: $("#CoreIdentificationDetailId").val(), CoreTypeCase: coretypecase, RepairRequestCase: repairrequestcase,
-                Acc: $("#Acc").val(), HasAccessory: hasaccessory, RollerBuilderId: $("#RollerBuilderId").val(), RecoveryOrderId: $("#id").val()
+                Acc: $("#Acc").val(), RollerBuilderId: $("#RollerBuilderId").val(), RecoveryOrderId: $("#id").val()
             }),
             async: false,
             cache: false,

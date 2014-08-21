@@ -121,6 +121,9 @@ namespace TestValidation
                     d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                           d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                           d._barringService, d._warehouseItemService, d._warehouseService);
+                    d._recoveryOrderService.ConfirmObject(d.recoveryOrderInHouse, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
+                                                          d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
+                                                          d._barringService, d._warehouseItemService, d._warehouseService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1, d._recoveryOrderService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact2, d._recoveryOrderService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact3, d._recoveryOrderService);

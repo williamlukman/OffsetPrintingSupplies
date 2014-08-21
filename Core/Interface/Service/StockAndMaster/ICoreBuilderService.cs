@@ -24,15 +24,15 @@ namespace Core.Interface.Service
                                  IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
                                  IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         CoreBuilder UpdateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IBarringService _barringService,
-                                        IContactService _contactService, IMachineService _machineService, IPriceMutationService _priceMutationService,
-                                        IContactGroupService _contactGroupService);
+                                 IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IBarringService _barringService,
+                                 IContactService _contactService, IMachineService _machineService, IPriceMutationService _priceMutationService,
+                                 IContactGroupService _contactGroupService);
         CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, IRollerBuilderService _rollerBuilderService,
-                                            ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                            IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService,
-                                            IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IBarringService _barringService,
-                                            IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                            ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService);
+                                     ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                     IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService,
+                                     IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IBarringService _barringService,
+                                     IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                     ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService, IBarringOrderDetailService _barringOrderDetailService);
         bool DeleteObject(int Id);
         bool IsBaseSkuDuplicated(CoreBuilder coreBuilder);
     }

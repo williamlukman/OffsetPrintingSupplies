@@ -83,20 +83,6 @@ namespace Data.Repository
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail)
-        {
-            recoveryOrderDetail.HasAccessory = true;
-            Update(recoveryOrderDetail);
-            return recoveryOrderDetail;
-        }
-
-        public RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail)
-        {
-            recoveryOrderDetail.HasAccessory = false;
-            Update(recoveryOrderDetail);
-            return recoveryOrderDetail;
-        }
-
         public RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail)
         {
             recoveryOrderDetail.IsDisassembled = true;

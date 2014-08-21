@@ -20,8 +20,8 @@ namespace Core.Interface.Repository
         CoreIdentificationDetail SoftDeleteObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail BuildRoller(CoreIdentificationDetail coreIdentificationDetail);

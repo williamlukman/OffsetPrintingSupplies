@@ -50,6 +50,16 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VHasNoRecoveryAccessoryDetails(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
+            if (accessories.Any())
+            {
+                recoveryOrderDetail.Errors.Add("Generic", "Tidak boleh ada asosiasi dengan accessory");
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VHasRollerBuilder(RecoveryOrderDetail recoveryOrderDetail, IRollerBuilderService _rollerBuilderService)
         {
             RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
@@ -340,16 +350,6 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VHasAccessoryAndHasRecoveryAccessoryDetail(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            IList<RecoveryAccessoryDetail> accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
-            if (recoveryOrderDetail.HasAccessory && !accessories.Any())
-            {
-                recoveryOrderDetail.Errors.Add("Generic", "Recovery Order Detail HasAccessory = true, tetapi tidak memiliki accessory");
-            }
-            return recoveryOrderDetail;
-        }
-
         public RecoveryOrderDetail VCreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService)
         {
@@ -391,20 +391,7 @@ namespace Validation.Validation
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VRecoveryOrderHasNotBeenConfirmed(recoveryOrderDetail, _recoveryOrderService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            //VHasNoRecoveryAccessoryDetails(recoveryOrderDetail, _recoveryAccessoryDetailService);
-            return recoveryOrderDetail;
-        }
-
-        public RecoveryOrderDetail VAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            VHasNotBeenFinished(recoveryOrderDetail);
-            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VHasNotBeenRejected(recoveryOrderDetail);
-            return recoveryOrderDetail;
-        }
-
-        public RecoveryOrderDetail VRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
+            VHasNoRecoveryAccessoryDetails(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 
@@ -521,8 +508,6 @@ namespace Validation.Validation
             VHasBeenPackaged(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
-            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VHasAccessoryAndHasRecoveryAccessoryDetail(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return recoveryOrderDetail;
         }
 
@@ -569,20 +554,6 @@ namespace Validation.Validation
         {
             recoveryOrderDetail.Errors.Clear();
             VDeleteObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService);
-            return isValid(recoveryOrderDetail);
-        }
-
-        public bool ValidAddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            recoveryOrderDetail.Errors.Clear();
-            VAddAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService);
-            return isValid(recoveryOrderDetail);
-        }
-
-        public bool ValidRemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            recoveryOrderDetail.Errors.Clear();
-            VRemoveAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService);
             return isValid(recoveryOrderDetail);
         }
 

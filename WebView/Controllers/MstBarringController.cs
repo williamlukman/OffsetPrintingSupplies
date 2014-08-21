@@ -24,7 +24,12 @@ namespace WebView.Controllers
         private IContactService _contactService;
         private IContactGroupService _contactGroupService;
         private IPriceMutationService _priceMutationService;
-       
+        private IPurchaseOrderDetailService _purchaseOrderDetailService;
+        private IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+        private IStockMutationService _stockMutationService;
+        private IBarringOrderDetailService _barringOrderDetailService;
+
         public MstBarringController()
         {
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
@@ -37,7 +42,13 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(),new ContactValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+            _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
+            _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
+            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
         }
+
         public ActionResult Index()
         {
             return View();
@@ -95,6 +106,9 @@ namespace WebView.Controllers
                             _machineService.GetObjectById(model.MachineId).Name,
                             model.BlanketItemId,
                             _itemService.GetObjectById(model.BlanketItemId).Name,
+                            model.IsBarRequired,
+                            model.HasLeftBar,
+                            model.HasRightBar,
                             model.LeftBarItemId.HasValue ? model.LeftBarItemId.Value : model.LeftBarItemId = null,
                             model.LeftBarItemId.HasValue ? _itemTypeService.GetObjectById(model.LeftBarItemId.Value).Name : "",
                             model.RightBarItemId.HasValue ? model.RightBarItemId.Value : model.RightBarItemId = null,
@@ -251,6 +265,9 @@ namespace WebView.Controllers
                 Machine = _machineService.GetObjectById(model.MachineId).Name,
                 model.BlanketItemId,
                 BlanketItem = _itemService.GetObjectById(model.BlanketItemId).Name,
+                model.IsBarRequired,
+                model.HasLeftBar,
+                model.HasRightBar,
                 LeftBarItemId = model.LeftBarItemId.HasValue ? model.LeftBarItemId.Value : model.LeftBarItemId = null,
                 LeftBarItem = model.LeftBarItemId.HasValue ? _itemTypeService.GetObjectById(model.LeftBarItemId.Value).Name : "",
                 RightBarItemId = model.RightBarItemId.HasValue ? model.RightBarItemId.Value : model.RightBarItemId = null,
@@ -314,8 +331,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _barringService.GetObjectById(model.Id);
-                model = _barringService.SoftDeleteObject(data,_itemTypeService,_warehouseItemService
-                    ,_priceMutationService);
+                model = _barringService.SoftDeleteObject(data,_itemTypeService,_warehouseItemService,_priceMutationService, _purchaseOrderDetailService,
+                                                        _stockAdjustmentDetailService, _salesOrderDetailService,_stockMutationService, _barringOrderDetailService);
             }
             catch (Exception ex)
             {

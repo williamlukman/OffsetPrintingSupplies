@@ -205,7 +205,8 @@ namespace TestValidation
                     WL = 12,
                     TL = 12
                 };
-                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
+                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService,
+                                             d._rollerTypeService, d._machineService, d._warehouseItemService);
                 d.contact = d._contactService.SoftDeleteObject(d.contact, d._coreIdentificationService, d._barringService, d._purchaseOrderService, d._salesOrderService);
                 d.contact.Errors.Count().should_not_be(0);
             };

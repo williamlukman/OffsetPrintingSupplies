@@ -32,7 +32,7 @@ namespace Validation.Validation
             return machine;
         }
 
-        public Machine VIsInRollerBuilder(Machine machine, IRollerBuilderService _rollerBuilderService)
+        public Machine VIsNotInRollerBuilder(Machine machine, IRollerBuilderService _rollerBuilderService)
         {
             IList<RollerBuilder> list = _rollerBuilderService.GetObjectsByMachineId(machine.Id);
             if (list.Any())
@@ -42,7 +42,7 @@ namespace Validation.Validation
             return machine;
         }
 
-        public Machine VIsInCoreIdentificationDetail(Machine machine, ICoreIdentificationDetailService _coreIdentificationDetailService)
+        public Machine VIsNotInCoreIdentificationDetail(Machine machine, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByMachineId(machine.Id);
             if (details.Any())
@@ -52,7 +52,7 @@ namespace Validation.Validation
             return machine;
         }
 
-        public Machine VHasBarring(Machine machine, IBarringService _barringService)
+        public Machine VIsNotInBarring(Machine machine, IBarringService _barringService)
         {
             IList<Barring> barrings = _barringService.GetObjectsByMachineId(machine.Id);
             if (barrings.Any())
@@ -79,11 +79,11 @@ namespace Validation.Validation
         public Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService,
                                      ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService)
         {
-            VIsInCoreIdentificationDetail(machine, _coreIdentificationDetailService);
+            VIsNotInCoreIdentificationDetail(machine, _coreIdentificationDetailService);
             if (!isValid(machine)) { return machine; }
-            VIsInRollerBuilder(machine, _rollerBuilderService);
+            VIsNotInRollerBuilder(machine, _rollerBuilderService);
             if (!isValid(machine)) { return machine; }
-            VHasBarring(machine, _barringService);
+            VIsNotInBarring(machine, _barringService);
             return machine;
         }
 

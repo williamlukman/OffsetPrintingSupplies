@@ -91,17 +91,17 @@ namespace Data.Repository
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail)
+        public CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail)
         {
-            coreIdentificationDetail.IsFinished = true;
+            coreIdentificationDetail.IsConfirmed = true;
             Update(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail)
+        public CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail)
         {
-            coreIdentificationDetail.IsFinished = false;
-            coreIdentificationDetail.FinishedDate = null;
+            coreIdentificationDetail.IsConfirmed = false;
+            coreIdentificationDetail.ConfirmationDate = null;
             UpdateObject(coreIdentificationDetail);
             return coreIdentificationDetail;
         }

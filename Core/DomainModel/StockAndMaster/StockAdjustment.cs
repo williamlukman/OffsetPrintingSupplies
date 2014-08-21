@@ -16,7 +16,6 @@ namespace Core.DomainModel
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
-        public bool IsCompleted { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public DateTime CreatedAt { get; set; }

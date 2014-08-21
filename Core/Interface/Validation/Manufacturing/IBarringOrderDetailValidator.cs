@@ -11,9 +11,6 @@ namespace Core.Interface.Validation
     {
         BarringOrderDetail VHasBarringOrder(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         BarringOrderDetail VHasBarring(BarringOrderDetail barringOrderDetail, IBarringService _barringService);
-        BarringOrderDetail VIsBarRequiredMustBeTrue(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail VHasLeftBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail VHasRightBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenCut(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenSideSealed(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasBeenBarPrepared(BarringOrderDetail barringOrderDetail);
@@ -28,8 +25,6 @@ namespace Core.Interface.Validation
         BarringOrderDetail VHasBeenFinished(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasFinishedDate(BarringOrderDetail barringOrderDetail);
 
-        BarringOrderDetail VHasNoLeftBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail VHasNoRightBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasNotBeenCut(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasNotBeenSideSealed(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VHasNotBeenBarPrepared(BarringOrderDetail barringOrderDetail);
@@ -50,10 +45,6 @@ namespace Core.Interface.Validation
         BarringOrderDetail VFinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         BarringOrderDetail VUnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
 
-        BarringOrderDetail VAddLeftBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail VRemoveLeftBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail VAddRightBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail VRemoveRightBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VCutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         BarringOrderDetail VSideSealObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail VPrepareObject(BarringOrderDetail barringOrderDetail);
@@ -72,10 +63,6 @@ namespace Core.Interface.Validation
         bool ValidFinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
         bool ValidUnfinishObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService);
 
-        bool ValidAddLeftBar(BarringOrderDetail barringOrderDetail);
-        bool ValidRemoveLeftBar(BarringOrderDetail barringOrderDetail);
-        bool ValidAddRightBar(BarringOrderDetail barringOrderDetail);
-        bool ValidRemoveRightBar(BarringOrderDetail barringOrderDetail);
         bool ValidCutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderSerivce);
         bool ValidSideSealObject(BarringOrderDetail barringOrderDetail);
         bool ValidPrepareObject(BarringOrderDetail barringOrderDetail);

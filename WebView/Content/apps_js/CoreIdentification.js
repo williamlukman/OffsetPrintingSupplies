@@ -328,90 +328,6 @@
         $('#confirm_div').dialog('close');
     });
 
-    $('#btn_finish_detail').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $('#FinishedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-            $('#idfinished').val(id);
-            $("#finished_div").dialog("open");
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#btn_unfinish_detail').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to unfinish record?', function (r) {
-                if (r) {
-                    $.ajax({
-                        url: base_url + "CoreIdentification/Unfinish",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            Id: id,
-                        }),
-                        success: function (result) {
-                            if (JSON.stringify(result.Errors) != '{}') {
-                                for (var key in result.Errors) {
-                                    if (key != null && key != undefined && key != 'Generic') {
-                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                    }
-                                    else {
-                                        $.messager.alert('Warning', result.Errors[key], 'warning');
-                                    }
-                                }
-                            }
-                            else {
-                                ReloadGridDetail();
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#finished_btn_submit').click(function () {
-        ClearErrorMessage();
-        $.ajax({
-            url: base_url + "CoreIdentification/Finish",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'),
-            }),
-            success: function (result) {
-                if (JSON.stringify(result.Errors) != '{}') {
-                    for (var key in result.Errors) {
-                        if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                        }
-                        else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
-                        }
-                    }
-                }
-                else {
-                    ReloadGridDetail();
-                    $("#finished_div").dialog('close');
-                }
-            }
-        });
-    });
-
-    $('#finished_btn_cancel').click(function () {
-        $('#finished_div').dialog('close');
-    });
-
-
-
     $('#btn_del').click(function () {
         clearForm("#frm");
 
@@ -544,8 +460,6 @@
                   { name: 'rl', index: 'rl', width: 80, sortable: false },
                   { name: 'wl', index: 'wl', width: 80, sortable: false },
                   { name: 'tl', index: 'tl', width: 80, sortable: false },
-                  { name: 'isfinished', index: 'isfinished', width: 80, sortable: false },
-                  { name: 'finisheddate', index: 'finisheddate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),

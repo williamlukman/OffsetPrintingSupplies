@@ -135,11 +135,31 @@ namespace TestValidation
                     WarehouseId = d.localWarehouse.Id
                 };
                 d.coreIdentification = d._coreIdentificationService.CreateObject(d.coreIdentification, d._contactService);
+
+                d.stockAdjustment = new StockAdjustment()
+                {
+                    AdjustmentDate = DateTime.Today,
+                    WarehouseId = d.localWarehouse.Id,
+                    Description = "Add Core Builder"
+                };
+                d.stockAdjustment = d._stockAdjustmentService.CreateObject(d.stockAdjustment, d._warehouseService);
+
+                d.stockAD1 = new StockAdjustmentDetail()
+                {
+                    ItemId = d._coreBuilderService.GetNewCore(d.coreBuilder.Id).Id,
+                    Quantity = 5,
+                    StockAdjustmentId = d.stockAdjustment.Id
+                };
+                d.stockAD1 = d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
+                                                        d._itemService, d._barringService, d._warehouseItemService);
+
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
                 {
                     CoreIdentificationId = d.coreIdentification.Id,
                     DetailId = 1,
-                    MaterialCase = 2,
+                    MaterialCase = Core.Constants.Constant.MaterialCase.New,
                     CoreBuilderId = d.coreBuilder.Id,
                     RollerTypeId = d._rollerTypeService.GetObjectByName("Found DT").Id,
                     MachineId = d.machine.Id,
@@ -150,7 +170,7 @@ namespace TestValidation
                     TL = 12
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail,
-                           d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
+                           d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);
                 d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService, d._barringService);
                 d.machine.Errors.Count().should_not_be(0);
             };

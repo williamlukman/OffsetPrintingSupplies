@@ -30,33 +30,6 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
-        public BarringOrderDetail VIsBarRequiredMustBeTrue(BarringOrderDetail barringOrderDetail)
-        {
-            if (!barringOrderDetail.IsBarRequired)
-            {
-                barringOrderDetail.Errors.Add("Generic", "Tidak bisa menambahkan bar untuk Barring Order yang tidak memerlukan bar");
-            }
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail VHasLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            if (!barringOrderDetail.HasLeftBar)
-            {
-                barringOrderDetail.Errors.Add("Generic", "LeftBar tidak ada");
-            }
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail VHasRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            if (!barringOrderDetail.HasRightBar)
-            {
-                barringOrderDetail.Errors.Add("Generic", "RightBar tidak ada");
-            }
-            return barringOrderDetail;
-        }
-
         public BarringOrderDetail VHasBeenCut(BarringOrderDetail barringOrderDetail)
         {
             if (!barringOrderDetail.IsCut)
@@ -180,24 +153,6 @@ namespace Validation.Validation
             if (!barringOrder.IsConfirmed)
             {
                 barringOrderDetail.Errors.Add("Generic", "Barring Order belum dikonfirmasi");
-            }
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail VHasNoLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            if (barringOrderDetail.HasLeftBar)
-            {
-                barringOrderDetail.Errors.Add("Generic", "LeftBar tidak boleh ada");
-            }
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail VHasNoRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            if (barringOrderDetail.HasRightBar)
-            {
-                barringOrderDetail.Errors.Add("Generic", "RightBar tidak boleh ada");
             }
             return barringOrderDetail;
         }
@@ -351,34 +306,6 @@ namespace Validation.Validation
             return barringOrderDetail;
         }
 
-        public BarringOrderDetail VAddLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            VIsBarRequiredMustBeTrue(barringOrderDetail);
-            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
-            VHasNoLeftBar(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail VRemoveLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            VHasLeftBar(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail VAddRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            VIsBarRequiredMustBeTrue(barringOrderDetail);
-            if (!isValid(barringOrderDetail)) { return barringOrderDetail; }
-            VHasNoRightBar(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail VRemoveRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            VHasRightBar(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
         public BarringOrderDetail VCutObject(BarringOrderDetail barringOrderDetail, IBarringOrderService _barringOrderService)
         {
             VHasNotBeenCut(barringOrderDetail);
@@ -528,34 +455,6 @@ namespace Validation.Validation
         {
             barringOrderDetail.Errors.Clear();
             VDeleteObject(barringOrderDetail, _barringOrderService);
-            return isValid(barringOrderDetail);
-        }
-
-        public bool ValidAddLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.Errors.Clear();
-            VAddLeftBar(barringOrderDetail);
-            return isValid(barringOrderDetail);
-        }
-
-        public bool ValidRemoveLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.Errors.Clear();
-            VRemoveLeftBar(barringOrderDetail);
-            return isValid(barringOrderDetail);
-        }
-
-        public bool ValidAddRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.Errors.Clear();
-            VAddRightBar(barringOrderDetail);
-            return isValid(barringOrderDetail);
-        }
-
-        public bool ValidRemoveRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.Errors.Clear();
-            VRemoveRightBar(barringOrderDetail);
             return isValid(barringOrderDetail);
         }
 
