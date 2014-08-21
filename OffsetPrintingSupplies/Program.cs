@@ -46,8 +46,6 @@ namespace OffsetPrintingSupplies
         {
             d.PopulateData();
 
-            d.barringOrderContact = d._barringOrderService.ConfirmObject(d.barringOrderContact, DateTime.Today, d._barringOrderDetailService, d._barringService, d._itemService, d._warehouseItemService);
-
             Console.WriteLine("Press any key to stop...");
             Console.ReadKey();
         }

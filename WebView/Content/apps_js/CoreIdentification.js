@@ -443,7 +443,7 @@
         url: base_url,
         datatype: "json",
         colNames: ['Detail Id', 'RollerIdentificationId','Material Case', 'CoreBuilder Id', 'CoreBuilder Name', 'RollerType Id', 'RollerType Name'
-                  ,'Machine Id','Machine Name','RD','CD','RL','WL','TL','Is Finished','Finished Date'
+                  ,'Machine Id','Machine Name','RD','CD','RL','WL','TL'
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 130, sortable: false},
