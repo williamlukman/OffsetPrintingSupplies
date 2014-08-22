@@ -38,11 +38,9 @@ namespace Data.Repository
             return cashSalesReturnDetail;
         }
 
-        public CashSalesReturnDetail GetObjectByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId)
+        public IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId)
         {
-            CashSalesReturnDetail cashSalesReturnDetail = Find(x => x.CashSalesInvoiceDetailId == CashSalesInvoiceDetailId && !x.IsDeleted);
-            if (cashSalesReturnDetail != null) { cashSalesReturnDetail.Errors = new Dictionary<string, string>(); }
-            return cashSalesReturnDetail;
+            return FindAll(x => x.CashSalesInvoiceDetailId == CashSalesInvoiceDetailId && !x.IsDeleted).ToList();
         }
 
         public CashSalesReturnDetail CreateObject(CashSalesReturnDetail cashSalesReturnDetail)

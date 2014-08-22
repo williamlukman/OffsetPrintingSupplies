@@ -14,7 +14,7 @@ namespace Validation.Validation
         {
             if (quantityPricing.ItemTypeId != oldItemTypeId)
             {
-                quantityPricing.Errors.Add("ItemTypeId", "Tidak boleh beda");
+                quantityPricing.Errors.Add("Generic", "ItemTypeId Tidak boleh beda");
             }
             return quantityPricing;
         }
@@ -33,7 +33,7 @@ namespace Validation.Validation
             ItemType itemType = _itemTypeService.GetObjectById(quantityPricing.ItemTypeId);
             if (itemType == null)
             {
-                quantityPricing.Errors.Add("ItemTypeId", "Tidak valid");
+                quantityPricing.Errors.Add("Generic", "ItemTypeId Tidak valid");
             }
             return quantityPricing;
         }

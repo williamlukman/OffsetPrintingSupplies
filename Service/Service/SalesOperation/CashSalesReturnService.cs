@@ -72,7 +72,7 @@ namespace Service.Service
                 {
                     cashSalesReturnDetail.Errors = new Dictionary<string, string>();
                     _cashSalesReturnDetailService.ConfirmObject(cashSalesReturnDetail, _cashSalesReturnService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService,
-                                                                _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+                                                                _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService, _cashSalesReturnDetailService);
                 }
                 // DueDate untuk Payable dari mana ?
                 Contact contact = _contactService.GetObjectByName(Core.Constants.Constant.BaseContact);
@@ -151,6 +151,7 @@ namespace Service.Service
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)
                         {
+                            paymentVoucherDetail.Errors = new Dictionary<string, string>();
                             _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail);
                         }
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);

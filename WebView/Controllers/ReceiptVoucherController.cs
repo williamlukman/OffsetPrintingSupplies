@@ -102,7 +102,7 @@ namespace WebView.Controllers
                             model.ReceiptDate,
                             model.IsGBCH,
                             model.DueDate,
-                            //model.IsBank,
+                            _cashBankService.GetObjectById(model.CashBankId).IsBank, //model.IsBank,
                             model.TotalAmount,
                             model.IsReconciled,
                             model.ReconciliationDate,
@@ -115,7 +115,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListPayable(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetListReceivable(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
 
@@ -242,7 +242,7 @@ namespace WebView.Controllers
                 model.ReceiptDate,
                 model.IsGBCH,
                 model.DueDate,
-                //model.IsBank,
+                _cashBankService.GetObjectById(model.CashBankId).IsBank,
                 model.TotalAmount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);

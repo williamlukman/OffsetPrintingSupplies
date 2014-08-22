@@ -9,11 +9,11 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#list").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
-		$("#listdetail").setGridParam({ url: base_url + 'CashSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#listdetail").setGridParam({ url: base_url + 'CustomPurchaseInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
 	}
 
 	function ClearData() {
@@ -24,10 +24,30 @@
 		ClearErrorMessage();
 	}
 
+	function onGBCH()
+	{
+	    if (document.getElementById('IsGBCH').value == 'True')
+	    {
+	        $('#GBCH_No').removeAttr('disabled');
+	        $('#GBCHDueDateDiv').show();
+	        $('#GBCHDueDateDiv2').hide();
+	    } else {
+	        $('#GBCH_No').attr('disabled', true);
+	        $('#GBCHDueDateDiv').hide();
+	        $('#GBCHDueDateDiv2').show();
+	    }
+	};
+
+    document.getElementById('IsGBCH').onchange = function ()
+	{
+	    onGBCH();
+	};
+
 	$("#form_div").dialog('close');
 	$("#item_div").dialog('close');
 	$("#confirm_div").dialog('close');
 	$("#paid_div").dialog('close');
+	$("#lookup_div_contact").dialog('close');
 	$("#lookup_div_cashbank").dialog('close');
 	$("#lookup_div_warehouse").dialog('close');
 	$("#lookup_div_item").dialog('close');
@@ -36,25 +56,33 @@
 
 	//GRID +++++++++++++++
 	$("#list").jqGrid({
-		url: base_url + 'CashSalesInvoice/GetList',
+		url: base_url + 'CustomPurchaseInvoice/GetList',
 		datatype: "json",
-		colNames: ['ID', 'Code', 'Description', 'Sales Date', 'Due Date',
-				   'Discount', 'Tax', 'Allowance', 'Is Confirmed', 'Confirmation Date', 'Amount Paid',
+		colNames: ['ID', 'Code', 'Description', 'Purchase Date', 'Due Date',
+				   'Discount', 'Tax', 'Allowance', 'Is GroupPricing', 'Contact ID', 'Contact Name',
+                   'Is Confirmed', 'Confirmation Date', 'Amount Paid',
+                   'Is GBCH', 'GBCH No.', 'GBCH Due Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
 				   'Total', 'CoGS', 'Warehouse ID', 'Warehouse Name',
-				   'Created At', 'Updated At', 'CashSalesInvoiceDetails', 'CashSalesReturns'],
+				   'Created At', 'Updated At', 'CustomPurchaseInvoiceDetails'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
 				  { name: 'description', index: 'description', width: 100 },
-				  { name: 'salesdate', index: 'salesdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'purchasedate', index: 'purchasedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'discount', index: 'discount', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
-				  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' } },
+                  { name: 'isgrouppricing', index: 'isgrouppricing', width: 80, boolean: { defaultValue: 'false' } },
+                  { name: 'contactid', index: 'contactid', width: 80 },
+                  { name: 'contact', index: 'contact', width: 100 },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency' },
+                  { name: 'isgbch', index: 'isgbch', width: 80, boolean: { defaultValue: 'false' } },
+                  { name: 'gbchno', index: 'gbchno', width: 100 },
+                  { name: 'gbchduedate', index: 'gbchduedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'cashbankid', index: 'cashbankid', width: 80 },
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
@@ -67,7 +95,6 @@
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'cashsalesinvoicedetails', index: 'cashsalesinvoicedetails', width: 80 },
-				  { name: 'cashsalesreturns', index: 'cashsalesreturns', width: 80 },
 		],
 		page: '1',
 		pager: $('#pager'),
@@ -113,6 +140,20 @@
 					  rowIsFullpayment = "NO";
 				  }
 				  $(this).jqGrid('setRowData', ids[i], { isfullpayment: rowIsFullpayment });
+				  rowIsGBCH = $(this).getRowData(cl).isgbch;
+				  if (rowIsGBCH == 'true') {
+				      rowIsGBCH = "YES";
+				  } else {
+				      rowIsGBCH = "NO";
+				  }
+				  $(this).jqGrid('setRowData', ids[i], { isgbch: rowIsGBCH });
+				  rowIsGroupPricing = $(this).getRowData(cl).isgrouppricing;
+				  if (rowIsGroupPricing == 'true') {
+				      rowIsGroupPricing = "YES";
+				  } else {
+				      rowIsGroupPricing = "NO";
+				  }
+				  $(this).jqGrid('setRowData', ids[i], { isgrouppricing: rowIsGroupPricing });
 			  }
 		  }
 
@@ -120,7 +161,7 @@
 	$("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
 		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
-	//TOOL BAR BUTTON
+    //TOOL BAR BUTTON
 	$('#btn_reload').click(function () {
 		ReloadGrid();
 	});
@@ -132,19 +173,16 @@
 	$('#btn_add_new').click(function () {
 		ClearData();
 		clearForm('#frm');
-		$('#SalesDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+		$('#PurchaseDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 		$('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 		$('#Description').removeAttr('disabled');
+		$('#btnContact').removeAttr('disabled');
 		$('#btnCashBank').removeAttr('disabled');
 		$('#btnWarehouse').removeAttr('disabled');
-		$('#Discount').removeAttr('disabled');
-		$('#Tax').removeAttr('disabled');
-		$('#Allowance').removeAttr('disabled');
-		$('#SalesDateDiv2').hide();
-		$('#SalesDateDiv').show();
+		$('#PurchaseDateDiv2').hide();
+		$('#PurchaseDateDiv').show();
 		$('#DueDateDiv2').hide();
 		$('#DueDateDiv').show();
-		vStatusSaving = 0; //add data mode
 		$('#form_btn_save').show();
 		$('#tabledetail_div').hide();
 		$('#form_div').dialog('open');
@@ -157,7 +195,7 @@
 		if (id) {
 			$.ajax({
 				dataType: "json",
-				url: base_url + "CashSalesInvoice/GetInfo?Id=" + id,
+				url: base_url + "CustomPurchaseInvoice/GetInfo?Id=" + id,
 				success: function (result) {
 					if (result.Id == null) {
 						$.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -175,25 +213,22 @@
 							$('#id').val(result.Id);
 							$('#Code').val(result.Code);
 							$('#Description').val(result.Description);
+							$('#ContactId').val(result.ContactId);
+							$('#Contact').val(result.Contact);
 							$('#CashBankId').val(result.CashBankId);
 							$('#CashBankName').val(result.CashBank);
 							$('#WarehouseId').val(result.WarehouseId);
 							$('#WarehouseName').val(result.Warehouse);
-							$('#Discount').numberbox('setValue', result.Discount);
-							$('#Tax').numberbox('setValue', result.Tax);
-							$('#Allowance').numberbox('setValue', result.Allowance);
 							$('#Total').numberbox('setValue', result.Total);
-							$('#SalesDate2').val(dateEnt(result.SalesDate));
+							$('#PurchaseDate2').val(dateEnt(result.PurchaseDate));
 							$('#DueDate2').val(dateEnt(result.DueDate));
 							$('#Description').attr('disabled', true);
+							$('#btnContact').attr('disabled', true);
 							$('#btnCashBank').attr('disabled', true);
 							$('#btnWarehouse').attr('disabled', true);
-							$('#Discount').attr('disabled', true);
-							$('#Tax').attr('disabled', true);
-							$('#Allowance').attr('disabled', true);
 							$('#Total').attr('disabled', true);
-							$('#SalesDateDiv').hide();
-							$('#SalesDateDiv2').show();
+							$('#PurchaseDateDiv').hide();
+							$('#PurchaseDateDiv2').show();
 							$('#DueDateDiv').hide();
 							$('#DueDateDiv2').show();
 							$('#form_btn_save').hide();
@@ -217,7 +252,7 @@
 			vStatusSaving = 1;//edit data mode
 			$.ajax({
 				dataType: "json",
-				url: base_url + "CashSalesInvoice/GetInfo?Id=" + id,
+				url: base_url + "CustomPurchaseInvoice/GetInfo?Id=" + id,
 				success: function (result) {
 					if (result.Id == null) {
 						$.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -235,24 +270,21 @@
 							$('#id').val(result.Id);
 							$('#Code').val(result.Code);
 							$('#Description').val(result.Description);
-							$('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
+							$('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
 							$('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-							$('#Discount').numberbox('setValue', (result.Discount));
-							$('#Tax').numberbox('setValue', (result.Tax));
-							$('#Allowance').numberbox('setValue', (result.Allowance));
 							$('#Total').numberbox('setValue', (result.Total));
+							$('#ContactId').val(result.ContactId);
+							$('#Contact').val(result.Contact);
 							$('#CashBankId').val(result.CashBankId);
 							$('#CashBankName').val(result.CashBank);
 							$('#WarehouseId').val(result.WarehouseId);
 							$('#WarehouseName').val(result.Warehouse);
 							$('#Description').removeAttr('disabled');
+							$('#btnContact').removeAttr('disabled');
 							$('#btnCashBank').removeAttr('disabled');
 							$('#btnWarehouse').removeAttr('disabled');
-							$('#Discount').removeAttr('disabled');
-							$('#Tax').removeAttr('disabled');
-							$('#Allowance').removeAttr('disabled');
-							$('#SalesDateDiv2').hide();
-							$('#SalesDateDiv').show();
+							$('#PurchaseDateDiv2').hide();
+							$('#PurchaseDateDiv').show();
 							$('#DueDateDiv2').hide();
 							$('#DueDateDiv').show();
 							$('#tabledetail_div').hide();
@@ -274,6 +306,7 @@
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 			$('#confirmDiscount').numberbox('setValue', ret.discount);
 			$('#confirmTax').numberbox('setValue', ret.tax);
+			$('#confirmAllowance').numberbox('setValue', ret.allowance);
 			$('#idconfirm').val(ret.id);
 			$("#confirm_div").dialog("open");
 		} else {
@@ -288,7 +321,7 @@
 			$.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
 				if (r) {
 					$.ajax({
-						url: base_url + "CashSalesInvoice/UnConfirm",
+						url: base_url + "CustomPurchaseInvoice/UnConfirm",
 						type: "POST",
 						contentType: "application/json",
 						data: JSON.stringify({
@@ -322,12 +355,12 @@
 	$('#confirm_btn_submit').click(function () {
 		ClearErrorMessage();
 		$.ajax({
-			url: base_url + "CashSalesInvoice/Confirm",
+			url: base_url + "CustomPurchaseInvoice/Confirm",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify({
 				Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
-				Discount: $('#confirmDiscount').numberbox('getValue'), Tax: $('#confirmTax').numberbox('getValue'),
+				Discount: $('#confirmDiscount').numberbox('getValue'), Tax: $('#confirmTax').numberbox('getValue'), Allowance: $('#confirmAllowance').numberbox('getValue'),
 			}),
 			success: function (result) {
 				if (JSON.stringify(result.Errors) != '{}') {
@@ -342,8 +375,8 @@
 					}
 				}
 				else {
-					ReloadGrid();
-					$("#confirm_div").dialog('close');
+				    $("#confirm_div").dialog('close');
+				    ReloadGrid();
 				}
 			}
 		});
@@ -361,6 +394,7 @@
 	        $('#AmountPaid').numberbox('setValue', ret.amountpaid);
 	        $('#paidTotal').numberbox('setValue', ret.total);
 	        $('#idpaid').val(ret.id);
+	        onGBCH();
 	        $("#paid_div").dialog("open");
 	    } else {
 	        $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -374,7 +408,7 @@
 	        $.messager.confirm('Confirm', 'Are you sure you want to unpaid record?', function (r) {
 	            if (r) {
 	                $.ajax({
-	                    url: base_url + "CashSalesInvoice/UnPaid",
+	                    url: base_url + "CustomPurchaseInvoice/UnPaid",
 	                    type: "POST",
 	                    contentType: "application/json",
 	                    data: JSON.stringify({
@@ -408,12 +442,14 @@
 	$('#paid_btn_submit').click(function () {
 	    ClearErrorMessage();
 	    $.ajax({
-	        url: base_url + "CashSalesInvoice/Paid",
+	        url: base_url + "CustomPurchaseInvoice/Paid",
 	        type: "POST",
 	        contentType: "application/json",
 	        data: JSON.stringify({
 	            Id: $('#idpaid').val(), AmountPaid: $('#AmountPaid').numberbox('getValue'),
-	            Allowance: $('#paidAllowance').numberbox('getValue'),
+	            Allowance: $('#paidAllowance').numberbox('getValue'), 
+	            IsGBCH: document.getElementById('IsGBCH').value, GBCH_No: $('#GBCH_No').val(),
+	            GBCH_DueDate: $('#GBCHDueDate').datebox('getValue'),
 	        }),
 	        success: function (result) {
 	            if (JSON.stringify(result.Errors) != '{}') {
@@ -464,7 +500,7 @@
 	$('#delete_confirm_btn_submit').click(function () {
 
 		$.ajax({
-			url: base_url + "CashSalesInvoice/Delete",
+			url: base_url + "CustomPurchaseInvoice/Delete",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify({
@@ -507,11 +543,11 @@
 
 		// Update
 		if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-			submitURL = base_url + 'CashSalesInvoice/Update';
+			submitURL = base_url + 'CustomPurchaseInvoice/Update';
 		}
 			// Insert
 		else {
-			submitURL = base_url + 'CashSalesInvoice/Insert';
+			submitURL = base_url + 'CustomPurchaseInvoice/Insert';
 		}
 
 		$.ajax({
@@ -520,10 +556,8 @@
 			url: submitURL,
 			data: JSON.stringify({
 				Id: id, Code: $("#Code").val(), Description: $("#Description").val(),
-				SalesDate: $("#SalesDate").datebox('getValue'), DueDate: $("#DueDate").datebox('getValue'),
-				Discount: $("#Discount").numberbox('getValue'), Tax: $('#Tax').numberbox('getValue'),
-				Allowance: $('#Allowance').numberbox('getValue'),
-				CashBankId: $('#CashBankId').val(), WarehouseId: $('#WarehouseId').val(),
+				PurchaseDate: $("#PurchaseDate").datebox('getValue'), DueDate: $("#DueDate").datebox('getValue'),
+				ContactId: $('#ContactId').val(), CashBankId: $('#CashBankId').val(), WarehouseId: $('#WarehouseId').val(),
 			}),
 			async: false,
 			cache: false,
@@ -560,7 +594,7 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id'],
+		colNames: ['Code', 'CustomPurchaseInvoice Id', 'CustomPurchaseInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 130, sortable: false },
@@ -603,7 +637,7 @@
 		if (id) {
 			$.ajax({
 				dataType: "json",
-				url: base_url + "CashSalesInvoice/GetInfoDetail?Id=" + id,
+				url: base_url + "CustomPurchaseInvoice/GetInfoDetail?Id=" + id,
 				success: function (result) {
 					if (result.Id == null) {
 						$.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -620,7 +654,9 @@
 							$("#item_btn_submit").data('kode', result.Id);
 							$('#ItemId').val(result.ItemId);
 							$('#Item').val(result.Item);
-							$('#Quantity').val(result.Quantity);
+							$('#Quantity').numberbox('setValue', result.Quantity);
+							$('#detailDiscount').numberbox('setValue', result.Discount);
+							$('#ListedUnitPrice').numberbox('setValue', result.ListedUnitPrice);
 							$('#item_div').dialog('open');
 						}
 					}
@@ -638,7 +674,7 @@
 			$.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
 				if (r) {
 					$.ajax({
-						url: base_url + "CashSalesInvoice/DeleteDetail",
+						url: base_url + "CustomPurchaseInvoice/DeleteDetail",
 						type: "POST",
 						contentType: "application/json",
 						data: JSON.stringify({
@@ -682,11 +718,11 @@
 
 		// Update
 		if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-			submitURL = base_url + 'CashSalesInvoice/UpdateDetail';
+			submitURL = base_url + 'CustomPurchaseInvoice/UpdateDetail';
 		}
 			// Insert
 		else {
-			submitURL = base_url + 'CashSalesInvoice/InsertDetail';
+			submitURL = base_url + 'CustomPurchaseInvoice/InsertDetail';
 		}
 
 		$.ajax({
@@ -694,7 +730,9 @@
 			type: 'POST',
 			url: submitURL,
 			data: JSON.stringify({
-				Id: id, CashSalesInvoiceId: $("#id").val(), CashSalesInvoiceDetailId: $("#CashSalesInvoiceDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+			    Id: id, CustomPurchaseInvoiceId: $("#id").val(), ItemId: $("#ItemId").val(),
+			    Quantity: $("#Quantity").numberbox('getValue'), Discount: $('#detailDiscount').numberbox('getValue'),
+			    ListedUnitPrice: $('#ListedUnitPrice').numberbox('getValue'),
 			}),
 			async: false,
 			cache: false,
@@ -746,6 +784,65 @@
 				this.selectedIndex = 0;
 		});
 	}
+
+    // -------------------------------------------------------Look Up Contact-------------------------------------------------------
+	$('#btnContact').click(function () {
+
+	    var lookUpURL = base_url + 'MstContact/GetList';
+	    var lookupGrid = $('#lookup_table_contact');
+	    lookupGrid.setGridParam({
+	        url: lookUpURL
+	    }).trigger("reloadGrid");
+	    $('#lookup_div_contact').dialog('open');
+	});
+
+	$("#lookup_table_contact").jqGrid({
+	    url: base_url,
+	    datatype: "json",
+	    mtype: 'GET',
+	    colNames: ['Id', 'Name', 'Description'],
+	    colModel: [
+				  { name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'name', index: 'name', width: 200 },
+				  { name: 'description', index: 'description', width: 200 }],
+	    page: '1',
+	    pager: $('#lookup_pager_contact'),
+	    rowNum: 20,
+	    rowList: [20, 30, 60],
+	    sortname: 'id',
+	    viewrecords: true,
+	    scrollrows: true,
+	    shrinkToFit: false,
+	    sortorder: "ASC",
+	    width: $("#lookup_div_contact").width() - 10,
+	    height: $("#lookup_div_contact").height() - 110,
+	});
+	$("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+	$('#lookup_btn_cancel_contact').click(function () {
+	    $('#lookup_div_contact').dialog('close');
+	});
+
+    // ADD or Select Data
+	$('#lookup_btn_add_contact').click(function () {
+	    var id = jQuery("#lookup_table_contact").jqGrid('getGridParam', 'selrow');
+	    if (id) {
+	        var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
+
+	        $('#ContactId').val(ret.id).data("kode", id);
+	        $('#Contact').val(ret.name);
+
+	        $('#lookup_div_contact').dialog('close');
+	    } else {
+	        $.messager.alert('Information', 'Please Select Data...!!', 'info');
+	    };
+	});
+
+
+    // ---------------------------------------------End Lookup Contact----------------------------------------------------------------
+
 
 	// -------------------------------------------------------Look Up CashBank-------------------------------------------------------
 	$('#btnCashBank').click(function () {

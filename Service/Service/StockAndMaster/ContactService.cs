@@ -39,6 +39,16 @@ namespace Service.Service
             return _repository.FindAll(c => c.Name == name && !c.IsDeleted).FirstOrDefault();
         }
 
+        public Contact FindOrCreateBaseContact(IContactGroupService _contactGroupService)
+        {
+            Contact contact = GetObjectByName(Core.Constants.Constant.BaseContact);
+            if (contact == null)
+            {
+                contact = CreateObject(Core.Constants.Constant.BaseContact, "BaseAddr", "BaseNo", "BasePic", "BasePicNo", "Base@Email", _contactGroupService);
+            }
+            return contact;
+        }
+
         public Contact CreateObject(string Name, string Address, string ContactNo, string PIC,
                                     string PICContactNo, string Email, IContactGroupService _contactGroupService)
         {

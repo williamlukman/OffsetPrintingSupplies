@@ -11,9 +11,9 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class CashSalesInvoiceController : Controller
+    public class CashSalesReturnController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CashSalesInvoiceController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CashSalesReturnController");
         private IItemService _itemService;
         private IContactService _contactService;
         private IItemTypeService _itemTypeService;
@@ -28,15 +28,16 @@ namespace WebView.Controllers
         private ISalesOrderDetailService _salesOrderDetailService;
         private ICashBankService _cashBankService;
         private ICashMutationService _cashMutationService;
+        private ICashSalesReturnService _cashSalesReturnService;
+        private ICashSalesReturnDetailService _cashSalesReturnDetailService;
         private ICashSalesInvoiceService _cashSalesInvoiceService;
         private ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService;
-        private ICashSalesReturnService _cashSalesReturnService;
         private IQuantityPricingService _quantityPricingService;
-        private IReceivableService _receivableService;
-        private IReceiptVoucherService _receiptVoucherService;
-        private IReceiptVoucherDetailService _receiptVoucherDetailService;
+        private IPayableService _payableService;
+        private IPaymentVoucherService _paymentVoucherService;
+        private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
-        public CashSalesInvoiceController()
+        public CashSalesReturnController()
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -54,12 +55,13 @@ namespace WebView.Controllers
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _cashSalesInvoiceService = new CashSalesInvoiceService(new CashSalesInvoiceRepository(), new CashSalesInvoiceValidator());
+            _cashSalesReturnDetailService = new CashSalesReturnDetailService(new CashSalesReturnDetailRepository(), new CashSalesReturnDetailValidator());
             _cashSalesInvoiceDetailService = new CashSalesInvoiceDetailService(new CashSalesInvoiceDetailRepository(), new CashSalesInvoiceDetailValidator());
             _cashSalesReturnService = new CashSalesReturnService(new CashSalesReturnRepository(), new CashSalesReturnValidator());
             _quantityPricingService = new QuantityPricingService(new QuantityPricingRepository(), new QuantityPricingValidator());
-            _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
-            _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
-            _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
+            _payableService = new PayableService(new PayableRepository(), new PayableValidator());
+            _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
+            _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
         }
 
         public ActionResult Index()
@@ -74,9 +76,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query = _cashSalesInvoiceService.GetAll().Where(d => d.IsDeleted == false);
+            var query = _cashSalesReturnService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<CashSalesInvoice>;
+            var list = query as IEnumerable<CashSalesReturn>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -100,35 +102,28 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from cashSalesInvoice in list
+                    from cashSalesReturn in list
                     select new
                     {
-                        id = cashSalesInvoice.Id,
+                        id = cashSalesReturn.Id,
                         cell = new object[] {
-                            cashSalesInvoice.Id,
-                            cashSalesInvoice.Code,
-                            cashSalesInvoice.Description,
-                            cashSalesInvoice.SalesDate,
-                            cashSalesInvoice.DueDate,
-                            cashSalesInvoice.Discount,
-                            cashSalesInvoice.Tax,
-                            cashSalesInvoice.Allowance,
-                            cashSalesInvoice.IsConfirmed,
-                            cashSalesInvoice.ConfirmationDate,
-                            cashSalesInvoice.AmountPaid,
-                            cashSalesInvoice.CashBankId,
-                            _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId).Name,
-                            cashSalesInvoice.IsBank,
-                            cashSalesInvoice.IsPaid,
-                            cashSalesInvoice.IsFullPayment,
-                            cashSalesInvoice.Total,
-                            cashSalesInvoice.CoGS,
-                            cashSalesInvoice.WarehouseId,
-                            _warehouseService.GetObjectById(cashSalesInvoice.WarehouseId).Name,
-                            cashSalesInvoice.CreatedAt,
-                            cashSalesInvoice.UpdatedAt,
-                            _cashSalesInvoiceDetailService.GetObjectsByCashSalesInvoiceId(cashSalesInvoice.Id).Count(),
-                            _cashSalesReturnService.GetObjectsByCashSalesInvoiceId(cashSalesInvoice.Id).Count()
+                            cashSalesReturn.Id,
+                            cashSalesReturn.Code,
+                            cashSalesReturn.Description,
+                            cashSalesReturn.ReturnDate,
+                            cashSalesReturn.CashSalesInvoiceId,
+                            _cashSalesInvoiceService.GetObjectById((int)cashSalesReturn.CashSalesInvoiceId).Code,
+                            cashSalesReturn.Allowance,
+                            cashSalesReturn.IsConfirmed,
+                            cashSalesReturn.ConfirmationDate,
+                            cashSalesReturn.Total,
+                            cashSalesReturn.CashBankId,
+                            _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId).Name,
+                            _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId).IsBank,
+                            cashSalesReturn.IsPaid,
+                            cashSalesReturn.CreatedAt,
+                            cashSalesReturn.UpdatedAt,
+                            _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(cashSalesReturn.Id).Count(),
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -141,9 +136,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query = _cashSalesInvoiceDetailService.GetObjectsByCashSalesInvoiceId(id).Where(d => d.IsDeleted == false);
+            var query = _cashSalesReturnDetailService.GetObjectsByCashSalesReturnId(id).Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<CashSalesInvoiceDetail>;
+            var list = query as IEnumerable<CashSalesReturnDetail>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -173,14 +168,12 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Code,
-                            model.CashSalesInvoiceId,
-                            _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Code,
-                            model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Name,
+                            model.CashSalesReturnId,
+                            _cashSalesReturnService.GetObjectById(model.CashSalesReturnId).Code,
+                            model.CashSalesInvoiceDetailId,
+                            _cashSalesInvoiceDetailService.GetObjectById(model.CashSalesInvoiceDetailId).Code,
                             model.Quantity,
-                            model.Amount,
-                            model.CoGS,
-                            model.PriceMutationId,
+                            model.TotalPrice,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -188,10 +181,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            CashSalesInvoice model = new CashSalesInvoice();
+            CashSalesReturn model = new CashSalesReturn();
             try
             {
-                model = _cashSalesInvoiceService.GetObjectById(Id);
+                model = _cashSalesReturnService.GetObjectById(Id);
           
             }
             catch (Exception ex)
@@ -205,26 +198,23 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.Description,
-                model.SalesDate,
-                model.DueDate,
-                model.Discount,
-                model.Tax,
+                model.ReturnDate,
                 model.Allowance,
                 model.Total,
                 model.CashBankId,
                 CashBank = _cashBankService.GetObjectById((int)model.CashBankId).Name,
-                model.WarehouseId,
-                Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
+                model.CashSalesInvoiceId,
+                CashSalesInvoice = _cashSalesInvoiceService.GetObjectById((int)model.CashSalesInvoiceId).Code,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         public dynamic GetInfoDetail(int Id)
         {
-            CashSalesInvoiceDetail model = new CashSalesInvoiceDetail();
+            CashSalesReturnDetail model = new CashSalesReturnDetail();
             try
             {
-                model = _cashSalesInvoiceDetailService.GetObjectById(Id);
+                model = _cashSalesReturnDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -236,21 +226,23 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                model.CashSalesInvoiceId,
-                CashSalesInvoice = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Code,
-                model.ItemId,
-                Item = _itemService.GetObjectById(model.ItemId).Name,
+                model.CashSalesReturnId,
+                CashSalesReturn = _cashSalesReturnService.GetObjectById(model.CashSalesReturnId).Code,
+                model.CashSalesInvoiceDetailId,
+                CashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(model.CashSalesInvoiceDetailId).Code,
+                _cashSalesInvoiceDetailService.GetObjectById(model.CashSalesInvoiceDetailId).ItemId,
+                _itemService.GetObjectById(_cashSalesInvoiceDetailService.GetObjectById(model.CashSalesInvoiceDetailId).ItemId).Name,
                 model.Quantity,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public dynamic Insert(CashSalesInvoice model)
+        public dynamic Insert(CashSalesReturn model)
         {
             try
             {
-                model = _cashSalesInvoiceService.CreateObject(model, _warehouseService);
+                model = _cashSalesReturnService.CreateObject(model, _cashSalesInvoiceService, _cashBankService);
             }
             catch (Exception ex)
             {
@@ -264,13 +256,13 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic InsertDetail(CashSalesInvoiceDetail model)
+        public dynamic InsertDetail(CashSalesReturnDetail model)
         {
             decimal total = 0;
             try
             {
-                model = _cashSalesInvoiceDetailService.CreateObject(model, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
-                total = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Total;
+                model = _cashSalesReturnDetailService.CreateObject(model, _cashSalesReturnService, _cashSalesInvoiceDetailService);
+                total = _cashSalesReturnService.GetObjectById(model.CashSalesReturnId).Total;
             }
             catch (Exception ex)
             {
@@ -287,20 +279,16 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(CashSalesInvoice model)
+        public dynamic Update(CashSalesReturn model)
         {
             try
             {
-                var data = _cashSalesInvoiceService.GetObjectById(model.Id);
+                var data = _cashSalesReturnService.GetObjectById(model.Id);
                 data.Description = model.Description;
-                data.SalesDate = model.SalesDate;
-                data.DueDate = model.DueDate;
-                data.Discount = model.Discount;
-                data.Tax = model.Tax;
+                data.ReturnDate = model.ReturnDate;
                 data.Allowance = model.Allowance;
                 data.CashBankId = model.CashBankId;
-                data.WarehouseId = model.WarehouseId;
-                model = _cashSalesInvoiceService.UpdateObject(data, _cashSalesInvoiceDetailService);
+                model = _cashSalesReturnService.UpdateObject(data, _cashSalesReturnDetailService);
             }
             catch (Exception ex)
             {
@@ -314,17 +302,17 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UpdateDetail(CashSalesInvoiceDetail model)
+        public dynamic UpdateDetail(CashSalesReturnDetail model)
         {
             decimal total = 0;
             try
             {
-                var data = _cashSalesInvoiceDetailService.GetObjectById(model.Id);
-                data.ItemId = model.ItemId;
+                var data = _cashSalesReturnDetailService.GetObjectById(model.Id);
+                data.CashSalesInvoiceDetailId = model.CashSalesInvoiceDetailId;
                 data.Quantity = model.Quantity;
-                data.CashSalesInvoiceId = model.CashSalesInvoiceId;
-                model = _cashSalesInvoiceDetailService.UpdateObject(data, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
-                total = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Total;
+                data.CashSalesReturnId = model.CashSalesReturnId;
+                model = _cashSalesReturnDetailService.UpdateObject(data, _cashSalesReturnService, _cashSalesInvoiceDetailService);
+                total = _cashSalesReturnService.GetObjectById(model.CashSalesReturnId).Total;
             }
             catch (Exception ex)
             {
@@ -340,14 +328,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Confirm(CashSalesInvoice model)
+        public dynamic Confirm(CashSalesReturn model)
         {
             try
             {
-                var data = _cashSalesInvoiceService.GetObjectById(model.Id);
-                model = _cashSalesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, model.Discount, model.Tax, _cashSalesInvoiceDetailService, 
-                                                    _contactService, _priceMutationService, _receivableService, _cashSalesInvoiceService, _warehouseItemService, 
-                                                    _warehouseService, _itemService, _barringService, _stockMutationService, _cashBankService);
+                var data = _cashSalesReturnService.GetObjectById(model.Id);
+                model = _cashSalesReturnService.ConfirmObject(data, model.ConfirmationDate.Value, model.Allowance, _cashSalesReturnDetailService, 
+                                                    _contactService, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _priceMutationService, _payableService, 
+                                                    _cashSalesReturnService, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
             }
             catch (Exception ex)
             {
@@ -362,13 +350,13 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UnConfirm(CashSalesInvoice model)
+        public dynamic UnConfirm(CashSalesReturn model)
         {
             try
             {
 
-                var data = _cashSalesInvoiceService.GetObjectById(model.Id);
-                model = _cashSalesInvoiceService.UnconfirmObject(data, _cashSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService,
+                var data = _cashSalesReturnService.GetObjectById(model.Id);
+                model = _cashSalesReturnService.UnconfirmObject(data, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService, _payableService, _paymentVoucherDetailService,
                                                    _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
 
             }
@@ -385,14 +373,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Paid(CashSalesInvoice model)
+        public dynamic Paid(CashSalesReturn model)
         {
             try
             {
-                var data = _cashSalesInvoiceService.GetObjectById(model.Id);
+                var data = _cashSalesReturnService.GetObjectById(model.Id);
                 data.Allowance = model.Allowance;
-                model = _cashSalesInvoiceService.PaidObject(data, model.AmountPaid.Value, model.Allowance, _cashBankService, _receivableService, _receiptVoucherService, _receiptVoucherDetailService, 
-                                                    _contactService, _cashMutationService, _cashSalesReturnService);
+                model = _cashSalesReturnService.PaidObject(data, _cashBankService, _payableService, _paymentVoucherService, _paymentVoucherDetailService, 
+                                                    _contactService, _cashMutationService);
             }
             catch (Exception ex)
             {
@@ -407,14 +395,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UnPaid(CashSalesInvoice model)
+        public dynamic UnPaid(CashSalesReturn model)
         {
             try
             {
 
-                var data = _cashSalesInvoiceService.GetObjectById(model.Id);
-                model = _cashSalesInvoiceService.UnpaidObject(data, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService,
-                                                   _receivableService, _cashMutationService, _cashSalesReturnService);
+                var data = _cashSalesReturnService.GetObjectById(model.Id);
+                model = _cashSalesReturnService.UnpaidObject(data, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService,
+                                                   _payableService, _cashMutationService);
 
             }
             catch (Exception ex)
@@ -430,12 +418,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(CashSalesInvoice model)
+        public dynamic Delete(CashSalesReturn model)
         {
             try
             {
-                var data = _cashSalesInvoiceService.GetObjectById(model.Id);
-                model = _cashSalesInvoiceService.SoftDeleteObject(data, _cashSalesInvoiceDetailService);
+                var data = _cashSalesReturnService.GetObjectById(model.Id);
+                model = _cashSalesReturnService.SoftDeleteObject(data, _cashSalesReturnDetailService);
             }
             catch (Exception ex)
             {
@@ -450,14 +438,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic DeleteDetail(CashSalesInvoiceDetail model)
+        public dynamic DeleteDetail(CashSalesReturnDetail model)
         {
             decimal total = 0;
             try
             {
-                var data = _cashSalesInvoiceDetailService.GetObjectById(model.Id);
-                model = _cashSalesInvoiceDetailService.SoftDeleteObject(data, _cashSalesInvoiceService);
-                total = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Total;
+                var data = _cashSalesReturnDetailService.GetObjectById(model.Id);
+                model = _cashSalesReturnDetailService.SoftDeleteObject(data, _cashSalesReturnService);
+                total = _cashSalesReturnService.GetObjectById(model.CashSalesReturnId).Total;
             }
             catch (Exception ex)
             {

@@ -40,9 +40,9 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public CashSalesReturnDetail GetObjectByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId)
+        public IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId)
         {
-            return _repository.GetObjectByCashSalesInvoiceDetailId(CashSalesInvoiceDetailId);
+            return _repository.GetObjectsByCashSalesInvoiceDetailId(CashSalesInvoiceDetailId);
         }
 
         public CashSalesReturnDetail CreateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
@@ -78,10 +78,10 @@ namespace Service.Service
 
         public CashSalesReturnDetail ConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService, 
                                                    ICashSalesInvoiceService _cashSalesInvoiceService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
-                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
-                                                   IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
+                                                   IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService, ICashSalesReturnDetailService _cashSalesReturnDetailService)
         {
-            if(_validator.ValidConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService))
+            if(_validator.ValidConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService))
             {
                 CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
                 CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
@@ -134,8 +134,14 @@ namespace Service.Service
 
         public CashSalesReturnDetail SoftDeleteObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService)
         {
-            return (cashSalesReturnDetail = _validator.ValidDeleteObject(cashSalesReturnDetail, _cashSalesReturnService) ?
-                    _repository.SoftDeleteObject(cashSalesReturnDetail) : cashSalesReturnDetail);
+            if(_validator.ValidDeleteObject(cashSalesReturnDetail, _cashSalesReturnService)) 
+            {
+                CashSalesReturn cashSalesReturn = _cashSalesReturnService.GetObjectById(cashSalesReturnDetail.CashSalesReturnId);
+                _repository.SoftDeleteObject(cashSalesReturnDetail);
+                cashSalesReturn.Total = CalculateTotal(cashSalesReturn.Id);
+                _cashSalesReturnService.GetRepository().Update(cashSalesReturn);
+            }
+            return cashSalesReturnDetail;
         }
 
         public bool DeleteObject(int Id)
@@ -152,6 +158,17 @@ namespace Service.Service
                 Total += cashSalesReturnDetail.TotalPrice;
             }
             return Total;
+        }
+
+        public int GetTotalQuantityByCashSalesInvoiceDetailId(int Id)
+        {
+            IList<CashSalesReturnDetail> cashSalesReturnDetails = GetObjectsByCashSalesInvoiceDetailId(Id);
+            int Quantity = 0;
+            foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
+            {
+                Quantity += cashSalesReturnDetail.Quantity;
+            }
+            return Quantity;
         }
     }
 }

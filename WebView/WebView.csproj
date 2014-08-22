@@ -151,6 +151,9 @@
     <Compile Include="Controllers\BarringWorkOrderController.cs" />
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
+    <Compile Include="Controllers\CashSalesReturnController.cs" />
+    <Compile Include="Controllers\QuantityPricingController.cs" />
+    <Compile Include="Controllers\CustomPurchaseInvoiceController.cs" />
     <Compile Include="Controllers\CoreIdentificationController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -190,6 +193,9 @@
     <Content Include="Content\apps_js\BarringWorkOrder.js" />
     <Content Include="Content\apps_js\CashBankAdjustment.js" />
     <Content Include="Content\apps_js\CashBankMutation.js" />
+    <Content Include="Content\apps_js\CashSalesReturn.js" />
+    <Content Include="Content\apps_js\QuantityPricing.js" />
+    <Content Include="Content\apps_js\CustomPurchaseInvoice.js" />
     <Content Include="Content\apps_js\CoreIdentification.js" />
     <Content Include="Content\apps_js\DeliveryOrder.js" />
     <Content Include="Content\apps_js\MasterBarring.js" />
@@ -1098,6 +1104,9 @@
     <Content Include="Views\RecoveryWorkOrder\Index.cshtml" />
     <Content Include="Views\WarehouseItem\Index.cshtml" />
     <Content Include="Views\CashSalesInvoice\Index.cshtml" />
+    <Content Include="Views\CashSalesReturn\Index.cshtml" />
+    <Content Include="Views\CustomPurchaseInvoice\Index.cshtml" />
+    <Content Include="Views\QuantityPricing\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

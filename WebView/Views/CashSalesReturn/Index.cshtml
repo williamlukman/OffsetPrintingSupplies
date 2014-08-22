@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Cash Sales Invoice";
+    ViewBag.Title = "Cash Sales Return";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,10 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/cashsalesinvoice.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/cashsalesreturn.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Cash Sales Invoice :.">
+    title=".: Cash Sales Return :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -32,7 +32,7 @@
 
 <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
-        title=".: Master CashSalesInvoice :.">
+        title=".: Master CashSalesReturn :.">
 
         <div id="form_toolbar" class="form_toolbar">
             <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
@@ -72,24 +72,11 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Warehouse</label></td>
+                                <label>CashSalesInvoice</label></td>
                             <td colspan="3">
-                               <input id="WarehouseId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                               <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                               <input id="WarehouseName" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                                         
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Discount</label></td>
-                            <td colspan="3">
-                        <input id="Discount" name="Discount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Tax</label></td>
-                            <td colspan="3">
-                        <input id="Tax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
+                               <input id="CashSalesInvoiceId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="btnCashSalesInvoice" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                               <input id="CashSalesInvoiceName" name="CashSalesInvoiceId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
@@ -105,20 +92,11 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Sales Date</label></td>
+                                <label>Return Date</label></td>
                              <td>
-                             <div id="SalesDateDiv"><input id="SalesDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
+                             <div id="ReturnDateDiv"><input id="ReturnDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                             </div>
-                             <div id="SalesDateDiv2"><input id="SalesDate2" type="text" size="10" disabled="disabled"/></div>
-                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Due Date</label></td>
-                             <td>
-                             <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                            </div>
-                             <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
+                             <div id="ReturnDateDiv2"><input id="ReturnDate2" type="text" size="10" disabled="disabled"/></div>
                              </td>
                         </tr>
                     </table>
@@ -152,25 +130,24 @@
     </div>
 <!-- End Dialog Box Delete-->
 
-<!-- Dialog Box  Item-->
-    <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
-        data-options="modal:true" title=".: Input Item :.">
+<!-- Dialog Box  CashSalesInvoiceDetail-->
+    <div id="cashsalesinvoicedetail_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
+        data-options="modal:true" title=".: Input CashSalesInvoiceDetail :.">
 
-        <div id="item_toolbar" class="form_toolbar">
-            <a id="item_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
-            <a id="item_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        <div id="cashsalesinvoicedetail_toolbar" class="form_toolbar">
+            <a id="cashsalesinvoicedetail_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="cashsalesinvoicedetail_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
         </div>
-        <div id="item_info">
+        <div id="cashsalesinvoicedetail_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
                       <td width="139" nowrap style="width: 100px">
-                          Item
+                          CashSalesInvoiceDetail
                       </td>
                       <td>
-                         <input id="ItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                         <input id="btnItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                         <input id="Item" name="ItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                         <input id="CashSalesInvoiceId" name="CashSalesInvoiceId" type="text" size ="10" hidden="hidden" />
+                         <input id="CashSalesInvoiceDetailId" name="CashSalesInvoiceDetailId" class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="btnCashSalesInvoiceDetail" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                               <input id="CashSalesInvoiceDetail" name="CashSalesInvoiceDetail" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                       </td>
                   </tr>
                     <tr>
@@ -185,11 +162,11 @@
           
         </div>
     </div>
-<!-- End Dialog Box Item-->
+<!-- End Dialog Box CashSalesInvoiceDetail-->
 
 <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Confirm CashSalesInvoice :.">
+        data-options="modal:true" title=".: Confirm CashSalesReturn :.">
 
         <div id="confirm_toolbar" class="form_toolbar">
             <a id="confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
@@ -217,15 +194,9 @@
                   </tr>
                   <tr>
                             <td>
-                                <label>Discount</label></td>
+                                <label>Allowance</label></td>
                             <td colspan="3">
-                        <input id="confirmDiscount" name="Discount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Tax</label></td>
-                            <td colspan="3">
-                        <input id="confirmTax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        <input id="confirmAllowance" name="Allowance" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </tr>
               </table>
           
@@ -235,7 +206,7 @@
 
 <!-- Dialog Box Paid-->
     <div id="paid_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Paid CashSalesInvoice :.">
+        data-options="modal:true" title=".: Paid CashSalesReturn :.">
 
         <div id="paid_toolbar" class="form_toolbar">
             <a id="paid_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
@@ -256,12 +227,6 @@
                             <label>Total</label></td>
                         <td colspan="3">
                         <input id="paidTotal" name="Total" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
-                  </tr>
-                  <tr>
-                        <td>
-                            <label>Amount Paid</label></td>
-                        <td colspan="3">
-                        <input id="AmountPaid" name="AmountPaid" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                   </tr>
                   <tr>
                         <td>
@@ -289,33 +254,33 @@
     </div>
 <!-- END Look Up CashBank -->
 
-<!-- Look Up Warehouse -->
-    <div id="lookup_div_warehouse" class="easyui-dialog" title="List Warehouse" style="padding: 0px 5px; height: 490px; width: 480px;"
+<!-- Look Up CashSalesInvoice -->
+    <div id="lookup_div_cashsalesinvoice" class="easyui-dialog" title="List CashSalesInvoice" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
-        <div id="lookup_toolbar_warehouse" class="grid_toolbar">
-            <a id="lookup_btn_add_warehouse" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_warehouse" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        <div id="lookup_toolbar_cashsalesinvoice" class="grid_toolbar">
+            <a id="lookup_btn_add_cashsalesinvoice" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_cashsalesinvoice" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
         </div>
 
-        <table id="lookup_table_warehouse" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_warehouse" class="scroll" style="text-align: center;"></div>
+        <table id="lookup_table_cashsalesinvoice" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_cashsalesinvoice" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up Warehouse -->
+<!-- END Look Up CashSalesInvoice -->
 
-<!-- Look Up item -->
-    <div id="lookup_div_item" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
+<!-- Look Up cashsalesinvoicedetail -->
+    <div id="lookup_div_cashsalesinvoicedetail" class="easyui-dialog" title="List CashSalesInvoiceDetail" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
-        <div id="lookup_toolbar_item" class="grid_toolbar">
-            <a id="lookup_btn_add_item" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_item" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        <div id="lookup_toolbar_cashsalesinvoicedetail" class="grid_toolbar">
+            <a id="lookup_btn_add_cashsalesinvoicedetail" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_cashsalesinvoicedetail" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
         </div>
 
-        <table id="lookup_table_item" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_item" class="scroll" style="text-align: center;"></div>
+        <table id="lookup_table_cashsalesinvoicedetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_cashsalesinvoicedetail" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up item -->
+<!-- END Look Up cashsalesinvoicedetail -->
 
   </div>
 

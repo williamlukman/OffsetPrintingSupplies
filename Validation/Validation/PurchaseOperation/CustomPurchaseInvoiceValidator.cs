@@ -70,7 +70,7 @@ namespace Validation.Validation
             Contact contact = _contactService.GetObjectById(customPurchaseInvoice.ContactId);
             if (contact == null)
             {
-                customPurchaseInvoice.Errors.Add("ContactId", "Tidak valid");
+                customPurchaseInvoice.Errors.Add("Contact", "Tidak valid");
             }
             return customPurchaseInvoice;
         }

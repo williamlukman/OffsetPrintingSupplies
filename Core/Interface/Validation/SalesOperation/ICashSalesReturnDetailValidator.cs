@@ -12,10 +12,10 @@ namespace Core.Interface.Validation
         CashSalesReturnDetail VIsNotConfirmed(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService);
         CashSalesReturnDetail VHasCashSalesReturn(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService);
         CashSalesReturnDetail VIsValidCashSalesInvoiceDetail(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnService _cashSalesReturnService);
-        CashSalesReturnDetail VIsValidQuantity(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
-        CashSalesReturnDetail VIsValidTotalPrice(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
+        CashSalesReturnDetail VIsValidQuantity(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService);
+        //CashSalesReturnDetail VIsValidTotalPrice(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
 
-        CashSalesReturnDetail VConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
+        CashSalesReturnDetail VConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService);
         CashSalesReturnDetail VUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail);
 
         CashSalesReturnDetail VCreateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
@@ -24,7 +24,7 @@ namespace Core.Interface.Validation
                                                ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesReturnDetail VDeleteObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService);
 
-        bool ValidConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
+        bool ValidConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService);
         bool ValidUnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail);
 
         bool ValidCreateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,

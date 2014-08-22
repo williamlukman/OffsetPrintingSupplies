@@ -68,14 +68,13 @@ namespace Service.Service
         }
 
         public CashSalesInvoiceDetail UpdateObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService,
-                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService, IPriceMutationService _priceMutationService,
+                                                     IItemService _itemService, IWarehouseItemService _warehouseItemService,
                                                      IQuantityPricingService _quantityPricingService)
         {
             if (_validator.ValidUpdateObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, this, _itemService, _warehouseItemService, _quantityPricingService))
             {
                 Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
                 QuantityPricing quantityPricing = _quantityPricingService.GetObjectByItemTypeIdAndQuantity(item.ItemTypeId, cashSalesInvoiceDetail.Quantity);
-                //PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 if (quantityPricing == null)
                 {
                     cashSalesInvoiceDetail.Amount = item.SellingPrice * cashSalesInvoiceDetail.Quantity;

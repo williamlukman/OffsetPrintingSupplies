@@ -38,6 +38,10 @@ namespace Validation.Validation
                     customPurchaseInvoiceDetail.Errors.Add("Generic", "CustomPurchaseInvoice tidak boleh terkonfirmasi");
                 }
             }
+            else
+            {
+                customPurchaseInvoiceDetail.Errors.Add("Generic", "CustomPurchaseInvoice tidak ada");
+            }
             return customPurchaseInvoiceDetail;
         }
 
@@ -113,6 +117,12 @@ namespace Validation.Validation
         public CustomPurchaseInvoiceDetail VCreateObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService, 
                                                       ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            VIsNotConfirmed(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
+            if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
+            VHasItem(customPurchaseInvoiceDetail, _itemService);
+            if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
+            VUniqueItem(customPurchaseInvoiceDetail, _customPurchaseInvoiceDetailService, _itemService);
+            if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
             VHasCustomPurchaseInvoice(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
             VIsValidQuantity(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _warehouseItemService);
@@ -120,16 +130,14 @@ namespace Validation.Validation
             VIsValidListedUnitPrice(customPurchaseInvoiceDetail);
             if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
             VIsValidDiscount(customPurchaseInvoiceDetail);
-            if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
-            VHasItem(customPurchaseInvoiceDetail, _itemService);
-            if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
-            VUniqueItem(customPurchaseInvoiceDetail, _customPurchaseInvoiceDetailService, _itemService);
             return customPurchaseInvoiceDetail;
         }
 
         public CustomPurchaseInvoiceDetail VUpdateObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService,
                                                       ICustomPurchaseInvoiceDetailService _customPurchaseInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            //VIsNotConfirmed(customPurchaseInvoiceDetail, _customPurchaseInvoiceService);
+            //if (!isValid(customPurchaseInvoiceDetail)) { return customPurchaseInvoiceDetail; }
             return VCreateObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService, _customPurchaseInvoiceDetailService, _itemService, _warehouseItemService);
         }
 

@@ -13,7 +13,7 @@ namespace Core.Interface.Service
         IList<CashSalesReturnDetail> GetAll();
         IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int cashSalesReturnId);
         CashSalesReturnDetail GetObjectById(int Id);
-        CashSalesReturnDetail GetObjectByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);
+        IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);
         CashSalesReturnDetail CreateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
                                            ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService);
         CashSalesReturnDetail UpdateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
@@ -22,11 +22,12 @@ namespace Core.Interface.Service
         CashSalesReturnDetail ConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
                                             ICashSalesInvoiceService _cashSalesInvoiceService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
                                             IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                            IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
+                                            IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService, ICashSalesReturnDetailService _cashSalesReturnDetailService);
         CashSalesReturnDetail UnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService,
                                               IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
                                               IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
         bool DeleteObject(int Id);
         decimal CalculateTotal(int CashSalesReturnId);
+        int GetTotalQuantityByCashSalesInvoiceDetailId(int Id);
     }
 }

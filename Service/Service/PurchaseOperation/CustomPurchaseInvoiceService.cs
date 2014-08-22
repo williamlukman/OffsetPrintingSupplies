@@ -91,7 +91,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(customPurchaseInvoice, _customPurchaseInvoiceDetailService, _payableService, _paymentVoucherDetailService))
             {
-                customPurchaseInvoice = _repository.UnconfirmObject(customPurchaseInvoice);
+                
                 IList<CustomPurchaseInvoiceDetail> customPurchaseInvoiceDetails = _customPurchaseInvoiceDetailService.GetObjectsByCustomPurchaseInvoiceId(customPurchaseInvoice.Id);
                 foreach (var customPurchaseInvoiceDetail in customPurchaseInvoiceDetails)
                 {
@@ -100,6 +100,9 @@ namespace Service.Service
                 }
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id);
                 _payableService.SoftDeleteObject(payable);
+                customPurchaseInvoice.Total = 0;
+                customPurchaseInvoice.CoGS = 0;
+                customPurchaseInvoice = _repository.UnconfirmObject(customPurchaseInvoice);
             }
             return customPurchaseInvoice;
         }
@@ -152,6 +155,7 @@ namespace Service.Service
                         IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                         foreach (var paymentVoucherDetail in paymentVoucherDetails)
                         {
+                            paymentVoucherDetail.Errors = new Dictionary<string, string>();
                             _paymentVoucherDetailService.SoftDeleteObject(paymentVoucherDetail);
                         }
                         _paymentVoucherService.SoftDeleteObject(paymentVoucher, _paymentVoucherDetailService);

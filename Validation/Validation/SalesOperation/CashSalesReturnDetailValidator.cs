@@ -20,6 +20,10 @@ namespace Validation.Validation
                     cashSalesReturnDetail.Errors.Add("Generic", "CashSalesReturn tidak boleh terkonfirmasi");
                 }
             }
+            else
+            {
+                cashSalesReturnDetail.Errors.Add("Generic", "CashSalesReturn tidak ada");
+            }
             return cashSalesReturnDetail;
         }
 
@@ -52,11 +56,11 @@ namespace Validation.Validation
             return cashSalesReturnDetail;
         }
 
-        public CashSalesReturnDetail VIsValidQuantity(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        public CashSalesReturnDetail VIsValidQuantity(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService)
         {
             CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
-         
-            if (cashSalesReturnDetail.Quantity <= 0 || cashSalesReturnDetail.Quantity > cashSalesInvoiceDetail.Quantity)
+
+            if (cashSalesReturnDetail.Quantity <= 0 || _cashSalesReturnDetailService.GetTotalQuantityByCashSalesInvoiceDetailId(cashSalesReturnDetail.CashSalesInvoiceDetailId) > cashSalesInvoiceDetail.Quantity)
             {
                 cashSalesReturnDetail.Errors.Add("Quantity", "Quantity harus lebih besar dari 0 dan lebih kecil atau sama dengan CashSalesInvoiceDetail Quantity");
                 return cashSalesReturnDetail;
@@ -64,21 +68,21 @@ namespace Validation.Validation
             return cashSalesReturnDetail;
         }
 
-        public CashSalesReturnDetail VIsValidTotalPrice(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        /*public CashSalesReturnDetail VIsValidTotalPrice(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
             CashSalesInvoiceDetail cashSalesInvoiceDetail = _cashSalesInvoiceDetailService.GetObjectById(cashSalesReturnDetail.CashSalesInvoiceDetailId);
 
             if (cashSalesReturnDetail.TotalPrice < 0 || cashSalesReturnDetail.TotalPrice > (cashSalesInvoiceDetail.Amount / cashSalesInvoiceDetail.Quantity) * cashSalesReturnDetail.Quantity)
             {
-                cashSalesReturnDetail.Errors.Add("TotalPrice", "Harus lebih besar atau sama dengan 0 dan lebih kecil atau sama dengan CashSalesInvoiceDetail Amount");
+                cashSalesReturnDetail.Errors.Add("Generic", "TotalPrice Harus lebih besar atau sama dengan 0 dan lebih kecil atau sama dengan CashSalesInvoiceDetail Amount ( " + cashSalesInvoiceDetail.Amount + " )");
                 return cashSalesReturnDetail;
             }
             return cashSalesReturnDetail;
-        }
+        }*/
 
-        public CashSalesReturnDetail VConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        public CashSalesReturnDetail VConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService)
         {
-            VIsValidQuantity(cashSalesReturnDetail, _cashSalesInvoiceDetailService);
+            VIsValidQuantity(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService);
             return cashSalesReturnDetail;
         }
 
@@ -95,21 +99,26 @@ namespace Validation.Validation
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             VIsValidCashSalesInvoiceDetail(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
-            VIsValidQuantity(cashSalesReturnDetail, _cashSalesInvoiceDetailService);
+            VIsValidQuantity(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService);
             if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
-            VIsValidTotalPrice(cashSalesReturnDetail, _cashSalesInvoiceDetailService);
+            VIsNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
+            if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
+            //VIsValidTotalPrice(cashSalesReturnDetail, _cashSalesInvoiceDetailService);
             return cashSalesReturnDetail;
         }
 
         public CashSalesReturnDetail VUpdateObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService,
                                                       ICashSalesReturnDetailService _cashSalesReturnDetailService, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
         {
+            //VIsNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
+            //if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             return VCreateObject(cashSalesReturnDetail, _cashSalesReturnService, _cashSalesReturnDetailService, _cashSalesInvoiceDetailService);
         }
 
         public CashSalesReturnDetail VDeleteObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesReturnService _cashSalesReturnService)
         {
             VIsNotConfirmed(cashSalesReturnDetail, _cashSalesReturnService);
+            if (!isValid(cashSalesReturnDetail)) { return cashSalesReturnDetail; }
             return cashSalesReturnDetail;
         }
 
@@ -120,10 +129,10 @@ namespace Validation.Validation
             return isValid(cashSalesReturnDetail);
         }
 
-        public bool ValidConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService)
+        public bool ValidConfirmObject(CashSalesReturnDetail cashSalesReturnDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, ICashSalesReturnDetailService _cashSalesReturnDetailService)
         {
             cashSalesReturnDetail.Errors.Clear();
-            VConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService);
+            VConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService);
             return isValid(cashSalesReturnDetail);
         }
 

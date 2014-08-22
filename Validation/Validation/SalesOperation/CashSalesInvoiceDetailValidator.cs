@@ -20,6 +20,10 @@ namespace Validation.Validation
                     cashSalesInvoiceDetail.Errors.Add("Generic", "CashSalesInvoice tidak boleh terkonfirmasi");
                 }
             }
+            else
+            {
+                cashSalesInvoiceDetail.Errors.Add("Generic", "CashSalesInvoice tidak ada");
+            }
             return cashSalesInvoiceDetail;
         }
 
@@ -114,6 +118,8 @@ namespace Validation.Validation
             VHasItem(cashSalesInvoiceDetail, _itemService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VUniqueItem(cashSalesInvoiceDetail, _cashSalesInvoiceDetailService, _itemService);
+            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
+            VIsNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
             //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             //VHasQuantityPricing(cashSalesInvoiceDetail, _itemService, _quantityPricingService);
             return cashSalesInvoiceDetail;
@@ -123,6 +129,8 @@ namespace Validation.Validation
                                                       ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
                                                       IQuantityPricingService _quantityPricingService)
         {
+            //VIsNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
+            //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             return VCreateObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _itemService, _warehouseItemService, _quantityPricingService);
         }
 

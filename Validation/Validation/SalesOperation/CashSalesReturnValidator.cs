@@ -94,7 +94,7 @@ namespace Validation.Validation
                 foreach (var cashSalesReturnDetail in cashSalesReturnDetails)
                 {
                     cashSalesReturnDetail.Errors = new Dictionary<string, string>();
-                    if (!validator.ValidConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService))
+                    if (!validator.ValidConfirmObject(cashSalesReturnDetail, _cashSalesInvoiceDetailService, _cashSalesReturnDetailService))
                     {
                         cashSalesReturn.Errors.Add("Generic", "CashSalesReturnDetails harus confirmable semua");
                         return cashSalesReturn;

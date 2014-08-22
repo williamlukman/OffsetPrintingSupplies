@@ -9,65 +9,57 @@
 	}
 
 	function ReloadGrid() {
-		$("#list").setGridParam({ url: base_url + 'CashSalesInvoice/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#list").setGridParam({ url: base_url + 'CashSalesReturn/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
 	}
 
 	function ReloadGridDetail() {
-		$("#listdetail").setGridParam({ url: base_url + 'CashSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+		$("#listdetail").setGridParam({ url: base_url + 'CashSalesReturn/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
 	}
 
 	function ClearData() {
 		$('#Description').removeClass('errormessage');
 		$('#Code').removeClass('errormessage');
 		$('#form_btn_save').data('kode', '');
-		$('#item_btn_submit').data('kode', '');
+		$('#cashsalesinvoicedetail_btn_submit').data('kode', '');
 		ClearErrorMessage();
 	}
 
 	$("#form_div").dialog('close');
-	$("#item_div").dialog('close');
+	$("#cashsalesinvoicedetail_div").dialog('close');
 	$("#confirm_div").dialog('close');
 	$("#paid_div").dialog('close');
 	$("#lookup_div_cashbank").dialog('close');
-	$("#lookup_div_warehouse").dialog('close');
-	$("#lookup_div_item").dialog('close');
+	$("#lookup_div_cashsalesinvoice").dialog('close');
+	$("#lookup_div_cashsalesinvoicedetail").dialog('close');
 	$("#delete_confirm_div").dialog('close');
 
 
 	//GRID +++++++++++++++
 	$("#list").jqGrid({
-		url: base_url + 'CashSalesInvoice/GetList',
+		url: base_url + 'CashSalesReturn/GetList',
 		datatype: "json",
-		colNames: ['ID', 'Code', 'Description', 'Sales Date', 'Due Date',
-				   'Discount', 'Tax', 'Allowance', 'Is Confirmed', 'Confirmation Date', 'Amount Paid',
-				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
-				   'Total', 'CoGS', 'Warehouse ID', 'Warehouse Name',
-				   'Created At', 'Updated At', 'CashSalesInvoiceDetails', 'CashSalesReturns'],
+		colNames: ['ID', 'Code', 'Description', 'Return Date', 'CashSalesInvoice ID', 'CashSalesInvoice Code',
+				   'Allowance', 'Is Confirmed', 'Confirmation Date', 'Total',
+				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid',
+				   'Created At', 'Updated At', 'CashSalesReturnDetails'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
 				  { name: 'description', index: 'description', width: 100 },
-				  { name: 'salesdate', index: 'salesdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'discount', index: 'discount', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
-				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
-				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
+				  { name: 'returndate', index: 'returndate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 80 },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 100 },
+                  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
 				  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency' },
+				  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
 				  { name: 'cashbankid', index: 'cashbankid', width: 80 },
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'isfullpayment', index: 'isfullpayment', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
-				  { name: 'cogs', index: 'cogs', width: 80, formatter: 'currency' },
-				  { name: 'warehouseid', index: 'warehouseid', width: 80 },
-				  { name: 'warehouse', index: 'warehouse', width: 100 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'cashsalesinvoicedetails', index: 'cashsalesinvoicedetails', width: 80 },
-				  { name: 'cashsalesreturns', index: 'cashsalesreturns', width: 80 },
+				  { name: 'cashsalesreturndetails', index: 'cashsalesreturndetails', width: 80 },
 		],
 		page: '1',
 		pager: $('#pager'),
@@ -106,13 +98,6 @@
 					  rowIsPaid = "NO";
 				  }
 				  $(this).jqGrid('setRowData', ids[i], { ispaid: rowIsPaid });
-				  rowIsFullpayment = $(this).getRowData(cl).isfullpayment;
-				  if (rowIsFullpayment == 'true') {
-					  rowIsFullpayment = "YES";
-				  } else {
-					  rowIsFullpayment = "NO";
-				  }
-				  $(this).jqGrid('setRowData', ids[i], { isfullpayment: rowIsFullpayment });
 			  }
 		  }
 
@@ -132,18 +117,13 @@
 	$('#btn_add_new').click(function () {
 		ClearData();
 		clearForm('#frm');
-		$('#SalesDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-		$('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+		$('#ReturnDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
 		$('#Description').removeAttr('disabled');
 		$('#btnCashBank').removeAttr('disabled');
-		$('#btnWarehouse').removeAttr('disabled');
-		$('#Discount').removeAttr('disabled');
-		$('#Tax').removeAttr('disabled');
+		$('#btnCashSalesInvoice').removeAttr('disabled');
 		$('#Allowance').removeAttr('disabled');
-		$('#SalesDateDiv2').hide();
-		$('#SalesDateDiv').show();
-		$('#DueDateDiv2').hide();
-		$('#DueDateDiv').show();
+		$('#ReturnDateDiv2').hide();
+		$('#ReturnDateDiv').show();
 		vStatusSaving = 0; //add data mode
 		$('#form_btn_save').show();
 		$('#tabledetail_div').hide();
@@ -157,7 +137,7 @@
 		if (id) {
 			$.ajax({
 				dataType: "json",
-				url: base_url + "CashSalesInvoice/GetInfo?Id=" + id,
+				url: base_url + "CashSalesReturn/GetInfo?Id=" + id,
 				success: function (result) {
 					if (result.Id == null) {
 						$.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -177,25 +157,18 @@
 							$('#Description').val(result.Description);
 							$('#CashBankId').val(result.CashBankId);
 							$('#CashBankName').val(result.CashBank);
-							$('#WarehouseId').val(result.WarehouseId);
-							$('#WarehouseName').val(result.Warehouse);
-							$('#Discount').numberbox('setValue', result.Discount);
-							$('#Tax').numberbox('setValue', result.Tax);
+							$('#CashSalesInvoiceId').val(result.CashSalesInvoiceId);
+							$('#CashSalesInvoiceName').val(result.CashSalesInvoice);
 							$('#Allowance').numberbox('setValue', result.Allowance);
 							$('#Total').numberbox('setValue', result.Total);
-							$('#SalesDate2').val(dateEnt(result.SalesDate));
-							$('#DueDate2').val(dateEnt(result.DueDate));
+							$('#ReturnDate2').val(dateEnt(result.ReturnDate));
 							$('#Description').attr('disabled', true);
 							$('#btnCashBank').attr('disabled', true);
-							$('#btnWarehouse').attr('disabled', true);
-							$('#Discount').attr('disabled', true);
-							$('#Tax').attr('disabled', true);
+							$('#btnCashSalesInvoice').attr('disabled', true);
 							$('#Allowance').attr('disabled', true);
 							$('#Total').attr('disabled', true);
-							$('#SalesDateDiv').hide();
-							$('#SalesDateDiv2').show();
-							$('#DueDateDiv').hide();
-							$('#DueDateDiv2').show();
+							$('#ReturnDateDiv').hide();
+							$('#ReturnDateDiv2').show();
 							$('#form_btn_save').hide();
 							$('#tabledetail_div').show();
 							ReloadGridDetail();
@@ -217,7 +190,7 @@
 			vStatusSaving = 1;//edit data mode
 			$.ajax({
 				dataType: "json",
-				url: base_url + "CashSalesInvoice/GetInfo?Id=" + id,
+				url: base_url + "CashSalesReturn/GetInfo?Id=" + id,
 				success: function (result) {
 					if (result.Id == null) {
 						$.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -235,26 +208,19 @@
 							$('#id').val(result.Id);
 							$('#Code').val(result.Code);
 							$('#Description').val(result.Description);
-							$('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
-							$('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-							$('#Discount').numberbox('setValue', (result.Discount));
-							$('#Tax').numberbox('setValue', (result.Tax));
+							$('#ReturnDate').datebox('setValue', dateEnt(result.ReturnDate));
 							$('#Allowance').numberbox('setValue', (result.Allowance));
 							$('#Total').numberbox('setValue', (result.Total));
 							$('#CashBankId').val(result.CashBankId);
 							$('#CashBankName').val(result.CashBank);
-							$('#WarehouseId').val(result.WarehouseId);
-							$('#WarehouseName').val(result.Warehouse);
+							$('#CashSalesInvoiceId').val(result.CashSalesInvoiceId);
+							$('#CashSalesInvoiceName').val(result.CashSalesInvoice);
 							$('#Description').removeAttr('disabled');
 							$('#btnCashBank').removeAttr('disabled');
-							$('#btnWarehouse').removeAttr('disabled');
-							$('#Discount').removeAttr('disabled');
-							$('#Tax').removeAttr('disabled');
+							$('#btnCashSalesInvoice').removeAttr('disabled');
 							$('#Allowance').removeAttr('disabled');
-							$('#SalesDateDiv2').hide();
-							$('#SalesDateDiv').show();
-							$('#DueDateDiv2').hide();
-							$('#DueDateDiv').show();
+							$('#ReturnDateDiv2').hide();
+							$('#ReturnDateDiv').show();
 							$('#tabledetail_div').hide();
 							$('#form_btn_save').show();
 							$('#form_div').dialog('open');
@@ -272,8 +238,7 @@
 		if (id) {
 			var ret = jQuery("#list").jqGrid('getRowData', id);
 			$('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-			$('#confirmDiscount').numberbox('setValue', ret.discount);
-			$('#confirmTax').numberbox('setValue', ret.tax);
+			$('#confirmAllowance').numberbox('setValue', ret.allowance);
 			$('#idconfirm').val(ret.id);
 			$("#confirm_div").dialog("open");
 		} else {
@@ -288,7 +253,7 @@
 			$.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
 				if (r) {
 					$.ajax({
-						url: base_url + "CashSalesInvoice/UnConfirm",
+						url: base_url + "CashSalesReturn/UnConfirm",
 						type: "POST",
 						contentType: "application/json",
 						data: JSON.stringify({
@@ -322,12 +287,12 @@
 	$('#confirm_btn_submit').click(function () {
 		ClearErrorMessage();
 		$.ajax({
-			url: base_url + "CashSalesInvoice/Confirm",
+			url: base_url + "CashSalesReturn/Confirm",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify({
 				Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
-				Discount: $('#confirmDiscount').numberbox('getValue'), Tax: $('#confirmTax').numberbox('getValue'),
+				Allowance: $('#confirmAllowance').numberbox('getValue'),
 			}),
 			success: function (result) {
 				if (JSON.stringify(result.Errors) != '{}') {
@@ -358,7 +323,6 @@
 	    if (id) {
 	        var ret = jQuery("#list").jqGrid('getRowData', id);
 	        $('#paidAllowance').numberbox('setValue', ret.allowance);
-	        $('#AmountPaid').numberbox('setValue', ret.amountpaid);
 	        $('#paidTotal').numberbox('setValue', ret.total);
 	        $('#idpaid').val(ret.id);
 	        $("#paid_div").dialog("open");
@@ -374,7 +338,7 @@
 	        $.messager.confirm('Confirm', 'Are you sure you want to unpaid record?', function (r) {
 	            if (r) {
 	                $.ajax({
-	                    url: base_url + "CashSalesInvoice/UnPaid",
+	                    url: base_url + "CashSalesReturn/UnPaid",
 	                    type: "POST",
 	                    contentType: "application/json",
 	                    data: JSON.stringify({
@@ -408,12 +372,11 @@
 	$('#paid_btn_submit').click(function () {
 	    ClearErrorMessage();
 	    $.ajax({
-	        url: base_url + "CashSalesInvoice/Paid",
+	        url: base_url + "CashSalesReturn/Paid",
 	        type: "POST",
 	        contentType: "application/json",
 	        data: JSON.stringify({
-	            Id: $('#idpaid').val(), AmountPaid: $('#AmountPaid').numberbox('getValue'),
-	            Allowance: $('#paidAllowance').numberbox('getValue'),
+	            Id: $('#idpaid').val(), Allowance: $('#paidAllowance').numberbox('getValue'),
 	        }),
 	        success: function (result) {
 	            if (JSON.stringify(result.Errors) != '{}') {
@@ -464,7 +427,7 @@
 	$('#delete_confirm_btn_submit').click(function () {
 
 		$.ajax({
-			url: base_url + "CashSalesInvoice/Delete",
+			url: base_url + "CashSalesReturn/Delete",
 			type: "POST",
 			contentType: "application/json",
 			data: JSON.stringify({
@@ -507,11 +470,11 @@
 
 		// Update
 		if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-			submitURL = base_url + 'CashSalesInvoice/Update';
+			submitURL = base_url + 'CashSalesReturn/Update';
 		}
 			// Insert
 		else {
-			submitURL = base_url + 'CashSalesInvoice/Insert';
+			submitURL = base_url + 'CashSalesReturn/Insert';
 		}
 
 		$.ajax({
@@ -520,10 +483,8 @@
 			url: submitURL,
 			data: JSON.stringify({
 				Id: id, Code: $("#Code").val(), Description: $("#Description").val(),
-				SalesDate: $("#SalesDate").datebox('getValue'), DueDate: $("#DueDate").datebox('getValue'),
-				Discount: $("#Discount").numberbox('getValue'), Tax: $('#Tax').numberbox('getValue'),
-				Allowance: $('#Allowance').numberbox('getValue'),
-				CashBankId: $('#CashBankId').val(), WarehouseId: $('#WarehouseId').val(),
+				ReturnDate: $("#ReturnDate").datebox('getValue'), Allowance: $('#Allowance').numberbox('getValue'),
+				CashBankId: $('#CashBankId').val(), CashSalesInvoiceId: $('#CashSalesInvoiceId').val(),
 			}),
 			async: false,
 			cache: false,
@@ -560,17 +521,15 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id'],
+		colNames: ['Code', 'CashSalesReturn Id', 'CashSalesReturn Code', 'CashSalesInvoiceDetail Id', 'CashSalesInvoiceDetail Code', 'Quantity', 'TotalPrice'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 130, sortable: false },
-				  { name: 'cashsalesinvoicecode', index: 'cashsalesinvoicecode', width: 130, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 80, sortable: false },
-				  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
+				  { name: 'cashsalesreturnid', index: 'cashsalesreturnid', width: 130, sortable: false },
+				  { name: 'cashsalesreturncode', index: 'cashsalesreturncode', width: 130, sortable: false },
+				  { name: 'cashsalesinvoicedetailid', index: 'cashsalesinvoicedetailid', width: 130, sortable: false },
+				  { name: 'cashsalesinvoicedetailcode', index: 'cashsalesinvoicedetailcode', width: 130, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-				  { name: 'pricemutationid', index: 'pricemutationid', width: 80, sortable: false },
+				  { name: 'totalprice', index: 'totalprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
 		//page: '1',
 		//pager: $('#pagerdetail'),
@@ -592,36 +551,40 @@
 
 	$('#btn_add_new_detail').click(function () {
 		ClearData();
-		clearForm('#item_div');
-		$('#item_div').dialog('open');
+		clearForm('#cashsalesinvoicedetail_div');
+		$('#cashsalesinvoicedetail_div').dialog('open');
 	});
 
 	$('#btn_edit_detail').click(function () {
 		ClearData();
-		clearForm("#item_div");
+		clearForm("#cashsalesinvoicedetail_div");
 		var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
 		if (id) {
 			$.ajax({
 				dataType: "json",
-				url: base_url + "CashSalesInvoice/GetInfoDetail?Id=" + id,
+				url: base_url + "CashSalesReturn/GetInfoDetail?Id=" + id,
 				success: function (result) {
 					if (result.Id == null) {
 						$.messager.alert('Information', 'Data Not Found...!!', 'info');
 					}
 					else {
 						if (JSON.stringify(result.Errors) != '{}') {
-							var error = '';
-							for (var key in result.Errors) {
-								error = error + "<br>" + key + " " + result.Errors[key];
-							}
-							$.messager.alert('Warning', error, 'warning');
+						    for (var key in result.Errors) {
+						        if (key != null && key != undefined && key != 'Generic') {
+						            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+						            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+						        }
+						        else {
+						            $.messager.alert('Warning', result.Errors[key], 'warning');
+						        }
+						    }
 						}
 						else {
-							$("#item_btn_submit").data('kode', result.Id);
-							$('#ItemId').val(result.ItemId);
-							$('#Item').val(result.Item);
+							$("#cashsalesinvoicedetail_btn_submit").data('kode', result.Id);
+							$('#CashSalesInvoiceDetailId').val(result.CashSalesInvoiceDetailId);
+							$('#CashSalesInvoiceDetail').val(result.CashSalesInvoiceDetail);
 							$('#Quantity').val(result.Quantity);
-							$('#item_div').dialog('open');
+							$('#cashsalesinvoicedetail_div').dialog('open');
 						}
 					}
 				}
@@ -638,7 +601,7 @@
 			$.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
 				if (r) {
 					$.ajax({
-						url: base_url + "CashSalesInvoice/DeleteDetail",
+						url: base_url + "CashSalesReturn/DeleteDetail",
 						type: "POST",
 						contentType: "application/json",
 						data: JSON.stringify({
@@ -670,23 +633,23 @@
 			$.messager.alert('Information', 'Please Select Data...!!', 'info');
 		}
 	});
-	//--------------------------------------------------------Dialog Item-------------------------------------------------------------
-	// item_btn_submit
+	//--------------------------------------------------------Dialog CashSalesInvoiceDetail-------------------------------------------------------------
+	// cashsalesinvoicedetail_btn_submit
 
-	$("#item_btn_submit").click(function () {
+	$("#cashsalesinvoicedetail_btn_submit").click(function () {
 
 		ClearErrorMessage();
 
 		var submitURL = '';
-		var id = $("#item_btn_submit").data('kode');
+		var id = $("#cashsalesinvoicedetail_btn_submit").data('kode');
 
 		// Update
 		if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-			submitURL = base_url + 'CashSalesInvoice/UpdateDetail';
+			submitURL = base_url + 'CashSalesReturn/UpdateDetail';
 		}
 			// Insert
 		else {
-			submitURL = base_url + 'CashSalesInvoice/InsertDetail';
+			submitURL = base_url + 'CashSalesReturn/InsertDetail';
 		}
 
 		$.ajax({
@@ -694,7 +657,7 @@
 			type: 'POST',
 			url: submitURL,
 			data: JSON.stringify({
-				Id: id, CashSalesInvoiceId: $("#id").val(), CashSalesInvoiceDetailId: $("#CashSalesInvoiceDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+				Id: id, CashSalesReturnId: $("#id").val(), CashSalesReturnDetailId: $("#CashSalesReturnDetailId").val(), CashSalesInvoiceDetailId: $("#CashSalesInvoiceDetailId").val(), Quantity: $("#Quantity").val(),
 			}),
 			async: false,
 			cache: false,
@@ -718,19 +681,19 @@
 					$('#Total').val(result.Total);
 					ReloadGridDetail();
 					ReloadGrid();
-					$("#item_div").dialog('close')
+					$("#cashsalesinvoicedetail_div").dialog('close')
 				}
 			}
 		});
 	});
 
 
-	// item_btn_cancel
-	$('#item_btn_cancel').click(function () {
-		clearForm('#item_div');
-		$("#item_div").dialog('close');
+	// cashsalesinvoicedetail_btn_cancel
+	$('#cashsalesinvoicedetail_btn_cancel').click(function () {
+		clearForm('#cashsalesinvoicedetail_div');
+		$("#cashsalesinvoicedetail_div").dialog('close');
 	});
-	//--------------------------------------------------------END Dialog Item-------------------------------------------------------------
+	//--------------------------------------------------------END Dialog CashSalesInvoiceDetail-------------------------------------------------------------
 
 
 	function clearForm(form) {
@@ -805,28 +768,27 @@
 	
 	// ---------------------------------------------End Lookup CashBank----------------------------------------------------------------
 
-	// -------------------------------------------------------Look Up Warehouse-------------------------------------------------------
-	$('#btnWarehouse').click(function () {
-		var lookUpURL = base_url + 'MstWarehouse/GetList';
-		var lookupGrid = $('#lookup_table_warehouse');
+	// -------------------------------------------------------Look Up CashSalesInvoice-------------------------------------------------------
+	$('#btnCashSalesInvoice').click(function () {
+		var lookUpURL = base_url + 'CashSalesInvoice/GetList';
+		var lookupGrid = $('#lookup_table_cashsalesinvoice');
 		lookupGrid.setGridParam({
 			url: lookUpURL
 		}).trigger("reloadGrid");
-		$('#lookup_div_warehouse').dialog('open');
+		$('#lookup_div_cashsalesinvoice').dialog('open');
 	});
 
-	jQuery("#lookup_table_warehouse").jqGrid({
+	jQuery("#lookup_table_cashsalesinvoice").jqGrid({
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'Code', 'Name', 'Description'],
+		colNames: ['Id', 'Code', 'Description'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: 'right' },
 				  { name: 'code', index: 'code', width: 200 },
-				  { name: 'name', index: 'name', width: 200 },
 				  { name: 'description', index: 'description', width: 200 }],
 		page: '1',
-		pager: $('#lookup_pager_warehouse'),
+		pager: $('#lookup_pager_cashsalesinvoice'),
 		rowNum: 20,
 		rowList: [20, 30, 60],
 		sortname: 'id',
@@ -834,55 +796,61 @@
 		scrollrows: true,
 		shrinkToFit: false,
 		sortorder: "ASC",
-		width: $("#lookup_div_warehouse").width() - 10,
-		height: $("#lookup_div_warehouse").height() - 110,
+		width: $("#lookup_div_cashsalesinvoice").width() - 10,
+		height: $("#lookup_div_cashsalesinvoice").height() - 110,
 	});
-	$("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
+	$("#lookup_table_cashsalesinvoice").jqGrid('navGrid', '#lookup_toolbar_cashsalesinvoice', { del: false, add: false, edit: false, search: false })
 		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
 	// Cancel or CLose
-	$('#lookup_btn_cancel_warehouse').click(function () {
-		$('#lookup_div_warehouse').dialog('close');
+	$('#lookup_btn_cancel_cashsalesinvoice').click(function () {
+		$('#lookup_div_cashsalesinvoice').dialog('close');
 	});
 
 	// ADD or Select Data
-	$('#lookup_btn_add_warehouse').click(function () {
-		var id = jQuery("#lookup_table_warehouse").jqGrid('getGridParam', 'selrow');
+	$('#lookup_btn_add_cashsalesinvoice').click(function () {
+		var id = jQuery("#lookup_table_cashsalesinvoice").jqGrid('getGridParam', 'selrow');
 		if (id) {
-			var ret = jQuery("#lookup_table_warehouse").jqGrid('getRowData', id);
+			var ret = jQuery("#lookup_table_cashsalesinvoice").jqGrid('getRowData', id);
 
-			$('#WarehouseId').val(ret.id).data("kode", id);
-			$('#WarehouseName').val(ret.name);
+			$('#CashSalesInvoiceId').val(ret.id).data("kode", id);
+			$('#CashSalesInvoiceName').val(ret.code);
 
-			$('#lookup_div_warehouse').dialog('close');
+			$('#lookup_div_cashsalesinvoice').dialog('close');
 		} else {
 			$.messager.alert('Information', 'Please Select Data...!!', 'info');
 		};
 	});
 
 
-	// ---------------------------------------------End Lookup Warehouse----------------------------------------------------------------
+	// ---------------------------------------------End Lookup CashSalesInvoice----------------------------------------------------------------
 
-	// -------------------------------------------------------Look Up item-------------------------------------------------------
-	$('#btnItem').click(function () {
-		var lookUpURL = base_url + 'MstItem/GetList';
-		var lookupGrid = $('#lookup_table_item');
+	// -------------------------------------------------------Look Up cashsalesinvoicedetail-------------------------------------------------------
+	$('#btnCashSalesInvoiceDetail').click(function () {
+	    var lookUpURL = base_url + 'CashSalesInvoice/GetListDetail?Id=' + $('#CashSalesInvoiceId').val();
+		var lookupGrid = $('#lookup_table_cashsalesinvoicedetail');
 		lookupGrid.setGridParam({
 			url: lookUpURL
 		}).trigger("reloadGrid");
-		$('#lookup_div_item').dialog('open');
+		$('#lookup_div_cashsalesinvoicedetail').dialog('open');
 	});
 
-	jQuery("#lookup_table_item").jqGrid({
+	jQuery("#lookup_table_cashsalesinvoicedetail").jqGrid({
 		url: base_url,
 		datatype: "json",
 		mtype: 'GET',
-		colNames: ['Id', 'Name'],
+		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity'],
 		colModel: [
-				  { name: 'id', index: 'id', width: 80, align: 'right' },
-				  { name: 'name', index: 'name', width: 200 }],
+				  //{ name: 'id', index: 'id', width: 80, align: 'right' },
+				  { name: 'code', index: 'code', width: 200, align: 'right' },
+                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 200 },
+                  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 200 },
+                  { name: 'itemid', index: 'itemid', width: 200 },
+                  { name: 'item', index: 'item', width: 200 },
+                  { name: 'quantity', index: 'quantity', width: 200 },
+		],
 		page: '1',
-		pager: $('#lookup_pager_item'),
+		pager: $('#lookup_pager_cashsalesinvoicedetail'),
 		rowNum: 20,
 		rowList: [20, 30, 60],
 		sortname: 'id',
@@ -890,34 +858,34 @@
 		scrollrows: true,
 		shrinkToFit: false,
 		sortorder: "ASC",
-		width: $("#lookup_div_item").width() - 10,
-		height: $("#lookup_div_item").height() - 110,
+		width: $("#lookup_div_cashsalesinvoicedetail").width() - 10,
+		height: $("#lookup_div_cashsalesinvoicedetail").height() - 110,
 	});
-	$("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
+	$("#lookup_table_cashsalesinvoicedetail").jqGrid('navGrid', '#lookup_toolbar_cashsalesinvoicedetail', { del: false, add: false, edit: false, search: false })
 		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
 	// Cancel or CLose
-	$('#lookup_btn_cancel_item').click(function () {
-		$('#lookup_div_item').dialog('close');
+	$('#lookup_btn_cancel_cashsalesinvoicedetail').click(function () {
+		$('#lookup_div_cashsalesinvoicedetail').dialog('close');
 	});
 
 	// ADD or Select Data
-	$('#lookup_btn_add_item').click(function () {
-		var id = jQuery("#lookup_table_item").jqGrid('getGridParam', 'selrow');
+	$('#lookup_btn_add_cashsalesinvoicedetail').click(function () {
+		var id = jQuery("#lookup_table_cashsalesinvoicedetail").jqGrid('getGridParam', 'selrow');
 		if (id) {
-			var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
+			var ret = jQuery("#lookup_table_cashsalesinvoicedetail").jqGrid('getRowData', id);
 
-			$('#ItemId').val(ret.id).data("kode", id);
-			$('#Item').val(ret.name);
+			$('#CashSalesInvoiceDetailId').val(id).data("kode", id);
+			$('#CashSalesInvoiceDetail').val(ret.code);
 
-			$('#lookup_div_item').dialog('close');
+			$('#lookup_div_cashsalesinvoicedetail').dialog('close');
 		} else {
 			$.messager.alert('Information', 'Please Select Data...!!', 'info');
 		};
 	});
 
 
-	// ---------------------------------------------End Lookup item----------------------------------------------------------------
+	// ---------------------------------------------End Lookup cashsalesinvoicedetail----------------------------------------------------------------
 
 
 }); //END DOCUMENT READY

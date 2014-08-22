@@ -11,7 +11,7 @@ namespace Core.Interface.Repository
         IList<CashSalesReturnDetail> GetAll();
         IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int CashSalesReturnId);
         CashSalesReturnDetail GetObjectById(int Id);
-        CashSalesReturnDetail GetObjectByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);
+        IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);
         CashSalesReturnDetail ConfirmObject(CashSalesReturnDetail cashSalesReturnDetail);
         CashSalesReturnDetail UnconfirmObject(CashSalesReturnDetail cashSalesReturnDetail);
         CashSalesReturnDetail CreateObject(CashSalesReturnDetail cashSalesReturnDetail);
