@@ -31,7 +31,7 @@ namespace Data.Context
                                         { "PaymentVoucherDetail", "PaymentVoucher", "Payable", 
                                           "RetailPurchaseInvoice", "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail", "PurchaseInvoice",
                                           "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder",
-                                          "CustomPurchaseInvoice", "CustomPurchaseInvoiceDetail" };
+                                          "CustomPurchaseInvoice", "CustomPurchaseInvoiceDetail", "PaymentRequest" };
             IList<String> salesOperationNames = new List<String>()
                                         { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
                                           "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
@@ -121,6 +121,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CashSalesReturnDetailMapping());
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceMapping());
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceDetailMapping());
+            modelBuilder.Configurations.Add(new PaymentRequestMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -185,5 +186,6 @@ namespace Data.Context
         public DbSet<CashSalesReturnDetail> CashSalesReturnDetails { get; set; }
         public DbSet<CustomPurchaseInvoice> CustomPurchaseInvoices { get; set; }
         public DbSet<CustomPurchaseInvoiceDetail> CustomPurchaseInvoiceDetails { get; set; }
+        public DbSet<PaymentRequest> PaymentRequests { get; set; }
     }
 }

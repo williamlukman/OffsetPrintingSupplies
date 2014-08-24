@@ -22,20 +22,20 @@ namespace OffsetPrintingSupplies
             {
                 db.DeleteAllTables();
 
-                //DataBuilder d = new DataBuilder();
+                DataBuilder d = new DataBuilder();
                 //PurchaseBuilder p = new PurchaseBuilder();
                 //SalesBuilder s = new SalesBuilder();
                 //RetailPurchaseBuilder rpb = new RetailPurchaseBuilder();
                 //RetailSalesBuilder rsb = new RetailSalesBuilder();
-                CashSalesBuilder csb = new CashSalesBuilder();
+                //CashSalesBuilder csb = new CashSalesBuilder();
                 //CustomPurchaseBuilder cpb = new CustomPurchaseBuilder();
 
-                //DataFunction(d);
+                DataFunction(d);
                 //PurchaseFunction(p);
                 //SalesFunction(s);
                 //RetailPurchaseFunction(rpb);
                 //RetailSalesFunction(rsb);
-                CashSalesFunction(csb);
+                //CashSalesFunction(csb);
                 //CustomPurchaseFunction(cpb);
             }
         }
@@ -247,6 +247,17 @@ namespace OffsetPrintingSupplies
         public static void DataFunction(DataBuilder d)
         {
             d.PopulateData();
+
+            PaymentRequest nocontact = new PaymentRequest()
+            {
+                RequestedDate = DateTime.Now,
+                Description = "Tanpa Kontak",
+                DueDate = DateTime.Today.AddDays(14),
+                Amount = 200000,
+            };
+            nocontact = d._paymentRequestService.CreateObject(nocontact, d._contactService);
+
+            d._paymentRequestService.ConfirmObject(d.paymentRequest1, DateTime.Now, d._payableService);
 
             // End of Test
             Console.WriteLine("Press any key to stop...");

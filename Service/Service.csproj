@@ -46,6 +46,7 @@
     <Compile Include="Service\Finance\CashBankMutationService.cs" />
     <Compile Include="Service\Manufacturing\BarringOrderDetailService.cs" />
     <Compile Include="Service\Manufacturing\BarringOrderService.cs" />
+    <Compile Include="Service\PurchaseOperation\PaymentRequestService.cs" />
     <Compile Include="Service\PurchaseOperation\CustomPurchaseInvoiceService.cs" />
     <Compile Include="Service\PurchaseOperation\CustomPurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\PayableService.cs" />

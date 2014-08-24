@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CashSalesBuilder.cs" />
+    <Compile Include="SpecPaymentRequest.cs" />
     <Compile Include="SpecCustomPurchaseInvoice.cs" />
     <Compile Include="CustomPurchaseBuilder.cs" />
     <Compile Include="SpecCashSalesInvoice.cs" />

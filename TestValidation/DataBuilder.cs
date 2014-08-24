@@ -66,9 +66,12 @@ namespace TestValidation
         public IPriceMutationService _priceMutationService;
         public IContactGroupService _contactGroupService;
         public IGroupItemPriceService _groupItemPriceService;
+        public IPaymentRequestService _paymentRequestService;
 
         public ContactGroup baseGroup, contactGroup1;
         public GroupItemPrice groupItemPrice1;
+        public PaymentRequest paymentRequest1;
+        public CashBank cashBank1;
         public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
@@ -163,6 +166,7 @@ namespace TestValidation
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _groupItemPriceService = new GroupItemPriceService(new GroupItemPriceRepository(), new GroupItemPriceValidator());
+            _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
@@ -342,6 +346,10 @@ namespace TestValidation
                 Description = "Generic"
             };
             machine = _machineService.CreateObject(machine);
+
+            cashBank1 = _cashBankService.CreateObject("Cash", "Kontan", false);
+
+            paymentRequest1 = _paymentRequestService.CreateObject(contact.Id, "Pembayaran Listrik", 500000, DateTime.Now, DateTime.Today.AddDays(14), _contactService) ;
         }
 
         public void PopulateBuilders()

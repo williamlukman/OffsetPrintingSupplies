@@ -78,6 +78,7 @@ namespace Core.Constants
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
             public static string CashSalesReturn = "CashSalesReturn";
             public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
+            public static string PaymentRequest = "PaymentRequest";
         }
 
         public class ReceivableSource

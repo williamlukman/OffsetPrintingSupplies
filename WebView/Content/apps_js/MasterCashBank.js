@@ -27,12 +27,13 @@
     $("#list").jqGrid({
         url: base_url + 'MstCashBank/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Amount','Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Description', 'Amount', 'IsBank', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 80 },
                   { name: 'description', index: 'description', width: 250 },
                   { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'isbank', index: 'isbank', width: 100 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -49,6 +50,18 @@
         height: $(window).height() - 200,
         gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowIsBank = $(this).getRowData(cl).isbank;
+		          if (rowIsBank == 'true') {
+		              rowIsBank = "YES";
+		          } else {
+		              rowIsBank = "NO";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
+
+		      }
 		      //var ids = $(this).jqGrid('getDataIDs');
 		      //for (var i = 0; i < ids.length; i++) {
 		      //    var cl = ids[i];
@@ -110,6 +123,13 @@
                             $('#Name').val(result.model.Name);
                             $('#Description').val(result.model.Description);
                             $('#Amount').numberbox('setValue', (result.model.Amount));
+                            var e = document.getElementById("IsBank");
+                            if (result.IsBank == true) {
+                                e.selectedIndex = 1;
+                            }
+                            else {
+                                e.selectedIndex = 0;
+                            }
                             $('#form_div').dialog('open');
                         }
                     }
@@ -192,12 +212,16 @@
             submitURL = base_url + 'MstCashBank/Insert';
         }
 
+        var e = document.getElementById("IsBank");
+        var moving = e.options[e.selectedIndex].value;
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Description: $("#Description").val()
+                Id: id, Name: $("#Name").val(), Description: $("#Description").val(),
+                IsBank: moving,
             }),
             async: false,
             cache: false,

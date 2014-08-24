@@ -68,6 +68,7 @@ namespace WebView.Controllers
                             item.Name,
                             item.Description,
                             item.Amount,
+                            item.IsBank,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -91,7 +92,12 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Id,
+                model.Name,
+                model.Description,
+                model.Amount,
+                model.IsBank,
+                model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -122,6 +128,7 @@ namespace WebView.Controllers
                 var data = _cashBankService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
+                data.IsBank = model.IsBank;
                 model = _cashBankService.UpdateObject(data);
             }
             catch (Exception ex)
