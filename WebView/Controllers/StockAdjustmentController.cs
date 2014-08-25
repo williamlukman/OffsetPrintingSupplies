@@ -18,6 +18,7 @@ namespace WebView.Controllers
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private IWarehouseService _warehouseService;
         private IItemService _itemService;
+        private IUoMService _uomService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
@@ -28,6 +29,7 @@ namespace WebView.Controllers
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
@@ -79,11 +81,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.WarehouseId,
                             _warehouseService.GetObjectById(model.WarehouseId).Name,
-                            model.AdjustmentDate,
                             model.Description,
-                            model.IsConfirmed,
+                            model.AdjustmentDate,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -131,9 +131,10 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Code,
-                            model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
-                            model.Quantity
+                            model.Quantity,
+                            _uomService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

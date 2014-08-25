@@ -80,7 +80,7 @@ namespace Validation.Validation
             CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
             if (sourceCashBank.Amount - cashBankMutation.Amount < 0)
             {
-                cashBankMutation.Errors.Add("Amount", "Tidak boleh melebihi jumlah amount dari source CashBank");
+                cashBankMutation.Errors.Add("Generic", "Tidak boleh melebihi jumlah amount dari source CashBank");
             }
             return cashBankMutation;
         }
@@ -90,7 +90,7 @@ namespace Validation.Validation
             CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
             if (targetCashBank.Amount - cashBankMutation.Amount < 0)
             {
-                cashBankMutation.Errors.Add("Amount", "Tidak boleh melebihi jumlah amount dari target CashBank");
+                cashBankMutation.Errors.Add("Generic", "Tidak boleh melebihi jumlah amount dari target CashBank");
             }
             return cashBankMutation;
         }

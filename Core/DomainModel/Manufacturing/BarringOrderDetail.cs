@@ -8,6 +8,8 @@ namespace Core.DomainModel
     public partial class BarringOrderDetail
     {
         public int Id { get; set; }
+        // TODO
+        // public string Code { get; set; }
         public int BarringOrderId { get; set; }
         public int BarringId { get; set; }
 

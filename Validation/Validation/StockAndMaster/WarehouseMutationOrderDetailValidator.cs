@@ -8,209 +8,209 @@ using Core.Interface.Service;
 
 namespace Validation.Validation
 {
-    public class WarehouseMutationOrderDetailValidator : IWarehouseMutationOrderDetailValidator
+    public class WarehouseMutationDetailValidator : IWarehouseMutationDetailValidator
     {
-        public WarehouseMutationOrderDetail VHasWarehouseMutationOrder(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService)
+        public WarehouseMutationDetail VHasWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService)
         {
-            WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            if (warehouseMutationOrder == null)
+            WarehouseMutation WarehouseMutation = _WarehouseMutationService.GetObjectById(WarehouseMutationDetail.WarehouseMutationId);
+            if (WarehouseMutation == null)
             {
-                warehouseMutationOrderDetail.Errors.Add("WarehouseMutationOrderId", "Tidak terasosiasi dengan Stock Adjustment");
+                WarehouseMutationDetail.Errors.Add("WarehouseMutationId", "Tidak terasosiasi dengan Stock Adjustment");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VHasWarehouseItemFrom(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationDetail VHasWarehouseItemFrom(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService, IWarehouseItemService _warehouseItemService)
         {
-            WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
+            WarehouseMutation WarehouseMutation = _WarehouseMutationService.GetObjectById(WarehouseMutationDetail.WarehouseMutationId);
+            WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseFromId, WarehouseMutationDetail.ItemId);
             if (warehouseItemFrom == null)
             {
-                warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak terasosiasi dengan item dari warehouse yang sebelum");
+                WarehouseMutationDetail.Errors.Add("Generic", "Tidak terasosiasi dengan item dari warehouse yang sebelum");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VHasWarehouseItemTo(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationDetail VHasWarehouseItemTo(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService, IWarehouseItemService _warehouseItemService)
         {
-            WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, warehouseMutationOrderDetail.ItemId);
+            WarehouseMutation WarehouseMutation = _WarehouseMutationService.GetObjectById(WarehouseMutationDetail.WarehouseMutationId);
+            WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseToId, WarehouseMutationDetail.ItemId);
             if (warehouseItemTo == null)
             {
-                warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak terasosiasi dengan item dari warehouse yang dituju");
+                WarehouseMutationDetail.Errors.Add("Generic", "Tidak terasosiasi dengan item dari warehouse yang dituju");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VUniqueItem(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService)
+        public WarehouseMutationDetail VUniqueItem(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationDetailService _WarehouseMutationDetailService, IItemService _itemService)
         {
-            IList<WarehouseMutationOrderDetail> details = _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(warehouseMutationOrderDetail.WarehouseMutationOrderId);
+            IList<WarehouseMutationDetail> details = _WarehouseMutationDetailService.GetObjectsByWarehouseMutationId(WarehouseMutationDetail.WarehouseMutationId);
             foreach (var detail in details)
             {
-                if (detail.ItemId == warehouseMutationOrderDetail.ItemId && detail.Id != warehouseMutationOrderDetail.Id)
+                if (detail.ItemId == WarehouseMutationDetail.ItemId && detail.Id != WarehouseMutationDetail.Id)
                 {
-                     warehouseMutationOrderDetail.Errors.Add("Generic", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
+                     WarehouseMutationDetail.Errors.Add("Generic", "Tidak boleh ada duplikasi item dalam 1 Stock Adjustment");
                 }
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VNonNegativeNorZeroQuantity(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationDetail VNonNegativeNorZeroQuantity(WarehouseMutationDetail WarehouseMutationDetail)
         {
-            if (warehouseMutationOrderDetail.Quantity <= 0)
+            if (WarehouseMutationDetail.Quantity <= 0)
             {
-                warehouseMutationOrderDetail.Errors.Add("Quantity", "Tidak boleh negatif atau 0");
+                WarehouseMutationDetail.Errors.Add("Quantity", "Tidak boleh negatif atau 0");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VWarehouseMutationOrderHasBeenConfirmed(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService)
+        public WarehouseMutationDetail VWarehouseMutationHasBeenConfirmed(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService)
         {
-            WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            if (!warehouseMutationOrder.IsConfirmed)
+            WarehouseMutation WarehouseMutation = _WarehouseMutationService.GetObjectById(WarehouseMutationDetail.WarehouseMutationId);
+            if (!WarehouseMutation.IsConfirmed)
             {
-                warehouseMutationOrderDetail.Errors.Add("Generic", "WarehouseMutationOrder harus sudah dikonfirmasi");
+                WarehouseMutationDetail.Errors.Add("Generic", "WarehouseMutation harus sudah dikonfirmasi");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VHasNotBeenConfirmed(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationDetail VHasNotBeenConfirmed(WarehouseMutationDetail WarehouseMutationDetail)
         {
-            if (warehouseMutationOrderDetail.IsConfirmed)
+            if (WarehouseMutationDetail.IsConfirmed)
             {
-                warehouseMutationOrderDetail.Errors.Add("IsConfirmed", "Tidak boleh sudah selesai.");
+                WarehouseMutationDetail.Errors.Add("IsConfirmed", "Tidak boleh sudah selesai.");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VHasBeenConfirmed(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationDetail VHasBeenConfirmed(WarehouseMutationDetail WarehouseMutationDetail)
         {
-            if (!warehouseMutationOrderDetail.IsConfirmed)
+            if (!WarehouseMutationDetail.IsConfirmed)
             {
-                warehouseMutationOrderDetail.Errors.Add("IsConfirmed", "Harus sudah selesai.");
+                WarehouseMutationDetail.Errors.Add("IsConfirmed", "Harus sudah selesai.");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VNonNegativeStockQuantity(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public WarehouseMutationDetail VNonNegativeStockQuantity(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
                                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseConfirm)
         {
-            WarehouseMutationOrder warehouseMutationOrder = _warehouseMutationOrderService.GetObjectById(warehouseMutationOrderDetail.WarehouseMutationOrderId);
-            WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseFromId, warehouseMutationOrderDetail.ItemId);
-            WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(warehouseMutationOrder.WarehouseToId, warehouseMutationOrderDetail.ItemId);
+            WarehouseMutation WarehouseMutation = _WarehouseMutationService.GetObjectById(WarehouseMutationDetail.WarehouseMutationId);
+            WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseFromId, WarehouseMutationDetail.ItemId);
+            WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(WarehouseMutation.WarehouseToId, WarehouseMutationDetail.ItemId);
             int Quantity = CaseConfirm ? warehouseItemFrom.Quantity : warehouseItemTo.Quantity;
-            if ( Quantity < warehouseMutationOrderDetail.Quantity)
+            if ( Quantity < WarehouseMutationDetail.Quantity)
             {
-                warehouseMutationOrderDetail.Errors.Add("Quantity", "Stock barang tidak boleh kurang dari jumlah mutasi barang");
-                return warehouseMutationOrderDetail;
+                WarehouseMutationDetail.Errors.Add("Quantity", "Stock barang tidak boleh kurang dari jumlah mutasi barang");
+                return WarehouseMutationDetail;
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VCreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                          IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationDetail VCreateObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
+                                                          IWarehouseMutationDetailService _WarehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            VHasWarehouseMutationOrder(warehouseMutationOrderDetail, _warehouseMutationOrderService);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VHasWarehouseItemFrom(warehouseMutationOrderDetail, _warehouseMutationOrderService, _warehouseItemService);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VHasWarehouseItemTo(warehouseMutationOrderDetail, _warehouseMutationOrderService, _warehouseItemService);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VNonNegativeNorZeroQuantity(warehouseMutationOrderDetail);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VUniqueItem(warehouseMutationOrderDetail, _warehouseMutationOrderDetailService, _itemService);
-            return warehouseMutationOrderDetail;
+            VHasWarehouseMutation(WarehouseMutationDetail, _WarehouseMutationService);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VHasWarehouseItemFrom(WarehouseMutationDetail, _WarehouseMutationService, _warehouseItemService);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VHasWarehouseItemTo(WarehouseMutationDetail, _WarehouseMutationService, _warehouseItemService);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VNonNegativeNorZeroQuantity(WarehouseMutationDetail);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VUniqueItem(WarehouseMutationDetail, _WarehouseMutationDetailService, _itemService);
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VUpdateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                                          IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationDetail VUpdateObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
+                                                          IWarehouseMutationDetailService _WarehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            VHasNotBeenConfirmed(warehouseMutationOrderDetail);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VCreateObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _warehouseMutationOrderDetailService, _itemService, _warehouseItemService);
-            return warehouseMutationOrderDetail;
+            VHasNotBeenConfirmed(WarehouseMutationDetail);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VCreateObject(WarehouseMutationDetail, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _warehouseItemService);
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VDeleteObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationDetail VDeleteObject(WarehouseMutationDetail WarehouseMutationDetail)
         {
-            VHasNotBeenConfirmed(warehouseMutationOrderDetail);
-            return warehouseMutationOrderDetail;
+            VHasNotBeenConfirmed(WarehouseMutationDetail);
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VHasConfirmationDate(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public WarehouseMutationDetail VHasConfirmationDate(WarehouseMutationDetail WarehouseMutationDetail)
         {
-            if (warehouseMutationOrderDetail.ConfirmationDate == null)
+            if (WarehouseMutationDetail.ConfirmationDate == null)
             {
-                warehouseMutationOrderDetail.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+                WarehouseMutationDetail.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
             }
-            return warehouseMutationOrderDetail;
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public WarehouseMutationDetail VConfirmObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            VHasConfirmationDate(warehouseMutationOrderDetail);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, true);
-            return warehouseMutationOrderDetail;
+            VHasConfirmationDate(WarehouseMutationDetail);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VNonNegativeStockQuantity(WarehouseMutationDetail, _WarehouseMutationService, _itemService, _barringService, _warehouseItemService, true);
+            return WarehouseMutationDetail;
         }
 
-        public WarehouseMutationOrderDetail VUnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public WarehouseMutationDetail VUnconfirmObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            VWarehouseMutationOrderHasBeenConfirmed(warehouseMutationOrderDetail, _warehouseMutationOrderService);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VHasBeenConfirmed(warehouseMutationOrderDetail);
-            if (!isValid(warehouseMutationOrderDetail)) { return warehouseMutationOrderDetail; }
-            VNonNegativeStockQuantity(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService, false);
-            return warehouseMutationOrderDetail;
+            VWarehouseMutationHasBeenConfirmed(WarehouseMutationDetail, _WarehouseMutationService);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VHasBeenConfirmed(WarehouseMutationDetail);
+            if (!isValid(WarehouseMutationDetail)) { return WarehouseMutationDetail; }
+            VNonNegativeStockQuantity(WarehouseMutationDetail, _WarehouseMutationService, _itemService, _barringService, _warehouseItemService, false);
+            return WarehouseMutationDetail;
         }
 
-        public bool ValidCreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                      IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        public bool ValidCreateObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
+                                      IWarehouseMutationDetailService _WarehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            VCreateObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _warehouseMutationOrderDetailService, _itemService, _warehouseItemService);
-            return isValid(warehouseMutationOrderDetail);
+            VCreateObject(WarehouseMutationDetail, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _warehouseItemService);
+            return isValid(WarehouseMutationDetail);
         }
 
-        public bool ValidUpdateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
-                                      IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        public bool ValidUpdateObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
+                                      IWarehouseMutationDetailService _WarehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
-            warehouseMutationOrderDetail.Errors.Clear();
-            VUpdateObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _warehouseMutationOrderDetailService, _itemService, _warehouseItemService);
-            return isValid(warehouseMutationOrderDetail);
+            WarehouseMutationDetail.Errors.Clear();
+            VUpdateObject(WarehouseMutationDetail, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _warehouseItemService);
+            return isValid(WarehouseMutationDetail);
         }
 
-        public bool ValidDeleteObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail)
+        public bool ValidDeleteObject(WarehouseMutationDetail WarehouseMutationDetail)
         {
-            warehouseMutationOrderDetail.Errors.Clear();
-            VDeleteObject(warehouseMutationOrderDetail);
-            return isValid(warehouseMutationOrderDetail);
+            WarehouseMutationDetail.Errors.Clear();
+            VDeleteObject(WarehouseMutationDetail);
+            return isValid(WarehouseMutationDetail);
         }
 
-        public bool ValidConfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public bool ValidConfirmObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            warehouseMutationOrderDetail.Errors.Clear();
-            VConfirmObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService);
-            return isValid(warehouseMutationOrderDetail);
+            WarehouseMutationDetail.Errors.Clear();
+            VConfirmObject(WarehouseMutationDetail, _WarehouseMutationService, _itemService, _barringService, _warehouseItemService);
+            return isValid(WarehouseMutationDetail);
         }
 
-        public bool ValidUnconfirmObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,
+        public bool ValidUnconfirmObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            warehouseMutationOrderDetail.Errors.Clear();
-            VUnconfirmObject(warehouseMutationOrderDetail, _warehouseMutationOrderService, _itemService, _barringService, _warehouseItemService);
-            return isValid(warehouseMutationOrderDetail);
+            WarehouseMutationDetail.Errors.Clear();
+            VUnconfirmObject(WarehouseMutationDetail, _WarehouseMutationService, _itemService, _barringService, _warehouseItemService);
+            return isValid(WarehouseMutationDetail);
         }
 
-        public bool isValid(WarehouseMutationOrderDetail obj)
+        public bool isValid(WarehouseMutationDetail obj)
         {
             bool isValid = !obj.Errors.Any();
             return isValid;
         }
 
-        public string PrintError(WarehouseMutationOrderDetail obj)
+        public string PrintError(WarehouseMutationDetail obj)
         {
             string erroroutput = "";
             KeyValuePair<string, string> first = obj.Errors.ElementAt(0);

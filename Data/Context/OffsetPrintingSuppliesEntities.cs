@@ -36,7 +36,7 @@ namespace Data.Context
                                           "RetailSalesInvoice", "RetailSalesInvoiceDetail", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
             IList<String> stockAndMasterNames = new List<String>()
-                                        {  "PriceMutation", "StockMutation", "WarehouseMutationOrderDetail", "WarehouseMutationOrder",
+                                        {  "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
                                           "Warehouse", "Barring", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
@@ -110,8 +110,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new UoMMapping());
             modelBuilder.Configurations.Add(new WarehouseMapping());
             modelBuilder.Configurations.Add(new WarehouseItemMapping());
-            modelBuilder.Configurations.Add(new WarehouseMutationOrderMapping());
-            modelBuilder.Configurations.Add(new WarehouseMutationOrderDetailMapping());
+            modelBuilder.Configurations.Add(new WarehouseMutationMapping());
+            modelBuilder.Configurations.Add(new WarehouseMutationDetailMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -162,8 +162,8 @@ namespace Data.Context
         public DbSet<UoM> UoMs { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseItem> WarehouseItems { get; set; }
-        public DbSet<WarehouseMutationOrder> WarehouseMutationOrders { get; set; }
-        public DbSet<WarehouseMutationOrderDetail> WarehouseMutationOrderDetails { get; set; }
+        public DbSet<WarehouseMutation> WarehouseMutations { get; set; }
+        public DbSet<WarehouseMutationDetail> WarehouseMutationDetails { get; set; }
         public DbSet<PriceMutation> PriceMutations { get; set; }
         public DbSet<RetailPurchaseInvoice> RetailPurchaseInvoices { get; set; }
         public DbSet<RetailPurchaseInvoiceDetail> RetailPurchaseInvoiceDetails { get; set; }

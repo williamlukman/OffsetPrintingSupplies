@@ -10,9 +10,9 @@ using Data.Repository;
 using Validation.Validation;
 namespace WebView.Controllers
 {
-    public class BarringWorkOrderController : Controller
+    public class BarringWorkProcessController : Controller
     {
-      private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("BarringWorkOrderController");
+      private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("BarringWorkProcessController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
@@ -22,7 +22,7 @@ namespace WebView.Controllers
         private IBarringOrderDetailService _barringOrderDetailService;
         private IContactService _contactService;
 
-        public BarringWorkOrderController()
+        public BarringWorkProcessController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());

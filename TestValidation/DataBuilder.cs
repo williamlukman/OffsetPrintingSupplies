@@ -60,8 +60,8 @@ namespace TestValidation
         public IUoMService _uomService;
         public IWarehouseItemService _warehouseItemService;
         public IWarehouseService _warehouseService;
-        public IWarehouseMutationOrderService _warehouseMutationOrderService;
-        public IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService;
+        public IWarehouseMutationService _warehouseMutationService;
+        public IWarehouseMutationDetailService _warehouseMutationDetailService;
 
         public IPriceMutationService _priceMutationService;
         public IContactGroupService _contactGroupService;
@@ -92,8 +92,8 @@ namespace TestValidation
         public Barring barring1, barring2, barring3;
         public BarringOrder barringOrderContact;
         public BarringOrderDetail barringODContact1, barringODContact2, barringODContact3, barringODContact4; 
-        public WarehouseMutationOrder warehouseMutationOrder;
-        public WarehouseMutationOrderDetail wmoDetail1, wmoDetail2, wmoDetail3, wmoDetail4, wmoDetail5, wmoDetail6,
+        public WarehouseMutation warehouseMutation;
+        public WarehouseMutationDetail wmoDetail1, wmoDetail2, wmoDetail3, wmoDetail4, wmoDetail5, wmoDetail6,
                                             wmoDetail7, wmoDetail8, wmoDetail9;
         public RollerWarehouseMutation rollerWarehouseMutationContact, rollerWarehouseMutationInHouse;
         public RollerWarehouseMutationDetail rwmDetailContact1, rwmDetailContact2, rwmDetailContact3,
@@ -155,8 +155,8 @@ namespace TestValidation
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-            _warehouseMutationOrderService = new WarehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
-            _warehouseMutationOrderDetailService = new WarehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
+            _warehouseMutationService = new WarehouseMutationService(new WarehouseMutationRepository(), new WarehouseMutationValidator());
+            _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -609,90 +609,90 @@ namespace TestValidation
 
         public void PopulateWarehouseMutationForRollerIdentificationAndRecovery()
         {
-            warehouseMutationOrder = new WarehouseMutationOrder()
+            warehouseMutation = new WarehouseMutation()
             {
                 WarehouseFromId = localWarehouse.Id,
                 WarehouseToId = movingWarehouse.Id,
                 MutationDate = DateTime.Now
             };
-            warehouseMutationOrder = _warehouseMutationOrderService.CreateObject(warehouseMutationOrder, _warehouseService);
+            warehouseMutation = _warehouseMutationService.CreateObject(warehouseMutation, _warehouseService);
 
-            wmoDetail1 = new WarehouseMutationOrderDetail()
+            wmoDetail1 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = coreBuilder1.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail1 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail1, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail1 = _warehouseMutationDetailService.CreateObject(wmoDetail1, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail2 = new WarehouseMutationOrderDetail()
+            wmoDetail2 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = coreBuilder2.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail2 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail2, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail2 = _warehouseMutationDetailService.CreateObject(wmoDetail2, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail3 = new WarehouseMutationOrderDetail()
+            wmoDetail3 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = coreBuilder3.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail3 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail3, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail3 = _warehouseMutationDetailService.CreateObject(wmoDetail3, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail4 = new WarehouseMutationOrderDetail()
+            wmoDetail4 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = itemCompound.Id,
                 Quantity = 500
             };
-            wmoDetail4 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail4, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail4 = _warehouseMutationDetailService.CreateObject(wmoDetail4, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail5 = new WarehouseMutationOrderDetail()
+            wmoDetail5 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = itemCompound1.Id,
                 Quantity = 500
             };
-            wmoDetail5 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail5, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail5 = _warehouseMutationDetailService.CreateObject(wmoDetail5, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail6 = new WarehouseMutationOrderDetail()
+            wmoDetail6 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = itemCompound2.Id,
                 Quantity = 500
             };
-            wmoDetail6 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail6, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail6 = _warehouseMutationDetailService.CreateObject(wmoDetail6, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail7 = new WarehouseMutationOrderDetail()
+            wmoDetail7 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = itemAccessory1.Id,
                 Quantity = 1
             };
-            wmoDetail7 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail7, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail7 = _warehouseMutationDetailService.CreateObject(wmoDetail7, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail8 = new WarehouseMutationOrderDetail()
+            wmoDetail8 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = barring3.Id,
                 Quantity = 1
             };
-            wmoDetail8 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail8, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail8 = _warehouseMutationDetailService.CreateObject(wmoDetail8, _warehouseMutationService, _itemService, _warehouseItemService);
 
-            wmoDetail9 = new WarehouseMutationOrderDetail()
+            wmoDetail9 = new WarehouseMutationDetail()
             {
-                WarehouseMutationOrderId = warehouseMutationOrder.Id,
+                WarehouseMutationId = warehouseMutation.Id,
                 ItemId = coreBuilder4.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail9 = _warehouseMutationOrderDetailService.CreateObject(wmoDetail9, _warehouseMutationOrderService, _itemService, _warehouseItemService);
+            wmoDetail9 = _warehouseMutationDetailService.CreateObject(wmoDetail9, _warehouseMutationService, _itemService, _warehouseItemService);
         }
 
         public void PopulateCoreIdentifications()
         {
-            warehouseMutationOrder = _warehouseMutationOrderService.ConfirmObject(warehouseMutationOrder, DateTime.Today, _warehouseMutationOrderDetailService, _itemService,
+            warehouseMutation = _warehouseMutationService.ConfirmObject(warehouseMutation, DateTime.Today, _warehouseMutationDetailService, _itemService,
                                                                                   _barringService, _warehouseItemService, _stockMutationService);
             
             coreIdentification = new CoreIdentification()

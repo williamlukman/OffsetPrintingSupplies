@@ -138,8 +138,8 @@
     <Compile Include="Repository\StockAndMaster\StockAdjustmentDetailRepository.cs" />
     <Compile Include="Repository\StockAndMaster\StockAdjustmentRepository.cs" />
     <Compile Include="Repository\StockAndMaster\StockMutationRepository.cs" />
-    <Compile Include="Repository\StockAndMaster\WarehouseMutationOrderDetailRepository.cs" />
-    <Compile Include="Repository\StockAndMaster\WarehouseMutationOrderRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\WarehouseMutationDetailRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\WarehouseMutationRepository.cs" />
     <Compile Include="Repository\StockAndMaster\WarehouseItemRepository.cs" />
     <Compile Include="Repository\StockAndMaster\WarehouseRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CoreBuilderRepository.cs" />

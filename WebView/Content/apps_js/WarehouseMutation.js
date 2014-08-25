@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'WarehouseMutation/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'WarehouseMutationOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'WarehouseMutation/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -47,22 +47,18 @@
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'WarehouseMutationOrder/GetList',
+        url: base_url + 'WarehouseMutation/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse From Id', 'Warehouse From Name', 'Warehouse To Id', 'Warehouse To Name','Mutation Date',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'From:' , 'To:','Mutation Date', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'warehousetoid', index: 'warehouseid', width: 150, align: "center" },
-                  { name: 'warehousetoname', index: 'warehousename', width: 150 },
-                  { name: 'warehousefromid', index: 'warehouseid', width: 150 , align: "center"},
+    			  { name: 'id', index: 'id', width: 40, align: "center" },
+                  { name: 'code', index: 'code', width: 60 },
                   { name: 'warehousefromname', index: 'warehousename', width: 150 },
+                  { name: 'warehousetoname', index: 'warehousename', width: 150 },
                   { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -126,7 +122,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "WarehouseMutationOrder/GetInfo?Id=" + id,
+                url: base_url + "WarehouseMutation/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -135,7 +131,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -175,7 +171,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "WarehouseMutationOrder/GetInfo?Id=" + id,
+                url: base_url + "WarehouseMutation/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -184,7 +180,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -233,7 +229,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "WarehouseMutationOrder/Unconfirm",
+                        url: base_url + "WarehouseMutation/Unconfirm",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -268,7 +264,7 @@
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
         $.ajax({
-            url: base_url + "WarehouseMutationOrder/Confirm",
+            url: base_url + "WarehouseMutation/Confirm",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -319,7 +315,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "WarehouseMutationOrder/Delete",
+            url: base_url + "WarehouseMutation/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -359,11 +355,11 @@
     
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'WarehouseMutationOrder/Update';
+            submitURL = base_url + 'WarehouseMutation/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'WarehouseMutationOrder/Insert';
+            submitURL = base_url + 'WarehouseMutation/Insert';
         }
 
         $.ajax({
@@ -404,13 +400,14 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity',
+        colNames: ['Code', 'Sku', 'Name', 'QTY', 'UoM'
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'code', index: 'code', width: 60, sortable: false },
+				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 120, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'uom', index: 'uom', width: 40, sortable: false }
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -443,7 +440,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "WarehouseMutationOrder/GetInfoDetail?Id=" + id,
+                url: base_url + "WarehouseMutation/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -452,7 +449,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -478,7 +475,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "WarehouseMutationOrder/DeleteDetail",
+                        url: base_url + "WarehouseMutation/DeleteDetail",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -520,11 +517,11 @@
         
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'WarehouseMutationOrder/UpdateDetail';
+            submitURL = base_url + 'WarehouseMutation/UpdateDetail';
         }
             // Insert
         else {
-            submitURL = base_url + 'WarehouseMutationOrder/InsertDetail';
+            submitURL = base_url + 'WarehouseMutation/InsertDetail';
         }
 
         $.ajax({
@@ -532,7 +529,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, WarehouseMutationOrderId: $("#id").val(), ItemId: $("#ItemId").val(),
+                Id: id, WarehouseMutationId: $("#id").val(), ItemId: $("#ItemId").val(),
                 Quantity: $("#Quantity").numberbox('getValue')
             }),
             async: false,

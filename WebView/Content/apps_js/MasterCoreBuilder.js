@@ -29,21 +29,22 @@
     $("#list").jqGrid({
         url: base_url + 'MstCoreBuilder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Category', 'UoM Id', 'UoM',
-                   'Base Sku', 'Sku UsedCore', 'Sku NewCore', 'UsedCore Quantity', 'NewCore Quantity','Created At', 'Updated At'],
+        colNames: ['ID', 'Base Sku', 'Name', 'Category',
+                    'Sku Used', 'QTY', 'UoM',
+                    'Sku New', 'QTY', 'UoM', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
+    			  { name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'basesku', index: 'basesku', width: 60 },
 				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'category', index: 'category', width: 80 },
-                  { name: 'uomid', index: 'uomid', width: 100 },
-                  { name: 'uom', index: 'uom', width: 100 },
-                  { name: 'basesku', index: 'basesku', width: 80 },
-                  { name: 'skuusedcore', index: 'skuusedcore', width: 100 },
-                  { name: 'skunewcore', index: 'skunewcore', width: 100 },
-                  { name: 'usedcorequantity', index: 'usedcorequantity', width: 117, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'newcorequantity', index: 'newcorequantity', width: 117, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'category', index: 'category', width: 70 },
+                  { name: 'skuusedcore', index: 'skuusedcore', width: 80 },
+                  { name: 'usedcorequantity', index: 'usedcorequantity', width: 30, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 30 },
+                  { name: 'skunewcore', index: 'skunewcore', width: 75 },
+                  { name: 'newcorequantity', index: 'newcorequantity', width: 30, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 30 },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -96,7 +97,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }

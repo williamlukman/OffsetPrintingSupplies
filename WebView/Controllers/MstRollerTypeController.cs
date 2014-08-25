@@ -93,7 +93,10 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Id,
+                model.Name,
+                model.Description,
+                model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 

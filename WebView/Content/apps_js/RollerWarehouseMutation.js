@@ -52,26 +52,26 @@
     $("#list").jqGrid({
         url: base_url + 'RollerWarehouseMutation/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'RollerIdentification Id', 'RollerIdentification Code', 'WarehouseFrom Id',
-                    'WarehouseFrom Code', 'WarehouseFrom Name', 'WarehouseTo Id', 'WarehouseTo Code',
-                    'WarehouseTo Name','Quantity','Is Confirmed','Confirmation Date','Created At','Updated At'
+        colNames: ['ID', 'Code', 'RollerIdentification Id', 'RIF', 'WarehouseFrom Id',
+                    'WarehouseFrom Code', 'From', 'WarehouseTo Id', 'WarehouseTo Code',
+                    'To','QTY','Is Confirmed','Confirmation Date','Created At','Updated At'
         ],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 100 },
-                  { name: 'rolleridentificationcode', index: 'rolleridentificationcode', width: 100 },
-                  { name: 'warehousefromid', index: 'warehousefromid', width: 100 },
-                  { name: 'warehousefromcode', index: 'warehousefromcode', width: 100 },
-                  { name: 'warehousefrom', index: 'warehousefrom', width: 100 },
-                  { name: 'warehousetoid', index: 'warehousetoid', width: 100 },
-                  { name: 'warehousetocode', index: 'warehousetocode', width: 100 },
-                  { name: 'warehouseto', index: 'warehouseto', width: 100 },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
+                  { name: 'code', index: 'code', width: 60 },
+				  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 100, hidden: true },
+                  { name: 'rolleridentificationcode', index: 'rolleridentificationcode', width: 60 },
+                  { name: 'warehousefromid', index: 'warehousefromid', width: 100, hidden: true },
+                  { name: 'warehousefromcode', index: 'warehousefromcode', width: 100, hidden: true },
+                  { name: 'warehousefrom', index: 'warehousefrom', width: 180 },
+                  { name: 'warehousetoid', index: 'warehousetoid', width: 100, hidden: true },
+                  { name: 'warehousetocode', index: 'warehousetocode', width: 100, hidden: true },
+                  { name: 'warehouseto', index: 'warehouseto', width: 180 },
+                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -146,7 +146,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -200,7 +200,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -427,14 +427,15 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'RollerWarehouseMutation Id','RollerIdentificationDetail Id','Item Id', 'Item Name'
+        colNames: ['Code', 'RollerWarehouseMutation Id','RIF Id', 'Item Id', 'Sku', 'Item'
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'rollerwarehousemutationid', index: 'rollerwarehousemutationid', width: 100, sortable: false },
-                  { name: 'rolleridentificationdetailid', index: 'rolleridentificationdetailid', width: 100, sortable: false },
-				  { name: 'coreidentificationid', index: 'coreidentificationid', width: 100, sortable: false },
-                  { name: 'coreidentificationname', index: 'coreidentificationname', width: 80, sortable: false },
+                  { name: 'code', index: 'code', width: 70, sortable: false, align: 'right' },
+                  { name: 'rollerwarehousemutationid', index: 'rollerwarehousemutationid', width: 100, sortable: false, hidden: true },
+                  { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 50, align: 'right', sortable: false },
+				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
+				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false},
+                  { name: 'itemname', index: 'itemname', width: 150, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -476,13 +477,13 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#CoreIdentificationDetailId').val(result.CoreIdentificationDetailId);
+                            $('#CoreIdentificationDetailId').val(result.DetailId);
                             $('#CoreIdentificationDetail').val(result.Item);
                             $('#item_div').dialog('open');
                         }
@@ -776,25 +777,26 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Detail Id', 'RollerIdentificationId', 'Material Case', 'CoreBuilder Id', 'CoreBuilder Name', 'RollerType Id', 'RollerType Name'
-                  , 'Machine Id', 'Machine Name', 'RD', 'CD', 'RL', 'WL', 'TL', 'Is Finished', 'Finished Date'
+        colNames: ['RIF Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id', 'Core Sku', 'Core', 'RollerType Id', 'RollerType'
+                  , 'Machine Id', 'Machine', 'RD', 'CD', 'RL', 'WL', 'TL', 'Is Finished', 'Finished Date'
         ],
         colModel: [
-                  { name: 'detailid', index: 'detailid', width: 130, sortable: false },
+                  { name: 'detailid', index: 'detailid', width: 40, sortable: false, align: 'right' },
                   { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
-                  { name: 'materialcase', index: 'materialcase', width: 130, sortable: false },
-                  { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false },
-                  { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
-                  { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false },
-                  { name: 'rollertypename', index: 'rollertypename', width: 80, sortable: false },
-                  { name: 'machineid', index: 'machineid', width: 80, sortable: false },
+                  { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
+                  { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
+                  { name: 'corebuildersku', index: 'corebuildersku', width: 60, sortable: false },
+                  { name: 'corebuildername', index: 'corebuildername', width: 70, sortable: false },
+                  { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false, hidden: true },
+                  { name: 'rollertypename', index: 'rollertypename', width: 75, sortable: false },
+                  { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true },
                   { name: 'machinename', index: 'machinename', width: 80, sortable: false },
-                  { name: 'rd', index: 'rd', width: 80, sortable: false },
-                  { name: 'cd', index: 'cd', width: 80, sortable: false },
-                  { name: 'rl', index: 'rl', width: 80, sortable: false },
-                  { name: 'wl', index: 'wl', width: 80, sortable: false },
-                  { name: 'tl', index: 'tl', width: 80, sortable: false },
-                  { name: 'isfinished', index: 'isfinished', width: 80, sortable: false },
+                  { name: 'rd', index: 'rd', width: 30, sortable: false, align: 'right' },
+                  { name: 'cd', index: 'cd', width: 30, sortable: false, align: 'right' },
+                  { name: 'rl', index: 'rl', width: 30, sortable: false, align: 'right' },
+                  { name: 'wl', index: 'wl', width: 30, sortable: false, align: 'right' },
+                  { name: 'tl', index: 'tl', width: 30, sortable: false, align: 'right' },
+                  { name: 'isfinished', index: 'isfinished', width: 80, sortable: false, hidden: true},
                   { name: 'finisheddate', index: 'finisheddate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',

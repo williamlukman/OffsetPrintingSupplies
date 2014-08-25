@@ -154,7 +154,8 @@ namespace Service.Service
                                      IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                      ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
         {
-            if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
+            if (_validator.ValidDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService,
+                                             _stockAdjustmentDetailService, _salesOrderDetailService, _barringService))
             {
                 IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(item.Id);
                 foreach (var warehouseitem in allwarehouseitems)

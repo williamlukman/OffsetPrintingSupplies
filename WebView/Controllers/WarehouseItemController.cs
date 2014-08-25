@@ -34,6 +34,7 @@ namespace WebView.Controllers
             return View();
         }
 
+        // warehouseitem
         public dynamic GetListItem(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
@@ -73,20 +74,15 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Name,
-                            _itemService.GetObjectById(model.ItemId).ItemTypeId,
-                            _itemTypeService.GetObjectById(_itemService.GetObjectById(model.ItemId).ItemTypeId).Name,
                             _itemService.GetObjectById(model.ItemId).Sku,
-                            _itemService.GetObjectById(model.ItemId).Category,
-                            _itemService.GetObjectById(model.ItemId).UoMId,
-                           _uoMService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name,
+                            _itemService.GetObjectById(model.ItemId).Name,
                             model.Quantity,
-                            model.PendingDelivery,
-                            model.PendingReceival,
+                           _uoMService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
+
 
         public dynamic GetListWarehouse(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
@@ -129,7 +125,8 @@ namespace WebView.Controllers
                            model.WarehouseId,
                            _warehouseService.GetObjectById(model.WarehouseId).Code,
                            _warehouseService.GetObjectById(model.WarehouseId).Name,
-                           _warehouseService.GetObjectById(model.WarehouseId).Description,
+                           model.Quantity,
+                           _uoMService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name,                           
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

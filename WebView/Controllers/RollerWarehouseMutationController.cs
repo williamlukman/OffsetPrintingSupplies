@@ -153,8 +153,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.RollerWarehouseMutationId,
-                            model.CoreIdentificationDetailId,
+                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
                             model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
                       }
                     }).ToArray()
@@ -213,7 +214,9 @@ namespace WebView.Controllers
                 model.Code,
                 model.RollerWarehouseMutationId,
                 model.CoreIdentificationDetailId,
+                DetailId = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
                 model.ItemId,
+                ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);

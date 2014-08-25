@@ -53,6 +53,7 @@ namespace WebView.Controllers
         {
             return View();
         }
+
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
@@ -92,34 +93,76 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
-                            model.Category,
-                            model.ItemTypeId,
-                            _itemTypeService.GetObjectById(model.ItemTypeId).Name,
-                            model.UoMId,
-                            _uomService.GetObjectById(model.UoMId).Name,
                             model.Sku,
+                            model.Name,
                             model.RollNo,
-                            model.ContactId,
-                            _contactService.GetObjectById(model.ContactId).Name,
-                            model.MachineId,
-                            _machineService.GetObjectById(model.MachineId).Name,
-                            model.BlanketItemId,
-                            _itemService.GetObjectById(model.BlanketItemId).Name,
-                            model.IsBarRequired,
-                            model.HasLeftBar,
-                            model.HasRightBar,
-                            model.LeftBarItemId.HasValue ? model.LeftBarItemId.Value : model.LeftBarItemId = null,
-                            model.LeftBarItemId.HasValue ? _itemService.GetObjectById(model.LeftBarItemId.Value).Name : "",
-                            model.RightBarItemId.HasValue ? model.RightBarItemId.Value : model.RightBarItemId = null,
-                            model.RightBarItemId.HasValue ? _itemService.GetObjectById(model.RightBarItemId.Value).Name : "",
+                            model.Quantity,
+                            _uomService.GetObjectById(model.UoMId).Name,
                             model.AC,
                             model.AR,
                             model.thickness,
                             model.KS,
-                            model.Quantity,
+                            model.Category,
+                            _itemTypeService.GetObjectById(model.ItemTypeId).Name,
+                            _machineService.GetObjectById(model.MachineId).Name,
+                            _itemService.GetObjectById(model.BlanketItemId).Name,
+                            model.HasLeftBar ? _itemService.GetObjectById(model.LeftBarItemId.Value).Name : "",
+                            model.HasRightBar ? _itemService.GetObjectById(model.RightBarItemId.Value).Name : "",
+                            _contactService.GetObjectById(model.ContactId).Name,
                             model.CreatedAt,
                             model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListLookUpItems(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query = _barringService.GetAll().Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<Barring>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Sku,
+                            model.Name,
+                            _itemService.GetObjectById(model.BlanketItemId).Sku,
+                            _itemService.GetObjectById(model.BlanketItemId).Name,
+                            model.HasLeftBar ? _itemService.GetObjectById(model.LeftBarItemId.Value).Sku : "",
+                            model.HasLeftBar ? _itemService.GetObjectById(model.LeftBarItemId.Value).Name : "",
+                            model.HasRightBar ? _itemService.GetObjectById(model.RightBarItemId.Value).Sku : "",
+                            model.HasRightBar ? _itemService.GetObjectById(model.RightBarItemId.Value).Name : "",
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

@@ -81,7 +81,6 @@ namespace WebView.Controllers
                             model.PIC,
                             model.PICContactNo,
                             model.Email,
-                            model.ContactGroupId,
                             _contactGroupService.GetObjectById(model.ContactGroupId).Name,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -114,7 +113,8 @@ namespace WebView.Controllers
                  model.PICContactNo,
                  model.Email,
                  model.ContactGroupId,
-                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId).Name
+                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId).Name,
+                 model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
 
