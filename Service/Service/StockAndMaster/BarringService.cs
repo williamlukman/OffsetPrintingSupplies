@@ -74,7 +74,7 @@ namespace Service.Service
             {
                 ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 barring = _repository.CreateObject(barring);
-                PriceMutation priceMutation = _priceMutationService.CreateObject(barring, contactGroup, barring.CreatedAt);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(barring, /*contactGroup,*/ barring.CreatedAt);
                 barring.PriceMutationId = priceMutation.Id;
                 barring = _repository.UpdateObject(barring);
             }
@@ -94,7 +94,7 @@ namespace Service.Service
                 if (oldbarring.SellingPrice != barring.SellingPrice)
                 {
                     DateTime priceMutationTimeStamp = DateTime.Now;
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(oldbarring, contactGroup, priceMutationTimeStamp);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(oldbarring, /*contactGroup,*/ priceMutationTimeStamp);
                     barring.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }

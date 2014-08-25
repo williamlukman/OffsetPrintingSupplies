@@ -80,6 +80,24 @@ namespace Validation.Validation
             return retailSalesInvoiceDetail;
         }
 
+        public RetailSalesInvoiceDetail VIsValidDiscount(RetailSalesInvoiceDetail retailSalesInvoiceDetail)
+        {
+            if (retailSalesInvoiceDetail.Discount < 0 || retailSalesInvoiceDetail.Discount > 100)
+            {
+                retailSalesInvoiceDetail.Errors.Add("Discount", "Harus antara 0 sampai 100");
+            }
+            return retailSalesInvoiceDetail;
+        }
+
+        public RetailSalesInvoiceDetail VIsValidAssignedPrice(RetailSalesInvoiceDetail retailSalesInvoiceDetail)
+        {
+            if (retailSalesInvoiceDetail.IsManualPriceAssignment && retailSalesInvoiceDetail.AssignedPrice < 0)
+            {
+                retailSalesInvoiceDetail.Errors.Add("AssignedPrice", "Harus lebih besar atau sama dengan 0");
+            }
+            return retailSalesInvoiceDetail;
+        }
+
         public RetailSalesInvoiceDetail VConfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService)
         {
             VIsValidQuantityOrdered(retailSalesInvoiceDetail, _retailSalesInvoiceService, _warehouseItemService);
@@ -99,6 +117,10 @@ namespace Validation.Validation
             if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VIsValidQuantity(retailSalesInvoiceDetail, _retailSalesInvoiceService, _warehouseItemService);
             if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
+            VIsValidDiscount(retailSalesInvoiceDetail);
+            if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
+            VIsValidAssignedPrice(retailSalesInvoiceDetail);
+            if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VHasItem(retailSalesInvoiceDetail, _itemService);
             if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VUniqueItem(retailSalesInvoiceDetail, _retailSalesInvoiceDetailService, _itemService);
@@ -108,6 +130,7 @@ namespace Validation.Validation
         public RetailSalesInvoiceDetail VUpdateObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService,
                                                       IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
+            VIsNotConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
             return VCreateObject(retailSalesInvoiceDetail, _retailSalesInvoiceService, _retailSalesInvoiceDetailService, _itemService, _warehouseItemService);
         }
 

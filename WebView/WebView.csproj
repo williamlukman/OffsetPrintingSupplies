@@ -152,6 +152,7 @@
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\CashSalesReturnController.cs" />
+    <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
     <Compile Include="Controllers\PaymentRequestController.cs" />
     <Compile Include="Controllers\QuantityPricingController.cs" />
     <Compile Include="Controllers\CustomPurchaseInvoiceController.cs" />
@@ -171,7 +172,6 @@
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
-    <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
     <Compile Include="Controllers\WarehouseItemController.cs" />
     <Compile Include="Controllers\PaymentVoucherController.cs" />
     <Compile Include="Controllers\PurchaseInvoiceController.cs" />
@@ -195,6 +195,7 @@
     <Content Include="Content\apps_js\CashBankAdjustment.js" />
     <Content Include="Content\apps_js\CashBankMutation.js" />
     <Content Include="Content\apps_js\CashSalesReturn.js" />
+    <Content Include="Content\apps_js\RetailSalesInvoice.js" />
     <Content Include="Content\apps_js\PaymentRequest.js" />
     <Content Include="Content\apps_js\QuantityPricing.js" />
     <Content Include="Content\apps_js\CustomPurchaseInvoice.js" />
@@ -1110,6 +1111,7 @@
     <Content Include="Views\CustomPurchaseInvoice\Index.cshtml" />
     <Content Include="Views\QuantityPricing\Index.cshtml" />
     <Content Include="Views\PaymentRequest\Index.cshtml" />
+    <Content Include="Views\RetailSalesInvoice\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

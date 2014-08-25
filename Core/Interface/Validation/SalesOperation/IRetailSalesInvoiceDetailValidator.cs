@@ -15,6 +15,8 @@ namespace Core.Interface.Validation
         RetailSalesInvoiceDetail VUniqueItem(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IItemService _itemService);
         RetailSalesInvoiceDetail VIsValidQuantityOrdered(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService);
         RetailSalesInvoiceDetail VIsValidQuantity(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService);
+        RetailSalesInvoiceDetail VIsValidDiscount(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
+        RetailSalesInvoiceDetail VIsValidAssignedPrice(RetailSalesInvoiceDetail retailSalesInvoiceDetail);
 
         RetailSalesInvoiceDetail VConfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService);
         RetailSalesInvoiceDetail VUnconfirmObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail);

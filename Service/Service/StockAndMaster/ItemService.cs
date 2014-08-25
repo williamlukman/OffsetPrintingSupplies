@@ -72,7 +72,7 @@ namespace Service.Service
                 {
                     item.CreatedAt = DateTime.Now;
                     item = _repository.CreateObject(item);
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, /*contactGroup,*/ item.CreatedAt);
                     item.PriceMutationId = priceMutation.Id;
                     item = _repository.UpdateObject(item);
                 }
@@ -88,7 +88,7 @@ namespace Service.Service
             {
                 ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 item = _repository.CreateObject(item);
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item, /*contactGroup,*/ item.CreatedAt);
                 item.PriceMutationId = priceMutation.Id;
                 _repository.UpdateObject(item);
             }
@@ -105,7 +105,7 @@ namespace Service.Service
                 item.UpdatedAt = DateTime.Now;
                 if (olditem.SellingPrice != item.SellingPrice)
                 {
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, (DateTime)item.UpdatedAt);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, /*contactGroup,*/ (DateTime)item.UpdatedAt);
                     item.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
                 }
@@ -135,7 +135,7 @@ namespace Service.Service
                 if (olditem.SellingPrice != item.SellingPrice)
                 {
                     DateTime priceMutationTimeStamp = DateTime.Now;
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, priceMutationTimeStamp);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, /*contactGroup,*/ priceMutationTimeStamp);
                     item.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }

@@ -24,6 +24,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IPriceMutationRepository GetRepository()
+        {
+            return _repository;
+        }
+
         public IList<PriceMutation> GetAll()
         {
             return _repository.GetAll();
@@ -50,7 +55,7 @@ namespace Service.Service
             return _repository.DeactivateObject(priceMutation);
         }
 
-        public PriceMutation CreateObject(int ItemId, int ContactGroupId, decimal Price, DateTime CreationDate)
+        public PriceMutation CreateObject(int ItemId, /*int ContactGroupId,*/ decimal Price, DateTime CreationDate)
         {
             PriceMutation priceMutation = new PriceMutation()
             {
@@ -62,9 +67,9 @@ namespace Service.Service
             return this.CreateObject(priceMutation);
         }
 
-        public PriceMutation CreateObject(Item item, ContactGroup contactGroup, DateTime CreationDate)
+        public PriceMutation CreateObject(Item item, /*ContactGroup contactGroup,*/ DateTime CreationDate)
         {
-            return this.CreateObject(item.Id, contactGroup.Id, item.SellingPrice, CreationDate);
+            return this.CreateObject(item.Id, /*contactGroup.Id,*/ item.SellingPrice, CreationDate);
         }
 
         public PriceMutation CreateObject(PriceMutation priceMutation)

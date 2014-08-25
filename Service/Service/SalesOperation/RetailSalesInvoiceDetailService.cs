@@ -47,11 +47,31 @@ namespace Service.Service
             if(_validator.ValidCreateObject(retailSalesInvoiceDetail, _retailSalesInvoiceService, this, _itemService, _warehouseItemService))
             {
                 Item item = _itemService.GetObjectById(retailSalesInvoiceDetail.ItemId);
-                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 RetailSalesInvoice retailSalesInvoice = _retailSalesInvoiceService.GetObjectById(retailSalesInvoiceDetail.RetailSalesInvoiceId);
-                retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
-                retailSalesInvoiceDetail.Amount = priceMutation.Amount * retailSalesInvoiceDetail.Quantity;
+                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+
+                if (retailSalesInvoiceDetail.IsManualPriceAssignment)
+                {
+                    //priceMutation = _priceMutationService.CreateObject(retailSalesInvoiceDetail.ItemId, retailSalesInvoiceDetail.AssignedPrice, DateTime.Now);
+
+                    retailSalesInvoiceDetail.PriceMutationId = priceMutation.Id;
+                    retailSalesInvoiceDetail.Amount = (retailSalesInvoiceDetail.AssignedPrice * retailSalesInvoiceDetail.Quantity) * (100 - retailSalesInvoiceDetail.Discount) / 100;
+                    //item.PriceMutationId = priceMutation.Id;
+                    //_itemService.GetRepository().Update(item);
+                }
+                else
+                {
+                    retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
+                    retailSalesInvoiceDetail.Amount = (priceMutation.Amount * retailSalesInvoiceDetail.Quantity) * (100 - retailSalesInvoiceDetail.Discount) / 100;
+                }
+
                 retailSalesInvoiceDetail = _repository.CreateObject(retailSalesInvoiceDetail);
+                if (retailSalesInvoiceDetail.IsManualPriceAssignment)
+                {
+                    priceMutation.CreatedAt = retailSalesInvoiceDetail.CreatedAt;
+                    _priceMutationService.GetRepository().Update(priceMutation);
+                }
+
                 retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
                 _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
             }
@@ -64,11 +84,31 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(retailSalesInvoiceDetail, _retailSalesInvoiceService, this, _itemService, _warehouseItemService))
             {
                 Item item = _itemService.GetObjectById(retailSalesInvoiceDetail.ItemId);
-                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 RetailSalesInvoice retailSalesInvoice = _retailSalesInvoiceService.GetObjectById(retailSalesInvoiceDetail.RetailSalesInvoiceId);
-                retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
-                retailSalesInvoiceDetail.Amount = priceMutation.Amount * retailSalesInvoiceDetail.Quantity;
+                PriceMutation priceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
+
+                if (retailSalesInvoiceDetail.IsManualPriceAssignment)
+                {
+                    //priceMutation = _priceMutationService.CreateObject(retailSalesInvoiceDetail.ItemId, retailSalesInvoiceDetail.AssignedPrice, DateTime.Now);
+
+                    retailSalesInvoiceDetail.PriceMutationId = priceMutation.Id;
+                    retailSalesInvoiceDetail.Amount = (retailSalesInvoiceDetail.AssignedPrice * retailSalesInvoiceDetail.Quantity) * (100 - retailSalesInvoiceDetail.Discount) / 100;
+                    //item.PriceMutationId = priceMutation.Id;
+                    //_itemService.GetRepository().Update(item);
+                }
+                else
+                {
+                    retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
+                    retailSalesInvoiceDetail.Amount = (priceMutation.Amount * retailSalesInvoiceDetail.Quantity) * (100 - retailSalesInvoiceDetail.Discount) / 100;
+                }
+
                 retailSalesInvoiceDetail = _repository.UpdateObject(retailSalesInvoiceDetail);
+                if (retailSalesInvoiceDetail.IsManualPriceAssignment)
+                {
+                    priceMutation.CreatedAt = retailSalesInvoiceDetail.CreatedAt;
+                    _priceMutationService.GetRepository().Update(priceMutation);
+                }
+
                 retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
                 _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
             }

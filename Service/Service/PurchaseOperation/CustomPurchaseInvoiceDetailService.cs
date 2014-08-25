@@ -103,7 +103,7 @@ namespace Service.Service
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity, itemPrice);
 
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, 0, item.SellingPrice, DateTime.Now);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
 
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 stockMutation.CreatedAt = (DateTime)customPurchaseInvoice.ConfirmationDate;
@@ -126,7 +126,7 @@ namespace Service.Service
                 decimal itemPrice = customPurchaseInvoiceDetail.Amount / customPurchaseInvoiceDetail.Quantity;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, customPurchaseInvoiceDetail.Quantity * (-1), itemPrice);
 
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, 0, item.SellingPrice, DateTime.Now);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
 
                 IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForItem(customPurchaseInvoiceDetail.ItemId, Core.Constants.Constant.SourceDocumentDetailType.CustomPurchaseInvoiceDetail, customPurchaseInvoiceDetail.Id);
                 foreach (var stockMutation in stockMutations)
