@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<RecoveryOrderDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<RecoveryOrderDetail> GetAll()
         {
             return _repository.GetAll();
@@ -109,19 +114,9 @@ namespace Service.Service
                                           _repository.SoftDeleteObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
-            return (recoveryOrderDetail = _validator.ValidAddAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService) ? _repository.AddAccessory(recoveryOrderDetail) : recoveryOrderDetail);
-        }
-
-        public RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
-        {
-            return (recoveryOrderDetail = _validator.ValidRemoveAccessory(recoveryOrderDetail, _recoveryAccessoryDetailService) ? _repository.RemoveAccessory(recoveryOrderDetail) : recoveryOrderDetail);
-        }
-
-        public RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail)
-        {
-            return (recoveryOrderDetail = _validator.ValidDisassembleObject(recoveryOrderDetail) ? _repository.DisassembleObject(recoveryOrderDetail) : recoveryOrderDetail);
+            return (recoveryOrderDetail = _validator.ValidDisassembleObject(recoveryOrderDetail, _recoveryOrderService) ? _repository.DisassembleObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
         public RecoveryOrderDetail StripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail)
@@ -129,10 +124,11 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidStripAndGlueObject(recoveryOrderDetail) ? _repository.StripAndGlueObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, int CompoundUsage)
+        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, int CompoundUsage, IRecoveryOrderService _recoveryOrderService,
+                                              IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryOrderDetail.CompoundUsage = CompoundUsage;
-            return (recoveryOrderDetail = _validator.ValidWrapObject(recoveryOrderDetail) ? _repository.WrapObject(recoveryOrderDetail) : recoveryOrderDetail);
+            return (recoveryOrderDetail = _validator.ValidWrapObject(recoveryOrderDetail, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService) ? _repository.WrapObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
         public RecoveryOrderDetail VulcanizeObject(RecoveryOrderDetail recoveryOrderDetail)

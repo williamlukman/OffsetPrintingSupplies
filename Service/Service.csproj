@@ -75,8 +75,8 @@
     <Compile Include="Service\SalesOperation\SalesOrderDetailService.cs" />
     <Compile Include="Service\SalesOperation\SalesOrderService.cs" />
     <Compile Include="Service\StockAndMaster\UoMService.cs" />
-    <Compile Include="Service\StockAndMaster\WarehouseMutationOrderService.cs" />
-    <Compile Include="Service\StockAndMaster\WarehouseMutationOrderDetailService.cs" />
+    <Compile Include="Service\StockAndMaster\WarehouseMutationService.cs" />
+    <Compile Include="Service\StockAndMaster\WarehouseMutationDetailService.cs" />
     <Compile Include="Service\StockAndMaster\StockAdjustmentDetailService.cs" />
     <Compile Include="Service\StockAndMaster\StockAdjustmentService.cs" />
     <Compile Include="Service\StockAndMaster\StockMutationService.cs" />

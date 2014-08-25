@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface IDeliveryOrderService
     {
         IDeliveryOrderValidator GetValidator();
+        IQueryable<DeliveryOrder> GetQueryable();
         IList<DeliveryOrder> GetAll();
         DeliveryOrder GetObjectById(int Id);
         IList<DeliveryOrder> GetObjectsBySalesOrderId(int salesOrderId);

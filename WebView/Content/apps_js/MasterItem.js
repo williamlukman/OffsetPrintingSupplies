@@ -30,26 +30,24 @@
     $("#list").jqGrid({
         url: base_url + 'MstItem/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
-                   'Category', 'UoM Id', 'UoM', 'Quantity',
-                   'Selling Price', 'AvgPrice',
-                   'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Sku', 'Name', 
+                    'Quantity', 'PendReceival', 'PendDelivery',
+                    'UoM', 'Selling Price', 'AvgPrice',
+                    'Category', 'Item Type', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'itemtypeid', index: 'itemtypeid', width: 80 },
-                  { name: 'itemtype', index: 'itemtype', width: 100 },
-                  { name: 'sku', index: 'sku', width: 100 },
-                  { name: 'category', index: 'category', width: 100 },
-                  { name: 'uomid', index: 'uomid', width: 80 },
-                  { name: 'uom', index: 'uom', width: 100 },
-                  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'sellingprice', index: 'sellingprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'avgprice', index: 'avgprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+    			  { name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'sku', index: 'sku', width: 70 },
+				  { name: 'name', index: 'name', width: 120 },
+                  { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 40 },
+                  { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'category', index: 'category', width: 70 },
+                  { name: 'itemtypename', index: 'itemtypename', width: 70 },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -102,7 +100,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }

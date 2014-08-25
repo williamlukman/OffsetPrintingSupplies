@@ -25,8 +25,11 @@ namespace WebView.Controllers
         private IPurchaseReceivalService _purchaseReceivalService;
         private ICoreIdentificationDetailService _coreIdentificationDetailService;
         private ICoreIdentificationService _coreIdentificationService;
+        private IRecoveryOrderDetailService _recoveryOrderDetailService;
+        private IRecoveryOrderService _recoveryOrderService;
         private IWarehouseService _warehouseService;
         private ICoreBuilderService _coreBuilderService;
+        private IRollerBuilderService _rollerBuilderService;
 
         public RollerWarehouseMutationController()
         {
@@ -43,9 +46,10 @@ namespace WebView.Controllers
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
+            _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
+            _recoveryOrderDetailService = new RecoveryOrderDetailService(new RecoveryOrderDetailRepository(), new RecoveryOrderDetailValidator());
+            _recoveryOrderService = new RecoveryOrderService(new RecoveryOrderRepository(), new RecoveryOrderValidator());
         }
-
-
 
         public ActionResult Index()
         {
@@ -92,8 +96,8 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.CoreIdentificationId,
-                            _coreIdentificationService.GetObjectById(model.CoreIdentificationId).Code,
+                            model.RecoveryOrderId,
+                            _recoveryOrderService.GetObjectById(model.RecoveryOrderId).Code,
                             model.WarehouseFromId,
                             _warehouseService.GetObjectById(model.WarehouseFromId).Code,
                             _warehouseService.GetObjectById(model.WarehouseFromId).Name,
@@ -109,9 +113,6 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
-       
-
 
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
@@ -153,8 +154,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.RollerWarehouseMutationId,
-                            model.CoreIdentificationDetailId,
+                            _recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId).Id,
                             model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
                       }
                     }).ToArray()
@@ -179,8 +181,8 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                model.CoreIdentificationId,
-                CoreIdentification = _coreIdentificationService.GetObjectById(model.CoreIdentificationId).Code,
+                model.RecoveryOrderId,
+                RecoveryOrder = _coreIdentificationService.GetObjectById(model.RecoveryOrderId).Code,
                 model.WarehouseFromId,
                 WarehouseFromCode = _warehouseService.GetObjectById(model.WarehouseFromId).Code,
                 WarehouseFrom = _warehouseService.GetObjectById(model.WarehouseFromId).Name,
@@ -212,8 +214,10 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.RollerWarehouseMutationId,
-                model.CoreIdentificationDetailId,
+                model.RecoveryOrderDetailId,
+                RecoveryOrderDetail = _coreIdentificationService.GetObjectById(model.RecoveryOrderDetailId).Code,
                 model.ItemId,
+                ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
@@ -224,7 +228,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _rollerWarehouseMutationService.CreateObject(model,_warehouseService,_coreIdentificationService);
+                model = _rollerWarehouseMutationService.CreateObject(model,_warehouseService,_recoveryOrderService);
             }
             catch (Exception ex)
             {
@@ -243,13 +247,13 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId);
-                var item = data.MaterialCase == Core.Constants.Constant.MaterialCase.New ? _coreBuilderService.GetNewCore(data.CoreBuilderId) :
-                    _coreBuilderService.GetUsedCore(data.CoreBuilderId);
+                var data = _recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId);
+                var MaterialCase = _coreIdentificationDetailService.GetObjectById(_recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId).CoreIdentificationDetailId).MaterialCase;
+                var item = MaterialCase == Core.Constants.Constant.MaterialCase.New ? _rollerBuilderService.GetRollerNewCore(data.RollerBuilderId) :
+                            _rollerBuilderService.GetRollerUsedCore(data.RollerBuilderId);
                 model.ItemId = item.Id;
-                model = _rollerWarehouseMutationDetailService.CreateObject(model,_rollerWarehouseMutationService,
-                    _coreIdentificationDetailService
-                    ,_itemService,_warehouseItemService);
+                model = _rollerWarehouseMutationDetailService.CreateObject(model, _rollerWarehouseMutationService,
+                    _recoveryOrderDetailService, _coreIdentificationDetailService, _itemService, _warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -269,12 +273,12 @@ namespace WebView.Controllers
             try
             {
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
-                data.CoreIdentificationId = model.CoreIdentificationId;
+                data.RecoveryOrderId = model.RecoveryOrderId;
                 data.WarehouseFromId = model.WarehouseFromId;
                 data.WarehouseToId = model.WarehouseToId;
                 data.Quantity = model.Quantity;
                 data.MutationDate = model.MutationDate;
-                model = _rollerWarehouseMutationService.UpdateObject(data,_warehouseService,_coreIdentificationService);
+                model = _rollerWarehouseMutationService.UpdateObject(data,_warehouseService, _recoveryOrderService);
             }
             catch (Exception ex)
             {
@@ -333,19 +337,13 @@ namespace WebView.Controllers
         {
             try
             {
-                var data1 = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId);
-                var item = data1.MaterialCase == Core.Constants.Constant.MaterialCase.New ? _coreBuilderService.GetNewCore(data1.CoreBuilderId) :
-                    _coreBuilderService.GetUsedCore(data1.CoreBuilderId);
+                var data = _recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId);
+                var MaterialCase = _coreIdentificationDetailService.GetObjectById(_recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId).CoreIdentificationDetailId).MaterialCase;
+                var item = MaterialCase == Core.Constants.Constant.MaterialCase.New ? _rollerBuilderService.GetRollerNewCore(data.RollerBuilderId) :
+                            _rollerBuilderService.GetRollerUsedCore(data.RollerBuilderId);
                 model.ItemId = item.Id;
-
-
-
-                var data = _rollerWarehouseMutationDetailService.GetObjectById(model.Id);
-                data.RollerWarehouseMutationId = model.RollerWarehouseMutationId;
-                data.CoreIdentificationDetailId = model.CoreIdentificationDetailId;
-                data.ItemId = model.ItemId;
-                model = _rollerWarehouseMutationDetailService.UpdateObject(data,_rollerWarehouseMutationService
-                    ,_coreIdentificationDetailService,_itemService,_warehouseItemService);
+                model = _rollerWarehouseMutationDetailService.UpdateObject(model,_rollerWarehouseMutationService,
+                    _recoveryOrderDetailService,_coreIdentificationDetailService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -368,7 +366,7 @@ namespace WebView.Controllers
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
                 model = _rollerWarehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value
                     ,_rollerWarehouseMutationDetailService,_itemService,_barringService
-                    ,_warehouseItemService,_stockMutationService,_coreIdentificationDetailService,_coreIdentificationService);
+                    ,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService, _coreIdentificationDetailService,_coreIdentificationService);
             }
             catch (Exception ex)
             {
@@ -389,9 +387,9 @@ namespace WebView.Controllers
             {
 
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
-                model = _rollerWarehouseMutationService.UnconfirmObject(data,_rollerWarehouseMutationDetailService
-                    ,_itemService,_barringService,_warehouseItemService,_stockMutationService,_coreIdentificationDetailService
-                    ,_coreIdentificationService);
+                model = _rollerWarehouseMutationService.UnconfirmObject(data,_rollerWarehouseMutationDetailService,
+                    _itemService,_barringService,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService,
+                    _coreIdentificationDetailService,_coreIdentificationService);
             }
             catch (Exception ex)
             {

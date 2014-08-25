@@ -39,7 +39,7 @@ namespace TestValidation
         
             it["validates_data"] = () =>
             {
-                d.warehouseMutationOrder.Errors.Count().should_be(0);
+                d.warehouseMutation.Errors.Count().should_be(0);
                 d.wmoDetail1.Errors.Count().should_be(0);
                 d.wmoDetail2.Errors.Count().should_be(0);
                 d.wmoDetail3.Errors.Count().should_be(0);
@@ -48,43 +48,43 @@ namespace TestValidation
                 d.wmoDetail6.Errors.Count().should_be(0);
             };
 
-            it["deletes_warehousemutationorder"] = () =>
+            it["deletes_WarehouseMutation"] = () =>
             {
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder);
-                d.warehouseMutationOrder.Errors.Count().should_be(0);
+                d.warehouseMutation = d._warehouseMutationService.SoftDeleteObject(d.warehouseMutation);
+                d.warehouseMutation.Errors.Count().should_be(0);
             };
 
-            it["deletes_warehousemutationorderdetail"] = () =>
+            it["deletes_WarehouseMutationdetail"] = () =>
             {
-                d.wmoDetail1 = d._warehouseMutationOrderDetailService.SoftDeleteObject(d.wmoDetail1, d._warehouseMutationOrderService, d._warehouseItemService);
+                d.wmoDetail1 = d._warehouseMutationDetailService.SoftDeleteObject(d.wmoDetail1, d._warehouseMutationService, d._warehouseItemService);
                 d.wmoDetail1.Errors.Count().should_be(0);
             };
 
-            it["confirms_warehousemutationorder"] = () =>
+            it["confirms_WarehouseMutation"] = () =>
             {
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Now, d._warehouseMutationOrderDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder.IsConfirmed.should_be(true);
-                d.warehouseMutationOrder.Errors.Count().should_be(0);
+                d.warehouseMutation = d._warehouseMutationService.ConfirmObject(d.warehouseMutation, DateTime.Now, d._warehouseMutationDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
+                d.warehouseMutation.IsConfirmed.should_be(true);
+                d.warehouseMutation.Errors.Count().should_be(0);
             };
 
-            it["unconfirms_warehousemutationorder"] = () =>
+            it["unconfirms_WarehouseMutation"] = () =>
             {
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Now, d._warehouseMutationOrderDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder.IsConfirmed.should_be(true);
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.UnconfirmObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder.IsConfirmed.should_be(false);
-                d.warehouseMutationOrder.Errors.Count().should_be(0);
+                d.warehouseMutation = d._warehouseMutationService.ConfirmObject(d.warehouseMutation, DateTime.Now, d._warehouseMutationDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
+                d.warehouseMutation.IsConfirmed.should_be(true);
+                d.warehouseMutation = d._warehouseMutationService.UnconfirmObject(d.warehouseMutation, d._warehouseMutationDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
+                d.warehouseMutation.IsConfirmed.should_be(false);
+                d.warehouseMutation.Errors.Count().should_be(0);
             };
 
             it["finishes_detail"] = () =>
             {
-                int quantitywarehousefrom = d._warehouseItemService.FindOrCreateObject(d.warehouseMutationOrder.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
-                int quantitywarehouseto = d._warehouseItemService.FindOrCreateObject(d.warehouseMutationOrder.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Today, d._warehouseMutationOrderDetailService, d._itemService,
+                int quantitywarehousefrom = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
+                int quantitywarehouseto = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
+                d.warehouseMutation = d._warehouseMutationService.ConfirmObject(d.warehouseMutation, DateTime.Today, d._warehouseMutationDetailService, d._itemService,
                                                                                           d._barringService, d._warehouseItemService, d._stockMutationService);
                 d.wmoDetail1.IsConfirmed.should_be(true);
-                int quantitywarehousefromfinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutationOrder.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
-                int quantitywarehousetofinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutationOrder.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
+                int quantitywarehousefromfinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
+                int quantitywarehousetofinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
                 d.wmoDetail1.Errors.Count().should_be(0);
                 quantitywarehousefromfinal.should_be(quantitywarehousefrom - d.wmoDetail1.Quantity);
                 quantitywarehousetofinal.should_be(quantitywarehouseto + d.wmoDetail1.Quantity);
@@ -92,35 +92,35 @@ namespace TestValidation
 
             it["unconfirm_whendetailisfinished"] = () =>
             {
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Today, d._warehouseMutationOrderDetailService, d._itemService,
+                d.warehouseMutation = d._warehouseMutationService.ConfirmObject(d.warehouseMutation, DateTime.Today, d._warehouseMutationDetailService, d._itemService,
                                                                                           d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder.IsConfirmed.should_be(true);
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.UnconfirmObject(d.warehouseMutationOrder, d._warehouseMutationOrderDetailService, d._itemService, d._barringService,
+                d.warehouseMutation.IsConfirmed.should_be(true);
+                d.warehouseMutation = d._warehouseMutationService.UnconfirmObject(d.warehouseMutation, d._warehouseMutationDetailService, d._itemService, d._barringService,
                                                                                             d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder.IsConfirmed.should_be(false);
-                d.warehouseMutationOrder.Errors.Count().should_be(0);
+                d.warehouseMutation.IsConfirmed.should_be(false);
+                d.warehouseMutation.Errors.Count().should_be(0);
             };
 
             it["deletes_whendetailisfinished"] = () =>
             {
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Today, d._warehouseMutationOrderDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
-                d.warehouseMutationOrder = d._warehouseMutationOrderService.SoftDeleteObject(d.warehouseMutationOrder);
-                d.warehouseMutationOrder.IsDeleted.should_be(false);
-                d.warehouseMutationOrder.Errors.Count().should_not_be(0);
+                d.warehouseMutation = d._warehouseMutationService.ConfirmObject(d.warehouseMutation, DateTime.Today, d._warehouseMutationDetailService, d._itemService, d._barringService, d._warehouseItemService, d._stockMutationService);
+                d.warehouseMutation = d._warehouseMutationService.SoftDeleteObject(d.warehouseMutation);
+                d.warehouseMutation.IsDeleted.should_be(false);
+                d.warehouseMutation.Errors.Count().should_not_be(0);
             };
 
             context["confirm_orderanddetail"] = () =>
             {
                 before = () =>
                 {
-                    d.warehouseMutationOrder = d._warehouseMutationOrderService.ConfirmObject(d.warehouseMutationOrder, DateTime.Today, d._warehouseMutationOrderDetailService, d._itemService,
+                    d.warehouseMutation = d._warehouseMutationService.ConfirmObject(d.warehouseMutation, DateTime.Today, d._warehouseMutationDetailService, d._itemService,
                                                                                               d._barringService, d._warehouseItemService, d._stockMutationService);
                 };
 
                 it["validates_confirmeddetails"] = () =>
                 {
-                    d.warehouseMutationOrder.IsConfirmed.should_be(true);
-                    d.warehouseMutationOrder.Errors.Count().should_be(0);
+                    d.warehouseMutation.IsConfirmed.should_be(true);
+                    d.warehouseMutation.Errors.Count().should_be(0);
                 };
             };
         }

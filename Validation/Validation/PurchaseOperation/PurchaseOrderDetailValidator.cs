@@ -21,6 +21,16 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
+        public PurchaseOrderDetail VPurchaseOrderHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService)
+        {
+            PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
+            if (purchaseOrder.IsConfirmed)
+            {
+                purchaseOrderDetail.Errors.Add("Generic", "Sudah terkonfirmasi");
+            }
+            return purchaseOrderDetail;
+        }
+
         public PurchaseOrderDetail VHasItem(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
@@ -49,9 +59,9 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUniquePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IItemService _itemService)
+        public PurchaseOrderDetail VUniquePurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
-            IList<PurchaseOrderDetail> details = _purchaseOrderDetails.GetObjectsByPurchaseOrderId(purchaseOrderDetail.PurchaseOrderId);
+            IList<PurchaseOrderDetail> details = _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(purchaseOrderDetail.PurchaseOrderId);
             foreach (var detail in details)
             {
                 if (detail.ItemId == purchaseOrderDetail.ItemId && detail.Id != purchaseOrderDetail.Id)
@@ -110,9 +120,11 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
+        public PurchaseOrderDetail VCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
             VHasPurchaseOrder(purchaseOrderDetail, _purchaseOrderService);
+            if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
+            VPurchaseOrderHasNotBeenConfirmed(purchaseOrderDetail, _purchaseOrderService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
             VHasItem(purchaseOrderDetail, _itemService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
@@ -120,13 +132,13 @@ namespace Validation.Validation
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
             VNonNegativePrice(purchaseOrderDetail);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
-            VUniquePurchaseOrderDetail(purchaseOrderDetail, _purchaseOrderDetails, _itemService);
+            VUniquePurchaseOrderDetail(purchaseOrderDetail, _purchaseOrderDetailService, _itemService);
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
+        public PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            VCreateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
+            VCreateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
             if (!isValid(purchaseOrderDetail)) { return purchaseOrderDetail; }
             VHasNotBeenConfirmed(purchaseOrderDetail);
             return purchaseOrderDetail;
@@ -156,16 +168,16 @@ namespace Validation.Validation
             return purchaseOrderDetail;
         }
 
-        public bool ValidCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
+        public bool ValidCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
-            VCreateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
+            VCreateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
             return isValid(purchaseOrderDetail);
         }
 
-        public bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail,  IPurchaseOrderDetailService _purchaseOrderDetails, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
+        public bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail,  IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
             purchaseOrderDetail.Errors.Clear();
-            VUpdateObject(purchaseOrderDetail, _purchaseOrderDetails, _purchaseOrderService, _itemService);
+            VUpdateObject(purchaseOrderDetail, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
             return isValid(purchaseOrderDetail);
         }
 

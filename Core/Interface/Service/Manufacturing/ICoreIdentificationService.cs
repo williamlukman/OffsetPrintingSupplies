@@ -10,11 +10,13 @@ namespace Core.Interface.Service
     public interface ICoreIdentificationService
     {
         ICoreIdentificationValidator GetValidator();
+        IQueryable<CoreIdentification> GetQueryable();
         IList<CoreIdentification> GetAll();
         IList<CoreIdentification> GetAllObjectsInHouse();
         IList<CoreIdentification> GetAllObjectsByContactId(int ContactId);
         IList<CoreIdentification> GetAllObjectsByWarehouseId(int WarehouseId);
         IList<CoreIdentification> GetConfirmedObjects();
+        IList<CoreIdentification> GetConfirmedNotCompletedObjects();
         CoreIdentification GetObjectById(int Id);
         CoreIdentification CreateObject(CoreIdentification coreIdentification, IContactService _contactService);
         CoreIdentification CreateObjectForContact(int ContactId, string Code, int Quantity, DateTime IdentifiedDate, int WarehouseId, IContactService _contactService);

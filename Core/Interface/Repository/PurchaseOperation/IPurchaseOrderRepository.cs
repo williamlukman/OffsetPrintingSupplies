@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IPurchaseOrderRepository : IRepository<PurchaseOrder>
     {
+        IQueryable<PurchaseOrder> GetQueryable();
         IList<PurchaseOrder> GetAll();
         IList<PurchaseOrder> GetAllByMonthCreated();
         PurchaseOrder GetObjectById(int Id);

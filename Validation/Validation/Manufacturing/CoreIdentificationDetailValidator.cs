@@ -21,6 +21,22 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail VDetailsDoNotExceedCoreIdentificationQuantity(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                                                      ICoreIdentificationDetailService _coreIdentificationDetailService, bool CaseCreate)
+        {
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+            IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentificationDetail.CoreIdentificationId);
+            if (coreIdentification.Quantity < details.Count())
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Jumlah detail harus " + coreIdentification.Quantity);
+            }
+            else if (CaseCreate && coreIdentification.Quantity == details.Count())
+            {
+                coreIdentificationDetail.Errors.Add("Generic", "Jumlah detail harus " + coreIdentification.Quantity);
+            }
+            return coreIdentificationDetail;
+        }
+
         public CoreIdentificationDetail VHasUniqueDetailId(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentificationDetail.CoreIdentificationId);
@@ -85,32 +101,12 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail VHasRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
-        {
-            RollerWarehouseMutationDetail rollerWarehouseMutationDetail = _rollerWarehouseMutationDetailService.GetObjectByCoreIdentificationDetailId(coreIdentificationDetail.Id);
-            if (rollerWarehouseMutationDetail == null)
-            {
-                coreIdentificationDetail.Errors.Add("Generic", "Tidak ada roller mutasi");
-            }
-            return coreIdentificationDetail;
-        }
-
         public CoreIdentificationDetail VIsInRecoveryOrderDetails(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByCoreIdentificationDetailId(coreIdentificationDetail.Id);
             if (details.Any())
             {
                 coreIdentificationDetail.Errors.Add("Generic", "Tidak boleh memiliki asosiasi Recovery Order Detail");
-            }
-            return coreIdentificationDetail;
-        }
-
-        public CoreIdentificationDetail VIsInRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
-        {
-            RollerWarehouseMutationDetail rollerWarehouseMutationDetail = _rollerWarehouseMutationDetailService.GetObjectByCoreIdentificationDetailId(coreIdentificationDetail.Id);
-            if (rollerWarehouseMutationDetail != null)
-            {
-                coreIdentificationDetail.Errors.Add("Generic", "Tidak boleh terasosiasi dengan roller warehouse mutation detail");
             }
             return coreIdentificationDetail;
         }
@@ -190,20 +186,38 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail VHasNotBeenFinished(CoreIdentificationDetail coreIdentificationDetail)
+        public CoreIdentificationDetail VHasNotBeenConfirmed(CoreIdentificationDetail coreIdentificationDetail)
         {
-            if (coreIdentificationDetail.IsFinished)
+            if (coreIdentificationDetail.IsConfirmed)
             {
                 coreIdentificationDetail.Errors.Add("Generic", "CoreIdentificationDetail sudah selesai");
             }
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail VHasFinishedDate(CoreIdentificationDetail coreIdentificationDetail)
+        public CoreIdentificationDetail VHasConfirmationDate(CoreIdentificationDetail coreIdentificationDetail)
         {
-            if (coreIdentificationDetail.FinishedDate == null)
+            if (coreIdentificationDetail.ConfirmationDate == null)
             {
-                coreIdentificationDetail.Errors.Add("FinishedDate", "Tidak boleh kosong");
+                coreIdentificationDetail.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
+            }
+            return coreIdentificationDetail;
+        }
+
+        public CoreIdentificationDetail VQuantityIsInStockForInHouse(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
+        {
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+            if (coreIdentification.IsInHouse)
+            {
+                int MaterialCase = coreIdentificationDetail.MaterialCase;
+                Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
+                                _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
+                                _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                if (warehouseItem.Quantity < 1)
+                {
+                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang tidak boleh kurang dari stock yang mau dimutasikan");
+                }
             }
             return coreIdentificationDetail;
         }
@@ -228,7 +242,7 @@ namespace Validation.Validation
 
         public CoreIdentificationDetail VCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService)
+                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
         {
             VHasCoreIdentification(coreIdentificationDetail, _coreIdentificationService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
@@ -243,29 +257,52 @@ namespace Validation.Validation
             VHasMeasurement(coreIdentificationDetail);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VHasRollerType(coreIdentificationDetail, _rollerTypeService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VQuantityIsInStockForInHouse(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            // specific for create, with CaseCreate = true
+            VDetailsDoNotExceedCoreIdentificationQuantity(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, true);
             return coreIdentificationDetail;
         }
 
         public CoreIdentificationDetail VUpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService)
+                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
         {
-            VCreateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _rollerTypeService, _machineService);
+            VHasCoreIdentification(coreIdentificationDetail, _coreIdentificationService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
-            VHasNotBeenFinished(coreIdentificationDetail);
+            VHasUniqueDetailId(coreIdentificationDetail, _coreIdentificationDetailService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasMaterialCase(coreIdentificationDetail);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasCoreBuilder(coreIdentificationDetail, _coreBuilderService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasMachine(coreIdentificationDetail, _machineService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasMeasurement(coreIdentificationDetail);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasRollerType(coreIdentificationDetail, _rollerTypeService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VQuantityIsInStockForInHouse(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            // specific for update, with CaseCreate = false
+            VDetailsDoNotExceedCoreIdentificationQuantity(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, false);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasNotBeenConfirmed(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail VFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                                          ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
+        public CoreIdentificationDetail VConfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
+                                                       IWarehouseItemService _warehouseItemService)
         {
-            VHasFinishedDate(coreIdentificationDetail);
+            VQuantityIsInStockForInHouse(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
-            VCoreIdentificationHasBeenConfirmed(coreIdentificationDetail, _coreIdentificationService);
+            VHasConfirmationDate(coreIdentificationDetail);
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail VUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        public CoreIdentificationDetail VUnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                           ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             VCoreIdentificationHasBeenConfirmed(coreIdentificationDetail, _coreIdentificationService);
@@ -323,15 +360,11 @@ namespace Validation.Validation
 
         public CoreIdentificationDetail VDeliverObject(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
-            VHasBeenRollerBuilt(coreIdentificationDetail);
-            VHasRollerWarehouseMutationDetail(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
             return coreIdentificationDetail;
         }
 
         public CoreIdentificationDetail VUndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
-            VHasRollerWarehouseMutationDetail(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
-            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VCoreIdentificationHasNotBeenCompleted(coreIdentificationDetail, _coreIdentificationService);
             return coreIdentificationDetail;
         }
@@ -342,41 +375,41 @@ namespace Validation.Validation
             VCoreIdentificationHasNotBeenConfirmed(coreIdentificationDetail, _coreIdentificationService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VIsInRecoveryOrderDetails(coreIdentificationDetail, _recoveryOrderDetailService);
-            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
-            VIsInRollerWarehouseMutationDetail(coreIdentificationDetail, _rollerWarehouseMutationDetailService);
             return coreIdentificationDetail;
         }
 
         public bool ValidCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService)
+                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
         {
-            VCreateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _rollerTypeService, _machineService);
+            VCreateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService,
+                          _rollerTypeService, _machineService, _warehouseItemService);
             return isValid(coreIdentificationDetail);
         }
 
         public bool ValidUpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                                      IRollerTypeService _rollerTypeService, IMachineService _machineService)
+                                      IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
         {
             coreIdentificationDetail.Errors.Clear();
-            VUpdateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _rollerTypeService, _machineService);
+            VUpdateObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService,
+                          _rollerTypeService, _machineService, _warehouseItemService);
             return isValid(coreIdentificationDetail);
         }
 
-        public bool ValidFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        public bool ValidConfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             coreIdentificationDetail.Errors.Clear();
-            VFinishObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService);
+            VConfirmObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService);
             return isValid(coreIdentificationDetail);
         }
 
-        public bool ValidUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        public bool ValidUnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
         {
             coreIdentificationDetail.Errors.Clear();
-            VUnfinishObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService);
+            VUnconfirmObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService);
             return isValid(coreIdentificationDetail);
         }
 

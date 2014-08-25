@@ -11,9 +11,9 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class RecoveryWorkOrderController : Controller
+    public class RecoveryWorkProcessController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkOrderController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkProcessController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
@@ -31,7 +31,7 @@ namespace WebView.Controllers
         private ICoreBuilderService _coreBuilderService;
         private IItemTypeService _itemTypeService;
 
-        public RecoveryWorkOrderController()
+        public RecoveryWorkProcessController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
@@ -161,7 +161,6 @@ namespace WebView.Controllers
                             model.CoreTypeCase,
                             model.Acc,
                             model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
-                            model.HasAccessory,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
@@ -273,12 +272,14 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.CoreIdentificationDetailId,
+                DetailId = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
+                CoreBuilderName = _coreBuilderService.GetObjectById(_coreIdentificationDetailService.GetObjectById(
+                                   model.CoreIdentificationDetailId).CoreBuilderId).Name,
                 model.RollerBuilderId,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                 model.CoreTypeCase,
                 model.Acc,
                 RepairRequestCase = model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
-                model.HasAccessory,
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
                 model.IsWrapped,
@@ -472,7 +473,6 @@ namespace WebView.Controllers
                 data.CoreTypeCase = model.CoreTypeCase;
                 data.Acc = model.Acc;
                 data.RepairRequestCase = model.RepairRequestCase;
-                data.HasAccessory = model.HasAccessory;
                 model = _recoveryOrderDetailService.UpdateObject(data,_recoveryOrderService,_coreIdentificationDetailService,_rollerBuilderService);
             }
             catch (Exception ex)
@@ -518,9 +518,10 @@ namespace WebView.Controllers
             try
             {
                 var data = _recoveryOrderDetailService.GetObjectById(Id);
-                if (Progress == "IsDisassembled") { model = _recoveryOrderDetailService.DisassembleObject(data); }
+                if (Progress == "IsDisassembled") { model = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
                 else if (Progress == "IsStrippedAndGlued") { model = _recoveryOrderDetailService.StripAndGlueObject(data); }
-                else if (Progress == "IsWrapped") { model = _recoveryOrderDetailService.WrapObject(data, CompoundUsage); }
+                else if (Progress == "IsWrapped") { model = _recoveryOrderDetailService.WrapObject(data, CompoundUsage,
+                                                            _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService); }
                 else if (Progress == "IsVulcanized") { model = _recoveryOrderDetailService.VulcanizeObject(data); }
                 else if (Progress == "IsFacedOff") { model = _recoveryOrderDetailService.FaceOffObject(data); }
                 else if (Progress == "IsConventionalGrinded") { model = _recoveryOrderDetailService.ConventionalGrindObject(data); }

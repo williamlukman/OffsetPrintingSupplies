@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<CoreBuilder> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<CoreBuilder> GetAll()
         {
             return FindAll().ToList();
@@ -35,7 +40,7 @@ namespace Data.Repository
                 CoreBuilder coreBuilder = GetObjectById(id);
                 Item item =
                     (from obj in db.Items
-                     where obj.Id == coreBuilder.UsedCoreItemId
+                     where obj.Id == coreBuilder.UsedCoreItemId && !obj.IsDeleted
                      select obj).First();
                 if (item != null) { item.Errors = new Dictionary<string, string>(); }
                 return item;
@@ -48,7 +53,7 @@ namespace Data.Repository
             {
                 CoreBuilder coreBuilder = GetObjectById(id);
                 Item item = (from obj in db.Items
-                             where obj.Id == coreBuilder.NewCoreItemId
+                             where obj.Id == coreBuilder.NewCoreItemId && !obj.IsDeleted
                              select obj).FirstOrDefault();
                 if (item != null) { item.Errors = new Dictionary<string, string>(); }
                 return item;

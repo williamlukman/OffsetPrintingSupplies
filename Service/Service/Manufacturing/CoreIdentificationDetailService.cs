@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<CoreIdentificationDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CoreIdentificationDetail> GetAll()
         {
             return _repository.GetAll();
@@ -75,7 +80,8 @@ namespace Service.Service
 
         public CoreIdentificationDetail CreateObject(int CoreIdentificationId, int DetailId, int MaterialCase, int CoreBuilderId, int RollerTypeId,
                                                      int MachineId, decimal RD, decimal CD, decimal RL, decimal WL, decimal TL, ICoreIdentificationService _coreIdentificationService,
-                                                     ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService)
+                                                     ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
+                                                     IWarehouseItemService _warehouseItemService)
         {
             CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail
             {
@@ -91,21 +97,23 @@ namespace Service.Service
                 WL = WL,
                 TL = TL
             };
-            return this.CreateObject(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService);
+            return this.CreateObject(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
         }
 
-        public CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                                     ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService)
+        public CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService,
+                                                     IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
         {
             coreIdentificationDetail.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _rollerTypeService, _machineService) ?
+            return (_validator.ValidCreateObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService,
+                                                _rollerTypeService, _machineService, _warehouseItemService) ?
                     _repository.CreateObject(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
-        public CoreIdentificationDetail UpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                                     ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService)
+        public CoreIdentificationDetail UpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService,
+                                                     IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
         {
-            return (coreIdentificationDetail = _validator.ValidUpdateObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _rollerTypeService, _machineService) ?
+            return (coreIdentificationDetail = _validator.ValidUpdateObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService,
+                                                                            _rollerTypeService, _machineService, _warehouseItemService) ?
                                                _repository.UpdateObject(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
@@ -126,15 +134,15 @@ namespace Service.Service
             return (coreIdentificationDetail = _validator.ValidUnsetJobScheduled(coreIdentificationDetail, _recoveryOrderService, _recoveryOrderDetailService) ? _repository.UnsetJobScheduled(coreIdentificationDetail) : coreIdentificationDetail);
         }
 
-        public CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService,
+        public CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail, DateTime ConfirmationDate, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            coreIdentificationDetail.FinishedDate = FinishedDate;
-            if( _validator.ValidFinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
+            coreIdentificationDetail.ConfirmationDate = ConfirmationDate;
+            if( _validator.ValidConfirmObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
-                if (coreIdentification.ContactId != null)
+                if (!coreIdentification.IsInHouse && coreIdentification.ContactId != null)
                 {
                     // add contact core
                     int MaterialCase = coreIdentificationDetail.MaterialCase;
@@ -145,16 +153,16 @@ namespace Service.Service
                     StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 }
-                _repository.FinishObject(coreIdentificationDetail);
+                _repository.ConfirmObject(coreIdentificationDetail);
             }
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        public CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnfinishObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
+            if (_validator.ValidUnconfirmObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
                 if (coreIdentification.ContactId != null)
@@ -171,7 +179,7 @@ namespace Service.Service
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                     }
                 }
-                _repository.UnfinishObject(coreIdentificationDetail);
+                _repository.UnconfirmObject(coreIdentificationDetail);
             }
             return coreIdentificationDetail;
         }

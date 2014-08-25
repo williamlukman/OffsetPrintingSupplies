@@ -11,26 +11,28 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class WarehouseMutationOrderController : Controller
+    public class WarehouseMutationController : Controller
     {
-      private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("WarehouseMutationOrderController");
+      private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("WarehouseMutationController");
         private IWarehouseService _warehouseService;
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
-        private IWarehouseMutationOrderService _warehouseMutationOrderService;
-        private IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService;
+        private IWarehouseMutationService _warehouseMutationService;
+        private IWarehouseMutationDetailService _warehouseMutationDetailService;
+        private IUoMService _uomService;
 
-        public WarehouseMutationOrderController()
+        public WarehouseMutationController()
         {
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
-            _warehouseMutationOrderService = new WarehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
-            _warehouseMutationOrderDetailService = new WarehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
+            _warehouseMutationService = new WarehouseMutationService(new WarehouseMutationRepository(), new WarehouseMutationValidator());
+            _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
+            _uomService = new UoMService(new UoMRepository(), new UoMValidator());
         }
 
 
@@ -46,9 +48,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _warehouseMutationOrderService.GetAll().Where(d => d.IsDeleted == false);
+            var query =  _warehouseMutationService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<WarehouseMutationOrder>;
+            var list = query as IEnumerable<WarehouseMutation>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -79,15 +81,12 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.WarehouseFromId,
                             _warehouseService.GetObjectById(model.WarehouseFromId).Name,
-                            model.WarehouseToId,
                             _warehouseService.GetObjectById(model.WarehouseToId).Name,
                             model.MutationDate,
-                            model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
-                            model.UpdatedAt,
+                            model.UpdatedAt
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -100,9 +99,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _warehouseMutationOrderDetailService.GetObjectsByWarehouseMutationOrderId(id).Where(d => d.IsDeleted == false);
+            var query =  _warehouseMutationDetailService.GetObjectsByWarehouseMutationId(id).Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<WarehouseMutationOrderDetail>;
+            var list = query as IEnumerable<WarehouseMutationDetail>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -132,9 +131,10 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Code,
-                            model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
-                            model.Quantity
+                            model.Quantity,
+                            _uomService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -142,10 +142,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            WarehouseMutationOrder model = new WarehouseMutationOrder();
+            WarehouseMutation model = new WarehouseMutation();
             try
             {
-                model = _warehouseMutationOrderService.GetObjectById(Id);
+                model = _warehouseMutationService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -168,10 +168,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfoDetail(int Id)
         {
-            WarehouseMutationOrderDetail model = new WarehouseMutationOrderDetail();
+            WarehouseMutationDetail model = new WarehouseMutationDetail();
             try
             {
-                model = _warehouseMutationOrderDetailService.GetObjectById(Id);
+                model = _warehouseMutationDetailService.GetObjectById(Id);
             
             }
             catch (Exception ex)
@@ -191,11 +191,11 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Insert(WarehouseMutationOrder model)
+        public dynamic Insert(WarehouseMutation model)
         {
             try
             {
-                model = _warehouseMutationOrderService.CreateObject(model,_warehouseService);
+                model = _warehouseMutationService.CreateObject(model,_warehouseService);
             }
             catch (Exception ex)
             {
@@ -210,11 +210,11 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic InsertDetail(WarehouseMutationOrderDetail model)
+        public dynamic InsertDetail(WarehouseMutationDetail model)
         {
             try
             {
-                model = _warehouseMutationOrderDetailService.CreateObject(model,_warehouseMutationOrderService,_itemService,_warehouseItemService);
+                model = _warehouseMutationDetailService.CreateObject(model,_warehouseMutationService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -229,15 +229,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(WarehouseMutationOrder model)
+        public dynamic Update(WarehouseMutation model)
         {
             try
             {
-                var data = _warehouseMutationOrderService.GetObjectById(model.Id);
+                var data = _warehouseMutationService.GetObjectById(model.Id);
                 data.WarehouseFromId = model.WarehouseFromId;
                 data.WarehouseToId = model.WarehouseToId;
                 data.MutationDate = model.MutationDate;
-                model = _warehouseMutationOrderService.UpdateObject(data,_warehouseService);
+                model = _warehouseMutationService.UpdateObject(data,_warehouseService);
             }
             catch (Exception ex)
             {
@@ -252,12 +252,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(WarehouseMutationOrder model)
+        public dynamic Delete(WarehouseMutation model)
         {
             try
             {
-                var data = _warehouseMutationOrderService.GetObjectById(model.Id);
-                model = _warehouseMutationOrderService.SoftDeleteObject(data);
+                var data = _warehouseMutationService.GetObjectById(model.Id);
+                model = _warehouseMutationService.SoftDeleteObject(data);
             }
             catch (Exception ex)
             {
@@ -272,12 +272,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic DeleteDetail(WarehouseMutationOrderDetail model)
+        public dynamic DeleteDetail(WarehouseMutationDetail model)
         {
             try
             {
-                var data = _warehouseMutationOrderDetailService.GetObjectById(model.Id);
-                model = _warehouseMutationOrderDetailService.SoftDeleteObject(data,_warehouseMutationOrderService,_warehouseItemService);
+                var data = _warehouseMutationDetailService.GetObjectById(model.Id);
+                model = _warehouseMutationDetailService.SoftDeleteObject(data,_warehouseMutationService,_warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -292,14 +292,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UpdateDetail(WarehouseMutationOrderDetail model)
+        public dynamic UpdateDetail(WarehouseMutationDetail model)
         {
             try
             {
-                var data = _warehouseMutationOrderDetailService.GetObjectById(model.Id);
+                var data = _warehouseMutationDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
-                model = _warehouseMutationOrderDetailService.UpdateObject(data,_warehouseMutationOrderService,_itemService,_warehouseItemService);
+                model = _warehouseMutationDetailService.UpdateObject(data,_warehouseMutationService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -315,12 +315,12 @@ namespace WebView.Controllers
 
 
         [HttpPost]
-        public dynamic Confirm(WarehouseMutationOrder model)
+        public dynamic Confirm(WarehouseMutation model)
         {
             try
             {
-                var data = _warehouseMutationOrderService.GetObjectById(model.Id);
-                model = _warehouseMutationOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_warehouseMutationOrderDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
+                var data = _warehouseMutationService.GetObjectById(model.Id);
+                model = _warehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_warehouseMutationDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
             }
             catch (Exception ex)
             {
@@ -335,13 +335,13 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UnConfirm(WarehouseMutationOrder model)
+        public dynamic UnConfirm(WarehouseMutation model)
         {
             try
             {
 
-                var data = _warehouseMutationOrderService.GetObjectById(model.Id);
-                model = _warehouseMutationOrderService.UnconfirmObject(data,_warehouseMutationOrderDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
+                var data = _warehouseMutationService.GetObjectById(model.Id);
+                model = _warehouseMutationService.UnconfirmObject(data,_warehouseMutationDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
             }
             catch (Exception ex)
             {

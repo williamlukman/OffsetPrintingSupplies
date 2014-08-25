@@ -29,6 +29,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<CashBankMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CashBankMutation> GetAll()
         {
             return _repository.GetAll();

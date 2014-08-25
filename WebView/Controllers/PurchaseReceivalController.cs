@@ -89,9 +89,9 @@ namespace WebView.Controllers
                             model.Code,
                             model.PurchaseOrderId,
                             _purchaseOrderService.GetObjectById(model.PurchaseOrderId).Code,
-                            model.ReceivalDate,
                             model.WarehouseId,
                             _warehouseService.GetObjectById(model.WarehouseId).Name,
+                            model.ReceivalDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -197,8 +197,10 @@ namespace WebView.Controllers
                             model.PurchaseOrderDetailId,
                             _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Code,
                             model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
                             model.Quantity,
+                            _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Price
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -252,7 +254,10 @@ namespace WebView.Controllers
                 model.PurchaseOrderDetailId,
                 PurchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Code,
                 model.ItemId,
+                ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
+                model.Quantity,
+                Price = _purchaseOrderDetailService.GetObjectById(model.PurchaseOrderDetailId).Price,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

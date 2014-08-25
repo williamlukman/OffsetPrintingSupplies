@@ -15,7 +15,7 @@ namespace Validation.Validation
             ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
             if (itemType == null)
             {
-                item.Errors.Add("ItemType", "Tidak boleh tidak ada");
+                item.Errors.Add("Generic", "Tidak boleh tidak ada");
             }
             return item;
         }
@@ -25,11 +25,11 @@ namespace Validation.Validation
             ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
             if (itemType == null)
             {
-                item.Errors.Add("ItemType", "Tidak boleh tidak ada");
+                item.Errors.Add("Generic", "Tidak boleh tidak ada");
             }
             else if (itemType.IsLegacy)
             {
-                item.Errors.Add("ItemType", "Tidak boleh memilih Legacy item type");
+                item.Errors.Add("Generic", "Tidak boleh memilih Legacy item type");
             }
             return item;
         }
@@ -155,6 +155,36 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VIsNotInBarring(Item item, IBarringService _barringService, IItemTypeService _itemTypeService)
+        {
+            ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+            if (itemType.Name == Core.Constants.Constant.ItemTypeCase.Blanket)
+            {
+                IList<Barring> barrings = _barringService.GetObjectsByBlanketItemId(item.Id);
+                if (barrings.Any())
+                {
+                    item.Errors.Add("Generic", "Blanket Item dipakai sebagai bahan pembuatan barring");
+                }
+            }
+            else if (itemType.Name == Core.Constants.Constant.ItemTypeCase.Bar)
+            {
+                IList<Barring> barrings1 = _barringService.GetObjectsByLeftBarItemId(item.Id);
+                if (barrings1.Any())
+                {
+                    item.Errors.Add("Generic", "Bar Item dipakai sebagai bahan pembuatan barring");
+                }
+                else
+                {
+                    IList<Barring> barrings2 = _barringService.GetObjectsByRightBarItemId(item.Id);
+                    if (barrings2.Any())
+                    {
+                        item.Errors.Add("Generic", "Bar Item dipakai sebagai bahan pembuatan barring");
+                    }
+                }
+            }
+            return item;
+        }
+
         public Item VCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             VHasUoM(item, _uomService);
@@ -198,7 +228,8 @@ namespace Validation.Validation
         }
 
         public Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                                  IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
+                                  IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                  IBarringService _barringService)
         {
             VHasItemTypeAndNotLegacyItem(item, _itemTypeService);
             if (!isValid(item)) { return item; }
@@ -211,10 +242,14 @@ namespace Validation.Validation
             VHasNoStockAdjustmentDetails(item, _stockAdjustmentDetailService);
             if (!isValid(item)) { return item; }
             VHasNoSalesOrderDetails(item, _salesOrderDetailService);
+            if (!isValid(item)) { return item; }
+            VIsNotInBarring(item, _barringService, _itemTypeService);
             return item;
         }
 
-        public Item VDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public Item VDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                        IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                        ISalesOrderDetailService _salesOrderDetailService)
         {
             VHasNoStockMutations(item, _stockMutationService);
             if (!isValid(item)) { return item; }
@@ -272,14 +307,18 @@ namespace Validation.Validation
             return isValid(item);
         }
 
-        public bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                      IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                      ISalesOrderDetailService _salesOrderDetailService, IBarringService _barringService)
         {
             item.Errors.Clear();
-            VDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService);
+            VDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService, _barringService);
             return isValid(item);
         }
 
-        public bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        public bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
+                                            IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                                            ISalesOrderDetailService _salesOrderDetailService)
         {
             item.Errors.Clear();
             VDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService);

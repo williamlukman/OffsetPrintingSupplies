@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IContactRepository : IRepository<Contact>
     {
+        IQueryable<Contact> GetQueryable();
         IList<Contact> GetAll();
         Contact GetObjectById(int Id);
         Contact CreateObject(Contact contact);

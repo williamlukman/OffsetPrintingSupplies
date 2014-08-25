@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IRecoveryOrderRepository : IRepository<RecoveryOrder>
     {
+        IQueryable<RecoveryOrder> GetQueryable();
         IList<RecoveryOrder> GetAll();
         IList<RecoveryOrder> GetAllObjectsInHouse();
         IList<RecoveryOrder> GetAllObjectsByContactId(int ContactId);

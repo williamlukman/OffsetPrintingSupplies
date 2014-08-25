@@ -29,14 +29,19 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<RollerWarehouseMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<RollerWarehouseMutation> GetAll()
         {
             return _repository.GetAll();
         }
 
-        public IList<RollerWarehouseMutation> GetObjectsByCoreIdentificationId(int coreIdentificationId)
+        public IList<RollerWarehouseMutation> GetObjectsByRecoveryOrderId(int recoveryOrderId)
         {
-            return _repository.GetObjectsByCoreIdentificationId(coreIdentificationId);
+            return _repository.GetObjectsByRecoveryOrderId(recoveryOrderId);
         }
 
         public Warehouse GetWarehouseFrom(RollerWarehouseMutation rollerWarehouseMutation)
@@ -54,15 +59,15 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public RollerWarehouseMutation CreateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, ICoreIdentificationService _coreIdentificationService)
+        public RollerWarehouseMutation CreateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, IRecoveryOrderService _recoveryOrderService)
         {
             rollerWarehouseMutation.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(rollerWarehouseMutation, _warehouseService, _coreIdentificationService) ? _repository.CreateObject(rollerWarehouseMutation) : rollerWarehouseMutation);
+            return (_validator.ValidCreateObject(rollerWarehouseMutation, _warehouseService, _recoveryOrderService) ? _repository.CreateObject(rollerWarehouseMutation) : rollerWarehouseMutation);
         }
 
-        public RollerWarehouseMutation UpdateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, ICoreIdentificationService _coreIdentificationService)
+        public RollerWarehouseMutation UpdateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, IRecoveryOrderService _recoveryOrderService)
         {
-            return (rollerWarehouseMutation = _validator.ValidUpdateObject(rollerWarehouseMutation, _warehouseService, _coreIdentificationService) ? _repository.UpdateObject(rollerWarehouseMutation) : rollerWarehouseMutation);
+            return (rollerWarehouseMutation = _validator.ValidUpdateObject(rollerWarehouseMutation, _warehouseService, _recoveryOrderService) ? _repository.UpdateObject(rollerWarehouseMutation) : rollerWarehouseMutation);
         }
 
         public RollerWarehouseMutation SoftDeleteObject(RollerWarehouseMutation rollerWarehouseMutation)
@@ -72,8 +77,8 @@ namespace Service.Service
 
         public RollerWarehouseMutation ConfirmObject(RollerWarehouseMutation rollerWarehouseMutation, DateTime ConfirmationDate, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
-                                                     IStockMutationService _stockMutationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                     ICoreIdentificationService _coreIdentificationService)
+                                                     IStockMutationService _stockMutationService, IRecoveryOrderDetailService _recoveryOrderDetailService, 
+                                                     ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService)
         {
             rollerWarehouseMutation.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(rollerWarehouseMutation, this, _rollerWarehouseMutationDetailService,
@@ -84,7 +89,8 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _rollerWarehouseMutationDetailService.ConfirmObject(detail, ConfirmationDate, this, _itemService, _barringService,
-                                                                        _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+                                                                        _warehouseItemService, _stockMutationService, _recoveryOrderDetailService,
+                                                                        _coreIdentificationDetailService, _coreIdentificationService);
                 }
                 _repository.ConfirmObject(rollerWarehouseMutation);
             }
@@ -93,8 +99,8 @@ namespace Service.Service
 
         public RollerWarehouseMutation UnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService,
-                                                      IStockMutationService _stockMutationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                      ICoreIdentificationService _coreIdentificationService)
+                                                      IStockMutationService _stockMutationService, IRecoveryOrderDetailService _recoveryOrderDetailService, 
+                                                      ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService)
         {
             if (_validator.ValidUnconfirmObject(rollerWarehouseMutation, this, _rollerWarehouseMutationDetailService,
                                                 _itemService, _barringService, _warehouseItemService))
@@ -104,7 +110,8 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _rollerWarehouseMutationDetailService.UnconfirmObject(detail, this, _itemService, _barringService, _warehouseItemService,
-                                                                          _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+                                                                          _stockMutationService, _recoveryOrderDetailService, _coreIdentificationDetailService,
+                                                                          _coreIdentificationService);
                 }
                 _repository.UnconfirmObject(rollerWarehouseMutation);
             }

@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<BarringOrderDetail> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<BarringOrderDetail> GetAll()
         {
             return FindAll().ToList();
@@ -42,8 +47,6 @@ namespace Data.Repository
 
         public BarringOrderDetail CreateObject(BarringOrderDetail barringOrderDetail)
         {
-            barringOrderDetail.HasLeftBar = false;
-            barringOrderDetail.HasRightBar = false;
             barringOrderDetail.IsCut = false;
             barringOrderDetail.IsSideSealed = false;
             barringOrderDetail.IsBarPrepared = false;
@@ -85,38 +88,6 @@ namespace Data.Repository
         public BarringOrderDetail UnsetJobScheduled(BarringOrderDetail barringOrderDetail)
         {
             barringOrderDetail.IsJobScheduled = false;
-            barringOrderDetail.UpdatedAt = DateTime.Now;
-            Update(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail AddRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.HasRightBar = true;
-            barringOrderDetail.UpdatedAt = DateTime.Now;
-            Update(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail RemoveRightBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.HasRightBar = false;
-            barringOrderDetail.UpdatedAt = DateTime.Now;
-            Update(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.HasLeftBar = true;
-            barringOrderDetail.UpdatedAt = DateTime.Now;
-            Update(barringOrderDetail);
-            return barringOrderDetail;
-        }
-
-        public BarringOrderDetail RemoveLeftBar(BarringOrderDetail barringOrderDetail)
-        {
-            barringOrderDetail.HasLeftBar = false;
             barringOrderDetail.UpdatedAt = DateTime.Now;
             Update(barringOrderDetail);
             return barringOrderDetail;
@@ -212,7 +183,6 @@ namespace Data.Repository
         public BarringOrderDetail FinishObject(BarringOrderDetail barringOrderDetail)
         {
             barringOrderDetail.IsFinished = true;
-            barringOrderDetail.FinishedDate = DateTime.Now;
             Update(barringOrderDetail);
             return barringOrderDetail;
         }

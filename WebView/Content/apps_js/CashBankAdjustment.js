@@ -23,19 +23,17 @@
     $("#list").jqGrid({
         url: base_url + 'CashBankAdjustment/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'CashBank Id', 'CashBank Name', 'Amount',
-                   'Adjustment Date', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'CashBank', 'Amount',
+                   'Adjustment Date', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'code', index: 'code', width: 100 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 80 },
-                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 80 },
-                  { name: 'confirmationdate', index: 'confirmationdate', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+				  { name: 'code', index: 'code', width: 80 },
+                  { name: 'cashbankname', index: 'cashbankname', width: 150 },
+                  { name: 'amount', index: 'amount', width: 120, formatter: 'currency', align: "right", formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'adjustmentdate', index: 'adjustmentdate', search:false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'confirmationdate', index: 'confirmationdate', search:false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -99,7 +97,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }

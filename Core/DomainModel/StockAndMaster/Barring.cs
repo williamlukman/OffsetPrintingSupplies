@@ -18,6 +18,10 @@ namespace Core.DomainModel
         public decimal thickness { get; set; }
         public decimal KS { get; set; }
 
+        public bool IsBarRequired { get; set; }
+        public bool HasLeftBar { get; set; }
+        public bool HasRightBar { get; set; }
+
         public virtual Contact Contact { get; set; }
         public virtual Machine Machine { get; set; }
         public virtual ICollection<BarringOrderDetail> BarringOrderDetails { get; set; }

@@ -24,6 +24,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<RollerType> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<RollerType> GetAll()
         {
             return _repository.GetAll();

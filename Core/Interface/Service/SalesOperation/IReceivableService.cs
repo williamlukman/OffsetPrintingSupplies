@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IReceivableService
     {
         IReceivableValidator GetValidator();
+        IQueryable<Receivable> GetQueryable();
         IList<Receivable> GetAll();
         IList<Receivable> GetObjectsByContactId(int contactId);
         Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId); 

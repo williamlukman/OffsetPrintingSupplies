@@ -126,7 +126,7 @@ namespace Validation.Validation
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
             if (coreIdentification.Quantity != details.Count())
             {
-                coreIdentification.Errors.Add("Quantity", "Tidak sama dengan jumlah Core Identification Detail");
+                coreIdentification.Errors.Add("Generic", "Quantity tidak sama dengan jumlah Core Identification Detail " + details.Count());
             }
             return coreIdentification;
         }
@@ -161,7 +161,7 @@ namespace Validation.Validation
                 WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePair.Key);
                 if (warehouseItem.Quantity < ValuePair.Value)
                 {
-                    coreIdentification.Errors.Add("Generic", "Stock item tidak mencukupi untuk melakukan Core Identification");
+                    coreIdentification.Errors.Add("Generic", "Stock di warehouseId: " + warehouseItem.WarehouseId + ", itemId: " + warehouseItem.ItemId + " jumlah: " + warehouseItem.Quantity + " tidak mencukupi untuk melakukan Core Identification");
                     return coreIdentification;
                 }
             }

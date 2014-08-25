@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IContactGroupRepository : IRepository<ContactGroup>
     {
+        IQueryable<ContactGroup> GetQueryable();
         IList<ContactGroup> GetAll();
         ContactGroup GetObjectById(int Id);
         ContactGroup GetObjectByIsLegacy(bool IsLegacy);

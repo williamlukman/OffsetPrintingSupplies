@@ -43,7 +43,7 @@ namespace Core.Constants
             public static string RollerWarehouseMutation = "RollerWarehouseMutation";
             public static string SalesOrder = "SalesOrder";
             public static string StockAdjustment = "StockAdjustment";
-            public static string WarehouseMutationOrder = "WarehouseMutationOrder";
+            public static string WarehouseMutation = "WarehouseMutation";
         }
 
         public class SourceDocumentDetailType
@@ -60,7 +60,7 @@ namespace Core.Constants
             public static string RollerWarehouseMutationDetail = "RollerWarehouseMutationDetail";
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
-            public static string WarehouseMutationOrderDetail = "WarehouseMutationOrderDetail";
+            public static string WarehouseMutationDetail = "WarehouseMutationDetail";
         }
 
         public class PayableSource

@@ -72,12 +72,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.SourceCashBankId,
                             _cashBankService.GetObjectById(model.SourceCashBankId).Name,
-                            model.TargetCashBankId,
                             _cashBankService.GetObjectById(model.TargetCashBankId).Name,
                             model.Amount,
-                            model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -111,6 +108,7 @@ namespace WebView.Controllers
                 TargetCashBank = _cashBankService.GetObjectById(model.TargetCashBankId).Name,
                 model.IsConfirmed,
                 model.ConfirmationDate,
+                model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 

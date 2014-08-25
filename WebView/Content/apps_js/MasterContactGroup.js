@@ -30,8 +30,8 @@
         colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 80 },
-                  { name: 'description', index: 'description', width: 250 },
+				  { name: 'name', index: 'name', width: 120 },
+                  { name: 'description', index: 'description', width: 200 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -158,7 +158,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
                     $("#delete_confirm_div").dialog('close');
@@ -216,7 +216,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
                 }

@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IRollerTypeService
     {
         IRollerTypeValidator GetValidator();
+        IQueryable<RollerType> GetQueryable();
         IList<RollerType> GetAll();
         RollerType GetObjectById(int Id);
         RollerType GetObjectByName(string Name);

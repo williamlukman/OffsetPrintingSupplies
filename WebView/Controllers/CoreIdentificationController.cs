@@ -92,15 +92,11 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.WarehouseId,
-                            _warehouseService.GetObjectById(model.WarehouseId).Code,
                             _warehouseService.GetObjectById(model.WarehouseId).Name,
-                            model.ContactId,
-                            model.ContactId.HasValue ?_contactService.GetObjectById(model.ContactId.Value).Name : "",
                             model.IsInHouse,
+                            model.ContactId.HasValue ?_contactService.GetObjectById(model.ContactId.Value).Name : "",
                             model.Quantity,
                             model.IdentifiedDate,
-                            model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -151,6 +147,7 @@ namespace WebView.Controllers
                         model.CoreIdentificationId,
                         model.MaterialCase == 1 ? "New" : "Used",
                         model.CoreBuilderId,
+                        _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
                         _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                         model.RollerTypeId,
                         _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
@@ -160,9 +157,7 @@ namespace WebView.Controllers
                         model.CD,
                         model.RL,
                         model.WL,
-                        model.TL,
-                        model.IsFinished,
-                        model.FinishedDate,
+                        model.TL
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -220,6 +215,7 @@ namespace WebView.Controllers
                 model.CoreIdentificationId,
                 model.MaterialCase,
                 model.CoreBuilderId,
+                CoreBuilderBaseSku = _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
                 CoreBuilder = _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                 model.RollerTypeId,
                 RollerType = _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
@@ -230,7 +226,6 @@ namespace WebView.Controllers
                 model.RL,
                 model.WL,
                 model.TL,
-                model.FinishedDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -262,7 +257,7 @@ namespace WebView.Controllers
             try
             {
                 model = _coreIdentificationDetailService.CreateObject(model, _coreIdentificationService,_coreBuilderService,
-                    _rollerTypeService,_machineService
+                    _rollerTypeService,_machineService, _warehouseItemService
                   );
                 amount = _coreIdentificationService.GetObjectById(model.CoreIdentificationId).Quantity;
             }
@@ -367,7 +362,7 @@ namespace WebView.Controllers
                 data.WL = model.WL;
                 data.TL = model.TL;
                 model = _coreIdentificationDetailService.UpdateObject(data, _coreIdentificationService
-                    ,_coreBuilderService,_rollerTypeService,_machineService);
+                    ,_coreBuilderService,_rollerTypeService,_machineService, _warehouseItemService);
                 amount = _coreIdentificationService.GetObjectById(model.CoreIdentificationId).Quantity;
             }
             catch (Exception ex)
@@ -429,48 +424,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-        [HttpPost]
-        public dynamic Finish(CoreIdentificationDetail model)
-        {
-            try
-            {
-                var data = _coreIdentificationDetailService.GetObjectById(model.Id);
-                model = _coreIdentificationDetailService.FinishObject(data,model.FinishedDate.Value,_coreIdentificationService,_coreBuilderService,_stockMutationService
-                    ,_itemService,_barringService,_warehouseItemService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Unconfirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic UnFinish(CoreIdentificationDetail model)
-        {
-            try
-            {
-                var data = _coreIdentificationDetailService.GetObjectById(model.Id);
-                model = _coreIdentificationDetailService.UnfinishObject(data,_coreIdentificationService,_coreBuilderService,_stockMutationService
-                    ,_itemService,_barringService,_warehouseItemService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Unfinish Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
     }
 }

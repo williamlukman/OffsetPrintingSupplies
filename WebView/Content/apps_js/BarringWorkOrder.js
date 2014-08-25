@@ -37,47 +37,33 @@
     }
 
     $("#confirm_div").dialog('close');
-    $("#finished_div").dialog('close');
-    $("#rejected_div").dialog('close');
     $("#form_div").dialog('close');
     $("#item_div").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#lookup_div_barring").dialog('close');
     $("#lookup_div_warehouse").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    $("#IsCut").hide();
-    $("#IsSideSealed").hide();
-    $("#IsBarPrepared").hide();
-    $("#IsAdhesiveTapeApplied").hide();
-    $("#IsBarMounted").hide();
-    $("#IsBarHeatPressed").hide();
-    $("#IsBarPullOffTested").hide();
-    $("#IsQCAndMarked").hide();
-    $("#IsPackaged").hide();
+    $("#rejected_div").dialog('close');
+    $("#finished_div").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'BarringWorkOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Warehouse Id',
-                    'Warehouse Code', 'Warehouse Name', 'QTY Received', 'QTY Final',
-                    'QTY Rejected', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'
+        colNames: ['ID', 'Code', 'Contact', 'Warehouse', 'QTY Received', 'QTY Final',
+                    'QTY Rejected', 'Confirmation Date', 'Created At', 'Updated At'
         ],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'contactid', index: 'contactid', width: 100 },
-                  { name: 'contactname', index: 'contactname', width: 100 },
-                  { name: 'warehouseid', index: 'warehouseid', width: 100 },
-                  { name: 'warehousecode', index: 'warehousecode', width: 100 },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
+                  { name: 'code', index: 'code', width: 50 },
+	              { name: 'contactname', index: 'contactname', width: 130 },
                   { name: 'warehouse', index: 'warehouse', width: 100 },
-                  { name: 'quantityreceived', index: 'quantityreceived', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'quantityfinal', index: 'quantityfinal', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'quantityrejected', index: 'quantityrejected', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
+                  { name: 'quantityreceived', index: 'quantityreceived', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'quantityfinal', index: 'quantityfinal', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'quantityrejected', index: 'quantityrejected', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -147,7 +133,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -195,7 +181,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -416,34 +402,20 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['BarringOrderId', 'Barring Id', 'Barring Name', 'IsBarRequired', 'HasLeftBar', 'LeftBarId', 'LeftBarName',
-                    'HasRightBar', 'RightBarId', 'RightBarName','IsCut','IsSideSealed',  'IsBarPrepared',
-                    'IsAdhesiveTapeApplied','IsBarMounted',    'IsBarHeatPressed',    'IsBarPullOffTested',
-                    'IsQCAndMarked',   'IsPackaged',  'IsRejected',     'Rejected Date', 'Is Finished' ,'Finished Date' 
+        colNames: ['Sku', 'Name', 'Sku', 'Nama',
+                   'Sku', 'Name', 'Sku', 'Nama',
+                   'Rejected Date' ,'Finished Date' 
         ],
         colModel: [
-                  { name: 'barringorderid', index: 'barringorderid', width: 100, sortable: false },
-                  { name: 'barringid', index: 'barringid', width: 100, sortable: false },
-                  { name: 'barringname', index: 'barringname', width: 100, sortable: false },
-				  { name: 'isbarrequired', index: 'isbarrequired', width: 100, sortable: false },
-                  { name: 'hasleftbar', index: 'hasleftbar', width: 100, sortable: false },
-                  { name: 'leftbarid', index: 'leftbarid', width: 100, sortable: false },
-                  { name: 'leftbarname', index: 'leftbarname', width: 100, sortable: false },
-                  { name: 'hasrightbar', index: 'hasrightbar', width: 100, sortable: false },
-                  { name: 'rightbarid', index: 'rightbarid', width: 100, sortable: false },
-                  { name: 'rightbarname', index: 'rightbarname', width: 100, sortable: false },
-                  { name: 'iscut', index: 'iscut', width: 100, sortable: false },
-                  { name: 'issidesealed', index: 'issidesealed', width: 100, sortable: false },
-                  { name: 'isbarprepared', index: 'isbarprepared', width: 100, sortable: false },
-                  { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 100, sortable: false },
-                  { name: 'isbarmounted', index: 'isbarmounted', width: 100, sortable: false },
-                  { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 100, sortable: false },
-                  { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 100, sortable: false },
-                  { name: 'isqcandmarked', index: 'isqcandmarked', width: 100, sortable: false },
-                  { name: 'ispackaged', index: 'ispackaged', width: 100, sortable: false },
-                  { name: 'isrejected', index: 'isrejected', width: 100, sortable: false },
+                  { name: 'barringsku', align:'right', index: 'barringsku', width: 50, sortable: false },
+                  { name: 'barringname', index: 'barringname', width: 70, sortable: false },
+                  { name: 'blanketsku', align:'right', index: 'blanketsku', width: 50, sortable: false },
+                  { name: 'blanketname', index: 'blanketname', width: 70, sortable: false },
+                  { name: 'leftbarsku', align:'right', index: 'leftbarsku', width: 50, sortable: false },
+                  { name: 'leftbarname', index: 'leftbarname', width: 70, sortable: false },
+                  { name: 'rightbarsku', align:'right', index: 'rightbarsku', width: 50, sortable: false },
+                  { name: 'rightbarname', index: 'rightbarname', width: 70, sortable: false },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isfinished', index: 'isfinished', width: 100, sortable: false },
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 
         ],
@@ -458,58 +430,23 @@
         sortorder: "ASC",
         width: $(window).width() -600,
         height: $(window).height() - 500,
-        onSelectRow: function (id) {
-            var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-            if (id) {
-                $.ajax({
-                    dataType: "json",
-                    url: base_url + "BarringWorkOrder/GetInfoDetail?Id=" + id,
-                    success: function (result) {
-                        if (result.Id == null) {
-                            $.messager.alert('Information', 'Data Not Found...!!', 'info');
-                        }
-                        else {
-                            $("#IsCut").hide();
-                            $("#IsSideSealed").hide();
-                            $("#IsBarPrepared").hide();
-                            $("#IsAdhesiveTapeApplied").hide();
-                            $("#IsBarMounted").hide();
-                            $("#IsBarHeatPressed").hide();
-                            $("#IsBarPullOffTested").hide();
-                            $("#IsQCAndMarked").hide();
-                            $("#IsPackaged").hide();
-                            if (JSON.stringify(result.Errors) != '{}') {
-                                var error = '';
-                                for (var key in result.Errors) {
-                                    error = error + "<br>" + key + " " + result.model.Errors[key];
-                                }
-                                $.messager.alert('Warning', error, 'warning');
-                            }
-                            else {
-                                if (result.IsCut == false) { $("#IsCut").show(); }
-                                else if (result.IsSideSealed == false) { $("#IsSideSealed").show(); }
-                                else if (result.IsBarPrepared == false) { $("#IsBarPrepared").show(); }
-                                else if (result.IsAdhesiveTapeApplied == false) { $("#IsAdhesiveTapeApplied").show(); }
-                                else if (result.IsBarMounted == false) { $("#IsBarMounted").show(); }
-                                else if (result.IsBarHeatPressed == false) { $("#IsBarHeatPressed").show(); }
-                                else if (result.IsBarPullOffTested == false) { $("#IsBarPullOffTested").show(); }
-                                else if (result.IsQCAndMarked == false) { $("#IsQCAndMarked").show(); }
-                                else if (result.IsPackaged == false) { $("#IsPackaged").show(); }
-
-                            }
-                        }
-                    }
-                });
-            } else {
-                $.messager.alert('Information', 'Data Not Found...!!', 'info');
-            };
-        },
         gridComplete:
 		  function () {
 		  }
     });//END GRID Detail
     $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    jQuery("#listdetail").jqGrid('setGroupHeaders', {
+        useColSpanStyle: false,
+        groupHeaders: [
+          { startColumnName: 'barringsku', numberOfColumns: 2, titleText: 'Barring'},
+          { startColumnName: 'blanketsku', numberOfColumns: 2, titleText: 'Blanket'},
+          { startColumnName: 'leftbarsku', numberOfColumns: 2, titleText: 'LeftBar'},
+          { startColumnName: 'rightbarsku', numberOfColumns: 2, titleText: 'RightBar'},
+
+        ]
+    });
+
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -533,39 +470,20 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            var e = document.getElementById("IsBarRequired");
-                            if (result.IsBarRequired == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
-                            var f = document.getElementById("HasLeftBar");
-                            if (result.HasLeftBar == true) {
-                                f.selectedIndex = 0;
-                            }
-                            else {
-                                f.selectedIndex = 1;
-                            }
-                            var g = document.getElementById("HasRightBar");
-                            if (result.HasRightBar == true) {
-                                g.selectedIndex = 0;
-                            }
-                            else {
-                                g.selectedIndex = 1;
-                            }
-                            $('#BarringId').val(result.BarringId);
+                            $('#BarringSku').val(result.BarringSku);
                             $('#Barring').val(result.Barring);
-                            $('#BarringRightBarId').val(result.BarringRightBarId);
-                            $('#BarringRightBar').val(result.BarringRightBar);
-                            $('#BarringLeftBarId').val(result.BarringLeftBarId);
+                            $('#BlanketSku').val(result.BlanketSku);
+                            $('#Blanket').val(result.Blanket);
+                            $('#BarringLeftBarSku').val(result.BarringLeftBarSku);
                             $('#BarringLeftBar').val(result.BarringLeftBar);
+                            $('#BarringRightBarSku').val(result.BarringRightBarSku);
+                            $('#BarringRightBar').val(result.BarringRightBar);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -614,330 +532,6 @@
         }
     });
 
-    $('#btn_finish_detail').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $('#FinishedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-            $('#idfinished').val(id);
-            $("#finished_div").dialog("open");
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#btn_unfinish_detail').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to unfinish record?', function (r) {
-                if (r) {
-                    $.ajax({
-                        url: base_url + "BarringWorkOrder/Unfinish",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            Id: id,
-                        }),
-                        success: function (result) {
-                            if (JSON.stringify(result.Errors) != '{}') {
-                                for (var key in result.Errors) {
-                                    if (key != null && key != undefined && key != 'Generic') {
-                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                    }
-                                    else {
-                                        $.messager.alert('Warning', result.Errors[key], 'warning');
-                                    }
-                                }
-                            }
-                            else {
-                                ReloadGridDetail();
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#finished_btn_submit').click(function () {
-        ClearErrorMessage();
-        $.ajax({
-            url: base_url + "BarringWorkOrder/Finish",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'),
-            }),
-            success: function (result) {
-                if (JSON.stringify(result.Errors) != '{}') {
-                    for (var key in result.Errors) {
-                        if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                        }
-                        else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
-                        }
-                    }
-                }
-                else {
-                    ReloadGridDetail();
-                    $("#finished_div").dialog('close');
-                }
-            }
-        });
-    });
-
-    $('#finished_btn_cancel').click(function () {
-        $('#finished_div').dialog('close');
-    });
-
-    $('#btn_reject_detail').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $('#FinishedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-            $('#idrejected').val(id);
-            $("#rejected_div").dialog("open");
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#btn_unreject_detail').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to unreject record?', function (r) {
-                if (r) {
-                    $.ajax({
-                        url: base_url + "BarringWorkOrder/Unreject",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            Id: id,
-                        }),
-                        success: function (result) {
-                            if (JSON.stringify(result.Errors) != '{}') {
-                                for (var key in result.Errors) {
-                                    if (key != null && key != undefined && key != 'Generic') {
-                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                    }
-                                    else {
-                                        $.messager.alert('Warning', result.Errors[key], 'warning');
-                                    }
-                                }
-                            }
-                            else {
-                                ReloadGridDetail();
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#rejected_btn_submit').click(function () {
-        ClearErrorMessage();
-        $.ajax({
-            url: base_url + "BarringWorkOrder/Reject",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                Id: $('#idrejected').val(), RejectedDate: $('#FinishedDate').datebox('getValue'),
-            }),
-            success: function (result) {
-                if (JSON.stringify(result.Errors) != '{}') {
-                    for (var key in result.Errors) {
-                        if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                        }
-                        else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
-                        }
-                    }
-                }
-                else {
-                    ReloadGridDetail();
-                    $("#rejected_div").dialog('close');
-                }
-            }
-        });
-    });
-
-    $('#rejected_btn_cancel').click(function () {
-        $('#rejected_div').dialog('close');
-    });
-
-    function UpdateProgress(detailid,progress) {
-        $.ajax({
-            url: base_url + "BarringWorkOrder/ProgressDetail?Id=" + detailid +"&" +"Progress=" + progress,
-            type: "POST",
-            contentType: "application/json",
-            success: function (result) {
-                if (JSON.stringify(result.Errors) != '{}') {
-                    for (var key in result.Errors) {
-                        if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                        }
-                        else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
-                        }
-                    }
-                }
-                else {
-                    $("#IsCut").hide();
-                    $("#IsSideSealed").hide();
-                    $("#IsBarPrepared").hide();
-                    $("#IsAdhesiveTapeApplied").hide();
-                    $("#IsBarMounted").hide();
-                    $("#IsBarHeatPressed").hide();
-                    $("#IsBarPullOffTested").hide();
-                    $("#IsQCAndMarked").hide();
-                    $("#IsPackaged").hide();
-                    ReloadGridDetail();
-                }
-            }
-        });
-    }
-
-    $('#IsCut').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsCut");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#IsSideSealed').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsSideSealed");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#IsBarPrepared').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsBarPrepared");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#IsAdhesiveTapeApplied').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsAdhesiveTapeApplied");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#IsBarMounted').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsBarMounted");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#IsBarHeatPressed').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsBarHeatPressed");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#IsBarPullOffTested').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsBarPullOffTested");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-
-    $('#IsQCAndMarked').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsQCAndMarked");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#IsPackaged').click(function () {
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to progress record?', function (r) {
-                if (r) {
-                    UpdateProgress(id, "IsPackaged");
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
     //--------------------------------------------------------Dialog Item-------------------------------------------------------------
     // coreidentification_btn_submit
 
@@ -956,20 +550,13 @@
         else {
             submitURL = base_url + 'BarringWorkOrder/InsertDetail';
         }
-        var e = document.getElementById("IsBarRequired");
-        var isbar = e.options[e.selectedIndex].value;
-        var f = document.getElementById("HasLeftBar");
-        var hasleft = f.options[f.selectedIndex].value;
-        var g = document.getElementById("HasRightBar");
-        var hasright = g.options[g.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, BarringId: $("#BarringId").val(), IsBarRequired: isbar, HasLeftBar: hasleft,
-                HasRightBar: hasright, BarringOrderId: $("#id").val()
+                Id: id, BarringId: $("#BarringSku").data('kode'), BarringOrderId: $("#id").val()
             }),
             async: false,
             cache: false,
@@ -1120,9 +707,9 @@
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
 
 
-    // -------------------------------------------------------Look Up barring-------------------------------------------------------
+    // -------------------------------------------------------Look Up barring, blanket, bars-------------------------------------------------------
     $('#btnBarring').click(function () {
-        var lookUpURL = base_url + 'MstBarring/GetList';
+        var lookUpURL = base_url + 'MstBarring/GetListLookUpItems';
         var lookupGrid = $('#lookup_table_barring');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -1134,13 +721,20 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id','Name'],
-        colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                 
-                  { name: 'name', index: 'name', width: 200 }
+        colNames: ['ID', 'Sku', 'Name', 'Blanket Sku', 'Name', 'Left Bar Sku', 'Name', 'Right Bar Sku', 'Name'
         ],
+        colModel: [
+                  { name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'sku', index: 'sku', width: 50 },
+				  { name: 'name', index: 'name', width: 100 },
+                  { name: 'blanketsku', index: 'blanketsku', width: 50 },
+				  { name: 'blanketname', index: 'blanketname', width: 100 },
+                  { name: 'leftbarsku', index: 'leftbarsku', width: 50 },
+				  { name: 'leftbarname', index: 'leftbarname', width: 100 },
+                  { name: 'rightbarsku', index: 'rightbarsku', width: 50 },
+				  { name: 'rightbarname', index: 'rightbarname', width: 100 },
 
+        ],
         page: '1',
         pager: $('#lookup_pager_barring'),
         rowNum: 20,
@@ -1167,9 +761,14 @@
         if (id) {
             var ret = jQuery("#lookup_table_barring").jqGrid('getRowData', id);
 
-            $('#BarringId').val(ret.id).data("kode", id);
+            $('#BarringSku').val(ret.sku).data("kode", id);
             $('#Barring').val(ret.name);
-
+            $('#BlanketSku').val(ret.blanketsku);
+            $('#Blanket').val(ret.blanketname);
+            $('#BarringLeftBarSku').val(ret.leftbarsku);
+            $('#BarringLeftBar').val(ret.leftbarname);
+            $('#BarringRightBarSku').val(ret.rightbarsku);
+            $('#BarringRightBar').val(ret.rightbarname);
             $('#lookup_div_barring').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -1177,6 +776,6 @@
     });
 
 
-    // ---------------------------------------------End Lookup barring----------------------------------------------------------------
+    // ---------------------------------------------End Lookup barring, blanket, bars----------------------------------------------------------------
 
 }); //END DOCUMENT READY

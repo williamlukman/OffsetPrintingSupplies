@@ -137,22 +137,7 @@ namespace TestValidation
                     d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
                                                                          d._warehouseItemService, d._barringService);
-                    d.coreIdentificationDetail = d._coreIdentificationDetailService.FinishObject(d.coreIdentificationDetail, DateTime.Today, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                                 d._barringService, d._warehouseItemService);
-                    d.coreIDContact1 = d._coreIdentificationDetailService.FinishObject(d.coreIDContact1, DateTime.Today, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                        d._barringService, d._warehouseItemService);
-                    d.coreIDContact2 = d._coreIdentificationDetailService.FinishObject(d.coreIDContact2, DateTime.Today, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                        d._barringService, d._warehouseItemService);
-                    d.coreIDContact3 = d._coreIdentificationDetailService.FinishObject(d.coreIDContact3, DateTime.Today, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                        d._barringService, d._warehouseItemService);
-                    d.coreIDInHouse1 = d._coreIdentificationDetailService.FinishObject(d.coreIDInHouse1, DateTime.Today, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                       d._barringService, d._warehouseItemService);
-                    d.coreIDInHouse2 = d._coreIdentificationDetailService.FinishObject(d.coreIDInHouse2, DateTime.Today, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                       d._barringService, d._warehouseItemService);
-                    d.coreIDInHouse3 = d._coreIdentificationDetailService.FinishObject(d.coreIDInHouse3, DateTime.Today, d._coreIdentificationService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                       d._barringService, d._warehouseItemService);
-
-
+                    
                     // in house core identification
                     d.usedCoreBuilderFinal = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService).Quantity;
                     d.usedCoreBuilder3Final = d._coreIdentificationDetailService.GetCore(d.coreIDContact1, d._coreBuilderService).Quantity;

@@ -151,6 +151,8 @@
     <Compile Include="Controllers\BarringWorkOrderController.cs" />
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
+    <Compile Include="Controllers\BarringWorkProcessController.cs" />
+    <Compile Include="Controllers\RecoveryWorkProcessController.cs" />
     <Compile Include="Controllers\CoreIdentificationController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -178,7 +180,7 @@
     <Compile Include="Controllers\SalesInvoiceController.cs" />
     <Compile Include="Controllers\SalesOrderController.cs" />
     <Compile Include="Controllers\StockAdjustmentController.cs" />
-    <Compile Include="Controllers\WarehouseMutationOrderController.cs" />
+    <Compile Include="Controllers\WarehouseMutationController.cs" />
     <Compile Include="GeneralFunction.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -189,6 +191,8 @@
     <Content Include="Content\apps_js\BarringWorkOrder.js" />
     <Content Include="Content\apps_js\CashBankAdjustment.js" />
     <Content Include="Content\apps_js\CashBankMutation.js" />
+    <Content Include="Content\apps_js\BarringWorkProcess.js" />
+    <Content Include="Content\apps_js\RecoveryWorkProcess.js" />
     <Content Include="Content\apps_js\CoreIdentification.js" />
     <Content Include="Content\apps_js\DeliveryOrder.js" />
     <Content Include="Content\apps_js\MasterBarring.js" />
@@ -216,7 +220,7 @@
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\useraccess.js" />
     <Content Include="Content\apps_js\WarehouseItem.js" />
-    <Content Include="Content\apps_js\WarehouseMutationOrder.js" />
+    <Content Include="Content\apps_js\WarehouseMutation.js" />
     <Content Include="Content\assets\images\emkl.png" />
     <Content Include="Content\assets\images\logoFEI.png" />
     <Content Include="Content\assets\images\logononame.png" />
@@ -1080,7 +1084,7 @@
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\CashBankAdjustment\Index.cshtml" />
     <Content Include="Views\CashBankMutation\Index.cshtml" />
-    <Content Include="Views\WarehouseMutationOrder\Index.cshtml" />
+    <Content Include="Views\WarehouseMutation\Index.cshtml" />
     <Content Include="Views\PurchaseOrder\Index.cshtml" />
     <Content Include="Views\SalesOrder\Index.cshtml" />
     <Content Include="Views\PurchaseReceival\Index.cshtml" />
@@ -1095,6 +1099,8 @@
     <Content Include="Views\BarringWorkOrder\Index.cshtml" />
     <Content Include="Views\RecoveryWorkOrder\Index.cshtml" />
     <Content Include="Views\WarehouseItem\Index.cshtml" />
+    <Content Include="Views\RecoveryWorkProcess\Index.cshtml" />
+    <Content Include="Views\BarringWorkProcess\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

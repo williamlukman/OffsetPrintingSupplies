@@ -29,12 +29,12 @@
         datatype: "json",
         colNames: ['ID', 'Name', 'Description', 'Amount','Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 80 },
-                  { name: 'description', index: 'description', width: 250 },
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+				  { name: 'name', index: 'name', width: 120 },
+                  { name: 'description', index: 'description', width: 200 },
                   { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -93,23 +93,23 @@
                 dataType: "json",
                 url: base_url + "MstCashBank/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
-                        if (JSON.stringify(result.model.Errors) != '{}') {
+                        if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
-                            for (var key in result.model.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
-                            $("#form_btn_save").data('kode', result.model.Id);
-                            $('#id').val(result.model.Id);
-                            $('#Name').val(result.model.Name);
-                            $('#Description').val(result.model.Description);
-                            $('#Amount').numberbox('setValue', (result.model.Amount));
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Name').val(result.Name);
+                            $('#Description').val(result.Description);
+                            $('#Amount').numberbox('setValue', (result.Amount));
                             $('#form_div').dialog('open');
                         }
                     }

@@ -24,6 +24,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<CoreBuilder> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CoreBuilder> GetAll()
         {
             return _repository.GetAll();
@@ -116,8 +121,8 @@ namespace Service.Service
             }
             else
             {
-                if (UsedCore.Errors.Count() > 0) { coreBuilder.Errors.Add(UsedCore.Errors.First().Key, UsedCore.Errors.First().Value); }
-                else if (NewCore.Errors.Count() > 0) { coreBuilder.Errors.Add(NewCore.Errors.First().Key, NewCore.Errors.First().Value); }
+                if (UsedCore.Errors.Count() > 0) { coreBuilder.Errors.Add("Generic", UsedCore.Errors.Keys.First() + ": " + UsedCore.Errors.Values.First()); }
+                else if (NewCore.Errors.Count() > 0) { coreBuilder.Errors.Add("Generic", NewCore.Errors.Keys.First() + ": " + NewCore.Errors.Values.First()); }
                 else { coreBuilder.Errors.Add("Generic", "Item tidak dapat di register"); }
             }
             return coreBuilder;
@@ -161,7 +166,8 @@ namespace Service.Service
                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService,
                                             IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IBarringService _barringService,
                                             IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                            ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService)
+                                            ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService,
+                                            IBarringOrderDetailService _barringOrderDetailService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             Item NewCore = _itemService.GetObjectById(coreBuilder.NewCoreItemId);
@@ -172,9 +178,9 @@ namespace Service.Service
                 if (_validator.ValidDeleteObject(coreBuilder, _coreIdentificationDetailService, _rollerBuilderService))
                 {
                     _itemService.SoftDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _barringService, _purchaseOrderDetailService,
-                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService);
+                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _barringOrderDetailService);
                     _itemService.SoftDeleteLegacyObject(NewCore, _stockMutationService, _itemTypeService, _warehouseItemService, _barringService, _purchaseOrderDetailService,
-                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService);
+                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _barringOrderDetailService);
                     _repository.SoftDeleteObject(coreBuilder);
                 }
             }

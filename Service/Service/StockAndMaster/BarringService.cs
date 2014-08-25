@@ -29,6 +29,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<Barring> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<Barring> GetAll()
         {
             return _repository.GetAll();
@@ -52,6 +57,36 @@ namespace Service.Service
         public IList<Barring> GetObjectsByContactId(int ContactId)
         {
             return _repository.GetObjectsByContactId(ContactId);
+        }
+
+        public IList<Barring> GetObjectsByBlanketItemId(int BlanketItemId)
+        {
+            return _repository.GetObjectsByBlanketItemId(BlanketItemId);
+        }
+
+        public IList<Barring> GetObjectsByLeftBarItemId(int LeftBarItemId)
+        {
+            return _repository.GetObjectsByLeftBarItemId(LeftBarItemId);
+        }
+
+        public IList<Barring> GetObjectsByRightBarItemId(int RightBarItemId)
+        {
+            return _repository.GetObjectsByRightBarItemId(RightBarItemId);
+        }
+
+        public Item GetBlanketItem(Barring barring)
+        {
+            return _repository.GetBlanketItem(barring);
+        }
+
+        public Item GetLeftBarItem(Barring barring)
+        {
+            return _repository.GetLeftBarItem(barring);
+        }
+
+        public Item GetRightBarItem(Barring barring)
+        {
+            return _repository.GetRightBarItem(barring);
         }
 
         public Barring GetObjectById(int Id)
@@ -104,9 +139,12 @@ namespace Service.Service
         }
 
         public Barring SoftDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                                        IPriceMutationService _priceMutationService)
+                                        IPriceMutationService _priceMutationService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                        IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                        IStockMutationService _stockMutationService, IBarringOrderDetailService _barringOrderDetailService)
         {
-            if (_validator.ValidDeleteObject(barring, _itemTypeService, _warehouseItemService))
+            if (_validator.ValidDeleteObject(barring, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService,
+                                             _salesOrderDetailService, _stockMutationService, _barringOrderDetailService))
             {
                 IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByItemId(barring.Id);
                 foreach (var warehouseitem in allwarehouseitems)

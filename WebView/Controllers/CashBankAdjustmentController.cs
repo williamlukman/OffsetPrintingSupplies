@@ -70,11 +70,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.CashBankId,
                             _cashBankService.GetObjectById(model.CashBankId).Name,
                             model.Amount,
                             model.AdjustmentDate,
-                            model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,

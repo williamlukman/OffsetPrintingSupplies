@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<RecoveryOrderDetail> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<RecoveryOrderDetail> GetAll()
         {
             return FindAll().ToList();
@@ -47,7 +52,6 @@ namespace Data.Repository
 
         public RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail)
         {
-            recoveryOrderDetail.HasAccessory = false;
             recoveryOrderDetail.IsDisassembled = false;
             recoveryOrderDetail.IsStrippedAndGlued = false;
             recoveryOrderDetail.IsWrapped = false;
@@ -75,20 +79,6 @@ namespace Data.Repository
         {
             recoveryOrderDetail.IsDeleted = true;
             recoveryOrderDetail.DeletedAt = DateTime.Now;
-            Update(recoveryOrderDetail);
-            return recoveryOrderDetail;
-        }
-
-        public RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail)
-        {
-            recoveryOrderDetail.HasAccessory = true;
-            Update(recoveryOrderDetail);
-            return recoveryOrderDetail;
-        }
-
-        public RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail)
-        {
-            recoveryOrderDetail.HasAccessory = false;
             Update(recoveryOrderDetail);
             return recoveryOrderDetail;
         }

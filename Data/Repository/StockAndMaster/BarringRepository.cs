@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<Barring> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<Barring> GetAll()
         {
             return (from x in Context.Items.OfType<Barring>() where !x.IsDeleted select x).ToList();
@@ -41,6 +46,60 @@ namespace Data.Repository
         public IList<Barring> GetObjectsByMachineId(int MachineId)
         {
             return (from x in Context.Items.OfType<Barring>() where x.MachineId == MachineId && !x.IsDeleted select x).ToList();
+        }
+
+        public IList<Barring> GetObjectsByBlanketItemId(int blanketItemId)
+        {
+            return (from x in Context.Items.OfType<Barring>() where x.BlanketItemId == blanketItemId && !x.IsDeleted select x).ToList();
+        }
+
+        public IList<Barring> GetObjectsByLeftBarItemId(int leftBarItemId)
+        {
+            return (from x in Context.Items.OfType<Barring>() where x.LeftBarItemId == leftBarItemId && !x.IsDeleted select x).ToList();
+        }
+
+        public IList<Barring> GetObjectsByRightBarItemId(int rightBarItemId)
+        {
+            return (from x in Context.Items.OfType<Barring>() where x.RightBarItemId == rightBarItemId && !x.IsDeleted select x).ToList();
+        }
+
+        public Item GetBlanketItem(Barring barring)
+        {
+            using (var db = GetContext())
+            {
+                Item blanket =
+                    (from obj in db.Items
+                     where obj.Id == barring.BlanketItemId && !obj.IsDeleted
+                     select obj).First();
+                if (blanket != null) { blanket.Errors = new Dictionary<string, string>(); }
+                return blanket;
+            }
+        }
+
+        public Item GetLeftBarItem(Barring barring)
+        {
+            using (var db = GetContext())
+            {
+                Item leftbar =
+                    (from obj in db.Items
+                     where obj.Id == barring.LeftBarItemId && !obj.IsDeleted
+                     select obj).First();
+                if (leftbar != null) { leftbar.Errors = new Dictionary<string, string>(); }
+                return leftbar;
+            }
+        }
+
+        public Item GetRightBarItem(Barring barring)
+        {
+            using (var db = GetContext())
+            {
+                Item rightbar =
+                    (from obj in db.Items
+                     where obj.Id == barring.RightBarItemId && !obj.IsDeleted
+                     select obj).First();
+                if (rightbar != null) { rightbar.Errors = new Dictionary<string, string>(); }
+                return rightbar;
+            }
         }
 
         public Barring GetObjectById(int Id)

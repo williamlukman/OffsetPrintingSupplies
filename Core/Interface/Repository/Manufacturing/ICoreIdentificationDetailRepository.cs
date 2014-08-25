@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface ICoreIdentificationDetailRepository : IRepository<CoreIdentificationDetail>
     {
+        IQueryable<CoreIdentificationDetail> GetQueryable();
         IList<CoreIdentificationDetail> GetAll();
         IList<CoreIdentificationDetail> GetObjectsByCoreIdentificationId(int CoreIdentificationId);
         IList<CoreIdentificationDetail> GetObjectsByCoreBuilderId(int CoreBuilderId);
@@ -19,8 +20,8 @@ namespace Core.Interface.Repository
         CoreIdentificationDetail SoftDeleteObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail BuildRoller(CoreIdentificationDetail coreIdentificationDetail);

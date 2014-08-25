@@ -160,7 +160,7 @@ namespace TestValidation
                         TL = 12
                     };
                     d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService,
-                                                                                                 d._coreBuilderService, d._rollerTypeService, d._machineService);
+                                                                                                 d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);
                     d.typeFoundDT = d._rollerTypeService.SoftDeleteObject(d.typeFoundDT, d._rollerBuilderService, d._coreIdentificationDetailService);
                     d.typeFoundDT.Errors.Count().should_not_be(0);
                 };

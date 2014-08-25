@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<RollerBuilder> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<RollerBuilder> GetAll()
         {
             return FindAll().ToList();
@@ -54,7 +59,7 @@ namespace Data.Repository
             {
                 RollerBuilder rollerBuilder = GetObjectById(id);
                 Item item = (from obj in db.Items
-                             where obj.Id == rollerBuilder.RollerUsedCoreItemId
+                             where obj.Id == rollerBuilder.RollerUsedCoreItemId && !obj.IsDeleted
                              select obj).FirstOrDefault();
                 if (item != null) { item.Errors = new Dictionary<string, string>(); }
                 return item;
@@ -67,7 +72,7 @@ namespace Data.Repository
             {
                 RollerBuilder rollerBuilder = GetObjectById(id);
                 Item item = (from obj in db.Items
-                             where obj.Id == rollerBuilder.RollerNewCoreItemId
+                             where obj.Id == rollerBuilder.RollerNewCoreItemId && !obj.IsDeleted
                              select obj).FirstOrDefault();
                 if (item != null) { item.Errors = new Dictionary<string, string>(); }
                 return item;

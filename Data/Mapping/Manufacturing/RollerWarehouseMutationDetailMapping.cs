@@ -17,9 +17,9 @@ namespace Data.Mapping
                 .HasForeignKey(rwmd => rwmd.RollerWarehouseMutationId);
             // supposed to be 1 to 0-1 relationship rather than 1 to many.
             // changing WithMany to WithOptional causes error in the EF
-            HasRequired(rwmd => rwmd.CoreIdentificationDetail)
+            HasRequired(rwmd => rwmd.RecoveryOrderDetail)
                 .WithMany()
-                .HasForeignKey(rwmd => rwmd.CoreIdentificationDetailId);
+                .HasForeignKey(rwmd => rwmd.RecoveryOrderDetailId);
             Ignore(rwmd => rwmd.Errors);
         }
     }

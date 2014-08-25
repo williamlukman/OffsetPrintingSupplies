@@ -29,6 +29,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<RecoveryAccessoryDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<RecoveryAccessoryDetail> GetAll()
         {
             return _repository.GetAll();

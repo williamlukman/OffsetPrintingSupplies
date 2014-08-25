@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
     public interface IPurchaseOrderDetailValidator
     {
         PurchaseOrderDetail VHasPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService);
+        PurchaseOrderDetail VPurchaseOrderHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService);
         PurchaseOrderDetail VHasItem(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService);
         PurchaseOrderDetail VNonZeroNorNegativeQuantity(PurchaseOrderDetail purchaseOrderDetail);
         PurchaseOrderDetail VNonNegativePrice(PurchaseOrderDetail purchaseOrderDetail);

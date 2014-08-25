@@ -99,7 +99,11 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                model
+                model.Id,
+                model.Name,
+                model.Code,
+                model.Description,
+                model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 

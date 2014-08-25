@@ -162,7 +162,8 @@ namespace TestValidation
                     WL = 12,
                     TL = 12
                 };
-                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService);
+                d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail,
+                                             d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);
                 Item compound = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,

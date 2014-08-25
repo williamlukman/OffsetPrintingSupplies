@@ -42,8 +42,8 @@ namespace TestValidation
         public IUoMService _uomService;
         public IWarehouseItemService _warehouseItemService;
         public IWarehouseService _warehouseService;
-        public IWarehouseMutationOrderService _warehouseMutationOrderService;
-        public IWarehouseMutationOrderDetailService _warehouseMutationOrderDetailService;
+        public IWarehouseMutationService _warehouseMutationService;
+        public IWarehouseMutationDetailService _warehouseMutationDetailService;
         public IPayableService _payableService;
         public IPaymentVoucherDetailService _paymentVoucherDetailService;
         public IPaymentVoucherService _paymentVoucherService;
@@ -136,8 +136,8 @@ namespace TestValidation
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-            _warehouseMutationOrderService = new WarehouseMutationOrderService(new WarehouseMutationOrderRepository(), new WarehouseMutationOrderValidator());
-            _warehouseMutationOrderDetailService = new WarehouseMutationOrderDetailService(new WarehouseMutationOrderDetailRepository(), new WarehouseMutationOrderDetailValidator());
+            _warehouseMutationService = new WarehouseMutationService(new WarehouseMutationRepository(), new WarehouseMutationValidator());
+            _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());

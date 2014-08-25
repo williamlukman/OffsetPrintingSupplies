@@ -10,6 +10,7 @@ namespace Core.Interface.Service
     public interface IBarringOrderService
     {
         IBarringOrderValidator GetValidator();
+        IQueryable<BarringOrder> GetQueryable();
         IList<BarringOrder> GetAll();
         IList<BarringOrder> GetAllObjectsByContactId(int ContactId);
         IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId);

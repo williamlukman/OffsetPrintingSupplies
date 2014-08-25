@@ -43,12 +43,12 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Name', 'Description','Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 80 },
-				  { name: 'name', index: 'name', width: 80 },
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+                  { name: 'code', index: 'code', width: 60 },
+				  { name: 'name', index: 'name', width: 180 },
                   { name: 'description', index: 'description', width: 250 },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -97,23 +97,23 @@
                 dataType: "json",
                 url: base_url + "MstMachine/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
-                        if (JSON.stringify(result.model.Errors) != '{}') {
+                        if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
-                            for (var key in result.model.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
-                            $("#form_btn_save").data('kode', result.model.Id);
-                            $('#id').val(result.model.Id);
-                            $('#Name').val(result.model.Name);
-                            $('#Code').val(result.model.Code);
-                            $('#Description').val(result.model.Description);
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Name').val(result.Name);
+                            $('#Code').val(result.Code);
+                            $('#Description').val(result.Description);
                             $('#form_div').dialog('open');
                         }
                     }

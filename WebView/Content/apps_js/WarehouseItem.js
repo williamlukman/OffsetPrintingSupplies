@@ -8,14 +8,11 @@
             url: base_url + 'MstWarehouse/GetList',
             datatype: "json",
             mtype: 'GET',
-            colNames: ['ID', 'Code', 'Name', 'Description', 'Created At', 'Updated At'],
+            colNames: ['ID', 'Code', 'Name'],
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center", frozen: true },
                       { name: 'code', index: 'code', width: 80 },
                       { name: 'name', index: 'name', width: 200},
-                      { name: 'description', index: 'description', width: 250 },
-                      { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                      { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
             ],
             page: '1',
             pager: jQuery('#pager'),
@@ -56,26 +53,15 @@
             url: base_url + 'MstItem/GetList',
             datatype: "json",
             mtype: 'GET',
-            colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
-                     'Category', 'UoM Id', 'UoM', 'Quantity',
-                     'Selling Price', 'AvgPrice',
-                     'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
+            colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'UoM'],
             colModel: [
-                      { name: 'id', index: 'id', width: 80, align: "center" , frozen: true},
-                      { name: 'name', index: 'name', width: 200 },
-                      { name: 'itemtypeid', index: 'itemtypeid', width: 80 },
-                      { name: 'itemtype', index: 'itemtype', width: 200 },
-                      { name: 'sku', index: 'sku', width: 100 },
-                      { name: 'category', index: 'category', width: 100 },
-                      { name: 'uomid', index: 'uomid', width: 80 },
-                      { name: 'uom', index: 'uom', width: 100 },
-                      { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                      { name: 'sellingprice', index: 'sellingprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                      { name: 'avgprice', index: 'avgprice', width: 80, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                      { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                      { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                      { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                      { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                      { name: 'id', index: 'id', width: 35, align: "center" },
+                      { name: 'sku', index: 'sku', width: 70 },
+                      { name: 'name', index: 'name', width: 120 },
+                      { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'uom', index: 'uom', width: 40 },
             ],
             page: '1',
             pager: jQuery('#pager'),
@@ -84,7 +70,7 @@
             sortname: 'id',
             viewrecords: true,
             scrollrows: true,
-            shrinkToFit: false,
+            shrinkToFit: true,
             sortorder: "asc",
             width: $("#toolbar").width(),
             height: $(window).height() - 190,
@@ -107,27 +93,21 @@
         jQuery("#list").jqGrid('setFrozenColumns');
     }
 
+    // warehouseitem
     function ReloadGridViewItem(id) {
      
         $("#list_detail").jqGrid({
             url: base_url + 'WarehouseItem/GetListItem?Id=' + id,
             datatype: "json",
             mtype: 'GET',
-            colNames: ['Item ID', 'Item Name', 'Item Type Id', 'Item Type Name', 'Sku'
-                       , 'Category', 'Uom Id', 'UoM Name', 'Quantity', 'Pending Delivery', 'Pending Receival'
+            colNames: ['ID', 'Sku', 'Item Name', 'QTY', 'UoM'
             ],
             colModel: [
-                      { name: 'itemid', index: 'itemid', width: 80, align: "center", frozen: true },
-                      { name: 'item', index: 'item', width: 200, frozen: true },
-                      { name: 'itemtypeid', index: 'itemtypeid', width: 80, align: "center" },
-                      { name: 'itemtype', index: 'itemtype', width: 200 },
+                      { name: 'itemid', index: 'itemid', width: 80, align: "center"},
                       { name: 'sku', index: 'sku', width: 80 },
-                      { name: 'category', index: 'category', width: 100 },
-                      { name: 'uomid', index: 'uomid', width: 100 },
+                      { name: 'item', index: 'item', width: 200},
+                      { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                       { name: 'uomname', index: 'uomname', width: 100 },
-                      { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                      { name: 'pendingdelivery', index: 'pendingdelivery', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                      { name: 'pendingreceival', index: 'pendingreceival', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
             ],
             page: '1',
             pager: $('#pager_detail'),
@@ -146,21 +126,22 @@
 
         });//END GRID Detail
         $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-        jQuery("#list_detail").jqGrid('setFrozenColumns');
     }
 
+    // itemwarehouse
     function ReloadGridViewWarehouse(id) {
         
         $("#list_detail").jqGrid({
             url: base_url + 'WarehouseItem/GetListWarehouse?Id=' + id,
             datatype: "json",
             mtype: 'GET',
-            colNames: ['ID', 'Code', 'Name', 'Description'],
+            colNames: ['ID', 'Code', 'Name', 'QTY', 'UoM'],
             colModel: [
-                      { name: 'id', index: 'id', width: 80, align: "center", frozen: true },
+                      { name: 'id', index: 'id', width: 80, align: "center"},
                       { name: 'code', index: 'code', width: 80 },
                       { name: 'name', index: 'name', width: 200 },
-                      { name: 'description', index: 'description', width: 250 },
+                      { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                      { name: 'uomname', index: 'uomname', width: 100 },
             ],
             page: '1',
             pager: $('#pager_detail'),
@@ -179,7 +160,6 @@
 
         });//END GRID Detail
         $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-        jQuery("#list_detail").jqGrid('setFrozenColumns');
     }
 
 

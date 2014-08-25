@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IMachineRepository : IRepository<Machine>
     {
+        IQueryable<Machine> GetQueryable();
         IList<Machine> GetAll();
         Machine GetObjectById(int Id);
         Machine CreateObject(Machine machine);

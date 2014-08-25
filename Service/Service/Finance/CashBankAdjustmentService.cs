@@ -25,6 +25,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<CashBankAdjustment> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CashBankAdjustment> GetAll()
         {
             return _repository.GetAll();

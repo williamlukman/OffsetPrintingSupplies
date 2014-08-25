@@ -86,22 +86,9 @@
                         <div id="toolbardetail" class="grid_toolbar">
                             <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
-                            <a id="btn_reject_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Reject</a>
-                            <a id="btn_unreject_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Undo Reject</a>
-                            <a id="btn_finish_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Finish</a>
-                            <a id="btn_unfinish_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unfinish</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-                            <a id="IsCut" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Cut</a>
-                            <a id="IsSideSealed" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">SideSeal</a>
-                            <a id="IsBarPrepared" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">BarPrepared</a>
-                            <a id="IsAdhesiveTapeApplied" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">AdhesiveTapeApplied</a>
-                            <a id="IsBarMounted" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">BarMounted</a>
-                            <a id="IsBarHeatPressed" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">BarHeatPressed</a>
-                            <a id="IsBarPullOffTested" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">BarPullOffTested</a>
-                            <a id="IsQCAndMarked" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">QCAndMarked</a>
-                            <a id="IsPackaged" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Packaged</a>
                         </div>
-                                  <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+                        <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
                         <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
                     </div>
                             </td>
@@ -129,50 +116,35 @@
                           Barring
                       </td>
                       <td>
-                         <input id="BarringId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="BarringSku" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnBarring" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Barring" name="BarringId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                       </td>
                   </tr>
-                  <tr>
-                       <td>IsBarRequired</td>
-                            <td>
-                                <select id="IsBarRequired">
-                                  <option value="True">Yes</option>
-                                  <option value="False">No</option>
-                               </select>
-                            </td>
-                  </tr>
-                     <tr>
-                       <td>HasLeftBar</td>
-                            <td>
-                                <select id="HasLeftBar">
-                                  <option value="True">Yes</option>
-                                  <option value="False">No</option>
-                               </select>
-                            </td>
-                        
-                  </tr>
-                  <tr>
-                      <td></td>
+                    <tr>
+                      <td width="139" nowrap style="width: 100px">
+                          Blanket
+                      </td>
                        <td>
-                               <input id="BarringLeftBarId" name="BarringLeftBarId" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
+                               <input id="BlanketSku" name="BlanketSku" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
+                              <input id="Blanket" name="Blanket" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                         </td>
+                  </tr>
+                  <tr>
+                      <td width="139" nowrap style="width: 100px">
+                          Left Bar
+                      </td>
+                       <td>
+                               <input id="BarringLeftBarSku" name="BarringLeftBarSku" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
                               <input id="BarringLeftBar" name="BarringLeftBar" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                          </td>
                   </tr>
-                     <tr>
-                       <td>HasRightBar</td>
-                            <td>
-                                <select id="HasRightBar">
-                                  <option value="True">Yes</option>
-                                  <option value="False">No</option>
-                               </select>
-                            </td>
-                  </tr>
                     <tr>
-                        <td></td>
+                      <td width="139" nowrap style="width: 100px">
+                          Right Bar
+                      </td>
                        <td>
-                               <input id="BarringRightBarId" name="BarringRightBarId" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
+                               <input id="BarringRightBarSku" name="BarringRightBarSku" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
                               <input id="BarringRightBar" name="BarringRightBar" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                          </td>
                   </tr>

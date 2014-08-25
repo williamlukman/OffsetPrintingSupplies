@@ -25,6 +25,8 @@ legend {
 
 textarea {
     min-height: 75px;
+    font-family: Arial;
+    font-size: 12px;
 }
 
 .editor-label {
@@ -154,4 +156,9 @@ textarea {
 .tabs-header
 {
 	background-color: #1BC9E0 !important;
+}
+
+.ui-th-column-header
+{
+  text-align: center;
 }

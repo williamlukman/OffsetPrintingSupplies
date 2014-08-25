@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IGroupItemPriceRepository : IRepository<GroupItemPrice>
     {
+        IQueryable<GroupItemPrice> GetQueryable();
         IList<GroupItemPrice> GetAll();
         GroupItemPrice GetObjectById(int Id);
         GroupItemPrice CreateObject(GroupItemPrice groupItemPrice);

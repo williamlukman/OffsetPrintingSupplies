@@ -81,15 +81,11 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.ContactId,
                            _contactService.GetObjectById(model.ContactId).Name,
-                            model.WarehouseId,
-                            _warehouseService.GetObjectById(model.WarehouseId).Code,
                             _warehouseService.GetObjectById(model.WarehouseId).Name,
                             model.QuantityReceived,
                             model.QuantityFinal,
                             model.QuantityRejected,
-                            model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -97,9 +93,6 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
-       
-
 
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
@@ -139,28 +132,15 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                            model.BarringOrderId,
-                            model.BarringId,
+                            _barringService.GetObjectById(model.BarringId).Sku,
                             _barringService.GetObjectById(model.BarringId).Name,
-                            model.IsBarRequired,
-                            model.HasLeftBar,
-                            model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Id.ToString(),
-                            model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Name.ToString(),
-                            model.HasRightBar,
-                            model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Id.ToString(),
-                            model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Name.ToString(),
-                            model.IsCut,
-                            model.IsSideSealed,
-                            model.IsBarPrepared,
-                            model.IsAdhesiveTapeApplied,
-                            model.IsBarMounted,
-                            model.IsBarHeatPressed,
-                            model.IsBarPullOffTested,
-                            model.IsQCAndMarked,
-                            model.IsPackaged,
-                            model.IsRejected,
+                            _barringService.GetBlanketItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                            _barringService.GetBlanketItem(_barringService.GetObjectById(model.BarringId)).Name,
+                            _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                            _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name,
+                            _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                            _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Name,
                             model.RejectedDate,
-                            model.IsFinished,
                             model.FinishedDate
                         }
                     }).ToArray()
@@ -212,25 +192,14 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
-                model.BarringOrderId,
-                model.BarringId,
-                Barring =  _barringService.GetObjectById(model.BarringId).Name,
-                model.IsBarRequired,
-                model.HasLeftBar,
-                BarringLeftBarId = model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Id.ToString(),
-                BarringLeftBar = model.HasLeftBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).LeftBarItemId.Value).Name.ToString(),
-                model.HasRightBar,
-                BarringRightBarId = model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Id.ToString(),
-                BarringRightBar = model.HasRightBar == false ? "" : _itemService.GetObjectById(_barringService.GetObjectById(model.BarringId).RightBarItemId.Value).Name.ToString(),
-                model.IsCut,
-                model.IsSideSealed,
-                model.IsBarPrepared,
-                model.IsAdhesiveTapeApplied,
-                model.IsBarMounted,
-                model.IsBarHeatPressed,
-                model.IsBarPullOffTested,
-                model.IsQCAndMarked,
-                model.IsPackaged,
+                BarringSku = _barringService.GetObjectById(model.BarringId).Sku,
+                Barring = _barringService.GetObjectById(model.BarringId).Name,
+                BlanketSku = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                Blanket = _barringService.GetBlanketItem(_barringService.GetObjectById(model.BarringId)).Name,
+                BarringLeftBarSku = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                BarringLeftBar = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name,
+                BarringRightBarSku = _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                BarringRightBar = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -346,9 +315,6 @@ namespace WebView.Controllers
             {
                 var data = _barringOrderDetailService.GetObjectById(model.Id);
                 data.BarringId = model.BarringId;
-                data.IsBarRequired = model.IsBarRequired;
-                data.HasLeftBar = model.HasLeftBar;
-                data.HasRightBar = model.HasRightBar;
                 model = _barringOrderDetailService.UpdateObject(data,_barringOrderService,_barringService);
             }
             catch (Exception ex)
@@ -370,7 +336,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _barringOrderDetailService.GetObjectById(Id);
-                if (Progress == "IsCut") { model = _barringOrderDetailService.CutObject(data); }
+                if (Progress == "IsCut") { model = _barringOrderDetailService.CutObject(data, _barringOrderService); }
                 else if (Progress == "IsSideSealed") { model = _barringOrderDetailService.SideSealObject(data); }
                 else if (Progress == "IsBarPrepared") { model = _barringOrderDetailService.PrepareObject(data); }
                 else if (Progress == "IsAdhesiveTapeApplied") { model = _barringOrderDetailService.ApplyTapeAdhesiveToObject(data); }

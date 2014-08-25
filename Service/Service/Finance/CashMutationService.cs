@@ -26,6 +26,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<CashMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CashMutation> GetAll()
         {
             return _repository.GetAll();
@@ -142,7 +147,7 @@ namespace Service.Service
             _repository.CreateObject(sourceCashMutation);
 
             CashMutation targetCashMutation = new CashMutation();
-            targetCashMutation.CashBankId = sourceCashBank.Id;
+            targetCashMutation.CashBankId = targetCashBank.Id;
             targetCashMutation.Amount = Math.Abs(cashBankMutation.Amount);
             targetCashMutation.MutationDate = (DateTime)cashBankMutation.ConfirmationDate;
             targetCashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankMutation;
@@ -188,7 +193,7 @@ namespace Service.Service
         {
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Deduction) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
-            cashBank.Amount -= Amount;
+            cashBank.Amount += Amount;
             _cashBankService.UpdateObject(cashBank);
         }
     }

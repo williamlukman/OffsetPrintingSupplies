@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<CoreIdentification> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<CoreIdentification> GetAll()
         {
             return FindAll().ToList();
@@ -43,6 +48,11 @@ namespace Data.Repository
             return FindAll(x => x.IsConfirmed && !x.IsDeleted).ToList();
         }
 
+        public IList<CoreIdentification> GetConfirmedNotCompletedObjects()
+        {
+            return FindAll(x => x.IsConfirmed && !x.IsCompleted && !x.IsDeleted).ToList();
+        }
+        
         public CoreIdentification GetObjectById(int Id)
         {
             CoreIdentification coreIdentification = Find(x => x.Id == Id && !x.IsDeleted);

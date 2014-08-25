@@ -32,7 +32,7 @@ namespace WebView.Controllers
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
-
+        private IBarringOrderDetailService _barringOrderDetailService;
 
         public MstRollerBuilderController()
         {
@@ -54,7 +54,7 @@ namespace WebView.Controllers
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
-        
+            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
         }
 
         public ActionResult Index()
@@ -101,28 +101,25 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
-                            model.Category,
-                            model.UoMId,
-                            _uomService.GetObjectById(model.UoMId).Name,
                             model.BaseSku,
-                            model.SkuRollerUsedCore,
-                            model.SkuRollerNewCore,
-                            model.MachineId,
-                            _machineService.GetObjectById(model.MachineId).Name,
-                            model.RollerTypeId,
+                            model.Name,
                             _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
-                            model.CompoundId,
-                            _itemTypeService.GetObjectById(model.CompoundId).Name,
-                            model.CoreBuilderId,
-                            _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                             model.RD,
                             model.CD,
                             model.RL,
                             model.WL,
                             model.TL,
+                            model.SkuRollerUsedCore,
                             _itemService.GetObjectById(model.RollerUsedCoreItemId).Quantity,
+                            _uomService.GetObjectById(model.UoMId).Name,
+                            model.SkuRollerNewCore,
                             _itemService.GetObjectById(model.RollerNewCoreItemId).Quantity,
+                            _uomService.GetObjectById(model.UoMId).Name,
+                            _machineService.GetObjectById(model.MachineId).Name,
+                            _itemService.GetObjectById(model.CompoundId).Name,
+                            _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
+                            _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
+                            model.Category,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -214,7 +211,7 @@ namespace WebView.Controllers
                 model.RollerTypeId,
                 RollerType = _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
                 model.CompoundId,
-                Compound = _itemTypeService.GetObjectById(model.CompoundId).Name,
+                Compound = _itemService.GetObjectById(model.CompoundId).Name,
                 model.CoreBuilderId,
                 CoreBuilder = _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                 model.RD,
@@ -282,7 +279,7 @@ namespace WebView.Controllers
                 model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_barringService,
                     _priceMutationService,_recoveryOrderDetailService,_coreBuilderService,
                     _warehouseItemService,_stockMutationService,_itemTypeService,_purchaseOrderDetailService,
-                    _stockAdjustmentDetailService,_salesOrderDetailService);
+                    _stockAdjustmentDetailService,_salesOrderDetailService, _barringOrderDetailService);
             }
             catch (Exception ex)
             {

@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IPayableRepository : IRepository<Payable>
     {
+        IQueryable<Payable> GetQueryable();
         IList<Payable> GetAll();
         IList<Payable> GetAllByMonthCreated();
         IList<Payable> GetObjectsByContactId(int contactId);

@@ -7,14 +7,14 @@ using System.Text;
 
 namespace Data.Mapping
 {
-    public class WarehouseMutationOrderDetailMapping : EntityTypeConfiguration<WarehouseMutationOrderDetail>
+    public class WarehouseMutationDetailMapping : EntityTypeConfiguration<WarehouseMutationDetail>
     {
-        public WarehouseMutationOrderDetailMapping()
+        public WarehouseMutationDetailMapping()
         {
             HasKey(wmod => wmod.Id);
-            HasRequired(wmod => wmod.WarehouseMutationOrder)
-                .WithMany(wmo => wmo.WarehouseMutationOrderDetails)
-                .HasForeignKey(wmod => wmod.WarehouseMutationOrderId);
+            HasRequired(wmod => wmod.WarehouseMutation)
+                .WithMany(wmo => wmo.WarehouseMutationDetails)
+                .HasForeignKey(wmod => wmod.WarehouseMutationId);
             Ignore(wmod => wmod.Errors);
         }
     }

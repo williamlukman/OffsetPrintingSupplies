@@ -11,7 +11,9 @@ namespace Core.Interface.Validation
     {
         Machine VHasUniqueCode(Machine machine, IMachineService _machineService);
         Machine VNameNotEmpty(Machine machine);
-        Machine VHasBarring(Machine machine, IBarringService _barringService);
+        Machine VIsNotInBarring(Machine machine, IBarringService _barringService);
+        Machine VIsNotInRollerBuilder(Machine machine, IRollerBuilderService _rollerBuilderService);
+        Machine VIsNotInCoreIdentificationDetail(Machine machine, ICoreIdentificationDetailService _coreIdentificationDetailService);
         Machine VCreateObject(Machine machine, IMachineService _machineService);
         Machine VUpdateObject(Machine machine, IMachineService _machineService);
         Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService);

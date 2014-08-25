@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface ICashBankMutationService
     {
         ICashBankMutationValidator GetValidator();
+        IQueryable<CashBankMutation> GetQueryable();
         IList<CashBankMutation> GetAll();
         CashBankMutation GetObjectById(int Id);
         CashBank GetSourceCashBank(CashBankMutation cashBankMutation);

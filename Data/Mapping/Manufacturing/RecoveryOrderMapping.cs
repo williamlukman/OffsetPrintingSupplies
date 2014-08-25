@@ -20,6 +20,10 @@ namespace Data.Mapping
             HasMany(ro => ro.RecoveryOrderDetails)
                 .WithRequired(rod => rod.RecoveryOrder)
                 .HasForeignKey(rod => rod.RecoveryOrderId);
+            HasMany(ro => ro.RollerWarehouseMutations)
+                .WithRequired(rwm => rwm.RecoveryOrder)
+                .HasForeignKey(rwm => rwm.RecoveryOrderId);
+     
         }
     }
 }

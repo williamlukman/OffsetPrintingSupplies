@@ -139,20 +139,102 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VHasBar(Barring barring, int itemId, IItemService _itemService)
+        public Barring VIfIsBarRequiredThenHasAtLeastOneBar(Barring barring)
         {
-            if (_itemService.GetObjectById(itemId) == null)
+            if (barring.IsBarRequired)
             {
-                barring.Errors.Add("Generic", "Bar tidak terasosiasi di dalam system");
+                if (!barring.HasLeftBar && !barring.HasRightBar)
+                {
+                    barring.Errors.Add("Generic", "Jika IsBarRequired, maka barring harus memiliki bar");
+                }
             }
             return barring;
         }
 
-        public Barring VHasNoBar(Barring barring, int itemId, IItemService _itemService)
+        public Barring VIfIsBarNotRequiredThenHasNoBars(Barring barring)
         {
-            if (_itemService.GetObjectById(itemId) != null)
+            if (!barring.IsBarRequired)
             {
-                barring.Errors.Add("Generic", "Bar tidak boleh terisi");
+                if (barring.HasLeftBar || barring.HasRightBar)
+                {
+                    barring.Errors.Add("Generic", "Jika tidak IsBarRequired, maka barring tidak boleh memiliki bar");
+                }
+            }
+            return barring;
+        }
+
+        public Barring VIfHasLeftBarThenLeftBarIsValid(Barring barring, IBarringService _barringService)
+        {
+            if (barring.HasLeftBar)
+            {
+                Item leftBarItem = _barringService.GetLeftBarItem(barring);
+                if (leftBarItem == null)
+                {
+                    barring.Errors.Add("LeftBarItemId", "Tidak terasosiasi dengan item"); 
+                }
+            }
+            return barring;
+        }
+
+        public Barring VIfHasRightBarThenRightBarIsValid(Barring barring, IBarringService _barringService)
+        {
+            if (barring.HasRightBar)
+            {
+                Item rightBarItem = _barringService.GetRightBarItem(barring);
+                if (rightBarItem == null)
+                {
+                    barring.Errors.Add("RightBarItemId", "Tidak terasosiasi dengan item");
+                }
+            }
+            return barring;
+        }
+
+        public Barring VHasNoStockMutations(Barring barring, IStockMutationService _stockMutationService)
+        {
+            IList<StockMutation> stockMutations = _stockMutationService.GetObjectsByItemId(barring.Id);
+            if (stockMutations.Any())
+            {
+                barring.Errors.Add("Generic", "Tidak boleh terasosiasi dengan stock mutation");
+            }
+            return barring;
+        }
+
+        public Barring VHasNoPurchaseOrderDetails(Barring barring, IPurchaseOrderDetailService _purchaseOrderDetailService)
+        {
+            IList<PurchaseOrderDetail> purchaseOrderDetails = _purchaseOrderDetailService.GetObjectsByItemId(barring.Id);
+            if (purchaseOrderDetails.Any())
+            {
+                barring.Errors.Add("Generic", "Tidak boleh terasosiasi dengan purchase order detail");
+            }
+            return barring;
+        }
+
+        public Barring VHasNoStockAdjustmentDetails(Barring barring, IStockAdjustmentDetailService _stockAdjustmentDetailService)
+        {
+            IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByItemId(barring.Id);
+            if (stockAdjustmentDetails.Any())
+            {
+                barring.Errors.Add("Generic", "Tidak boleh terasosiasi dengan stock adjustment detail");
+            }
+            return barring;
+        }
+
+        public Barring VHasNoSalesOrderDetails(Barring barring, ISalesOrderDetailService _salesOrderDetailService)
+        {
+            IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsByItemId(barring.Id);
+            if (salesOrderDetails.Any())
+            {
+                barring.Errors.Add("Generic", "Tidak boleh terasosiasi dengan sales order detail");
+            }
+            return barring;
+        }
+
+        public Barring VHasNoBarringOrderDetails(Barring barring, IBarringOrderDetailService _barringOrderDetailService)
+        {
+            IList<BarringOrderDetail> barringOrderDetails = _barringOrderDetailService.GetObjectsByBarringId(barring.Id);
+            if (barringOrderDetails.Any())
+            {
+                barring.Errors.Add("Generic", "Tidak boleh terasosiasi dengan barring order detail");
             }
             return barring;
         }
@@ -183,6 +265,14 @@ namespace Validation.Validation
             VHasMachine(barring, _machineService);
             if (!isValid(barring)) { return barring; }
             VHasMeasurement(barring);
+            if (!isValid(barring)) { return barring; }
+            VIfIsBarNotRequiredThenHasNoBars(barring);
+            if (!isValid(barring)) { return barring; }
+            VIfIsBarRequiredThenHasAtLeastOneBar(barring);
+            if (!isValid(barring)) { return barring; }
+            VIfHasLeftBarThenLeftBarIsValid(barring, _barringService);
+            if (!isValid(barring)) { return barring; }
+            VIfHasRightBarThenRightBarIsValid(barring, _barringService);
             return barring;
         }
 
@@ -192,11 +282,23 @@ namespace Validation.Validation
             return VCreateObject(barring, _barringService, _uomService, _itemService, _itemTypeService, _contactService, _machineService);
         }
 
-        public Barring VDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public Barring VDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                     IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                     IStockMutationService _stockMutationService, IBarringOrderDetailService _barringOrderDetailService)
         {
             VHasItemTypeAndIsLegacy(barring, _itemTypeService);
             if (!isValid(barring)) { return barring; }
             VWarehouseQuantityMustBeZero(barring, _warehouseItemService);
+            if (!isValid(barring)) { return barring; }
+            VHasNoStockMutations(barring, _stockMutationService);
+            if (!isValid(barring)) { return barring; }
+            VHasNoBarringOrderDetails(barring, _barringOrderDetailService);
+            if (!isValid(barring)) { return barring; }
+            VHasNoPurchaseOrderDetails(barring, _purchaseOrderDetailService);
+            if (!isValid(barring)) { return barring; }
+            VHasNoStockAdjustmentDetails(barring, _stockAdjustmentDetailService);
+            if (!isValid(barring)) { return barring; }
+            VHasNoSalesOrderDetails(barring, _salesOrderDetailService);
             return barring;
         }
 
@@ -218,30 +320,6 @@ namespace Validation.Validation
             return barring;
         }
 
-        public Barring VAddLeftBar(Barring barring, IItemService _itemService)
-        {
-            VHasNoBar(barring, (int) barring.LeftBarItemId, _itemService);
-            return barring;
-        }
-
-        public Barring VRemoveLeftBar(Barring barring, IItemService _itemService)
-        {
-            VHasBar(barring, (int) barring.LeftBarItemId, _itemService);
-            return barring;
-        }
-
-        public Barring VAddRightBar(Barring barring, IItemService _itemService)
-        {
-            VHasNoBar(barring, (int) barring.RightBarItemId, _itemService);
-            return barring;
-        }
-
-        public Barring VRemoveRightBar(Barring barring, IItemService _itemService)
-        {
-            VHasBar(barring, (int) barring.RightBarItemId, _itemService);
-            return barring;
-        }
-
         public bool ValidCreateObject(Barring barring, IBarringService _barringService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                      IContactService _contactService, IMachineService _machineService)
         {
@@ -257,10 +335,13 @@ namespace Validation.Validation
             return isValid(barring);
         }
 
-        public bool ValidDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+        public bool ValidDeleteObject(Barring barring, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                     IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                     IStockMutationService _stockMutationService, IBarringOrderDetailService _barringOrderDetailService)
         {
             barring.Errors.Clear();
-            VDeleteObject(barring, _itemTypeService, _warehouseItemService);
+            VDeleteObject(barring, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService,
+                          _stockMutationService, _barringOrderDetailService);
             return isValid(barring);
         }
 
@@ -282,34 +363,6 @@ namespace Validation.Validation
         {
             barring.Errors.Clear();
             VAdjustPendingDelivery(barring);
-            return isValid(barring);
-        }
-
-        public bool ValidAddLeftBar(Barring barring, IItemService _itemService)
-        {
-            barring.Errors.Clear();
-            VAddLeftBar(barring, _itemService);
-            return isValid(barring);
-        }
-
-        public bool ValidRemoveLeftBar(Barring barring, IItemService _itemService)
-        {
-            barring.Errors.Clear();
-            VRemoveLeftBar(barring, _itemService);
-            return isValid(barring);
-        }
-
-        public bool ValidAddRightBar(Barring barring, IItemService _itemService)
-        {
-            barring.Errors.Clear();
-            VAddRightBar(barring, _itemService);
-            return isValid(barring);
-        }
-
-        public bool ValidRemoveRightBar(Barring barring, IItemService _itemService)
-        {
-            barring.Errors.Clear();
-            VRemoveRightBar(barring, _itemService);
             return isValid(barring);
         }
         

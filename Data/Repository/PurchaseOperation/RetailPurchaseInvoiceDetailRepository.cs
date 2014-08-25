@@ -16,6 +16,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<RetailPurchaseInvoiceDetail> GetQueryable()
+        {
+            return FindAll();
+        }
+
         public IList<RetailPurchaseInvoiceDetail> GetAll()
         {
             return FindAll().ToList();

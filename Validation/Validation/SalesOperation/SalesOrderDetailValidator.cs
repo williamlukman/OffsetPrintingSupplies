@@ -13,10 +13,20 @@ namespace Validation.Validation
     {
         public SalesOrderDetail VHasSalesOrder(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService)
         {
-            SalesOrder so = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
-            if (so == null)
+            SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
+            if (salesOrder == null)
             {
                 salesOrderDetail.Errors.Add("SalesOrderId", "Tidak terasosiasi dengan sales order");
+            }
+            return salesOrderDetail;
+        }
+
+        public SalesOrderDetail VSalesOrderHasNotBeenConfirmed(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService)
+        {
+            SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
+            if (salesOrder.IsConfirmed)
+            {
+                salesOrderDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
             }
             return salesOrderDetail;
         }
@@ -113,6 +123,8 @@ namespace Validation.Validation
         public SalesOrderDetail VCreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             VHasSalesOrder(salesOrderDetail, _salesOrderService);
+            if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
+            VSalesOrderHasNotBeenConfirmed(salesOrderDetail, _salesOrderService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VHasItem(salesOrderDetail, _itemService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }

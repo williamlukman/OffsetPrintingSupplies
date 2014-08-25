@@ -10,15 +10,15 @@ namespace Core.Interface.Validation
     public interface ICoreIdentificationDetailValidator
     {
         CoreIdentificationDetail VHasCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
+        CoreIdentificationDetail VDetailsDoNotExceedCoreIdentificationQuantity(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                                               ICoreIdentificationDetailService _coreIdentificationDetailService, bool CaseCreate);
         CoreIdentificationDetail VHasUniqueDetailId(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationDetailService _coreIdentificationDetailService);
         CoreIdentificationDetail VHasMaterialCase(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VHasCoreBuilder(CoreIdentificationDetail coreIdentificationDetail, ICoreBuilderService _coreBuilderService);
         CoreIdentificationDetail VHasRollerType(CoreIdentificationDetail coreIdentificationDetail, IRollerTypeService _rollerTypeService);
         CoreIdentificationDetail VHasMachine(CoreIdentificationDetail coreIdentificationDetail, IMachineService _machineService);
         CoreIdentificationDetail VHasMeasurement(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail VHasRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail VIsInRecoveryOrderDetails(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        CoreIdentificationDetail VIsInRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail VCoreIdentificationHasBeenConfirmed(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
         CoreIdentificationDetail VCoreIdentificationHasNotBeenConfirmed(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
         CoreIdentificationDetail VCoreIdentificationHasNotBeenCompleted(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
@@ -27,21 +27,23 @@ namespace Core.Interface.Validation
         CoreIdentificationDetail VHasBeenDelivered(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VHasNotBeenDelivered(CoreIdentificationDetail coreIdentificationDetail);
         CoreIdentificationDetail VHasBeenRollerBuilt(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail VHasNotBeenFinished(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail VHasFinishedDate(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail VQuantityIsInStockForContact(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService,
-                                                    IWarehouseItemService _warehouseItemService);
+        CoreIdentificationDetail VHasNotBeenConfirmed(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail VHasConfirmationDate(CoreIdentificationDetail coreIdentificationDetail);
+        CoreIdentificationDetail VQuantityIsInStockForInHouse(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                              ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
+        CoreIdentificationDetail VQuantityIsInStockForContact(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+                                                              ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail VCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                                                IRollerTypeService _rollerTypeService, IMachineService _machineService);
+                                                IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail VUpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                                                IRollerTypeService _rollerTypeService, IMachineService _machineService);
+                                                IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail VDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                IRecoveryOrderDetailService _recoveryOrderDetailService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
-        CoreIdentificationDetail VFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        CoreIdentificationDetail VConfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
-        CoreIdentificationDetail VUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        CoreIdentificationDetail VUnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                  ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail VSetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
         CoreIdentificationDetail VUnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
@@ -50,15 +52,15 @@ namespace Core.Interface.Validation
 
         bool ValidCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                               IRollerTypeService _rollerTypeService, IMachineService _machineService);
+                               IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService);
         bool ValidUpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
-                               IRollerTypeService _rollerTypeService, IMachineService _machineService);
+                               IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService);
         bool ValidDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                IRecoveryOrderDetailService _recoveryOrderDetailService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
-        bool ValidFinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        bool ValidConfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
-        bool ValidUnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        bool ValidUnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                  ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService);
         bool ValidSetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
         bool ValidUnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);

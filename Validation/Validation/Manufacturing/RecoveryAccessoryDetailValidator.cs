@@ -15,12 +15,12 @@ namespace Validation.Validation
             RecoveryOrderDetail detail = _recoveryOrderDetailService.GetObjectById(recoveryAccessoryDetail.RecoveryOrderDetailId);
             if (detail == null)
             {
-                recoveryAccessoryDetail.Errors.Add("RecoveryOrderDetailId", "Tidak terasosiasi dengan Recovery Order Detail");
+                recoveryAccessoryDetail.Errors.Add("Generic", "Tidak terasosiasi dengan Recovery Order Detail");
             }
             return recoveryAccessoryDetail;
         }
 
-        public RecoveryAccessoryDetail VIsAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService)
+       public RecoveryAccessoryDetail VIsAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             Item item = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
             ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessory);

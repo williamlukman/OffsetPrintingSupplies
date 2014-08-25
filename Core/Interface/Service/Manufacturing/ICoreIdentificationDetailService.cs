@@ -12,6 +12,7 @@ namespace Core.Interface.Service
     {
         ICoreIdentificationDetailValidator GetValidator();
         ICoreIdentificationDetailRepository GetRepository();
+        IQueryable<CoreIdentificationDetail> GetQueryable();
         IList<CoreIdentificationDetail> GetAll();
         IList<CoreIdentificationDetail> GetObjectsByCoreIdentificationId(int CoreIdentificationId);
         IList<CoreIdentificationDetail> GetObjectsByCoreBuilderId(int CoreBuilderId);
@@ -21,20 +22,23 @@ namespace Core.Interface.Service
         CoreIdentificationDetail GetObjectByDetailId(int CoreIdentificationId, int DetailId);
         Item GetCore(CoreIdentificationDetail coreIdentificationDetail, ICoreBuilderService _coreBuilderService);
         CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                              ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService);
+                                              ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
+                                              IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail CreateObject(int CoreIdentificationId, int DetailId, int MaterialCase, int CoreBuilderId, int RollerTypeId,
                                               int MachineId, decimal RD, decimal CD, decimal RL, decimal WL, decimal TL, ICoreIdentificationService _coreIdentificationService,
-                                              ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService);
+                                              ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
+                                              IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail UpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                              ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService);
+                                              ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
+                                              IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail SoftDeleteObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                   IRecoveryOrderDetailService _recoveryOrderDetailService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail SetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
         CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        CoreIdentificationDetail FinishObject(CoreIdentificationDetail coreIdentificationDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService,
+        CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService,
                                               ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        CoreIdentificationDetail UnfinishObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
+        CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                 ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);

@@ -26,6 +26,16 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<ReceiptVoucherDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
+        public IList<ReceiptVoucherDetail> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public IList<ReceiptVoucherDetail> GetObjectsByReceiptVoucherId(int receiptVoucherId)
         {
             return _repository.GetObjectsByReceiptVoucherId(receiptVoucherId);

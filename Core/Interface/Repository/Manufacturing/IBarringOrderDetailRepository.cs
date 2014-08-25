@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IBarringOrderDetailRepository : IRepository<BarringOrderDetail>
     {
+        IQueryable<BarringOrderDetail> GetQueryable();
         IList<BarringOrderDetail> GetAll();
         IList<BarringOrderDetail> GetObjectsByBarringOrderId(int barringOrderId);
         IList<BarringOrderDetail> GetObjectsByBarringId(int barringId);
@@ -17,10 +18,6 @@ namespace Core.Interface.Repository
         BarringOrderDetail SoftDeleteObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail SetJobScheduled(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail UnsetJobScheduled(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail AddLeftBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail RemoveLeftBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail AddRightBar(BarringOrderDetail barringOrderDetail);
-        BarringOrderDetail RemoveRightBar(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail CutObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail SideSealObject(BarringOrderDetail barringOrderDetail);
         BarringOrderDetail PrepareObject(BarringOrderDetail barringOrderDetail);

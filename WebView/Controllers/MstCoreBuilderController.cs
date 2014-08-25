@@ -33,12 +33,15 @@ namespace WebView.Controllers
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
         private IMachineService _machineService;
+        private IBarringOrderDetailService _barringOrderDetailService;
+
         private ContactGroup baseGroup;
         private IRollerTypeService _rollerTypeService;
         private ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         private RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
+
         public MstCoreBuilderController()
         {
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
@@ -52,7 +55,7 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-              _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -60,7 +63,8 @@ namespace WebView.Controllers
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
             _machineService = new MachineService(new MachineRepository(),new MachineValidator());
-               _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
+            _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
+            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
         }
 
         public ActionResult Index()
@@ -107,15 +111,15 @@ namespace WebView.Controllers
                         id = item.Id,
                         cell = new object[] {
                             item.Id,
+                            item.BaseSku,
                             item.Name,
                             item.Category,
-                            item.UoMId,
-                            _uomService.GetObjectById(item.UoMId).Name,
-                            item.BaseSku,
                             item.SkuUsedCore, 
-                            item.SkuNewCore,
                             _itemService.GetObjectById(item.UsedCoreItemId).Quantity,
+                            _uomService.GetObjectById(item.UoMId).Name,
+                            item.SkuNewCore,
                             _itemService.GetObjectById(item.NewCoreItemId).Quantity,
+                            _uomService.GetObjectById(item.UoMId).Name,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -204,7 +208,7 @@ namespace WebView.Controllers
                 model = _coreBuilderService.SoftDeleteObject(data, _itemService, _rollerBuilderService, 
                     _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService, 
                     _warehouseItemService, _stockMutationService, _itemTypeService,_barringService,_purchaseOrderDetailService
-                    ,_stockAdjustmentDetailService,_salesOrderDetailService,_priceMutationService);
+                    ,_stockAdjustmentDetailService,_salesOrderDetailService,_priceMutationService, _barringOrderDetailService);
             }
             catch (Exception ex)
             {

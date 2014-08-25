@@ -158,7 +158,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
                     $("#delete_confirm_div").dialog('close');
@@ -217,7 +217,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
                 }

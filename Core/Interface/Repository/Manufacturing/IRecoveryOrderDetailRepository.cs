@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IRecoveryOrderDetailRepository : IRepository<RecoveryOrderDetail>
     {
+        IQueryable<RecoveryOrderDetail> GetQueryable();
         IList<RecoveryOrderDetail> GetAll();
         IList<RecoveryOrderDetail> GetObjectsByRecoveryOrderId(int recoveryOrderId);
         IList<RecoveryOrderDetail> GetObjectsByCoreIdentificationDetailId(int coreIdentificationDetailId);
@@ -17,8 +18,6 @@ namespace Core.Interface.Repository
         RecoveryOrderDetail UpdateObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail SoftDeleteObject(RecoveryOrderDetail recoveryOrderDetail);
 
-        RecoveryOrderDetail AddAccessory(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail RemoveAccessory(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail StripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail);
