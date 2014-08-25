@@ -106,7 +106,7 @@
                 dataType: "json",
                 url: base_url + "MstCashBank/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
@@ -118,11 +118,11 @@
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
-                            $("#form_btn_save").data('kode', result.model.Id);
-                            $('#id').val(result.model.Id);
-                            $('#Name').val(result.model.Name);
-                            $('#Description').val(result.model.Description);
-                            $('#Amount').numberbox('setValue', (result.model.Amount));
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Name').val(result.Name);
+                            $('#Description').val(result.Description);
+                            $('#Amount').numberbox('setValue', (result.Amount));
                             var e = document.getElementById("IsBank");
                             if (result.IsBank == true) {
                                 e.selectedIndex = 1;
