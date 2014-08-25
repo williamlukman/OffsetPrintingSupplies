@@ -15,8 +15,9 @@ namespace Core.DomainModel
         
         public int Quantity { get; set; }
         public decimal CoGS { get; set; }
-        //public decimal AssignedPrice { get; set; }
-        //public bool IsManualPriceAssignment { get; set; }
+        public decimal Discount { get; set; }
+        public decimal AssignedPrice { get; set; }
+        public bool IsManualPriceAssignment { get; set; }
         public decimal Amount { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

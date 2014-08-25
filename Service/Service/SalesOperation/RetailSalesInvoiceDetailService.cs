@@ -52,8 +52,8 @@ namespace Service.Service
                 retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 retailSalesInvoiceDetail.Amount = priceMutation.Amount * retailSalesInvoiceDetail.Quantity;
                 retailSalesInvoiceDetail = _repository.CreateObject(retailSalesInvoiceDetail);
-                retailSalesInvoice.Total += retailSalesInvoiceDetail.Amount;
-                _retailSalesInvoiceService.GetRepository().UpdateObject(retailSalesInvoice);
+                retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
+                _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
             }
             return retailSalesInvoiceDetail;
         }
@@ -69,8 +69,8 @@ namespace Service.Service
                 retailSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 retailSalesInvoiceDetail.Amount = priceMutation.Amount * retailSalesInvoiceDetail.Quantity;
                 retailSalesInvoiceDetail = _repository.UpdateObject(retailSalesInvoiceDetail);
-                retailSalesInvoice.Total += retailSalesInvoiceDetail.Amount;
-                _retailSalesInvoiceService.GetRepository().UpdateObject(retailSalesInvoice);
+                retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
+                _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
             }
             return retailSalesInvoiceDetail;
         }
@@ -126,13 +126,30 @@ namespace Service.Service
 
         public RetailSalesInvoiceDetail SoftDeleteObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService)
         {
-            return (retailSalesInvoiceDetail = _validator.ValidDeleteObject(retailSalesInvoiceDetail, _retailSalesInvoiceService) ?
-                    _repository.SoftDeleteObject(retailSalesInvoiceDetail) : retailSalesInvoiceDetail);
+            if(_validator.ValidDeleteObject(retailSalesInvoiceDetail, _retailSalesInvoiceService))
+            {
+                RetailSalesInvoice retailSalesInvoice = _retailSalesInvoiceService.GetObjectById(retailSalesInvoiceDetail.RetailSalesInvoiceId);
+                _repository.SoftDeleteObject(retailSalesInvoiceDetail);
+                retailSalesInvoice.Total = CalculateTotal(retailSalesInvoice.Id);
+                _retailSalesInvoiceService.GetRepository().Update(retailSalesInvoice);
+            }
+            return retailSalesInvoiceDetail;
         }
 
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
+        }
+
+        public decimal CalculateTotal(int RetailSalesInvoiceId)
+        {
+            IList<RetailSalesInvoiceDetail> retailSalesInvoiceDetails = GetObjectsByRetailSalesInvoiceId(RetailSalesInvoiceId);
+            decimal Total = 0;
+            foreach (var retailSalesInvoiceDetail in retailSalesInvoiceDetails)
+            {
+                Total += retailSalesInvoiceDetail.Amount;
+            }
+            return Total;
         }
     }
 }

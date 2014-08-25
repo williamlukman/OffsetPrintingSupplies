@@ -53,7 +53,7 @@ namespace Service.Service
                 retailPurchaseInvoiceDetail.Amount = priceMutation.Amount * retailPurchaseInvoiceDetail.Quantity;
                 retailPurchaseInvoiceDetail = _repository.CreateObject(retailPurchaseInvoiceDetail);
                 retailPurchaseInvoice.Total = CalculateTotal(retailPurchaseInvoice.Id);
-                _retailPurchaseInvoiceService.GetRepository().UpdateObject(retailPurchaseInvoice);
+                _retailPurchaseInvoiceService.GetRepository().Update(retailPurchaseInvoice);
             }
             return retailPurchaseInvoiceDetail;
         }
@@ -70,7 +70,7 @@ namespace Service.Service
                 retailPurchaseInvoiceDetail.Amount = priceMutation.Amount * retailPurchaseInvoiceDetail.Quantity;
                 retailPurchaseInvoiceDetail = _repository.UpdateObject(retailPurchaseInvoiceDetail);
                 retailPurchaseInvoice.Total = CalculateTotal(retailPurchaseInvoice.Id);
-                _retailPurchaseInvoiceService.GetRepository().UpdateObject(retailPurchaseInvoice);
+                _retailPurchaseInvoiceService.GetRepository().Update(retailPurchaseInvoice);
             }
             return retailPurchaseInvoiceDetail;
         }
@@ -134,8 +134,14 @@ namespace Service.Service
 
         public RetailPurchaseInvoiceDetail SoftDeleteObject(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
         {
-            return (retailPurchaseInvoiceDetail = _validator.ValidDeleteObject(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService) ?
-                    _repository.SoftDeleteObject(retailPurchaseInvoiceDetail) : retailPurchaseInvoiceDetail);
+            if(_validator.ValidDeleteObject(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService))
+            {
+                RetailPurchaseInvoice retailPurchaseInvoice = _retailPurchaseInvoiceService.GetObjectById(retailPurchaseInvoiceDetail.RetailPurchaseInvoiceId);
+                _repository.SoftDeleteObject(retailPurchaseInvoiceDetail);
+                retailPurchaseInvoice.Total = CalculateTotal(retailPurchaseInvoice.Id);
+                _retailPurchaseInvoiceService.GetRepository().Update(retailPurchaseInvoice);
+            }
+            return retailPurchaseInvoiceDetail;
         }
 
         public bool DeleteObject(int Id)

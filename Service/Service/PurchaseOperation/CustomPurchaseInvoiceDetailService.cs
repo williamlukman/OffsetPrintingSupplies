@@ -54,7 +54,7 @@ namespace Service.Service
                 customPurchaseInvoiceDetail.Amount = priceMutation.Amount * customPurchaseInvoiceDetail.Quantity;
                 customPurchaseInvoiceDetail = _repository.CreateObject(customPurchaseInvoiceDetail);
                 customPurchaseInvoice.Total = CalculateTotal(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
-                _customPurchaseInvoiceService.GetRepository().UpdateObject(customPurchaseInvoice);
+                _customPurchaseInvoiceService.GetRepository().Update(customPurchaseInvoice);
             }
             return customPurchaseInvoiceDetail;
         }
@@ -72,7 +72,7 @@ namespace Service.Service
                 customPurchaseInvoiceDetail.Amount = priceMutation.Amount * customPurchaseInvoiceDetail.Quantity;
                 customPurchaseInvoiceDetail = _repository.UpdateObject(customPurchaseInvoiceDetail);
                 customPurchaseInvoice.Total = CalculateTotal(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
-                _customPurchaseInvoiceService.GetRepository().UpdateObject(customPurchaseInvoice);
+                _customPurchaseInvoiceService.GetRepository().Update(customPurchaseInvoice);
             }
             return customPurchaseInvoiceDetail;
         }
@@ -143,8 +143,14 @@ namespace Service.Service
 
         public CustomPurchaseInvoiceDetail SoftDeleteObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail, ICustomPurchaseInvoiceService _customPurchaseInvoiceService)
         {
-            return (customPurchaseInvoiceDetail = _validator.ValidDeleteObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService) ?
-                    _repository.SoftDeleteObject(customPurchaseInvoiceDetail) : customPurchaseInvoiceDetail);
+            if(_validator.ValidDeleteObject(customPurchaseInvoiceDetail, _customPurchaseInvoiceService))
+            {
+                CustomPurchaseInvoice customPurchaseInvoice = _customPurchaseInvoiceService.GetObjectById(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
+                _repository.SoftDeleteObject(customPurchaseInvoiceDetail);
+                customPurchaseInvoice.Total = CalculateTotal(customPurchaseInvoiceDetail.CustomPurchaseInvoiceId);
+                _customPurchaseInvoiceService.GetRepository().Update(customPurchaseInvoice);
+            }
+            return customPurchaseInvoiceDetail;
         }
 
         public bool DeleteObject(int Id)

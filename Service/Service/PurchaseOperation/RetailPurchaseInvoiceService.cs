@@ -78,6 +78,11 @@ namespace Service.Service
                 Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate);
                 retailPurchaseInvoice = _repository.ConfirmObject(retailPurchaseInvoice);
             }
+            else
+            {
+                retailPurchaseInvoice.ConfirmationDate = null;
+                //retailPurchaseInvoice.ContactId = 0; //null;
+            }
             return retailPurchaseInvoice;
         }
 
