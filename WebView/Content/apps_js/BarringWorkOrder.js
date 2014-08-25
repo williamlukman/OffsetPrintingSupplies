@@ -165,7 +165,7 @@
                             $('#btnWarehouse').attr('disabled', true);
                             $('#Code').attr('disabled', true);
                             $('#QuantityReceived').attr('disabled', true);
-                            $('#tabledetail_div').show();
+                            $('#tabledetail_div').show(); 
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
                         }
