@@ -10,15 +10,12 @@ namespace Validation.Validation
 {
     public class RetailSalesInvoiceDetailValidator : IRetailSalesInvoiceDetailValidator
     {
-        public RetailSalesInvoiceDetail VIsNotConfirmed(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService)
+        public RetailSalesInvoiceDetail VRetailSalesInvoiceHasNotBeenConfirmed(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService)
         {
             RetailSalesInvoice retailSalesInvoice = _retailSalesInvoiceService.GetObjectById(retailSalesInvoiceDetail.RetailSalesInvoiceId);
-            if (retailSalesInvoice != null)
+            if (retailSalesInvoice.IsConfirmed)
             {
-                if (retailSalesInvoice.IsConfirmed)
-                {
-                    retailSalesInvoiceDetail.Errors.Add("Generic", "RetailSalesInvoice tidak boleh terkonfirmasi");
-                }
+                retailSalesInvoiceDetail.Errors.Add("Generic", "RetailSalesInvoice tidak boleh terkonfirmasi");
             }
             return retailSalesInvoiceDetail;
         }
@@ -97,6 +94,8 @@ namespace Validation.Validation
         {
             VHasRetailSalesInvoice(retailSalesInvoiceDetail, _retailSalesInvoiceService);
             if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
+            VRetailSalesInvoiceHasNotBeenConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
+            if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VIsValidQuantity(retailSalesInvoiceDetail, _retailSalesInvoiceService, _warehouseItemService);
             if (!isValid(retailSalesInvoiceDetail)) { return retailSalesInvoiceDetail; }
             VHasItem(retailSalesInvoiceDetail, _itemService);
@@ -113,7 +112,7 @@ namespace Validation.Validation
 
         public RetailSalesInvoiceDetail VDeleteObject(RetailSalesInvoiceDetail retailSalesInvoiceDetail, IRetailSalesInvoiceService _retailSalesInvoiceService)
         {
-            VIsNotConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
+            VRetailSalesInvoiceHasNotBeenConfirmed(retailSalesInvoiceDetail, _retailSalesInvoiceService);
             return retailSalesInvoiceDetail;
         }
 

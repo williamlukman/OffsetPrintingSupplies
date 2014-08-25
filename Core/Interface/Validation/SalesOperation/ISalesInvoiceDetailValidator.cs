@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
     public interface ISalesInvoiceDetailValidator
     {
         SalesInvoiceDetail VHasSalesInvoice(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService);
+        SalesInvoiceDetail VSalesInvoiceHasNotBeenConfirmed(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService);
         SalesInvoiceDetail VHasDeliveryOrderDetail(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderDetailService _deliveryOrderDetailService);
         SalesInvoiceDetail VDeliveryOrderDetailAndSalesInvoiceMustHaveTheSameDeliveryOrder(SalesInvoiceDetail salesInvoiceDetail,
                                                          IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesInvoiceService salesInvoiceService);
