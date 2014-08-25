@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
     public interface ISalesOrderDetailValidator
     {
         SalesOrderDetail VHasSalesOrder(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService);
+        SalesOrderDetail VSalesOrderHasNotBeenConfirmed(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService);
         SalesOrderDetail VHasItem(SalesOrderDetail salesOrderDetail, IItemService _itemService);
         SalesOrderDetail VNonZeroNorNegativeQuantity(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail VNonNegativePrice(SalesOrderDetail salesOrderDetail);

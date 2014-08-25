@@ -38,9 +38,9 @@ namespace Data.Repository
             return FindAll(x => x.RollerWarehouseMutationId == rollerWarehouseMutationId && !x.IsDeleted).ToList();
         }
 
-        public RollerWarehouseMutationDetail GetObjectByCoreIdentificationDetailId(int coreIdentificationDetailId)
+        public RollerWarehouseMutationDetail GetObjectByRecoveryOrderDetailId(int recoveryOrderDetailId)
         {
-            return Find(x => x.CoreIdentificationDetailId == coreIdentificationDetailId && !x.IsDeleted);
+            return Find(x => x.RecoveryOrderDetailId == recoveryOrderDetailId && !x.IsDeleted);
         }
 
         public RollerWarehouseMutationDetail GetObjectById(int Id)

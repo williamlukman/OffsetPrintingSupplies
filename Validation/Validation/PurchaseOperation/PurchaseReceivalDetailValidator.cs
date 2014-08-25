@@ -21,6 +21,16 @@ namespace Validation.Validation
             return purchaseReceivalDetail;
         }
 
+        public PurchaseReceivalDetail VPurchaseReceivalHasNotBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService)
+        {
+            PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
+            if (purchaseReceival.IsConfirmed)
+            {
+                purchaseReceivalDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
+            }
+            return purchaseReceivalDetail;
+        }
+
         public PurchaseReceivalDetail VHasItem(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
@@ -86,7 +96,7 @@ namespace Validation.Validation
         }
 
         public PurchaseReceivalDetail VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail,
-                                                        IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService)
+                                                        IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService, bool CaseCreate)
         {
             PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
             IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseOrderDetailId(purchaseReceivalDetail.PurchaseOrderDetailId);
@@ -94,12 +104,15 @@ namespace Validation.Validation
             int totalReceivalQuantity = 0;
             foreach (var detail in details)
             {
-                totalReceivalQuantity += detail.Quantity;
+                if (!detail.IsConfirmed)
+                {
+                    totalReceivalQuantity += detail.Quantity;
+                }
             }
-            if (totalReceivalQuantity > purchaseOrderDetail.Quantity)
+            if (CaseCreate) { totalReceivalQuantity += purchaseReceivalDetail.Quantity; }
+            if (totalReceivalQuantity > purchaseOrderDetail.PendingReceivalQuantity)
             {
-                int maxquantity = totalReceivalQuantity - purchaseReceivalDetail.Quantity;
-                purchaseReceivalDetail.Errors.Add("Generic", "Hanya boleh maksimum " + maxquantity);
+                purchaseReceivalDetail.Errors.Add("Generic", "Quantity maximum adalah " + purchaseOrderDetail.PendingReceivalQuantity);
             }
             return purchaseReceivalDetail;
         }
@@ -160,6 +173,8 @@ namespace Validation.Validation
         {
             VHasPurchaseReceival(purchaseReceivalDetail, _purchaseReceivalService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VPurchaseReceivalHasNotBeenConfirmed(purchaseReceivalDetail, _purchaseReceivalService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasItem(purchaseReceivalDetail, _itemService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasPurchaseOrderDetail(purchaseReceivalDetail, _purchaseOrderDetailService);
@@ -170,7 +185,8 @@ namespace Validation.Validation
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VNonNegativeQuantity(purchaseReceivalDetail);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
-            VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService);
+            // specific parameter for create function
+            VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService, true);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VUniquePurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _itemService);
             return purchaseReceivalDetail;
@@ -179,7 +195,24 @@ namespace Validation.Validation
         public PurchaseReceivalDetail VUpdateObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                                     IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService, IItemService _itemService)
         {
-            VCreateObject(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseReceivalService, _purchaseOrderDetailService, _itemService);
+            VHasPurchaseReceival(purchaseReceivalDetail, _purchaseReceivalService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VPurchaseReceivalHasNotBeenConfirmed(purchaseReceivalDetail, _purchaseReceivalService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VHasItem(purchaseReceivalDetail, _itemService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VHasPurchaseOrderDetail(purchaseReceivalDetail, _purchaseOrderDetailService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VPurchaseOrderDetailHasBeenConfirmed(purchaseReceivalDetail, _purchaseOrderDetailService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VPurchaseReceivalAndPurchaseOrderDetailHaveTheSamePurchaseOrder(purchaseReceivalDetail, _purchaseReceivalService, _purchaseOrderDetailService);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VNonNegativeQuantity(purchaseReceivalDetail);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            // specific parameter for update function
+            VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService, false);
+            if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
+            VUniquePurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _itemService);
             if (!isValid(purchaseReceivalDetail)) return purchaseReceivalDetail;
             VHasNotBeenConfirmed(purchaseReceivalDetail);
             return purchaseReceivalDetail;
@@ -199,7 +232,7 @@ namespace Validation.Validation
             if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
             VHasNotBeenConfirmed(purchaseReceivalDetail);
             if (!isValid(purchaseReceivalDetail)) { return purchaseReceivalDetail; }
-            VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService);
+            VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(purchaseReceivalDetail, _purchaseReceivalDetailService, _purchaseOrderDetailService, false);
             return purchaseReceivalDetail;
         }
 

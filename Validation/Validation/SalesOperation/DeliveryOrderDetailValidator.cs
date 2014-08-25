@@ -21,6 +21,16 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
+        public DeliveryOrderDetail VDeliveryOrderHasNotBeenConfirmed(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _purchaseReceivalService)
+        {
+            DeliveryOrder deliveryOrder = _purchaseReceivalService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+            if (deliveryOrder.IsConfirmed)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
+            }
+            return deliveryOrderDetail;
+        }
+
         public DeliveryOrderDetail VHasItem(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService)
         {
             Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
@@ -76,20 +86,23 @@ namespace Validation.Validation
         }
 
         public DeliveryOrderDetail VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail,
-                                     IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService)
+                                     IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService, bool CaseCreate)
         {
             SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
             IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsBySalesOrderDetailId(deliveryOrderDetail.SalesOrderDetailId);
 
-            int totalReceivalQuantity = 0;
+            int totalDeliveryQuantity = 0;
             foreach (var detail in details)
             {
-                totalReceivalQuantity += detail.Quantity;
+                if (!detail.IsConfirmed)
+                {
+                    totalDeliveryQuantity += detail.Quantity;
+                }
             }
-            if (totalReceivalQuantity > salesOrderDetail.Quantity)
+            if (CaseCreate) { totalDeliveryQuantity += salesOrderDetail.Quantity; }
+            if (totalDeliveryQuantity > salesOrderDetail.PendingDeliveryQuantity)
             {
-                int maxquantity = totalReceivalQuantity - deliveryOrderDetail.Quantity;
-                deliveryOrderDetail.Errors.Add("Generic", "Hanya boleh maksimum " + maxquantity);
+                deliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + salesOrderDetail.PendingDeliveryQuantity);
             }
             return deliveryOrderDetail;
         }
@@ -164,6 +177,8 @@ namespace Validation.Validation
         {
             VHasDeliveryOrder(deliveryOrderDetail, _deliveryOrderService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VDeliveryOrderHasNotBeenConfirmed(deliveryOrderDetail, _deliveryOrderService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VHasItem(deliveryOrderDetail, _itemService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VHasSalesOrderDetail(deliveryOrderDetail, _salesOrderDetailService);
@@ -174,7 +189,8 @@ namespace Validation.Validation
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VNonNegativeQuantity(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService);
+            // specific parameter = true for create
+            VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService, true);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VUniqueSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _itemService);
             return deliveryOrderDetail;
@@ -185,7 +201,24 @@ namespace Validation.Validation
         {
             VHasNotBeenConfirmed(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            VCreateObject(deliveryOrderDetail, _deliveryOrderDetailService, _deliveryOrderService, _salesOrderDetailService, _itemService);
+            VHasDeliveryOrder(deliveryOrderDetail, _deliveryOrderService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VDeliveryOrderHasNotBeenConfirmed(deliveryOrderDetail, _deliveryOrderService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VHasItem(deliveryOrderDetail, _itemService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VHasSalesOrderDetail(deliveryOrderDetail, _salesOrderDetailService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VSalesOrderDetailHasBeenConfirmed(deliveryOrderDetail, _salesOrderDetailService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VDeliveryOrderAndSalesOrderDetailHaveTheSameSalesOrder(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VNonNegativeQuantity(deliveryOrderDetail);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            // specific parameter = false for non create function
+            VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService, false);
+            if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
+            VUniqueSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _itemService);
             return deliveryOrderDetail;
         }
 
@@ -205,7 +238,7 @@ namespace Validation.Validation
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VHasItemQuantity(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService);
+            VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService, false);
             return deliveryOrderDetail;
         }
 

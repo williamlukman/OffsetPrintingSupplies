@@ -97,7 +97,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListConfirmed(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetListConfirmedNotCompleted(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
 
@@ -105,7 +105,7 @@ namespace WebView.Controllers
 
             // Get Data
 
-            var query = _purchaseOrderService.GetConfirmedObjects().Where(d => d.IsDeleted == false);
+            var query = _purchaseOrderService.GetQueryable().Where(d => d.IsConfirmed && !d.IsReceivalCompleted && !d.IsDeleted);
 
             var list = query as IEnumerable<PurchaseOrder>;
 
@@ -191,8 +191,10 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
                             model.Quantity,
+                            model.PendingReceivalQuantity,
                             model.Price
                       }
                     }).ToArray()

@@ -51,15 +51,15 @@
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'PurchaseDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'contactid', index: 'contactid', width: 100 },
-                  { name: 'contactname', index: 'contactname', width: 80 },
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+                  { name: 'code', index: 'code', width: 80 },
+				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
+                  { name: 'contactname', index: 'contactname', width: 150 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -142,6 +142,7 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
+                            $('#PurchaseDate2').val(dateEnt(result.PurchaseDate));
                             $('#PurchaseDateDiv2').show();
                             $('#PurchaseDateDiv').hide();
                             $('#form_btn_save').hide();
@@ -396,14 +397,16 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity','Price',
+        colNames: ['Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'PendRcv', 'Price',
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
+				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -633,9 +636,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Sku', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'sku', index: 'sku', width: 80 },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_item'),

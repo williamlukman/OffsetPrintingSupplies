@@ -10,13 +10,14 @@ namespace Core.Interface.Validation
     public interface IDeliveryOrderDetailValidator
     {
         DeliveryOrderDetail VHasDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService);
+        DeliveryOrderDetail VDeliveryOrderHasNotBeenConfirmed(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService);
         DeliveryOrderDetail VHasItem(DeliveryOrderDetail deliveryOrderDetail, IItemService _itemService);
         DeliveryOrderDetail VNonNegativeQuantity(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail VHasSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VUniqueSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetails, IItemService _itemService);
         DeliveryOrderDetail VSalesOrderDetailHasBeenConfirmed(DeliveryOrderDetail deliveryOrderDetail, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(DeliveryOrderDetail deliveryOrderDetail,
-                                     IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService);
+                                     IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService, bool CaseCreate);
         DeliveryOrderDetail VDeliveryOrderAndSalesOrderDetailHaveTheSameSalesOrder(DeliveryOrderDetail deliveryOrderDetail,
                                      IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService);
         DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IItemService _itemService,

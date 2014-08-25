@@ -9,7 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int RollerWarehouseMutationId { get; set; }
-        public int CoreIdentificationDetailId { get; set; }
+        public int RecoveryOrderDetailId { get; set; }
         public string Code { get; set; }
 
         public int ItemId { get; set; }
@@ -22,6 +22,6 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
         public virtual RollerWarehouseMutation RollerWarehouseMutation { get; set; }
-        public virtual CoreIdentificationDetail CoreIdentificationDetail { get; set; }
+        public virtual RecoveryOrderDetail RecoveryOrderDetail { get; set; }
     }
 }

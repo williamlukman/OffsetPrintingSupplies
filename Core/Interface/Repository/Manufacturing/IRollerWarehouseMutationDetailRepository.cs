@@ -12,7 +12,7 @@ namespace Core.Interface.Repository
         IList<RollerWarehouseMutationDetail> GetAll();
         IList<RollerWarehouseMutationDetail> GetAllByMonthCreated();
         IList<RollerWarehouseMutationDetail> GetObjectsByRollerWarehouseMutationId(int rollerWarehouseMutationId);
-        RollerWarehouseMutationDetail GetObjectByCoreIdentificationDetailId(int coreIdentificationDetailId);
+        RollerWarehouseMutationDetail GetObjectByRecoveryOrderDetailId(int recoveryOrderDetailId);
         RollerWarehouseMutationDetail GetObjectById(int Id);
         RollerWarehouseMutationDetail CreateObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail);
         RollerWarehouseMutationDetail UpdateObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail);

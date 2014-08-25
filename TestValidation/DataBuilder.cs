@@ -1175,96 +1175,96 @@ namespace TestValidation
         {
             rollerWarehouseMutationContact = new RollerWarehouseMutation()
             {
-                CoreIdentificationId = coreIdentificationContact.Id,
+                RecoveryOrderId = recoveryOrderContact.Id,
                 Quantity = 3,
                 WarehouseFromId = movingWarehouse.Id,
                 WarehouseToId = localWarehouse.Id,
                 MutationDate = DateTime.Today
             };
-            _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationContact, _warehouseService, _coreIdentificationService);
+            _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationContact, _warehouseService, _recoveryOrderService);
 
             rwmDetailContact1 = new RollerWarehouseMutationDetail()
             {
                 RollerWarehouseMutationId = rollerWarehouseMutationContact.Id,
-                CoreIdentificationDetailId = coreIDContact1.Id,
+                RecoveryOrderDetailId = recoveryODContact1.Id,
                 ItemId = (coreIDContact1.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
                          _rollerBuilderService.GetRollerUsedCore(recoveryODContact1.RollerBuilderId).Id :
                           _rollerBuilderService.GetRollerNewCore(recoveryODContact1.RollerBuilderId).Id
             };
-            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailContact1, _rollerWarehouseMutationService,
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailContact1, _rollerWarehouseMutationService, _recoveryOrderDetailService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
             
             rwmDetailContact2 = new RollerWarehouseMutationDetail()
             {
                 RollerWarehouseMutationId = rollerWarehouseMutationContact.Id,
-                CoreIdentificationDetailId = coreIDContact2.Id,
+                RecoveryOrderDetailId = recoveryODContact2b.Id,
                 ItemId = (coreIDContact2.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
                          _rollerBuilderService.GetRollerUsedCore(recoveryODContact2b.RollerBuilderId).Id :
                           _rollerBuilderService.GetRollerNewCore(recoveryODContact2b.RollerBuilderId).Id
             };
-            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailContact2, _rollerWarehouseMutationService,
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailContact2, _rollerWarehouseMutationService, _recoveryOrderDetailService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
             rwmDetailContact3 = new RollerWarehouseMutationDetail()
             {
                 RollerWarehouseMutationId = rollerWarehouseMutationContact.Id,
-                CoreIdentificationDetailId = coreIDContact3.Id,
+                RecoveryOrderDetailId = recoveryODContact3.Id,
                 ItemId = (coreIDContact3.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
                          _rollerBuilderService.GetRollerUsedCore(recoveryODContact3.RollerBuilderId).Id :
                           _rollerBuilderService.GetRollerNewCore(recoveryODContact3.RollerBuilderId).Id
             };
 
-            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailContact3, _rollerWarehouseMutationService,
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailContact3, _rollerWarehouseMutationService, _recoveryOrderDetailService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
             _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationContact, DateTime.Today, _rollerWarehouseMutationDetailService, _itemService,
-                                                          _barringService, _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+                                                          _barringService, _warehouseItemService, _stockMutationService, _recoveryOrderDetailService, _coreIdentificationDetailService, _coreIdentificationService);
             
             rollerWarehouseMutationInHouse = new RollerWarehouseMutation()
             {
-                CoreIdentificationId = coreIdentificationInHouse.Id,
+                RecoveryOrderId = recoveryOrderInHouse.Id,
                 Quantity = 3,
                 WarehouseFromId = movingWarehouse.Id,
                 WarehouseToId = localWarehouse.Id,
                 MutationDate = DateTime.Today
             };
-            _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationInHouse, _warehouseService, _coreIdentificationService);
+            _rollerWarehouseMutationService.CreateObject(rollerWarehouseMutationInHouse, _warehouseService, _recoveryOrderService);
 
             rwmDetailInHouse1 = new RollerWarehouseMutationDetail()
             {
                 RollerWarehouseMutationId = rollerWarehouseMutationInHouse.Id,
-                CoreIdentificationDetailId = coreIDInHouse1.Id,
+                RecoveryOrderDetailId = recoveryODInHouse1.Id,
                 ItemId = (coreIDInHouse1.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
                          _rollerBuilderService.GetRollerUsedCore(recoveryODInHouse1.RollerBuilderId).Id :
                           _rollerBuilderService.GetRollerNewCore(recoveryODInHouse1.RollerBuilderId).Id
             };
-            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse1, _rollerWarehouseMutationService,
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse1, _rollerWarehouseMutationService, _recoveryOrderDetailService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
             rwmDetailInHouse2 = new RollerWarehouseMutationDetail()
             {
                 RollerWarehouseMutationId = rollerWarehouseMutationInHouse.Id,
-                CoreIdentificationDetailId = coreIDInHouse2.Id,
+                RecoveryOrderDetailId = recoveryODInHouse2.Id,
                 ItemId = (coreIDInHouse2.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
                          _rollerBuilderService.GetRollerUsedCore(recoveryODInHouse2.RollerBuilderId).Id :
                           _rollerBuilderService.GetRollerNewCore(recoveryODInHouse2.RollerBuilderId).Id
             };
-            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse2, _rollerWarehouseMutationService,
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse2, _rollerWarehouseMutationService, _recoveryOrderDetailService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
             rwmDetailInHouse3 = new RollerWarehouseMutationDetail()
             {
                 RollerWarehouseMutationId = rollerWarehouseMutationInHouse.Id,
-                CoreIdentificationDetailId = coreIDInHouse3.Id,
+                RecoveryOrderDetailId = recoveryODInHouse3b.Id,
                 ItemId = (coreIDInHouse3.MaterialCase == Core.Constants.Constant.MaterialCase.Used) ?
                          _rollerBuilderService.GetRollerUsedCore(recoveryODInHouse3b.RollerBuilderId).Id :
                           _rollerBuilderService.GetRollerNewCore(recoveryODInHouse3b.RollerBuilderId).Id
             };
-            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse3, _rollerWarehouseMutationService,
+            _rollerWarehouseMutationDetailService.CreateObject(rwmDetailInHouse3, _rollerWarehouseMutationService, _recoveryOrderDetailService,
                                                                _coreIdentificationDetailService, _itemService, _warehouseItemService);
 
             _rollerWarehouseMutationService.ConfirmObject(rollerWarehouseMutationInHouse, DateTime.Today, _rollerWarehouseMutationDetailService, _itemService,
-                                                          _barringService, _warehouseItemService, _stockMutationService, _coreIdentificationDetailService, _coreIdentificationService);
+                                                          _barringService, _warehouseItemService, _stockMutationService, _recoveryOrderDetailService, _coreIdentificationDetailService, _coreIdentificationService);
         }
 
         public void PopulateBarring()

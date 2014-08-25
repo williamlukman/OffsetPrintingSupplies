@@ -10,13 +10,14 @@ namespace Core.Interface.Validation
     public interface IPurchaseReceivalDetailValidator
     {
         PurchaseReceivalDetail VHasPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService);
+        PurchaseReceivalDetail VPurchaseReceivalHasNotBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService);
         PurchaseReceivalDetail VHasItem(PurchaseReceivalDetail purchaseReceivalDetail, IItemService _itemService);
         PurchaseReceivalDetail VNonNegativeQuantity(PurchaseReceivalDetail purchaseReceivalDetail);
         PurchaseReceivalDetail VHasPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail VPurchaseReceivalAndPurchaseOrderDetailHaveTheSamePurchaseOrder(PurchaseReceivalDetail purchaseReceivalDetail,
                                                        IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail VQuantityOfPurchaseReceivalDetailsIsLessThanOrEqualPurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail,
-                                                       IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService);
+                                                       IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseOrderDetailService _purchaseOrderDetailService, bool CaseCreate);
         PurchaseReceivalDetail VUniquePurchaseOrderDetail(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
         PurchaseReceivalDetail VPurchaseOrderDetailHasBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseOrderDetailService _purchaseOrderDetailService);
         PurchaseReceivalDetail VHasBeenConfirmed(PurchaseReceivalDetail purchaseReceivalDetail);

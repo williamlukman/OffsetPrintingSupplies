@@ -18,9 +18,7 @@ namespace Core.Interface.Validation
         CoreIdentificationDetail VHasRollerType(CoreIdentificationDetail coreIdentificationDetail, IRollerTypeService _rollerTypeService);
         CoreIdentificationDetail VHasMachine(CoreIdentificationDetail coreIdentificationDetail, IMachineService _machineService);
         CoreIdentificationDetail VHasMeasurement(CoreIdentificationDetail coreIdentificationDetail);
-        CoreIdentificationDetail VHasRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail VIsInRecoveryOrderDetails(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        CoreIdentificationDetail VIsInRollerWarehouseMutationDetail(CoreIdentificationDetail coreIdentificationDetail, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail VCoreIdentificationHasBeenConfirmed(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
         CoreIdentificationDetail VCoreIdentificationHasNotBeenConfirmed(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);
         CoreIdentificationDetail VCoreIdentificationHasNotBeenCompleted(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService);

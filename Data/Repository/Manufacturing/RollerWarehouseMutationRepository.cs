@@ -33,9 +33,9 @@ namespace Data.Repository
             return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
-        public IList<RollerWarehouseMutation> GetObjectsByCoreIdentificationId(int coreIdentificationId)
+        public IList<RollerWarehouseMutation> GetObjectsByRecoveryOrderId(int recoveryOrderId)
         {
-            return FindAll(x => x.CoreIdentificationId == coreIdentificationId && !x.IsDeleted).ToList();
+            return FindAll(x => x.RecoveryOrderId == recoveryOrderId && !x.IsDeleted).ToList();
         }
 
         public RollerWarehouseMutation GetObjectById(int Id)
