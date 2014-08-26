@@ -18,27 +18,27 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
-        private IWarehouseService _warehouseService;
-        private IDeliveryOrderService _deliveryOrderService;
-        private IDeliveryOrderDetailService _deliveryOrderDetailService;
-        private ISalesInvoiceService _salesInvoiceService;
-        private ISalesInvoiceDetailService _salesInvoiceDetailService;
         private ISalesOrderService _salesOrderService;
         private ISalesOrderDetailService _salesOrderDetailService;
-      
+        private IDeliveryOrderDetailService _deliveryOrderDetailService;
+        private IDeliveryOrderService _deliveryOrderService;
+        private ISalesInvoiceService _salesInvoiceService;
+        private ISalesInvoiceDetailService _salesInvoiceDetailService;
+        private IWarehouseService _warehouseService;
+
         public DeliveryOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
-            _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
+            _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
             _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
             _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
             _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
-            _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
-            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
         }
 
 
@@ -54,7 +54,7 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _deliveryOrderService.GetAll().Where(d => d.IsDeleted == false);
+            var query = _deliveryOrderService.GetAll().Where(d => d.IsDeleted == false);
 
             var list = query as IEnumerable<DeliveryOrder>;
 
@@ -89,9 +89,9 @@ namespace WebView.Controllers
                             model.Code,
                             model.SalesOrderId,
                             _salesOrderService.GetObjectById(model.SalesOrderId).Code,
-                            model.DeliveryDate,
                             model.WarehouseId,
                             _warehouseService.GetObjectById(model.WarehouseId).Name,
+                            model.DeliveryDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -155,14 +155,14 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
+        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
 
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(id).Where(d => d.IsDeleted == false);
+            var query = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(id).Where(d => d.IsDeleted == false);
 
             var list = query as IEnumerable<DeliveryOrderDetail>;
 
@@ -197,14 +197,16 @@ namespace WebView.Controllers
                             model.SalesOrderDetailId,
                             _salesOrderDetailService.GetObjectById(model.SalesOrderDetailId).Code,
                             model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
                             model.Quantity,
+                            _salesOrderDetailService.GetObjectById(model.SalesOrderDetailId).Price
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
-      
+
         public dynamic GetInfo(int Id)
         {
             DeliveryOrder model = new DeliveryOrder();
@@ -225,8 +227,8 @@ namespace WebView.Controllers
                 model.SalesOrderId,
                 SalesOrder = _salesOrderService.GetObjectById(model.SalesOrderId).Code,
                 model.DeliveryDate,
-                model.WarehouseId, 
-                Warehouse =_warehouseService.GetObjectById(model.WarehouseId).Name,
+                model.WarehouseId,
+                Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -237,6 +239,7 @@ namespace WebView.Controllers
             try
             {
                 model = _deliveryOrderDetailService.GetObjectById(Id);
+
             }
             catch (Exception ex)
             {
@@ -251,8 +254,10 @@ namespace WebView.Controllers
                 model.SalesOrderDetailId,
                 SalesOrderDetail = _salesOrderDetailService.GetObjectById(model.SalesOrderDetailId).Code,
                 model.ItemId,
+                ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
+                Price = _salesOrderDetailService.GetObjectById(model.SalesOrderDetailId).Price,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -262,8 +267,8 @@ namespace WebView.Controllers
         {
             try
             {
-             
-                model = _deliveryOrderService.CreateObject(model,_salesOrderService,_warehouseService);
+
+                model = _deliveryOrderService.CreateObject(model, _salesOrderService, _warehouseService);
             }
             catch (Exception ex)
             {
@@ -282,7 +287,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _deliveryOrderDetailService.CreateObject(model,_deliveryOrderService,_salesOrderDetailService,_salesOrderService,_itemService);
+                model = _deliveryOrderDetailService.CreateObject(model, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
             }
             catch (Exception ex)
             {
@@ -303,9 +308,9 @@ namespace WebView.Controllers
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
                 data.SalesOrderId = model.SalesOrderId;
-                data.WarehouseId = model.WarehouseId;
                 data.DeliveryDate = model.DeliveryDate;
-                model = _deliveryOrderService.UpdateObject(data,_salesOrderService,_warehouseService);
+                data.WarehouseId = model.WarehouseId;
+                model = _deliveryOrderService.UpdateObject(data, _salesOrderService, _warehouseService);
             }
             catch (Exception ex)
             {
@@ -325,7 +330,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
-                model = _deliveryOrderService.SoftDeleteObject(data,_deliveryOrderDetailService);
+                model = _deliveryOrderService.SoftDeleteObject(data, _deliveryOrderDetailService);
             }
             catch (Exception ex)
             {
@@ -368,7 +373,7 @@ namespace WebView.Controllers
                 data.SalesOrderDetailId = model.SalesOrderDetailId;
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
-                model = _deliveryOrderDetailService.UpdateObject(data,_deliveryOrderService,_salesOrderDetailService,_salesOrderService,_itemService);
+                model = _deliveryOrderDetailService.UpdateObject(data, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
             }
             catch (Exception ex)
             {
@@ -389,7 +394,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
-                model = _deliveryOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_deliveryOrderDetailService,_salesOrderService,_salesOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -410,7 +415,7 @@ namespace WebView.Controllers
             {
 
                 var data = _deliveryOrderService.GetObjectById(model.Id);
-                model = _deliveryOrderService.UnconfirmObject(data,_deliveryOrderDetailService,_salesInvoiceService,_salesInvoiceDetailService,_salesOrderService,_salesOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _deliveryOrderService.UnconfirmObject(data, _deliveryOrderDetailService, _salesInvoiceService, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -427,4 +432,3 @@ namespace WebView.Controllers
 
     }
 }
-

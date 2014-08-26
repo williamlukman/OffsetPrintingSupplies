@@ -31,7 +31,7 @@
         url: base_url + 'MstItem/GetList',
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 
-                    'Quantity', 'PendReceival', 'PendDelivery',
+                    'Ready', 'PendReceival', 'PendDelivery',
                     'UoM', 'Selling Price', 'AvgPrice',
                     'Category', 'Item Type', 'Created At', 'Updated At'],
         colModel: [

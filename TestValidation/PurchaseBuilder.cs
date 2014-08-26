@@ -176,7 +176,7 @@ namespace TestValidation
             PopulateMasterData();
             PopulateOrderAndReceivalData();
             PopulateInvoiceData();
-            PopulatePaymentVouher();
+            PopulateVoucher();
         }
 
         public void PopulateMasterData()
@@ -515,7 +515,7 @@ namespace TestValidation
 
         }
 
-        void PopulatePaymentVouher()
+        public void PopulateVoucher()
         {
             _purchaseInvoiceService.ConfirmObject(pi1, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
                                                   _purchaseReceivalDetailService, _payableService);

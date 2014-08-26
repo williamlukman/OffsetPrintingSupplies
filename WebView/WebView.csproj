@@ -152,6 +152,10 @@
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\BarringWorkProcessController.cs" />
+    <Compile Include="Controllers\CashMutationController.cs" />
+    <Compile Include="Controllers\ReceivableController.cs" />
+    <Compile Include="Controllers\PayableController.cs" />
+    <Compile Include="Controllers\StockMutationController.cs" />
     <Compile Include="Controllers\RecoveryWorkProcessController.cs" />
     <Compile Include="Controllers\CoreIdentificationController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
@@ -192,6 +196,10 @@
     <Content Include="Content\apps_js\CashBankAdjustment.js" />
     <Content Include="Content\apps_js\CashBankMutation.js" />
     <Content Include="Content\apps_js\BarringWorkProcess.js" />
+    <Content Include="Content\apps_js\CashMutation.js" />
+    <Content Include="Content\apps_js\Receivable.js" />
+    <Content Include="Content\apps_js\Payable.js" />
+    <Content Include="Content\apps_js\StockMutation.js" />
     <Content Include="Content\apps_js\RecoveryWorkProcess.js" />
     <Content Include="Content\apps_js\CoreIdentification.js" />
     <Content Include="Content\apps_js\DeliveryOrder.js" />
@@ -1101,6 +1109,10 @@
     <Content Include="Views\WarehouseItem\Index.cshtml" />
     <Content Include="Views\RecoveryWorkProcess\Index.cshtml" />
     <Content Include="Views\BarringWorkProcess\Index.cshtml" />
+    <Content Include="Views\StockMutation\Index.cshtml" />
+    <Content Include="Views\CashMutation\Index.cshtml" />
+    <Content Include="Views\Receivable\Index.cshtml" />
+    <Content Include="Views\Payable\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

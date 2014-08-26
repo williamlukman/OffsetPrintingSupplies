@@ -515,7 +515,7 @@ namespace TestValidation
 
         }
 
-        void PopulateVoucher()
+        public void PopulateVoucher()
         {
             _salesInvoiceService.ConfirmObject(si1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
                                                   _deliveryOrderDetailService, _receivableService);

@@ -585,11 +585,11 @@
         colNames: ['Code', 'Payable Id', 'Payable Code', 'Amount', 'Description'
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
+                  { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'payableid', index: 'payableid', width: 130, sortable: false, hidden: true },
-                  { name: 'payable', index: 'payable', width: 130, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'description', index: 'itemname', width: 80, sortable: false }
+                  { name: 'payable', index: 'payable', width: 70, sortable: false },
+                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'description', index: 'description', width: 180, sortable: false }
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
