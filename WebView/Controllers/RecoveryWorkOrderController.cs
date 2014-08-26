@@ -11,9 +11,9 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class RecoveryWorkProcessController : Controller
+    public class RecoveryWorkOrderController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkProcessController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkOrderController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
@@ -31,7 +31,7 @@ namespace WebView.Controllers
         private ICoreBuilderService _coreBuilderService;
         private IItemTypeService _itemTypeService;
 
-        public RecoveryWorkProcessController()
+        public RecoveryWorkOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
@@ -157,6 +157,72 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.CoreIdentificationDetailId,
                             model.RollerBuilderId,
+                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                            model.CoreTypeCase,
+                            model.Acc,
+                            model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
+                            model.IsDisassembled,
+                            model.IsStrippedAndGlued,
+                            model.IsWrapped,
+                            model.CompoundUsage,
+                            model.IsVulcanized,
+                            model.IsFacedOff,
+                            model.IsConventionalGrinded,
+                            model.IsCWCGrinded,
+                            model.IsPolishedAndQC,
+                            model.IsPackaged,
+                            model.IsRejected,
+                            model.RejectedDate,
+                            model.IsFinished,
+                            model.FinishedDate
+                        }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListDetailFinished(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(id).Where(d => d.IsDeleted == false);
+
+            var list = query as IEnumerable<RecoveryOrderDetail>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
+                            model.CoreIdentificationDetailId,
+                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
+                            model.RollerBuilderId,
+                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
                             _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                             model.CoreTypeCase,
                             model.Acc,

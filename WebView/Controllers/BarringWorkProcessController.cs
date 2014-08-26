@@ -48,67 +48,8 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _barringOrderService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<BarringOrder>;
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
-            {
-                if (!page.HasValue)
-                {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from model in list
-                    select new
-                    {
-                        id = model.Id,
-                        cell = new object[] {
-                            model.Id,
-                            model.Code,
-                            model.ContactId,
-                           _contactService.GetObjectById(model.ContactId).Name,
-                            model.WarehouseId,
-                            _warehouseService.GetObjectById(model.WarehouseId).Code,
-                            _warehouseService.GetObjectById(model.WarehouseId).Name,
-                            model.QuantityReceived,
-                            model.QuantityFinal,
-                            model.QuantityRejected,
-                            model.IsConfirmed,
-                            model.ConfirmationDate,
-                            model.CreatedAt,
-                            model.UpdatedAt,
-                      }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-       
-
-
-        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
-        {
-            // Construct where statement
-
-            string strWhere = GeneralFunction.ConstructWhere(filters);
-
-            // Get Data
-            var query = _barringOrderDetailService.GetObjectsByBarringOrderId(id).Where(d => d.IsDeleted == false);
+            var query = _barringOrderDetailService.GetAll().Where(d => d.IsDeleted == false);
 
             var list = query as IEnumerable<BarringOrderDetail>;
 
@@ -139,9 +80,17 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            model.Id,
                             model.BarringOrderId,
                             model.BarringId,
+                            _barringService.GetObjectById(model.BarringId).Sku,
                             _barringService.GetObjectById(model.BarringId).Name,
+                            _barringService.GetBlanketItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                            _barringService.GetBlanketItem(_barringService.GetObjectById(model.BarringId)).Name,
+                            _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                            _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name,
+                            _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                            _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Name,
                             model.IsCut,
                             model.IsSideSealed,
                             model.IsBarPrepared,
@@ -154,19 +103,20 @@ namespace WebView.Controllers
                             model.IsRejected,
                             model.RejectedDate,
                             model.IsFinished,
-                            model.FinishedDate
-                        }
+                            model.FinishedDate,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
-
         public dynamic GetInfo(int Id)
         {
-            BarringOrder model = new BarringOrder();
+            BarringOrderDetail model = new BarringOrderDetail();
             try
             {
-                model = _barringOrderService.GetObjectById(Id);
+                model = _barringOrderDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -177,13 +127,29 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
-                model.Code,
-                model.ContactId,
-                Contact = _contactService.GetObjectById(model.ContactId).Name,
-                model.WarehouseId,
-                WarehouseCode = _warehouseService.GetObjectById(model.WarehouseId).Code,
-                Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
-                model.QuantityReceived,
+                model.BarringOrderId,
+                model.BarringId,
+                BarringSku = _barringService.GetObjectById(model.BarringId).Sku,
+                Barring =_barringService.GetObjectById(model.BarringId).Name,
+                BlanketSku = _barringService.GetBlanketItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                Blanket = _barringService.GetBlanketItem(_barringService.GetObjectById(model.BarringId)).Name,
+                LeftBarSku = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                LeftBar = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name,
+                RightBarSku = _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Sku,
+                RightBar = _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Name,
+                model.IsCut,
+                model.IsSideSealed,
+                model.IsBarPrepared,
+                model.IsAdhesiveTapeApplied,
+                model.IsBarMounted,
+                model.IsBarHeatPressed,
+                model.IsBarPullOffTested,
+                model.IsQCAndMarked,
+                model.IsPackaged,
+                model.IsRejected,
+                model.RejectedDate,
+                model.IsFinished,
+                model.FinishedDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -225,88 +191,9 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public dynamic Insert(BarringOrder model)
-        {
-            try
-            {
-                model = _barringOrderService.CreateObject(model);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic InsertDetail(BarringOrderDetail model)
-        {
-            try
-            {
-                model = _barringOrderDetailService.CreateObject(model,_barringOrderService,_barringService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic Update(BarringOrder model)
-        {
-            try
-            {
-                var data = _barringOrderService.GetObjectById(model.Id);
-                data.ContactId = model.ContactId;
-                data.WarehouseId = model.WarehouseId;
-                data.Code = model.Code;
-                data.QuantityReceived = model.QuantityReceived;
-                model = _barringOrderService.UpdateObject(data,_barringOrderDetailService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
 
 
-        [HttpPost]
-        public dynamic Delete(BarringOrder model)
-        {
-            try
-            {
-                var data = _barringOrderService.GetObjectById(model.Id);
-                model = _barringOrderService.SoftDeleteObject(model, _barringOrderDetailService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
 
-            return Json(new
-            {
-                model.Errors
-            });
-        }
 
         [HttpPost]
         public dynamic DeleteDetail(BarringOrderDetail model)
@@ -329,99 +216,38 @@ namespace WebView.Controllers
             });
         }
 
+
         [HttpPost]
-        public dynamic UpdateDetail(BarringOrderDetail model)
+        public dynamic ProgressDetail(BarringOrderDetail model)
         {
+            var models = new BarringOrderDetail();
             try
             {
                 var data = _barringOrderDetailService.GetObjectById(model.Id);
-                data.BarringId = model.BarringId;
-                model = _barringOrderDetailService.UpdateObject(data,_barringOrderService,_barringService);
+                if (model.IsCut == true) { models = _barringOrderDetailService.CutObject(data, _barringOrderService); }
+                if (model.IsSideSealed == true) { models = _barringOrderDetailService.SideSealObject(data); }
+                if (model.IsBarPrepared == true) { models = _barringOrderDetailService.PrepareObject(data); }
+                if (model.IsAdhesiveTapeApplied == true) { models = _barringOrderDetailService.ApplyTapeAdhesiveToObject(data); }
+                if (model.IsBarMounted == true) { models = _barringOrderDetailService.MountObject(data); }
+                if (model.IsBarHeatPressed == true) { models = _barringOrderDetailService.HeatPressObject(data); }
+                if (model.IsBarPullOffTested == true) { models = _barringOrderDetailService.PullOffTestObject(data); }
+                if (model.IsQCAndMarked == true) { models = _barringOrderDetailService.QCAndMarkObject(data); }
+                if (model.IsPackaged == true) { models = _barringOrderDetailService.PackageObject(data); }
             }
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                models.Errors.Add("Generic", "Error : " + ex);
             }
 
             return Json(new
             {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic ProgressDetail(int Id,string Progress)
-        {
-            var model = new BarringOrderDetail();
-            try
-            {
-                var data = _barringOrderDetailService.GetObjectById(Id);
-                if (Progress == "IsCut") { model = _barringOrderDetailService.CutObject(data, _barringOrderService); }
-                else if (Progress == "IsSideSealed") { model = _barringOrderDetailService.SideSealObject(data); }
-                else if (Progress == "IsBarPrepared") { model = _barringOrderDetailService.PrepareObject(data); }
-                else if (Progress == "IsAdhesiveTapeApplied") { model = _barringOrderDetailService.ApplyTapeAdhesiveToObject(data); }
-                else if (Progress == "IsBarMounted") { model = _barringOrderDetailService.MountObject(data); }
-                else if (Progress == "IsBarHeatPressed") { model = _barringOrderDetailService.HeatPressObject(data); }
-                else if (Progress == "IsBarPullOffTested") { model = _barringOrderDetailService.PullOffTestObject(data); }
-                else if (Progress == "IsQCAndMarked") { model = _barringOrderDetailService.QCAndMarkObject(data); }
-                else if (Progress == "IsPackaged") { model = _barringOrderDetailService.PackageObject(data); }
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
+                models.Errors
             });
         }
 
 
-        [HttpPost]
-        public dynamic Confirm(BarringOrder model)
-        {
-            try
-            {
-                var data = _barringOrderService.GetObjectById(model.Id);
-                model = _barringOrderService.ConfirmObject(data,model.ConfirmationDate.Value
-                   ,_barringOrderDetailService,_barringService,_itemService,_warehouseItemService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Confirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic UnConfirm(BarringOrder model)
-        {
-            try
-            {
-
-                var data = _barringOrderService.GetObjectById(model.Id);
-                model = _barringOrderService.UnconfirmObject(data,_barringOrderDetailService,_barringService,
-                    _itemService,_warehouseItemService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Unconfirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
+       
 
         [HttpPost]
         public dynamic Finish(BarringOrderDetail model)

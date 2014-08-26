@@ -36,12 +36,12 @@
         });
     }
 
-    $("#coreidentification_div").dialog('close');
+    $("#recoveryworkorder_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
     $("#item_div").dialog('close');
-    $("#lookup_div_coreidentification").dialog('close');
-    $("#lookup_div_coreidentificationdetail").dialog('close');
+    $("#lookup_div_recoveryworkorder").dialog('close');
+    $("#lookup_div_recoveryworkorderdetail").dialog('close');
     $("#lookup_div_warehouseto").dialog('close');
     $("#lookup_div_warehousefrom").dialog('close');
     $("#lookup_div_contact").dialog('close');
@@ -119,7 +119,7 @@
         clearForm('#frm');
         $('#btnWarehouseFrom').removeAttr('disabled');
         $('#btnWarehouseTo').removeAttr('disabled');
-        $('#btnCoreIdentification').removeAttr('disabled');
+        $('#btnRecoveryWorkOrder').removeAttr('disabled');
         $('#Quantity').removeAttr('disabled');
         $('#MutationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#MutationDateDiv').show();
@@ -154,15 +154,15 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#CoreIdentificationId').val(result.CoreIdentificationId);
-                            $('#CoreIdentification').val(result.CoreIdentification);
+                            $('#RecoveryWorkOrderId').val(result.RecoveryOrderId);
+                            $('#RecoveryWorkOrder').val(result.RecoveryOrder);
                             $('#WarehouseFromId').val(result.WarehouseFromId);
                             $('#WarehouseFrom').val(result.WarehouseFrom);
                             $('#WarehouseToId').val(result.WarehouseToId);
                             $('#WarehouseTo').val(result.WarehouseTo);
                             $('#Quantity').val(result.Quantity);
                             $('#form_btn_save').hide();
-                            $('#btnCoreIdentification').attr('disabled', true);
+                            $('#btnRecoveryWorkOrder').attr('disabled', true);
                             $('#btnWarehouseFrom').attr('disabled', true);
                             $('#btnWarehouseTo').attr('disabled', true);
                             $('#Quantity').attr('disabled', true);
@@ -208,8 +208,8 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#CoreIdentificationId').val(result.CoreIdentificationId);
-                            $('#CoreIdentification').val(result.CoreIdentification);
+                            $('#RecoveryWorkOrderId').val(result.RecoveryOrderId);
+                            $('#RecoveryWorkOrder').val(result.RecoveryOrder);
                             $('#WarehouseFromId').val(result.WarehouseFromId);
                             $('#WarehouseFrom').val(result.WarehouseFrom);
                             $('#WarehouseToId').val(result.WarehouseToId);
@@ -221,7 +221,7 @@
                             $('#MutationDateDiv').show();
                             $('#btnWarehouseFrom').removeAttr('disabled');
                             $('#btnWarehouseTo').removeAttr('disabled');
-                            $('#btnCoreIdentification').removeAttr('disabled');
+                            $('#btnRecoveryWorkOrder').removeAttr('disabled');
                             $('#Quantity').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
@@ -393,7 +393,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, CoreIdentificationId: $("#CoreIdentificationId").val(),
+                Id: id, RecoveryOrderId: $("#RecoveryWorkOrderId").val(),
                 WarehouseToId: $("#WarehouseToId").val(), WarehouseFromId: $("#WarehouseFromId").val(),
                 Quantity: $('#Quantity').numberbox('getValue'), MutationDate: $('#MutationDate').datebox('getValue'),
             }),
@@ -427,12 +427,13 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'RollerWarehouseMutation Id','RIF Id', 'Item Id', 'Sku', 'Item'
+        colNames: ['RIF ID','Code', 'RollerWarehouseMutation Id','RWOD Id', 'Item Id', 'Sku', 'Item'
         ],
         colModel: [
+                  { name: 'rifid', index: 'rifid', width: 70, sortable: false, align: 'right' },
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'right' },
                   { name: 'rollerwarehousemutationid', index: 'rollerwarehousemutationid', width: 100, sortable: false, hidden: true },
-                  { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 50, align: 'right', sortable: false },
+                  { name: 'recoveryworkorderdetailid', index: 'recoveryworkorderdetailid', width: 50, align: 'right', sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
 				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false},
                   { name: 'itemname', index: 'itemname', width: 150, sortable: false },
@@ -483,8 +484,8 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#CoreIdentificationDetailId').val(result.DetailId);
-                            $('#CoreIdentificationDetail').val(result.Item);
+                            $('#RecoveryWorkOrderDetailId').val(result.RIFID).data("kode", result.RecoveryOrderDetailId);
+                            $('#RecoveryWorkOrderDetail').val(result.Item);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -533,7 +534,7 @@
         }
     });
     //--------------------------------------------------------Dialog Item-------------------------------------------------------------
-    // coreidentification_btn_submit
+    // recoveryworkorder_btn_submit
 
     $("#item_btn_submit").click(function () {
 
@@ -541,7 +542,7 @@
 
         var submitURL = '';
         var id = $("#item_btn_submit").data('kode');
-
+    
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
             submitURL = base_url + 'RollerWarehouseMutation/UpdateDetail';
@@ -556,8 +557,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, CoreIdentificationDetailId: $("#CoreIdentificationDetailId").val(), RollerWarehouseMutationId: $("#id").val(),
-                ItemId : $("#CoreIdentificationDetailId").val()
+                Id: id, RecoveryOrderDetailId: $("#RecoveryWorkOrderDetailId").data('kode'), RollerWarehouseMutationId: $("#id").val()
             }),
             async: false,
             cache: false,
@@ -586,7 +586,7 @@
     });
 
 
-    // coreidentification_btn_cancel
+    // recoveryworkorder_btn_cancel
     $('#item_btn_cancel').click(function () {
         clearForm('#item_div');
         $("#item_div").dialog('close');
@@ -707,17 +707,17 @@
     // ---------------------------------------------End Lookup warehousefrom----------------------------------------------------------------
 
 
-    // -------------------------------------------------------Look Up coreidentification-------------------------------------------------------
-    $('#btnCoreIdentification').click(function () {
-        var lookUpURL = base_url + 'CoreIdentification/GetList';
-        var lookupGrid = $('#lookup_table_coreidentification');
+    // -------------------------------------------------------Look Up recoveryworkorder-------------------------------------------------------
+    $('#btnRecoveryWorkOrder').click(function () {
+        var lookUpURL = base_url + 'RecoveryWorkOrder/GetList';
+        var lookupGrid = $('#lookup_table_recoveryworkorder');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_coreidentification').dialog('open');
+        $('#lookup_div_recoveryworkorder').dialog('open');
     });
 
-    jQuery("#lookup_table_coreidentification").jqGrid({
+    jQuery("#lookup_table_recoveryworkorder").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
@@ -726,7 +726,7 @@
                   { name: 'id', index: 'id', width: 80, align: 'right' },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
-        pager: $('#lookup_pager_coreidentification'),
+        pager: $('#lookup_pager_recoveryworkorder'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -734,73 +734,61 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_coreidentification").width() - 10,
-        height: $("#lookup_div_coreidentification").height() - 110,
+        width: $("#lookup_div_recoveryworkorder").width() - 10,
+        height: $("#lookup_div_recoveryworkorder").height() - 110,
     });
-    $("#lookup_table_coreidentification").jqGrid('navGrid', '#lookup_toolbar_coreidentification', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_recoveryworkorder").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorder', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_coreidentification').click(function () {
-        $('#lookup_div_coreidentification').dialog('close');
+    $('#lookup_btn_cancel_recoveryworkorder').click(function () {
+        $('#lookup_div_recoveryworkorder').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_coreidentification').click(function () {
-        var id = jQuery("#lookup_table_coreidentification").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_recoveryworkorder').click(function () {
+        var id = jQuery("#lookup_table_recoveryworkorder").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_coreidentification").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_recoveryworkorder").jqGrid('getRowData', id);
         
-            $('#CoreIdentificationId').val(ret.id).data("kode", id);
-            $('#CoreIdentification').val(ret.name);
+            $('#RecoveryWorkOrderId').val(ret.id).data("kode", id);
+            $('#RecoveryWorkOrder').val(ret.name);
 
-            $('#lookup_div_coreidentification').dialog('close');
+            $('#lookup_div_recoveryworkorder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup coreidentification----------------------------------------------------------------
+    // ---------------------------------------------End Lookup recoveryworkorder----------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up coreidentificationdetail-------------------------------------------------------
-    $('#btnCoreIdentificationDetail').click(function () {
-        var lookUpURL = base_url + 'CoreIdentification/GetListDetail?Id=' + $('#CoreIdentificationId').val();
-        var lookupGrid = $('#lookup_table_coreidentificationdetail');
+    // -------------------------------------------------------Look Up recoveryworkorderdetail-------------------------------------------------------
+    $('#btnRecoveryWorkOrderDetail').click(function () {
+        var lookUpURL = base_url + 'RecoveryWorkOrder/GetListDetailFinished?id=' + $('#RecoveryWorkOrderId').val();
+        var lookupGrid = $('#lookup_table_recoveryworkorderdetail');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_coreidentificationdetail').dialog('open');
+        $('#lookup_div_recoveryworkorderdetail').dialog('open');
     });
 
-    jQuery("#lookup_table_coreidentificationdetail").jqGrid({
+    jQuery("#lookup_table_recoveryworkorderdetail").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['RIF Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id', 'Core Sku', 'Core', 'RollerType Id', 'RollerType'
-                  , 'Machine Id', 'Machine', 'RD', 'CD', 'RL', 'WL', 'TL', 'Is Finished', 'Finished Date'
+        colNames: ['RIF Id', 'Detail Id', 'Material', 'RollerBuilder Id', 'Roller Sku', 'Roller'
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 40, sortable: false, align: 'right' },
-                  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
+                  { name: 'rolleridentificationdetailid', index: 'rolleridentificationdetailid', width: 130, sortable: false, hidden: true },
                   { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
-                  { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
-                  { name: 'corebuildersku', index: 'corebuildersku', width: 60, sortable: false },
-                  { name: 'corebuildername', index: 'corebuildername', width: 70, sortable: false },
-                  { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false, hidden: true },
-                  { name: 'rollertypename', index: 'rollertypename', width: 75, sortable: false },
-                  { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true },
-                  { name: 'machinename', index: 'machinename', width: 80, sortable: false },
-                  { name: 'rd', index: 'rd', width: 30, sortable: false, align: 'right' },
-                  { name: 'cd', index: 'cd', width: 30, sortable: false, align: 'right' },
-                  { name: 'rl', index: 'rl', width: 30, sortable: false, align: 'right' },
-                  { name: 'wl', index: 'wl', width: 30, sortable: false, align: 'right' },
-                  { name: 'tl', index: 'tl', width: 30, sortable: false, align: 'right' },
-                  { name: 'isfinished', index: 'isfinished', width: 80, sortable: false, hidden: true},
-                  { name: 'finisheddate', index: 'finisheddate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 80, sortable: false },
+                  { name: 'rollerbuildersku', index: 'rollerbuildersku', width: 60, sortable: false },
+                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 70, sortable: false },
         ],
         page: '1',
-        pager: $('#lookup_pager_coreidentificationdetail'),
+        pager: $('#lookup_pager_recoveryworkorderdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -808,33 +796,33 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_coreidentificationdetail").width() - 10,
-        height: $("#lookup_div_coreidentificationdetail").height() - 110,
+        width: $("#lookup_div_recoveryworkorderdetail").width() - 10,
+        height: $("#lookup_div_recoveryworkorderdetail").height() - 110,
     });
-    $("#lookup_table_coreidentificationdetail").jqGrid('navGrid', '#lookup_toolbar_coreidentificationdetail', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_recoveryworkorderdetail").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorderdetail', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_coreidentificationdetail').click(function () {
-        $('#lookup_div_coreidentificationdetail').dialog('close');
+    $('#lookup_btn_cancel_recoveryworkorderdetail').click(function () {
+        $('#lookup_div_recoveryworkorderdetail').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_coreidentificationdetail').click(function () {
-        var id = jQuery("#lookup_table_coreidentificationdetail").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_recoveryworkorderdetail').click(function () {
+        var id = jQuery("#lookup_table_recoveryworkorderdetail").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_coreidentificationdetail").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_recoveryworkorderdetail").jqGrid('getRowData', id);
 
-            $('#CoreIdentificationDetailId').val(id).data("kode", id);
-            $('#CoreIdentificationDetail').val(ret.corebuildername);
+            $('#RecoveryWorkOrderDetailId').val(ret.detailid).data("kode", id);
+            $('#RecoveryWorkOrderDetail').val(ret.rollerbuildername);
 
-            $('#lookup_div_coreidentificationdetail').dialog('close');
+            $('#lookup_div_recoveryworkorderdetail').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup coreidentificationdetail----------------------------------------------------------------
+    // ---------------------------------------------End Lookup recoveryworkorderdetail----------------------------------------------------------------
 
 }); //END DOCUMENT READY
