@@ -115,51 +115,7 @@
 
 
 
-    $('#btn_add_detail').click(function () {
-        ClearData();
-        clearForm('#frm');
-        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            $.ajax({
-                dataType: "json",
-                url: base_url + "BarringWorkProcess/GetInfo?Id=" + id,
-                success: function (result) {
-                    if (result.Id == null) {
-                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
-                    }
-                    else {
-                        if (JSON.stringify(result.Errors) != '{}') {
-                            var error = '';
-                            for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.Errors[key];
-                            }
-                            $.messager.alert('Warning', error, 'warning');
-                        }
-                        else {
-                            $("#form_btn_save").data('kode', result.Id);
-                            $('#id').val(result.Id);
-                            $('#Code').val(result.Code);
-                            $('#ContactId').val(result.ContactId);
-                            $('#Contact').val(result.Contact);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
-                            $('#QuantityReceived').val(result.QuantityReceived);
-                            $('#form_btn_save').hide();
-                            $('#btnContact').attr('disabled', true);
-                            $('#btnWarehouse').attr('disabled', true);
-                            $('#Code').attr('disabled', true);
-                            $('#QuantityReceived').attr('disabled', true);
-                            $('#tabledetail_div').show();
-                            ReloadGridDetail();
-                            $('#form_div').dialog('open');
-                        }
-                    }
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
+  
 
 
 
