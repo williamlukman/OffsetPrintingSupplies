@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IPurchaseReceivalDetailRepository : IRepository<PurchaseReceivalDetail>
     {
+        IQueryable<PurchaseReceivalDetail> GetQueryable();
         IList<PurchaseReceivalDetail> GetAll();
         IList<PurchaseReceivalDetail> GetAllByMonthCreated();
         IList<PurchaseReceivalDetail> GetObjectsByPurchaseReceivalId(int purchaseReceivalId);

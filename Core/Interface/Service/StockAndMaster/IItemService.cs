@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IItemService
     {
+        IQueryable<Item> GetQueryable();
         IItemValidator GetValidator();
         IItemRepository GetRepository();
         IList<Item> GetAll();

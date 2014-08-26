@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IStockMutationService
     {
+        IQueryable<StockMutation> GetQueryable();
          IStockMutationValidator GetValidator();
          IList<StockMutation> GetAll();
          IList<StockMutation> GetObjectsByItemId(int itemId);

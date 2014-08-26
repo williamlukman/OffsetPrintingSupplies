@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface ICashSalesInvoiceDetailService
     {
+        IQueryable<CashSalesInvoiceDetail> GetQueryable();
         ICashSalesInvoiceDetailValidator GetValidator();
         IList<CashSalesInvoiceDetail> GetAll();
         IList<CashSalesInvoiceDetail> GetObjectsByCashSalesInvoiceId(int cashSalesInvoiceId);

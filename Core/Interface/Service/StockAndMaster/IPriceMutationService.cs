@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IPriceMutationService
     {
+        IQueryable<PriceMutation> GetQueryable();
         IPriceMutationValidator GetValidator();
         IPriceMutationRepository GetRepository();
         IList<PriceMutation> GetAll();

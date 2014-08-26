@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IStockAdjustmentService
     {
+        IQueryable<StockAdjustment> GetQueryable();
         IStockAdjustmentValidator GetValidator();
         IList<StockAdjustment> GetAll();
         StockAdjustment GetObjectById(int Id);

@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface ICashSalesReturnDetailService
     {
+        IQueryable<CashSalesReturnDetail> GetQueryable();
         ICashSalesReturnDetailValidator GetValidator();
         IList<CashSalesReturnDetail> GetAll();
         IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int cashSalesReturnId);

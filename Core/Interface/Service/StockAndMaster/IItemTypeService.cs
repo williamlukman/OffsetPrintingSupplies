@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IItemTypeService
     {
+        IQueryable<ItemType> GetQueryable();
         IItemTypeValidator GetValidator();
         IList<ItemType> GetAll();
         ItemType GetObjectById(int Id);

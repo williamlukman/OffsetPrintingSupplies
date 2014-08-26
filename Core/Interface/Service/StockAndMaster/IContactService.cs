@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IContactService
     {
+        IQueryable<Contact> GetQueryable();
         IContactValidator GetValidator();
         IList<Contact> GetAll();
         Contact GetObjectById(int Id);

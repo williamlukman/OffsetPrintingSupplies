@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<CustomPurchaseInvoice> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CustomPurchaseInvoice> GetAll()
         {
             return _repository.GetAll();

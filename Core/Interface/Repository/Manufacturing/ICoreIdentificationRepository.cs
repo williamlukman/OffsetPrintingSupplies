@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface ICoreIdentificationRepository : IRepository<CoreIdentification>
     {
+        IQueryable<CoreIdentification> GetQueryable();
         IList<CoreIdentification> GetAll();
         IList<CoreIdentification> GetAllObjectsInHouse();
         IList<CoreIdentification> GetAllObjectsByContactId(int ContactId);

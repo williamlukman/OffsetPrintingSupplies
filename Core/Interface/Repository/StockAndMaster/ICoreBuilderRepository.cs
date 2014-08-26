@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface ICoreBuilderRepository : IRepository<CoreBuilder>
     {
+        IQueryable<CoreBuilder> GetQueryable();
         IList<CoreBuilder> GetAll();
         IList<CoreBuilder> GetObjectsByItemId(int ItemId);
         CoreBuilder GetObjectById(int Id);

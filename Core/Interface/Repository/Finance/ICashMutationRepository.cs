@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface ICashMutationRepository : IRepository<CashMutation>
     {
+        IQueryable<CashMutation> GetQueryable();
         IList<CashMutation> GetAll();
         CashMutation GetObjectById(int Id);
         IList<CashMutation> GetObjectsByCashBankId(int cashBankId);

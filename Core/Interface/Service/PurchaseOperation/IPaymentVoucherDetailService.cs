@@ -9,6 +9,8 @@ namespace Core.Interface.Service
 {
     public interface IPaymentVoucherDetailService
     {
+        IQueryable<PaymentVoucherDetail> GetQueryable();
+        IList<PaymentVoucherDetail> GetAll();
         IPaymentVoucherDetailValidator GetValidator();
         IList<PaymentVoucherDetail> GetObjectsByPaymentVoucherId(int paymentVoucherId);
         IList<PaymentVoucherDetail> GetObjectsByPayableId(int payableId);

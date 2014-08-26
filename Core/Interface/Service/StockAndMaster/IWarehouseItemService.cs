@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IWarehouseItemService
     {
+        IQueryable<WarehouseItem> GetQueryable();
         IWarehouseItemValidator GetValidator();
         IWarehouseItemRepository GetRepository();
         IList<WarehouseItem> GetAll();

@@ -27,6 +27,16 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<SalesInvoiceDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
+        public IList<SalesInvoiceDetail> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public IList<SalesInvoiceDetail> GetObjectsBySalesInvoiceId(int salesInvoiceId)
         {
             return _repository.GetObjectsBySalesInvoiceId(salesInvoiceId);

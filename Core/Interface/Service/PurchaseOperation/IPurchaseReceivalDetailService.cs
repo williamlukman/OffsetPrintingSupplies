@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IPurchaseReceivalDetailService
     {
+        IQueryable<PurchaseReceivalDetail> GetQueryable();
         IPurchaseReceivalDetailValidator GetValidator();
         IList<PurchaseReceivalDetail> GetObjectsByPurchaseReceivalId(int purchaseReceivalId);
         PurchaseReceivalDetail GetObjectById(int Id);

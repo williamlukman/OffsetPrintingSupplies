@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface ICashBankService
     {
+        IQueryable<CashBank> GetQueryable();
         ICashBankValidator GetValidator();
         IList<CashBank> GetAll();
         CashBank GetObjectById(int Id);

@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IBarringOrderRepository : IRepository<BarringOrder>
     {
+        IQueryable<BarringOrder> GetQueryable();
         IList<BarringOrder> GetAll();
         IList<BarringOrder> GetAllObjectsByContactId(int ContactId);
         IList<BarringOrder> GetAllObjectsByWarehouseId(int WarehouseId);

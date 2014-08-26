@@ -10,6 +10,8 @@ namespace Core.Interface.Service
 {
     public interface IPurchaseOrderDetailService
     {
+        IQueryable<PurchaseOrderDetail> GetQueryable();
+        IList<PurchaseOrderDetail> GetAll();
         IPurchaseOrderDetailValidator GetValidator();
         IList<PurchaseOrderDetail> GetObjectsByPurchaseOrderId(int purchaseOrderId);
         IList<PurchaseOrderDetail> GetObjectsByItemId(int itemId);

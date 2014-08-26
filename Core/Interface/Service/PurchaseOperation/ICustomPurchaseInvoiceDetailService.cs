@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface ICustomPurchaseInvoiceDetailService
     {
+        IQueryable<CustomPurchaseInvoiceDetail> GetQueryable();
         ICustomPurchaseInvoiceDetailValidator GetValidator();
         IList<CustomPurchaseInvoiceDetail> GetAll();
         IList<CustomPurchaseInvoiceDetail> GetObjectsByCustomPurchaseInvoiceId(int customPurchaseInvoiceId);

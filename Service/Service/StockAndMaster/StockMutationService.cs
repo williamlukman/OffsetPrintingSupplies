@@ -26,6 +26,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<StockMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<StockMutation> GetAll()
         {
             return _repository.GetAll();

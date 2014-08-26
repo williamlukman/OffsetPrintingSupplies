@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IGroupItemPriceService
     {
+        IQueryable<GroupItemPrice> GetQueryable();
         IGroupItemPriceValidator GetValidator();
         IList<GroupItemPrice> GetAll();
         GroupItemPrice GetObjectById(int Id);

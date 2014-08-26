@@ -26,6 +26,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<CashMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CashMutation> GetAll()
         {
             return _repository.GetAll();

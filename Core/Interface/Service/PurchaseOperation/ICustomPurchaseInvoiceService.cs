@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface ICustomPurchaseInvoiceService
     {
+        IQueryable<CustomPurchaseInvoice> GetQueryable();
         ICustomPurchaseInvoiceValidator GetValidator();
         ICustomPurchaseInvoiceRepository GetRepository();
         IList<CustomPurchaseInvoice> GetAll();

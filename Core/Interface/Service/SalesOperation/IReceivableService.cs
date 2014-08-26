@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IReceivableService
     {
+        IQueryable<Receivable> GetQueryable();
         IReceivableValidator GetValidator();
         IList<Receivable> GetAll();
         IList<Receivable> GetObjectsByContactId(int contactId);

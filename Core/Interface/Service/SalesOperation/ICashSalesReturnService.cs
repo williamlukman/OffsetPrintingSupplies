@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface ICashSalesReturnService
     {
+        IQueryable<CashSalesReturn> GetQueryable();
         ICashSalesReturnValidator GetValidator();
         ICashSalesReturnRepository GetRepository();
         IList<CashSalesReturn> GetAll();

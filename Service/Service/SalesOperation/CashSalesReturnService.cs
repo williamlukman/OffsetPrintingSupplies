@@ -30,6 +30,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<CashSalesReturn> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<CashSalesReturn> GetAll()
         {
             return _repository.GetAll();

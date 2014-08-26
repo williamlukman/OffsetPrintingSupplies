@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface ICashMutationService
     {
+        IQueryable<CashMutation> GetQueryable();
         ICashMutationValidator GetValidator();
         IList<CashMutation> GetAll();
         CashMutation GetObjectById(int Id);

@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IPaymentRequestService
     {
+        IQueryable<PaymentRequest> GetQueryable();
         IPaymentRequestValidator GetValidator();
         IList<PaymentRequest> GetAll();
         PaymentRequest GetObjectById(int Id);

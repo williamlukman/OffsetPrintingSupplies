@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IQuantityPricingRepository : IRepository<QuantityPricing>
     {
+        IQueryable<QuantityPricing> GetQueryable();
         IList<QuantityPricing> GetAll();
         IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId);
         QuantityPricing GetObjectById(int Id);

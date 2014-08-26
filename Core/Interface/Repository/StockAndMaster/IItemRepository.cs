@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IItemRepository : IRepository<Item>
     {
+        IQueryable<Item> GetQueryable();
         IList<Item> GetAll();
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
         IList<Item> GetObjectsByUoMId(int UoMId);

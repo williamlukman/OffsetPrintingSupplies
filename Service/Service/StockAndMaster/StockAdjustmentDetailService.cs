@@ -27,6 +27,16 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<StockAdjustmentDetail> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
+        public IList<StockAdjustmentDetail> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
         public IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int stockAdjustmentId)
         {
             return _repository.GetObjectsByStockAdjustmentId(stockAdjustmentId);

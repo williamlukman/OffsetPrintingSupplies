@@ -10,6 +10,7 @@ namespace Core.Interface.Service
 {
     public interface IWarehouseMutationOrderDetailService
     {
+        IQueryable<WarehouseMutationOrderDetail> GetQueryable();
         IWarehouseMutationOrderDetailValidator GetValidator();
         IList<WarehouseMutationOrderDetail> GetAll();
         IList<WarehouseMutationOrderDetail> GetObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId);

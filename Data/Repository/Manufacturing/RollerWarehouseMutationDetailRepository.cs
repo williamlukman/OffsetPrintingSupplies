@@ -18,6 +18,11 @@ namespace Data.Repository
             entities = new OffsetPrintingSuppliesEntities();
         }
 
+        public IQueryable<RollerWarehouseMutationDetail> GetQueryable()
+        {
+            return FindAll(x => !x.IsDeleted);
+        }
+
         public IList<RollerWarehouseMutationDetail> GetAll()
         {
             return FindAll(x => !x.IsDeleted).ToList();

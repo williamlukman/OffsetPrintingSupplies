@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IUoMService
     {
+        IQueryable<UoM> GetQueryable();
         IUoMValidator GetValidator();
         IList<UoM> GetAll();
         UoM GetObjectById(int Id);

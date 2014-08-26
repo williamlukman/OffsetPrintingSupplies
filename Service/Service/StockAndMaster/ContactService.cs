@@ -24,6 +24,11 @@ namespace Service.Service
             return _validator;
         }
 
+        public IQueryable<Contact> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<Contact> GetAll()
         {
             return _repository.GetAll();

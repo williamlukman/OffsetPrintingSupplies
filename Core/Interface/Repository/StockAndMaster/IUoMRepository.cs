@@ -8,6 +8,7 @@ namespace Core.Interface.Repository
 {
     public interface IUoMRepository : IRepository<UoM>
     {
+        IQueryable<UoM> GetQueryable();
         IList<UoM> GetAll();
         UoM GetObjectById(int Id);
         UoM CreateObject(UoM unitOfMeasurement);

@@ -29,6 +29,11 @@ namespace Service.Service
             return _repository;
         }
 
+        public IQueryable<PriceMutation> GetQueryable()
+        {
+            return _repository.GetQueryable();
+        }
+
         public IList<PriceMutation> GetAll()
         {
             return _repository.GetAll();

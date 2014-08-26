@@ -149,7 +149,7 @@
     <Compile Include="Repository\Manufacturing\RollerWarehouseMutationDetailRepository.cs" />
     <Compile Include="Repository\Manufacturing\RollerWarehouseMutationRepository.cs" />
     <Compile Include="Repository\SalesOperation\SalesOrderDetailRepository.cs" />
-    <Compile Include="Repository\StockAndMaster\SalesOrderRepository.cs" />
+    <Compile Include="Repository\SalesOperation\SalesOrderRepository.cs" />
     <Compile Include="Repository\StockAndMaster\UoMRepository.cs" />
     <Compile Include="Repository\StockAndMaster\StockAdjustmentDetailRepository.cs" />
     <Compile Include="Repository\StockAndMaster\StockAdjustmentRepository.cs" />

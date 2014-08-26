@@ -9,6 +9,7 @@ namespace Core.Interface.Service
 {
     public interface IQuantityPricingService
     {
+        IQueryable<QuantityPricing> GetQueryable();
         IQuantityPricingValidator GetValidator();
         IList<QuantityPricing> GetAll();
         IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId);
