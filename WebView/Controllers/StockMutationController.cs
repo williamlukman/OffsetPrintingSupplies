@@ -99,5 +99,67 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
+
+        public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query = _stockMutationService.GetAll().Where(d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false);
+
+            var list = query as IEnumerable<StockMutation>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from stockmutation in list
+                    select new
+                    {
+                        id = stockmutation.Id,
+                        cell = new object[] {
+                            stockmutation.Id,
+                            stockmutation.ItemId,
+                            _itemService.GetObjectById(stockmutation.ItemId).Sku,
+                            _itemService.GetObjectById(stockmutation.ItemId).Name,
+                            stockmutation.WarehouseId,
+                            _warehouseService.GetObjectById(stockmutation.WarehouseId).Name,
+                            stockmutation.WarehouseItemId,
+                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
+                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
+                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
+                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
+                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
+                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
+                            _uomService.GetObjectById(_itemService.GetObjectById(stockmutation.ItemId).UoMId).Name,
+                            stockmutation.SourceDocumentType,
+                            stockmutation.SourceDocumentId,
+                            stockmutation.SourceDocumentDetailType,
+                            stockmutation.SourceDocumentDetailId,
+                            stockmutation.CreatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

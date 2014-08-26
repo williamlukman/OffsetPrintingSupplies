@@ -12,6 +12,10 @@
         $("#list").setGridParam({ url: base_url + 'StockMutation/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
+    function ReloadGridByDate(StartDate, EndDate) {
+        $("#list").setGridParam({ url: base_url + 'StockMutation/GetListByDate', postData: { filters: null, startdate: StartDate, enddate: EndDate }, page: 'first' }).trigger("reloadGrid");
+    }
+
     function ClearData() {
         ClearErrorMessage();
     }
@@ -71,6 +75,23 @@
 
     $('#btn_print').click(function () {
         window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+    });
+
+
+    $('#btn_search').click(function () {
+        $('#StartDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#EndDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $("#search_div").dialog("open");
+    });
+
+    $('#search_btn_submit').click(function () {
+        ClearErrorMessage();
+        ReloadGridByDate($('#StartDate').datebox('getValue'), $('#EndDate').datebox('getValue'));
+        $("#search_div").dialog('close');
+    });
+
+    $('#search_btn_cancel').click(function () {
+        $('#search_div').dialog('close');
     });
 
     function clearForm(form) {

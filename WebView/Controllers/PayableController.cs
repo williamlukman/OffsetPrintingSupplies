@@ -87,5 +87,62 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
+
+        public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query = _payableService.GetAll().Where(d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false);
+
+            var list = query as IEnumerable<Payable>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from payable in list
+                    select new
+                    {
+                        id = payable.Id,
+                        cell = new object[] {
+                            payable.Id,
+                            payable.ContactId,
+                            _contactService.GetObjectById(payable.ContactId).Name,
+                            payable.Code,
+                            payable.PayableSource,
+                            payable.PayableSourceId,
+                            payable.Amount,
+                            payable.RemainingAmount,
+                            payable.PendingClearanceAmount,
+                            // payable.AllowanceAmount,
+                            payable.DueDate,
+                            payable.IsCompleted,
+                            payable.CompletionDate,
+                            payable.CreatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
