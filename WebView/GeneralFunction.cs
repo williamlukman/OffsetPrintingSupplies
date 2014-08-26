@@ -696,5 +696,83 @@ namespace WebView
                 LOG.Error("", ex);
             }
         }
+
+        // Make sure you are using System.Linq.Dynamic in order to use the output filter string inside Where clause/method
+        public static void ConstructWhereInLinq(string whereClause, out string filter)
+        {
+            filter = "";
+            //List<dynamic> filterValues = new List<dynamic>();
+
+            string[] specChars = new string[] { "<", ">", "<=", ">=", "=" };//, "like", "in", "between", "or", "and", "(", ")", "where" };
+
+            try
+            {
+                string[] conditions = Regex.Split(whereClause.Trim(), "AND");
+                for (int i = 0; i < conditions.Length; i++)
+                {
+                    if (!String.IsNullOrEmpty(conditions[i]))
+                    {
+                        string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        // 0 : fieldName
+                        // 1 : operator
+                        // 2 : fieldValue
+
+                        bool useLike = false;
+                        if (temp[1].Contains("LIKE"))
+                        {
+                            useLike = true;
+
+                            // replace
+                            temp[1] = "=";
+                        }
+
+                        //string[] conditionStatement = Regex.Split(conditions[i], useLike ? "LIKE" : "=");
+
+                        string filterValue = "";
+                        if (useLike)
+                            filterValue = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
+                        else
+                            filterValue = temp[2].Trim().Substring(1, temp[2].Trim().Length - 2);
+
+                        int value = 0;
+                        DateTime date = DateTime.Now;
+                        bool boolValue = false;
+
+                        // FieldValue as Numeric
+                        if (int.TryParse(filterValue, out value))
+                        {
+                            //filterValues.Add(value);
+                            filter += temp[0].Trim() + " " + temp[1].Trim() + value.ToString(); // " @" + i.ToString() + "";
+                        }
+                        // FieldValue as Date
+                        else if (DateTime.TryParse(filterValue, out date))
+                        {
+                            //filterValues.Add(date);
+                            filter += temp[0].Trim() + " " + temp[1].Trim() + "DateTime.Parse(\"" + date.ToString() + "\")"; // " @" + i.ToString();
+                        }
+                        // FieldValue as Boolean
+                        else if (bool.TryParse(filterValue, out boolValue))
+                        {
+                            //filterValues.Add(boolValue);
+                            filter += temp[0].Trim() + " " + temp[1].Trim() + boolValue.ToString(); // " @" + i.ToString() + "";
+                        }
+                        // FieldValue as Alphabetical
+                        else
+                        {
+                            //filterValues.Add(filterValue);
+                            filter += temp[0].Trim() + ".Contains(\"" + filterValue.ToString() + "\")"; // ".Contains(@" + i.ToString() + ")";
+                        }
+
+                        if (i < conditions.Length - 1)
+                            filter += " AND ";
+                    }
+                }
+                //LOG.Debug(filter + "===" + filterValues.Count);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("", ex);
+            }
+        }
     }
 }

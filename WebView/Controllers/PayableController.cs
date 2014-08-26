@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 using Service.Service;
@@ -33,9 +34,12 @@ namespace WebView.Controllers
             // Construct where statement
 
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _payableService.GetAll().Where(d => d.IsDeleted == false);
+            var query = _payableService.GetQueryable().Where(filter);
 
             var list = query as IEnumerable<Payable>;
 
@@ -90,9 +94,12 @@ namespace WebView.Controllers
             // Construct where statement
 
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _payableService.GetAll().Where(d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false);
+            var query = _payableService.GetQueryable().Where(filter /*d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false*/);
 
             var list = query as IEnumerable<Payable>;
 
