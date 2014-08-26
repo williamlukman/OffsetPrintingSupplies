@@ -95,6 +95,15 @@ namespace Validation.Validation
             return cashSalesInvoiceDetail;
         }
 
+        public CashSalesInvoiceDetail VIsValidAssignedPrice(CashSalesInvoiceDetail cashSalesInvoiceDetail)
+        {
+            if (cashSalesInvoiceDetail.IsManualPriceAssignment && cashSalesInvoiceDetail.AssignedPrice < 0)
+            {
+                cashSalesInvoiceDetail.Errors.Add("AssignedPrice", "Harus lebih besar atau sama dengan 0");
+            }
+            return cashSalesInvoiceDetail;
+        }
+
         public CashSalesInvoiceDetail VConfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService)
         {
             VIsValidQuantityOrdered(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
@@ -115,6 +124,8 @@ namespace Validation.Validation
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VIsValidQuantity(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
+            VIsValidAssignedPrice(cashSalesInvoiceDetail);
+            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VHasItem(cashSalesInvoiceDetail, _itemService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VUniqueItem(cashSalesInvoiceDetail, _cashSalesInvoiceDetailService, _itemService);
@@ -129,8 +140,8 @@ namespace Validation.Validation
                                                       ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
                                                       IQuantityPricingService _quantityPricingService)
         {
-            //VIsNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
-            //if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
+            VIsNotConfirmed(cashSalesInvoiceDetail, _cashSalesInvoiceService);
+            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             return VCreateObject(cashSalesInvoiceDetail, _cashSalesInvoiceService, _cashSalesInvoiceDetailService, _itemService, _warehouseItemService, _quantityPricingService);
         }
 

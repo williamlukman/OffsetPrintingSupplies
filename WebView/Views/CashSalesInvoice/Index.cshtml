@@ -181,8 +181,24 @@
                                <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
+                  <tr>
+                        <td>Is Manual Price Assignment</td>
+                            <td>
+                                <select id="IsManualPriceAssignment" onchange="onManualAssignedPrice()">
+                                  <option value="False">No</option>
+                                  <option value="True">Yes</option>
+                               </select>
+                            </td>
+                  </tr>
+                  <tr>
+                        <td>
+                            Assigned Price
+                        </td>
+                        <td>
+                               <input id="AssignedPrice" name="AssignedPrice" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
               </table>
-          
         </div>
     </div>
 <!-- End Dialog Box Item-->

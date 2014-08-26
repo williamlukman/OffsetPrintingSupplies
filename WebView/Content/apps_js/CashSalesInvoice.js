@@ -16,6 +16,18 @@
 		$("#listdetail").setGridParam({ url: base_url + 'CashSalesInvoice/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
 	}
 
+	function onManualAssignedPrice() {
+	    if (document.getElementById('IsManualPriceAssignment').value == 'True') {
+	        $('#AssignedPrice').removeAttr('disabled');
+	    } else {
+	        $('#AssignedPrice').attr('disabled', true);
+	    }
+	};
+
+	document.getElementById('IsManualPriceAssignment').onchange = function () {
+	    onManualAssignedPrice();
+	};
+
 	function ClearData() {
 		$('#Description').removeClass('errormessage');
 		$('#Code').removeClass('errormessage');
@@ -113,6 +125,14 @@
 					  rowIsFullpayment = "NO";
 				  }
 				  $(this).jqGrid('setRowData', ids[i], { isfullpayment: rowIsFullpayment });
+
+				  rowIsManualPriceAssignment = $(this).getRowData(cl).ismanualpriceassignment;
+				  if (rowIsManualPriceAssignment == 'true') {
+				      rowIsManualPriceAssignment = "YES";
+				  } else {
+				      rowIsManualPriceAssignment = "NO";
+				  }
+				  $(this).jqGrid('setRowData', ids[i], { ismanualpriceassignment: rowIsManualPriceAssignment });
 			  }
 		  }
 
@@ -560,7 +580,7 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id'],
+		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Is Manual Price Assignment', 'Assigned Price'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 130, sortable: false },
@@ -571,6 +591,8 @@
 				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'pricemutationid', index: 'pricemutationid', width: 80, sortable: false },
+                  { name: 'ismanualpriceassignment', index: 'ismanualpriceassignment', width: 80, boolean: { defaultValue: 'false' } },
+                  { name: 'assignedprice', index: 'assignedprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
 		//page: '1',
 		//pager: $('#pagerdetail'),
@@ -585,6 +607,18 @@
 		height: $(window).height() - 500,
 		gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowIsManualPriceAssignment = $(this).getRowData(cl).ismanualpriceassignment;
+		          if (rowIsManualPriceAssignment == 'true') {
+		              rowIsManualPriceAssignment = "YES";
+		          } else {
+		              rowIsManualPriceAssignment = "NO";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ismanualpriceassignment: rowIsManualPriceAssignment });
+
+		      }
 		  }
 	});//END GRID Detail
 	$("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
@@ -621,6 +655,15 @@
 							$('#ItemId').val(result.ItemId);
 							$('#Item').val(result.Item);
 							$('#Quantity').val(result.Quantity);
+							var e = document.getElementById("IsManualPriceAssignment");
+							if (result.IsManualPriceAssignment == true) {
+							    e.selectedIndex = 1;
+							}
+							else {
+							    e.selectedIndex = 0;
+							}
+							$('#AssignedPrice').numberbox('setValue', result.AssignedPrice);
+							onManualAssignedPrice();
 							$('#item_div').dialog('open');
 						}
 					}
@@ -694,7 +737,10 @@
 			type: 'POST',
 			url: submitURL,
 			data: JSON.stringify({
-				Id: id, CashSalesInvoiceId: $("#id").val(), CashSalesInvoiceDetailId: $("#CashSalesInvoiceDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+			    Id: id, CashSalesInvoiceId: $("#id").val(), CashSalesInvoiceDetailId: $("#CashSalesInvoiceDetailId").val(),
+			    ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+			    IsManualPriceAssignment: document.getElementById("IsManualPriceAssignment").value,
+			    AssignedPrice: $('#AssignedPrice').numberbox('getValue'),
 			}),
 			async: false,
 			cache: false,

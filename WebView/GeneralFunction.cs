@@ -748,7 +748,7 @@ namespace WebView
                         else if (DateTime.TryParse(filterValue, out date))
                         {
                             //filterValues.Add(date);
-                            filter += temp[0].Trim() + " " + temp[1].Trim() + "DateTime.Parse(\"" + date.ToString() + "\")"; // " @" + i.ToString();
+                            filter += temp[0].Trim() + " " + temp[1].Trim() + "DateTime{" + date.ToString() + "})"; // " @" + i.ToString();
                         }
                         // FieldValue as Boolean
                         else if (bool.TryParse(filterValue, out boolValue))

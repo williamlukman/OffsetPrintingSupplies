@@ -37,12 +37,12 @@ namespace WebView.Controllers
 
             string strWhere = GeneralFunction.ConstructWhere(filters);
             string filter = null;
-            List<dynamic> filterValues = null;
-            GeneralFunction.ConstructWhereInLinq(strWhere, out filter, out filterValues);
+            //List<dynamic> filterValues = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter/*, out filterValues*/);
             if (filter == "") filter = "true";
 
             // Get Data
-            var query = _itemTypeService.GetQueryable().Where(filter, filterValues);
+            var query = _itemTypeService.GetQueryable().Where(filter/*, filterValues*/);
             
             var list = query as IEnumerable<ItemType>;
 

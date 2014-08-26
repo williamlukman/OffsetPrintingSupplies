@@ -97,9 +97,12 @@ namespace WebView.Controllers
             string filter = null;
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
+            //DateTime dtStart = startdate;
+            //DateTime dtEnd = enddate.AddDays(1);
+            filter += " AND CreatedAt >= @0 AND CreatedAt < @1";
 
             // Get Data
-            var query = _payableService.GetQueryable().Where(filter /*d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false*/);
+            var query = _payableService.GetQueryable().Where(filter, startdate, enddate.AddDays(1) /*d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false*/);
 
             var list = query as IEnumerable<Payable>;
 

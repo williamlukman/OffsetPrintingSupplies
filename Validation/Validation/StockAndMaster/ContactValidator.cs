@@ -15,7 +15,7 @@ namespace Validation.Validation
             ContactGroup contactGroup = _contactGroupService.GetObjectById(contact.ContactGroupId);
             if (contactGroup == null)
             {
-                contact.Errors.Add("ContactGroupId", "Tidak memiliki asosiasi dengan Contact Group");
+                contact.Errors.Add("ContactGroup", "Tidak ada");
             }
             return contact;
         }

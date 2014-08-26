@@ -71,7 +71,14 @@ namespace Service.Service
 
         public Contact CreateObject(Contact contact, IContactGroupService _contactGroupService)
         {
-            if (contact.ContactGroupId == 0) { contact.ContactGroupId = _contactGroupService.GetObjectByIsLegacy(true).Id; }
+            if (contact.ContactGroupId == 0) 
+            { 
+                ContactGroup baseGroup = _contactGroupService.GetObjectByIsLegacy(true);
+                if (baseGroup != null)
+                {
+                    contact.ContactGroupId = baseGroup.Id;
+                }
+            }
             contact.Errors = new Dictionary<String, String>();
             return (_validator.ValidCreateObject(contact, this, _contactGroupService) ? _repository.CreateObject(contact) : contact);
         }

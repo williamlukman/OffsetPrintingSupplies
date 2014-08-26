@@ -181,6 +181,8 @@ namespace WebView.Controllers
                             model.Amount,
                             model.CoGS,
                             model.PriceMutationId,
+                            model.IsManualPriceAssignment,
+                            model.AssignedPrice,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -241,6 +243,9 @@ namespace WebView.Controllers
                 model.ItemId,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
+                model.IsManualPriceAssignment,
+                model.AssignedPrice,
+                model.Amount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -322,6 +327,8 @@ namespace WebView.Controllers
                 var data = _cashSalesInvoiceDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.IsManualPriceAssignment = model.IsManualPriceAssignment;
+                data.AssignedPrice = model.AssignedPrice;
                 data.CashSalesInvoiceId = model.CashSalesInvoiceId;
                 model = _cashSalesInvoiceDetailService.UpdateObject(data, _cashSalesInvoiceService, _itemService, _warehouseItemService, _quantityPricingService);
                 total = _cashSalesInvoiceService.GetObjectById(model.CashSalesInvoiceId).Total;

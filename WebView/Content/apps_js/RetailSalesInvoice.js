@@ -173,7 +173,7 @@
 
 				  rowIsManualPriceAssignment = $(this).getRowData(cl).ismanualpriceassignment;
 				  if (rowIsManualPriceAssignment == 'true') {
-				      rowIsGBCH = "YES";
+				      rowIsManualPriceAssignment = "YES";
 				  } else {
 				      rowIsManualPriceAssignment = "NO";
 				  }
@@ -649,7 +649,7 @@
 		          var cl = ids[i];
 		          rowIsManualPriceAssignment = $(this).getRowData(cl).ismanualpriceassignment;
 		          if (rowIsManualPriceAssignment == 'true') {
-		              rowIsGBCH = "YES";
+		              rowIsManualPriceAssignment = "YES";
 		          } else {
 		              rowIsManualPriceAssignment = "NO";
 		          }
