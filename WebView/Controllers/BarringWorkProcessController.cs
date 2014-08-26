@@ -154,67 +154,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetInfoDetail(int Id)
-        {
-            BarringOrderDetail model = new BarringOrderDetail();
-            try
-            {
-                model = _barringOrderDetailService.GetObjectById(Id);
-            
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Id,
-                model.BarringOrderId,
-                model.BarringId,
-                Barring =  _barringService.GetObjectById(model.BarringId).Name,
-                BarringLeftBarId = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Id.ToString(),
-                BarringLeftBar = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name.ToString(),
-                BarringRightBarId = _barringService.GetRightBarItem(_barringService.GetObjectById(model.BarringId)).Id.ToString(),
-                BarringRightBar = _barringService.GetLeftBarItem(_barringService.GetObjectById(model.BarringId)).Name.ToString(),
-                model.IsCut,
-                model.IsSideSealed,
-                model.IsBarPrepared,
-                model.IsAdhesiveTapeApplied,
-                model.IsBarMounted,
-                model.IsBarHeatPressed,
-                model.IsBarPullOffTested,
-                model.IsQCAndMarked,
-                model.IsPackaged,
-                model.Errors
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-
-
-
-
-        [HttpPost]
-        public dynamic DeleteDetail(BarringOrderDetail model)
-        {
-            try
-            {
-                var data = _barringOrderDetailService.GetObjectById(model.Id);
-                model = _barringOrderDetailService.SoftDeleteObject(data,_barringOrderService);
-                 
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
+     
 
 
         [HttpPost]
