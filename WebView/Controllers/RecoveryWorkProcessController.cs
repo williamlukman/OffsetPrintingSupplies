@@ -232,6 +232,7 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
                             model.Quantity
                         }
@@ -426,19 +427,31 @@ namespace WebView.Controllers
         public dynamic ProgressDetail(RecoveryOrderDetail model)
         {
             var models = new RecoveryOrderDetail();
+            models.Errors = new Dictionary<string, string>();
             try
             {
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
-                if (model.IsDisassembled == true) { models = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
-                if (model.IsStrippedAndGlued == true) { models = _recoveryOrderDetailService.StripAndGlueObject(data); }
-                if (model.IsWrapped == true) { models = _recoveryOrderDetailService.WrapObject(data, model.CompoundUsage,
-                                                            _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService); }
-                if (model.IsVulcanized == true) { models = _recoveryOrderDetailService.VulcanizeObject(data); }
-                if (model.IsFacedOff == true) { models = _recoveryOrderDetailService.FaceOffObject(data); }
-                if (model.IsConventionalGrinded == true) { models = _recoveryOrderDetailService.ConventionalGrindObject(data); }
-                if (model.IsCWCGrinded == true) { models = _recoveryOrderDetailService.CWCGrindObject(data); }
-                if (model.IsPolishedAndQC == true) { models = _recoveryOrderDetailService.PolishAndQCObject(data); }
-                if (model.IsPackaged == true) { models = _recoveryOrderDetailService.PackageObject(data); }
+                if (model.IsDisassembled && !data.IsDisassembled) { models = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsStrippedAndGlued && !data.IsStrippedAndGlued) { models = _recoveryOrderDetailService.StripAndGlueObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsWrapped && !data.IsWrapped)
+                {
+                    models = _recoveryOrderDetailService.WrapObject(data, model.CompoundUsage,
+                                                            _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+                }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsVulcanized && !data.IsVulcanized) { models = _recoveryOrderDetailService.VulcanizeObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsFacedOff && !data.IsFacedOff) { models = _recoveryOrderDetailService.FaceOffObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsConventionalGrinded && !data.IsConventionalGrinded) { models = _recoveryOrderDetailService.ConventionalGrindObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsCWCGrinded && !data.IsCWCGrinded) { models = _recoveryOrderDetailService.CWCGrindObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsPolishedAndQC && !data.IsPolishedAndQC) { models = _recoveryOrderDetailService.PolishAndQCObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsPackaged && !data.IsPackaged) { models = _recoveryOrderDetailService.PackageObject(data); }
             }
             catch (Exception ex)
             {

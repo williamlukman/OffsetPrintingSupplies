@@ -180,7 +180,6 @@
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseReceivalController.cs" />
     <Compile Include="Controllers\ReceiptVoucherController.cs" />
-    <Compile Include="Controllers\RecoveryWorkProcessController.cs" />
     <Compile Include="Controllers\RollerWarehouseMutationController.cs" />
     <Compile Include="Controllers\SalesInvoiceController.cs" />
     <Compile Include="Controllers\SalesOrderController.cs" />
@@ -549,6 +548,7 @@
     <Content Include="Content\images\padlock.png" />
     <Content Include="Content\images\SUBMITicon.png" />
     <Content Include="Content\images\tab.png" />
+    <Content Include="Content\images\zentrum_logo.gif" />
     <Content Include="Content\infoss.css" />
     <Content Include="Content\infoss_home.css" />
     <Content Include="Content\jquery.tabs-ie.css" />
@@ -967,6 +967,7 @@
     <Content Include="Content\uploadify\check.php" />
     <Content Include="Content\uploadify\uploadify.php" />
     <Content Include="ClassDiagram1.cd" />
+    <None Include="Properties\PublishProfiles\Zengra.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />

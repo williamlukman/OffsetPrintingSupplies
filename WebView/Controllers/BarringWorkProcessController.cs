@@ -82,6 +82,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.BarringOrderId,
+                            _barringOrderService.GetObjectById(model.BarringOrderId).Code,
                             model.BarringId,
                             _barringService.GetObjectById(model.BarringId).Sku,
                             _barringService.GetObjectById(model.BarringId).Name,
@@ -128,6 +129,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.BarringOrderId,
+                _barringOrderService.GetObjectById(model.BarringOrderId).Code,
                 model.BarringId,
                 BarringSku = _barringService.GetObjectById(model.BarringId).Sku,
                 Barring =_barringService.GetObjectById(model.BarringId).Name,
@@ -161,18 +163,27 @@ namespace WebView.Controllers
         public dynamic ProgressDetail(BarringOrderDetail model)
         {
             var models = new BarringOrderDetail();
+            models.Errors = new Dictionary<string, string>();
             try
             {
                 var data = _barringOrderDetailService.GetObjectById(model.Id);
-                if (model.IsCut == true) { models = _barringOrderDetailService.CutObject(data, _barringOrderService); }
-                if (model.IsSideSealed == true) { models = _barringOrderDetailService.SideSealObject(data); }
-                if (model.IsBarPrepared == true) { models = _barringOrderDetailService.PrepareObject(data); }
-                if (model.IsAdhesiveTapeApplied == true) { models = _barringOrderDetailService.ApplyTapeAdhesiveToObject(data); }
-                if (model.IsBarMounted == true) { models = _barringOrderDetailService.MountObject(data); }
-                if (model.IsBarHeatPressed == true) { models = _barringOrderDetailService.HeatPressObject(data); }
-                if (model.IsBarPullOffTested == true) { models = _barringOrderDetailService.PullOffTestObject(data); }
-                if (model.IsQCAndMarked == true) { models = _barringOrderDetailService.QCAndMarkObject(data); }
-                if (model.IsPackaged == true) { models = _barringOrderDetailService.PackageObject(data); }
+                if (model.IsCut && !data.IsCut) { models = _barringOrderDetailService.CutObject(data, _barringOrderService); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsSideSealed && !data.IsSideSealed) { models = _barringOrderDetailService.SideSealObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsBarPrepared && !data.IsBarPrepared) { models = _barringOrderDetailService.PrepareObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsAdhesiveTapeApplied && !data.IsAdhesiveTapeApplied) { models = _barringOrderDetailService.ApplyTapeAdhesiveToObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsBarMounted && !data.IsBarMounted) { models = _barringOrderDetailService.MountObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsBarHeatPressed && !data.IsBarHeatPressed) { models = _barringOrderDetailService.HeatPressObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsBarPullOffTested && !data.IsBarPullOffTested) { models = _barringOrderDetailService.PullOffTestObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsQCAndMarked && !data.IsQCAndMarked) { models = _barringOrderDetailService.QCAndMarkObject(data); }
+                if (models.Errors.Any()) { return Json(new { models.Errors }); }
+                if (model.IsPackaged  && !data.IsPackaged) { models = _barringOrderDetailService.PackageObject(data); }
             }
             catch (Exception ex)
             {

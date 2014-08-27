@@ -157,7 +157,10 @@ namespace WebView.Controllers
                         model.CD,
                         model.RL,
                         model.WL,
-                        model.TL
+                        model.TL,
+                        model.IsJobScheduled,
+                        model.IsRollerBuilt,
+                        model.IsDelivered
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

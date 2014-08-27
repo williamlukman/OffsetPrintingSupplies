@@ -43,35 +43,36 @@
     $("#list").jqGrid({
         url: base_url + 'BarringWorkProcess/GetList',
         datatype: "json",
-        colNames: ['ID','Barring Order ID', 'Barring Id', 'Sku','Barring','Blanket Sku','BlanketName', 'LeftBar Sku', 'LeftBarName',
-                     'RightBar Sku', 'RightBarName','IsCut','IsSideSealed',  'IsBarPrepared',
-                    'IsAdhesiveTapeApplied','IsBarMounted',    'IsBarHeatPressed',    'IsBarPullOffTested',
-                    'IsQCAndMarked',   'IsPackaged',  'IsRejected',     'Rejected Date', 'Is Finished' ,'Finished Date'
+        colNames: ['ID','Barring Order ID', 'Code', 'Barring Id', 'Sku','Name','Sku','Name', 'Sku', 'Name',
+                   'Sku', 'Name','C', 'SS', 'BP',
+                   'ATA','BM', 'BHP', 'BPOT',
+                   'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
         ],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: "center" },
-    			  { name: 'barringorderid', index: 'barringorderid', width: 80, align: "center" },
-                  { name: 'barringid', index: 'barringid', width: 100, sortable: false },
-                  { name: 'sku', index: 'sku', width: 100, sortable: false },
+                  { name: 'id', index: 'id', width: 50, align: "center" },
+    			  { name: 'barringorderid', index: 'barringorderid', width: 80, align: 'center', hidden: true },
+                  { name: 'barringordercode', index: 'barringorderid', width: 50, align: 'center'},
+                  { name: 'barringid', index: 'barringid', width: 100, sortable: false, hidden: true },
+                  { name: 'sku', index: 'sku', width: 50, sortable: false, align: 'right' },
                   { name: 'barringname', index: 'barringname', width: 100, sortable: false },
-                  { name: 'blanketsku', index: 'blanketsku', width: 100, sortable: false },
+                  { name: 'blanketsku', index: 'blanketsku', width: 50, align: 'right', sortable: false },
                   { name: 'blanketname', index: 'blanketname', width: 100, sortable: false },
-                  { name: 'leftbarsku', index: 'leftbarsku', width: 100, sortable: false },
+                  { name: 'leftbarsku', index: 'leftbarsku', width: 50, align: 'right', sortable: false },
                   { name: 'lefbarname', index: 'lefbarname', width: 100, sortable: false },
-                  { name: 'rightbarsku', index: 'rightbarsku', width: 100, sortable: false },
+                  { name: 'rightbarsku', index: 'rightbarsku', width: 50, align: 'right', sortable: false },
                   { name: 'rightbarname', index: 'rightbarname', width: 100, sortable: false },
-                  { name: 'iscut', index: 'iscut', width: 100, sortable: false },
-                  { name: 'issidesealed', index: 'issidesealed', width: 100, sortable: false },
-                  { name: 'isbarprepared', index: 'isbarprepared', width: 100, sortable: false },
-                  { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 100, sortable: false },
-                  { name: 'isbarmounted', index: 'isbarmounted', width: 100, sortable: false },
-                  { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 100, sortable: false },
-                  { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 100, sortable: false },
-                  { name: 'isqcandmarked', index: 'isqcandmarked', width: 100, sortable: false },
-                  { name: 'ispackaged', index: 'ispackaged', width: 100, sortable: false },
-                  { name: 'isrejected', index: 'isrejected', width: 100, sortable: false },
+                  { name: 'iscut', index: 'iscut', width: 30, sortable: false },
+                  { name: 'issidesealed', index: 'issidesealed', width: 30, sortable: false },
+                  { name: 'isbarprepared', index: 'isbarprepared', width: 30, sortable: false },
+                  { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 30, sortable: false },
+                  { name: 'isbarmounted', index: 'isbarmounted', width: 30, sortable: false },
+                  { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 30, sortable: false },
+                  { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 30, sortable: false },
+                  { name: 'isqcandmarked', index: 'isqcandmarked', width: 35, sortable: false },
+                  { name: 'ispackaged', index: 'ispackaged', width: 30, sortable: false },
+                  { name: 'isrejected', index: 'isrejected', width: 30, sortable: false },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isfinished', index: 'isfinished', width: 100, sortable: false },
+                  { name: 'isfinished', index: 'isfinished', width: 30, sortable: false },
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -90,13 +91,104 @@
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
-		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		          rowCut = $(this).getRowData(cl).iscut;
+		          if (rowCut == 'true') {
+		              rowCut = "Y";
 		          } else {
-		              rowIsConfirmed = "NO";
+		              rowCut = "N";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
+		          $(this).jqGrid('setRowData', ids[i], { iscut: rowCut });
+
+		          var cl = ids[i];
+		          rowSideSealed = $(this).getRowData(cl).issidesealed;
+		          if (rowSideSealed == 'true') {
+		              rowSideSealed = "Y";
+		          } else {
+		              rowSideSealed = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { issidesealed: rowSideSealed });
+
+		          var cl = ids[i];
+		          rowBarPrepared = $(this).getRowData(cl).isbarprepared;
+		          if (rowBarPrepared == 'true') {
+		              rowBarPrepared = "Y";
+		          } else {
+		              rowBarPrepared = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isbarprepared: rowBarPrepared });
+
+		          var cl = ids[i];
+		          rowAdhesiveTapeApplied = $(this).getRowData(cl).isadhesivetapeapplied;
+		          if (rowAdhesiveTapeApplied == 'true') {
+		              rowAdhesiveTapeApplied = "Y";
+		          } else {
+		              rowAdhesiveTapeApplied = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isadhesivetapeapplied: rowAdhesiveTapeApplied });
+
+		          var cl = ids[i];
+		          rowBarMounted = $(this).getRowData(cl).isbarmounted;
+		          if (rowBarMounted == 'true') {
+		              rowBarMounted = "Y";
+		          } else {
+		              rowBarMounted = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isbarmounted: rowBarMounted });
+
+		          var cl = ids[i];
+		          rowBarHeatPressed = $(this).getRowData(cl).isbarheatpressed;
+		          if (rowBarHeatPressed == 'true') {
+		              rowBarHeatPressed = "Y";
+		          } else {
+		              rowBarHeatPressed = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isbarheatpressed: rowBarHeatPressed });
+                 
+		          var cl = ids[i];
+		          rowBarPullOffTested = $(this).getRowData(cl).isbarpullofftested;
+		          if (rowBarPullOffTested == 'true') {
+		              rowBarPullOffTested = "Y";
+		          } else {
+		              rowBarPullOffTested = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isbarpullofftested: rowBarPullOffTested });
+
+		          var cl = ids[i];
+		          rowQCAndMarked = $(this).getRowData(cl).isqcandmarked;
+		          if (rowQCAndMarked == 'true') {
+		              rowQCAndMarked = "Y";
+		          } else {
+		              rowQCAndMarked = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isqcandmarked: rowQCAndMarked });
+
+		          var cl = ids[i];
+		          rowPackaged = $(this).getRowData(cl).ispackaged;
+		          if (rowPackaged == 'true') {
+		              rowPackaged = "Y";
+		          } else {
+		              rowPackaged = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ispackaged: rowPackaged });
+
+		          var cl = ids[i];
+		          rowRejected = $(this).getRowData(cl).isrejected;
+		          if (rowRejected == 'true') {
+		              rowRejected = "Y";
+		          } else {
+		              rowRejected = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isrejected: rowRejected });
+
+		          var cl = ids[i];
+		          rowFinished = $(this).getRowData(cl).isfinished;
+		          if (rowFinished == 'true') {
+		              rowFinished = "Y";
+		          } else {
+		              rowFinished = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isfinished: rowFinished });
+		          
 		      }
 		  }
 
@@ -160,6 +252,15 @@
                             document.getElementById("isbarpullofftested").checked = result.IsBarPullOffTested;
                             document.getElementById("isqcandmarked").checked = result.IsQCAndMarked;
                             document.getElementById("ispackaged").checked = result.IsPackaged;
+                            if (result.IsCut) { $('#iscut').attr('disabled', true); } else { $('#iscut').removeAttr('disabled'); }
+                            if (result.IsSideSealed) { $('#issidesealed').attr('disabled', true); } else { $('#issidesealed').removeAttr('disabled'); }
+                            if (result.IsBarPrepared) { $('#isbarprepared').attr('disabled', true); } else { $('#isbarprepared').removeAttr('disabled'); }
+                            if (result.IsAdhesiveTapeApplied) { $('#isadhesivetapeapplied').attr('disabled', true); } else { $('#isadhesivetapeapplied').removeAttr('disabled'); }
+                            if (result.IsBarMounted) { $('#isbarmounted').attr('disabled', true); } else { $('#isbarmounted').removeAttr('disabled'); }
+                            if (result.IsBarHeatPressed) { $('#isbarheatpressed').attr('disabled', true); } else { $('#isbarheatpressed').removeAttr('disabled'); }
+                            if (result.IsBarPullOffTested) { $('#isbarpullofftested').attr('disabled', true); } else { $('#isbarpullofftested').removeAttr('disabled'); }
+                            if (result.IsQCAndMarked) { $('#isqcandmarked').attr('disabled', true); } else { $('#isqcandmarked').removeAttr('disabled'); }
+                            if (result.IsPackaged) { $('#ispackaged').attr('disabled', true); } else { $('#ispackaged').removeAttr('disabled'); }
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -363,7 +464,7 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idrejected').val(), RejectedDate: $('#FinishedDate').datebox('getValue'),
+                Id: $('#idrejected').val(), RejectedDate: $('#RejectedDate').datebox('getValue'),
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
