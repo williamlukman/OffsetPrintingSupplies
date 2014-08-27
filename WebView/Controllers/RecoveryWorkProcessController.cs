@@ -11,9 +11,9 @@ using Validation.Validation;
 
 namespace WebView.Controllers
 {
-    public class RecoveryWorkOrderController : Controller
+    public class RecoveryWorkProcessController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkOrderController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("RecoveryWorkProcessController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
@@ -31,7 +31,7 @@ namespace WebView.Controllers
         private ICoreBuilderService _coreBuilderService;
         private IItemTypeService _itemTypeService;
 
-        public RecoveryWorkOrderController()
+        public RecoveryWorkProcessController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
@@ -65,9 +65,9 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _recoveryOrderService.GetAll().Where(d => d.IsDeleted == false);
+            var query =  _recoveryOrderDetailService.GetAll().Where(d => d.IsDeleted == false);
 
-            var list = query as IEnumerable<RecoveryOrder>;
+            var list = query as IEnumerable<RecoveryOrderDetail>;
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -96,26 +96,34 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                            model.Id,
-                            model.Code,
-                            model.CoreIdentificationId,
-                            model.WarehouseId,
-                            _warehouseService.GetObjectById(model.WarehouseId).Code,
-                            _warehouseService.GetObjectById(model.WarehouseId).Name,
-                            model.QuantityReceived,
-                            model.QuantityFinal,
-                            model.QuantityRejected,
-                            model.IsConfirmed,
-                            model.ConfirmationDate,
+                            model.RecoveryOrderId,
+                             _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
+                            model.CoreIdentificationDetailId,
+                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
+                            model.RollerBuilderId,
+                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
+                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                            model.CoreTypeCase,
+                            model.Acc,
+                            model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
+                            model.IsDisassembled,
+                            model.IsStrippedAndGlued,
+                            model.IsWrapped,
+                            model.CompoundUsage,
+                            model.IsVulcanized,
+                            model.IsFacedOff,
+                            model.IsConventionalGrinded,
+                            model.IsCWCGrinded,
+                            model.IsPolishedAndQC,
+                            model.IsPackaged,
+                            model.RejectedDate,
+                            model.FinishedDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
-       
-
 
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
@@ -155,8 +163,11 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
                             model.CoreIdentificationDetailId,
+                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
                             model.RollerBuilderId,
+                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
                             _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                             model.CoreTypeCase,
                             model.Acc,
@@ -179,6 +190,8 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
+
+  
 
         public dynamic GetListAccessory(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
@@ -229,10 +242,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            RecoveryOrder model = new RecoveryOrder();
+            RecoveryOrderDetail model = new RecoveryOrderDetail();
             try
             {
-                model = _recoveryOrderService.GetObjectById(Id);
+                model = _recoveryOrderDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -243,13 +256,30 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
-                model.Code,
-                model.WarehouseId,
-                model.CoreIdentificationId,
-                CoreIdentification =_coreIdentificationService.GetObjectById(model.CoreIdentificationId).Code,
-                WarehouseCode = _warehouseService.GetObjectById(model.WarehouseId).Code,
-                Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
-                model.QuantityReceived,
+                model.RecoveryOrderId,
+                CoreIdentificationDetail =  _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
+                model.CoreIdentificationDetailId,
+                MaterialCase = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
+                model.RollerBuilderId,
+                RollerBuilderSku = _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
+                RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                model.CoreTypeCase,
+                model.Acc,
+                RepairRequestCase =  model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
+                model.IsDisassembled,
+                model.IsStrippedAndGlued,
+                model.IsWrapped,
+                model.CompoundUsage,
+                model.IsVulcanized,
+                model.IsFacedOff,
+                model.IsConventionalGrinded,
+                model.IsCWCGrinded,
+                model.IsPolishedAndQC,
+                model.IsPackaged,
+                model.RejectedDate,
+                model.FinishedDate,
+                model.CreatedAt,
+                model.UpdatedAt,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -317,43 +347,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public dynamic Insert(RecoveryOrder model)
-        {
-            try
-            {
-                model = _recoveryOrderService.CreateObject(model,_coreIdentificationService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic InsertDetail(RecoveryOrderDetail model)
-        {
-            try
-            {
-                model = _recoveryOrderDetailService.CreateObject(model,_recoveryOrderService,_coreIdentificationDetailService,_rollerBuilderService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
+       
 
         [HttpPost]
         public dynamic InsertAccessory(RecoveryAccessoryDetail model)
@@ -375,71 +369,11 @@ namespace WebView.Controllers
             });
         }
 
-        [HttpPost]
-        public dynamic Update(RecoveryOrder model)
-        {
-            try
-            {
-                var data = _recoveryOrderService.GetObjectById(model.Id);
-                data.CoreIdentificationId = model.CoreIdentificationId;
-                data.WarehouseId = model.WarehouseId;
-                data.Code = model.Code;
-                data.QuantityReceived = model.QuantityReceived;
-                model = _recoveryOrderService.UpdateObject(data,_recoveryOrderDetailService,_coreIdentificationService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
+      
 
 
-        [HttpPost]
-        public dynamic Delete(RecoveryOrder model)
-        {
-            try
-            {
-                var data = _recoveryOrderService.GetObjectById(model.Id);
-                model = _recoveryOrderService.SoftDeleteObject(model,_recoveryOrderDetailService,_recoveryAccessoryDetailService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
+      
 
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic DeleteDetail(RecoveryOrderDetail model)
-        {
-            try
-            {
-                var data = _recoveryOrderDetailService.GetObjectById(model.Id);
-                model = _recoveryOrderDetailService.SoftDeleteObject(data,_recoveryOrderService,_recoveryAccessoryDetailService);
-                 
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
 
         [HttpPost]
         public dynamic DeleteAccessory(RecoveryAccessoryDetail model)
@@ -462,30 +396,7 @@ namespace WebView.Controllers
             });
         }
 
-        [HttpPost]
-        public dynamic UpdateDetail(RecoveryOrderDetail model)
-        {
-            try
-            {
-                var data = _recoveryOrderDetailService.GetObjectById(model.Id);
-                data.CoreIdentificationDetailId = model.CoreIdentificationDetailId;
-                data.RollerBuilderId = model.RollerBuilderId;
-                data.CoreTypeCase = model.CoreTypeCase;
-                data.Acc = model.Acc;
-                data.RepairRequestCase = model.RepairRequestCase;
-                model = _recoveryOrderDetailService.UpdateObject(data,_recoveryOrderService,_coreIdentificationDetailService,_rollerBuilderService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
+       
 
         [HttpPost]
         public dynamic UpdateAccessory(RecoveryAccessoryDetail model)
@@ -512,79 +423,37 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic ProgressDetail(int Id,string Progress,int CompoundUsage)
+        public dynamic ProgressDetail(RecoveryOrderDetail model)
         {
-            var model = new RecoveryOrderDetail();
+            var models = new RecoveryOrderDetail();
             try
             {
-                var data = _recoveryOrderDetailService.GetObjectById(Id);
-                if (Progress == "IsDisassembled") { model = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
-                else if (Progress == "IsStrippedAndGlued") { model = _recoveryOrderDetailService.StripAndGlueObject(data); }
-                else if (Progress == "IsWrapped") { model = _recoveryOrderDetailService.WrapObject(data, CompoundUsage,
+                var data = _recoveryOrderDetailService.GetObjectById(model.Id);
+                if (model.IsDisassembled == true) { models = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
+                if (model.IsStrippedAndGlued == true) { models = _recoveryOrderDetailService.StripAndGlueObject(data); }
+                if (model.IsWrapped == true) { models = _recoveryOrderDetailService.WrapObject(data, model.CompoundUsage,
                                                             _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService); }
-                else if (Progress == "IsVulcanized") { model = _recoveryOrderDetailService.VulcanizeObject(data); }
-                else if (Progress == "IsFacedOff") { model = _recoveryOrderDetailService.FaceOffObject(data); }
-                else if (Progress == "IsConventionalGrinded") { model = _recoveryOrderDetailService.ConventionalGrindObject(data); }
-                else if (Progress == "IsCWCGrinded") { model = _recoveryOrderDetailService.CWCGrindObject(data); }
-                else if (Progress == "IsPolishedAndQC") { model = _recoveryOrderDetailService.PolishAndQCObject(data); }
-                else if (Progress == "IsPackaged") { model = _recoveryOrderDetailService.PackageObject(data); }
+                if (model.IsVulcanized == true) { models = _recoveryOrderDetailService.VulcanizeObject(data); }
+                if (model.IsFacedOff == true) { models = _recoveryOrderDetailService.FaceOffObject(data); }
+                if (model.IsConventionalGrinded == true) { models = _recoveryOrderDetailService.ConventionalGrindObject(data); }
+                if (model.IsCWCGrinded == true) { models = _recoveryOrderDetailService.CWCGrindObject(data); }
+                if (model.IsPolishedAndQC == true) { models = _recoveryOrderDetailService.PolishAndQCObject(data); }
+                if (model.IsPackaged == true) { models = _recoveryOrderDetailService.PackageObject(data); }
             }
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                models.Errors.Add("Generic", "Error : " + ex);
             }
 
             return Json(new
             {
-                model.Errors
+                models.Errors
             });
         }
 
 
-        [HttpPost]
-        public dynamic Confirm(RecoveryOrder model)
-        {
-            try
-            {
-                var data = _recoveryOrderService.GetObjectById(model.Id);
-                model = _recoveryOrderService.ConfirmObject(data,model.ConfirmationDate.Value
-                   ,_coreIdentificationDetailService,_recoveryOrderDetailService,_recoveryAccessoryDetailService,
-                   _coreBuilderService,_stockMutationService,_itemService,_barringService,_warehouseItemService,_warehouseService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Confirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-        [HttpPost]
-        public dynamic UnConfirm(RecoveryOrder model)
-        {
-            try
-            {
-
-                var data = _recoveryOrderService.GetObjectById(model.Id);
-                model = _recoveryOrderService.UnconfirmObject(data,_coreIdentificationDetailService,_recoveryOrderDetailService,_recoveryAccessoryDetailService,
-                    _coreBuilderService,_stockMutationService,_itemService,_barringService,_warehouseItemService,_warehouseService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Unconfirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
+       
 
         [HttpPost]
         public dynamic Finish(RecoveryOrderDetail model)

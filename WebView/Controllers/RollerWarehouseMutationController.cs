@@ -152,12 +152,15 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            _coreIdentificationDetailService.GetObjectById(_recoveryOrderDetailService.GetObjectById
+                                (model.RecoveryOrderDetailId).CoreIdentificationDetailId).DetailId,
                             model.Code,
                             model.RollerWarehouseMutationId,
-                            _recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId).Id,
+                            model.RecoveryOrderDetailId,
                             model.ItemId,
                             _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
+                            
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -182,7 +185,7 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.RecoveryOrderId,
-                RecoveryOrder = _coreIdentificationService.GetObjectById(model.RecoveryOrderId).Code,
+                RecoveryOrder = _recoveryOrderService.GetObjectById(model.RecoveryOrderId).Code,
                 model.WarehouseFromId,
                 WarehouseFromCode = _warehouseService.GetObjectById(model.WarehouseFromId).Code,
                 WarehouseFrom = _warehouseService.GetObjectById(model.WarehouseFromId).Name,
@@ -214,11 +217,12 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.RollerWarehouseMutationId,
-                model.RecoveryOrderDetailId,
-                RecoveryOrderDetail = _coreIdentificationService.GetObjectById(model.RecoveryOrderDetailId).Code,
+                model.RecoveryOrderDetailId, 
                 model.ItemId,
                 ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
+                RIFID = _coreIdentificationDetailService.GetObjectById(_recoveryOrderDetailService.GetObjectById
+                                (model.RecoveryOrderDetailId).CoreIdentificationDetailId).DetailId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -337,12 +341,9 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId);
-                var MaterialCase = _coreIdentificationDetailService.GetObjectById(_recoveryOrderDetailService.GetObjectById(model.RecoveryOrderDetailId).CoreIdentificationDetailId).MaterialCase;
-                var item = MaterialCase == Core.Constants.Constant.MaterialCase.New ? _rollerBuilderService.GetRollerNewCore(data.RollerBuilderId) :
-                            _rollerBuilderService.GetRollerUsedCore(data.RollerBuilderId);
-                model.ItemId = item.Id;
-                model = _rollerWarehouseMutationDetailService.UpdateObject(model,_rollerWarehouseMutationService,
+                var data2 = _rollerWarehouseMutationDetailService.GetObjectById(model.Id);
+                data2.RecoveryOrderDetailId = model.RecoveryOrderDetailId;
+                model = _rollerWarehouseMutationDetailService.UpdateObject(data2,_rollerWarehouseMutationService,
                     _recoveryOrderDetailService,_coreIdentificationDetailService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)

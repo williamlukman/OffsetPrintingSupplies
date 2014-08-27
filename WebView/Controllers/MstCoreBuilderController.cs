@@ -131,7 +131,7 @@ namespace WebView.Controllers
         public dynamic GetInfo(int Id)
         {
             CoreBuilder model = new CoreBuilder();
-            try
+            try 
             {
                 model = _coreBuilderService.GetObjectById(Id);
             }

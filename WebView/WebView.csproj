@@ -157,6 +157,7 @@
     <Compile Include="Controllers\PayableController.cs" />
     <Compile Include="Controllers\StockMutationController.cs" />
     <Compile Include="Controllers\RecoveryWorkProcessController.cs" />
+    <Compile Include="Controllers\RecoveryWorkOrderController.cs" />
     <Compile Include="Controllers\CoreIdentificationController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -179,7 +180,7 @@
     <Compile Include="Controllers\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseReceivalController.cs" />
     <Compile Include="Controllers\ReceiptVoucherController.cs" />
-    <Compile Include="Controllers\RecoveryWorkOrderController.cs" />
+    <Compile Include="Controllers\RecoveryWorkProcessController.cs" />
     <Compile Include="Controllers\RollerWarehouseMutationController.cs" />
     <Compile Include="Controllers\SalesInvoiceController.cs" />
     <Compile Include="Controllers\SalesOrderController.cs" />
@@ -965,6 +966,7 @@
     <Content Include="Content\themes\easyui\metro\images\Thumbs.db" />
     <Content Include="Content\uploadify\check.php" />
     <Content Include="Content\uploadify\uploadify.php" />
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
     <Content Include="Scripts\jquery-1.1.3.1.pack.js" />
