@@ -13,8 +13,9 @@ namespace Core.Interface.Service
         IClosingValidator GetValidator();
         IList<Closing> GetAll();
         Closing GetObjectById(int Id);
-        Closing CreateObject(Closing closing, ICashBankService _cashBankService);
-        Closing SoftDeleteObject(Closing closing);
+        Closing CreateObject(Closing closing);
+        Closing CloseObject(Closing closing);
+        //Closing SoftDeleteObject(Closing closing);
         bool DeleteObject(int Id);
         //Closing CreateClosingForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
         //Closing CreateClosingForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);

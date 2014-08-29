@@ -11,6 +11,7 @@ namespace Core.Interface.Validation
     public interface IGeneralLedgerJournalValidator
     {
         GeneralLedgerJournal VIsValidSourceDocument(GeneralLedgerJournal generalLedgerJournal);
+
         GeneralLedgerJournal VCreateObject(GeneralLedgerJournal generalLedgerJournal);
         GeneralLedgerJournal VDeleteObject(GeneralLedgerJournal generalLedgerJournal);
         bool ValidCreateObject(GeneralLedgerJournal generalLedgerJournal);

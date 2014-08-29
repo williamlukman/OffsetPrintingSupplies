@@ -12,6 +12,7 @@ namespace Core.Interface.Validation
     {
         ValidComb VHasAccount(ValidComb validComb, IAccountService _accountService);
         ValidComb VHasClosing(ValidComb validComb, IClosingService _closingService);
+
         ValidComb VCreateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService);
         ValidComb VDeleteObject(ValidComb validComb);
         bool ValidCreateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService);

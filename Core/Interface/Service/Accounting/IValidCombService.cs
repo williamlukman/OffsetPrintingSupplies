@@ -13,8 +13,8 @@ namespace Core.Interface.Service
         IValidCombValidator GetValidator();
         IList<ValidComb> GetAll();
         ValidComb GetObjectById(int Id);
-        ValidComb CreateObject(ValidComb validComb, ICashBankService _cashBankService);
-        ValidComb SoftDeleteObject(ValidComb validComb);
+        ValidComb CreateObject(ValidComb validComb, IAccountService _accountService, IClosingService _closingService);
+        //ValidComb SoftDeleteObject(ValidComb validComb);
         bool DeleteObject(int Id);
         //ValidComb CreateValidCombForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
         //ValidComb CreateValidCombForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);

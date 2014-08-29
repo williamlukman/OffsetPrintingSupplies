@@ -12,7 +12,8 @@ namespace Core.Interface.Repository
         IList<Closing> GetAll();
         Closing GetObjectById(int Id);
         Closing CreateObject(Closing closing);
-        Closing SoftDeleteObject(Closing closing);
+        Closing CloseObject(Closing closing);
+        //Closing SoftDeleteObject(Closing closing);
         bool DeleteObject(int Id);
     }
 }

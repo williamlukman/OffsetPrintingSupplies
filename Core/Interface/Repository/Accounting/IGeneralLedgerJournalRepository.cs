@@ -12,7 +12,7 @@ namespace Core.Interface.Repository
         IList<GeneralLedgerJournal> GetAll();
         GeneralLedgerJournal GetObjectById(int Id);
         IList<GeneralLedgerJournal> GetObjectsByAccountId(int accountId);
-        IList<GeneralLedgerJournal> GetObjectsBySourceDocument(int cashBankId, string SourceDocumentType, int SourceDocumentId);
+        IList<GeneralLedgerJournal> GetObjectsBySourceDocument(int accountId, string SourceDocument, int SourceDocumentId);
         GeneralLedgerJournal CreateObject(GeneralLedgerJournal generalLedgerJournal);
         GeneralLedgerJournal SoftDeleteObject(GeneralLedgerJournal generalLedgerJournal);
         bool DeleteObject(int Id);

@@ -12,7 +12,7 @@ namespace Core.Interface.Repository
         IList<ValidComb> GetAll();
         ValidComb GetObjectById(int Id);
         ValidComb CreateObject(ValidComb validComb);
-        ValidComb SoftDeleteObject(ValidComb validComb);
+        //ValidComb SoftDeleteObject(ValidComb validComb);
         bool DeleteObject(int Id);
     }
 }

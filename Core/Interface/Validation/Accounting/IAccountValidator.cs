@@ -10,15 +10,16 @@ namespace Core.Interface.Validation
 {
     public interface IAccountValidator
     {
-        Account VHasCashBank(Account account, ICashBankService _cashBankService);
+        //Account VHasCashBank(Account account, ICashBankService _cashBankService);
         Account VHasCode(Account account);
         Account VHasName(Account account);
         Account VIsValidGroup(Account account);
         Account VIsValidLevel(Account account);
-        Account VIsValidParent(Account account);
-        Account VCreateObject(Account account, ICashBankService _cashBankService);
+        Account VIsValidParent(Account account, IAccountService _accountService);
+
+        Account VCreateObject(Account account, IAccountService _accountService);
         Account VDeleteObject(Account account);
-        bool ValidCreateObject(Account account, ICashBankService _cashBankService);
+        bool ValidCreateObject(Account account, IAccountService _accountService);
         bool ValidDeleteObject(Account account);
         bool isValid(Account account);
         string PrintError(Account account);

@@ -28,6 +28,24 @@ namespace Core.Constants
             public static int Deduction = 2;
         }
 
+        public class AccountGroup
+        {
+            public static int Asset = 1;
+            public static int Expenses = 2;
+            public static int Liability = 3;
+            public static int Equity = 4;
+            public static int Revenue = 5;
+        }
+
+        public class SourceDocument
+        {
+            public static string PaymentVoucherDetail = "PaymentVoucherDetail";
+            public static string ReceiptVoucherDetail = "ReceiptVoucherDetail";
+            public static string CustomPurchaseInvoiceDetail = "CustomPurchaseInvoiceDetail";
+            public static string CashSalesInvoiceDetailDetail = "CashSalesInvoiceDetailDetail";
+            public static string RetailSalesInvoiceDetail = "RetailSalesInvoiceDetail";
+        }
+
         public class SourceDocumentType
         {
             public static string BarringOrder = "BarringOrder";

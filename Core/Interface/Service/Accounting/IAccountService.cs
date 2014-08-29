@@ -14,8 +14,8 @@ namespace Core.Interface.Service
         IList<Account> GetAll();
         Account GetObjectById(int Id);
         Account GetObjectByIsLegacy(bool IsLegacy);
-        Account CreateObject(Account account, ICashBankService _cashBankService);
-        Account CreateLegacyObject(Account account, ICashBankService _cashBankService);
+        Account CreateObject(Account account, IAccountService _accountService);
+        Account CreateLegacyObject(Account account, IAccountService _accountService);
         Account SoftDeleteObject(Account account);
         bool DeleteObject(int Id);
         //Account CreateAccountForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
