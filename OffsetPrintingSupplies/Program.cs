@@ -34,7 +34,7 @@ namespace OffsetPrintingSupplies
 
         public static void DataFunction(DataBuilder d)
         {
-            d.PopulateData();
+           d.PopulateData();
         }
     }
 }
