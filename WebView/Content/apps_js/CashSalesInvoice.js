@@ -578,7 +578,7 @@
 	$("#listdetail").jqGrid({
 		url: base_url,
 		datatype: "json",
-		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Is Manual Price Assignment', 'Assigned Price'],
+		colNames: ['Code', 'CashSalesInvoice Id', 'CashSalesInvoice Code', 'Item Id', 'Item Name', 'Quantity', 'Amount', 'CoGS', 'PriceMutation Id', 'Discount', 'Is Manual Price Assignment', 'Assigned Price'],
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 130, sortable: false },
@@ -589,6 +589,7 @@
 				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'pricemutationid', index: 'pricemutationid', width: 105, sortable: false },
+                  { name: 'discount', index: 'discount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'ismanualpriceassignment', index: 'ismanualpriceassignment', width: 165, boolean: { defaultValue: 'false' } },
                   { name: 'assignedprice', index: 'assignedprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
@@ -653,6 +654,7 @@
 							$('#ItemId').val(result.ItemId);
 							$('#Item').val(result.Item);
 							$('#Quantity').val(result.Quantity);
+							$('#Discount').val(result.Discount);
 							var e = document.getElementById("IsManualPriceAssignment");
 							if (result.IsManualPriceAssignment == true) {
 							    e.selectedIndex = 1;
@@ -736,7 +738,7 @@
 			url: submitURL,
 			data: JSON.stringify({
 			    Id: id, CashSalesInvoiceId: $("#id").val(), CashSalesInvoiceDetailId: $("#CashSalesInvoiceDetailId").val(),
-			    ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+			    ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(), Discount: $('#Discount').numberbox('getValue'),
 			    IsManualPriceAssignment: document.getElementById("IsManualPriceAssignment").value,
 			    AssignedPrice: $('#AssignedPrice').numberbox('getValue'),
 			}),

@@ -95,6 +95,15 @@ namespace Validation.Validation
             return cashSalesInvoiceDetail;
         }
 
+        public CashSalesInvoiceDetail VIsValidDiscount(CashSalesInvoiceDetail cashSalesInvoiceDetail)
+        {
+            if (cashSalesInvoiceDetail.Discount < 0 || cashSalesInvoiceDetail.Discount > 100)
+            {
+                cashSalesInvoiceDetail.Errors.Add("Discount", "Harus antara 0 sampai 100");
+            }
+            return cashSalesInvoiceDetail;
+        }
+
         public CashSalesInvoiceDetail VIsValidAssignedPrice(CashSalesInvoiceDetail cashSalesInvoiceDetail)
         {
             if (cashSalesInvoiceDetail.IsManualPriceAssignment && cashSalesInvoiceDetail.AssignedPrice < 0)
@@ -123,6 +132,8 @@ namespace Validation.Validation
             VHasCashSalesInvoice(cashSalesInvoiceDetail, _cashSalesInvoiceService);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VIsValidQuantity(cashSalesInvoiceDetail, _cashSalesInvoiceService, _warehouseItemService);
+            if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
+            VIsValidDiscount(cashSalesInvoiceDetail);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }
             VIsValidAssignedPrice(cashSalesInvoiceDetail);
             if (!isValid(cashSalesInvoiceDetail)) { return cashSalesInvoiceDetail; }

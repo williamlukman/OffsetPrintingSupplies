@@ -187,6 +187,7 @@ namespace WebView.Controllers
                              model.Amount,
                              model.CoGS,
                              model.PriceMutationId,
+                             model.Discount,
                              model.IsManualPriceAssignment,
                              model.AssignedPrice,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -303,6 +304,7 @@ namespace WebView.Controllers
                 model.ItemId,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
+                model.Discount,
                 model.IsManualPriceAssignment,
                 model.AssignedPrice,
                 model.Amount,
@@ -407,6 +409,7 @@ namespace WebView.Controllers
                 var data = _cashSalesInvoiceDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.Discount = model.Discount;
                 data.IsManualPriceAssignment = model.IsManualPriceAssignment;
                 data.AssignedPrice = model.AssignedPrice;
                 data.CashSalesInvoiceId = model.CashSalesInvoiceId;

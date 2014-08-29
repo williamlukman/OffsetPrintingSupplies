@@ -15,6 +15,7 @@ namespace Core.Interface.Validation
         CashSalesInvoiceDetail VUniqueItem(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceDetailService _cashSalesInvoiceDetailService, IItemService _itemService);
         CashSalesInvoiceDetail VIsValidQuantityOrdered(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService);
         CashSalesInvoiceDetail VIsValidQuantity(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService, IWarehouseItemService _warehouseItemService);
+        CashSalesInvoiceDetail VIsValidDiscount(CashSalesInvoiceDetail cashSalesInvoiceDetail);
         CashSalesInvoiceDetail VIsValidAssignedPrice(CashSalesInvoiceDetail cashSalesInvoiceDetail);
         //CashSalesInvoiceDetail VHasQuantityPricing(CashSalesInvoiceDetail cashSalesInvoiceDetail, IItemService _itemService, IQuantityPricingService _quantityPricingService);
 
