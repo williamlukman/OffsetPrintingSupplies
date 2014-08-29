@@ -407,13 +407,13 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity',
-        ],
+        colNames: ['Code', 'Item Id', 'Item Name', 'Quantity', 'Price'],
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
                   { name: 'item', index: 'item', width: 80, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, formatter: 'currency' },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -464,6 +464,7 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
+                            $('#Price').val(result.Price);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -536,7 +537,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, StockAdjustmentId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").numberbox('getValue')
+                Quantity: $("#Quantity").numberbox('getValue'), Price: $("#Price").numberbox('getValue')
             }),
             async: false,
             cache: false,

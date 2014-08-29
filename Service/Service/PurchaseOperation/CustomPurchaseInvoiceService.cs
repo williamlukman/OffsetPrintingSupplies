@@ -78,7 +78,8 @@ namespace Service.Service
                     customPurchaseInvoice.CoGS += customPurchaseInvoiceDetail.CoGS;
                 }
                 // Tax dihitung setelah discount
-                customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100;
+                //customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100;
+                customPurchaseInvoice.Total = CalculateTotalAmountAfterDiscountAndTax(customPurchaseInvoice);
                 Payable payable = _payableService.CreateObject(customPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id, customPurchaseInvoice.Total, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault());
                 customPurchaseInvoice = _repository.ConfirmObject(customPurchaseInvoice);
             }
@@ -182,6 +183,11 @@ namespace Service.Service
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
+        }
+
+        public decimal CalculateTotalAmountAfterDiscountAndTax(CustomPurchaseInvoice customPurchaseInvoice)
+        {
+            return ((customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100);
         }
     }
 }

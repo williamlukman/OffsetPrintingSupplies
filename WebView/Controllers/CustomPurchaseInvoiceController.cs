@@ -451,11 +451,12 @@ namespace WebView.Controllers
             try
             {
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
+                decimal total = _customPurchaseInvoiceService.CalculateTotalAmountAfterDiscountAndTax(data) - model.Allowance;
                 decimal cashbank = _cashBankService.GetTotalCashBank();
                 decimal receivable = _receivableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
                 decimal payable = _payableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
 
-                if ((cashbank + receivable) - payable < ((model.Total * (100 - model.Discount) / 100) * (100 - model.Tax) / 100))
+                if ((cashbank + receivable) - payable < total)
                 {
                     Errors.Add("Generic", "Dana tidak tersedia");
                 }

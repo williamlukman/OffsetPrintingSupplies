@@ -129,7 +129,8 @@ namespace WebView.Controllers
                              model.Code,
                              model.ItemId,
                              item = model.Item.Name,
-                             model.Quantity
+                             model.Quantity,
+                             model.Price
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -164,7 +165,8 @@ namespace WebView.Controllers
                             model.Code,
                             model.ItemId,
                             model.item,
-                            model.Quantity
+                            model.Quantity,
+                            model.Price
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -226,6 +228,7 @@ namespace WebView.Controllers
                 model.ItemId,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
+                model.Price,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -317,6 +320,7 @@ namespace WebView.Controllers
                 var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.Price = model.Price;
                 model = _stockAdjustmentDetailService.UpdateObject(data,_stockAdjustmentService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)
