@@ -15,7 +15,7 @@ namespace Core.Interface.Service
         GeneralLedgerJournal GetObjectById(int Id);
         IList<GeneralLedgerJournal> GetObjectsByAccountId(int accountId);
         IList<GeneralLedgerJournal> GetObjectsBySourceDocument(int accountId, string SourceDocumentType, int SourceDocumentId);
-        GeneralLedgerJournal CreateObject(GeneralLedgerJournal generalLedgerJournal, ICashBankService _cashBankService);
+        GeneralLedgerJournal CreateObject(GeneralLedgerJournal generalLedgerJournal, IAccountService _accountService);
         GeneralLedgerJournal SoftDeleteObject(GeneralLedgerJournal generalLedgerJournal);
         bool DeleteObject(int Id);
         //GeneralLedgerJournal CreateGeneralLedgerJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
