@@ -40,13 +40,14 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
-        public PaymentVoucher VIfGBCHThenIsBank(PaymentVoucher paymentVoucher)
+        public PaymentVoucher VIfGBCHThenIsBank(PaymentVoucher paymentVoucher, ICashBankService _cashBankService)
         {
+            CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
             if (paymentVoucher.IsGBCH)
             {
-                if (!paymentVoucher.IsBank)
+                if (!cashBank.IsBank)
                 {
-                    paymentVoucher.Errors.Add("IsBank", "Jika GBCH Harus IsBank");
+                    paymentVoucher.Errors.Add("Generic", "Jika GBCH Harus IsBank");
                 }
             }
             return paymentVoucher;
@@ -200,7 +201,7 @@ namespace Validation.Validation
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasPaymentDate(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
-            VIfGBCHThenIsBank(paymentVoucher);
+            VIfGBCHThenIsBank(paymentVoucher, _cashBankService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VIfGBCHThenHasDueDate(paymentVoucher);
             return paymentVoucher;

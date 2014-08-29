@@ -400,9 +400,18 @@ namespace TestValidation
             cashBank = new CashBank()
             {
                 Name = "Rekening BRI",
-                Description = "Untuk cashflow"
+                Description = "Untuk cashflow",
+                IsBank = true
             };
             _cashBankService.CreateObject(cashBank);
+
+            pettyCash = new CashBank()
+            {
+                Name = "Petty Cash",
+                Description = "Uang kas sementara",
+                IsBank = false
+            };
+            _cashBankService.CreateObject(pettyCash);
 
             cashBankAdjustment = new CashBankAdjustment()
             {
@@ -1795,7 +1804,6 @@ namespace TestValidation
                 CashBankId = cashBank.Id,
                 ReceiptDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
-                IsBank = true,
                 DueDate = DateTime.Today.AddDays(14),
                 TotalAmount = si1.AmountReceivable + si2.AmountReceivable + si3.AmountReceivable
             };
@@ -2090,7 +2098,6 @@ namespace TestValidation
                 CashBankId = cashBank.Id,
                 PaymentDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
-                IsBank = true,
                 DueDate = DateTime.Today.AddDays(14),
                 TotalAmount = pi1.AmountPayable + pi2.AmountPayable + pi3.AmountPayable
             };

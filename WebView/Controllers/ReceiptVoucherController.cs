@@ -102,7 +102,6 @@ namespace WebView.Controllers
                             model.ReceiptDate,
                             model.IsGBCH,
                             model.DueDate,
-                            model.IsBank,
                             model.TotalAmount,
                             model.IsReconciled,
                             model.ReconciliationDate,
@@ -242,7 +241,6 @@ namespace WebView.Controllers
                 model.ReceiptDate,
                 model.IsGBCH,
                 model.DueDate,
-                model.IsBank,
                 model.TotalAmount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
@@ -326,7 +324,6 @@ namespace WebView.Controllers
                 data.ReceiptDate = model.ReceiptDate;
                 data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
-                data.IsBank = model.IsBank;
                 data.TotalAmount = model.TotalAmount;
                 model = _receiptVoucherService.UpdateObject(data,_receiptVoucherDetailService,_receivableService,
                     _contactService,_cashBankService);

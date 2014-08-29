@@ -265,7 +265,8 @@ namespace TestValidation
             cashBank = new CashBank()
             {
                 Name = "Rekening BRI",
-                Description = "Untuk cashflow"
+                Description = "Untuk cashflow",
+                IsBank = true
             };
             _cashBankService.CreateObject(cashBank);
 
@@ -535,7 +536,6 @@ namespace TestValidation
                 CashBankId = cashBank.Id,
                 ReceiptDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
-                IsBank = true,
                 DueDate = DateTime.Today.AddDays(14),
                 TotalAmount = si1.AmountReceivable + si2.AmountReceivable + si3.AmountReceivable
             };

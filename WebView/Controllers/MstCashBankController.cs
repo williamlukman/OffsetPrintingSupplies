@@ -68,6 +68,7 @@ namespace WebView.Controllers
                             item.Name,
                             item.Description,
                             item.Amount,
+                            item.IsBank,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -95,6 +96,7 @@ namespace WebView.Controllers
                 model.Name,
                 model.Description,
                 model.Amount,
+                model.IsBank,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

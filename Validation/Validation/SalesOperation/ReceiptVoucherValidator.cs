@@ -40,13 +40,14 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
-        public ReceiptVoucher VIfGBCHThenIsBank(ReceiptVoucher receiptVoucher)
+        public ReceiptVoucher VIfGBCHThenIsBank(ReceiptVoucher receiptVoucher, ICashBankService _cashBankService)
         {
+            CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
             if (receiptVoucher.IsGBCH)
             {
-                if (!receiptVoucher.IsBank)
+                if (!cashBank.IsBank)
                 {
-                    receiptVoucher.Errors.Add("IsBank", "Jika GBCH Harus IsBank");
+                    receiptVoucher.Errors.Add("Generic", "Jika GBCH Harus IsBank");
                 }
             }
             return receiptVoucher;
@@ -200,7 +201,7 @@ namespace Validation.Validation
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasReceiptDate(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
-            VIfGBCHThenIsBank(receiptVoucher);
+            VIfGBCHThenIsBank(receiptVoucher, _cashBankService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VIfGBCHThenHasDueDate(receiptVoucher);
             return receiptVoucher;

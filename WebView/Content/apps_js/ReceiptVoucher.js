@@ -52,7 +52,7 @@
         url: base_url + 'ReceiptVoucher/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Receipt Date',
-                   'Is GBCH', 'Due Date', 'Is Bank', 'Total Amount', 'Is Reconciled', 'ReconciliationDate',
+                   'Is GBCH', 'Due Date', 'Total Amount', 'Is Reconciled', 'ReconciliationDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -64,7 +64,6 @@
                   { name: 'receiptdate', index: 'receiptdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isgbch', index: 'isgbch', width: 45 },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isbank', index: 'isbank', width: 40 },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isreconciled', index: 'isreconciled', width: 100, hidden: true },
                   { name: 'reconciliationdate', index: 'reconciliationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -105,14 +104,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isgbch: rowIsGBCH });
 
-		          rowIsBank = $(this).getRowData(cl).isbank;
-		          if (rowIsBank == 'true') {
-		              rowIsBank = "YES";
-		          } else {
-		              rowIsBank = "NO";
-		          }
-		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
-
 		          rowIsReconciled = $(this).getRowData(cl).isreconciled;
 		          if (rowIsReconciled == 'true') {
 		              rowIsReconciled = "YES";
@@ -148,7 +139,6 @@
         $('#btnCashBank').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
-        $('#IsBank').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#ReceiptDateDiv').show();
         $('#ReceiptDateDiv2').hide();
@@ -195,13 +185,6 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            var f = document.getElementById("IsBank");
-                            if (result.IsBank == true) {
-                                f.selectedIndex = 0;
-                            }
-                            else {
-                                f.selectedIndex = 1;
-                            }
                             $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
                             $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -215,7 +198,6 @@
                             $('#btnCashBank').attr('disabled', true);
                             $('#TotalAmount').attr('disabled', true);
                             $('#IsGBCH').attr('disabled', true);
-                            $('#IsBank').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -266,13 +248,6 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            var f = document.getElementById("IsBank");
-                            if (result.IsBank == true) {
-                                f.selectedIndex = 0;
-                            }
-                            else {
-                                f.selectedIndex = 1;
-                            }
                             $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
                             $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -286,7 +261,6 @@
                             $('#btnCashBank').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
-                            $('#IsBank').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_div').dialog('open');
                         }
@@ -540,8 +514,6 @@
 
         var e = document.getElementById("IsGBCH");
         var gbch = e.options[e.selectedIndex].value;
-        var f = document.getElementById("IsBank");
-        var bank = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
@@ -549,7 +521,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, IsBank: bank, TotalAmount: $("#TotalAmount").numberbox('getValue'),
+                IsGBCH: gbch, TotalAmount: $("#TotalAmount").numberbox('getValue'),
                 ReceiptDate: $('#ReceiptDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,

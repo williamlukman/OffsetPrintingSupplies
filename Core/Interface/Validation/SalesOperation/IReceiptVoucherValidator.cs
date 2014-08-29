@@ -12,7 +12,7 @@ namespace Core.Interface.Validation
         ReceiptVoucher VHasContact(ReceiptVoucher receiptVoucher, IContactService _contactService);
         ReceiptVoucher VHasCashBank(ReceiptVoucher receiptVoucher, ICashBankService _cashBankService);
         ReceiptVoucher VHasReceiptDate(ReceiptVoucher receiptVoucher);
-        ReceiptVoucher VIfGBCHThenIsBank(ReceiptVoucher receiptVoucher);
+        ReceiptVoucher VIfGBCHThenIsBank(ReceiptVoucher receiptVoucher, ICashBankService _cashBankService);
         ReceiptVoucher VIfGBCHThenHasDueDate(ReceiptVoucher receiptVoucher);
         ReceiptVoucher VHasNoReceiptVoucherDetail(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);
         ReceiptVoucher VHasReceiptVoucherDetails(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService);

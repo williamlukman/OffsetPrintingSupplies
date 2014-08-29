@@ -80,8 +80,8 @@
     <Compile Include="Mapping\StockAndMaster\StockAdjustmentDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\StockAdjustmentMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\StockMutationMapping.cs" />
-    <Compile Include="Mapping\StockAndMaster\WarehouseMutationOrderDetailMapping.cs" />
-    <Compile Include="Mapping\StockAndMaster\WarehouseMutationOrderMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\WarehouseMutationDetailMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\WarehouseMutationMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\WarehouseMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\WarehouseItemMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ItemMapping.cs" />

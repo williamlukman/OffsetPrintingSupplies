@@ -98,7 +98,6 @@ namespace WebView.Controllers
                             model.PaymentDate,
                             model.IsGBCH,
                             model.DueDate,
-                            model.IsBank,
                             model.TotalAmount,
                             model.IsReconciled,
                             model.ReconciliationDate,
@@ -238,7 +237,6 @@ namespace WebView.Controllers
                 model.PaymentDate,
                 model.IsGBCH,
                 model.DueDate,
-                model.IsBank,
                 model.TotalAmount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
@@ -322,7 +320,6 @@ namespace WebView.Controllers
                 data.PaymentDate = model.PaymentDate;
                 data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
-                data.IsBank = model.IsBank;
                 data.TotalAmount = model.TotalAmount;
                 model = _paymentVoucherService.UpdateObject(data,_paymentVoucherDetailService,_payableService,
                     _contactService,_cashBankService);

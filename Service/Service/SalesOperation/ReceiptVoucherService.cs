@@ -70,8 +70,7 @@ namespace Service.Service
                 ReceiptDate = receiptDate,
                 TotalAmount = totalAmount,
                 IsGBCH = IsGBCH,
-                DueDate = DueDate,
-                IsBank = IsBank
+                DueDate = DueDate
             };
             return this.CreateObject(receiptVoucher, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
         }
