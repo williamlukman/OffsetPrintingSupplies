@@ -76,7 +76,7 @@
                    'Is GBCH', 'GBCH No.', 'GBCH Due Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
 				   'Total', 'CoGS', 'Warehouse ID', 'Warehouse Name',
-				   'Created At', 'Updated At', 'RetailSalesInvoiceDetails'],
+				   'Created At', 'Updated At'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
