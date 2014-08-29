@@ -91,5 +91,16 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
+        public decimal GetTotalRemainingAmountByDueDate(DateTime DueDate)
+        {
+            IList<Payable> payables = GetObjectsByDueDate(DueDate);
+            decimal Total = 0;
+            foreach (var payable in payables)
+            {
+                Total += payable.RemainingAmount;
+            }
+            return Total;
+        }
+
     }
 }

@@ -447,29 +447,29 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic Check(CustomPurchaseInvoice model)
         {
+            Dictionary<string, string> Errors = new Dictionary<string, string>();
             try
             {
                 var data = _customPurchaseInvoiceService.GetObjectById(model.Id);
-                //var cashbank = _cashBankService
-                //var receivable = _receivableService
-                //var payable = _payableService
+                decimal cashbank = _cashBankService.GetTotalCashBank();
+                decimal receivable = _receivableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
+                decimal payable = _payableService.GetTotalRemainingAmountByDueDate(model.DueDate.GetValueOrDefault());
+
+                if ((cashbank + receivable) - payable < ((model.Total * (100 - model.Discount) / 100) * (100 - model.Tax) / 100))
+                {
+                    Errors.Add("Generic", "Dana tidak tersedia");
+                }
             }
             catch (Exception ex)
             {
-                LOG.Error("Confirm Failed", ex);
-                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                LOG.Error("Check Funds Failed", ex);
                 Errors.Add("Generic", "Error " + ex);
-
-                return Json(new
-                {
-                    Errors
-                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
             {
-                model.Errors
-            });
+                Errors
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

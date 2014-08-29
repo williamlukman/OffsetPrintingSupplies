@@ -84,5 +84,16 @@ namespace Service.Service
             return (cashbanks.Count() > 0 ? true : false);
         }
 
+        public decimal GetTotalCashBank()
+        {
+            IList<CashBank> cashBanks = GetAll();
+            decimal Total = 0;
+            foreach (var cashBank in cashBanks)
+            {
+                Total += cashBank.Amount;
+            }
+            return Total;
+        }
+
     }
 }

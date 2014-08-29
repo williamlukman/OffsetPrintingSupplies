@@ -21,5 +21,6 @@ namespace Core.Interface.Service
         Payable UpdateObject(Payable payable);
         Payable SoftDeleteObject(Payable payable);
         bool DeleteObject(int Id);
+        decimal GetTotalRemainingAmountByDueDate(DateTime DueDate);
     }
 }

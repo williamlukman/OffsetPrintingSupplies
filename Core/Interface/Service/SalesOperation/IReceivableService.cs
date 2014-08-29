@@ -21,5 +21,6 @@ namespace Core.Interface.Service
         Receivable UpdateObject(Receivable receivable);
         Receivable SoftDeleteObject(Receivable receivable);
         bool DeleteObject(int Id);
+        decimal GetTotalRemainingAmountByDueDate(DateTime DueDate);
     }
 }
