@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
     public interface IPurchaseInvoiceDetailValidator
     {
         PurchaseInvoiceDetail VHasPurchaseInvoice(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService);
+        PurchaseInvoiceDetail VPurchaseInvoiceHasNotBeenConfirmed(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService);
         PurchaseInvoiceDetail VHasPurchaseReceivalDetail(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseInvoiceDetail VPurchaseReceivalDetailAndPurchaseInvoiceMustHaveTheSamePurchaseReceival(PurchaseInvoiceDetail purchaseInvoiceDetail,
                                                          IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseInvoiceService purchaseInvoiceService);

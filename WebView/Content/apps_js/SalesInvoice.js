@@ -41,6 +41,7 @@
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_deliveryorder").dialog('close');
+    $("#lookup_div_warehouse").dialog('close');
     $("#delete_confirm_div").dialog('close');
 
 
@@ -48,24 +49,24 @@
     $("#list").jqGrid({
         url: base_url + 'SalesInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'DeliveryOrder Id', 'DeliveryOrder Code', 'Description', 'Discount(%)', 'Tax',
-                   'Invoice Date', 'Due Date', 'Amount Payable',
+        colNames: ['ID', 'Code', 'Delivery Order Id', 'DO', 'Description', 'Disc(%)', 'Tax',
+                   'Invoice Date', 'Due Date', 'Amount Receivable',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'deliveryorderid', index: 'deliveryorderid', width: 100 },
-                  { name: 'deliveryorder', index: 'deliveryorder', width: 100 },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
+                  { name: 'code', index: 'code', width: 70 },
+				  { name: 'deliveryorderid', index: 'deliveryorderid', width: 100, hidden: true },
+                  { name: 'deliveryorder', index: 'deliveryorder', width: 70 },
                   { name: 'description', index: 'description', width: 100 },
-                  { name: 'discount', index: 'discount', width: 100, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'istax', index: 'istax', width: 100 },
+                  { name: 'discount', index: 'discount', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'istax', index: 'istax', width: 30 },
                   { name: 'invoicedate', index: 'invoicedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'amountpayable', index: 'amountpayable', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
+                  { name: 'amountreceivable', index: 'amountreceivable', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -449,16 +450,17 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'DeliveryOrder Detail Id', 'DeliveryOrder Detail Code', 'Item Id', 'Item Name', 'Quantity', 'Amount'
+        colNames: ['Code', 'Delivery Order Id', 'DOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount'
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'deliveryorderdetailid', index: 'deliveryorderdetailid', width: 130, sortable: false, hidden: true },
-                  { name: 'deliveryorderdetailcode', index: 'deliveryorderdetailcode', width: 130, sortable: false },
-                  { name: 'itemid', index: 'itemid', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'deliveryorderdetailid', index: 'deliveryorderdetailid', width: 70, sortable: false, hidden: true },
+                  { name: 'deliveryorderdetailcode', index: 'deliveryorderdetailcode', width: 70, sortable: false },
+                  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -510,7 +512,7 @@
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
                             $('#Price').val(result.Price);
-                            $('#PurchaseOrderDetailId').val(result.PurchaseOrderDetailId);
+                            $('#SalesOrderDetailId').val(result.SalesOrderDetailId);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -634,14 +636,14 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'PurchaseOrder Id', 'PurchaseOrder Code', 'ReceivalDate', 'Warehouse Id', 'Warehouse Name',
+        colNames: ['ID', 'Code', 'SalesOrder Id', 'SalesOrder Code', 'Delivery Date', 'Warehouse Id', 'Warehouse Name',
                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100 },
-                  { name: 'purchaseorder', index: 'purchaseorder', width: 100 },
-                  { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'salesorderid', index: 'salesorderid', width: 100 },
+                  { name: 'salesorder', index: 'salesorder', width: 100 },
+                  { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'warehouseid', index: 'warehouseid', width: 100 },
                   { name: 'warehousename', index: 'warehousename', width: 100 },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
@@ -700,15 +702,16 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Purchase Order Detail Id', 'Purchase Order Detail Code', 'Item Id', 'Item Name', 'Quantity',
+        colNames: ['Code', 'Sales Order Detail Id', 'POD', 'Item Id', 'Item Sku', 'Name', 'QTY',
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 100, sortable: false },
-                  { name: 'purchaseorderdetailid', index: 'purchaseorderdetailid', width: 100, sortable: false, hidden: true },
-                  { name: 'purchaseorderdetailcode', index: 'purchaseorderdetailcode', width: 100, sortable: false },
-                  { name: 'itemid', index: 'itemid', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'salesorderdetailid', index: 'salesorderdetailid', width: 100, sortable: false, hidden: true },
+                  { name: 'salesorderdetailcode', index: 'salesorderdetailcode', width: 70, sortable: false },
+                  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         page: '1',
         pager: $('#lookup_pager_item'),

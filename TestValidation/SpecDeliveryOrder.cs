@@ -127,8 +127,6 @@ namespace TestValidation
                 };
 
                 item_batiktulis = _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                _itemService.AdjustQuantity(item_batiktulis, 1000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_batiktulis.Id), 1000);
 
                 item_busway = new Item()
                 {
@@ -139,8 +137,6 @@ namespace TestValidation
                     UoMId = Pcs.Id
                 };
                 item_busway = _itemService.CreateObject(item_busway, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                _itemService.AdjustQuantity(item_busway, 200);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_busway.Id), 200);
 
                 item_botolaqua = new Item()
                 {
@@ -151,8 +147,35 @@ namespace TestValidation
                     UoMId = Pcs.Id
                 };
                 item_botolaqua = _itemService.CreateObject(item_botolaqua, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                _itemService.AdjustQuantity(item_botolaqua, 20000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_botolaqua.Id), 20000);
+
+                StockAdjustment sa = new StockAdjustment() { AdjustmentDate = DateTime.Today, WarehouseId = warehouse.Id, Description = "item adjustment" };
+                _stockAdjustmentService.CreateObject(sa, _warehouseService);
+                StockAdjustmentDetail sadBatikTulis = new StockAdjustmentDetail()
+                {
+                    ItemId = item_batiktulis.Id,
+                    Quantity = 1000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadBatikTulis, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                StockAdjustmentDetail sadBusWay = new StockAdjustmentDetail()
+                {
+                    ItemId = item_busway.Id,
+                    Quantity = 200,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadBusWay, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                StockAdjustmentDetail sadBotolAqua = new StockAdjustmentDetail()
+                {
+                    ItemId = item_botolaqua.Id,
+                    Quantity = 20000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadBotolAqua, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
+                                                      _itemService, _barringService, _warehouseItemService);
 
                 salesOrder1 = _salesOrderService.CreateObject(contact.Id, new DateTime(2014, 07, 09), _contactService);
                 salesOrder2 = _salesOrderService.CreateObject(contact.Id, new DateTime(2014, 04, 09), _contactService);

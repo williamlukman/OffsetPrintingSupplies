@@ -23,31 +23,18 @@ namespace OffsetPrintingSupplies
                 db.DeleteAllTables();
 
                 DataBuilder d = new DataBuilder();
-                //PurchaseBuilder p = new PurchaseBuilder();
-               // SalesBuilder s = new SalesBuilder();
+        
+                DataFunction(d);
+        
+                Console.WriteLine("Press any key to stop...");
+                Console.ReadKey();
 
-                  DataFunction(d);
-                //SalesFunction(s);
-                //PurchaseFunction(p);
             }
         }
-
-        //public static void PurchaseFunction(PurchaseBuilder p)
-        //{
-        //    p.PopulateData();
-        //}
-
-        //public static void SalesFunction(SalesBuilder s)
-        //{
-        //    s.PopulateData();
-        //}
 
         public static void DataFunction(DataBuilder d)
         {
             d.PopulateData();
-
-            Console.WriteLine("Press any key to stop...");
-            Console.ReadKey();
         }
     }
 }

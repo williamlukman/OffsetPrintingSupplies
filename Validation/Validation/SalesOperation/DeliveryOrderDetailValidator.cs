@@ -99,10 +99,11 @@ namespace Validation.Validation
                     totalDeliveryQuantity += detail.Quantity;
                 }
             }
-            if (CaseCreate) { totalDeliveryQuantity += salesOrderDetail.Quantity; }
+            if (CaseCreate) { totalDeliveryQuantity += deliveryOrderDetail.Quantity; }
             if (totalDeliveryQuantity > salesOrderDetail.PendingDeliveryQuantity)
             {
-                deliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + salesOrderDetail.PendingDeliveryQuantity);
+                int maxquantity = salesOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + deliveryOrderDetail.Quantity;
+                deliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
             }
             return deliveryOrderDetail;
         }

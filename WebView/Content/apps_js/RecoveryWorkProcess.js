@@ -50,36 +50,38 @@
     $("#list").jqGrid({
         url: base_url + 'RecoveryWorkProcess/GetList',
         datatype: "json",
-        colNames: ['Recovery Order Id','CoreIdentificationDetailId', 'RIFD Id', 'Material Case', 'RollerBuilder Id', 'RollerBuilder Sku', 'RollerBuilder Name',
-                   'CoreTypeCase', 'Acc', 'RepairRequestCase',
-                   'IsDisassembled', 'IsStrippedAndGlued', 'IsWrapped', 'CompoundUsage',
-                   'IsVulcanized', 'IsFacedOff', 'IsConventionalGrinded', 'IsCWCGrinded',
-                   'IsPolishedAndQC','IsPackaged',
-                   'Rejected Date', 'Finished Date'
+        colNames: ['RWO Id', 'RIF Id', 'CoreIdentificationDetailId', 'Material', 'Roller Id', 'Roller Sku', 'Roller Name',
+                   'Core Type', 'Acc', 'Repair Request',
+                   'D', 'S&G', 'W', 'Comp',
+                   'V', 'FO', 'CG', 'CWCG',
+                   'P&QC', 'P', 'Rejected Date', 'Finished Date',
+                   'Created At', 'Updated At'
         ],
         colModel: [
-                  { name: 'recoveryorderid', index: 'recoveryorderid', width: 100, sortable: false },
-                  { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 100, sortable: false },
-                  { name: 'rifdid', index: 'rollerbuilderid', width: 100, sortable: false },
-                  { name: 'materialcase', index: 'rollerbuildername', width: 100, sortable: false },
-                  { name: 'rollerbuilderid', index: 'rollerbuildername', width: 100, sortable: false },
-                  { name: 'rollerbuildersku', index: 'rollerbuildername', width: 100, sortable: false },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
-				  { name: 'coretypecase', index: 'coretypecase', width: 100, sortable: false },
-                  { name: 'acc', index: 'acc', width: 100, sortable: false },
+                  { name: 'recoveryorderid', index: 'recoveryorderid', width: 40, sortable: false },
+                  { name: 'rifdid', index: 'rollerbuilderid', width: 100, sortable: false, hidden: true },
+                  { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 100, sortable: false, hidden: true },
+                  { name: 'materialcase', index: 'rollerbuildername', width: 60, sortable: false },
+                  { name: 'rollerbuilderid', index: 'rollerbuildername', width: 100, sortable: false, hidden: true},
+                  { name: 'rollerbuildersku', index: 'rollerbuildername', width: 70, sortable: false },
+                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 80, sortable: false },
+				  { name: 'coretypecase', index: 'coretypecase', width: 60, align: 'right', sortable: false },
+                  { name: 'acc', index: 'acc', width: 20, align: 'right', sortable: false },
                   { name: 'repairrequestcase', index: 'repairrequestcase', width: 100, sortable: false },
-                  { name: 'isdisassembled', index: 'isdisassembled', width: 100, sortable: false },
-                  { name: 'isstrippedangGlued', index: 'isstrippedangGlued', width: 100, sortable: false },
-                  { name: 'iswrapped', index: 'iswrapped', width: 100, sortable: false },
-                  { name: 'compoundusage', index: 'compoundusage', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isvulcanized', index: 'isvulcanized', width: 100, sortable: false },
-                  { name: 'isfacedoff', index: 'isfacedoff', width: 100, sortable: false },
-                  { name: 'isconventionalgrinded', index: 'isconventionalgrinded', width: 100, sortable: false },
-                  { name: 'iscwcgrinded', index: 'iscwcgrinded', width: 100, sortable: false },
-                  { name: 'ispolishedandqc', index: 'ispolishedandqc', width: 100, sortable: false },
-                  { name: 'ispackaged', index: 'ispackaged', width: 100, sortable: false },
-                  { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isdisassembled', index: 'isdisassembled', width: 20, sortable: false },
+                  { name: 'isstrippedangGlued', index: 'isstrippedangGlued', width: 30, sortable: false },
+                  { name: 'iswrapped', index: 'iswrapped', width: 20, sortable: false },
+                  { name: 'compoundusage', index: 'compoundusage', width: 50, align:'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'isvulcanized', index: 'isvulcanized', width: 20, sortable: false },
+                  { name: 'isfacedoff', index: 'isfacedoff', width: 20, sortable: false },
+                  { name: 'isconventionalgrinded', index: 'isconventionalgrinded', width: 20, sortable: false },
+                  { name: 'iscwcgrinded', index: 'iscwcgrinded', width: 35, sortable: false },
+                  { name: 'ispolishedandqc', index: 'ispolishedandqc', width: 35, sortable: false },
+                  { name: 'ispackaged', index: 'ispackaged', width: 20, sortable: false },
+                  { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'createdat', index: 'createdat', sortable: false, search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'updatedat', index: 'updatedat', sortable: false, search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 
         ],
         page: '1',
@@ -98,13 +100,77 @@
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
-		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		          rowIsDisassembled = $(this).getRowData(cl).isdisassembled;
+		          if (rowIsDisassembled == 'true') {
+		              rowIsDisassembled = "Y";
 		          } else {
-		              rowIsConfirmed = "NO";
+		              rowIsDisassembled = "N";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
+		          $(this).jqGrid('setRowData', ids[i], { isdisassembled: rowIsDisassembled });
+
+		          rowIsStrippedAndGlued = $(this).getRowData(cl).isstrippedangGlued;
+		          if (rowIsStrippedAndGlued == 'true') {
+		              rowIsStrippedAndGlued = "Y";
+		          } else {
+		              rowIsStrippedAndGlued = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isstrippedangGlued: rowIsStrippedAndGlued });
+
+		          rowIsWrapped = $(this).getRowData(cl).iswrapped;
+		          if (rowIsWrapped == 'true') {
+		              rowIsWrapped = "Y";
+		          } else {
+		              rowIsWrapped = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { iswrapped: rowIsWrapped });
+
+		          rowIsVulcanized = $(this).getRowData(cl).isvulcanized;
+		          if (rowIsVulcanized == 'true') {
+		              rowIsVulcanized = "Y";
+		          } else {
+		              rowIsVulcanized = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isvulcanized: rowIsVulcanized });
+
+		          rowIsFacedOff = $(this).getRowData(cl).isfacedoff;
+		          if (rowIsFacedOff == 'true') {
+		              rowIsFacedOff = "Y";
+		          } else {
+		              rowIsFacedOff = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isfacedoff: rowIsFacedOff });
+
+		          rowIsConventionalGrinded = $(this).getRowData(cl).isconventionalgrinded;
+		          if (rowIsConventionalGrinded == 'true') {
+		              rowIsConventionalGrinded = "Y";
+		          } else {
+		              rowIsConventionalGrinded = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isconventionalgrinded: rowIsConventionalGrinded });
+
+		          rowIsCWCGrinded = $(this).getRowData(cl).iscwcgrinded;
+		          if (rowIsCWCGrinded == 'true') {
+		              rowIsCWCGrinded = "Y";
+		          } else {
+		              rowIsCWCGrinded = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { iscwcgrinded: rowIsCWCGrinded });
+
+		          rowIsPolishedAndQC = $(this).getRowData(cl).ispolishedandqc;
+		          if (rowIsPolishedAndQC == 'true') {
+		              rowIsPolishedAndQC = "Y";
+		          } else {
+		              rowIsPolishedAndQC = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ispolishedandqc: rowIsPolishedAndQC });
+
+		          rowIsPackaged = $(this).getRowData(cl).ispackaged;
+		          if (rowIsPackaged == 'true') {
+		              rowIsPackaged = "Y";
+		          } else {
+		              rowIsPackaged = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ispackaged: rowIsPackaged });
 		      }
 		  }
 
@@ -162,6 +228,24 @@
                             document.getElementById("IsCWCGrinded").checked = result.IsCWCGrinded;
                             document.getElementById("IsPolishedAndQC").checked = result.IsPolishedAndQC;
                             document.getElementById("IsPackaged").checked = result.IsPackaged;
+                            if (result.IsDisassembled) { $('#IsDisassembled').attr('disabled', true); } else { $('#IsDisassembled').removeAttr('disabled'); }
+                            if (result.IsStrippedAndGlued) { $('#IsStrippedAndGlued').attr('disabled', true); } else { $('#IsStrippedAndGlued').removeAttr('disabled'); }
+                            if (result.IsWrapped)
+                            {
+                                $('#IsWrapped').attr('disabled', true);
+                                $('#CompoundUsage').attr('disabled', true);
+                            }
+                            else 
+                            {
+                                $('#IsWrapped').removeAttr('disabled');
+                                $('#CompoundUsage').removeAttr('disabled');
+                            }
+                            if (result.IsVulcanized) { $('#IsVulcanized').attr('disabled', true); } else { $('#IsVulcanized').removeAttr('disabled'); }
+                            if (result.IsFacedOff) { $('#IsFacedOff').attr('disabled', true); } else { $('#IsFacedOff').removeAttr('disabled'); }
+                            if (result.IsConventionalGrinded) { $('#IsConventionalGrinded').attr('disabled', true); } else { $('#IsConventionalGrinded').removeAttr('disabled'); }
+                            if (result.IsCWCGrinded) { $('#IsCWCGrinded').attr('disabled', true); } else { $('#IsCWCGrinded').removeAttr('disabled'); }
+                            if (result.IsPolishedAndQC) { $('#IsPolishedAndQC').attr('disabled', true); } else { $('#IsPolishedAndQC').removeAttr('disabled'); }
+                            if (result.IsPackaged) { $('#IsPackaged').attr('disabled', true); } else { $('#IsPackaged').removeAttr('disabled'); }
                             $('#process_div').show();
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
@@ -459,12 +543,13 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['ItemId', 'ItemName', 'Quantity', 
+        colNames: ['Id', 'Sku', 'Name', 'QTY', 
         ],
         colModel: [
-                  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 100, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'itemid', index: 'itemid', width: 40, sortable: false },
+                  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         //page: '1',
         //pager: $('#pageraccessory'),
@@ -513,6 +598,7 @@
                         else {
                             $("#accessory_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId);
+                            $('#ItemSku').val(result.ItemSku);
                             $('#Item').val(result.Item);
                             $('#Quantity').numberbox('setValue', (result.Quantity));
                             $('#accessory_div').dialog('open');
@@ -803,9 +889,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Sku', 'Name'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'id', index: 'id', width: 40, align: 'right' },
+                  { name: 'sku', index: 'sku', width: 70, align: 'right' },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_item'),
@@ -834,6 +921,7 @@
             var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
 
             $('#ItemId').val(ret.id).data("kode", id);
+            $('#ItemSku').val(ret.sku);
             $('#Item').val(ret.name);
 
             $('#lookup_div_item').dialog('close');

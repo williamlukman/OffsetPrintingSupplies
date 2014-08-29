@@ -38,6 +38,8 @@ namespace TestValidation
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
+        IStockAdjustmentService _stockAdjustmentService;
+        IStockAdjustmentDetailService _stockAdjustmentDetailService;
 
         IPriceMutationService _priceMutationService;
         IContactGroupService _contactGroupService;
@@ -58,6 +60,8 @@ namespace TestValidation
                 _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
                 _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
                 _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
+                _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+                _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
                 _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
                 _uomService = new UoMService(new UoMRepository(), new UoMValidator());
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
@@ -105,8 +109,6 @@ namespace TestValidation
                     UoMId = Pcs.Id
                 };
                 _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                _itemService.AdjustQuantity(item_batiktulis, 1000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_batiktulis.Id), 1000);
 
                 item_sepatubola = new Item()
                 {
@@ -117,8 +119,28 @@ namespace TestValidation
                     UoMId = Pcs.Id
                 };
                 _itemService.CreateObject(item_sepatubola, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                _itemService.AdjustQuantity(item_sepatubola, 1000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item_sepatubola.Id), 1000);
+
+                StockAdjustment sa = new StockAdjustment() { AdjustmentDate = DateTime.Today, WarehouseId = warehouse.Id, Description = "item adjustment" };
+                _stockAdjustmentService.CreateObject(sa, _warehouseService);
+                StockAdjustmentDetail sadSepatuBola = new StockAdjustmentDetail()
+                {
+                    ItemId = item_sepatubola.Id,
+                    Quantity = 1000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadSepatuBola, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                StockAdjustmentDetail sadBatikTulis = new StockAdjustmentDetail()
+                {
+                    ItemId = item_batiktulis.Id,
+                    Quantity = 1000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadBatikTulis, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
+                                                      _itemService, _barringService, _warehouseItemService);
+
             }
         }
 

@@ -112,7 +112,8 @@ namespace Validation.Validation
             if (CaseCreate) { totalReceivalQuantity += purchaseReceivalDetail.Quantity; }
             if (totalReceivalQuantity > purchaseOrderDetail.PendingReceivalQuantity)
             {
-                purchaseReceivalDetail.Errors.Add("Generic", "Quantity maximum adalah " + purchaseOrderDetail.PendingReceivalQuantity);
+                int maxquantity = purchaseOrderDetail.PendingReceivalQuantity - totalReceivalQuantity + purchaseReceivalDetail.Quantity;
+                purchaseReceivalDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
             }
             return purchaseReceivalDetail;
         }

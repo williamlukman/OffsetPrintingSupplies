@@ -9,8 +9,8 @@ namespace Core.Interface.Validation
 {
     public interface IRetailPurchaseInvoiceDetailValidator
     {
-        RetailPurchaseInvoiceDetail VIsNotConfirmed(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService);
         RetailPurchaseInvoiceDetail VHasRetailPurchaseInvoice(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService);
+        RetailPurchaseInvoiceDetail VRetailPurchaseInvoiceHasNotBeenConfirmed(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService);
         RetailPurchaseInvoiceDetail VHasItem(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IItemService _itemService);
         RetailPurchaseInvoiceDetail VUniqueItem(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceDetailService _retailPurchaseInvoiceDetailService, IItemService _itemService);
         RetailPurchaseInvoiceDetail VIsValidQuantityOrdered(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService, IWarehouseItemService _warehouseItemService);

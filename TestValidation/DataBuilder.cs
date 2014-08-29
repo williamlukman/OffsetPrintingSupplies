@@ -66,6 +66,9 @@ namespace TestValidation
         public IPriceMutationService _priceMutationService;
         public IContactGroupService _contactGroupService;
 
+        public CashBank cashBank, pettyCash;
+        public CashBankAdjustment cashBankAdjustment;
+
         public ContactGroup baseGroup;
         public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
@@ -107,6 +110,26 @@ namespace TestValidation
         public int usedCoreBuilderFinal, usedCoreBuilder1Final, usedCoreBuilder2Final, usedCoreBuilder3Final, usedCoreBuilder4Final;
         public int usedRollerBuilderFinal, usedRollerBuilder1Final, usedRollerBuilder2Final, usedRollerBuilder3Final, usedRollerBuilder4Final;
         public int accessory1quantity;
+
+        // purchase
+        public PurchaseOrder po1, po2;
+        public PurchaseOrderDetail po1a, po1b, po1c, po2a, po2b;
+        public PurchaseReceival pr1, pr2, pr3;
+        public PurchaseReceivalDetail pr1a, pr1b, pr2a, pr2b, pr1a2, pr1c;
+        public PurchaseInvoice pi1, pi2, pi3;
+        public PurchaseInvoiceDetail pi1a, pi1b, pi2a, pi2b, pi1a2, pi1c;
+        public PaymentVoucher pv;
+        public PaymentVoucherDetail pvd1, pvd2, pvd3;
+
+        // sales
+        public SalesOrder so1, so2;
+        public SalesOrderDetail so1a, so1b, so1c, so2a, so2b;
+        public DeliveryOrder do1, do2, do3;
+        public DeliveryOrderDetail do1a, do1b, do2a, do2b, do1a2, do1c;
+        public SalesInvoice si1, si2, si3;
+        public SalesInvoiceDetail si1a, si1b, si2a, si2b, si1a2, si1c;
+        public ReceiptVoucher rv;
+        public ReceiptVoucherDetail rvd1, rvd2, rvd3;
 
         public DataBuilder()
         {
@@ -206,6 +229,16 @@ namespace TestValidation
             PopulateCoreIdentifications2();
             PopulateRollerWarehouseMutation();
             PopulateBarringOrders();
+
+            // @SalesBuilder
+            PopulateSalesAndDelivery();
+            PopulateSalesInvoice();
+            PopulateReceiptVoucher();
+
+            // @PurchaseBuilder
+            PopulatePurchaseOrderAndPurchaseReceival();
+            PopulatePurchaseInvoice();
+            PopulatePaymentVoucher();
         }
 
         public void PopulateWarehouse()
@@ -363,6 +396,22 @@ namespace TestValidation
                 Description = "Generic"
             };
             machine = _machineService.CreateObject(machine);
+
+            cashBank = new CashBank()
+            {
+                Name = "Rekening BRI",
+                Description = "Untuk cashflow"
+            };
+            _cashBankService.CreateObject(cashBank);
+
+            cashBankAdjustment = new CashBankAdjustment()
+            {
+                CashBankId = cashBank.Id,
+                Amount = 1000000000,
+                AdjustmentDate = DateTime.Today
+            };
+            _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService);
         }
 
         public void PopulateBuilders()
@@ -1487,6 +1536,596 @@ namespace TestValidation
                 BarringOrderId = barringOrderContact.Id
             };
             _barringOrderDetailService.CreateObject(barringODContact4, _barringOrderService, _barringService);
+        }
+
+        // @SalesBuilder
+        public void PopulateSalesAndDelivery()
+        {
+            TimeSpan purchaseDate = new TimeSpan(10, 0, 0, 0);
+            TimeSpan receivedDate = new TimeSpan(3, 0, 0 ,0);
+            TimeSpan lateDeliveryDate = new TimeSpan(2, 0, 0, 0);
+            so1 = new SalesOrder()
+            {
+                SalesDate = DateTime.Today.Subtract(purchaseDate),
+                ContactId = contact.Id
+            };
+            _salesOrderService.CreateObject(so1, _contactService);
+
+            so2 = new SalesOrder()
+            {
+                SalesDate = DateTime.Today.Subtract(purchaseDate),
+                ContactId = contact.Id
+            };
+            _salesOrderService.CreateObject(so2, _contactService);
+
+            so1a = new SalesOrderDetail()
+            {
+                ItemId = blanket1.Id,
+                SalesOrderId = so1.Id,
+                Quantity = 300,
+                Price = 50000
+            };
+            _salesOrderDetailService.CreateObject(so1a, _salesOrderService, _itemService);
+
+            so1b = new SalesOrderDetail()
+            {
+                ItemId = blanket2.Id,
+                SalesOrderId = so1.Id,
+                Quantity = 250,
+                Price = 72000
+            };
+            _salesOrderDetailService.CreateObject(so1b, _salesOrderService, _itemService);
+
+            so1c = new SalesOrderDetail()
+            {
+                ItemId = blanket3.Id,
+                SalesOrderId = so1.Id,
+                Quantity = 100,
+                Price = 100000
+            };
+            _salesOrderDetailService.CreateObject(so1c, _salesOrderService, _itemService);
+
+            so2a = new SalesOrderDetail()
+            {
+                ItemId = blanket1.Id,
+                SalesOrderId = so2.Id,
+                Quantity = 300,
+                Price = 50000
+            };
+            _salesOrderDetailService.CreateObject(so2a, _salesOrderService, _itemService);
+
+            so2b = new SalesOrderDetail()
+            {
+                ItemId = blanket2.Id,
+                SalesOrderId = so2.Id,
+                Quantity = 250,
+                Price = 72000
+            };
+            _salesOrderDetailService.CreateObject(so2b, _salesOrderService, _itemService);
+
+            _salesOrderService.ConfirmObject(so1, so1.SalesDate, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            _salesOrderService.ConfirmObject(so2, so2.SalesDate, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+
+            do1 = new DeliveryOrder()
+            {
+                SalesOrderId = so1.Id,
+                DeliveryDate = DateTime.Now.Subtract(receivedDate),
+                WarehouseId = localWarehouse.Id
+            };
+            _deliveryOrderService.CreateObject(do1, _salesOrderService, _warehouseService);
+
+            do2 = new DeliveryOrder()
+            {
+                SalesOrderId = so2.Id,
+                DeliveryDate = DateTime.Now.Subtract(receivedDate),
+                WarehouseId = localWarehouse.Id
+            };
+            _deliveryOrderService.CreateObject(do2, _salesOrderService, _warehouseService);
+
+            do1a = new DeliveryOrderDetail()
+            {
+                SalesOrderDetailId = so1a.Id,
+                DeliveryOrderId = do1.Id,
+                ItemId = so1a.ItemId,
+                Quantity = so1a.Quantity - 100
+            };
+            _deliveryOrderDetailService.CreateObject(do1a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            do1b = new DeliveryOrderDetail()
+            {
+                SalesOrderDetailId = so1b.Id,
+                DeliveryOrderId = do1.Id,
+                ItemId = so1b.ItemId,
+                Quantity = so1b.Quantity
+            };
+            _deliveryOrderDetailService.CreateObject(do1b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            do2a = new DeliveryOrderDetail()
+            {
+                SalesOrderDetailId = so2a.Id,
+                DeliveryOrderId = do2.Id,
+                ItemId = so2a.ItemId,
+                Quantity = so2a.Quantity
+            };
+            _deliveryOrderDetailService.CreateObject(do2a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            do2b = new DeliveryOrderDetail()
+            {
+                SalesOrderDetailId = so2b.Id,
+                DeliveryOrderId = do2.Id,
+                ItemId = so2b.ItemId,
+                Quantity = so2b.Quantity
+            };
+            _deliveryOrderDetailService.CreateObject(do2b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            do3 = new DeliveryOrder()
+            {
+                SalesOrderId = so1.Id,
+                DeliveryDate = DateTime.Now.Subtract(lateDeliveryDate),
+                WarehouseId = localWarehouse.Id
+            };
+            _deliveryOrderService.CreateObject(do3, _salesOrderService, _warehouseService);
+
+            do1c = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = do3.Id,
+                SalesOrderDetailId = so1c.Id,
+                Quantity = so1c.Quantity,
+                ItemId = so1c.ItemId
+            };
+            _deliveryOrderDetailService.CreateObject(do1c, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            do1a2 = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = do3.Id,
+                SalesOrderDetailId = so1a.Id,
+                Quantity = 100,
+                ItemId = so1a.ItemId
+            };
+            _deliveryOrderDetailService.CreateObject(do1a2, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+        }
+
+        public void PopulateSalesInvoice()
+        {
+            TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
+            TimeSpan lateDeliveryDate = new TimeSpan(2, 0, 0, 0);
+            _deliveryOrderService.ConfirmObject(do1, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
+                                       _itemService, _barringService, _warehouseItemService);
+            _deliveryOrderService.ConfirmObject(do2, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
+                                                   _itemService, _barringService, _warehouseItemService);
+            _deliveryOrderService.ConfirmObject(do3, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
+                                                   _stockMutationService, _itemService, _barringService, _warehouseItemService);
+
+            si1 = new SalesInvoice()
+            {
+                InvoiceDate = DateTime.Today,
+                Description = "Penjualan DO1",
+                DeliveryOrderId = do1.Id,
+                IsTaxable = true,
+                Discount = 0,
+                DueDate = DateTime.Today.AddDays(14)
+            };
+            si1 = _salesInvoiceService.CreateObject(si1, _deliveryOrderService);
+
+            si1a = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = si1.Id,
+                DeliveryOrderDetailId = do1a.Id,
+                Quantity = do1a.Quantity
+            };
+            si1a = _salesInvoiceDetailService.CreateObject(si1a, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            si1b = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = si1.Id,
+                DeliveryOrderDetailId = do1b.Id,
+                Quantity = do1b.Quantity
+            };
+            si1b = _salesInvoiceDetailService.CreateObject(si1b, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            si2 = new SalesInvoice()
+            {
+                InvoiceDate = DateTime.Today,
+                Description = "Penjualan DO2",
+                DeliveryOrderId = do2.Id,
+                IsTaxable = true,
+                Discount = 5,
+                DueDate = DateTime.Today.AddDays(14)
+            };
+            si2 = _salesInvoiceService.CreateObject(si2, _deliveryOrderService);
+
+            si2a = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = si2.Id,
+                DeliveryOrderDetailId = do2a.Id,
+                Quantity = do2a.Quantity
+            };
+            si2a = _salesInvoiceDetailService.CreateObject(si2a, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            si2b = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = si2.Id,
+                DeliveryOrderDetailId = do2b.Id,
+                Quantity = do2b.Quantity
+            };
+            si2b = _salesInvoiceDetailService.CreateObject(si2b, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            si3 = new SalesInvoice()
+            {
+                InvoiceDate = DateTime.Today,
+                Description = "Penjualan DO3",
+                DeliveryOrderId = do3.Id,
+                IsTaxable = true,
+                Discount = 0,
+                DueDate = DateTime.Today.AddDays(14)
+            };
+            si3 = _salesInvoiceService.CreateObject(si3, _deliveryOrderService);
+
+            si1a2 = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = si3.Id,
+                DeliveryOrderDetailId = do1a2.Id,
+                Quantity = do1a2.Quantity
+            };
+            si1a2 = _salesInvoiceDetailService.CreateObject(si1a2, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            si1c = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = si3.Id,
+                DeliveryOrderDetailId = do1c.Id,
+                Quantity = do1c.Quantity
+            };
+            si1c = _salesInvoiceDetailService.CreateObject(si1c, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+        }
+
+        public void PopulateReceiptVoucher()
+        {
+            _salesInvoiceService.ConfirmObject(si1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
+                                                  _deliveryOrderDetailService, _receivableService);
+            _salesInvoiceService.ConfirmObject(si2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
+                                                  _deliveryOrderDetailService, _receivableService);
+            _salesInvoiceService.ConfirmObject(si3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
+                                                  _deliveryOrderDetailService, _receivableService);
+
+            rv = new ReceiptVoucher()
+            {
+                ContactId = contact.Id,
+                CashBankId = cashBank.Id,
+                ReceiptDate = DateTime.Today.AddDays(14),
+                IsGBCH = true,
+                IsBank = true,
+                DueDate = DateTime.Today.AddDays(14),
+                TotalAmount = si1.AmountReceivable + si2.AmountReceivable + si3.AmountReceivable
+            };
+            _receiptVoucherService.CreateObject(rv, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+
+            rvd1 = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = rv.Id,
+                ReceivableId = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.SalesInvoice, si1.Id).Id,
+                Amount = si1.AmountReceivable,
+                Description = "Receipt buat Sales Invoice 1"
+            };
+            _receiptVoucherDetailService.CreateObject(rvd1, _receiptVoucherService, _cashBankService, _receivableService);
+
+            rvd2 = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = rv.Id,
+                ReceivableId = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.SalesInvoice, si2.Id).Id,
+                Amount = si2.AmountReceivable,
+                Description = "Receipt buat Sales Invoice 2"
+            };
+            _receiptVoucherDetailService.CreateObject(rvd2, _receiptVoucherService, _cashBankService, _receivableService);
+
+            rvd3 = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = rv.Id,
+                ReceivableId = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.SalesInvoice, si3.Id).Id,
+                Amount = si3.AmountReceivable,
+                Description = "Receipt buat Sales Invoice 3"
+            };
+            _receiptVoucherDetailService.CreateObject(rvd3, _receiptVoucherService, _cashBankService, _receivableService);
+
+            _receiptVoucherService.ConfirmObject(rv, DateTime.Today, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService);
+
+            _receiptVoucherService.ReconcileObject(rv, DateTime.Today.AddDays(10), _receiptVoucherDetailService, _cashMutationService, _cashBankService, _receivableService);
+        }
+
+        // @PurchaseBuilder
+        public void PopulatePurchaseOrderAndPurchaseReceival()
+        {
+            TimeSpan purchaseDate = new TimeSpan(10, 0, 0, 0);
+            TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
+            TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
+            po1 = new PurchaseOrder()
+            {
+                PurchaseDate = DateTime.Today.Subtract(purchaseDate),
+                ContactId = contact.Id
+            };
+            _purchaseOrderService.CreateObject(po1, _contactService);
+
+            po2 = new PurchaseOrder()
+            {
+                PurchaseDate = DateTime.Today.Subtract(purchaseDate),
+                ContactId = contact.Id
+            };
+            _purchaseOrderService.CreateObject(po2, _contactService);
+
+            po1a = new PurchaseOrderDetail()
+            {
+                ItemId = blanket1.Id,
+                PurchaseOrderId = po1.Id,
+                Quantity = 300,
+                Price = 50000
+            };
+            _purchaseOrderDetailService.CreateObject(po1a, _purchaseOrderService, _itemService);
+
+            po1b = new PurchaseOrderDetail()
+            {
+                ItemId = blanket2.Id,
+                PurchaseOrderId = po1.Id,
+                Quantity = 250,
+                Price = 72000
+            };
+            _purchaseOrderDetailService.CreateObject(po1b, _purchaseOrderService, _itemService);
+
+            po1c = new PurchaseOrderDetail()
+            {
+                ItemId = blanket3.Id,
+                PurchaseOrderId = po1.Id,
+                Quantity = 100,
+                Price = 100000
+            };
+            _purchaseOrderDetailService.CreateObject(po1c, _purchaseOrderService, _itemService);
+
+            po2a = new PurchaseOrderDetail()
+            {
+                ItemId = blanket1.Id,
+                PurchaseOrderId = po2.Id,
+                Quantity = 300,
+                Price = 50000
+            };
+            _purchaseOrderDetailService.CreateObject(po2a, _purchaseOrderService, _itemService);
+
+            po2b = new PurchaseOrderDetail()
+            {
+                ItemId = blanket2.Id,
+                PurchaseOrderId = po2.Id,
+                Quantity = 250,
+                Price = 72000
+            };
+            _purchaseOrderDetailService.CreateObject(po2b, _purchaseOrderService, _itemService);
+
+            _purchaseOrderService.ConfirmObject(po1, po1.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            _purchaseOrderService.ConfirmObject(po2, po2.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+
+            pr1 = new PurchaseReceival()
+            {
+                PurchaseOrderId = po1.Id,
+                ReceivalDate = DateTime.Now.Subtract(receivedDate),
+                WarehouseId = localWarehouse.Id
+            };
+            _purchaseReceivalService.CreateObject(pr1, _purchaseOrderService, _warehouseService);
+
+            pr2 = new PurchaseReceival()
+            {
+                PurchaseOrderId = po2.Id,
+                ReceivalDate = DateTime.Now.Subtract(receivedDate),
+                WarehouseId = localWarehouse.Id
+            };
+            _purchaseReceivalService.CreateObject(pr2, _purchaseOrderService, _warehouseService);
+
+            pr1a = new PurchaseReceivalDetail()
+            {
+                PurchaseOrderDetailId = po1a.Id,
+                PurchaseReceivalId = pr1.Id,
+                ItemId = po1a.ItemId,
+                Quantity = po1a.Quantity - 100
+            };
+            _purchaseReceivalDetailService.CreateObject(pr1a, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+            pr1b = new PurchaseReceivalDetail()
+            {
+                PurchaseOrderDetailId = po1b.Id,
+                PurchaseReceivalId = pr1.Id,
+                ItemId = po1b.ItemId,
+                Quantity = po1b.Quantity
+            };
+            _purchaseReceivalDetailService.CreateObject(pr1b, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+            pr2a = new PurchaseReceivalDetail()
+            {
+                PurchaseOrderDetailId = po2a.Id,
+                PurchaseReceivalId = pr2.Id,
+                ItemId = po2a.ItemId,
+                Quantity = po2a.Quantity
+            };
+            _purchaseReceivalDetailService.CreateObject(pr2a, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+            pr2b = new PurchaseReceivalDetail()
+            {
+                PurchaseOrderDetailId = po2b.Id,
+                PurchaseReceivalId = pr2.Id,
+                ItemId = po2b.ItemId,
+                Quantity = po2b.Quantity
+            };
+            _purchaseReceivalDetailService.CreateObject(pr2b, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+            pr3 = new PurchaseReceival()
+            {
+                PurchaseOrderId = po1.Id,
+                ReceivalDate = DateTime.Now.Subtract(lateReceivedDate),
+                WarehouseId = localWarehouse.Id
+            };
+            _purchaseReceivalService.CreateObject(pr3, _purchaseOrderService, _warehouseService);
+
+            pr1c = new PurchaseReceivalDetail()
+            {
+                PurchaseReceivalId = pr3.Id,
+                PurchaseOrderDetailId = po1c.Id,
+                Quantity = po1c.Quantity,
+                ItemId = po1c.ItemId
+            };
+            _purchaseReceivalDetailService.CreateObject(pr1c, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+            pr1a2 = new PurchaseReceivalDetail()
+            {
+                PurchaseReceivalId = pr3.Id,
+                PurchaseOrderDetailId = po1a.Id,
+                Quantity = 100,
+                ItemId = po1a.ItemId
+            };
+            _purchaseReceivalDetailService.CreateObject(pr1a2, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+        }
+
+        public void PopulatePurchaseInvoice()
+        {
+            TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
+            TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
+            _purchaseReceivalService.ConfirmObject(pr1, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
+                                       _itemService, _barringService, _warehouseItemService);
+            _purchaseReceivalService.ConfirmObject(pr2, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
+                                                   _itemService, _barringService, _warehouseItemService);
+            _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService,
+                                                   _stockMutationService, _itemService, _barringService, _warehouseItemService);
+
+            pi1 = new PurchaseInvoice()
+            {
+                InvoiceDate = DateTime.Today,
+                Description = "Pembayaran PR1",
+                PurchaseReceivalId = pr1.Id,
+                IsTaxable = true,
+                Discount = 0,
+                DueDate = DateTime.Today.AddDays(14)
+            };
+            pi1 = _purchaseInvoiceService.CreateObject(pi1, _purchaseReceivalService);
+
+            pi1a = new PurchaseInvoiceDetail()
+            {
+                PurchaseInvoiceId = pi1.Id,
+                PurchaseReceivalDetailId = pr1a.Id,
+                Quantity = pr1a.Quantity
+            };
+            pi1a = _purchaseInvoiceDetailService.CreateObject(pi1a, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
+
+            pi1b = new PurchaseInvoiceDetail()
+            {
+                PurchaseInvoiceId = pi1.Id,
+                PurchaseReceivalDetailId = pr1b.Id,
+                Quantity = pr1b.Quantity
+            };
+            pi1b = _purchaseInvoiceDetailService.CreateObject(pi1b, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
+
+            pi2 = new PurchaseInvoice()
+            {
+                InvoiceDate = DateTime.Today,
+                Description = "Pembayaran PR2",
+                PurchaseReceivalId = pr2.Id,
+                IsTaxable = true,
+                Discount = 5,
+                DueDate = DateTime.Today.AddDays(14)
+            };
+            pi2 = _purchaseInvoiceService.CreateObject(pi2, _purchaseReceivalService);
+
+            pi2a = new PurchaseInvoiceDetail()
+            {
+                PurchaseInvoiceId = pi2.Id,
+                PurchaseReceivalDetailId = pr2a.Id,
+                Quantity = pr2a.Quantity
+            };
+            pi2a = _purchaseInvoiceDetailService.CreateObject(pi2a, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
+
+            pi2b = new PurchaseInvoiceDetail()
+            {
+                PurchaseInvoiceId = pi2.Id,
+                PurchaseReceivalDetailId = pr2b.Id,
+                Quantity = pr2b.Quantity
+            };
+            pi2b = _purchaseInvoiceDetailService.CreateObject(pi2b, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
+
+            pi3 = new PurchaseInvoice()
+            {
+                InvoiceDate = DateTime.Today,
+                Description = "Pembayaran PR3",
+                PurchaseReceivalId = pr3.Id,
+                IsTaxable = true,
+                Discount = 0,
+                DueDate = DateTime.Today.AddDays(14)
+            };
+            pi3 = _purchaseInvoiceService.CreateObject(pi3, _purchaseReceivalService);
+
+            pi1a2 = new PurchaseInvoiceDetail()
+            {
+                PurchaseInvoiceId = pi3.Id,
+                PurchaseReceivalDetailId = pr1a2.Id,
+                Quantity = pr1a2.Quantity
+            };
+            pi1a2 = _purchaseInvoiceDetailService.CreateObject(pi1a2, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
+
+            pi1c = new PurchaseInvoiceDetail()
+            {
+                PurchaseInvoiceId = pi3.Id,
+                PurchaseReceivalDetailId = pr1c.Id,
+                Quantity = pr1c.Quantity
+            };
+            pi1c = _purchaseInvoiceDetailService.CreateObject(pi1c, _purchaseInvoiceService, _purchaseOrderDetailService, _purchaseReceivalDetailService);
+
+        }
+
+        public void PopulatePaymentVoucher()
+        {
+            _purchaseInvoiceService.ConfirmObject(pi1, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
+                                                  _purchaseReceivalDetailService, _payableService);
+            _purchaseInvoiceService.ConfirmObject(pi2, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
+                                                  _purchaseReceivalDetailService, _payableService);
+            _purchaseInvoiceService.ConfirmObject(pi3, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
+                                                  _purchaseReceivalDetailService, _payableService);
+
+            pv = new PaymentVoucher()
+            {
+                ContactId = contact.Id,
+                CashBankId = cashBank.Id,
+                PaymentDate = DateTime.Today.AddDays(14),
+                IsGBCH = true,
+                IsBank = true,
+                DueDate = DateTime.Today.AddDays(14),
+                TotalAmount = pi1.AmountPayable + pi2.AmountPayable + pi3.AmountPayable
+            };
+            _paymentVoucherService.CreateObject(pv, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+
+            pvd1 = new PaymentVoucherDetail()
+            {
+                PaymentVoucherId = pv.Id,
+                PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi1.Id).Id,
+                Amount = pi1.AmountPayable,
+                Description = "Payment buat Purchase Invoice 1"
+            };
+            _paymentVoucherDetailService.CreateObject(pvd1, _paymentVoucherService, _cashBankService, _payableService);
+
+            pvd2 = new PaymentVoucherDetail()
+            {
+                PaymentVoucherId = pv.Id,
+                PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi2.Id).Id,
+                Amount = pi2.AmountPayable,
+                Description = "Payment buat Purchase Invoice 2"
+            };
+            _paymentVoucherDetailService.CreateObject(pvd2, _paymentVoucherService, _cashBankService, _payableService);
+
+            pvd3 = new PaymentVoucherDetail()
+            {
+                PaymentVoucherId = pv.Id,
+                PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi3.Id).Id,
+                Amount = pi3.AmountPayable,
+                Description = "Payment buat Purchase Invoice 3"
+            };
+            _paymentVoucherDetailService.CreateObject(pvd3, _paymentVoucherService, _cashBankService, _payableService);
+
+            _paymentVoucherService.ConfirmObject(pv, DateTime.Today, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+
+            _paymentVoucherService.ReconcileObject(pv, DateTime.Today.AddDays(10), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService);
         }
     }
 }

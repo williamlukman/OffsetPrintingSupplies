@@ -13,31 +13,30 @@ namespace WebView.Controllers
 {
     public class SalesOrderController : Controller
     {
-       private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("SalesOrderController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("SalesOrderController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBarringService _barringService;
-        private IContactService _contactService;
         private ISalesOrderService _salesOrderService;
         private ISalesOrderDetailService _salesOrderDetailService;
-        private IDeliveryOrderService _deliveryOrderService;
+        private IContactService _contactService;
         private IDeliveryOrderDetailService _deliveryOrderDetailService;
-        
-            
+        private IDeliveryOrderService _deliveryOrderService;
+
         public SalesOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _barringService = new BarringService(new BarringRepository(), new BarringValidator());
-            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
             _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
-        }
 
+        }
 
         public ActionResult Index()
         {
@@ -51,7 +50,7 @@ namespace WebView.Controllers
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _salesOrderService.GetAll().Where(d => d.IsDeleted == false);
+            var query = _salesOrderService.GetAll().Where(d => d.IsDeleted == false);
 
             var list = query as IEnumerable<SalesOrder>;
 
@@ -96,14 +95,67 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
+        public dynamic GetListConfirmedNotCompleted(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
 
             string strWhere = GeneralFunction.ConstructWhere(filters);
 
             // Get Data
-            var query =  _salesOrderDetailService.GetObjectsBySalesOrderId(id).Where(d => d.IsDeleted == false);
+
+            var query = _salesOrderService.GetQueryable().Where(d => d.IsConfirmed && !d.IsDeliveryCompleted && !d.IsDeleted);
+
+            var list = query as IEnumerable<SalesOrder>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Code,
+                            model.ContactId,
+                            _contactService.GetObjectById(model.ContactId).Name,
+                            model.SalesDate,
+                            model.IsConfirmed,
+                            model.ConfirmationDate,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            var query = _salesOrderDetailService.GetObjectsBySalesOrderId(id).Where(d => d.IsDeleted == false);
 
             var list = query as IEnumerable<SalesOrderDetail>;
 
@@ -136,66 +188,16 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.ItemId,
+                            _itemService.GetObjectById(model.ItemId).Sku,
                             _itemService.GetObjectById(model.ItemId).Name,
                             model.Quantity,
+                            model.PendingDeliveryQuantity,
                             model.Price
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListConfirmed(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
-        {
-            // Construct where statement
-
-            string strWhere = GeneralFunction.ConstructWhere(filters);
-
-            // Get Data
-
-            var query = _salesOrderService.GetConfirmedObjects().Where(d => d.IsDeleted == false);
-
-            var list = query as IEnumerable<SalesOrder>;
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
-            {
-                if (!page.HasValue)
-                {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from model in list
-                    select new
-                    {
-                        id = model.Id,
-                        cell = new object[] {
-                            model.Id,
-                            model.Code,
-                            model.ContactId,
-                            _contactService.GetObjectById(model.ContactId).Name,
-                            model.SalesDate,
-                            model.IsConfirmed,
-                            model.ConfirmationDate,
-                            model.CreatedAt,
-                            model.UpdatedAt,
-                      }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
-        }
 
         public dynamic GetInfo(int Id)
         {
@@ -227,7 +229,7 @@ namespace WebView.Controllers
             try
             {
                 model = _salesOrderDetailService.GetObjectById(Id);
-            
+
             }
             catch (Exception ex)
             {
@@ -251,7 +253,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _salesOrderService.CreateObject(model,_contactService);
+                model = _salesOrderService.CreateObject(model, _contactService);
             }
             catch (Exception ex)
             {
@@ -270,7 +272,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _salesOrderDetailService.CreateObject(model,_salesOrderService,_itemService);
+                model = _salesOrderDetailService.CreateObject(model, _salesOrderService, _itemService);
             }
             catch (Exception ex)
             {
@@ -292,7 +294,7 @@ namespace WebView.Controllers
                 var data = _salesOrderService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
                 data.SalesDate = model.SalesDate;
-                model = _salesOrderService.UpdateObject(data,_contactService);
+                model = _salesOrderService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
             {
@@ -312,7 +314,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _salesOrderService.GetObjectById(model.Id);
-                model = _salesOrderService.SoftDeleteObject(data,_salesOrderDetailService);
+                model = _salesOrderService.SoftDeleteObject(data, _salesOrderDetailService);
             }
             catch (Exception ex)
             {
@@ -355,7 +357,7 @@ namespace WebView.Controllers
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
                 data.Price = model.Price;
-                model = _salesOrderDetailService.UpdateObject(data,_salesOrderService,_itemService);
+                model = _salesOrderDetailService.UpdateObject(data, _salesOrderService, _itemService);
             }
             catch (Exception ex)
             {
@@ -376,7 +378,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _salesOrderService.GetObjectById(model.Id);
-                model = _salesOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_salesOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _salesOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -397,7 +399,7 @@ namespace WebView.Controllers
             {
 
                 var data = _salesOrderService.GetObjectById(model.Id);
-                model = _salesOrderService.UnconfirmObject(data,_salesOrderDetailService,_deliveryOrderService,_deliveryOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _salesOrderService.UnconfirmObject(data, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -410,7 +412,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-
     }
 }

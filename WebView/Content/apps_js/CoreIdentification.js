@@ -446,7 +446,7 @@ $(document).ready(function () {
         url: base_url,
         datatype: "json",
         colNames: ['Id', 'RollerIdentificationId','Material', 'CoreBuilder Id', 'Core Sku', 'Core', 'RollerType Id', 'RollerType'
-                  ,'Machine Id','Machine','RD','CD','RL','WL','TL'
+                  ,'Machine Id','Machine','RD','CD','RL','WL','TL', 'OnTask', 'IsBuilt', 'IsDelivered'
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 30, sortable: false},
@@ -456,14 +456,17 @@ $(document).ready(function () {
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 70, sortable: false },
                   { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
                   { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false, hidden: true },
-                  { name: 'rollertypename', index: 'rollertypename', width: 70, sortable: false },
+                  { name: 'rollertypename', index: 'rollertypename', width: 60, sortable: false },
                   { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true},
                   { name: 'machinename', index: 'machinename', width: 90, sortable: false },
-                  { name: 'rd', index: 'rd', width: 40, align: 'right', sortable: false },
-                  { name: 'cd', index: 'cd', width: 40, align: 'right', sortable: false },
-                  { name: 'rl', index: 'rl', width: 40, align: 'right', sortable: false },
-                  { name: 'wl', index: 'wl', width: 40, align: 'right', sortable: false },
-                  { name: 'tl', index: 'tl', width: 40, align: 'right', sortable: false },
+                  { name: 'rd', index: 'rd', width: 25, align: 'right', sortable: false },
+                  { name: 'cd', index: 'cd', width: 25, align: 'right', sortable: false },
+                  { name: 'rl', index: 'rl', width: 25, align: 'right', sortable: false },
+                  { name: 'wl', index: 'wl', width: 25, align: 'right', sortable: false },
+                  { name: 'tl', index: 'tl', width: 25, align: 'right', sortable: false },
+                  { name: 'isjobscheduled', index: 'isjobscheduled', width: 45, align: 'right', sortable: false },
+                  { name: 'isrollerbuilt', index: 'isrollerbuilt', width: 45, align: 'right', sortable: false },
+                  { name: 'isdelivered', index: 'isdelivered', width: 65, align: 'right', sortable: false }
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -474,21 +477,36 @@ $(document).ready(function () {
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 700,
+        width: $(window).width() - 600,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsConfirmed = $(this).getRowData(cl).isfinished;
-		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		          rowIsJobScheduled = $(this).getRowData(cl).isjobscheduled;
+		          if (rowIsJobScheduled == 'true') {
+		              rowIsJobScheduled = "Y";
 		          } else {
-		              rowIsConfirmed = "NO";
+		              rowIsJobScheduled = "N";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { isfinished: rowIsConfirmed });
+		          $(this).jqGrid('setRowData', ids[i], { isjobscheduled: rowIsJobScheduled });
 
+		          rowIsRollerBuilt = $(this).getRowData(cl).isrollerbuilt;
+		          if (rowIsRollerBuilt == 'true') {
+		              rowIsRollerBuilt = "Y";
+		          } else {
+		              rowIsRollerBuilt = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isrollerbuilt: rowIsRollerBuilt });
+
+		          rowIsDelivered = $(this).getRowData(cl).isdelivered;
+		          if (rowIsDelivered == 'true') {
+		              rowIsDelivered = "Y";
+		          } else {
+		              rowIsDelivered = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isdelivered: rowIsDelivered });
 		          
 		      }
 		  }

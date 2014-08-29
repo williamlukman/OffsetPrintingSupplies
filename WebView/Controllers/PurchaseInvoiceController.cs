@@ -142,6 +142,7 @@ namespace WebView.Controllers
                             model.PurchaseReceivalDetailId,
                             _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).Code,
                             _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId,
+                            _itemService.GetObjectById( _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId).Sku,
                             _itemService.GetObjectById( _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId).Name,
                             model.Quantity,
                             model.Amount,

@@ -39,6 +39,10 @@ namespace NSpec
 
         IPriceMutationService _priceMutationService;
         IContactGroupService _contactGroupService;
+        IStockAdjustmentService _stockAdjustmentService;
+        IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        IStockMutationService _stockMutationService;
+        IItemService _itemService;
 
         int Quantity1;
         int Quantity2;
@@ -62,6 +66,10 @@ namespace NSpec
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+                _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+                _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
+                _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
+                _itemService = new ItemService(new ItemRepository(), new ItemValidator());
 
                 baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
@@ -101,8 +109,6 @@ namespace NSpec
                     UoMId = Pcs.Id
                 };
                 itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                itemService.AdjustQuantity(item1, 1000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item1.Id), 1000);
 
                 item2 = new Item()
                 {
@@ -113,8 +119,27 @@ namespace NSpec
                     UoMId = Pcs.Id
                 };
                 itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
-                itemService.AdjustQuantity(item2, 1000);
-                _warehouseItemService.AdjustQuantity(_warehouseItemService.FindOrCreateObject(warehouse.Id, item2.Id), 1000);
+
+                StockAdjustment sa = new StockAdjustment() { AdjustmentDate = DateTime.Today, WarehouseId = warehouse.Id, Description = "item adjustment" };
+                _stockAdjustmentService.CreateObject(sa, _warehouseService);
+                StockAdjustmentDetail sadItem1 = new StockAdjustmentDetail()
+                {
+                    ItemId = item1.Id,
+                    Quantity = 1000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadItem1, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                StockAdjustmentDetail sadItem2 = new StockAdjustmentDetail()
+                {
+                    ItemId = item2.Id,
+                    Quantity = 1000,
+                    StockAdjustmentId = sa.Id
+                };
+                _stockAdjustmentDetailService.CreateObject(sadItem2, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+                _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
+                                                      _itemService, _barringService, _warehouseItemService);
 
             }
         }
@@ -303,8 +328,8 @@ namespace NSpec
 
                     it["should create StockMutation"] = () =>
                     {
-                        stockMutationService.GetObjectsByItemId(item1.Id).Count().should_be(1);
-                        stockMutationService.GetObjectsByItemId(item2.Id).Count().should_be(1);
+                        stockMutationService.GetObjectsBySourceDocumentDetailForItem(item1.Id, Core.Constants.Constant.SourceDocumentDetailType.PurchaseOrderDetail, poDetail1.Id).Count().should_be(1);
+                        stockMutationService.GetObjectsBySourceDocumentDetailForItem(item2.Id, Core.Constants.Constant.SourceDocumentDetailType.PurchaseOrderDetail, poDetail2.Id).Count().should_be(1);
                     };
                 };
             };

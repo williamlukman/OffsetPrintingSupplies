@@ -22,6 +22,16 @@ namespace Validation.Validation
             return salesInvoiceDetail;
         }
 
+        public SalesInvoiceDetail VSalesInvoiceHasNotBeenConfirmed(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService)
+        {
+            SalesInvoice salesInvoice = _salesInvoiceService.GetObjectById(salesInvoiceDetail.SalesInvoiceId);
+            if (salesInvoice.IsConfirmed)
+            {
+                salesInvoiceDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
+            }
+            return salesInvoiceDetail;
+        }
+
         public SalesInvoiceDetail VHasDeliveryOrderDetail(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
             DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(salesInvoiceDetail.DeliveryOrderDetailId);
@@ -98,6 +108,8 @@ namespace Validation.Validation
                                                    ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
             VHasSalesInvoice(salesInvoiceDetail, _salesInvoiceService);
+            if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
+            VSalesInvoiceHasNotBeenConfirmed(salesInvoiceDetail, _salesInvoiceService);
             if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
             VHasDeliveryOrderDetail(salesInvoiceDetail, _deliveryOrderDetailService);
             if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }

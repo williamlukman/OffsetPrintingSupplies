@@ -191,7 +191,6 @@
             &nbsp;
         </div>
         <div data-options="region:'center',border:false" style="margin-right: 5px;">
-
             <div id="menusisi">
                 <div id="menusisixx">
                     <div id="logo">
@@ -203,7 +202,7 @@
                         <div class="dcjq-container clear">
                             <div class="dcjq-vertical-mega-menu">
                                 <ul id="mega-1" class="mega-menu">
-                                    <li><a href="#">Home</a></li>
+                                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
                                     <li><a href="#">Master</a>
                                         <ul>
                                                <li><a href="#">Data</a>
@@ -219,6 +218,7 @@
                                                 <li><a href="#">Finance</a>
                                                 <ul>
                                                     <li><a href="@Url.Action("Index", "MstCashBank")">CashBank</a> </li>
+                                                    <li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a> </li>
                                                     <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
                                                     <li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
                                                     
@@ -231,9 +231,10 @@
                                                     <li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>
                                                     <li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>
                                                     <li><a href="@Url.Action("Index", "StockAdjustment")">Stock Adjustment</a></li>
-                                                   <li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>
+                                                    <li><a href="@Url.Action("Index", "StockMutation")">Stock Mutation</a></li>
+                                                    <li><a href="@Url.Action("Index", "MstWarehouse")">Warehouse</a> </li>
                                                     <li><a href="@Url.Action("Index", "WarehouseItem")">Warehouse Item</a> </li>
-                                                   <li><a href="@Url.Action("Index", "WarehouseMutation")">Warehouse Mutation</a></li>
+                                                    <li><a href="@Url.Action("Index", "WarehouseMutation")">Warehouse Mutation</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -264,7 +265,8 @@
                                                     <li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
                                                     <li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
                                                     <li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
-                                                    <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Invoice</a></li>
+                                                    <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
                                                 </ul>
                                             </li>
                                                <li><a href="#">Sales</a>
@@ -272,7 +274,8 @@
                                                     <li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
                                                     <li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>
                                                     <li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
-                                                    <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Invoice</a></li>
+                                                    <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
                                                 </ul>
                                             </li>
                                         </ul>

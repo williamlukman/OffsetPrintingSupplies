@@ -21,6 +21,16 @@ namespace Validation.Validation
             return purchaseInvoiceDetail;
         }
 
+        public PurchaseInvoiceDetail VPurchaseInvoiceHasNotBeenConfirmed(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService)
+        {
+            PurchaseInvoice purchaseInvoice = _purchaseInvoiceService.GetObjectById(purchaseInvoiceDetail.PurchaseInvoiceId);
+            if (purchaseInvoice.IsConfirmed)
+            {
+                purchaseInvoiceDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
+            }
+            return purchaseInvoiceDetail;
+        }
+
         public PurchaseInvoiceDetail VHasPurchaseReceivalDetail(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
             PurchaseReceivalDetail prd = _purchaseReceivalDetailService.GetObjectById(purchaseInvoiceDetail.PurchaseReceivalDetailId);
@@ -97,6 +107,8 @@ namespace Validation.Validation
                                                    IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
             VHasPurchaseInvoice(purchaseInvoiceDetail, _purchaseInvoiceService);
+            if (!isValid(purchaseInvoiceDetail)) { return purchaseInvoiceDetail; }
+            VPurchaseInvoiceHasNotBeenConfirmed(purchaseInvoiceDetail, _purchaseInvoiceService);
             if (!isValid(purchaseInvoiceDetail)) { return purchaseInvoiceDetail; }
             VHasPurchaseReceivalDetail(purchaseInvoiceDetail, _purchaseReceivalDetailService);
             if (!isValid(purchaseInvoiceDetail)) { return purchaseInvoiceDetail; }

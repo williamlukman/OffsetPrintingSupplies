@@ -10,25 +10,22 @@ namespace Validation.Validation
 {
     public class RetailPurchaseInvoiceDetailValidator : IRetailPurchaseInvoiceDetailValidator
     {
-        public RetailPurchaseInvoiceDetail VIsNotConfirmed(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
-        {
-            RetailPurchaseInvoice retailPurchaseInvoice = _retailPurchaseInvoiceService.GetObjectById(retailPurchaseInvoiceDetail.RetailPurchaseInvoiceId);
-            if (retailPurchaseInvoice != null)
-            {
-                if (retailPurchaseInvoice.IsConfirmed)
-                {
-                    retailPurchaseInvoiceDetail.Errors.Add("Generic", "RetailPurchaseInvoice tidak boleh terkonfirmasi");
-                }
-            }
-            return retailPurchaseInvoiceDetail;
-        }
-
         public RetailPurchaseInvoiceDetail VHasRetailPurchaseInvoice(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
         {
             RetailPurchaseInvoice retailPurchaseInvoice = _retailPurchaseInvoiceService.GetObjectById(retailPurchaseInvoiceDetail.RetailPurchaseInvoiceId);
             if (retailPurchaseInvoice == null)
             {
                 retailPurchaseInvoiceDetail.Errors.Add("RetailPurchaseInvoiceId", "Tidak valid");
+            }
+            return retailPurchaseInvoiceDetail;
+        }
+
+        public RetailPurchaseInvoiceDetail VRetailPurchaseInvoiceHasNotBeenConfirmed(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
+        {
+            RetailPurchaseInvoice retailPurchaseInvoice = _retailPurchaseInvoiceService.GetObjectById(retailPurchaseInvoiceDetail.RetailPurchaseInvoiceId);
+            if (retailPurchaseInvoice.IsConfirmed)
+            {
+                retailPurchaseInvoiceDetail.Errors.Add("Generic", "RetailPurchaseInvoice tidak boleh terkonfirmasi");
             }
             return retailPurchaseInvoiceDetail;
         }
@@ -97,6 +94,8 @@ namespace Validation.Validation
         {
             VHasRetailPurchaseInvoice(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
             if (!isValid(retailPurchaseInvoiceDetail)) { return retailPurchaseInvoiceDetail; }
+            VRetailPurchaseInvoiceHasNotBeenConfirmed(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
+            if (!isValid(retailPurchaseInvoiceDetail)) { return retailPurchaseInvoiceDetail; }
             VIsValidQuantity(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService, _warehouseItemService);
             if (!isValid(retailPurchaseInvoiceDetail)) { return retailPurchaseInvoiceDetail; }
             VHasItem(retailPurchaseInvoiceDetail, _itemService);
@@ -113,7 +112,7 @@ namespace Validation.Validation
 
         public RetailPurchaseInvoiceDetail VDeleteObject(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService)
         {
-            VIsNotConfirmed(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
+            VRetailPurchaseInvoiceHasNotBeenConfirmed(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService);
             return retailPurchaseInvoiceDetail;
         }
 

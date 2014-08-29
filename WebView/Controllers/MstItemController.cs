@@ -148,10 +148,10 @@ namespace WebView.Controllers
                         id = item.Id,
                         cell = new object[] {
                             item.Id,
+                            item.Sku,
                             item.Name,
                             item.ItemTypeId,
                             _itemTypeService.GetObjectById(item.ItemTypeId).Name,
-                            item.Sku,
                             item.Category,
                             item.UoMId,
                             _uoMService.GetObjectById(item.UoMId).Name,
