@@ -12,6 +12,9 @@ namespace Data.Mapping
         public AccountMapping()
         {
             HasKey(a => a.Id);
+            //HasMany(a => a.GeneralLedgerJournals);
+            //HasOptional(a => a.ValidComb);
+            //HasOptional(a => a.Closing);
             Ignore(a => a.Errors);
         }
     }

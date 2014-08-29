@@ -60,18 +60,21 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
                 QuantityPricing quantityPricing = _quantityPricingService.GetObjectByItemTypeIdAndQuantity(item.ItemTypeId, cashSalesInvoiceDetail.Quantity);
                 decimal price = item.SellingPrice;
+                decimal discount = cashSalesInvoiceDetail.Discount;
                 if (cashSalesInvoiceDetail.IsManualPriceAssignment)
                 {
                     price = cashSalesInvoiceDetail.AssignedPrice;
                 }
-                if (quantityPricing == null)
+                if (quantityPricing != null)
                 {
-                    cashSalesInvoiceDetail.Amount = price * cashSalesInvoiceDetail.Quantity;
+                    if(cashSalesInvoiceDetail.Discount <= 0)
+                    {
+                        discount = quantityPricing.Discount;
+                    };
+                    
                 }
-                else
-                {
-                    cashSalesInvoiceDetail.Amount = (price * (100 - quantityPricing.Discount) / 100) * cashSalesInvoiceDetail.Quantity;
-                }
+                cashSalesInvoiceDetail.Amount = (price * (100 - discount) / 100) * cashSalesInvoiceDetail.Quantity;
+
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 cashSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 
@@ -91,18 +94,21 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(cashSalesInvoiceDetail.ItemId);
                 QuantityPricing quantityPricing = _quantityPricingService.GetObjectByItemTypeIdAndQuantity(item.ItemTypeId, cashSalesInvoiceDetail.Quantity);
                 decimal price = item.SellingPrice;
+                decimal discount = cashSalesInvoiceDetail.Discount;
                 if (cashSalesInvoiceDetail.IsManualPriceAssignment)
                 {
                     price = cashSalesInvoiceDetail.AssignedPrice;
                 }
-                if (quantityPricing == null)
+                if (quantityPricing != null)
                 {
-                    cashSalesInvoiceDetail.Amount = price * cashSalesInvoiceDetail.Quantity;
+                    if (cashSalesInvoiceDetail.Discount <= 0)
+                    {
+                        discount = quantityPricing.Discount;
+                    };
+
                 }
-                else
-                {
-                    cashSalesInvoiceDetail.Amount = (price * (100 - quantityPricing.Discount) / 100) * cashSalesInvoiceDetail.Quantity;
-                }
+                cashSalesInvoiceDetail.Amount = (price * (100 - discount) / 100) * cashSalesInvoiceDetail.Quantity;
+
                 CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesInvoiceDetail.CashSalesInvoiceId);
                 cashSalesInvoiceDetail.PriceMutationId = item.PriceMutationId;
                 cashSalesInvoiceDetail = _repository.UpdateObject(cashSalesInvoiceDetail);

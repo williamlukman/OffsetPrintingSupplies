@@ -24,8 +24,6 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
 
-        //public virtual ValidComb ValidComb { get; set; }
-        //public virtual Closing Closing { get; set; }
         public virtual ICollection<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
     }
 }

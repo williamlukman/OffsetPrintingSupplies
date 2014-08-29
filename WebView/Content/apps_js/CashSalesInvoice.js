@@ -626,6 +626,7 @@
 	$('#btn_add_new_detail').click(function () {
 		ClearData();
 		clearForm('#item_div');
+		onManualAssignedPrice();
 		$('#item_div').dialog('open');
 	});
 
@@ -654,7 +655,7 @@
 							$('#ItemId').val(result.ItemId);
 							$('#Item').val(result.Item);
 							$('#Quantity').val(result.Quantity);
-							$('#Discount').val(result.Discount);
+							$('#detailDiscount').val(result.Discount);
 							var e = document.getElementById("IsManualPriceAssignment");
 							if (result.IsManualPriceAssignment == true) {
 							    e.selectedIndex = 1;
@@ -738,7 +739,7 @@
 			url: submitURL,
 			data: JSON.stringify({
 			    Id: id, CashSalesInvoiceId: $("#id").val(), CashSalesInvoiceDetailId: $("#CashSalesInvoiceDetailId").val(),
-			    ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(), Discount: $('#Discount').numberbox('getValue'),
+			    ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(), Discount: $('#detailDiscount').numberbox('getValue'),
 			    IsManualPriceAssignment: document.getElementById("IsManualPriceAssignment").value,
 			    AssignedPrice: $('#AssignedPrice').numberbox('getValue'),
 			}),

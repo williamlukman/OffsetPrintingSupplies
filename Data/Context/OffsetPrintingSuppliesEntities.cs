@@ -20,6 +20,9 @@ namespace Data.Context
         {
             IList<String> tableNames = new List<String>();
 
+            IList<String> accountingNames = new List<String>() 
+                                        { "GeneralLedgerJournal", "Closing", "ValidComb", "Account" };
+
             IList<String> financeNames = new List<String>()
                                         { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank"};
             IList<String> manufacturingNames = new List<String>()
@@ -43,6 +46,7 @@ namespace Data.Context
                                           "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
 
+            accountingNames.ToList().ForEach(x => tableNames.Add(x));
             financeNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
@@ -122,6 +126,10 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceMapping());
             modelBuilder.Configurations.Add(new CustomPurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new PaymentRequestMapping());
+            modelBuilder.Configurations.Add(new AccountMapping());
+            modelBuilder.Configurations.Add(new ValidCombMapping());
+            modelBuilder.Configurations.Add(new ClosingMapping());
+            modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -187,5 +195,9 @@ namespace Data.Context
         public DbSet<CustomPurchaseInvoice> CustomPurchaseInvoices { get; set; }
         public DbSet<CustomPurchaseInvoiceDetail> CustomPurchaseInvoiceDetails { get; set; }
         public DbSet<PaymentRequest> PaymentRequests { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<ValidComb> ValidCombs { get; set; }
+        public DbSet<Closing> Closings { get; set; }
+        public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
     }
 }

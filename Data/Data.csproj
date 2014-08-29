@@ -45,6 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\OffsetPrintingSuppliesEntities.cs" />
+    <Compile Include="Mapping\Accounting\AccountMapping.cs" />
+    <Compile Include="Mapping\Accounting\ClosingMapping.cs" />
+    <Compile Include="Mapping\Accounting\GeneralLedgerJournalMapping.cs" />
+    <Compile Include="Mapping\Accounting\ValidCombMapping.cs" />
     <Compile Include="Mapping\Finance\CashBankMapping.cs" />
     <Compile Include="Mapping\Finance\CashMutationMapping.cs" />
     <Compile Include="Mapping\Finance\CashBankAdjustmentMapping.cs" />

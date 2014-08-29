@@ -14,7 +14,7 @@ namespace Data.Mapping
             HasKey(vc => vc.Id);
             HasRequired(vc => vc.Account)
                 .WithMany()
-                .HasForeignKey(vc => vc.Account)
+                .HasForeignKey(vc => vc.AccountId)
                 .WillCascadeOnDelete(false);
             HasRequired(vc => vc.Closing)
                 .WithMany()

@@ -43,6 +43,10 @@
   <ItemGroup>
     <Compile Include="Constants\OperationConstant.cs" />
     <Compile Include="Constants\ManufacturingConstant.cs" />
+    <Compile Include="DomainModel\Accounting\Account.cs" />
+    <Compile Include="DomainModel\Accounting\Closing.cs" />
+    <Compile Include="DomainModel\Accounting\GeneralLedgerJournal.cs" />
+    <Compile Include="DomainModel\Accounting\ValidComb.cs" />
     <Compile Include="DomainModel\Finance\CashBank.cs" />
     <Compile Include="DomainModel\Finance\CashBankAdjustment.cs" />
     <Compile Include="DomainModel\Finance\CashMutation.cs" />
@@ -105,6 +109,10 @@
     <Compile Include="DomainModel\Manufacturing\RecoveryAccessoryDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ItemType.cs" />
     <Compile Include="DomainModel\StockAndMaster\Warehouse.cs" />
+    <Compile Include="Interface\Repository\Accounting\IAccountRepository.cs" />
+    <Compile Include="Interface\Repository\Accounting\IClosingRepository.cs" />
+    <Compile Include="Interface\Repository\Accounting\IValidCombRepository.cs" />
+    <Compile Include="Interface\Repository\Accounting\IGeneralLedgerJournalRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ICashMutationRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ICashBankRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ICashBankMutationRepository.cs" />
@@ -168,6 +176,10 @@
     <Compile Include="Interface\Repository\StockAndMaster\IItemRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Service\Accounting\IAccountService.cs" />
+    <Compile Include="Interface\Service\Accounting\IClosingService.cs" />
+    <Compile Include="Interface\Service\Accounting\IValidCombService.cs" />
+    <Compile Include="Interface\Service\Accounting\IGeneralLedgerJournalService.cs" />
     <Compile Include="Interface\Service\Finance\ICashMutationService.cs" />
     <Compile Include="Interface\Service\Finance\ICashBankService.cs" />
     <Compile Include="Interface\Service\Finance\ICashBankAdjustmentService.cs" />
@@ -230,6 +242,10 @@
     <Compile Include="Interface\Service\StockAndMaster\IContactService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemTypeService.cs" />
+    <Compile Include="Interface\Validation\Accounting\IAccountValidator.cs" />
+    <Compile Include="Interface\Validation\Accounting\IClosingValidator.cs" />
+    <Compile Include="Interface\Validation\Accounting\IValidCombValidator.cs" />
+    <Compile Include="Interface\Validation\Accounting\IGeneralLedgerJournalValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashMutationValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankAdjustmentValidator.cs" />
