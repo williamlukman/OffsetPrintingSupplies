@@ -19,12 +19,12 @@ namespace Data.Repository
 
         public IQueryable<Receivable> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<Receivable> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public IList<Receivable> GetAllByMonthCreated()
@@ -35,6 +35,11 @@ namespace Data.Repository
         public IList<Receivable> GetObjectsByContactId(int contactId)
         {
             return FindAll(p => p.ContactId == contactId && !p.IsDeleted).ToList();
+        }
+
+        public IList<Receivable> GetObjectsByDueDate(DateTime DueDate)
+        {
+            return FindAll(x => !x.IsDeleted && x.DueDate <= DueDate).ToList();
         }
 
         public Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId)

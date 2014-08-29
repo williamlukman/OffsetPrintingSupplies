@@ -18,7 +18,12 @@ namespace Data.Mapping
                 .WillCascadeOnDelete(false);
             HasMany(rv => rv.ReceiptVoucherDetails)
                 .WithRequired(rvd => rvd.ReceiptVoucher)
-                .HasForeignKey(rvd => rvd.ReceiptVoucherId);
+                .HasForeignKey(rvd => rvd.ReceiptVoucherId)
+                .WillCascadeOnDelete(true);
+            HasRequired(rv => rv.CashBank)
+                .WithMany()
+                .HasForeignKey(rv => rv.CashBankId)
+                .WillCascadeOnDelete(true);
             Ignore(rv => rv.Errors);
         }
     }

@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         IList<SalesOrder> GetAll();
         SalesOrder GetObjectById(int Id);
         IList<SalesOrder> GetObjectsByContactId(int contactId);
+        IQueryable<SalesOrder> GetQueryableConfirmedObjects();
         IList<SalesOrder> GetConfirmedObjects();
         SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService);

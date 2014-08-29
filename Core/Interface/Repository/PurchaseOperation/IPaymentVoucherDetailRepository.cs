@@ -11,7 +11,9 @@ namespace Core.Interface.Repository
         IQueryable<PaymentVoucherDetail> GetQueryable();
         IList<PaymentVoucherDetail> GetAll();
         IList<PaymentVoucherDetail> GetAllByMonthCreated();
+        IQueryable<PaymentVoucherDetail> GetQueryableObjectsByPaymentVoucherId(int paymentVoucherId);
         IList<PaymentVoucherDetail> GetObjectsByPaymentVoucherId(int paymentVoucherId);
+        IQueryable<PaymentVoucherDetail> GetQueryableObjectsByPayableId(int payableId);
         IList<PaymentVoucherDetail> GetObjectsByPayableId(int payableId);
         PaymentVoucherDetail GetObjectById(int Id);
         PaymentVoucherDetail CreateObject(PaymentVoucherDetail paymentVoucherDetail);

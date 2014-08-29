@@ -12,7 +12,9 @@ namespace Core.Interface.Service
         IQueryable<ReceiptVoucherDetail> GetQueryable();
         IList<ReceiptVoucherDetail> GetAll();
         IReceiptVoucherDetailValidator GetValidator();
+        IQueryable<ReceiptVoucherDetail> GetQueryableObjectsByReceiptVoucherId(int receiptVoucherId);
         IList<ReceiptVoucherDetail> GetObjectsByReceiptVoucherId(int receiptVoucherId);
+        IQueryable<ReceiptVoucherDetail> GetQueryableObjectsByReceivableId(int receivableId);
         IList<ReceiptVoucherDetail> GetObjectsByReceivableId(int receivableId);
         ReceiptVoucherDetail GetObjectById(int Id);        
         ReceiptVoucherDetail CreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,

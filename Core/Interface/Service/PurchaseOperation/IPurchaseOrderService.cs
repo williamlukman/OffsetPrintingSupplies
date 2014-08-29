@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         IList<PurchaseOrder> GetAll();
         PurchaseOrder GetObjectById(int Id);
         IList<PurchaseOrder> GetObjectsByContactId(int contactId);
+        IQueryable<PurchaseOrder> GetQueryableConfirmedObjects();
         IList<PurchaseOrder> GetConfirmedObjects();
         PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService);

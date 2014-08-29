@@ -35,6 +35,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<CustomPurchaseInvoiceDetail> GetQueryableObjectsByCustomPurchaseInvoiceId(int CustomPurchaseInvoiceId)
+        {
+            return _repository.GetQueryableObjectsByCustomPurchaseInvoiceId(CustomPurchaseInvoiceId);
+        }
+
         public IList<CustomPurchaseInvoiceDetail> GetObjectsByCustomPurchaseInvoiceId(int CustomPurchaseInvoiceId)
         {
             return _repository.GetObjectsByCustomPurchaseInvoiceId(CustomPurchaseInvoiceId);
@@ -111,7 +116,7 @@ namespace Service.Service
                 PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, item.SellingPrice, DateTime.Now);
 
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
-                stockMutation.CreatedAt = (DateTime)customPurchaseInvoice.ConfirmationDate;
+                stockMutation.CreatedAt = (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault();
                 _stockMutationService.UpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 customPurchaseInvoiceDetail.CoGS = customPurchaseInvoiceDetail.Quantity * item.AvgPrice;

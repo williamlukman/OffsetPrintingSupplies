@@ -40,6 +40,7 @@ namespace Core.DomainModel
 
         public Dictionary<string, string> Errors { get; set; }
 
+        public virtual Contact Contact { get; set; }
         public virtual CashBank CashBank { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual ICollection<RetailPurchaseInvoiceDetail> RetailPurchaseinvoiceDetails { get; set; }

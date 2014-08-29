@@ -31,9 +31,19 @@ namespace Data.Repository
             return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
+        public IQueryable<SalesInvoiceDetail> GetQueryableObjectsBySalesInvoiceId(int salesInvoiceId)
+        {
+            return FindAll(pid => pid.SalesInvoiceId == salesInvoiceId && !pid.IsDeleted);
+        }
+
         public IList<SalesInvoiceDetail> GetObjectsBySalesInvoiceId(int salesInvoiceId)
         {
             return FindAll(pid => pid.SalesInvoiceId == salesInvoiceId && !pid.IsDeleted).ToList();
+        }
+
+        public IQueryable<SalesInvoiceDetail> GetQueryableObjectsByDeliveryOrderDetailId(int deliveryOrderDetailId)
+        {
+            return FindAll(pid => pid.DeliveryOrderDetailId == deliveryOrderDetailId && !pid.IsDeleted);
         }
 
         public IList<SalesInvoiceDetail> GetObjectsByDeliveryOrderDetailId(int deliveryOrderDetailId)

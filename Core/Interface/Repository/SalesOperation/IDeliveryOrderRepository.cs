@@ -12,7 +12,9 @@ namespace Core.Interface.Repository
         IList<DeliveryOrder> GetAll();
         IList<DeliveryOrder> GetAllByMonthCreated();
         DeliveryOrder GetObjectById(int Id);
+        IQueryable<DeliveryOrder> GetQueryableObjectsBySalesOrderId(int salesOrderId);
         IList<DeliveryOrder> GetObjectsBySalesOrderId(int salesOrderId);
+        IQueryable<DeliveryOrder> GetQueryableConfirmedObjects();
         IList<DeliveryOrder> GetConfirmedObjects();
         DeliveryOrder CreateObject(DeliveryOrder deliveryOrder);
         DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder);

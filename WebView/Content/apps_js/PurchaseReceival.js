@@ -58,7 +58,7 @@
                   { name: 'purchaseorder', index: 'purchaseorder', width: 100 },
                   { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'warehouseid', index: 'warehouseid', width: 100 },
-                  { name: 'warehousename', index: 'warehousename', width: 100 },
+                  { name: 'warehouse', index: 'warehouse', width: 100 },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -91,8 +91,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -135,7 +135,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -184,7 +184,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -414,9 +414,9 @@
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
                   { name: 'purchaseorderdetailid', index: 'purchaseorderdetailid', width: 100, sortable: false, hidden: true },
-                  { name: 'purchaseorderdetailcode', index: 'purchaseorderdetailcode', width: 100, sortable: false },
+                  { name: 'purchaseorderdetail', index: 'purchaseorderdetail', width: 100, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
+                  { name: 'item', index: 'item', width: 80, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         //page: '1',
@@ -434,8 +434,8 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true });
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -459,7 +459,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -598,7 +598,7 @@
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
 				  { name: 'contactid', index: 'contactid', width: 100 },
-                  { name: 'contactname', index: 'contactname', width: 80 },
+                  { name: 'contact', index: 'contact', width: 80 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -617,8 +617,8 @@
         width: $("#lookup_div_purchaseorder").width() - 10,
         height: $("#lookup_div_purchaseorder").height() - 110,
     });
-    $("#lookup_table_purchaseorder").jqGrid('navGrid', '#lookup_toolbar_purchaseorder', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_purchaseorder").jqGrid('navGrid', '#lookup_toolbar_purchaseorder', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_purchaseorder').click(function () {
@@ -661,7 +661,7 @@
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
+                  { name: 'item', index: 'item', width: 80, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
@@ -677,8 +677,8 @@
         width: $("#lookup_div_item").width() - 10,
         height: $("#lookup_div_item").height() - 110,
     });
-    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_item').click(function () {
@@ -692,7 +692,7 @@
             var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
             $('#PurchaseOrderDetailId').val(id);
             $('#ItemId').val(ret.itemid);
-            $('#Item').val(ret.itemname);
+            $('#Item').val(ret.item);
 
             $('#lookup_div_item').dialog('close');
         } else {
@@ -733,8 +733,8 @@
         width: $("#lookup_div_warehouse").width() - 10,
         height: $("#lookup_div_warehouse").height() - 110,
     });
-    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehouse').click(function () {

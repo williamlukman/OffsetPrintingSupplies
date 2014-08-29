@@ -60,7 +60,7 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(groupItemPrice.ItemId);
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 groupItemPrice.UpdatedAt = DateTime.Now;
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, /*groupItemPrice.ContactGroupId,*/ item.SellingPrice, (DateTime)groupItemPrice.UpdatedAt);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item.Id, /*groupItemPrice.ContactGroupId,*/ item.SellingPrice, (DateTime)groupItemPrice.UpdatedAt.GetValueOrDefault());
                 groupItemPrice.PriceMutationId = priceMutation.Id;
                 groupItemPrice = _repository.UpdateObject(groupItemPrice);
                 _priceMutationService.DeactivateObject(oldpriceMutation, groupItemPrice.UpdatedAt);

@@ -14,7 +14,9 @@ namespace Core.Interface.Service
         IDeliveryOrderValidator GetValidator();
         IList<DeliveryOrder> GetAll();
         DeliveryOrder GetObjectById(int Id);
+        IQueryable<DeliveryOrder> GetQueryableObjectsBySalesOrderId(int salesOrderId);
         IList<DeliveryOrder> GetObjectsBySalesOrderId(int salesOrderId);
+        IQueryable<DeliveryOrder> GetQueryableConfirmedObjects();
         IList<DeliveryOrder> GetConfirmedObjects();
         DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService);
         DeliveryOrder CreateObject(int warehouseId, int salesOrderId, DateTime deliveryDate, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService);

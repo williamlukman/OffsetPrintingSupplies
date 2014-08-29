@@ -41,6 +41,11 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
+        public IList<Payable> GetObjectsByDueDate(DateTime DueDate)
+        {
+            return _repository.GetObjectsByDueDate(DueDate);
+        }
+
         public Payable GetObjectBySource(string PayableSource, int PayableSourceId)
         {
             return _repository.GetObjectBySource(PayableSource, PayableSourceId);
@@ -85,5 +90,6 @@ namespace Service.Service
         {
             return _repository.DeleteObject(Id);
         }
+
     }
 }

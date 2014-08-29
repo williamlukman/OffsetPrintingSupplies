@@ -32,10 +32,10 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
     			  { name: 'cashbankid', index: 'cashbankid', width: 35, align: "center", hidden: true},
-				  { name: 'name', index: 'name', width: 120 },
+				  { name: 'cashbank', index: 'cashbank', width: 120 },
                   { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-				  { name: 'source', index: 'source', width: 120, align: 'right' },
-				  { name: 'sourceid', index: 'sourceid', width: 60 },
+				  { name: 'sourcedocumenttype', index: 'sourcedocumenttype', width: 120, align: 'right' },
+				  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 60 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -56,7 +56,7 @@
 
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

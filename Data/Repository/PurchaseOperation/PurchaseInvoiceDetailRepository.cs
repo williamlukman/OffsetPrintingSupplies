@@ -30,9 +30,20 @@ namespace Data.Repository
         {
             return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
+
+        public IQueryable<PurchaseInvoiceDetail> GetQueryableObjectsByPurchaseInvoiceId(int purchaseInvoiceId)
+        {
+            return FindAll(pid => pid.PurchaseInvoiceId == purchaseInvoiceId && !pid.IsDeleted);
+        }
+
         public IList<PurchaseInvoiceDetail> GetObjectsByPurchaseInvoiceId(int purchaseInvoiceId)
         {
             return FindAll(pid => pid.PurchaseInvoiceId == purchaseInvoiceId && !pid.IsDeleted).ToList();
+        }
+
+        public IQueryable<PurchaseInvoiceDetail> GetQueryableObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId)
+        {
+            return FindAll(pid => pid.PurchaseReceivalDetailId == purchaseReceivalDetailId && !pid.IsDeleted);
         }
 
         public IList<PurchaseInvoiceDetail> GetObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId)

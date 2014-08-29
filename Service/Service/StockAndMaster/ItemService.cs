@@ -46,6 +46,13 @@ namespace Service.Service
             return items.ToList();
         }
 
+        public IQueryable<Item> GetQueryableAccessories(IItemService _itemService, IItemTypeService _itemTypeService)
+        {
+            ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessory);
+            IQueryable<Item> items = _repository.GetQueryableObjectsByItemTypeId(itemType.Id);
+            return items;
+        }
+
         public IList<Item> GetObjectsByItemTypeId(int ItemTypeId)
         {
             return _repository.GetObjectsByItemTypeId(ItemTypeId);
@@ -110,7 +117,7 @@ namespace Service.Service
                 item.UpdatedAt = DateTime.Now;
                 if (olditem.SellingPrice != item.SellingPrice)
                 {
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, /*contactGroup,*/ (DateTime)item.UpdatedAt);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, /*contactGroup,*/ (DateTime)item.UpdatedAt.GetValueOrDefault());
                     item.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
                 }

@@ -20,17 +20,27 @@ namespace Data.Repository
 
         public IQueryable<WarehouseItem> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<WarehouseItem> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IQueryable<WarehouseItem> GetQueryableObjectsByWarehouseId(int warehouseId)
+        {
+            return FindAll(x => x.WarehouseId == warehouseId && !x.IsDeleted);
         }
 
         public IList<WarehouseItem> GetObjectsByWarehouseId(int warehouseId)
         {
             return FindAll(x => x.WarehouseId == warehouseId && !x.IsDeleted).ToList();
+        }
+
+        public IQueryable<WarehouseItem> GetQueryableObjectsByItemId(int itemId)
+        {
+            return FindAll(x => x.ItemId == itemId);
         }
 
         public IList<WarehouseItem> GetObjectsByItemId(int itemId)

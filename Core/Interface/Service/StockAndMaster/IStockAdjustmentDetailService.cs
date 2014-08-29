@@ -13,6 +13,7 @@ namespace Core.Interface.Service
         IQueryable<StockAdjustmentDetail> GetQueryable();
         IList<StockAdjustmentDetail> GetAll();
         IStockAdjustmentDetailValidator GetValidator();
+        IQueryable<StockAdjustmentDetail> GetQueryableObjectsByStockAdjustmentId(int stockAdjustmentId);
         IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int stockAdjustmentId);
         IList<StockAdjustmentDetail> GetObjectsByItemId(int itemId);
         StockAdjustmentDetail GetObjectById(int Id);

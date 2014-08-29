@@ -239,7 +239,7 @@ namespace Validation.Validation
 
         public CustomPurchaseInvoice VHasCashBank(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService)
         {
-            CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId);
+            CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
             if (cashBank == null)
             {
                 customPurchaseInvoice.Errors.Add("CashBankId", "Tidak valid");
@@ -249,7 +249,7 @@ namespace Validation.Validation
 
         public CustomPurchaseInvoice VIsCashBankTypeBank(CustomPurchaseInvoice customPurchaseInvoice, ICashBankService _cashBankService)
         {
-            CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId);
+            CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
             if (!cashBank.IsBank)
             {
                 customPurchaseInvoice.Errors.Add("Generic", "CashBank bukan tipe Bank");

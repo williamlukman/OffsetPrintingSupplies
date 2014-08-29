@@ -36,9 +36,19 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<PaymentVoucherDetail> GetQueryableObjectsByPaymentVoucherId(int paymentVoucherId)
+        {
+            return _repository.GetQueryableObjectsByPaymentVoucherId(paymentVoucherId);
+        }
+
         public IList<PaymentVoucherDetail> GetObjectsByPaymentVoucherId(int paymentVoucherId)
         {
             return _repository.GetObjectsByPaymentVoucherId(paymentVoucherId);
+        }
+
+        public IQueryable<PaymentVoucherDetail> GetQueryableObjectsByPayableId(int payableId)
+        {
+            return _repository.GetQueryableObjectsByPayableId(payableId);
         }
 
         public IList<PaymentVoucherDetail> GetObjectsByPayableId(int payableId)

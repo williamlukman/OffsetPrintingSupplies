@@ -12,7 +12,9 @@ namespace Core.Interface.Service
         IQueryable<PaymentVoucherDetail> GetQueryable();
         IList<PaymentVoucherDetail> GetAll();
         IPaymentVoucherDetailValidator GetValidator();
+        IQueryable<PaymentVoucherDetail> GetQueryableObjectsByPaymentVoucherId(int paymentVoucherId);
         IList<PaymentVoucherDetail> GetObjectsByPaymentVoucherId(int paymentVoucherId);
+        IQueryable<PaymentVoucherDetail> GetQueryableObjectsByPayableId(int payableId);
         IList<PaymentVoucherDetail> GetObjectsByPayableId(int payableId);
         PaymentVoucherDetail GetObjectById(int Id);        
         PaymentVoucherDetail CreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,

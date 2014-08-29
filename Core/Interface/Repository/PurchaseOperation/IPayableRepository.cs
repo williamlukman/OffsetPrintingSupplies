@@ -12,6 +12,7 @@ namespace Core.Interface.Repository
         IList<Payable> GetAll();
         IList<Payable> GetAllByMonthCreated();
         IList<Payable> GetObjectsByContactId(int contactId);
+        IList<Payable> GetObjectsByDueDate(DateTime DueDate);
         Payable GetObjectBySource(string PayableSource, int PayableSourceId); 
         Payable GetObjectById(int Id);
         Payable CreateObject(Payable payable);

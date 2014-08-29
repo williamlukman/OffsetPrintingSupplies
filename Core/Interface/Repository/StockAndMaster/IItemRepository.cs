@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<Item> GetQueryable();
         IList<Item> GetAll();
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
+        IQueryable<Item> GetQueryableObjectsByItemTypeId(int ItemTypeId);
         IList<Item> GetObjectsByUoMId(int UoMId);
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);

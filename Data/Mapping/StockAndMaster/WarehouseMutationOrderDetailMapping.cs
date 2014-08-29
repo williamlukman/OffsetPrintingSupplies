@@ -15,6 +15,10 @@ namespace Data.Mapping
             HasRequired(wmod => wmod.WarehouseMutationOrder)
                 .WithMany(wmo => wmo.WarehouseMutationOrderDetails)
                 .HasForeignKey(wmod => wmod.WarehouseMutationOrderId);
+            HasRequired(wmod => wmod.Item)
+                .WithMany()
+                .HasForeignKey(wmod => wmod.ItemId)
+                .WillCascadeOnDelete(false);
             Ignore(wmod => wmod.Errors);
         }
     }

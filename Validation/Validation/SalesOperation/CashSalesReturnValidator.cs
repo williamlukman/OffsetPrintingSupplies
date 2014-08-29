@@ -174,17 +174,17 @@ namespace Validation.Validation
 
         public CashSalesReturn VHasCashBank(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService)
         {
-            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId);
+            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId.GetValueOrDefault());
             if (cashBank == null)
             {
-                cashSalesReturn.Errors.Add("CashBankId", "Tidak valid");
+                cashSalesReturn.Errors.Add("CashBank", "Tidak valid");
             }
             return cashSalesReturn;
         }
 
         public CashSalesReturn VIsCashBankTypeNotBank(CashSalesReturn cashSalesReturn, ICashBankService _cashBankService)
         {
-            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId);
+            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesReturn.CashBankId.GetValueOrDefault());
             if (cashBank.IsBank)
             {
                 cashSalesReturn.Errors.Add("Generic", "CashBank harus bukan tipe Bank");
@@ -209,10 +209,10 @@ namespace Validation.Validation
 
         public CashSalesReturn VHasCashSalesInvoice(CashSalesReturn cashSalesReturn, ICashSalesInvoiceService _cashSalesInvoiceService)
         {
-            CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById((int)cashSalesReturn.CashSalesInvoiceId);
+            CashSalesInvoice cashSalesInvoice = _cashSalesInvoiceService.GetObjectById(cashSalesReturn.CashSalesInvoiceId);
             if (cashSalesInvoice == null)
             {
-                cashSalesReturn.Errors.Add("CashSalesInvoiceId", "Tidak valid");
+                cashSalesReturn.Errors.Add("CashSalesInvoice", "Tidak valid");
             }
             return cashSalesReturn;
         }

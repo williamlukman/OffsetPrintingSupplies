@@ -18,12 +18,12 @@ namespace Data.Repository
 
         public IQueryable<GroupItemPrice> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<GroupItemPrice> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public GroupItemPrice GetObjectById(int Id)

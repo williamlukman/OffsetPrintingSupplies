@@ -17,6 +17,7 @@
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add/Edit Detail</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
+        <a id="btn_check" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">Check Funds</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_paid" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Paid</a>
@@ -191,6 +192,57 @@
         </div>
     </div>
 <!-- End Dialog Box Item-->
+
+<!-- Dialog Box Check-->
+    <div id="check_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
+        data-options="modal:true" title=".: Check Funds :.">
+
+        <div id="check_toolbar" class="form_toolbar">
+            <a id="check_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="check_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+        <div id="check_info">
+              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+                  <tr>
+                      <td width="139" nowrap style="width: 100px">
+                          Id
+                      </td>
+                      <td>
+                         <input id="idcheck" type="text" size="10" disabled="disabled"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          Due Date :
+                      </td>
+                      <td>
+                         <input id="checkDueDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
+                         <input name="DueDate" type="text" size="1" hidden="hidden"/>
+                      </td>
+                  </tr>
+                  <tr>
+                            <td>
+                                <label>Discount</label></td>
+                            <td colspan="3">
+                        <input id="checkDiscount" name="Discount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Tax</label></td>
+                            <td colspan="3">
+                        <input id="checkTax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Allowance</label></td>
+                            <td colspan="3">
+                        <input id="checkAllowance" name="Allowance" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </tr>
+              </table>
+          
+        </div>
+    </div>
+<!-- End Dialog Box Check-->
 
 <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"

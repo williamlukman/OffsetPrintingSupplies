@@ -106,7 +106,7 @@ namespace Service.Service
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, retailPurchaseInvoiceDetail.Quantity, itemPrice);
 
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
-                stockMutation.CreatedAt = (DateTime)retailPurchaseInvoice.ConfirmationDate;
+                stockMutation.CreatedAt = (DateTime)retailPurchaseInvoice.ConfirmationDate.GetValueOrDefault();
                 _stockMutationService.UpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 retailPurchaseInvoiceDetail.CoGS = retailPurchaseInvoiceDetail.Quantity * item.AvgPrice;

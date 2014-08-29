@@ -12,7 +12,9 @@ namespace Core.Interface.Service
         IQueryable<PurchaseInvoiceDetail> GetQueryable();
         IList<PurchaseInvoiceDetail> GetAll();
         IPurchaseInvoiceDetailValidator GetValidator();
+        IQueryable<PurchaseInvoiceDetail> GetQueryableObjectsByPurchaseInvoiceId(int purchaseInvoiceId);
         IList<PurchaseInvoiceDetail> GetObjectsByPurchaseInvoiceId(int purchaseInvoiceId);
+        IQueryable<PurchaseInvoiceDetail> GetQueryableObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId);
         IList<PurchaseInvoiceDetail> GetObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId);
         PurchaseInvoiceDetail GetObjectById(int Id);
         PurchaseInvoiceDetail CreateObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService,

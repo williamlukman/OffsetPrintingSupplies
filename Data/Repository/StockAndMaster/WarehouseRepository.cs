@@ -20,12 +20,12 @@ namespace Data.Repository
 
         public IQueryable<Warehouse> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<Warehouse> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public Warehouse GetObjectById(int Id)

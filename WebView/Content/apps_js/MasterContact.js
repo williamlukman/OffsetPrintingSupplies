@@ -70,7 +70,7 @@
 
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -98,28 +98,28 @@
                 dataType: "json",
                 url: base_url + "MstContact/GetInfo?Id=" + id,
                 success: function (result) {
-                    if (result.model == null) {
+                    if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
                     else {
-                        if (JSON.stringify(result.model.Errors) != '{}') {
+                        if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
-                            for (var key in result.model.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
                         else {
                             $("#form_btn_save").data('kode', id);
-                            $('#id').val(result.model.Id);
-                            $('#Name').val(result.model.Name);
-                            $('#Address').val(result.model.Address);
-                            $('#ContactNo').val(result.model.ContactNo);
-                            $('#PIC').val(result.model.PIC);
-                            $('#PICContactNo').val(result.model.PICContactNo);
-                            $('#Email').val(result.model.Email);
-                            $('#ContactGroupId').val(result.model.ContactGroupId);
-                            $('#ContactGroup').val(result.model.ContactGroup);
+                            $('#id').val(result.Id);
+                            $('#Name').val(result.Name);
+                            $('#Address').val(result.Address);
+                            $('#ContactNo').val(result.ContactNo);
+                            $('#PIC').val(result.PIC);
+                            $('#PICContactNo').val(result.PICContactNo);
+                            $('#Email').val(result.Email);
+                            $('#ContactGroupId').val(result.ContactGroupId);
+                            $('#ContactGroup').val(result.ContactGroup);
                             $("#form_div").dialog("open");
                         }
                     }
@@ -268,8 +268,8 @@
         mtype: 'GET',
         colNames: ['Id', 'Name'],
         colModel: [
-                  { name: 'id', index: 'contactcode', width: 80, align: 'right' },
-                  { name: 'name', index: 'contactname', width: 200 }],
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_contactgroup'),
         rowNum: 20,
@@ -283,7 +283,7 @@
         height: $("#lookup_div_contactgroup").height() - 110,
     });
     $("#lookup_table_contactgroup").jqGrid('navGrid', '#lookup_toolbar_contactgroup', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_contactgroup').click(function () {

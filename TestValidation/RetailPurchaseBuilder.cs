@@ -334,6 +334,7 @@ namespace TestValidation
                 PurchaseDate = DateTime.Today.Subtract(salesDate),
                 WarehouseId = localWarehouse.Id,
                 CashBankId = cashBank.Id,
+                ContactId = contact.Id,
                 DueDate = DateTime.Today.Subtract(dueDate)
             };
             _retailPurchaseInvoiceService.CreateObject(rpi1, _warehouseService);
@@ -344,6 +345,7 @@ namespace TestValidation
                 PurchaseDate = DateTime.Today.Subtract(salesDate),
                 WarehouseId = localWarehouse.Id,
                 CashBankId = cashBank.Id,
+                ContactId = contact.Id,
                 DueDate = DateTime.Today.Subtract(dueDate),
                 IsGroupPricing = true,
                 Discount = 25,
@@ -357,6 +359,7 @@ namespace TestValidation
                 PurchaseDate = DateTime.Today.Subtract(salesDate),
                 WarehouseId = localWarehouse.Id,
                 CashBankId = cashBank2.Id,
+                ContactId = contact.Id,
                 DueDate = DateTime.Today.Subtract(dueDate),
                 IsGBCH = true,
                 GBCH_DueDate = DateTime.Today.Subtract(dueDate),

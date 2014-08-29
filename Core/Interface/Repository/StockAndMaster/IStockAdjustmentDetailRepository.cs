@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<StockAdjustmentDetail> GetQueryable();
         IList<StockAdjustmentDetail> GetAll();
         IList<StockAdjustmentDetail> GetAllByMonthCreated();
+        IQueryable<StockAdjustmentDetail> GetQueryableObjectsByStockAdjustmentId(int stockAdjustmentId);
         IList<StockAdjustmentDetail> GetObjectsByStockAdjustmentId(int stockAdjustmentId);
         IList<StockAdjustmentDetail> GetObjectsByItemId(int itemId);
         StockAdjustmentDetail GetObjectById(int Id);

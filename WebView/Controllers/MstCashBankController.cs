@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
 using Service.Service;
@@ -29,13 +30,27 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _cashBankService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _cashBankService.GetQueryable();
 
-            var list = query as IEnumerable<CashBank>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.Description,
+                             model.Amount,
+                             model.IsBank,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -59,18 +74,18 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Name,
-                            item.Description,
-                            item.Amount,
-                            item.IsBank,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.Name,
+                            model.Description,
+                            model.Amount,
+                            model.IsBank,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -87,7 +102,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error" + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -111,7 +132,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Insert Failed", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -134,7 +161,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Update Failed", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -154,7 +187,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Delete Failed", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new

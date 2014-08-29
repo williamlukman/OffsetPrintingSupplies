@@ -58,9 +58,9 @@
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
 				  { name: 'contactid', index: 'contactid', width: 100 },
-                  { name: 'contactname', index: 'contactname', width: 100 },
+                  { name: 'contact', index: 'contact', width: 100 },
                   { name: 'cashbankid', index: 'cashbankid', width: 100 },
-                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
+                  { name: 'cashbank', index: 'cashbank', width: 100 },
                   { name: 'paymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isgbch', index: 'isgbch', width: 100 },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -124,8 +124,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -175,7 +175,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -246,7 +246,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -606,8 +606,8 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true });
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -631,7 +631,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -768,7 +768,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
+                  { name: 'name', index: 'name', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),
@@ -782,8 +782,8 @@
         width: $("#lookup_div_contact").width() - 10,
         height: $("#lookup_div_contact").height() - 110,
     });
-    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_contact').click(function () {
@@ -797,7 +797,7 @@
             var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
             $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
+            $('#Contact').val(ret.name);
             $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -825,7 +825,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
+                  { name: 'name', index: 'name', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_cashbank'),
@@ -839,8 +839,8 @@
         width: $("#lookup_div_cashbank").width() - 10,
         height: $("#lookup_div_cashbank").height() - 110,
     });
-    $("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_cashbank').click(function () {
@@ -854,7 +854,7 @@
             var ret = jQuery("#lookup_table_cashbank").jqGrid('getRowData', id);
 
             $('#CashBankId').val(ret.id).data("kode", id);
-            $('#CashBank').val(ret.code);
+            $('#CashBank').val(ret.name);
             $('#lookup_div_cashbank').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -884,7 +884,7 @@
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
                   { name: 'contactid', index: 'contactid', width: 100, sortable: false },
-                  { name: 'contactname', index: 'contactname', width: 100, sortable: false },
+                  { name: 'contact', index: 'contact', width: 100, sortable: false },
                   { name: 'payablesource', index: 'payablesource', width: 100, sortable: false },
                   { name: 'payablesourceid', index: 'payablesourceid', width: 100, sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
@@ -904,8 +904,8 @@
         width: $("#lookup_div_payable").width() - 10,
         height: $("#lookup_div_payable").height() - 110,
     });
-    $("#lookup_table_payable").jqGrid('navGrid', '#lookup_toolbar_payable', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_payable").jqGrid('navGrid', '#lookup_toolbar_payable', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_payable').click(function () {

@@ -39,9 +39,19 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<WarehouseItem> GetQueryableObjectsByWarehouseId(int warehouseId)
+        {
+            return _repository.GetQueryableObjectsByWarehouseId(warehouseId);
+        }
+
         public IList<WarehouseItem> GetObjectsByWarehouseId(int warehouseId)
         {
             return _repository.GetObjectsByWarehouseId(warehouseId);
+        }
+
+        public IQueryable<WarehouseItem> GetQueryableObjectsByItemId(int ItemId)
+        {
+            return _repository.GetQueryableObjectsByItemId(ItemId);
         }
 
         public IList<WarehouseItem> GetObjectsByItemId(int ItemId)

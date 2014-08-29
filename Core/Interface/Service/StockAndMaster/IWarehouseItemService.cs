@@ -14,7 +14,9 @@ namespace Core.Interface.Service
         IWarehouseItemValidator GetValidator();
         IWarehouseItemRepository GetRepository();
         IList<WarehouseItem> GetAll();
+        IQueryable<WarehouseItem> GetQueryableObjectsByWarehouseId(int warehouseId);
         IList<WarehouseItem> GetObjectsByWarehouseId(int warehouseId);
+        IQueryable<WarehouseItem> GetQueryableObjectsByItemId(int ItemId);
         IList<WarehouseItem> GetObjectsByItemId(int itemId);
         WarehouseItem GetObjectById(int Id);
         WarehouseItem FindOrCreateObject(int warehouseId, int ItemId);

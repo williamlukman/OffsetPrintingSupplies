@@ -13,7 +13,7 @@ namespace Validation.Validation
     {
         public StockMutation VHasWarehouse(StockMutation stockMutation, IWarehouseService _warehouseService)
         {
-            Warehouse warehouse = _warehouseService.GetObjectById(stockMutation.WarehouseId);
+            Warehouse warehouse = _warehouseService.GetObjectById((int)stockMutation.WarehouseId.GetValueOrDefault());
             if (warehouse == null)
             {
                 stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan warehouse");
@@ -23,7 +23,7 @@ namespace Validation.Validation
 
         public StockMutation VHasWarehouseItem(StockMutation stockMutation, IWarehouseItemService _warehouseItemService)
         {
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById((int)stockMutation.WarehouseItemId.GetValueOrDefault());
             if (warehouseItem == null)
             {
                 stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan item di warehouse");

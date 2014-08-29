@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -37,13 +39,32 @@ namespace WebView.Controllers
         public dynamic GetListItem(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _warehouseItemService.GetObjectsByWarehouseId(id);
+            var q = _warehouseItemService.GetQueryableObjectsByWarehouseId(id).Include("Item").Include("ItemType").Include("UoM");
 
-            var list = query as IEnumerable<WarehouseItem>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.ItemId,
+                             item = model.Item.Name,
+                             itemtypeid = model.Item.ItemTypeId,
+                             itemtype = model.Item.ItemType.Name,
+                             sku = model.Item.Sku,
+                             category = model.Item.Category,
+                             uomid = model.Item.UoMId,
+                             uom = model.Item.UoM.Name,
+                             model.Quantity,
+                             model.PendingDelivery,
+                             model.PendingReceival,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -73,13 +94,13 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Name,
-                            _itemService.GetObjectById(model.ItemId).ItemTypeId,
-                            _itemTypeService.GetObjectById(_itemService.GetObjectById(model.ItemId).ItemTypeId).Name,
-                            _itemService.GetObjectById(model.ItemId).Sku,
-                            _itemService.GetObjectById(model.ItemId).Category,
-                            _itemService.GetObjectById(model.ItemId).UoMId,
-                           _uoMService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name,
+                            model.item,
+                            model.itemtypeid,
+                            model.itemtype,
+                            model.sku,
+                            model.category,
+                            model.uomid,
+                            model.uom,
                             model.Quantity,
                             model.PendingDelivery,
                             model.PendingReceival,
@@ -91,13 +112,25 @@ namespace WebView.Controllers
         public dynamic GetListWarehouse(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _warehouseItemService.GetObjectsByItemId(id);
+            var q = _warehouseItemService.GetQueryableObjectsByItemId(id).Include("Warehouse");
 
-            var list = query as IEnumerable<WarehouseItem>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.WarehouseId,
+                             warehousecode = model.Warehouse.Code,
+                             warehouse = model.Warehouse.Name,
+                             warehousedesc = model.Warehouse.Description,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -127,9 +160,9 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                            model.WarehouseId,
-                           _warehouseService.GetObjectById(model.WarehouseId).Code,
-                           _warehouseService.GetObjectById(model.WarehouseId).Name,
-                           _warehouseService.GetObjectById(model.WarehouseId).Description,
+                           model.warehousecode,
+                           model.warehouse,
+                           model.warehousedesc,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

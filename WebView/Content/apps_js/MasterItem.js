@@ -31,7 +31,7 @@
         url: base_url + 'MstItem/GetList',
         datatype: "json",
         colNames: ['ID', 'Name', 'Item Type Id', 'Item Type Name', 'SKU',
-                   'Category', 'UoM Id', 'UoM', 'Quantity',
+                   'Category', 'UoM Id','UoM','Quantity',
                    'Selling Price', 'AvgPrice',
                    'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
         colModel: [
@@ -68,7 +68,7 @@
 
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true});
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -323,8 +323,8 @@
         mtype: 'GET',
         colNames: ['Id', 'Name'],
         colModel: [
-                  { name: 'id', index: 'contactcode', width: 80, align: 'right' },
-                  { name: 'name', index: 'contactname', width: 200 }],
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_uom'),
         rowNum: 20,

@@ -31,6 +31,11 @@ namespace Data.Repository
             return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
+        public IQueryable<PurchaseReceivalDetail> GetQueryableObjectsByPurchaseReceivalId(int purchaseReceivalId)
+        {
+            return FindAll(prd => prd.PurchaseReceivalId == purchaseReceivalId && !prd.IsDeleted);
+        }
+
         public IList<PurchaseReceivalDetail> GetObjectsByPurchaseReceivalId(int purchaseReceivalId)
         {
             return FindAll(prd => prd.PurchaseReceivalId == purchaseReceivalId && !prd.IsDeleted).ToList();

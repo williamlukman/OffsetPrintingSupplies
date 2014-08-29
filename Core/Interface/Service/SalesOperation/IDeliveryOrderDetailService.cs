@@ -13,8 +13,10 @@ namespace Core.Interface.Service
         IQueryable<DeliveryOrderDetail> GetQueryable();
         IList<DeliveryOrderDetail> GetAll();
         IDeliveryOrderDetailValidator GetValidator();
+        IQueryable<DeliveryOrderDetail> GetQueryableObjectsByDeliveryOrderId(int deliveryOrderId);
         IList<DeliveryOrderDetail> GetObjectsByDeliveryOrderId(int deliveryOrderId);
         DeliveryOrderDetail GetObjectById(int Id);
+        IQueryable<DeliveryOrderDetail> GetQueryableObjectsBySalesOrderDetailId(int salesOrderDetailId);
         IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId);
         DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,

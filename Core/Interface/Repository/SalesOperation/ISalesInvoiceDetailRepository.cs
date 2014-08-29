@@ -11,7 +11,9 @@ namespace Core.Interface.Repository
         IQueryable<SalesInvoiceDetail> GetQueryable();
         IList<SalesInvoiceDetail> GetAll();
         IList<SalesInvoiceDetail> GetAllByMonthCreated();
+        IQueryable<SalesInvoiceDetail> GetQueryableObjectsBySalesInvoiceId(int salesInvoiceId);
         IList<SalesInvoiceDetail> GetObjectsBySalesInvoiceId(int salesInvoiceId);
+        IQueryable<SalesInvoiceDetail> GetQueryableObjectsByDeliveryOrderDetailId(int deliveryOrderDetailId);
         IList<SalesInvoiceDetail> GetObjectsByDeliveryOrderDetailId(int deliveryOrderDetailId);
         SalesInvoiceDetail GetObjectById(int Id);
         SalesInvoiceDetail CreateObject(SalesInvoiceDetail salesInvoiceDetail);

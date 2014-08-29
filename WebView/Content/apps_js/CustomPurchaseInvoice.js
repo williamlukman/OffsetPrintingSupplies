@@ -45,6 +45,7 @@
 
 	$("#form_div").dialog('close');
 	$("#item_div").dialog('close');
+	$("#check_div").dialog('close');
 	$("#confirm_div").dialog('close');
 	$("#paid_div").dialog('close');
 	$("#lookup_div_contact").dialog('close');
@@ -64,7 +65,7 @@
                    'Is GBCH', 'GBCH No.', 'GBCH Due Date',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
 				   'Total', 'CoGS', 'Warehouse ID', 'Warehouse Name',
-				   'Created At', 'Updated At', 'CustomPurchaseInvoiceDetails'],
+				   'Created At', 'Updated At'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
@@ -94,7 +95,6 @@
 				  { name: 'warehouse', index: 'warehouse', width: 100 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'cashsalesinvoicedetails', index: 'cashsalesinvoicedetails', width: 80 },
 		],
 		page: '1',
 		pager: $('#pager'),
@@ -104,7 +104,7 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $("#toolbar").width(),
 		height: $(window).height() - 200,
 		gridComplete:
@@ -159,7 +159,7 @@
 
 	});//END GRID
 	$("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
 	$('#btn_reload').click(function () {
@@ -297,6 +297,55 @@
 		} else {
 			$.messager.alert('Information', 'Please Select Data...!!', 'info');
 		}
+	});
+
+	$('#btn_check').click(function () {
+	    var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+	    if (id) {
+	        var ret = jQuery("#list").jqGrid('getRowData', id);
+	        $('#checkDueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+	        $('#checkDiscount').numberbox('setValue', ret.discount);
+	        $('#checkTax').numberbox('setValue', ret.tax);
+	        $('#checkAllowance').numberbox('setValue', ret.allowance);
+	        $('#idcheck').val(ret.id);
+	        $("#check_div").dialog("open");
+	    } else {
+	        $.messager.alert('Information', 'Please Select Data...!!', 'info');
+	    }
+	});
+
+	$('#check_btn_submit').click(function () {
+	    ClearErrorMessage();
+	    $.ajax({
+	        url: base_url + "CustomPurchaseInvoice/Check",
+	        type: "POST",
+	        contentType: "application/json",
+	        data: JSON.stringify({
+	            Id: $('#idcheck').val(), DueDate: $('#checkDueDate').datebox('getValue'),
+	            Discount: $('#checkDiscount').numberbox('getValue'), Tax: $('#checkTax').numberbox('getValue'), Allowance: $('#checkAllowance').numberbox('getValue'),
+	        }),
+	        success: function (result) {
+	            if (JSON.stringify(result.Errors) != '{}') {
+	                for (var key in result.Errors) {
+	                    if (key != null && key != undefined && key != 'Generic') {
+	                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+	                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+	                    }
+	                    else {
+	                        $.messager.alert('Warning', result.Errors[key], 'warning');
+	                    }
+	                }
+	            }
+	            else {
+	                $("#check_div").dialog('close');
+	                ReloadGrid();
+	            }
+	        }
+	    });
+	});
+
+	$('#check_btn_cancel').click(function () {
+	    $('#check_div').dialog('close');
 	});
 
 	$('#btn_confirm').click(function () {
@@ -598,9 +647,9 @@
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 130, sortable: false },
-				  { name: 'cashsalesinvoicecode', index: 'cashsalesinvoicecode', width: 130, sortable: false },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 130, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 80, sortable: false },
-				  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
+				  { name: 'item', index: 'item', width: 80, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
 				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
@@ -614,15 +663,15 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $(window).width() - 700,
 		height: $(window).height() - 500,
 		gridComplete:
 		  function () {
 		  }
 	});//END GRID Detail
-	$("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-	//.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false })
+	                .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	$('#btn_add_new_detail').click(function () {
 		ClearData();
@@ -817,8 +866,8 @@
 	    width: $("#lookup_div_contact").width() - 10,
 	    height: $("#lookup_div_contact").height() - 110,
 	});
-	$("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
 	$('#lookup_btn_cancel_contact').click(function () {
@@ -876,8 +925,8 @@
 		width: $("#lookup_div_cashbank").width() - 10,
 		height: $("#lookup_div_cashbank").height() - 110,
 	});
-	$("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_cashbank').click(function () {
@@ -934,8 +983,8 @@
 		width: $("#lookup_div_warehouse").width() - 10,
 		height: $("#lookup_div_warehouse").height() - 110,
 	});
-	$("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_warehouse').click(function () {
@@ -990,8 +1039,8 @@
 		width: $("#lookup_div_item").width() - 10,
 		height: $("#lookup_div_item").height() - 110,
 	});
-	$("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_item').click(function () {

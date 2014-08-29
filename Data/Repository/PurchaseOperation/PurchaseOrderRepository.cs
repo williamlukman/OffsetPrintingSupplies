@@ -43,6 +43,11 @@ namespace Data.Repository
             return FindAll(po => po.ContactId == contactId && !po.IsDeleted).ToList();
         }
 
+        public IQueryable<PurchaseOrder> GetQueryableConfirmedObjects()
+        {
+            return FindAll(x => x.IsConfirmed && !x.IsDeleted);
+        }
+
         public IList<PurchaseOrder> GetConfirmedObjects()
         {
             return FindAll(x => x.IsConfirmed && !x.IsDeleted).ToList();

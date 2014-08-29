@@ -11,7 +11,9 @@ namespace Core.Interface.Repository
         IQueryable<ReceiptVoucherDetail> GetQueryable();
         IList<ReceiptVoucherDetail> GetAll();
         IList<ReceiptVoucherDetail> GetAllByMonthCreated();
+        IQueryable<ReceiptVoucherDetail> GetQueryableObjectsByReceiptVoucherId(int receiptVoucherId);
         IList<ReceiptVoucherDetail> GetObjectsByReceiptVoucherId(int receiptVoucherId);
+        IQueryable<ReceiptVoucherDetail> GetQueryableObjectsByReceivableId(int receivableId);
         IList<ReceiptVoucherDetail> GetObjectsByReceivableId(int receivableId);
         ReceiptVoucherDetail GetObjectById(int Id);
         ReceiptVoucherDetail CreateObject(ReceiptVoucherDetail receiptVoucherDetail);

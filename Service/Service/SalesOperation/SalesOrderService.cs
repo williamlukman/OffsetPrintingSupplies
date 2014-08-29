@@ -35,6 +35,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<SalesOrder> GetQueryableConfirmedObjects()
+        {
+            return _repository.GetQueryableConfirmedObjects();
+        }
+
         public IList<SalesOrder> GetConfirmedObjects()
         {
             return _repository.GetConfirmedObjects();

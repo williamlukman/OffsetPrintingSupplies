@@ -54,7 +54,7 @@
 				   'Discount', 'Tax', 'Allowance', 'Is Confirmed', 'Confirmation Date', 'Amount Paid',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid', 'Is Full Payment',
 				   'Total', 'CoGS', 'Warehouse ID', 'Warehouse Name',
-				   'Created At', 'Updated At', 'CashSalesInvoiceDetails', 'CashSalesReturns'],
+				   'Created At', 'Updated At'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
@@ -65,21 +65,19 @@
 				  { name: 'tax', index: 'tax', width: 80, decimal: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
 				  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'amountpaid', index: 'amountpaid', width: 80, formatter: 'currency' },
 				  { name: 'cashbankid', index: 'cashbankid', width: 80 },
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
 				  { name: 'isbank', index: 'isbank', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'isfullpayment', index: 'isfullpayment', width: 80, boolean: { defaultValue: 'false' } },
+				  { name: 'isfullpayment', index: 'isfullpayment', width: 100, boolean: { defaultValue: 'false' } },
 				  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
 				  { name: 'cogs', index: 'cogs', width: 80, formatter: 'currency' },
-				  { name: 'warehouseid', index: 'warehouseid', width: 80 },
+				  { name: 'warehouseid', index: 'warehouseid', width: 85 },
 				  { name: 'warehouse', index: 'warehouse', width: 100 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'cashsalesinvoicedetails', index: 'cashsalesinvoicedetails', width: 80 },
-				  { name: 'cashsalesreturns', index: 'cashsalesreturns', width: 80 },
 		],
 		page: '1',
 		pager: $('#pager'),
@@ -89,7 +87,7 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $("#toolbar").width(),
 		height: $(window).height() - 200,
 		gridComplete:
@@ -138,7 +136,7 @@
 
 	});//END GRID
 	$("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	//TOOL BAR BUTTON
 	$('#btn_reload').click(function () {
@@ -584,14 +582,14 @@
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 130, sortable: false },
-				  { name: 'cashsalesinvoicecode', index: 'cashsalesinvoicecode', width: 130, sortable: false },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 150, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 80, sortable: false },
-				  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
+				  { name: 'item', index: 'item', width: 80, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
 				  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 				  { name: 'cogs', index: 'cogs', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-				  { name: 'pricemutationid', index: 'pricemutationid', width: 80, sortable: false },
-                  { name: 'ismanualpriceassignment', index: 'ismanualpriceassignment', width: 80, boolean: { defaultValue: 'false' } },
+				  { name: 'pricemutationid', index: 'pricemutationid', width: 105, sortable: false },
+                  { name: 'ismanualpriceassignment', index: 'ismanualpriceassignment', width: 165, boolean: { defaultValue: 'false' } },
                   { name: 'assignedprice', index: 'assignedprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
 		//page: '1',
@@ -602,7 +600,7 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $(window).width() - 700,
 		height: $(window).height() - 500,
 		gridComplete:
@@ -621,8 +619,8 @@
 		      }
 		  }
 	});//END GRID Detail
-	$("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-	//.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false })
+	    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	$('#btn_add_new_detail').click(function () {
 		ClearData();
@@ -825,8 +823,8 @@
 		width: $("#lookup_div_cashbank").width() - 10,
 		height: $("#lookup_div_cashbank").height() - 110,
 	});
-	$("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_cashbank').click(function () {
@@ -883,8 +881,8 @@
 		width: $("#lookup_div_warehouse").width() - 10,
 		height: $("#lookup_div_warehouse").height() - 110,
 	});
-	$("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_warehouse').click(function () {
@@ -939,8 +937,8 @@
 		width: $("#lookup_div_item").width() - 10,
 		height: $("#lookup_div_item").height() - 110,
 	});
-	$("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_item').click(function () {

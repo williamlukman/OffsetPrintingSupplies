@@ -45,6 +45,11 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
+        public IQueryable<PurchaseOrder> GetQueryableConfirmedObjects()
+        {
+            return _repository.GetQueryableConfirmedObjects();
+        }
+
         public IList<PurchaseOrder> GetConfirmedObjects()
         {
             return _repository.GetConfirmedObjects();

@@ -18,12 +18,17 @@ namespace Data.Repository
 
         public IQueryable<QuantityPricing> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<QuantityPricing> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
+        }
+
+        public IQueryable<QuantityPricing> GetQueryableObjectsByItemTypeId(int ItemTypeId)
+        {
+            return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted);
         }
 
         public IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId)

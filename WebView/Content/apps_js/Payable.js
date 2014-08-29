@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'Payable/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'Payable/GetList' }).trigger("reloadGrid");
     }
 
     function ReloadGridByDate(StartDate, EndDate) {
-        $("#list").setGridParam({ url: base_url + 'Payable/GetListByDate', postData: { filters: null, startdate: StartDate, enddate: EndDate }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'Payable/GetListByDate', postData: { startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -33,7 +33,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
     			  { name: 'contactid', index: 'contactid', width: 35, align: "center", hidden: true},
-				  { name: 'contactname', index: 'contactname', width: 120, search: false },
+				  { name: 'contact', index: 'contact', width: 120, search: true },
                   { name: 'code', index: 'code', width: 120 },
 				  { name: 'payablesource', index: 'payablesource', width: 120, align: 'right' },
 				  { name: 'payablesourceid', index: 'payablesourceid', width: 60 },
@@ -54,7 +54,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -74,8 +74,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

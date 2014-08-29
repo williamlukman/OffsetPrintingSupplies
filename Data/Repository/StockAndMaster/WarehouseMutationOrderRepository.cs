@@ -20,12 +20,12 @@ namespace Data.Repository
 
         public IQueryable<WarehouseMutationOrder> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<WarehouseMutationOrder> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public IList<WarehouseMutationOrder> GetAllByMonthCreated()

@@ -12,6 +12,7 @@ namespace Core.Interface.Service
         IQueryable<CashSalesReturnDetail> GetQueryable();
         ICashSalesReturnDetailValidator GetValidator();
         IList<CashSalesReturnDetail> GetAll();
+        IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesReturnId(int CashSalesReturnId);
         IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int cashSalesReturnId);
         CashSalesReturnDetail GetObjectById(int Id);
         IList<CashSalesReturnDetail> GetObjectsByCashSalesInvoiceDetailId(int CashSalesInvoiceDetailId);

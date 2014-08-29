@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<WarehouseMutationOrderDetail> GetQueryable();
         IList<WarehouseMutationOrderDetail> GetAll();
         IList<WarehouseMutationOrderDetail> GetAllByMonthCreated();
+        IQueryable<WarehouseMutationOrderDetail> GetQueryableObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId);
         IList<WarehouseMutationOrderDetail> GetObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId);
         WarehouseMutationOrderDetail GetObjectById(int Id);
         WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail);

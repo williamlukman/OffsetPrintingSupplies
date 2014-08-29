@@ -18,12 +18,12 @@ namespace Data.Repository
 
         public IQueryable<RetailPurchaseInvoice> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<RetailPurchaseInvoice> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public IList<RetailPurchaseInvoice> GetAllByMonthCreated()

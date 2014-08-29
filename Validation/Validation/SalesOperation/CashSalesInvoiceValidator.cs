@@ -230,7 +230,7 @@ namespace Validation.Validation
 
         public CashSalesInvoice VHasCashBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService)
         {
-            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId);
+            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId.GetValueOrDefault());
             if (cashBank == null)
             {
                 cashSalesInvoice.Errors.Add("CashBankId", "Tidak valid");
@@ -240,7 +240,7 @@ namespace Validation.Validation
 
         public CashSalesInvoice VIsCashBankTypeNotBank(CashSalesInvoice cashSalesInvoice, ICashBankService _cashBankService)
         {
-            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId);
+            CashBank cashBank = _cashBankService.GetObjectById((int)cashSalesInvoice.CashBankId.GetValueOrDefault());
             if (cashBank.IsBank)
             {
                 cashSalesInvoice.Errors.Add("Generic", "CashBank harus bukan tipe Bank");

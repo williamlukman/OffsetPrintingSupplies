@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         IList<PurchaseReceival> GetAll();
         PurchaseReceival GetObjectById(int Id);
         IList<PurchaseReceival> GetObjectsByPurchaseOrderId(int purchaseOrderId);
+        IQueryable<PurchaseReceival> GetQueryableConfirmedObjects();
         IList<PurchaseReceival> GetConfirmedObjects();
         PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService);
         PurchaseReceival CreateObject(int warehouseId, int purchaseOrderId, DateTime ReceivalDate, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService);

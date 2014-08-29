@@ -13,6 +13,7 @@ namespace Core.Interface.Service
         IQueryable<WarehouseMutationOrderDetail> GetQueryable();
         IWarehouseMutationOrderDetailValidator GetValidator();
         IList<WarehouseMutationOrderDetail> GetAll();
+        IQueryable<WarehouseMutationOrderDetail> GetQueryableObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId);
         IList<WarehouseMutationOrderDetail> GetObjectsByWarehouseMutationOrderId(int warehouseMutationOrderId);
         WarehouseMutationOrderDetail GetObjectById(int Id);
         WarehouseMutationOrderDetail CreateObject(WarehouseMutationOrderDetail warehouseMutationOrderDetail, IWarehouseMutationOrderService _warehouseMutationOrderService,

@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -46,17 +48,38 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _purchaseInvoiceService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _purchaseInvoiceService.GetQueryable().Include("PurchaseReceival");
 
-            var list = query as IEnumerable<PurchaseInvoice>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.PurchaseReceivalId,
+                             purchasereceival = model.PurchaseReceival.Code,
+                             model.Description,
+                             model.Discount,
+                             model.IsTaxable,
+                             model.InvoiceDate,
+                             model.DueDate,
+                             model.AmountPayable,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
-            var totalRecords = query.Count();
+            var totalRecords = list.Count();
             var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
             // default last page
             if (totalPages > 0)
@@ -84,7 +107,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.PurchaseReceivalId,
-                            _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
+                            model.purchasereceival,
                             model.Description,
                             model.Discount,
                             model.IsTaxable,
@@ -103,13 +126,28 @@ namespace WebView.Controllers
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(id).Where(d => d.IsDeleted == false);
+            var q = _purchaseInvoiceDetailService.GetQueryableObjectsByPurchaseInvoiceId(id).Include("PurchaseReceivalDetail").Include("Item");
+            
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.PurchaseReceivalDetailId,
+                             purchasereceivaldetail = model.PurchaseReceivalDetail.Code,
+                             itemid = model.PurchaseReceivalDetail.ItemId,
+                             item = model.PurchaseReceivalDetail.Item.Name, 
+                             model.Quantity,
+                             model.Amount,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
-            var list = query as IEnumerable<PurchaseInvoiceDetail>;
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -140,9 +178,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.PurchaseReceivalDetailId,
-                            _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).Code,
-                            _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId,
-                            _itemService.GetObjectById( _purchaseReceivalDetailService.GetObjectById(model.PurchaseReceivalDetailId).ItemId).Name,
+                            model.purchasereceivaldetail,
+                            model.itemid,
+                            model.item,
                             model.Quantity,
                             model.Amount,
                       }
@@ -161,7 +199,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -190,7 +234,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -218,7 +268,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -239,7 +295,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
                
             }
 
@@ -267,7 +329,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -288,7 +356,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -310,7 +384,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -335,7 +415,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -349,16 +435,22 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic Confirm(PurchaseInvoice model)
         {
-            //try
-            //{
+            try
+            {
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseReceivalService,_purchaseReceivalDetailService,_payableService);
-            //}
-            //catch (Exception ex)
-            //{
-            //    LOG.Error("Confirm Failed", ex);
-            //    model.Errors.Add("Generic", "Error : " + ex);
-            //}
+                model = _purchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService, _purchaseReceivalDetailService, _payableService);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Confirm Failed", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
+            }
 
             return Json(new
             {
@@ -378,7 +470,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Unconfirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new

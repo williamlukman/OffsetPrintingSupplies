@@ -35,6 +35,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<CashSalesReturnDetail> GetQueryableObjectsByCashSalesReturnId(int CashSalesReturnId)
+        {
+            return _repository.GetQueryableObjectsByCashSalesReturnId(CashSalesReturnId);
+        }
+
         public IList<CashSalesReturnDetail> GetObjectsByCashSalesReturnId(int CashSalesReturnId)
         {
             return _repository.GetObjectsByCashSalesReturnId(CashSalesReturnId);
@@ -107,7 +112,7 @@ namespace Service.Service
                     WarehouseItemId = warehouseItem.Id
                 };
                 stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
-                stockMutation.CreatedAt = (DateTime)cashSalesReturn.ConfirmationDate;
+                stockMutation.CreatedAt = (DateTime)cashSalesReturn.ConfirmationDate.GetValueOrDefault();
                 _stockMutationService.UpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, cashSalesReturnDetail.Quantity, (cashSalesInvoiceDetail.CoGS / cashSalesInvoiceDetail.Quantity));

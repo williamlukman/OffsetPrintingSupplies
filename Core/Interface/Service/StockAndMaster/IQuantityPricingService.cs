@@ -12,6 +12,7 @@ namespace Core.Interface.Service
         IQueryable<QuantityPricing> GetQueryable();
         IQuantityPricingValidator GetValidator();
         IList<QuantityPricing> GetAll();
+        IQueryable<QuantityPricing> GetQueryableObjectsByItemTypeId(int ItemTypeId);
         IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId);
         QuantityPricing GetObjectById(int Id);
         QuantityPricing GetObjectByItemTypeIdAndQuantity(int ItemTypeId, int Quantity);

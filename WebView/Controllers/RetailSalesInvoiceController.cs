@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -70,13 +72,47 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _retailSalesInvoiceService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _retailSalesInvoiceService.GetQueryable().Include("Contact").Include("CashBank");
 
-            var list = query as IEnumerable<RetailSalesInvoice>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.Description,
+                             model.SalesDate,
+                             model.DueDate,
+                             model.Discount,
+                             model.Tax,
+                             model.IsGroupPricing,
+                             model.ContactId,
+                             contact = model.Contact.Name,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.AmountPaid,
+                             model.IsGBCH,
+                             model.GBCH_No,
+                             model.GBCH_DueDate,
+                             model.CashBankId,
+                             cashbank = model.CashBank.Name,
+                             model.IsBank,
+                             model.IsPaid,
+                             model.IsFullPayment,
+                             model.Total,
+                             model.CoGS,
+                             model.WarehouseId,
+                             warehouse = model.Warehouse.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -100,39 +136,38 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from retailSalesInvoice in list
+                    from model in list
                     select new
                     {
-                        id = retailSalesInvoice.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            retailSalesInvoice.Id,
-                            retailSalesInvoice.Code,
-                            retailSalesInvoice.Description,
-                            retailSalesInvoice.SalesDate,
-                            retailSalesInvoice.DueDate,
-                            retailSalesInvoice.Discount,
-                            retailSalesInvoice.Tax,
-                            retailSalesInvoice.IsGroupPricing,
-                            retailSalesInvoice.ContactId,
-                            _contactService.GetObjectById((int)retailSalesInvoice.ContactId).Name,
-                            retailSalesInvoice.IsConfirmed,
-                            retailSalesInvoice.ConfirmationDate,
-                            retailSalesInvoice.AmountPaid,
-                            retailSalesInvoice.IsGBCH,
-                            retailSalesInvoice.GBCH_No,
-                            retailSalesInvoice.GBCH_DueDate,
-                            retailSalesInvoice.CashBankId,
-                            _cashBankService.GetObjectById((int)retailSalesInvoice.CashBankId).Name,
-                            retailSalesInvoice.IsBank,
-                            retailSalesInvoice.IsPaid,
-                            retailSalesInvoice.IsFullPayment,
-                            retailSalesInvoice.Total,
-                            retailSalesInvoice.CoGS,
-                            retailSalesInvoice.WarehouseId,
-                            _warehouseService.GetObjectById(retailSalesInvoice.WarehouseId).Name,
-                            retailSalesInvoice.CreatedAt,
-                            retailSalesInvoice.UpdatedAt,
-                            _retailSalesInvoiceDetailService.GetObjectsByRetailSalesInvoiceId(retailSalesInvoice.Id).Count(),
+                            model.Id,
+                            model.Code,
+                            model.Description,
+                            model.SalesDate,
+                            model.DueDate,
+                            model.Discount,
+                            model.Tax,
+                            model.IsGroupPricing,
+                            model.ContactId,
+                            model.contact,
+                            model.IsConfirmed,
+                            model.ConfirmationDate,
+                            model.AmountPaid,
+                            model.IsGBCH,
+                            model.GBCH_No,
+                            model.GBCH_DueDate,
+                            model.CashBankId,
+                            model.cashbank,
+                            model.IsBank,
+                            model.IsPaid,
+                            model.IsFullPayment,
+                            model.Total,
+                            model.CoGS,
+                            model.WarehouseId,
+                            model.warehouse,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -141,13 +176,33 @@ namespace WebView.Controllers
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _retailSalesInvoiceDetailService.GetObjectsByRetailSalesInvoiceId(id).Where(d => d.IsDeleted == false);
+            var q = _retailSalesInvoiceDetailService.GetQueryableObjectsByRetailSalesInvoiceId(id).Include("RetailSalesInvoice").Include("Item");
 
-            var list = query as IEnumerable<RetailSalesInvoiceDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.RetailSalesInvoiceId,
+                             retailsalesinvoice = model.RetailSalesInvoice.Code,
+                             model.ItemId,
+                             item = model.Item.Name,
+                             model.Quantity,
+                             model.Amount,
+                             model.CoGS,
+                             model.PriceMutationId,
+                             model.Discount,
+                             model.IsManualPriceAssignment,
+                             model.AssignedPrice,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -178,9 +233,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.RetailSalesInvoiceId,
-                            _retailSalesInvoiceService.GetObjectById(model.RetailSalesInvoiceId).Code,
+                            model.retailsalesinvoice,
                             model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Name,
+                            model.item,
                             model.Quantity,
                             model.Amount,
                             model.CoGS,
@@ -204,7 +259,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error" + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -221,9 +282,9 @@ namespace WebView.Controllers
                 model.IsGBCH,
                 model.GBCH_No,
                 model.GBCH_DueDate,
-                Contact = _contactService.GetObjectById((int)model.ContactId).Name,
+                Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.CashBankId,
-                CashBank = _cashBankService.GetObjectById((int)model.CashBankId).Name,
+                CashBank = _cashBankService.GetObjectById((int)model.CashBankId.GetValueOrDefault()).Name,
                 model.WarehouseId,
                 Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
                 model.Errors
@@ -240,7 +301,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -270,6 +337,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -290,7 +364,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
 
             }
 
@@ -319,6 +399,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -346,7 +433,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -369,7 +462,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Confirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -392,7 +491,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Unconfirm Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -416,7 +521,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Paid Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -439,7 +550,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Unpaid Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -459,7 +576,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error" + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -481,7 +604,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new

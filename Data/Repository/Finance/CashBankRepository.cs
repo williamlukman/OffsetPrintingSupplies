@@ -21,12 +21,12 @@ namespace Data.Repository
 
         public IQueryable<CashBank> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<CashBank> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public CashBank GetObjectById(int Id)

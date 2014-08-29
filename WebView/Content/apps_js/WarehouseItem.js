@@ -44,7 +44,7 @@
               }
 
         });//END GRID
-        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list").jqGrid('setFrozenColumns');
     //    $("#list").setGridParam({ url: base_url + 'MstWarehouse/GetList', page: '1' }).trigger("reloadGrid");
 
@@ -103,7 +103,7 @@
               }
 
         });//END GRID
-        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list").jqGrid('setFrozenColumns');
     }
 
@@ -124,7 +124,7 @@
                       { name: 'sku', index: 'sku', width: 80 },
                       { name: 'category', index: 'category', width: 100 },
                       { name: 'uomid', index: 'uomid', width: 100 },
-                      { name: 'uomname', index: 'uomname', width: 100 },
+                      { name: 'uom', index: 'uom', width: 100 },
                       { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                       { name: 'pendingdelivery', index: 'pendingdelivery', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                       { name: 'pendingreceival', index: 'pendingreceival', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
@@ -145,7 +145,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list_detail").jqGrid('setFrozenColumns');
     }
 
@@ -178,7 +178,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list_detail").jqGrid('setFrozenColumns');
     }
 
@@ -235,8 +235,8 @@
           }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    // .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true })
+              .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

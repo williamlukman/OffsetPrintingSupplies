@@ -13,6 +13,7 @@ namespace Core.Interface.Service
         IQueryable<PurchaseOrderDetail> GetQueryable();
         IList<PurchaseOrderDetail> GetAll();
         IPurchaseOrderDetailValidator GetValidator();
+        IQueryable<PurchaseOrderDetail> GetQueryableObjectsByPurchaseOrderId(int purchaseOrderId);
         IList<PurchaseOrderDetail> GetObjectsByPurchaseOrderId(int purchaseOrderId);
         IList<PurchaseOrderDetail> GetObjectsByItemId(int itemId);
         PurchaseOrderDetail GetObjectById(int Id);

@@ -20,12 +20,12 @@ namespace Data.Repository
 
         public IQueryable<Contact> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<Contact> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public Contact GetObjectById(int Id)

@@ -31,6 +31,11 @@ namespace Data.Repository
             return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
 
+        public IQueryable<DeliveryOrderDetail> GetQueryableObjectsByDeliveryOrderId(int deliveryOrderId)
+        {
+            return FindAll(x => x.DeliveryOrderId == deliveryOrderId && !x.IsDeleted);
+        }
+
         public IList<DeliveryOrderDetail> GetObjectsByDeliveryOrderId(int deliveryOrderId)
         {
             return FindAll(x => x.DeliveryOrderId == deliveryOrderId && !x.IsDeleted).ToList();
@@ -39,6 +44,11 @@ namespace Data.Repository
         public DeliveryOrderDetail GetObjectById(int Id)
         {
             return Find(x => x.Id == Id && !x.IsDeleted);
+        }
+
+        public IQueryable<DeliveryOrderDetail> GetQueryableObjectsBySalesOrderDetailId(int salesOrderDetailId)
+        {
+            return FindAll(x => x.SalesOrderDetailId == salesOrderDetailId && !x.IsDeleted);
         }
 
         public IList<DeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId)

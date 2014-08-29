@@ -19,12 +19,12 @@ namespace Data.Repository
 
         public IQueryable<UoM> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<UoM> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public UoM GetObjectById(int Id)

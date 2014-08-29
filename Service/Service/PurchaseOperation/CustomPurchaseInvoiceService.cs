@@ -79,7 +79,7 @@ namespace Service.Service
                 }
                 // Tax dihitung setelah discount
                 customPurchaseInvoice.Total = (customPurchaseInvoice.Total * (100 - customPurchaseInvoice.Discount) / 100) * (100 - customPurchaseInvoice.Tax) / 100;
-                Payable payable = _payableService.CreateObject(customPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id, customPurchaseInvoice.Total, (DateTime)customPurchaseInvoice.DueDate);
+                Payable payable = _payableService.CreateObject(customPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id, customPurchaseInvoice.Total, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault());
                 customPurchaseInvoice = _repository.ConfirmObject(customPurchaseInvoice);
             }
             else
@@ -117,7 +117,7 @@ namespace Service.Service
         {
             if (_validator.ValidPaidObject(customPurchaseInvoice, _cashBankService, _paymentVoucherService))
             {
-                CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId);
+                CashBank cashBank = _cashBankService.GetObjectById((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
                 customPurchaseInvoice.IsBank = cashBank.IsBank;
                 customPurchaseInvoice.AmountPaid = AmountPaid;
                 if (!customPurchaseInvoice.IsGBCH)
@@ -133,13 +133,13 @@ namespace Service.Service
                 payable.AllowanceAmount = customPurchaseInvoice.Allowance;
                 payable.RemainingAmount = payable.Amount - customPurchaseInvoice.Allowance;
                 _payableService.UpdateObject(payable);
-                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId, customPurchaseInvoice.ContactId, DateTime.Now, payable.RemainingAmount,
-                                                                            customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate, customPurchaseInvoice.IsBank, _paymentVoucherDetailService,
+                PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject((int)customPurchaseInvoice.CashBankId.GetValueOrDefault(), customPurchaseInvoice.ContactId, DateTime.Now, payable.RemainingAmount,
+                                                                            customPurchaseInvoice.IsGBCH, (DateTime)customPurchaseInvoice.DueDate.GetValueOrDefault(), customPurchaseInvoice.IsBank, _paymentVoucherDetailService,
                                                                             _payableService, _contactService, _cashBankService);
                 PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.CreateObject(paymentVoucher.Id, payable.Id, payable.RemainingAmount, 
                                                                             "Automatic Payment", _paymentVoucherService, _cashBankService, _payableService);
                 customPurchaseInvoice = _repository.PaidObject(customPurchaseInvoice);
-                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.ConfirmationDate, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
+                _paymentVoucherService.ConfirmObject(paymentVoucher, (DateTime)customPurchaseInvoice.ConfirmationDate.GetValueOrDefault(), _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService);
             }
             return customPurchaseInvoice;
         }
@@ -149,7 +149,7 @@ namespace Service.Service
             if (_validator.ValidUnpaidObject(customPurchaseInvoice))
             {
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.CustomPurchaseInvoice, customPurchaseInvoice.Id);
-                IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)customPurchaseInvoice.CashBankId);
+                IList<PaymentVoucher> paymentVouchers = _paymentVoucherService.GetObjectsByCashBankId((int)customPurchaseInvoice.CashBankId.GetValueOrDefault());
                 foreach (var paymentVoucher in paymentVouchers)
                 {
                     if (paymentVoucher.ContactId == customPurchaseInvoice.ContactId)

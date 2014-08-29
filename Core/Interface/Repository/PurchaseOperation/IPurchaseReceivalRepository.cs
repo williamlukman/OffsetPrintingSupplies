@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<PurchaseReceival> GetQueryable();
         IList<PurchaseReceival> GetAll();
         IList<PurchaseReceival> GetAllByMonthCreated();
+        IQueryable<PurchaseReceival> GetQueryableConfirmedObjects();
         IList<PurchaseReceival> GetConfirmedObjects();
         PurchaseReceival GetObjectById(int Id);
         IList<PurchaseReceival> GetObjectsByPurchaseOrderId(int purchaseOrderId);

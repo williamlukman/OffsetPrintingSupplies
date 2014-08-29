@@ -54,10 +54,10 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
-				  { name: 'warehousetoid', index: 'warehouseid', width: 150, align: "center" },
-                  { name: 'warehousetoname', index: 'warehousename', width: 150 },
-                  { name: 'warehousefromid', index: 'warehouseid', width: 150 , align: "center"},
-                  { name: 'warehousefromname', index: 'warehousename', width: 150 },
+				  { name: 'warehousetoid', index: 'warehousetoid', width: 150, align: "center" },
+                  { name: 'warehouseto', index: 'warehouseto', width: 150 },
+                  { name: 'warehousefromid', index: 'warehousefromid', width: 150, align: "center" },
+                  { name: 'warehousefrom', index: 'warehousefrom', width: 150 },
                   { name: 'mutationdate', index: 'mutationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -91,8 +91,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -135,7 +135,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -184,7 +184,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -409,7 +409,7 @@
         colModel: [
                   { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 80, sortable: false },
+                  { name: 'item', index: 'item', width: 80, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         //page: '1',
@@ -427,8 +427,8 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true })
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -452,7 +452,7 @@
                         if (JSON.stringify(result.Errors) != '{}') {
                             var error = '';
                             for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.model.Errors[key];
+                                error = error + "<br>" + key + " " + result.Errors[key];
                             }
                             $.messager.alert('Warning', error, 'warning');
                         }
@@ -599,8 +599,8 @@
         width: $("#lookup_div_warehousefrom").width() - 10,
         height: $("#lookup_div_warehousefrom").height() - 110,
     });
-    $("#lookup_table_warehousefrom").jqGrid('navGrid', '#lookup_toolbar_warehousefrom', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehousefrom").jqGrid('navGrid', '#lookup_toolbar_warehousefrom', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehousefrom').click(function () {
@@ -655,8 +655,8 @@
         width: $("#lookup_div_warehouseto").width() - 10,
         height: $("#lookup_div_warehouseto").height() - 110,
     });
-    $("#lookup_table_warehouseto").jqGrid('navGrid', '#lookup_toolbar_warehouseto', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehouseto").jqGrid('navGrid', '#lookup_toolbar_warehouseto', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehouseto').click(function () {
@@ -712,8 +712,8 @@
         width: $("#lookup_div_item").width() - 10,
         height: $("#lookup_div_item").height() - 110,
     });
-    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_item').click(function () {

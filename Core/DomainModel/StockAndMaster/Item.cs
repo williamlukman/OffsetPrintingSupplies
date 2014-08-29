@@ -28,7 +28,7 @@ namespace Core.DomainModel
         public int PriceMutationId { get; set; }
         public decimal AvgPrice { get; set; }
         public decimal Margin { get; set; }
-        public decimal RoundingUp { get; set; }
+        //public decimal RoundingUp { get; set; }
         public virtual ICollection<StockMutation> StockMutations { get; set; }
         public virtual ICollection<PriceMutation> PriceMutations { get; set; }
 

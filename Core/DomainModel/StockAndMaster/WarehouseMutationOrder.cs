@@ -21,7 +21,10 @@ namespace Core.DomainModel
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
+        
         public Dictionary<string, string> Errors { get; set; }
+        public virtual Warehouse WarehouseFrom { get; set; }
+        public virtual Warehouse WarehouseTo { get; set; }
         public virtual ICollection<WarehouseMutationOrderDetail> WarehouseMutationOrderDetails { get; set; }
     }
 }

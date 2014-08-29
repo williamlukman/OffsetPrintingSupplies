@@ -72,7 +72,7 @@ namespace Service.Service
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
             cashMutation.Amount = Math.Abs(paymentVoucher.TotalAmount);
-            cashMutation.MutationDate = paymentVoucher.IsGBCH ? (DateTime) paymentVoucher.ReconciliationDate : (DateTime) paymentVoucher.ConfirmationDate;
+            cashMutation.MutationDate = paymentVoucher.IsGBCH ? (DateTime) paymentVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) paymentVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.PaymentVoucher;
             cashMutation.SourceDocumentId = paymentVoucher.Id;
             cashMutation.Status = Constant.MutationStatus.Deduction;
@@ -94,7 +94,7 @@ namespace Service.Service
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
             cashMutation.Amount = Math.Abs(receiptVoucher.TotalAmount);
-            cashMutation.MutationDate = receiptVoucher.IsGBCH ? (DateTime) receiptVoucher.ReconciliationDate : (DateTime) receiptVoucher.ConfirmationDate;
+            cashMutation.MutationDate = receiptVoucher.IsGBCH ? (DateTime) receiptVoucher.ReconciliationDate.GetValueOrDefault() : (DateTime) receiptVoucher.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.ReceiptVoucher;
             cashMutation.SourceDocumentId = receiptVoucher.Id;
             cashMutation.Status = Constant.MutationStatus.Addition;
@@ -116,7 +116,7 @@ namespace Service.Service
             CashMutation cashMutation = new CashMutation();
             cashMutation.CashBankId = cashBank.Id;
             cashMutation.Amount = Math.Abs(cashBankAdjustment.Amount);
-            cashMutation.MutationDate = (DateTime) cashBankAdjustment.ConfirmationDate;
+            cashMutation.MutationDate = (DateTime) cashBankAdjustment.ConfirmationDate.GetValueOrDefault();
             cashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankAdjustment;
             cashMutation.SourceDocumentId = cashBankAdjustment.Id;
             cashMutation.Status = (cashBankAdjustment.Amount >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
@@ -140,7 +140,7 @@ namespace Service.Service
             CashMutation sourceCashMutation = new CashMutation();
             sourceCashMutation.CashBankId = sourceCashBank.Id;
             sourceCashMutation.Amount = Math.Abs(cashBankMutation.Amount);
-            sourceCashMutation.MutationDate = (DateTime) cashBankMutation.ConfirmationDate;
+            sourceCashMutation.MutationDate = (DateTime) cashBankMutation.ConfirmationDate.GetValueOrDefault();
             sourceCashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankMutation;
             sourceCashMutation.SourceDocumentId = cashBankMutation.Id;
             sourceCashMutation.Status = Constant.MutationStatus.Deduction;
@@ -149,7 +149,7 @@ namespace Service.Service
             CashMutation targetCashMutation = new CashMutation();
             targetCashMutation.CashBankId = sourceCashBank.Id;
             targetCashMutation.Amount = Math.Abs(cashBankMutation.Amount);
-            targetCashMutation.MutationDate = (DateTime)cashBankMutation.ConfirmationDate;
+            targetCashMutation.MutationDate = (DateTime)cashBankMutation.ConfirmationDate.GetValueOrDefault();
             targetCashMutation.SourceDocumentType = Constant.SourceDocumentType.CashBankMutation;
             targetCashMutation.SourceDocumentId = cashBankMutation.Id;
             targetCashMutation.Status = Constant.MutationStatus.Addition;

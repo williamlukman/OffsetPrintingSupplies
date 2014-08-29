@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -34,42 +36,30 @@ namespace WebView.Controllers
             return View();
         }
 
-        public dynamic GetInfo(int Id)
-        {
-            QuantityPricing model = new QuantityPricing();
-            try
-            {
-                model = _quantityPricingService.GetObjectById(Id);
-
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error" + ex);
-            }
-
-            return Json(new
-            {
-                model.Id,
-                model.ItemTypeId,
-                model.Discount,
-                model.MinQuantity,
-                model.IsInfiniteMaxQuantity,
-                model.MaxQuantity,
-                model.Errors
-            }, JsonRequestBehavior.AllowGet);
-        }
-
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _quantityPricingService.GetObjectsByItemTypeId(id);
+            var q = _quantityPricingService.GetQueryableObjectsByItemTypeId(id);
 
-            var list = query as IEnumerable<QuantityPricing>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Discount,
+                             model.MinQuantity,
+                             model.IsInfiniteMaxQuantity,
+                             model.MaxQuantity,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -110,6 +100,38 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetInfo(int Id)
+        {
+            QuantityPricing model = new QuantityPricing();
+            try
+            {
+                model = _quantityPricingService.GetObjectById(Id);
+
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("GetInfo", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new
+            {
+                model.Id,
+                model.ItemTypeId,
+                model.Discount,
+                model.MinQuantity,
+                model.IsInfiniteMaxQuantity,
+                model.MaxQuantity,
+                model.Errors
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public dynamic Insert(QuantityPricing model)
         {
@@ -120,6 +142,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Insert Failed", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -143,6 +172,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Update Failed", ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new
@@ -162,7 +198,13 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error" + ex);
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
+                Errors.Add("Generic", "Error " + ex);
+
+                return Json(new
+                {
+                    Errors
+                }, JsonRequestBehavior.AllowGet);
             }
 
             return Json(new

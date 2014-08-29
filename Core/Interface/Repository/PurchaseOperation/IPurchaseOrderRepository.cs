@@ -13,6 +13,7 @@ namespace Core.Interface.Repository
         IList<PurchaseOrder> GetAllByMonthCreated();
         PurchaseOrder GetObjectById(int Id);
         IList<PurchaseOrder> GetObjectsByContactId(int contactId);
+        IQueryable<PurchaseOrder> GetQueryableConfirmedObjects();
         IList<PurchaseOrder> GetConfirmedObjects();
         PurchaseOrder CreateObject(PurchaseOrder purchaseOrder);
         PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder);

@@ -7,6 +7,7 @@ using System.Text;
 using Data.Context;
 using Data.Repository;
 using System.Data;
+using System.Data.Entity;
 
 namespace Data.Repository
 {
@@ -20,17 +21,22 @@ namespace Data.Repository
 
         public IQueryable<Item> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<Item> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public IList<Item> GetObjectsByItemTypeId(int ItemTypeId)
         {
             return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted).ToList();
+        }
+
+        public IQueryable<Item> GetQueryableObjectsByItemTypeId(int ItemTypeId)
+        {
+            return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted);
         }
 
         public IList<Item> GetObjectsByUoMId(int UoMId)

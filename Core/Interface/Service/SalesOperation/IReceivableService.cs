@@ -13,6 +13,7 @@ namespace Core.Interface.Service
         IReceivableValidator GetValidator();
         IList<Receivable> GetAll();
         IList<Receivable> GetObjectsByContactId(int contactId);
+        IList<Receivable> GetObjectsByDueDate(DateTime DueDate);
         Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId); 
         Receivable GetObjectById(int Id);
         Receivable CreateObject(Receivable receivable);

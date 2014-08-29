@@ -37,9 +37,19 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<PurchaseInvoiceDetail> GetQueryableObjectsByPurchaseInvoiceId(int purchaseInvoiceId)
+        {
+            return _repository.GetQueryableObjectsByPurchaseInvoiceId(purchaseInvoiceId);
+        }
+
         public IList<PurchaseInvoiceDetail> GetObjectsByPurchaseInvoiceId(int purchaseInvoiceId)
         {
             return _repository.GetObjectsByPurchaseInvoiceId(purchaseInvoiceId);
+        }
+
+        public IQueryable<PurchaseInvoiceDetail> GetQueryableObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId)
+        {
+            return _repository.GetQueryableObjectsByPurchaseReceivalDetailId(purchaseReceivalDetailId);
         }
 
         public IList<PurchaseInvoiceDetail> GetObjectsByPurchaseReceivalDetailId(int purchaseReceivalDetailId)

@@ -8,7 +8,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -43,7 +43,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
+        sortorder: "DESC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -63,8 +63,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#pager1', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -158,7 +158,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
                     $("#delete_confirm_div").dialog('close');

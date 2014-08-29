@@ -10,6 +10,7 @@ namespace Core.Interface.Repository
     {
         IQueryable<CashSalesInvoiceDetail> GetQueryable();
         IList<CashSalesInvoiceDetail> GetAll();
+        IQueryable<CashSalesInvoiceDetail> GetQueryableObjectsByCashSalesInvoiceId(int CashSalesInvoiceId);
         IList<CashSalesInvoiceDetail> GetObjectsByCashSalesInvoiceId(int CashSalesInvoiceId);
         CashSalesInvoiceDetail GetObjectById(int Id);
         CashSalesInvoiceDetail ConfirmObject(CashSalesInvoiceDetail cashSalesInvoiceDetail);

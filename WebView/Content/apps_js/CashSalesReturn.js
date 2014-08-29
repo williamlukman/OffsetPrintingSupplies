@@ -41,17 +41,17 @@
 		colNames: ['ID', 'Code', 'Description', 'Return Date', 'CashSalesInvoice ID', 'CashSalesInvoice Code',
 				   'Allowance', 'Is Confirmed', 'Confirmation Date', 'Total',
 				   'CashBank ID', 'CashBank Name', 'Is Bank', 'Is Paid',
-				   'Created At', 'Updated At', 'CashSalesReturnDetails'],
+				   'Created At', 'Updated At'],
 		colModel: [
 				  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'code', index: 'code', width: 100 },
 				  { name: 'description', index: 'description', width: 100 },
 				  { name: 'returndate', index: 'returndate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 80 },
-				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 100 },
+                  { name: 'cashsalesinvoiceid', index: 'cashsalesinvoiceid', width: 125 },
+				  { name: 'cashsalesinvoice', index: 'cashsalesinvoice', width: 155 },
                   { name: 'allowance', index: 'allowance', width: 80, formatter: 'currency' },
 				  { name: 'isconfirmed', index: 'isconfirmed', width: 80, boolean: { defaultValue: 'false' } },
-				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'total', index: 'total', width: 80, formatter: 'currency' },
 				  { name: 'cashbankid', index: 'cashbankid', width: 80 },
 				  { name: 'cashbank', index: 'cashbank', width: 100 },
@@ -59,7 +59,6 @@
 				  { name: 'ispaid', index: 'ispaid', width: 80, boolean: { defaultValue: 'false' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'cashsalesreturndetails', index: 'cashsalesreturndetails', width: 80 },
 		],
 		page: '1',
 		pager: $('#pager'),
@@ -69,7 +68,7 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $("#toolbar").width(),
 		height: $(window).height() - 200,
 		gridComplete:
@@ -103,7 +102,7 @@
 
 	});//END GRID
 	$("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	//TOOL BAR BUTTON
 	$('#btn_reload').click(function () {
@@ -525,9 +524,9 @@
 		colModel: [
 				  { name: 'code', index: 'code', width: 100, sortable: false },
 				  { name: 'cashsalesreturnid', index: 'cashsalesreturnid', width: 130, sortable: false },
-				  { name: 'cashsalesreturncode', index: 'cashsalesreturncode', width: 130, sortable: false },
-				  { name: 'cashsalesinvoicedetailid', index: 'cashsalesinvoicedetailid', width: 130, sortable: false },
-				  { name: 'cashsalesinvoicedetailcode', index: 'cashsalesinvoicedetailcode', width: 130, sortable: false },
+				  { name: 'cashsalesreturn', index: 'cashsalesreturn', width: 140, sortable: false },
+				  { name: 'cashsalesinvoicedetailid', index: 'cashsalesinvoicedetailid', width: 160, sortable: false },
+				  { name: 'cashsalesinvoicedetail', index: 'cashsalesinvoicedetail', width: 185, sortable: false },
 				  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
 				  { name: 'totalprice', index: 'totalprice', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
 		],
@@ -539,15 +538,15 @@
 		viewrecords: true,
 		scrollrows: true,
 		shrinkToFit: false,
-		sortorder: "ASC",
+		sortorder: "DESC",
 		width: $(window).width() - 700,
 		height: $(window).height() - 500,
 		gridComplete:
 		  function () {
 		  }
 	});//END GRID Detail
-	$("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-	//.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false })
+	                .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	$('#btn_add_new_detail').click(function () {
 		ClearData();
@@ -742,8 +741,8 @@
 		width: $("#lookup_div_cashbank").width() - 10,
 		height: $("#lookup_div_cashbank").height() - 110,
 	});
-	$("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_cashbank').click(function () {
@@ -799,8 +798,8 @@
 		width: $("#lookup_div_cashsalesinvoice").width() - 10,
 		height: $("#lookup_div_cashsalesinvoice").height() - 110,
 	});
-	$("#lookup_table_cashsalesinvoice").jqGrid('navGrid', '#lookup_toolbar_cashsalesinvoice', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_cashsalesinvoice").jqGrid('navGrid', '#lookup_toolbar_cashsalesinvoice', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_cashsalesinvoice').click(function () {
@@ -861,8 +860,8 @@
 		width: $("#lookup_div_cashsalesinvoicedetail").width() - 10,
 		height: $("#lookup_div_cashsalesinvoicedetail").height() - 110,
 	});
-	$("#lookup_table_cashsalesinvoicedetail").jqGrid('navGrid', '#lookup_toolbar_cashsalesinvoicedetail', { del: false, add: false, edit: false, search: false })
-		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+	$("#lookup_table_cashsalesinvoicedetail").jqGrid('navGrid', '#lookup_toolbar_cashsalesinvoicedetail', { del: false, add: false, edit: false, search: true })
+		   .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 	// Cancel or CLose
 	$('#lookup_btn_cancel_cashsalesinvoicedetail').click(function () {

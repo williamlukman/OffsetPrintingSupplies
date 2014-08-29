@@ -23,6 +23,10 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(rsi => rsi.WarehouseId)
                 .WillCascadeOnDelete(false);
+            HasRequired(rsi => rsi.Contact)
+                .WithMany()
+                .HasForeignKey(rsi => rsi.ContactId)
+                .WillCascadeOnDelete(false);
             Ignore(rsi => rsi.Errors);
         }
     }

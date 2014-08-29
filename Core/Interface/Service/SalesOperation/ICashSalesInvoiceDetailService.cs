@@ -12,6 +12,7 @@ namespace Core.Interface.Service
         IQueryable<CashSalesInvoiceDetail> GetQueryable();
         ICashSalesInvoiceDetailValidator GetValidator();
         IList<CashSalesInvoiceDetail> GetAll();
+        IQueryable<CashSalesInvoiceDetail> GetQueryableObjectsByCashSalesInvoiceId(int CashSalesInvoiceId);
         IList<CashSalesInvoiceDetail> GetObjectsByCashSalesInvoiceId(int cashSalesInvoiceId);
         CashSalesInvoiceDetail GetObjectById(int Id);
         CashSalesInvoiceDetail CreateObject(CashSalesInvoiceDetail cashSalesInvoiceDetail, ICashSalesInvoiceService _cashSalesInvoiceService,

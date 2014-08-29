@@ -10,6 +10,7 @@ namespace Core.Interface.Repository
     {
         IQueryable<QuantityPricing> GetQueryable();
         IList<QuantityPricing> GetAll();
+        IQueryable<QuantityPricing> GetQueryableObjectsByItemTypeId(int ItemTypeId);
         IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId);
         QuantityPricing GetObjectById(int Id);
         QuantityPricing GetObjectByItemTypeIdAndQuantity(int ItemTypeId, int Quantity);

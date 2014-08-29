@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         IItemRepository GetRepository();
         IList<Item> GetAll();
         IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
+        IQueryable<Item> GetQueryableAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
         IList<Item> GetObjectsByUoMId(int UoMId);
         Item GetObjectById(int Id);

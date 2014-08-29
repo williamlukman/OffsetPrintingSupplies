@@ -19,6 +19,17 @@ namespace Data.Repository
         //    Context = context;
         //    ShareContext = sharedContext;
         //}
+       
+        //public static IQueryable<T> Include<T>
+        //    (this IQueryable<T> source, string path)
+        //{
+        //    var objectQuery = source as System.Data.Objects.ObjectQuery<T>;
+        //    if (objectQuery != null)
+        //    {
+        //        return objectQuery.Include(path);
+        //    }
+        //    return source;
+        //}
 
         public EfRepository()
         {

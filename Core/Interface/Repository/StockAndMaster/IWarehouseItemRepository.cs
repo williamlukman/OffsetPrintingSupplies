@@ -10,7 +10,9 @@ namespace Core.Interface.Repository
     {
         IQueryable<WarehouseItem> GetQueryable();
         IList<WarehouseItem> GetAll();
+        IQueryable<WarehouseItem> GetQueryableObjectsByWarehouseId(int warehouseId);
         IList<WarehouseItem> GetObjectsByWarehouseId(int WarehouseId);
+        IQueryable<WarehouseItem> GetQueryableObjectsByItemId(int itemId);
         IList<WarehouseItem> GetObjectsByItemId(int itemId);
         WarehouseItem GetObjectById(int Id);
         WarehouseItem FindOrCreateObject(int WarehouseId, int ItemId);

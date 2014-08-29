@@ -8,6 +8,9 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
+using System.Data.Objects;
 
 namespace WebView.Controllers
 {
@@ -39,13 +42,39 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _stockMutationService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _stockMutationService.GetQueryable().Include("Item").Include("Warehouse").Include("UoM");
 
-            var list = query as IEnumerable<StockMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.ItemId,
+                            sku = model.Item.Sku,
+                            item = model.Item.Name,
+                            model.WarehouseId,
+                            warehouse = model.Warehouse.Name,
+                            model.WarehouseItemId,
+                            ready = model.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
+                                (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                            pendingreceival = model.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
+                                (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                            pendingdelivery = model.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
+                                (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                            uom = model.Item.UoM.Name,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.SourceDocumentDetailType,
+                            model.SourceDocumentDetailId,
+                            model.CreatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -69,45 +98,73 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from stockmutation in list
+                    from model in list
                     select new
                     {
-                        id = stockmutation.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            stockmutation.Id,
-                            stockmutation.ItemId,
-                            _itemService.GetObjectById(stockmutation.ItemId).Sku,
-                            _itemService.GetObjectById(stockmutation.ItemId).Name,
-                            stockmutation.WarehouseId,
-                            _warehouseService.GetObjectById(stockmutation.WarehouseId).Name,
-                            stockmutation.WarehouseItemId,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            _uomService.GetObjectById(_itemService.GetObjectById(stockmutation.ItemId).UoMId).Name,
-                            stockmutation.SourceDocumentType,
-                            stockmutation.SourceDocumentId,
-                            stockmutation.SourceDocumentDetailType,
-                            stockmutation.SourceDocumentDetailId,
-                            stockmutation.CreatedAt,
+                            model.Id,
+                            model.ItemId,
+                            model.sku,
+                            model.item,
+                            model.WarehouseId,
+                            model.warehouse,
+                            model.WarehouseItemId,
+                            model.ready,
+                            model.pendingreceival,
+                            model.pendingdelivery,
+                            model.uom,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.SourceDocumentDetailType,
+                            model.SourceDocumentDetailId,
+                            model.CreatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
+        public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime? startdate, DateTime? enddate, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            if (startdate.HasValue && enddate.HasValue)
+            {
+                filter = "(" + filter + ") AND CreatedAt >= @0 AND CreatedAt < @1";
+            }
 
             // Get Data
-            var query = _stockMutationService.GetAll().Where(d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false);
+            var q = _stockMutationService.GetQueryable().Include("Item").Include("Warehouse").Include("UoM");
 
-            var list = query as IEnumerable<StockMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.ItemId,
+                             sku = model.Item.Sku,
+                             item = model.Item.Name,
+                             model.WarehouseId,
+                             warehouse = model.Warehouse.Name,
+                             model.WarehouseItemId,
+                             ready = model.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
+                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                             pendingreceival = model.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
+                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                             pendingdelivery = model.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
+                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                             uom = model.Item.UoM.Name,
+                             model.SourceDocumentType,
+                             model.SourceDocumentId,
+                             model.SourceDocumentDetailType,
+                             model.SourceDocumentDetailId,
+                             model.CreatedAt,
+                         }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -131,30 +188,27 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from stockmutation in list
+                    from model in list
                     select new
                     {
-                        id = stockmutation.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            stockmutation.Id,
-                            stockmutation.ItemId,
-                            _itemService.GetObjectById(stockmutation.ItemId).Sku,
-                            _itemService.GetObjectById(stockmutation.ItemId).Name,
-                            stockmutation.WarehouseId,
-                            _warehouseService.GetObjectById(stockmutation.WarehouseId).Name,
-                            stockmutation.WarehouseItemId,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            _uomService.GetObjectById(_itemService.GetObjectById(stockmutation.ItemId).UoMId).Name,
-                            stockmutation.SourceDocumentType,
-                            stockmutation.SourceDocumentId,
-                            stockmutation.SourceDocumentDetailType,
-                            stockmutation.SourceDocumentDetailId,
-                            stockmutation.CreatedAt,
+                            model.Id,
+                            model.ItemId,
+                            model.sku,
+                            model.item,
+                            model.WarehouseId,
+                            model.warehouse,
+                            model.WarehouseItemId,
+                            model.ready,
+                            model.pendingreceival,
+                            model.pendingdelivery,
+                            model.uom,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.SourceDocumentDetailType,
+                            model.SourceDocumentDetailId,
+                            model.CreatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

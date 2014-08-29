@@ -13,7 +13,7 @@
     }
 
     function ReloadGridByDate(StartDate, EndDate) {
-        $("#list").setGridParam({ url: base_url + 'StockMutation/GetListByDate', postData: { filters: null, startdate: StartDate, enddate: EndDate }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'StockMutation/GetListByDate', postData: { startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -35,18 +35,18 @@
     			  { name: 'id', index: 'id', width: 35, align: "center" },
     			  { name: 'itemid', index: 'itemid', width: 35, align: "center", hidden: true},
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 120 },
+				  { name: 'item', index: 'item', width: 120 },
 				  { name: 'warehouseid', index: 'warehouseid', width: 70, hidden: true },
 				  { name: 'warehouse', index: 'warehouse', width: 120 },
 				  { name: 'warehouseitemid', index: 'warehouseitemid', width: 120, hidden: true },
-                  { name: 'quantity', index: 'quantity', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'ready', index: 'ready', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 40 },
-				  { name: 'source', index: 'source', width: 120, align: 'right' },
-				  { name: 'sourceid', index: 'sourceid', width: 60 },
-				  { name: 'detailsource', index: 'detailsource', width: 150, align: 'right' },
-				  { name: 'detailsourceid', index: 'detailsourceid', width: 55 },
+				  { name: 'sourcedocumenttype', index: 'sourcedocumenttype', width: 120, align: 'right' },
+				  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 60 },
+				  { name: 'sourcedocumentdetailtype', index: 'sourcedocumentdetailtype', width: 150, align: 'right' },
+				  { name: 'sourcedocumentdetailid', index: 'sourcedocumentdetailid', width: 55 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -65,8 +65,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

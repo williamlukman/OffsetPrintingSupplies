@@ -10,6 +10,7 @@ namespace Core.Interface.Repository
     {
         IQueryable<CustomPurchaseInvoiceDetail> GetQueryable();
         IList<CustomPurchaseInvoiceDetail> GetAll();
+        IQueryable<CustomPurchaseInvoiceDetail> GetQueryableObjectsByCustomPurchaseInvoiceId(int CustomPurchaseInvoiceId);
         IList<CustomPurchaseInvoiceDetail> GetObjectsByCustomPurchaseInvoiceId(int CustomPurchaseInvoiceId);
         CustomPurchaseInvoiceDetail GetObjectById(int Id);
         CustomPurchaseInvoiceDetail ConfirmObject(CustomPurchaseInvoiceDetail customPurchaseInvoiceDetail);

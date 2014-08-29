@@ -100,7 +100,7 @@
 		  }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list_detail").jqGrid('setFrozenColumns');
     }
 
@@ -142,9 +142,9 @@
           }
 
     });//END GRID
-    $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-    $("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    // .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+    $("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true });
+              //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -255,7 +255,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
-                            $.messager.alert('Warning', result.model.Errors[key], 'warning');
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
                     $("#delete_confirm_div").dialog('close');

@@ -38,9 +38,19 @@ namespace Data.Repository
             return deliveryOrder;
         }
 
+        public IQueryable<DeliveryOrder> GetQueryableObjectsBySalesOrderId(int salesOrderId)
+        {
+            return FindAll(x => x.SalesOrderId == salesOrderId && !x.IsDeleted);
+        }
+
         public IList<DeliveryOrder> GetObjectsBySalesOrderId(int salesOrderId)
         {
             return FindAll(x => x.SalesOrderId == salesOrderId && !x.IsDeleted).ToList();
+        }
+
+        public IQueryable<DeliveryOrder> GetQueryableConfirmedObjects()
+        {
+            return FindAll(x => x.IsConfirmed && !x.IsDeleted);
         }
 
         public IList<DeliveryOrder> GetConfirmedObjects()

@@ -34,6 +34,11 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<QuantityPricing> GetQueryableObjectsByItemTypeId(int ItemTypeId)
+        {
+            return _repository.GetQueryableObjectsByItemTypeId(ItemTypeId);
+        }
+
         public IList<QuantityPricing> GetObjectsByItemTypeId(int ItemTypeId)
         {
             return _repository.GetObjectsByItemTypeId(ItemTypeId);

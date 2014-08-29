@@ -41,6 +41,11 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
+        public IList<Receivable> GetObjectsByDueDate(DateTime DueDate)
+        {
+            return _repository.GetObjectsByDueDate(DueDate);
+        }
+
         public Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId)
         {
             return _repository.GetObjectBySource(ReceivableSource, ReceivableSourceId);

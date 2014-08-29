@@ -9,8 +9,8 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int ItemId { get; set; }
-        public int WarehouseId { get; set; }
-        public int WarehouseItemId { get; set; }
+        public Nullable<int> WarehouseId { get; set; }
+        public Nullable<int> WarehouseItemId { get; set; }
         public int ItemCase { get; set; }
         public int Status { get; set; }
 
@@ -27,6 +27,8 @@ namespace Core.DomainModel
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
 
+        public virtual WarehouseItem WarehouseItem { get; set; }
+        public virtual Warehouse Warehouse { get; set; }
         public virtual Item Item { get; set; }
         public Dictionary<String, String> Errors { get; set; }
 
