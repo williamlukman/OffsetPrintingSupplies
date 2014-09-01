@@ -68,6 +68,13 @@ namespace TestValidation
         public IGroupItemPriceService _groupItemPriceService;
         public IPaymentRequestService _paymentRequestService;
 
+        public IUserAccountService _userAccountService;
+        public IUserMenuService _userMenuService;
+        public IUserAccessService _userAccessService;
+
+        public UserAccount admin, user;
+        public UserMenu menudata, menufinance;
+        public UserAccess admindata, userdata, adminfinance, userfinance;
         public ContactGroup baseGroup, contactGroup1;
         public GroupItemPrice groupItemPrice1;
         public PaymentRequest paymentRequest1;
@@ -79,7 +86,7 @@ namespace TestValidation
         public UoM Pcs, Boxes, Tubs;
         public Item item, itemCompound, itemCompound1, itemCompound2, itemAccessory1, itemAccessory2;
         public Warehouse localWarehouse, movingWarehouse;
-        public Contact contact;
+        public Contact contact, baseContact;
         public Machine machine;
         public CoreBuilder coreBuilder, coreBuilder1, coreBuilder2, coreBuilder3, coreBuilder4;
         public CoreIdentification coreIdentification, coreIdentificationInHouse, coreIdentificationContact;
@@ -168,6 +175,10 @@ namespace TestValidation
             _groupItemPriceService = new GroupItemPriceService(new GroupItemPriceRepository(), new GroupItemPriceValidator());
             _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
 
+            _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
+            _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
+            _userAccessService = new UserAccessService(new UserAccessRepository(), new UserAccessValidator());
+
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
             typeBarring = _itemTypeService.CreateObject("Barring", "Barring", true);
@@ -195,10 +206,13 @@ namespace TestValidation
             typeInkFormY = _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
 
             baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+            baseContact = _contactService.FindOrCreateBaseContact(_contactGroupService);
+            admin = _userAccountService.FindOrCreateSysAdmin();
         }
 
         public void PopulateData()
         {
+            PopulateUserRole();
             PopulateWarehouse();
             PopulateItem();
             PopulateSingles();
@@ -213,6 +227,59 @@ namespace TestValidation
             PopulateCoreIdentifications2();
             PopulateRollerWarehouseMutation();
             PopulateBarringOrders();
+        }
+
+        public void PopulateUserRole()
+        {
+            user = new UserAccount()
+            {
+                Username = "admin",
+                Password = "123",
+                Name = "admin",
+                Description = "admin palsu",
+            };
+            user = _userAccountService.CreateObject(user);
+
+            menudata = _userMenuService.CreateObject("Data", "Master");
+            menufinance = _userMenuService.CreateObject("Finance", "Master");
+
+            admindata = new UserAccess()
+            {
+                UserAccountId = admin.Id,
+                UserMenuId = menudata.Id,
+                AllowView = true,
+                AllowCreate = true,
+                AllowEdit = true,
+                AllowConfirm = true,
+                AllowUnconfirm = true,
+                AllowPaid = true,
+                AllowUnpaid = true,
+                AllowReconcile = true,
+                AllowUnreconcile = true,
+                AllowPrint = true,
+                AllowDelete = true,
+                AllowUndelete = true
+            };
+            admindata = _userAccessService.CreateObject(admindata, _userAccountService, _userMenuService);
+
+            adminfinance = new UserAccess()
+            {
+                UserAccountId = admin.Id,
+                UserMenuId = menufinance.Id,
+                AllowView = true,
+                AllowCreate = true,
+                AllowEdit = true,
+                AllowConfirm = true,
+                AllowUnconfirm = true,
+                AllowPaid = true,
+                AllowUnpaid = true,
+                AllowReconcile = true,
+                AllowUnreconcile = true,
+                AllowPrint = true,
+                AllowDelete = true,
+                AllowUndelete = true
+            };
+            adminfinance = _userAccessService.CreateObject(adminfinance, _userAccountService, _userMenuService);
         }
 
         public void PopulateItem()

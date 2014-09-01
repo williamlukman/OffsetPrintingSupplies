@@ -259,6 +259,23 @@ namespace OffsetPrintingSupplies
 
             d._paymentRequestService.ConfirmObject(d.paymentRequest1, DateTime.Now, d._payableService);
 
+            Console.WriteLine(d.admin.Errors.Count());
+            Console.WriteLine(d.user.Errors.Count());
+            Console.WriteLine(d.menudata.Errors.Count());
+            Console.WriteLine(d.menufinance.Errors.Count());
+            Console.WriteLine(d.admindata.Errors.Count());
+            Console.WriteLine(d.adminfinance.Errors.Count());
+
+            string oldpassword = "sysadmin";
+            //d.admin.Password = "sysadmin123";
+            d.admin = d._userAccountService.UpdateObject(d.admin, oldpassword, "sysadmin123");
+            Console.WriteLine(d.admin.Errors.Count());
+
+            d.user.Username = "Adam";
+            d._userAccountService.CreateObject(d.user);
+            d.admin = d._userAccountService.SoftDeleteObject(d.admin, d.user.Id);
+            Console.WriteLine(d.admin.Errors.Count());
+
             // End of Test
             Console.WriteLine("Press any key to stop...");
             Console.ReadKey();

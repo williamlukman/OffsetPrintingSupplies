@@ -109,6 +109,9 @@
     <Compile Include="DomainModel\Manufacturing\RecoveryAccessoryDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ItemType.cs" />
     <Compile Include="DomainModel\StockAndMaster\Warehouse.cs" />
+    <Compile Include="DomainModel\UserRole\UserAccess.cs" />
+    <Compile Include="DomainModel\UserRole\UserMenu.cs" />
+    <Compile Include="DomainModel\UserRole\UserAccount.cs" />
     <Compile Include="Interface\Repository\Accounting\IAccountRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IClosingRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IValidCombRepository.cs" />
@@ -176,6 +179,9 @@
     <Compile Include="Interface\Repository\StockAndMaster\IItemRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Repository\UserRole\IUserAccessRepository.cs" />
+    <Compile Include="Interface\Repository\UserRole\IUserMenuRepository.cs" />
+    <Compile Include="Interface\Repository\UserRole\IUserAccountRepository.cs" />
     <Compile Include="Interface\Service\Accounting\IAccountService.cs" />
     <Compile Include="Interface\Service\Accounting\IClosingService.cs" />
     <Compile Include="Interface\Service\Accounting\IValidCombService.cs" />
@@ -242,6 +248,9 @@
     <Compile Include="Interface\Service\StockAndMaster\IContactService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemTypeService.cs" />
+    <Compile Include="Interface\Service\UserRole\IUserAccessService.cs" />
+    <Compile Include="Interface\Service\UserRole\IUserMenuService.cs" />
+    <Compile Include="Interface\Service\UserRole\IUserAccountService.cs" />
     <Compile Include="Interface\Validation\Accounting\IAccountValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IClosingValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IValidCombValidator.cs" />
@@ -308,11 +317,17 @@
     <Compile Include="Interface\Validation\StockAndMaster\IContactValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IItemTypeValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IItemValidator.cs" />
+    <Compile Include="Interface\Validation\UserRole\IUserAccessValidator.cs" />
+    <Compile Include="Interface\Validation\UserRole\IUserMenuValidator.cs" />
+    <Compile Include="Interface\Validation\UserRole\IUserAccountValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

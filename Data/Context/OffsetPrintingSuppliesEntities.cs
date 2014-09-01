@@ -20,6 +20,9 @@ namespace Data.Context
         {
             IList<String> tableNames = new List<String>();
 
+            IList<String> userroleNames = new List<String>() 
+                                        { "UserAccess", "UserMenu", "UserAccount" };
+
             IList<String> accountingNames = new List<String>() 
                                         { "GeneralLedgerJournal", "Closing", "ValidComb", "Account" };
 
@@ -46,6 +49,7 @@ namespace Data.Context
                                           "Warehouse", "Barring", "CoreBuilder", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
 
+            userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
             financeNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
@@ -130,6 +134,9 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new ValidCombMapping());
             modelBuilder.Configurations.Add(new ClosingMapping());
             modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
+            modelBuilder.Configurations.Add(new UserAccountMapping());
+            modelBuilder.Configurations.Add(new UserMenuMapping());
+            modelBuilder.Configurations.Add(new UserAccessMapping());
             base.OnModelCreating(modelBuilder);
         }
 
@@ -199,5 +206,8 @@ namespace Data.Context
         public DbSet<ValidComb> ValidCombs { get; set; }
         public DbSet<Closing> Closings { get; set; }
         public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<UserMenu> UserMenus { get; set; }
+        public DbSet<UserAccess> UserAccesses { get; set; }
     }
 }

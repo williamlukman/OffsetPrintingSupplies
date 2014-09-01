@@ -112,7 +112,7 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(item, _uomService, this, _itemTypeService))
             {
                 ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
-                Item olditem = _repository.GetObjectById(item.Id);
+                Item olditem = _repository.GetObjectById(item.Id); // Note: olditem might be pointing to the same memory with item (share the same contents)
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 item.UpdatedAt = DateTime.Now;
                 if (olditem.SellingPrice != item.SellingPrice)
@@ -142,7 +142,7 @@ namespace Service.Service
             if(_validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService)) 
             {
                 ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
-                Item olditem = _repository.GetObjectById(item.Id);
+                Item olditem = _repository.GetObjectById(item.Id); // Note: olditem might be pointing to the same memory with item (share the same contents)
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 if (olditem.SellingPrice != item.SellingPrice)
                 {

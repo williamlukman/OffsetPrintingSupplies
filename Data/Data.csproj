@@ -111,6 +111,9 @@
     <Compile Include="Mapping\StockAndMaster\CoreBuilderMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ItemTypeMapping.cs" />
+    <Compile Include="Mapping\UserRole\UserAccessMapping.cs" />
+    <Compile Include="Mapping\UserRole\UserMenuMapping.cs" />
+    <Compile Include="Mapping\UserRole\UserAccountMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Accounting\AccountRepository.cs" />
     <Compile Include="Repository\Accounting\ClosingRepository.cs" />
@@ -179,6 +182,9 @@
     <Compile Include="Repository\EfRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ItemRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ItemTypeRepository.cs" />
+    <Compile Include="Repository\UserRole\UserAccessRepository.cs" />
+    <Compile Include="Repository\UserRole\UserMenuRepository.cs" />
+    <Compile Include="Repository\UserRole\UserAccountRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

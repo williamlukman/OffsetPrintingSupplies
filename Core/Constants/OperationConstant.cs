@@ -28,6 +28,11 @@ namespace Core.Constants
             public static int Deduction = 2;
         }
 
+        public class UserType
+        {
+            public static string Admin = "Admin";
+        }
+
         public class AccountGroup
         {
             public static int Asset = 1;

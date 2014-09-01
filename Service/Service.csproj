@@ -106,6 +106,10 @@
     <Compile Include="Service\StockAndMaster\ContactService.cs" />
     <Compile Include="Service\StockAndMaster\ItemService.cs" />
     <Compile Include="Service\StockAndMaster\ItemTypeService.cs" />
+    <Compile Include="Service\StringEncryption.cs" />
+    <Compile Include="Service\UserRole\UserAccessService.cs" />
+    <Compile Include="Service\UserRole\UserMenuService.cs" />
+    <Compile Include="Service\UserRole\UserAccountService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

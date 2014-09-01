@@ -106,6 +106,9 @@
     <Compile Include="Validation\StockAndMaster\ContactValidator.cs" />
     <Compile Include="Validation\StockAndMaster\ItemTypeValidator.cs" />
     <Compile Include="Validation\StockAndMaster\ItemValidator.cs" />
+    <Compile Include="Validation\UserRole\UserAccessValidator.cs" />
+    <Compile Include="Validation\UserRole\UserMenuValidator.cs" />
+    <Compile Include="Validation\UserRole\UserAccountValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
