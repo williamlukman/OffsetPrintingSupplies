@@ -57,7 +57,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
+                    Description = "ABC123",
                     UoMId = d.Pcs.Id,
                     Quantity = 0
                 };
@@ -67,7 +67,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
                     Sku = "Cmp10001",
                     Name = "Cmp 10001",
-                    Category = "cmp",
+                    Description = "cmp",
                     UoMId = d.Pcs.Id
                 };
                 d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -87,7 +87,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._barringService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService);
 
                 d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
 
@@ -104,10 +104,12 @@ namespace TestValidation
                     SkuNewCore = "CB00001N",
                     SkuUsedCore = "CB00001U",
                     Name = "CoreBuilder00001",
-                    Category = "X",
-                    UoMId = d.Pcs.Id
+                    Description = "X",
+                    UoMId = d.Pcs.Id,
+                    MachineId = d.machine.Id
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
+                                                                   d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     ContactId = d.contact.Id,
@@ -140,7 +142,7 @@ namespace TestValidation
                     SkuRollerNewCore = "RB0001N",
                     SkuRollerUsedCore = "RB0001U",
                     Name = "Roller 0001",
-                    Category = "0001",
+                    Description = "0001",
                     RD = 12,
                     CD = 13,
                     RL = 14,
@@ -174,9 +176,9 @@ namespace TestValidation
 
             it["delete_rollerbuilder"] = () =>
             {
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._barringService, d._priceMutationService, d._recoveryOrderDetailService,
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._blanketService, d._priceMutationService, d._recoveryOrderDetailService,
                                                                            d._coreBuilderService, d._warehouseItemService, d._stockMutationService, d._itemTypeService,
-                                                                           d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService, d._barringOrderDetailService);
+                                                                           d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService, d._blanketOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_be(0);
             };
 
@@ -205,11 +207,11 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(stockADy, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._barringService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService);
 
                 d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, DateTime.Today, 
                                        d._coreIdentificationDetailService, d._stockMutationService, d._recoveryOrderService, d._recoveryOrderDetailService,
-                                       d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
+                                       d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
                 d.coreIdentification.Errors.Count().should_be(0);
 
                 RecoveryOrder recoveryOrder = new RecoveryOrder()
@@ -234,9 +236,9 @@ namespace TestValidation
                 recoveryOrderDetail = d._recoveryOrderDetailService.CreateObject(recoveryOrderDetail, d._recoveryOrderService, d._coreIdentificationDetailService, d._rollerBuilderService);
                 recoveryOrderDetail.Errors.Count().should_be(0);
 
-                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._barringService, d._priceMutationService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService,
+                d.rollerBuilder = d._rollerBuilderService.SoftDeleteObject(d.rollerBuilder, d._itemService, d._blanketService, d._priceMutationService, d._recoveryOrderDetailService, d._coreBuilderService, d._warehouseItemService,
                                                                            d._stockMutationService, d._itemTypeService, d._purchaseOrderDetailService,
-                                                                           d._stockAdjustmentDetailService, d._salesOrderDetailService, d._barringOrderDetailService);
+                                                                           d._stockAdjustmentDetailService, d._salesOrderDetailService, d._blanketOrderDetailService);
                 d.rollerBuilder.Errors.Count().should_not_be(0);
             };
         }

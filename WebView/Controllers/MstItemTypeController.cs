@@ -100,6 +100,28 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetInfoByName(string itemType)
+        {
+            ItemType model = new ItemType();
+            try
+            {
+                model = _itemTypeService.GetObjectByName(itemType);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("GetInfo", ex);
+                model.Errors.Add("Generic", "Error" + ex);
+            }
+
+            return Json(new
+            {
+                model.Id,
+                model.Name,
+                model.Description,
+                model.Errors
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public dynamic Insert(ItemType model)
         {

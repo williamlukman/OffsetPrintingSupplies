@@ -15,9 +15,9 @@ namespace TestValidation
 {
     public class PurchaseBuilder
     {
-        public IBarringService _barringService;
-        public IBarringOrderService _barringOrderService;
-        public IBarringOrderDetailService _barringOrderDetailService;
+        public IBlanketService _blanketService;
+        public IBlanketOrderService _blanketOrderService;
+        public IBlanketOrderDetailService _blanketOrderDetailService;
         public ICashBankService _cashBankService;
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
@@ -67,7 +67,7 @@ namespace TestValidation
         public IContactGroupService _contactGroupService;
 
         public ContactGroup baseGroup;
-        public ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
+        public ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
@@ -75,7 +75,7 @@ namespace TestValidation
 
         public Warehouse localWarehouse;
         public Contact contact;
-        public Item blanket1, blanket2, blanket3;
+        public Item rollBlanket1, rollBlanket2, rollBlanket3;
         public StockAdjustment stockAdjustment;
         public StockAdjustmentDetail stockAD1, stockAD2;
         public CashBank cashBank, pettyCash;
@@ -91,9 +91,9 @@ namespace TestValidation
 
         public PurchaseBuilder()
         {
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
-            _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
-            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
+            _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
+            _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
             _cashBankAdjustmentService = new CashBankAdjustmentService(new CashBankAdjustmentRepository(), new CashBankAdjustmentValidator());
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
@@ -144,9 +144,9 @@ namespace TestValidation
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
-            typeBarring = _itemTypeService.CreateObject("Barring", "Barring", true);
+            typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);
             typeBearing = _itemTypeService.CreateObject("Bearing", "Bearing");
-            typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket");
+            typeRollBlanket = _itemTypeService.CreateObject("RollBlanket", "RollBlanket");
             typeChemical = _itemTypeService.CreateObject("Chemical", "Chemical");
             typeCompound = _itemTypeService.CreateObject("Compound", "Compound");
             typeConsumable = _itemTypeService.CreateObject("Consumable", "Consumable");
@@ -207,49 +207,49 @@ namespace TestValidation
             };
             _uomService.CreateObject(Tubs);
 
-            blanket1 = new Item()
+            rollBlanket1 = new Item()
             {
-                ItemTypeId = _itemTypeService.GetObjectByName("Blanket").Id,
-                Name = "Blanket1",
-                Category = "Blanket",
+                ItemTypeId = _itemTypeService.GetObjectByName("RollBlanket").Id,
+                Name = "RollBlanket1",
+                Category = "RollBlanket",
                 Sku = "BLK1",
                 UoMId = Pcs.Id
             };
 
-            blanket1 = _itemService.CreateObject(blanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            rollBlanket1 = _itemService.CreateObject(rollBlanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
 
-            blanket2 = new Item()
+            rollBlanket2 = new Item()
             {
-                ItemTypeId = _itemTypeService.GetObjectByName("Blanket").Id,
-                Name = "Blanket2",
-                Category = "Blanket",
+                ItemTypeId = _itemTypeService.GetObjectByName("RollBlanket").Id,
+                Name = "RollBlanket2",
+                Category = "RollBlanket",
                 Sku = "BLK2",
                 UoMId = Pcs.Id
             };
 
-            blanket2 = _itemService.CreateObject(blanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            rollBlanket2 = _itemService.CreateObject(rollBlanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
 
-            blanket3 = new Item()
+            rollBlanket3 = new Item()
             {
-                ItemTypeId = _itemTypeService.GetObjectByName("Blanket").Id,
-                Name = "Blanket3",
-                Category = "Blanket",
+                ItemTypeId = _itemTypeService.GetObjectByName("RollBlanket").Id,
+                Name = "RollBlanket3",
+                Category = "RollBlanket",
                 Sku = "BLK3",
                 UoMId = Pcs.Id
             };
 
-            blanket3 = _itemService.CreateObject(blanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            rollBlanket3 = _itemService.CreateObject(rollBlanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
 
             StockAdjustment sa = new StockAdjustment() { WarehouseId = localWarehouse.Id, AdjustmentDate = DateTime.Today, Description = "Bar Related Adjustment" };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
-            StockAdjustmentDetail sadBlanket1 = new StockAdjustmentDetail() { ItemId = blanket1.Id, Quantity = 100000, StockAdjustmentId = sa.Id };
-            _stockAdjustmentDetailService.CreateObject(sadBlanket1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBlanket2 = new StockAdjustmentDetail() { ItemId = blanket2.Id, Quantity = 100000, StockAdjustmentId = sa.Id };
-            _stockAdjustmentDetailService.CreateObject(sadBlanket2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBlanket3 = new StockAdjustmentDetail() { ItemId = blanket3.Id, Quantity = 100000, StockAdjustmentId = sa.Id };
-            _stockAdjustmentDetailService.CreateObject(sadBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
+            StockAdjustmentDetail sadRollBlanket1 = new StockAdjustmentDetail() { ItemId = rollBlanket1.Id, Quantity = 100000, StockAdjustmentId = sa.Id };
+            _stockAdjustmentDetailService.CreateObject(sadRollBlanket1, _stockAdjustmentService, _itemService, _warehouseItemService);
+            StockAdjustmentDetail sadRollBlanket2 = new StockAdjustmentDetail() { ItemId = rollBlanket2.Id, Quantity = 100000, StockAdjustmentId = sa.Id };
+            _stockAdjustmentDetailService.CreateObject(sadRollBlanket2, _stockAdjustmentService, _itemService, _warehouseItemService);
+            StockAdjustmentDetail sadRollBlanket3 = new StockAdjustmentDetail() { ItemId = rollBlanket3.Id, Quantity = 100000, StockAdjustmentId = sa.Id };
+            _stockAdjustmentDetailService.CreateObject(sadRollBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
 
 
             contact = new Contact()
@@ -302,7 +302,7 @@ namespace TestValidation
 
             po1a = new PurchaseOrderDetail()
             {
-                ItemId = blanket1.Id,
+                ItemId = rollBlanket1.Id,
                 PurchaseOrderId = po1.Id,
                 Quantity = 300,
                 Price = 50000
@@ -311,7 +311,7 @@ namespace TestValidation
 
             po1b = new PurchaseOrderDetail()
             {
-                ItemId = blanket2.Id,
+                ItemId = rollBlanket2.Id,
                 PurchaseOrderId = po1.Id,
                 Quantity = 250,
                 Price = 72000
@@ -320,7 +320,7 @@ namespace TestValidation
 
             po1c = new PurchaseOrderDetail()
             {
-                ItemId = blanket3.Id,
+                ItemId = rollBlanket3.Id,
                 PurchaseOrderId = po1.Id,
                 Quantity = 100,
                 Price = 100000
@@ -329,7 +329,7 @@ namespace TestValidation
 
             po2a = new PurchaseOrderDetail()
             {
-                ItemId = blanket1.Id,
+                ItemId = rollBlanket1.Id,
                 PurchaseOrderId = po2.Id,
                 Quantity = 300,
                 Price = 50000
@@ -338,15 +338,15 @@ namespace TestValidation
 
             po2b = new PurchaseOrderDetail()
             {
-                ItemId = blanket2.Id,
+                ItemId = rollBlanket2.Id,
                 PurchaseOrderId = po2.Id,
                 Quantity = 250,
                 Price = 72000
             };
             _purchaseOrderDetailService.CreateObject(po2b, _purchaseOrderService, _itemService);
 
-            _purchaseOrderService.ConfirmObject(po1, po1.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-            _purchaseOrderService.ConfirmObject(po2, po2.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+            _purchaseOrderService.ConfirmObject(po1, po1.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+            _purchaseOrderService.ConfirmObject(po2, po2.PurchaseDate, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
 
             pr1 = new PurchaseReceival()
             {
@@ -433,11 +433,11 @@ namespace TestValidation
             TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
             TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
             _purchaseReceivalService.ConfirmObject(pr1, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                       _itemService, _barringService, _warehouseItemService);
+                                       _itemService, _blanketService, _warehouseItemService);
             _purchaseReceivalService.ConfirmObject(pr2, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                   _itemService, _barringService, _warehouseItemService);
+                                                   _itemService, _blanketService, _warehouseItemService);
             _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService,
-                                                   _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                                                   _stockMutationService, _itemService, _blanketService, _warehouseItemService);
 
             pi1 = new PurchaseInvoice()
             {

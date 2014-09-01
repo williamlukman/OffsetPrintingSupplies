@@ -136,7 +136,7 @@ namespace Validation.Validation
         }
 
         public RollerWarehouseMutationDetail VNonNegativeStockQuantity(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
-                                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool CaseConfirm)
+                                                                      IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, bool CaseConfirm)
         {
             int Quantity = CaseConfirm ? 1 : -1;
             RollerWarehouseMutation rollerWarehouseMutation = _rollerWarehouseMutationService.GetObjectById(rollerWarehouseMutationDetail.RollerWarehouseMutationId);
@@ -199,22 +199,22 @@ namespace Validation.Validation
         }
 
         public RollerWarehouseMutationDetail VConfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
-                                                            IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(rollerWarehouseMutationDetail);
             if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
-            VNonNegativeStockQuantity(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService, true);
+            VNonNegativeStockQuantity(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _blanketService, _warehouseItemService, true);
             return rollerWarehouseMutationDetail;
         }
 
         public RollerWarehouseMutationDetail VUnconfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
-                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                      IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             VRollerWarehouseMutationHasNotBeenCompleted(rollerWarehouseMutationDetail, _rollerWarehouseMutationService);
             if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
             VHasBeenConfirmed(rollerWarehouseMutationDetail);
             if (!isValid(rollerWarehouseMutationDetail)) { return rollerWarehouseMutationDetail; }
-            VNonNegativeStockQuantity(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService, false);
+            VNonNegativeStockQuantity(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _blanketService, _warehouseItemService, false);
             return rollerWarehouseMutationDetail;
         }
 
@@ -245,18 +245,18 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
-                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             rollerWarehouseMutationDetail.Errors.Clear();
-            VConfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService);
+            VConfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _blanketService, _warehouseItemService);
             return isValid(rollerWarehouseMutationDetail);
         }
 
         public bool ValidUnconfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
-                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                        IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             rollerWarehouseMutationDetail.Errors.Clear();
-            VUnconfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _barringService, _warehouseItemService);
+            VUnconfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _blanketService, _warehouseItemService);
             return isValid(rollerWarehouseMutationDetail);
         }
 

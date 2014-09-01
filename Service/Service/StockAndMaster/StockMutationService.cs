@@ -66,18 +66,18 @@ namespace Service.Service
             return _repository.GetObjectsBySourceDocumentDetailForItem(itemId, SourceDocumentDetailType, SourceDocumentDetailId);
         }
 
-        public StockMutation CreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBarringService _barringService)
+        public StockMutation CreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
         {
             stockMutation.Errors = new Dictionary<String, String>();
             return (_validator.ValidCreateObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.CreateObject(stockMutation) : stockMutation);
         }
 
-        public StockMutation UpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBarringService _barringService)
+        public StockMutation UpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
         {
             return (_validator.ValidUpdateObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.UpdateObject(stockMutation) : stockMutation);
         }
 
-        public StockMutation SoftDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBarringService _barringService)
+        public StockMutation SoftDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
         {
             return (_validator.ValidDeleteObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.SoftDeleteObject(stockMutation) : stockMutation);
         }
@@ -351,25 +351,25 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public StockMutation CreateStockMutationForBarringOrder(BarringOrderDetail barringOrderDetail, WarehouseItem warehouseItem, bool CaseAddition)
+        public StockMutation CreateStockMutationForBlanketOrder(BlanketOrderDetail blanketOrderDetail, WarehouseItem warehouseItem, bool CaseAddition)
         {
             StockMutation stockMutation = new StockMutation();
             stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
             stockMutation.Quantity = 1;
-            stockMutation.SourceDocumentType = Constant.SourceDocumentType.BarringOrder;
-            stockMutation.SourceDocumentId = barringOrderDetail.BarringOrderId;
-            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BarringOrderDetail;
-            stockMutation.SourceDocumentDetailId = barringOrderDetail.Id;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.BlanketOrder;
+            stockMutation.SourceDocumentId = blanketOrderDetail.BlanketOrderId;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlanketOrderDetail;
+            stockMutation.SourceDocumentDetailId = blanketOrderDetail.Id;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = CaseAddition ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
             return _repository.CreateObject(stockMutation);
         }
 
-        public IList<StockMutation> SoftDeleteStockMutationForBarringOrder(BarringOrderDetail barringOrderDetail, WarehouseItem warehouseItem)
+        public IList<StockMutation> SoftDeleteStockMutationForBlanketOrder(BlanketOrderDetail blanketOrderDetail, WarehouseItem warehouseItem)
         {
-            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.BarringOrderDetail, barringOrderDetail.Id);
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.BlanketOrderDetail, blanketOrderDetail.Id);
             foreach (var stockMutation in stockMutations)
             {
                 _repository.Delete(stockMutation);
@@ -487,16 +487,16 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public void StockMutateObject(StockMutation stockMutation, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-            // item.AvgCost = _barringService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-            // barring.AvgCost = _barringService.CalculateAvgCost(barring, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+            // item.AvgCost = _blanketService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+            // blanket.AvgCost = _blanketService.CalculateAvgCost(blanket, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
 
             int Quantity = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(stockMutation.ItemId);
-            Barring barring = _barringService.GetObjectById(stockMutation.ItemId);
+            Blanket blanket = _blanketService.GetObjectById(stockMutation.ItemId);
 
             if (warehouseItem != null)
             {
@@ -504,7 +504,7 @@ namespace Service.Service
                 { _warehouseItemService.AdjustQuantity(warehouseItem, Quantity); }
             }
 
-            if (barring == null)
+            if (blanket == null)
             {
                 // itemService in action
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
@@ -516,30 +516,30 @@ namespace Service.Service
             }
             else
             {
-                // barringService in action
+                // blanketService in action
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
-                { _barringService.AdjustQuantity(barring, Quantity); }
+                { _blanketService.AdjustQuantity(blanket, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
-                { _barringService.AdjustPendingDelivery(barring, Quantity); }
+                { _blanketService.AdjustPendingDelivery(blanket, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingReceival)
-                { _barringService.AdjustPendingReceival(barring, Quantity); }
+                { _blanketService.AdjustPendingReceival(blanket, Quantity); }
             }
         }
 
-        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+        public void ReverseStockMutateObject(StockMutation stockMutation, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
 
             int Quantity = (stockMutation.Status == Constant.MutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(stockMutation.ItemId);
-            Barring barring = _barringService.GetObjectById(stockMutation.ItemId);
+            Blanket blanket = _blanketService.GetObjectById(stockMutation.ItemId);
             if (warehouseItem != null) {
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
                 { _warehouseItemService.AdjustQuantity(warehouseItem, Quantity); }
             }
 
-            if (barring == null)
+            if (blanket == null)
             {
                 // itemService in action
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
@@ -551,13 +551,13 @@ namespace Service.Service
             }
             else
             {
-                // barringService in action
+                // blanketService in action
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
-                { _barringService.AdjustQuantity(barring, Quantity); }
+                { _blanketService.AdjustQuantity(blanket, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
-                { _barringService.AdjustPendingDelivery(barring, Quantity); }
+                { _blanketService.AdjustPendingDelivery(blanket, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingReceival)
-                { _barringService.AdjustPendingReceival(barring, Quantity); }
+                { _blanketService.AdjustPendingReceival(blanket, Quantity); }
             }
         }
     }

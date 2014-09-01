@@ -21,7 +21,7 @@ namespace WebView.Controllers
         private IUoMService _uomService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
 
         public StockAdjustmentController()
         {
@@ -32,7 +32,7 @@ namespace WebView.Controllers
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
         }
 
 
@@ -318,7 +318,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -339,7 +339,7 @@ namespace WebView.Controllers
             {
 
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService);
             }
             catch (Exception ex)
             {

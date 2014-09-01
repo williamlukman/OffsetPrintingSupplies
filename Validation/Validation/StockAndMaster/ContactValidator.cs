@@ -88,12 +88,12 @@ namespace Validation.Validation
             return contact;
         }
 
-        public Contact VHasBarring(Contact contact, IBarringService _barringService)
+        public Contact VHasBlanket(Contact contact, IBlanketService _blanketService)
         {
-            IList<Barring> barrings = _barringService.GetObjectsByContactId(contact.Id);
-            if (barrings.Any())
+            IList<Blanket> blankets = _blanketService.GetObjectsByContactId(contact.Id);
+            if (blankets.Any())
             {
-                contact.Errors.Add("Generic", "Contact masih memiliki asosiasi dengan Barring");
+                contact.Errors.Add("Generic", "Contact masih memiliki asosiasi dengan Blanket");
             }
             return contact;
         }
@@ -142,12 +142,12 @@ namespace Validation.Validation
             return contact;
         }
 
-        public Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+        public Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
                                      IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
         {
             VHasCoreIdentification(contact, _coreIdentificationService);
             if (!isValid(contact)) { return contact; }
-            VHasBarring(contact, _barringService);
+            VHasBlanket(contact, _blanketService);
             if (!isValid(contact)) { return contact; }
             VHasSalesOrder(contact, _salesOrderService);
             if (!isValid(contact)) { return contact; }
@@ -168,11 +168,11 @@ namespace Validation.Validation
             return isValid(contact);
         }
 
-        public bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+        public bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
                                       IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
         {
             contact.Errors.Clear();
-            VDeleteObject(contact, _coreIdentificationService, _barringService, _purchaseOrderService, _salesOrderService);
+            VDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService);
             return isValid(contact);
         }
 

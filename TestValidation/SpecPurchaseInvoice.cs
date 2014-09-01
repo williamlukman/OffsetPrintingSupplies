@@ -36,9 +36,9 @@ namespace TestValidation
             {
                 pb.localWarehouse.Errors.Count().should_be(0);
                 pb.contact.Errors.Count().should_be(0);
-                pb.blanket1.Errors.Count().should_be(0);
-                pb.blanket2.Errors.Count().should_be(0);
-                pb.blanket3.Errors.Count().should_be(0);
+                pb.rollBlanket1.Errors.Count().should_be(0);
+                pb.rollBlanket2.Errors.Count().should_be(0);
+                pb.rollBlanket3.Errors.Count().should_be(0);
                 pb.cashBank.Errors.Count().should_be(0);
                 pb.po1.Errors.Count().should_be(0);
                 pb.po1a.Errors.Count().should_be(0);

@@ -18,7 +18,7 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IWarehouseService _warehouseService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IUoMService _uomService;
 
         public StockMutationController()
@@ -27,7 +27,7 @@ namespace WebView.Controllers
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(),new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(),new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
         }
 

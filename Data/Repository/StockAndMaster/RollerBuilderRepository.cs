@@ -86,6 +86,13 @@ namespace Data.Repository
             return rollerBuilder;
         }
 
+        public RollerBuilder GetObjectByName(string Name)
+        {
+            RollerBuilder rollerBuilder = Find(x => x.Name == Name && !x.IsDeleted);
+            if (rollerBuilder != null) { rollerBuilder.Errors = new Dictionary<string, string>(); }
+            return rollerBuilder;
+        }
+
         public RollerBuilder CreateObject(RollerBuilder rollerBuilder)
         {
             rollerBuilder.Errors = new Dictionary<string, string>();

@@ -51,7 +51,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
+                    Description = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -72,10 +72,12 @@ namespace TestValidation
                     SkuNewCore = "CORE1001N",
                     SkuUsedCore = "CORE1001U",
                     Name = "Core X 1001",
-                    Category = "X 1001",
-                    UoMId = d.Pcs.Id
+                    Description = "X 1001",
+                    UoMId = d.Pcs.Id,
+                    MachineId = d.machine.Id
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService,
+                                d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
             }
         }
 
@@ -95,10 +97,12 @@ namespace TestValidation
                     SkuNewCore = "123N",
                     SkuUsedCore = "123U",
                     Name = "Core X 1001",
-                    Category = "X 1001",
-                    UoMId = d.Pcs.Id
+                    Description = "X 1001",
+                    UoMId = d.Pcs.Id,
+                    MachineId = d.machine.Id
                 };
-                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
+                                                                        d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
                 coreBuilderCopySku.Errors.Count().should_not_be(0);
             };
 
@@ -110,10 +114,12 @@ namespace TestValidation
                     SkuNewCore = "CORE1001N",
                     SkuUsedCore = "123U",
                     Name = "Core X 1001",
-                    Category = "X 1001",
-                    UoMId = d.Pcs.Id
+                    Description = "X 1001",
+                    UoMId = d.Pcs.Id,
+                    MachineId = d.machine.Id
                 };
-                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService , d._warehouseService, d._priceMutationService, d._contactGroupService);
+                coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService ,
+                                                                           d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
                 coreBuilderCopySkuNew.Errors.Count().should_not_be(0);
             };
 
@@ -126,10 +132,12 @@ namespace TestValidation
                     SkuNewCore = "123N",
                     SkuUsedCore = "CORE1001U",
                     Name = "Core X 1001",
-                    Category = "X 1001",
-                    UoMId = d.Pcs.Id
+                    Description = "X 1001",
+                    UoMId = d.Pcs.Id,
+                    MachineId = d.machine.Id
                 };
-                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
+                                                                            d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
                 coreBuilderCopySkuUsed.Errors.Count().should_not_be(0);
             };
 
@@ -137,8 +145,8 @@ namespace TestValidation
             {
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderDetailService, d._recoveryAccessoryDetailService, d._warehouseItemService,
-                                                                       d._stockMutationService, d._itemTypeService, d._barringService, d._purchaseOrderDetailService, 
-                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService, d._barringOrderDetailService);
+                                                                       d._stockMutationService, d._itemTypeService, d._blanketService, d._purchaseOrderDetailService, 
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService, d._blanketOrderDetailService);
                 d.coreBuilder.Errors.Count().should_be(0);
             };
 
@@ -178,8 +186,8 @@ namespace TestValidation
                                              d._rollerTypeService, d._machineService, d._warehouseItemService);
 
                 d.coreBuilder = d._coreBuilderService.SoftDeleteObject(d.coreBuilder, d._itemService, d._rollerBuilderService, d._coreIdentificationDetailService, d._recoveryOrderDetailService, d._recoveryAccessoryDetailService,
-                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._barringService, d._purchaseOrderDetailService,
-                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService, d._barringOrderDetailService);
+                                                                       d._warehouseItemService, d._stockMutationService, d._itemTypeService, d._blanketService, d._purchaseOrderDetailService,
+                                                                       d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService, d._blanketOrderDetailService);
                 d.coreBuilder.Errors.Count().should_not_be(0);
             };
         }

@@ -61,7 +61,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
+                    Description = "ABC123",
                     UoMId = d.Pcs.Id,
                     Quantity = 0
                 };
@@ -76,7 +76,7 @@ namespace TestValidation
             {
                 d.typeAccessory.Errors.Count().should_be(0);
                 d.typeBearing.Errors.Count().should_be(0);
-                d.typeBlanket.Errors.Count().should_be(0);
+                d.typeRollBlanket.Errors.Count().should_be(0);
                 d.typeCore.Errors.Count().should_be(0);
                 d.typeConsumable.Errors.Count().should_be(0);
                 d.typeChemical.Errors.Count().should_be(0);
@@ -109,7 +109,7 @@ namespace TestValidation
                 {
                     ItemTypeId = d.typeGlue.Id,
                     Name = "Glue101",
-                    Category = "Glue",
+                    Description = "Glue",
                     Sku = "G101",
                     UoMId = d.Pcs.Id
                 };
@@ -132,7 +132,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._barringService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService);
 
                 d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
                 d.typeGlue.Errors.Count().should_not_be(0);

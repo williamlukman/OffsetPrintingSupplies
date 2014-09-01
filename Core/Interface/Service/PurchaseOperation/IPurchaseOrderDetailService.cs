@@ -22,9 +22,9 @@ namespace Core.Interface.Service
         PurchaseOrderDetail SoftDeleteObject(PurchaseOrderDetail purchaseOrderDetail);
         bool DeleteObject(int Id);
         PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
-                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                         IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                           IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                           IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                            IWarehouseItemService _warehouseItemService);
         PurchaseOrderDetail SetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity);
         PurchaseOrderDetail UnsetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity, IPurchaseOrderService _purchaseOrderService);

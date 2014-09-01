@@ -17,7 +17,7 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IRollerWarehouseMutationService _rollerWarehouseMutationService;
         private IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService;
         private IContactService _contactService;
@@ -36,7 +36,7 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _rollerWarehouseMutationService = new RollerWarehouseMutationService(new RollerWarehouseMutationRepository(), new RollerWarehouseMutationValidator());
             _rollerWarehouseMutationDetailService = new RollerWarehouseMutationDetailService(new RollerWarehouseMutationDetailRepository(), new RollerWarehouseMutationDetailValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -366,7 +366,7 @@ namespace WebView.Controllers
             {
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
                 model = _rollerWarehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value
-                    ,_rollerWarehouseMutationDetailService,_itemService,_barringService
+                    ,_rollerWarehouseMutationDetailService,_itemService,_blanketService
                     ,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService, _coreIdentificationDetailService,_coreIdentificationService);
             }
             catch (Exception ex)
@@ -389,7 +389,7 @@ namespace WebView.Controllers
 
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
                 model = _rollerWarehouseMutationService.UnconfirmObject(data,_rollerWarehouseMutationDetailService,
-                    _itemService,_barringService,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService,
+                    _itemService,_blanketService,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService,
                     _coreIdentificationDetailService,_coreIdentificationService);
             }
             catch (Exception ex)

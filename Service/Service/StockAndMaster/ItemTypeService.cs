@@ -41,7 +41,7 @@ namespace Service.Service
 
         public ItemType GetObjectByName(string name)
         {
-            return _repository.FindAll(c => c.Name == name && !c.IsDeleted).FirstOrDefault();
+            return _repository.GetObjectByName(name);
         }
 
         public ItemType CreateObject(string Name, string Description)

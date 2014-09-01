@@ -148,10 +148,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\BarringWorkOrderController.cs" />
+    <Compile Include="Controllers\BlanketWorkOrderController.cs" />
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
-    <Compile Include="Controllers\BarringWorkProcessController.cs" />
+    <Compile Include="Controllers\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\CashMutationController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
@@ -161,7 +161,7 @@
     <Compile Include="Controllers\CoreIdentificationController.cs" />
     <Compile Include="Controllers\DeliveryOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\MstBarringController.cs" />
+    <Compile Include="Controllers\MstBlanketController.cs" />
     <Compile Include="Controllers\MstCashBankController.cs" />
     <Compile Include="Controllers\MstContactController.cs" />
     <Compile Include="Controllers\MstContactGroupController.cs" />
@@ -192,10 +192,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\apps_js\BarringWorkOrder.js" />
+    <Content Include="Content\apps_js\BlanketWorkOrder.js" />
     <Content Include="Content\apps_js\CashBankAdjustment.js" />
     <Content Include="Content\apps_js\CashBankMutation.js" />
-    <Content Include="Content\apps_js\BarringWorkProcess.js" />
+    <Content Include="Content\apps_js\BlanketWorkProcess.js" />
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
@@ -203,7 +203,7 @@
     <Content Include="Content\apps_js\RecoveryWorkProcess.js" />
     <Content Include="Content\apps_js\CoreIdentification.js" />
     <Content Include="Content\apps_js\DeliveryOrder.js" />
-    <Content Include="Content\apps_js\MasterBarring.js" />
+    <Content Include="Content\apps_js\MasterBlanket.js" />
     <Content Include="Content\apps_js\MasterCashBank.js" />
     <Content Include="Content\apps_js\MasterContact.js" />
     <Content Include="Content\apps_js\MasterContactGroup.js" />
@@ -1091,7 +1091,7 @@
     <Content Include="Views\MstCashBank\Index.cshtml" />
     <Content Include="Views\MstCoreBuilder\Index.cshtml" />
     <Content Include="Views\MstRollerBuilder\Index.cshtml" />
-    <Content Include="Views\MstBarring\Index.cshtml" />
+    <Content Include="Views\MstBlanket\Index.cshtml" />
     <Content Include="Views\StockAdjustment\Index.cshtml" />
     <Content Include="Views\CashBankAdjustment\Index.cshtml" />
     <Content Include="Views\CashBankMutation\Index.cshtml" />
@@ -1107,11 +1107,11 @@
     <Content Include="Views\ReceiptVoucher\Index.cshtml" />
     <Content Include="Views\CoreIdentification\Index.cshtml" />
     <Content Include="Views\RollerWarehouseMutation\Index.cshtml" />
-    <Content Include="Views\BarringWorkOrder\Index.cshtml" />
+    <Content Include="Views\BlanketWorkOrder\Index.cshtml" />
     <Content Include="Views\RecoveryWorkOrder\Index.cshtml" />
     <Content Include="Views\WarehouseItem\Index.cshtml" />
     <Content Include="Views\RecoveryWorkProcess\Index.cshtml" />
-    <Content Include="Views\BarringWorkProcess\Index.cshtml" />
+    <Content Include="Views\BlanketWorkProcess\Index.cshtml" />
     <Content Include="Views\StockMutation\Index.cshtml" />
     <Content Include="Views\CashMutation\Index.cshtml" />
     <Content Include="Views\Receivable\Index.cshtml" />

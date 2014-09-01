@@ -34,7 +34,7 @@ namespace TestValidation
         IDeliveryOrderDetailService _deliveryOrderDetailService;
         IStockMutationService _stockMutationService;
         IUoMService _uomService;
-        IBarringService _barringService;
+        IBlanketService _blanketService;
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
@@ -66,7 +66,7 @@ namespace TestValidation
                 _uomService = new UoMService(new UoMRepository(), new UoMValidator());
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-                _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+                _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -104,7 +104,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Batik Tulis",
-                    Category = "Item",
+                    Description = "Item",
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
@@ -114,7 +114,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Sepatu Bola",
-                    Category = "Item",
+                    Description = "Item",
                     Sku = "sb123",
                     UoMId = Pcs.Id
                 };
@@ -139,7 +139,7 @@ namespace TestValidation
                 _stockAdjustmentDetailService.CreateObject(sadBatikTulis, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _barringService, _warehouseItemService);
+                                                      _itemService, _blanketService, _warehouseItemService);
 
             }
         }
@@ -225,7 +225,7 @@ namespace TestValidation
                         salesOrderDetail2 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_sepatubola.Id, 12, 850000, _salesOrderService, _itemService);
                         Quantity1 = item_batiktulis.PendingDelivery;
                         Quantity2 = item_sepatubola.PendingDelivery;
-                        salesOrder = _salesOrderService.ConfirmObject(salesOrder, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                        salesOrder = _salesOrderService.ConfirmObject(salesOrder, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                     };
 
                     it["confirmed_salesorder"] = () =>
@@ -252,7 +252,7 @@ namespace TestValidation
                     it["unfinish_salesorderdetail"] = () =>
                     {
                         _salesOrderService.UnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _stockMutationService,
-                                                           _itemService, _barringService, _warehouseItemService);
+                                                           _itemService, _blanketService, _warehouseItemService);
                         salesOrderDetail1.IsConfirmed.should_be(false);
                         salesOrderDetail2.IsConfirmed.should_be(false);
                         salesOrderDetail1.Errors.Count().should_be(0);
@@ -266,7 +266,7 @@ namespace TestValidation
                     it["delete_unfinish_salesorderdetail"] = () =>
                     {
                         _salesOrderService.UnconfirmObject(salesOrder, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _stockMutationService,
-                                                           _itemService, _barringService, _warehouseItemService);
+                                                           _itemService, _blanketService, _warehouseItemService);
                         salesOrderDetail2 = _salesOrderDetailService.SoftDeleteObject(salesOrderDetail2);
                         salesOrderDetail2.Errors.Count().should_be(0);
                         salesOrderDetail2.IsDeleted.should_be(true);

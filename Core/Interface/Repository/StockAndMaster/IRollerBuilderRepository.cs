@@ -16,6 +16,7 @@ namespace Core.Interface.Repository
         IList<RollerBuilder> GetObjectsByMachineId(int machineId);
         IList<RollerBuilder> GetObjectsByRollerTypeId(int rollerTypeId);
         RollerBuilder GetObjectById(int Id);
+        RollerBuilder GetObjectByName(string Name);
         Item GetRollerUsedCore(int Id);
         Item GetRollerNewCore(int Id);
         RollerBuilder CreateObject(RollerBuilder rollerBuilder);

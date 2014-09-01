@@ -17,10 +17,10 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IWarehouseService _warehouseService;
-        private IBarringOrderService _barringOrderService;
-        private IBarringOrderDetailService _barringOrderDetailService;
+        private IBlanketOrderService _blanketOrderService;
+        private IBlanketOrderDetailService _blanketOrderDetailService;
         private IContactService _contactService;
         private IRecoveryOrderService _recoveryOrderService;
         private IRecoveryOrderDetailService _recoveryOrderDetailService;
@@ -36,11 +36,11 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-            _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
-            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
+            _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
+            _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
             _recoveryOrderService = new RecoveryOrderService(new RecoveryOrderRepository(), new RecoveryOrderValidator());
             _recoveryOrderDetailService = new RecoveryOrderDetailService(new RecoveryOrderDetailRepository(), new RecoveryOrderDetailValidator());
             _recoveryAccessoryDetailService = new RecoveryAccessoryDetailService(new RecoveryAccessoryDetailRepository(), new RecoveryAccessoryDetailValidator());
@@ -477,7 +477,7 @@ namespace WebView.Controllers
                 model = _recoveryOrderDetailService.FinishObject(data, model.FinishedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
                     _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,
-                    _barringService,_stockMutationService);
+                    _blanketService,_stockMutationService);
             }
             catch (Exception ex)
             {
@@ -500,7 +500,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.UnfinishObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService
-                    ,_coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_barringService
+                    ,_coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService
                     ,_stockMutationService);
             }
             catch (Exception ex)
@@ -523,7 +523,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.RejectObject(data,model.RejectedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,_coreBuilderService
-                    ,_rollerBuilderService,_itemService,_warehouseItemService,_barringService,_stockMutationService);
+                    ,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService);
             }
             catch (Exception ex)
             {
@@ -546,7 +546,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.UndoRejectObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
-                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_barringService,_stockMutationService);
+                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService);
             }
             catch (Exception ex)
             {

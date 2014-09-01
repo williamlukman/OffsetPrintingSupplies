@@ -17,7 +17,7 @@ namespace Core.Interface.Service
         Contact CreateObject(Contact contact, IContactGroupService _contactGroupService);
         Contact CreateObject(string Name, string Address, string ContactNo, string PIC, string PICContactNo, string Email, IContactGroupService _contactGroupService);
         Contact UpdateObject(Contact contact, IContactGroupService _contactGroupService);
-        Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+        Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
                                  IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(Contact contact);

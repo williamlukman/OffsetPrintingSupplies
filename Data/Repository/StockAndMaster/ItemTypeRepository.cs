@@ -34,6 +34,13 @@ namespace Data.Repository
             return itemType;
         }
 
+        public ItemType GetObjectByName(string Name)
+        {
+            ItemType itemType = Find(x => x.Name == Name && !x.IsDeleted);
+            if (itemType != null) { itemType.Errors = new Dictionary<string, string>(); }
+            return itemType;
+        }
+
         public ItemType CreateObject(ItemType itemType)
         {
             itemType.IsDeleted = false;

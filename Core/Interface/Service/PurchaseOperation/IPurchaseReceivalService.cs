@@ -24,12 +24,12 @@ namespace Core.Interface.Service
         PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, DateTime ConfirmationDate, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                        IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                        IStockMutationService _stockMutationService, IItemService _itemService,
-                                       IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                       IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         PurchaseReceival UnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                          IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                          IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                          IStockMutationService _stockMutationService, IItemService _itemService,
-                                         IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                         IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         PurchaseReceival CheckAndSetInvoiceComplete(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseReceival UnsetInvoiceComplete(PurchaseReceival purchaseReceival);
     }

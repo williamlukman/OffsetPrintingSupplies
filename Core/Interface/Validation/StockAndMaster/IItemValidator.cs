@@ -21,7 +21,7 @@ namespace Core.Interface.Validation
         Item VHasNoPurchaseOrderDetails(Item item, IPurchaseOrderDetailService _purchaseOrderDetailService);
         Item VHasNoStockAdjustmentDetails(Item item, IStockAdjustmentDetailService _stockAdjustmentDetailService);
         Item VHasNoSalesOrderDetails(Item item, ISalesOrderDetailService _salesOrderDetailService);
-        Item VIsNotInBarring(Item item, IBarringService _barringService, IItemTypeService _itemTypeService);
+        Item VIsNotInBlanket(Item item, IBlanketService _blanketService, IItemTypeService _itemTypeService);
 
         Item VCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VCreateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
@@ -29,13 +29,15 @@ namespace Core.Interface.Validation
         Item VUpdateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
         Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                            IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                           ISalesOrderDetailService _salesOrderDetailService, IBarringService _barringService);
+                           ISalesOrderDetailService _salesOrderDetailService, IBlanketService _blanketService);
         Item VDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                  IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                  ISalesOrderDetailService _salesOrderDetailService);
         Item VAdjustQuantity(Item item);
         Item VAdjustPendingDelivery(Item item);
         Item VAdjustPendingReceival(Item item);
+        //Item VOnTrial(Item item);
+        //Item VReturnOnTrial(Item item);
 
         bool ValidCreateObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidCreateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
@@ -43,13 +45,15 @@ namespace Core.Interface.Validation
         bool ValidUpdateLegacyObject(Item item, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService);
         bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                               ISalesOrderDetailService _salesOrderDetailService, IBarringService _barringService);
+                               ISalesOrderDetailService _salesOrderDetailService, IBlanketService _blanketService);
         bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                      IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                      ISalesOrderDetailService _salesOrderDetailService);
         bool ValidAdjustQuantity(Item item);
         bool ValidAdjustPendingDelivery(Item item);
         bool ValidAdjustPendingReceival(Item item);
+        //bool ValidOnTrial(Item item);
+        //bool ValidReturnOnTrial(Item item);
         bool isValid(Item item);
         string PrintError(Item item);
     }

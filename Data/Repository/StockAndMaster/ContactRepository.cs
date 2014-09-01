@@ -35,6 +35,13 @@ namespace Data.Repository
             return contact;
         }
 
+        public Contact GetObjectByName(string Name)
+        {
+            Contact contact = Find(x => x.Name == Name && !x.IsDeleted);
+            if (contact != null) { contact.Errors = new Dictionary<string, string>(); }
+            return contact;
+        }
+
         public Contact CreateObject(Contact contact)
         {
             contact.IsDeleted = false;

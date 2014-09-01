@@ -18,14 +18,14 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IRollerBuilderService _rollerBuilderService;
         private ICoreIdentificationDetailService _coreIdentificationDetailService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         public MstMachineController()
         {
             _MachineService = new MachineService(new MachineRepository(),new MachineValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
         }
 
 
@@ -155,7 +155,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _MachineService.GetObjectById(model.Id);
-                model = _MachineService.SoftDeleteObject(data,_rollerBuilderService,_coreIdentificationDetailService,_barringService);
+                model = _MachineService.SoftDeleteObject(data,_rollerBuilderService,_coreIdentificationDetailService,_blanketService);
             }
             catch (Exception ex)
             {

@@ -103,7 +103,7 @@ namespace Service.Service
 
         public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                              IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             recoveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService))
@@ -122,7 +122,7 @@ namespace Service.Service
 
         public RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                              IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
         {
             if (_validator.ValidUnconfirmObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService))
             {

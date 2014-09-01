@@ -81,7 +81,7 @@ namespace Service.Service
         }
 
         public RetailPurchaseInvoiceDetail ConfirmObject(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IRetailPurchaseInvoiceService _retailPurchaseInvoiceService, IWarehouseItemService _warehouseItemService, 
-                                                      IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                      IWarehouseService _warehouseService, IItemService _itemService, IBlanketService _blanketService, IStockMutationService _stockMutationService)
         {
             if(_validator.ValidConfirmObject(retailPurchaseInvoiceDetail, _retailPurchaseInvoiceService, _warehouseItemService))
             {
@@ -101,10 +101,10 @@ namespace Service.Service
                     WarehouseId = retailPurchaseInvoice.WarehouseId,
                     WarehouseItemId = warehouseItem.Id
                 };
-                stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
+                stockMutation = _stockMutationService.CreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _blanketService);
                 stockMutation.CreatedAt = (DateTime)retailPurchaseInvoice.ConfirmationDate;
-                _stockMutationService.UpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
-                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.UpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _blanketService);
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 retailPurchaseInvoiceDetail.CoGS = retailPurchaseInvoiceDetail.Quantity * item.AvgPrice;
                 retailPurchaseInvoiceDetail = _repository.ConfirmObject(retailPurchaseInvoiceDetail);
             }
@@ -112,7 +112,7 @@ namespace Service.Service
         }
 
         public RetailPurchaseInvoiceDetail UnconfirmObject(RetailPurchaseInvoiceDetail retailPurchaseInvoiceDetail, IWarehouseItemService _warehouseItemService,
-                                                      IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                      IWarehouseService _warehouseService, IItemService _itemService, IBlanketService _blanketService, IStockMutationService _stockMutationService)
         {
             if (_validator.ValidUnconfirmObject(retailPurchaseInvoiceDetail))
             {
@@ -120,8 +120,8 @@ namespace Service.Service
                 foreach (var stockMutation in stockMutations)
                 {
                     stockMutation.Errors = new Dictionary<string, string>();
-                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
-                    _stockMutationService.SoftDeleteObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _barringService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                    _stockMutationService.SoftDeleteObject(stockMutation, _warehouseService, _warehouseItemService, _itemService, _blanketService);
                 }
                 retailPurchaseInvoiceDetail.CoGS = 0;
                 retailPurchaseInvoiceDetail = _repository.UnconfirmObject(retailPurchaseInvoiceDetail);

@@ -78,7 +78,7 @@ namespace Validation.Validation
         }
 
         public WarehouseMutation VDetailsAreVerifiedConfirmable(WarehouseMutation WarehouseMutation, IWarehouseMutationService _WarehouseMutationService, IWarehouseMutationDetailService _WarehouseMutationDetailService,
-                                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             IList<WarehouseMutationDetail> details = _WarehouseMutationDetailService.GetObjectsByWarehouseMutationId(WarehouseMutation.Id);
             foreach (var detail in details)
@@ -129,7 +129,7 @@ namespace Validation.Validation
         }
 
         public WarehouseMutation VConfirmObject(WarehouseMutation WarehouseMutation, IWarehouseMutationService _WarehouseMutationService, IWarehouseMutationDetailService _WarehouseMutationDetailService,
-                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(WarehouseMutation);
             if (!isValid(WarehouseMutation)) { return WarehouseMutation; }
@@ -137,12 +137,12 @@ namespace Validation.Validation
             if (!isValid(WarehouseMutation)) { return WarehouseMutation; }
             VHasWarehouseMutationDetails(WarehouseMutation, _WarehouseMutationDetailService);
             if (!isValid(WarehouseMutation)) { return WarehouseMutation; }
-            VDetailsAreVerifiedConfirmable(WarehouseMutation, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _barringService, _warehouseItemService);
+            VDetailsAreVerifiedConfirmable(WarehouseMutation, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _blanketService, _warehouseItemService);
             return WarehouseMutation;
         }
 
         public WarehouseMutation VUnconfirmObject(WarehouseMutation WarehouseMutation, IWarehouseMutationService _WarehouseMutationService, IWarehouseMutationDetailService _WarehouseMutationDetailService,
-                                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             VHasBeenConfirmed(WarehouseMutation);
             return WarehouseMutation;
@@ -169,18 +169,18 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(WarehouseMutation WarehouseMutation, IWarehouseMutationService _WarehouseMutationService, IWarehouseMutationDetailService _WarehouseMutationDetailService,
-                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             WarehouseMutation.Errors.Clear();
-            VConfirmObject(WarehouseMutation, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _barringService, _warehouseItemService);
+            VConfirmObject(WarehouseMutation, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _blanketService, _warehouseItemService);
             return isValid(WarehouseMutation);
         }
 
         public bool ValidUnconfirmObject(WarehouseMutation WarehouseMutation, IWarehouseMutationService _WarehouseMutationService, IWarehouseMutationDetailService _WarehouseMutationDetailService,
-                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                         IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             WarehouseMutation.Errors.Clear();
-            VUnconfirmObject(WarehouseMutation, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _barringService, _warehouseItemService);
+            VUnconfirmObject(WarehouseMutation, _WarehouseMutationService, _WarehouseMutationDetailService, _itemService, _blanketService, _warehouseItemService);
             return isValid(WarehouseMutation);
         }
 

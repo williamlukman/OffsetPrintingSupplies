@@ -32,7 +32,7 @@ namespace NSpec
         IPurchaseOrderDetailService poDetailService;
         IStockMutationService stockMutationService;
         IUoMService _uomService;
-        IBarringService _barringService;
+        IBlanketService _blanketService;
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
@@ -62,7 +62,7 @@ namespace NSpec
                 _uomService = new UoMService(new UoMRepository(), new UoMValidator());
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-                _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+                _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -104,7 +104,7 @@ namespace NSpec
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Batik Tulis",
-                    Category = "Item",
+                    Description = "Item",
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
@@ -114,7 +114,7 @@ namespace NSpec
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Buku Gambar",
-                    Category = "Item",
+                    Description = "Item",
                     Sku = "bg123",
                     UoMId = Pcs.Id
                 };
@@ -139,7 +139,7 @@ namespace NSpec
                 _stockAdjustmentDetailService.CreateObject(sadItem2, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _barringService, _warehouseItemService);
+                                                      _itemService, _blanketService, _warehouseItemService);
 
             }
         }
@@ -192,7 +192,7 @@ namespace NSpec
 
                     it["must not allow PO confirmation if there is no PO Detail"] = () =>
                     {
-                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService);
+                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _blanketService, _warehouseItemService);
                         newPO.Errors.Count().should_not_be(0);
                     };
 
@@ -302,7 +302,7 @@ namespace NSpec
 
                 it["allows confirmation"] = () =>
                 {
-                    newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService);
+                    newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _blanketService, _warehouseItemService);
                     newPO.IsConfirmed.should_be(true);
                 };
 
@@ -314,7 +314,7 @@ namespace NSpec
                         item2 = itemService.GetObjectById(item2.Id);
                         Quantity1 = item1.PendingReceival;
                         Quantity2 = item2.PendingReceival;
-                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _barringService, _warehouseItemService);
+                        newPO = poService.ConfirmObject(newPO, DateTime.Today, poDetailService, stockMutationService, itemService, _blanketService, _warehouseItemService);
                     };
 
                     it["should increase pending receival in item"] = () =>

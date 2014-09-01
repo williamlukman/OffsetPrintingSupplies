@@ -18,22 +18,22 @@ namespace Core.Interface.Validation
         StockAdjustmentDetail VHasBeenConfirmed(StockAdjustmentDetail StockAdjustmentDetail);
         StockAdjustmentDetail VHasNotBeenConfirmed(StockAdjustmentDetail StockAdjustmentDetail);
         StockAdjustmentDetail VNonNegativeStockQuantity(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
-                                                        IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, bool ToConfirm);
+                                                        IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, bool ToConfirm);
         StockAdjustmentDetail VHasConfirmationDate(StockAdjustmentDetail stockAdjustmentDetail);
         StockAdjustmentDetail VCreateObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentDetailService _StockAdjustmentDetails, IStockAdjustmentService _StockAdjustmentService,
                                             IItemService _itemService, IWarehouseItemService _warehouseItemService);
         StockAdjustmentDetail VUpdateObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentDetailService _StockAdjustmentDetails, IStockAdjustmentService _StockAdjustmentService,
                                             IItemService _itemService, IWarehouseItemService _warehouseItemService);
         StockAdjustmentDetail VDeleteObject(StockAdjustmentDetail StockAdjustmentDetail);
-        StockAdjustmentDetail VConfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        StockAdjustmentDetail VUnconfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        StockAdjustmentDetail VConfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+        StockAdjustmentDetail VUnconfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         bool ValidCreateObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentDetailService _StockAdjustmentDetails, IStockAdjustmentService _StockAdjustmentService,
                                IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUpdateObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentDetailService _StockAdjustmentDetails, IStockAdjustmentService _StockAdjustmentService,
                                IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidDeleteObject(StockAdjustmentDetail StockAdjustmentDetail);
-        bool ValidConfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
-        bool ValidUnconfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+        bool ValidConfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+        bool ValidUnconfirmObject(StockAdjustmentDetail StockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         bool isValid(StockAdjustmentDetail StockAdjustmentDetail);
         string PrintError(StockAdjustmentDetail StockAdjustmentDetail);
     }

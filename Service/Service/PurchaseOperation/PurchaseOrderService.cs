@@ -82,7 +82,7 @@ namespace Service.Service
         }
 
         public PurchaseOrder ConfirmObject(PurchaseOrder purchaseOrder, DateTime ConfirmationDate, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                    IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                    IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                     IWarehouseItemService _warehouseItemService)
         {
             purchaseOrder.ConfirmationDate = ConfirmationDate;
@@ -92,7 +92,7 @@ namespace Service.Service
                 foreach (var detail in purchaseOrderDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _purchaseOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    _purchaseOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(purchaseOrder);
             }
@@ -101,7 +101,7 @@ namespace Service.Service
 
         public PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseReceivalService _purchaseReceivalService,
                                              IPurchaseReceivalDetailService _purchaseReceivalDetailService, IStockMutationService _stockMutationService,
-                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(purchaseOrder, _purchaseReceivalService))
             {
@@ -109,7 +109,7 @@ namespace Service.Service
                 foreach (var detail in purchaseOrderDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _purchaseOrderDetailService.UnconfirmObject(detail, _purchaseReceivalDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    _purchaseOrderDetailService.UnconfirmObject(detail, _purchaseReceivalDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(purchaseOrder);
             }

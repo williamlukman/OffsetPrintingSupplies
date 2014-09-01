@@ -54,10 +54,10 @@ namespace Service.Service
             return _repository.GetNewCore(Id);
         }
 
-        public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Category, int UoMId, IUoMService _uomService,
-                                        IItemService _itemService, IItemTypeService _itemTypeService,
+        public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Description, int UoMId, int MachineId,
+                                        IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                        IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                        IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService, IMachineService _machineService)
         {
             CoreBuilder coreBuilder = new CoreBuilder
             {
@@ -65,15 +65,17 @@ namespace Service.Service
                 SkuNewCore = SkuNewCore,
                 SkuUsedCore = SkuUsedCore,
                 Name = Name,
-                Category = Category,
-                UoMId = UoMId
+                Description = Description,
+                UoMId = UoMId,
+                MachineId = MachineId
             };
-            return this.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            return this.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService,
+                                     _warehouseService, _priceMutationService, _contactGroupService, _machineService);
         }
 
         public CoreBuilder CreateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, 
-                                        IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IPriceMutationService _priceMutationService, 
+                                        IContactGroupService _contactGroupService, IMachineService _machineService)
         {
             coreBuilder.Errors = new Dictionary<String, String>();
 
@@ -86,7 +88,8 @@ namespace Service.Service
             Item UsedCore = new Item()
             {
                 Name = coreBuilder.Name,
-                Category = coreBuilder.Category,
+                Description = coreBuilder.Description,
+                Category = typeCore.Name,
                 UoMId = coreBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = typeCore.Id,
@@ -97,7 +100,8 @@ namespace Service.Service
             Item NewCore = new Item()
             {
                 Name = coreBuilder.Name,
-                Category = coreBuilder.Category,
+                Description = coreBuilder.Description,
+                Category = typeCore.Name,
                 UoMId = coreBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = typeCore.Id,
@@ -108,7 +112,7 @@ namespace Service.Service
             if (_itemService.GetValidator().ValidCreateLegacyObject(UsedCore, _uomService, _itemService, _itemTypeService) &&
                 _itemService.GetValidator().ValidCreateLegacyObject(NewCore, _uomService, _itemService, _itemTypeService))
             {
-                if (_validator.ValidCreateObject(coreBuilder, this, _uomService, _itemService))
+                if (_validator.ValidCreateObject(coreBuilder, this, _uomService, _itemService, _machineService))
                 {
                     UsedCore = _itemService.CreateLegacyObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
                     UsedCore.Id = UsedCore.Id;
@@ -129,26 +133,26 @@ namespace Service.Service
         }
 
         public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IBarringService _barringService,
+                                        IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IBlanketService _blanketService,
                                         IContactService _contactService, IMachineService _machineService, IPriceMutationService _priceMutationService,
                                         IContactGroupService _contactGroupService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             UsedCore.Name = coreBuilder.Name;
-            UsedCore.Category = coreBuilder.Category;
+            UsedCore.Description = coreBuilder.Description;
             Item NewCore = _itemService.GetObjectById(coreBuilder.NewCoreItemId);
             NewCore.Name = coreBuilder.Name;
-            NewCore.Category = coreBuilder.Category;
+            NewCore.Description = coreBuilder.Description;
 
             if (_itemService.GetValidator().ValidUpdateLegacyObject(UsedCore, _uomService, _itemService, _itemTypeService) &&
                 _itemService.GetValidator().ValidUpdateLegacyObject(NewCore, _uomService, _itemService, _itemTypeService))
             {
-                if (_validator.ValidUpdateObject(coreBuilder, this, _uomService, _itemService))
+                if (_validator.ValidUpdateObject(coreBuilder, this, _uomService, _itemService, _machineService))
                 {
                     _itemService.UpdateLegacyObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService,
-                                                    _barringService, _contactService, _machineService, _priceMutationService, _contactGroupService);
+                                                    _blanketService, _contactService, _machineService, _priceMutationService, _contactGroupService);
                     _itemService.UpdateLegacyObject(NewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService,
-                                                    _barringService, _contactService, _machineService, _priceMutationService, _contactGroupService);
+                                                    _blanketService, _contactService, _machineService, _priceMutationService, _contactGroupService);
                     coreBuilder = _repository.UpdateObject(coreBuilder);
                 }
             }
@@ -164,10 +168,10 @@ namespace Service.Service
         public CoreBuilder SoftDeleteObject(CoreBuilder coreBuilder, IItemService _itemService, IRollerBuilderService _rollerBuilderService,
                                             ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, IWarehouseItemService _warehouseItemService,
-                                            IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IBarringService _barringService,
+                                            IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IBlanketService _blanketService,
                                             IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                             ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService,
-                                            IBarringOrderDetailService _barringOrderDetailService)
+                                            IBlanketOrderDetailService _blanketOrderDetailService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             Item NewCore = _itemService.GetObjectById(coreBuilder.NewCoreItemId);
@@ -177,10 +181,10 @@ namespace Service.Service
             {
                 if (_validator.ValidDeleteObject(coreBuilder, _coreIdentificationDetailService, _rollerBuilderService))
                 {
-                    _itemService.SoftDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _barringService, _purchaseOrderDetailService,
-                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _barringOrderDetailService);
-                    _itemService.SoftDeleteLegacyObject(NewCore, _stockMutationService, _itemTypeService, _warehouseItemService, _barringService, _purchaseOrderDetailService,
-                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _barringOrderDetailService);
+                    _itemService.SoftDeleteLegacyObject(UsedCore, _stockMutationService, _itemTypeService, _warehouseItemService, _blanketService, _purchaseOrderDetailService,
+                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _blanketOrderDetailService);
+                    _itemService.SoftDeleteLegacyObject(NewCore, _stockMutationService, _itemTypeService, _warehouseItemService, _blanketService, _purchaseOrderDetailService,
+                                                        _stockAdjustmentDetailService, _salesOrderDetailService, _priceMutationService, _blanketOrderDetailService);
                     _repository.SoftDeleteObject(coreBuilder);
                 }
             }

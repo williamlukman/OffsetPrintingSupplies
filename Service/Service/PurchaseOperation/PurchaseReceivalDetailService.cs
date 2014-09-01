@@ -94,7 +94,7 @@ namespace Service.Service
 
         public PurchaseReceivalDetail ConfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, DateTime ConfirmationDate, IPurchaseReceivalService _purchaseReceivalService,
                                                     IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService,
-                                                    IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                    IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             purchaseReceivalDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService))
@@ -110,7 +110,7 @@ namespace Service.Service
                     // item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity, itemPrice);
                     //item.PendingReceival -= purchaseReceivalDetail.Quantity;
                     //item.Quantity += purchaseReceivalDetail.Quantity;
-                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
                 PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
                 _purchaseOrderDetailService.SetReceivalComplete(purchaseOrderDetail, purchaseReceivalDetail.Quantity);
@@ -121,7 +121,7 @@ namespace Service.Service
         public PurchaseReceivalDetail UnconfirmObject(PurchaseReceivalDetail purchaseReceivalDetail, IPurchaseReceivalService _purchaseReceivalService,
                                                       IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                                       IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IStockMutationService _stockMutationService,
-                                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                      IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(purchaseReceivalDetail, _purchaseInvoiceDetailService, _itemService))
             {
@@ -136,7 +136,7 @@ namespace Service.Service
                     //item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
                     //item.PendingReceival += purchaseReceivalDetail.Quantity;
                     //item.Quantity -= purchaseReceivalDetail.Quantity;
-                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
                 PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
                 _purchaseOrderDetailService.UnsetReceivalComplete(purchaseOrderDetail, purchaseReceivalDetail.Quantity, _purchaseOrderService);

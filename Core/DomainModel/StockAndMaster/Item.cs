@@ -17,13 +17,14 @@ namespace Core.DomainModel
         public string Sku { get; set; }
 
         public string Name { get; set; }
-        public string Category { get; set; }
+        public string Description { get; set; }
         public int UoMId { get; set; }
         public int Quantity { get; set; }
         public int PendingDelivery { get; set; }
         public int PendingReceival { get; set; }
+        //public int OnTrial { get; set; }
 
-        public string Description { get; set; }
+        public string Category { get; set; }
         public decimal SellingPrice { get; set; }
         public int PriceMutationId { get; set; }
         public decimal AvgPrice { get; set; }

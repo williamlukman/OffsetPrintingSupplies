@@ -25,14 +25,14 @@ namespace WebView.Controllers
         private IStockMutationService _stockMutationService;
         private IMachineService _machineService;
         private IRollerTypeService _rollerTypeService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
         private IContactGroupService _contactGroupService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
-        private IBarringOrderDetailService _barringOrderDetailService;
+        private IBlanketOrderDetailService _blanketOrderDetailService;
 
         public MstRollerBuilderController()
         {
@@ -47,14 +47,14 @@ namespace WebView.Controllers
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _machineService = new MachineService(new MachineRepository(), new MachineValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
-            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
+            _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
         }
 
         public ActionResult Index()
@@ -119,7 +119,7 @@ namespace WebView.Controllers
                             _itemService.GetObjectById(model.CompoundId).Name,
                             _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
                             _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
-                            model.Category,
+                            model.Description,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -170,6 +170,7 @@ namespace WebView.Controllers
                             model.Name,
                             model.Sku,
                             model.Category,
+                            model.Description,
                             model.UoMId,
                             _uomService.GetObjectById(model.UoMId).Name,
                             model.Quantity,
@@ -200,7 +201,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Name,
-                model.Category,
+                model.Description,
                 model.UoMId,
                 UoM = _uomService.GetObjectById(model.UoMId).Name,
                 model.BaseSku,
@@ -256,7 +257,7 @@ namespace WebView.Controllers
                 data.Name = model.Name;
                 model = _rollerBuilderService.UpdateObject(data,_machineService,_uomService,_itemService,
                     _itemTypeService,_coreBuilderService,_rollerTypeService,_warehouseItemService,_warehouseService,
-                    _barringService,_contactService,_priceMutationService,_contactGroupService);
+                    _blanketService,_contactService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -276,10 +277,10 @@ namespace WebView.Controllers
             try
             {
                 var data = _rollerBuilderService.GetObjectById(model.Id);
-                model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_barringService,
+                model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_blanketService,
                     _priceMutationService,_recoveryOrderDetailService,_coreBuilderService,
                     _warehouseItemService,_stockMutationService,_itemTypeService,_purchaseOrderDetailService,
-                    _stockAdjustmentDetailService,_salesOrderDetailService, _barringOrderDetailService);
+                    _stockAdjustmentDetailService,_salesOrderDetailService, _blanketOrderDetailService);
             }
             catch (Exception ex)
             {

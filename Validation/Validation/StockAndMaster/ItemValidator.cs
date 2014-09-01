@@ -155,30 +155,30 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VIsNotInBarring(Item item, IBarringService _barringService, IItemTypeService _itemTypeService)
+        public Item VIsNotInBlanket(Item item, IBlanketService _blanketService, IItemTypeService _itemTypeService)
         {
             ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
-            if (itemType.Name == Core.Constants.Constant.ItemTypeCase.Blanket)
+            if (itemType.Name == Core.Constants.Constant.ItemTypeCase.RollBlanket)
             {
-                IList<Barring> barrings = _barringService.GetObjectsByBlanketItemId(item.Id);
-                if (barrings.Any())
+                IList<Blanket> blankets = _blanketService.GetObjectsByRollBlanketItemId(item.Id);
+                if (blankets.Any())
                 {
-                    item.Errors.Add("Generic", "Blanket Item dipakai sebagai bahan pembuatan barring");
+                    item.Errors.Add("Generic", "RollBlanket Item dipakai sebagai bahan pembuatan blanket");
                 }
             }
             else if (itemType.Name == Core.Constants.Constant.ItemTypeCase.Bar)
             {
-                IList<Barring> barrings1 = _barringService.GetObjectsByLeftBarItemId(item.Id);
-                if (barrings1.Any())
+                IList<Blanket> blankets1 = _blanketService.GetObjectsByLeftBarItemId(item.Id);
+                if (blankets1.Any())
                 {
-                    item.Errors.Add("Generic", "Bar Item dipakai sebagai bahan pembuatan barring");
+                    item.Errors.Add("Generic", "Bar Item dipakai sebagai bahan pembuatan blanket");
                 }
                 else
                 {
-                    IList<Barring> barrings2 = _barringService.GetObjectsByRightBarItemId(item.Id);
-                    if (barrings2.Any())
+                    IList<Blanket> blankets2 = _blanketService.GetObjectsByRightBarItemId(item.Id);
+                    if (blankets2.Any())
                     {
-                        item.Errors.Add("Generic", "Bar Item dipakai sebagai bahan pembuatan barring");
+                        item.Errors.Add("Generic", "Bar Item dipakai sebagai bahan pembuatan blanket");
                     }
                 }
             }
@@ -229,7 +229,7 @@ namespace Validation.Validation
 
         public Item VDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                   IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                  IBarringService _barringService)
+                                  IBlanketService _blanketService)
         {
             VHasItemTypeAndNotLegacyItem(item, _itemTypeService);
             if (!isValid(item)) { return item; }
@@ -243,7 +243,7 @@ namespace Validation.Validation
             if (!isValid(item)) { return item; }
             VHasNoSalesOrderDetails(item, _salesOrderDetailService);
             if (!isValid(item)) { return item; }
-            VIsNotInBarring(item, _barringService, _itemTypeService);
+            VIsNotInBlanket(item, _blanketService, _itemTypeService);
             return item;
         }
 
@@ -309,10 +309,10 @@ namespace Validation.Validation
 
         public bool ValidDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                       IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                      ISalesOrderDetailService _salesOrderDetailService, IBarringService _barringService)
+                                      ISalesOrderDetailService _salesOrderDetailService, IBlanketService _blanketService)
         {
             item.Errors.Clear();
-            VDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService, _barringService);
+            VDeleteObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService, _blanketService);
             return isValid(item);
         }
 

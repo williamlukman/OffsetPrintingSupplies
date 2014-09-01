@@ -54,7 +54,7 @@ namespace TestValidation
         IDeliveryOrderService _deliveryOrderService;
         IDeliveryOrderDetailService _deliveryOrderDetailService;
         IUoMService _uomService;
-        IBarringService _barringService;
+        IBlanketService _blanketService;
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
@@ -83,7 +83,7 @@ namespace TestValidation
                 _uomService = new UoMService(new UoMRepository(), new UoMValidator());
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-                _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+                _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -121,7 +121,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Batik Tulis",
-                    Category = "Item",
+                    Description = "Item",
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
@@ -132,7 +132,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Busway",
-                    Category = "Untuk disumbangkan bagi kebutuhan DKI Jakarta",
+                    Description = "Untuk disumbangkan bagi kebutuhan DKI Jakarta",
                     Sku = "DKI002",
                     UoMId = Pcs.Id
                 };
@@ -142,7 +142,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Botol Aqua",
-                    Category = "Minuman",
+                    Description = "Minuman",
                     Sku = "DKI003",
                     UoMId = Pcs.Id
                 };
@@ -175,7 +175,7 @@ namespace TestValidation
                 _stockAdjustmentDetailService.CreateObject(sadBotolAqua, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _barringService, _warehouseItemService);
+                                                      _itemService, _blanketService, _warehouseItemService);
 
                 salesOrder1 = _salesOrderService.CreateObject(contact.Id, new DateTime(2014, 07, 09), _contactService);
                 salesOrder2 = _salesOrderService.CreateObject(contact.Id, new DateTime(2014, 04, 09), _contactService);
@@ -185,8 +185,8 @@ namespace TestValidation
                 salesOrderDetail_batiktulis_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_batiktulis.Id, 40, 2000500, _salesOrderService, _itemService);
                 salesOrderDetail_busway_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_busway.Id, 3, 810000000, _salesOrderService, _itemService);
                 salesOrderDetail_botolaqua_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_botolaqua.Id, 340, 5500, _salesOrderService, _itemService);
-                salesOrder1 = _salesOrderService.ConfirmObject(salesOrder1, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                salesOrder2 = _salesOrderService.ConfirmObject(salesOrder2, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                salesOrder1 = _salesOrderService.ConfirmObject(salesOrder1, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+                salesOrder2 = _salesOrderService.ConfirmObject(salesOrder2, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }
         }
 
@@ -238,11 +238,11 @@ namespace TestValidation
                     deliveryOrderDetail_batiktulis_do2a = _deliveryOrderDetailService.CreateObject(deliveryOrder3.Id, item_batiktulis.Id, 100, salesOrderDetail_batiktulis_so1.Id, _deliveryOrderService,
                                                                                                                           _salesOrderDetailService, _salesOrderService, _itemService);
                     deliveryOrder1 = _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
-                                                                         _barringService, _warehouseItemService);
+                                                                         _blanketService, _warehouseItemService);
                     deliveryOrder2 = _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
-                                                                         _barringService, _warehouseItemService);
+                                                                         _blanketService, _warehouseItemService);
                     deliveryOrder3 = _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
-                                                                         _barringService, _warehouseItemService);
+                                                                         _blanketService, _warehouseItemService);
                 };
 
                 it["validates_deliveryorders"] = () =>
@@ -262,7 +262,7 @@ namespace TestValidation
                     deliveryOrder1 = _deliveryOrderService.UnconfirmObject(deliveryOrder1, _deliveryOrderDetailService,
                                                                            _salesInvoiceService, _salesInvoiceDetailService, _salesOrderService,
                                                                            _salesOrderDetailService, _stockMutationService, _itemService,
-                                                                           _barringService, _warehouseItemService);
+                                                                           _blanketService, _warehouseItemService);
                     deliveryOrder1.Errors.Count().should_be(0);
                 };
 

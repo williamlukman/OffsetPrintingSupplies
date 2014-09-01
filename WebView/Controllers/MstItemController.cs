@@ -20,7 +20,7 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IWarehouseService _warehouseService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
         private IContactGroupService _contactGroupService;
@@ -37,7 +37,7 @@ namespace WebView.Controllers
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(),new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(),new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -100,6 +100,7 @@ namespace WebView.Controllers
                             item.SellingPrice,
                             item.AvgPrice,
                             item.Category,
+                            item.Description,
                             _itemTypeService.GetObjectById(item.ItemTypeId).Name,
                             item.CreatedAt,
                             item.UpdatedAt,
@@ -153,6 +154,7 @@ namespace WebView.Controllers
                             item.ItemTypeId,
                             _itemTypeService.GetObjectById(item.ItemTypeId).Name,
                             item.Category,
+                            item.Description,
                             item.UoMId,
                             _uoMService.GetObjectById(item.UoMId).Name,
                             item.Quantity,
@@ -196,6 +198,7 @@ namespace WebView.Controllers
                 model.PendingDelivery,
                 model.PendingReceival,
                 model.Category,
+                model.Description,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -229,6 +232,7 @@ namespace WebView.Controllers
                 data.Name = model.Name;
                 data.Sku = model.Sku;
                 data.Category = model.Category;
+                data.Description = model.Description;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
                 data.SellingPrice = model.SellingPrice;
@@ -252,7 +256,7 @@ namespace WebView.Controllers
             {
                 var data = _itemService.GetObjectById(model.Id);
                 model = _itemService.SoftDeleteObject(data,_stockMutationService,_itemTypeService,
-                    _warehouseItemService,_barringService,_purchaseOrderDetailService,_stockAdjustmentDetailService,
+                    _warehouseItemService,_blanketService,_purchaseOrderDetailService,_stockAdjustmentDetailService,
                     _salesOrderDetailService,_priceMutationService);
             }
             catch (Exception ex)

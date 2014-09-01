@@ -44,8 +44,8 @@
     <Compile Include="Service\Finance\CashMutationService.cs" />
     <Compile Include="Service\Finance\CashBankAdjustmentService.cs" />
     <Compile Include="Service\Finance\CashBankMutationService.cs" />
-    <Compile Include="Service\Manufacturing\BarringOrderDetailService.cs" />
-    <Compile Include="Service\Manufacturing\BarringOrderService.cs" />
+    <Compile Include="Service\Manufacturing\BlanketOrderDetailService.cs" />
+    <Compile Include="Service\Manufacturing\BlanketOrderService.cs" />
     <Compile Include="Service\PurchaseOperation\PayableService.cs" />
     <Compile Include="Service\PurchaseOperation\PaymentVoucherDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\PaymentVoucherService.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="Service\SalesOperation\ReceiptVoucherService.cs" />
     <Compile Include="Service\SalesOperation\SalesInvoiceDetailService.cs" />
     <Compile Include="Service\SalesOperation\SalesInvoiceService.cs" />
-    <Compile Include="Service\StockAndMaster\BarringService.cs" />
+    <Compile Include="Service\StockAndMaster\BlanketService.cs" />
     <Compile Include="Service\SalesOperation\DeliveryOrderDetailService.cs" />
     <Compile Include="Service\SalesOperation\DeliveryOrderService.cs" />
     <Compile Include="Service\PurchaseOperation\PurchaseOrderDetailService.cs" />

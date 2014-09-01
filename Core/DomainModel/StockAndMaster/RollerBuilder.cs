@@ -20,7 +20,7 @@ namespace Core.DomainModel
         public int UoMId { get; set; }
 
         public string Name { get; set; }
-        public string Category { get; set; }
+        public string Description { get; set; }
         public decimal RD { get; set; }
         public decimal CD { get; set; }
         public decimal RL { get; set; }

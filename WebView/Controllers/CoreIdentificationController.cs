@@ -21,7 +21,7 @@ namespace WebView.Controllers
         private ICoreBuilderService _coreBuilderService;
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IContactService _contactService;
         private IRecoveryOrderDetailService _recoveryOrderDetailService;
         private IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService;
@@ -38,7 +38,7 @@ namespace WebView.Controllers
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _recoveryOrderDetailService = new RecoveryOrderDetailService(new RecoveryOrderDetailRepository(), new RecoveryOrderDetailValidator());
             _rollerWarehouseMutationDetailService = new RollerWarehouseMutationDetailService(new RollerWarehouseMutationDetailRepository(), new RollerWarehouseMutationDetailValidator());
@@ -391,7 +391,7 @@ namespace WebView.Controllers
                 model = _coreIdentificationService.ConfirmObject(data, model.ConfirmationDate.Value
                     ,_coreIdentificationDetailService,_stockMutationService,_recoveryOrderService
                     ,_recoveryOrderDetailService,_coreBuilderService,_itemService
-                    ,_warehouseItemService,_barringService);
+                    ,_warehouseItemService,_blanketService);
             }
             catch (Exception ex)
             {
@@ -414,7 +414,7 @@ namespace WebView.Controllers
                 var data = _coreIdentificationService.GetObjectById(model.Id);
                 model = _coreIdentificationService.UnconfirmObject(data, _coreIdentificationDetailService
                     ,_stockMutationService,_recoveryOrderService,_coreBuilderService
-                    ,_itemService,_warehouseItemService,_barringService);
+                    ,_itemService,_warehouseItemService,_blanketService);
             }
             catch (Exception ex)
             {

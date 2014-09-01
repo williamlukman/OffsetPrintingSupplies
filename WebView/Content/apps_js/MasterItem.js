@@ -14,6 +14,7 @@
 
     function ClearData() {
         $('#Description').val('').text('').removeClass('errormessage');
+        $('#Category').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
@@ -33,7 +34,7 @@
         colNames: ['ID', 'Sku', 'Name', 
                     'Ready', 'PendReceival', 'PendDelivery',
                     'UoM', 'Selling Price', 'AvgPrice',
-                    'Category', 'Item Type', 'Created At', 'Updated At'],
+                    'Category', 'Description', 'Item Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
@@ -45,6 +46,7 @@
                   { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'category', index: 'category', width: 70 },
+                  { name: 'description', index: 'description', width: 70 },
                   { name: 'itemtypename', index: 'itemtypename', width: 70 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -110,6 +112,7 @@
                             $('#Name').val(result.Name);
                             $('#SKU').val(result.Sku);
                             $('#Category').val(result.Category);
+                            $('#Description').val(result.Description);
                             $('#ItemTypeId').val(result.ItemTypeId);
                             $('#ItemTypeName').val(result.ItemType);
                             $('#UoMId').val(result.UoMId);
@@ -205,7 +208,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").val(),
-                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(),
+                Sku: $("#SKU").val(), Category: $("#Category").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
             }),
             async: false,
             cache: false,

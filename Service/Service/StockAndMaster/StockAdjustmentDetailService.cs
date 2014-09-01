@@ -90,24 +90,24 @@ namespace Service.Service
         }
 
         public StockAdjustmentDetail ConfirmObject(StockAdjustmentDetail stockAdjustmentDetail, DateTime ConfirmationDate, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
-                                                   IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                   IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             stockAdjustmentDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _blanketService, _warehouseItemService))
             {
                 stockAdjustmentDetail = _repository.ConfirmObject(stockAdjustmentDetail);
                 StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
-                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
             }
             return stockAdjustmentDetail;
         }
         public StockAdjustmentDetail UnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
-                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
-            if (_validator.ValidUnconfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _barringService, _warehouseItemService))
+            if (_validator.ValidUnconfirmObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _blanketService, _warehouseItemService))
             {
                 stockAdjustmentDetail = _repository.UnconfirmObject(stockAdjustmentDetail);
                 StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
@@ -116,7 +116,7 @@ namespace Service.Service
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
-                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
             }
             return stockAdjustmentDetail;

@@ -29,7 +29,7 @@ namespace TestValidation
                 d.PopulateItem();
                 d.PopulateSingles();
                 d.PopulateBuilders();
-                d.PopulateBarring();
+                d.PopulateBlanket();
                 d.PopulateWarehouseMutationForRollerIdentificationAndRecovery();
                 d.PopulateCoreIdentifications();
             }
@@ -73,7 +73,7 @@ namespace TestValidation
             it["confirms_coreidentificationcontact"] = () =>
             {
                 d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService, d._recoveryOrderService,
-                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
                 d.coreIdentificationContact.IsConfirmed.should_be(true);
                 d.coreIdentificationContact.Errors.Count().should_be(0);
             };
@@ -81,10 +81,10 @@ namespace TestValidation
             it["unconfirms_coreidentificationcontact"] = () =>
             {
                 d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
-                                               d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
+                                               d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
                 d.coreIdentificationContact.IsConfirmed.should_be(true);
                 d.coreIdentificationContact = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._stockMutationService,
-                                               d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
+                                               d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
                 d.coreIdentificationContact.IsConfirmed.should_be(false);
                 d.coreIdentificationContact.Errors.Count().should_be(0);
             };
@@ -93,7 +93,7 @@ namespace TestValidation
             {
                 d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                                         d._warehouseItemService, d._barringService);
+                                                                                         d._warehouseItemService, d._blanketService);
                 d.coreIdentificationInHouse.IsConfirmed.should_be(true);
                 d.coreIdentificationInHouse.Errors.Count().should_be(0);
             };
@@ -102,10 +102,10 @@ namespace TestValidation
             {
                 d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                                         d._warehouseItemService, d._barringService);
+                                                                                         d._warehouseItemService, d._blanketService);
                 d.coreIdentificationInHouse.IsConfirmed.should_be(true);
                 d.coreIdentificationInHouse = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._stockMutationService,
-                                                                                           d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._barringService);
+                                                                                           d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
                 d.coreIdentificationInHouse.IsConfirmed.should_be(false);
                 d.coreIdentificationInHouse.Errors.Count().should_be(0);
             };
@@ -130,13 +130,13 @@ namespace TestValidation
 
                     d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                         d._warehouseItemService, d._barringService);
+                                                                         d._warehouseItemService, d._blanketService);
                     d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                         d._warehouseItemService, d._barringService);
+                                                                         d._warehouseItemService, d._blanketService);
                     d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                         d._warehouseItemService, d._barringService);
+                                                                         d._warehouseItemService, d._blanketService);
                     
                     // in house core identification
                     d.usedCoreBuilderFinal = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService).Quantity;

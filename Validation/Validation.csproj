@@ -44,8 +44,8 @@
     <Compile Include="Validation\Finance\CashMutationValidator.cs" />
     <Compile Include="Validation\Finance\CashBankAdjustmentValidator.cs" />
     <Compile Include="Validation\Finance\CashBankMutationValidator.cs" />
-    <Compile Include="Validation\Manufacturing\BarringOrderDetailValidator.cs" />
-    <Compile Include="Validation\Manufacturing\BarringOrderValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BlanketOrderDetailValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BlanketOrderValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PayableValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PaymentVoucherDetailValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PaymentVoucherValidator.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="Validation\SalesOperation\ReceiptVoucherValidator.cs" />
     <Compile Include="Validation\SalesOperation\SalesInvoiceDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\SalesInvoiceValidator.cs" />
-    <Compile Include="Validation\StockAndMaster\BarringValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\BlanketValidator.cs" />
     <Compile Include="Validation\SalesOperation\DeliveryOrderDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\DeliveryOrderValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PurchaseOrderDetailValidator.cs" />

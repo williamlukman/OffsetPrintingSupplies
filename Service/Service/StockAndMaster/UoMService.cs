@@ -41,7 +41,7 @@ namespace Service.Service
 
         public UoM GetObjectByName(string name)
         {
-            return _repository.FindAll(c => c.Name == name && !c.IsDeleted).FirstOrDefault();
+            return _repository.GetObjectByName(name);
         }
 
         public UoM CreateObject(string Name)

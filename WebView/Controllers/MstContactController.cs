@@ -15,7 +15,7 @@ namespace WebView.Controllers
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ContactController");
         private IContactService _contactService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private ICoreIdentificationService _coreIdentificationService;
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
@@ -25,7 +25,7 @@ namespace WebView.Controllers
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
-            _barringService = new BarringService(new BarringRepository(),new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(),new BlanketValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -171,7 +171,7 @@ namespace WebView.Controllers
             {
                 var data = _contactService.GetObjectById(model.Id);
                 model = _contactService.SoftDeleteObject(data, _coreIdentificationService, 
-                    _barringService, _purchaseOrderService, _salesOrderService);
+                    _blanketService, _purchaseOrderService, _salesOrderService);
             }
 
             catch (Exception ex)

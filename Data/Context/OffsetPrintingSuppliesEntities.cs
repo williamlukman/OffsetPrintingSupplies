@@ -26,7 +26,7 @@ namespace Data.Context
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                           "CoreIdentificationDetail", "CoreIdentification",
-                                          "BarringOrderDetail", "BarringOrder" };
+                                          "BlanketOrderDetail", "BlanketOrder" };
             IList<String> purchaseOperationNames = new List<String>()
                                         { "PaymentVoucherDetail", "PaymentVoucher", "Payable", 
                                           "RetailPurchaseInvoice", "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail", "PurchaseInvoice",
@@ -38,7 +38,7 @@ namespace Data.Context
             IList<String> stockAndMasterNames = new List<String>()
                                         {  "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
-                                          "Warehouse", "Barring", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
+                                          "Warehouse", "Blanket", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
 
             financeNames.ToList().ForEach(x => tableNames.Add(x));
@@ -58,9 +58,9 @@ namespace Data.Context
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
-            modelBuilder.Configurations.Add(new BarringMapping());
-            modelBuilder.Configurations.Add(new BarringOrderMapping());
-            modelBuilder.Configurations.Add(new BarringOrderDetailMapping());
+            modelBuilder.Configurations.Add(new BlanketMapping());
+            modelBuilder.Configurations.Add(new BlanketOrderMapping());
+            modelBuilder.Configurations.Add(new BlanketOrderDetailMapping());
             modelBuilder.Configurations.Add(new CashBankMapping());
             modelBuilder.Configurations.Add(new CashBankAdjustmentMapping());
             modelBuilder.Configurations.Add(new CashBankMutationMapping());
@@ -115,9 +115,9 @@ namespace Data.Context
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<Barring> Barrings { get; set; }
-        public DbSet<BarringOrder> BarringOrders { get; set; }
-        public DbSet<BarringOrderDetail> BarringOrderDetails { get; set; }
+        public DbSet<Blanket> Blankets { get; set; }
+        public DbSet<BlanketOrder> BlanketOrders { get; set; }
+        public DbSet<BlanketOrderDetail> BlanketOrderDetails { get; set; }
         public DbSet<CashBank> CashBanks { get; set; }
         public DbSet<CashBankAdjustment> CashBankAdjustments { get; set; }
         public DbSet<CashBankMutation> CashBankMutations { get; set; }

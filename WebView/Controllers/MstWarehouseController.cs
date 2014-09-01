@@ -18,14 +18,14 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IItemService _itemService;
         private ICoreIdentificationService _coreIdentificationService;
-        private IBarringOrderService _barringOrderService;
+        private IBlanketOrderService _blanketOrderService;
 
         public MstWarehouseController()
         {  
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
              _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
-            _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
+            _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
         }
 
@@ -156,7 +156,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _warehouseService.GetObjectById(model.Id);
-                model = _warehouseService.SoftDeleteObject(data,_warehouseItemService,_coreIdentificationService,_barringOrderService);
+                model = _warehouseService.SoftDeleteObject(data,_warehouseItemService,_coreIdentificationService,_blanketOrderService);
             }
             catch (Exception ex)
             {

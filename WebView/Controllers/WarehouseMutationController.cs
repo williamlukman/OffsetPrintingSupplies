@@ -18,7 +18,7 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IWarehouseMutationService _warehouseMutationService;
         private IWarehouseMutationDetailService _warehouseMutationDetailService;
         private IUoMService _uomService;
@@ -29,7 +29,7 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _warehouseMutationService = new WarehouseMutationService(new WarehouseMutationRepository(), new WarehouseMutationValidator());
             _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
@@ -320,7 +320,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _warehouseMutationService.GetObjectById(model.Id);
-                model = _warehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_warehouseMutationDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
+                model = _warehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_warehouseMutationDetailService,_itemService,_blanketService,_warehouseItemService,_stockMutationService);
             }
             catch (Exception ex)
             {
@@ -341,7 +341,7 @@ namespace WebView.Controllers
             {
 
                 var data = _warehouseMutationService.GetObjectById(model.Id);
-                model = _warehouseMutationService.UnconfirmObject(data,_warehouseMutationDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
+                model = _warehouseMutationService.UnconfirmObject(data,_warehouseMutationDetailService,_itemService,_blanketService,_warehouseItemService,_stockMutationService);
             }
             catch (Exception ex)
             {

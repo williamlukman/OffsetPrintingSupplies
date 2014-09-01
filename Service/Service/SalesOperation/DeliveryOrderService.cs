@@ -85,7 +85,7 @@ namespace Service.Service
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                            IStockMutationService _stockMutationService, IItemService _itemService,
-                                           IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                           IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             deliveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService))
@@ -95,7 +95,7 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _deliveryOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _salesOrderDetailService, _stockMutationService, _itemService,
-                                                              _barringService, _warehouseItemService);
+                                                              _blanketService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(deliveryOrder);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
@@ -107,7 +107,7 @@ namespace Service.Service
         public DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                              ISalesInvoiceService _salesInvoiceService, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                              ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                             IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                             IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                              IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(deliveryOrder, _salesInvoiceService))
@@ -118,7 +118,7 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesOrderService, _salesOrderDetailService,
                                                                 _salesInvoiceDetailService, _stockMutationService,
-                                                                _itemService, _barringService, _warehouseItemService);
+                                                                _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(deliveryOrder);
             }

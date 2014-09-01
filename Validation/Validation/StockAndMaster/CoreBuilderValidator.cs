@@ -63,6 +63,16 @@ namespace Validation.Validation
             return coreBuilder;
         }
 
+        public CoreBuilder VHasMachine(CoreBuilder coreBuilder, IMachineService _machineService)
+        {
+            Machine machine = _machineService.GetObjectById(coreBuilder.MachineId);
+            if (machine == null)
+            {
+                coreBuilder.Errors.Add("MachineId", "Tidak terasosiasi dengan machine");
+            }
+            return coreBuilder;
+        }
+
         public CoreBuilder VIsInCoreIdentificationDetail(CoreBuilder coreBuilder, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreBuilderId(coreBuilder.Id);
@@ -84,19 +94,21 @@ namespace Validation.Validation
         }
 
 
-        public CoreBuilder VCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
+        public CoreBuilder VCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService, IMachineService _machineService)
         {
             VHasUniqueBaseSku(coreBuilder, _coreBuilderService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
             VNameNotEmpty(coreBuilder);
             if (!isValid(coreBuilder)) { return coreBuilder; }
             VHasUoM(coreBuilder, _uomService);
+            if (!isValid(coreBuilder)) { return coreBuilder; }
+            VHasMachine(coreBuilder, _machineService);
             return coreBuilder;
         }
 
-        public CoreBuilder VUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
+        public CoreBuilder VUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService, IMachineService _machineService)
         {
-            VCreateObject(coreBuilder, _coreBuilderService, _uomService, _itemService);
+            VCreateObject(coreBuilder, _coreBuilderService, _uomService, _itemService, _machineService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
             VHasUsedCoreItem(coreBuilder, _itemService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
@@ -112,16 +124,16 @@ namespace Validation.Validation
             return coreBuilder;
         }
 
-        public bool ValidCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
+        public bool ValidCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService, IMachineService _machineService)
         {
-            VCreateObject(coreBuilder, _coreBuilderService, _uomService, _itemService);
+            VCreateObject(coreBuilder, _coreBuilderService, _uomService, _itemService, _machineService);
             return isValid(coreBuilder);
         }
 
-        public bool ValidUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService)
+        public bool ValidUpdateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService, IMachineService _machineService)
         {
             coreBuilder.Errors.Clear();
-            VUpdateObject(coreBuilder, _coreBuilderService, _uomService, _itemService);
+            VUpdateObject(coreBuilder, _coreBuilderService, _uomService, _itemService, _machineService);
             return isValid(coreBuilder);
         }
 

@@ -17,7 +17,7 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private ISalesOrderService _salesOrderService;
         private ISalesOrderDetailService _salesOrderDetailService;
         private IDeliveryOrderDetailService _deliveryOrderDetailService;
@@ -31,7 +31,7 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
             _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
@@ -394,7 +394,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
-                model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -415,7 +415,7 @@ namespace WebView.Controllers
             {
 
                 var data = _deliveryOrderService.GetObjectById(model.Id);
-                model = _deliveryOrderService.UnconfirmObject(data, _deliveryOrderDetailService, _salesInvoiceService, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                model = _deliveryOrderService.UnconfirmObject(data, _deliveryOrderDetailService, _salesInvoiceService, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }
             catch (Exception ex)
             {

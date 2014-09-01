@@ -3,7 +3,6 @@
 		vMainGrid,
 		vCode;
 
-
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
@@ -27,7 +26,8 @@
     $("#lookup_div_corebuilder").dialog('close');
     $("#lookup_div_uom").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $('#SkuRollerUsedCore').attr('disabled', true);
+    $('#SkuRollerNewCore').attr('disabled', true);
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -38,7 +38,7 @@
                    'Sku Used', 'QTY', 'UoM',
                    'Sku New', 'QTY', 'UoM', 
                    'Machine', 'Compound',
-                   'Core Sku', 'Core', 'Category',
+                   'Core Sku', 'Core', 'Description',
                    'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
@@ -60,7 +60,7 @@
                   { name: 'compoundname', index: 'compoundname', width: 100 },
                   { name: 'coresku', index: 'coresku', width: 60 },
                   { name: 'corebuildername', index: 'corebuildername', width: 80 },
-                  { name: 'category', index: 'category', width: 50 },
+                  { name: 'description', index: 'description', width: 80 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -128,7 +128,7 @@
                             $('#UoMId').val(result.UoMId);
                             $('#UoM').val(result.UoM);
                             $('#Name').val(result.Name);
-                            $('#Category').val(result.Category);
+                            $('#Description').val(result.Description);
                             $('#MachineId').val(result.MachineId);
                             $('#Machine').val(result.Machine);
                             $('#RollerTypeId').val(result.RollerTypeId);
@@ -232,8 +232,8 @@
             data: JSON.stringify({
                 Id: id, MachineId: $("#MachineId").val(), RollerTypeId: $("#RollerTypeId").val(),
                 CompoundId: $("#CompoundId").val(), UoMId: $("#UoMId").val(), CoreBuilderId: $("#CoreBuilderId").val(),
-                BaseSku: $("#BaseSku").val(), SkuRollerUsedCore: $("#SkuRollerUsedCore").val(), SkuRollerNewCore: $("#SkuRollerNewCore").val(),
-                Name: $("#Name").val(), Category: $("#Category").val(), RD: $("#RD").numberbox('getValue'),
+                BaseSku: $("#BaseSku").val(), SkuRollerUsedCore: $("#BaseSku").val() + "U", SkuRollerNewCore: $("#BaseSku").val() + "N",
+                Name: $("#Name").val(), Description: $("#Description").val(), RD: $("#RD").numberbox('getValue'),
                 CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'), WL: $("#WL").numberbox('getValue'),
                 TL: $("#TL").numberbox('getValue'),
             }),
@@ -460,12 +460,12 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['ID', 'Name', 'SKU',
-                     'Category', 'UoM Id', 'UoM', 'Quantity', 'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
+                     'Description', 'UoM Id', 'UoM', 'Quantity', 'Pending Receival', 'Pending Delivery', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 100 },
                   { name: 'sku', index: 'sku', width: 100 },
-                  { name: 'category', index: 'category', width: 100 },
+                  { name: 'descriptoin', index: 'description', width: 100 },
                   { name: 'uomid', index: 'uomid', width: 80 },
                   { name: 'uom', index: 'uom', width: 100 },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },

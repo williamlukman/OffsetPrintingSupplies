@@ -29,9 +29,9 @@ namespace Core.Constants
         {
             public static string Accessory = "Accessory";
             public static string Bar = "Bar";
-            public static string Barring = "Barring";
-            public static string Bearing = "Bearing";
             public static string Blanket = "Blanket";
+            public static string Bearing = "Bearing";
+            public static string RollBlanket = "RollBlanket";
             public static string Chemical = "Chemical";
             public static string Compound = "Compound";
             public static string Consumable = "Consumable";
@@ -68,6 +68,12 @@ namespace Core.Constants
             public static int CWCGrind = 7;
             public static int PolishAndQC = 8;
             public static int Package = 9;
+        }
+
+        public class CroppingType
+        {
+            public static string Special = "Special";
+            public static string Normal = "Normal";
         }
     }
 }

@@ -25,7 +25,7 @@ namespace WebView.Controllers
         private IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
         private IContactGroupService _contactGroupService;
@@ -33,11 +33,11 @@ namespace WebView.Controllers
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
         private IMachineService _machineService;
-        private IBarringOrderDetailService _barringOrderDetailService;
+        private IBlanketOrderDetailService _blanketOrderDetailService;
 
         private ContactGroup baseGroup;
         private IRollerTypeService _rollerTypeService;
-        private ItemType typeAccessory, typeBar, typeBarring, typeBearing, typeBlanket, typeCore, typeCompound, typeChemical,
+        private ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         private RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
@@ -55,7 +55,7 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -64,7 +64,7 @@ namespace WebView.Controllers
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
             _machineService = new MachineService(new MachineRepository(),new MachineValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
-            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
+            _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
         }
 
         public ActionResult Index()
@@ -113,7 +113,8 @@ namespace WebView.Controllers
                             item.Id,
                             item.BaseSku,
                             item.Name,
-                            item.Category,
+                            item.Description,
+                            _machineService.GetObjectById(item.MachineId).Name,
                             item.SkuUsedCore, 
                             _itemService.GetObjectById(item.UsedCoreItemId).Quantity,
                             _uomService.GetObjectById(item.UoMId).Name,
@@ -145,7 +146,9 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Name,
-                model.Category,
+                model.Description,
+                model.MachineId,
+                Machine = _machineService.GetObjectById(model.MachineId).Name,
                 model.UoMId,
                 UoM = _uomService.GetObjectById(model.UoMId).Name,
                 model.BaseSku,
@@ -163,7 +166,7 @@ namespace WebView.Controllers
             try
             {
                 model = _coreBuilderService.CreateObject(model,_uomService,_itemService,_itemTypeService,
-                    _warehouseItemService,_warehouseService,_priceMutationService,_contactGroupService);
+                    _warehouseItemService,_warehouseService,_priceMutationService,_contactGroupService,_machineService);
             }
             catch (Exception ex)
             {
@@ -185,7 +188,7 @@ namespace WebView.Controllers
                 var data = _coreBuilderService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 model = _coreBuilderService.UpdateObject(data,_uomService,_itemService,_itemTypeService,_warehouseItemService
-                    ,_warehouseService,_barringService,_contactService,_machineService,_priceMutationService,_contactGroupService);
+                    ,_warehouseService,_blanketService,_contactService,_machineService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -207,8 +210,8 @@ namespace WebView.Controllers
                 var data = _coreBuilderService.GetObjectById(model.Id);
                 model = _coreBuilderService.SoftDeleteObject(data, _itemService, _rollerBuilderService, 
                     _coreIdentificationDetailService, _recoveryOrderDetailService, _recoveryAccessoryDetailService, 
-                    _warehouseItemService, _stockMutationService, _itemTypeService,_barringService,_purchaseOrderDetailService
-                    ,_stockAdjustmentDetailService,_salesOrderDetailService,_priceMutationService, _barringOrderDetailService);
+                    _warehouseItemService, _stockMutationService, _itemTypeService,_blanketService,_purchaseOrderDetailService
+                    ,_stockAdjustmentDetailService,_salesOrderDetailService,_priceMutationService, _blanketOrderDetailService);
             }
             catch (Exception ex)
             {

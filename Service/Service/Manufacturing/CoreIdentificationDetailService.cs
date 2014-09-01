@@ -136,7 +136,7 @@ namespace Service.Service
 
         public CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail, DateTime ConfirmationDate, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             coreIdentificationDetail.ConfirmationDate = ConfirmationDate;
             if( _validator.ValidConfirmObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
@@ -151,7 +151,7 @@ namespace Service.Service
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
                     WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
                     StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
-                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(coreIdentificationDetail);
             }
@@ -160,7 +160,7 @@ namespace Service.Service
 
         public CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                                     IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
             {
@@ -176,7 +176,7 @@ namespace Service.Service
                     IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
-                        _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                        _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                     }
                 }
                 _repository.UnconfirmObject(coreIdentificationDetail);
