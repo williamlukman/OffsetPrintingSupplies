@@ -425,7 +425,7 @@
         rowList: [20, 30, 60],
         sortname: 'Code',
         viewrecords: true,
-        scrollrows: true,
+        scrollrows: true, 
         shrinkToFit: false,
         sortorder: "ASC",
         width: $(window).width() -600,

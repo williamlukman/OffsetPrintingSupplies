@@ -62,7 +62,7 @@
         height: $(window).height() - 200,
         gridComplete:
 		  function () {
-		  }
+		      //$(this).find(">tbody>tr.jqgrow:odd").css("background", "#E0E0E0");		  }
 
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })

@@ -526,10 +526,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id','Sku', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'sku', index: 'sku', width: 200 },
+                  { name: 'name', index: 'name', width: 200 }
+        ],
         page: '1',
         pager: $('#lookup_pager_corebuilder'),
         rowNum: 20,

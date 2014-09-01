@@ -692,7 +692,7 @@
                     }
                 }
                 else {
-                    ReloadGridAccessory();
+                    ReloadGridDetail();
                     $("#accessory_div").dialog('close')
                 }
             }
