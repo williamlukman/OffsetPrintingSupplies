@@ -39,6 +39,13 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
+        public IQueryable<Item> GetQueryableAccessories(IItemService _itemService, IItemTypeService _itemTypeService)
+        {
+            ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessory);
+            IQueryable<Item> items = _repository.GetQueryableObjectsByItemTypeId(itemType.Id);
+            return items;
+        }
+
         public IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService)
         {
             ItemType itemType = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Accessory);

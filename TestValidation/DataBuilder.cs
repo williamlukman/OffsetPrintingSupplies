@@ -297,9 +297,9 @@ namespace TestValidation
                 Name = "Compound RB else",
                 Category = "Compound",
                 Sku = "CMP123",
-                UoMId = Tubs.Id
+                UoMId = Tubs.Id,
+                MinimumQuantity = 150000
             };
-
             itemCompound = _itemService.CreateObject(itemCompound, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
 
             itemCompound1 = new Item()

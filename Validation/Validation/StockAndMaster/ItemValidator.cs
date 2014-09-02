@@ -89,6 +89,10 @@ namespace Validation.Validation
             {
                 item.Errors.Add("Generic", "Pending receival tidak boleh negatif");
             }
+            else if (item.MinimumQuantity < 0)
+            {
+                item.Errors.Add("Generic", "Minimum quantity tidak boleh negatif");
+            }
             return item;
         }
 

@@ -28,6 +28,11 @@ namespace Data.Repository
             return FindAll().ToList();
         }
 
+        public IQueryable<Item> GetQueryableObjectsByItemTypeId(int ItemTypeId)
+        {
+            return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted);
+        }
+
         public IList<Item> GetObjectsByItemTypeId(int ItemTypeId)
         {
             return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted).ToList();

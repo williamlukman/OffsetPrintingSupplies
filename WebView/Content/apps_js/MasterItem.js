@@ -32,7 +32,7 @@
         url: base_url + 'MstItem/GetList',
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 
-                    'Ready', 'PendReceival', 'PendDelivery',
+                    'Ready', 'PendReceival', 'PendDelivery', 'MIN',
                     'UoM', 'Selling Price', 'AvgPrice',
                     'Category', 'Description', 'Item Type', 'Created At', 'Updated At'],
         colModel: [
@@ -42,6 +42,7 @@
                   { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'minimumquantity', index: 'minimumquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 40 },
                   { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
@@ -63,9 +64,17 @@
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
-		  function () {
-		  }
-
+            function () {
+                var ids = $(this).jqGrid('getDataIDs');
+                for (var i = 0; i < ids.length; i++) {
+                    var cl = ids[i];
+                    rowQuantity = $(this).getRowData(cl).quantity;
+                    rowMinimumQuantity = $(this).getRowData(cl).minimumquantity;
+                    if (rowMinimumQuantity - rowQuantity >= 0) {
+                        $(this).jqGrid('setRowData', ids[i], false, 'fontred');
+                    }
+                }
+            }
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
@@ -118,6 +127,7 @@
                             $('#UoMId').val(result.UoMId);
                             $('#UoMName').val(result.UoM);
                             $('#Quantity').numberbox('setValue', (result.Quantity));
+                            $('#MinimumQuantity').numberbox('setValue', (result.MinimumQuantity));
                             $('#SellingPrice').numberbox('setValue', (result.SellingPrice));
                             $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
                             $('#PendingReceival').numberbox('setValue', (result.PendingReceival));

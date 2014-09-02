@@ -22,6 +22,7 @@ namespace Core.DomainModel
         public int Quantity { get; set; }
         public int PendingDelivery { get; set; }
         public int PendingReceival { get; set; }
+        public int MinimumQuantity { get; set; }
         //public int OnTrial { get; set; }
 
         public string Category { get; set; }
