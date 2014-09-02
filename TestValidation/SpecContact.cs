@@ -180,7 +180,8 @@ namespace TestValidation
                     Name = "CoreBuilder00001",
                     Description = "X",
                     UoMId = d.Pcs.Id,
-                    MachineId = d.machine.Id
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
                                                                    d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);

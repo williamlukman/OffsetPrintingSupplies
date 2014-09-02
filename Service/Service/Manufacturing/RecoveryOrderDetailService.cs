@@ -78,21 +78,6 @@ namespace Service.Service
             return roller;
         }
 
-        public RecoveryOrderDetail CreateObject(int CoreIdentificationDetailId, int RollerBuilderId, string CoreTypeCase, string Acc, int RepairRequestCase,
-                                                IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                IRollerBuilderService _rollerBuilderService)
-        {
-            RecoveryOrderDetail recoveryOrderDetail = new RecoveryOrderDetail
-            {
-                CoreIdentificationDetailId = CoreIdentificationDetailId,
-                RollerBuilderId = RollerBuilderId,
-                CoreTypeCase = CoreTypeCase,
-                Acc = Acc,
-                RepairRequestCase = RepairRequestCase
-            };
-            return this.CreateObject(recoveryOrderDetail, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
-        }
-
         public RecoveryOrderDetail CreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                 ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService)
         {

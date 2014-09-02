@@ -17,6 +17,7 @@ namespace Core.DomainModel
         public string SkuRollerNewCore { get; set; }
         public int RollerUsedCoreItemId { get; set; }
         public int RollerNewCoreItemId { get; set; }
+        public int AdhesiveId { get; set; }
         public int UoMId { get; set; }
 
         public string Name { get; set; }
@@ -32,9 +33,14 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+
         public virtual UoM UoM { get; set; }
         public virtual Machine Machine { get; set; }
         public virtual CoreBuilder CoreBuilder { get; set; }
         public virtual RollerType RollerType { get; set; }
+        public virtual Item Compound { get; set; }
+        public virtual Item RollerUsedCoreItem { get; set; }
+        public virtual Item RollerNewCoreItem { get; set; }
+        public virtual Item Adhesive { get; set; }
     }
 }

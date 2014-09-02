@@ -25,6 +25,14 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(cb => cb.MachineId)
                 .WillCascadeOnDelete(false);
+            HasRequired(cb => cb.UsedCoreItem)
+                .WithMany()
+                .HasForeignKey(cb => cb.UsedCoreItemId)
+                .WillCascadeOnDelete(false);
+            HasRequired(cb => cb.NewCoreItem)
+                .WithMany()
+                .HasForeignKey(cb => cb.NewCoreItemId)
+                .WillCascadeOnDelete(false);
             Ignore(cb => cb.Errors);
         }
     }

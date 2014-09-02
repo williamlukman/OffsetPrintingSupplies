@@ -92,6 +92,16 @@ namespace Validation.Validation
             return rollerBuilder;
         }
 
+        public RollerBuilder VHasAdhesive(RollerBuilder rollerBuilder, IItemService _itemService)
+        {
+            Item adhesive = _itemService.GetObjectById(rollerBuilder.AdhesiveId);
+            if (adhesive == null)
+            {
+                rollerBuilder.Errors.Add("AdhesiveId", "Tidak terasosiasi dengan adhesive");
+            }
+            return rollerBuilder;
+        }
+
         public RollerBuilder VHasMeasurement(RollerBuilder rollerBuilder)
         {
             if (rollerBuilder.CD <= 0) { rollerBuilder.Errors.Add("CD", "Tidak boleh 0 atau negatif"); return rollerBuilder; }
@@ -140,6 +150,8 @@ namespace Validation.Validation
             VHasMeasurement(rollerBuilder);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
             VHasUoM(rollerBuilder, _uomService);
+            if (!isValid(rollerBuilder)) { return rollerBuilder; }
+            VHasAdhesive(rollerBuilder, _itemService);
             return rollerBuilder;
         }
 

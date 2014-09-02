@@ -10,7 +10,6 @@ namespace Validation.Validation
 {
     public class CoreIdentificationDetailValidator : ICoreIdentificationDetailValidator
     {
-
         public CoreIdentificationDetail VHasCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService)
         {
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
@@ -90,7 +89,17 @@ namespace Validation.Validation
             }
             return coreIdentificationDetail;
         }
-        
+
+        public CoreIdentificationDetail VHasRepairRequestCase(CoreIdentificationDetail coreIdentificationDetail)
+        {
+            if (coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.BearingSeat &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrill)
+            {
+                coreIdentificationDetail.Errors.Add("RepairRequestCase", "Hanya dapat diisi dengan 1 untuk Bearing Seat atau 2 untuk CentreDrill");
+            }
+            return coreIdentificationDetail;
+        }
+
         public CoreIdentificationDetail VHasMeasurement(CoreIdentificationDetail coreIdentificationDetail)
         {
             if (coreIdentificationDetail.CD <= 0) { coreIdentificationDetail.Errors.Add("CD", "Tidak boleh 0 atau negatif"); return coreIdentificationDetail; }
@@ -260,6 +269,8 @@ namespace Validation.Validation
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VQuantityIsInStockForInHouse(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasRepairRequestCase(coreIdentificationDetail);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             // specific for create, with CaseCreate = true
             VDetailsDoNotExceedCoreIdentificationQuantity(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, true);
             return coreIdentificationDetail;
@@ -284,6 +295,8 @@ namespace Validation.Validation
             VHasRollerType(coreIdentificationDetail, _rollerTypeService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VQuantityIsInStockForInHouse(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VHasRepairRequestCase(coreIdentificationDetail);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             // specific for update, with CaseCreate = false
             VDetailsDoNotExceedCoreIdentificationQuantity(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, false);

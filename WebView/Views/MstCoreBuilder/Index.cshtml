@@ -52,15 +52,39 @@
                         </tr>
                           <tr>
                             <td>
-                                <label>Sku UsedCore</label></td>
+                                <label>Used Sku</label></td>
                             <td >
                                 <input id="SkuUsedCore" name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/></td>
                         </tr>
                           <tr>
                             <td>
-                                <label>Sku NewCore</label></td>
+                                <label>New Sku</label></td>
                             <td >
                                 <input id="SkuNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Name</label></td>
+                            <td colspan="3">
+                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Description</label></td>
+                            <td colspan="3">
+                                <input id="Description" name="Description" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Used Quantity</label></td>
+                            <td colspan="3">
+                        <input id="UsedCoreQuantity" name="UsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>New Quantity</label></td>
+                            <td colspan="3">
+                        <input id="NewCoreQuantity" name="NewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
                         </tr>
                          <tr>
                             <td>
@@ -80,27 +104,14 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Name</label></td>
-                            <td colspan="3">
-                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
-                        </tr>
-                        <tr>
+                                <label>Type</label>
+                            </td>
                             <td>
-                                <label>Description</label></td>
-                            <td colspan="3">
-                                <input id="Description" name="Description" type="text" size="60" maxlength="60" align="left" /></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>UsedCore Quantity</label></td>
-                            <td colspan="3">
-                        <input id="UsedCoreQuantity" name="UsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
-                        </tr>
-                         <tr>
-                            <td>
-                                <label>NewCore Quantity</label></td>
-                            <td colspan="3">
-                        <input id="NewCoreQuantity" name="NewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                <select id="CoreBuilderTypeCase">
+                                  <option value="Hollow">Hollow</option>
+                                  <option value="Shaft">Shaft</option>
+                               </select>
+                            </td>
                         </tr>
                     </table>
                 @*</fieldset>*@

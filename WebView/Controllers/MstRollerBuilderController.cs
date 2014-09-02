@@ -117,6 +117,7 @@ namespace WebView.Controllers
                             _uomService.GetObjectById(model.UoMId).Name,
                             _machineService.GetObjectById(model.MachineId).Name,
                             _itemService.GetObjectById(model.CompoundId).Name,
+                            _itemService.GetObjectById(model.AdhesiveId).Name,
                             _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
                             _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                             model.Description,
@@ -171,11 +172,11 @@ namespace WebView.Controllers
                             model.Sku,
                             model.Category,
                             model.Description,
-                            model.UoMId,
-                            _uomService.GetObjectById(model.UoMId).Name,
                             model.Quantity,
                             model.PendingReceival,
                             model.PendingDelivery,
+                            model.UoMId,
+                            _uomService.GetObjectById(model.UoMId).Name,
                             model.CreatedAt,
                             model.UpdatedAt
                       }
@@ -183,6 +184,61 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetListAdhesive(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            int itemtypeId = _itemTypeService.GetObjectByName("Adhesive").Id;
+            var query = _itemService.GetAll().Where(d => d.IsDeleted == false && d.ItemTypeId == itemtypeId);
+
+            var list = query as IEnumerable<Item>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Name,
+                            model.Sku,
+                            model.Category,
+                            model.Description,
+                            model.Quantity,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.UoMId,
+                            _uomService.GetObjectById(model.UoMId).Name,
+                            model.CreatedAt,
+                            model.UpdatedAt
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
 
         public dynamic GetInfo(int Id)
         {
@@ -213,6 +269,8 @@ namespace WebView.Controllers
                 RollerType = _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
                 model.CompoundId,
                 Compound = _itemService.GetObjectById(model.CompoundId).Name,
+                model.AdhesiveId,
+                Adhesive = _itemService.GetObjectById(model.AdhesiveId).Name,
                 model.CoreBuilderId,
                 CoreBuilder = _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                 model.RD,
@@ -255,7 +313,23 @@ namespace WebView.Controllers
             {
                 var data = _rollerBuilderService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                model = _rollerBuilderService.UpdateObject(data,_machineService,_uomService,_itemService,
+                data.BaseSku = model.BaseSku;
+                data.SkuRollerNewCore = model.SkuRollerNewCore;
+                data.SkuRollerUsedCore = model.SkuRollerUsedCore;
+                data.MachineId = model.MachineId;
+                data.RollerTypeId = model.RollerTypeId;
+                data.CompoundId = model.CompoundId;
+                data.AdhesiveId = model.AdhesiveId;
+                data.UoMId = model.UoMId;
+                data.CoreBuilderId = model.CoreBuilderId;
+                data.Description = model.Description;
+                data.RD = model.RD;
+                data.CD = model.CD;
+                data.RL = model.RL;
+                data.WL = model.WL;
+                data.TL = model.TL;
+
+                model = _rollerBuilderService.UpdateObject(data, _machineService, _uomService, _itemService,
                     _itemTypeService,_coreBuilderService,_rollerTypeService,_warehouseItemService,_warehouseService,
                     _blanketService,_contactService,_priceMutationService,_contactGroupService);
             }

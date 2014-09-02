@@ -15,6 +15,7 @@ namespace Core.DomainModel
         public int NewCoreItemId { get; set; }
         public int UoMId { get; set; }
         public int MachineId { get; set; }
+        public string CoreBuilderTypeCase { get; set; }
 
         public string Name { get; set; }
         public string Description { get; set; }
@@ -24,10 +25,12 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
-        public UoM UoM { get; set; }
 
+        public virtual UoM UoM { get; set; }
         public virtual ICollection<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
         public virtual ICollection<RollerBuilder> RollerBuilders { get; set; }
         public virtual Machine Machine { get; set; }
+        public virtual Item UsedCoreItem { get; set;  }
+        public virtual Item NewCoreItem { get; set; }
     }
 }

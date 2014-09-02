@@ -74,7 +74,8 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Description = "X 1001",
                     UoMId = d.Pcs.Id,
-                    MachineId = d.machine.Id
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService,
                                 d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
@@ -99,7 +100,8 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Description = "X 1001",
                     UoMId = d.Pcs.Id,
-                    MachineId = d.machine.Id
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
                                                                         d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
@@ -116,7 +118,8 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Description = "X 1001",
                     UoMId = d.Pcs.Id,
-                    MachineId = d.machine.Id
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Shaft
                 };
                 coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService ,
                                                                            d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
@@ -134,7 +137,8 @@ namespace TestValidation
                     Name = "Core X 1001",
                     Description = "X 1001",
                     UoMId = d.Pcs.Id,
-                    MachineId = d.machine.Id
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
                                                                             d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);

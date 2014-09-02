@@ -70,12 +70,12 @@ namespace TestValidation
         public CashBankAdjustment cashBankAdjustment;
 
         public ContactGroup baseGroup;
-        public ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
+        public ItemType typeAdhesive, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
         public UoM Pcs, Boxes, Tubs;
-        public Item item, itemCompound, itemCompound1, itemCompound2, itemAccessory1, itemAccessory2;
+        public Item item, itemAdhesive, itemCompound, itemCompound1, itemCompound2, itemAccessory1, itemAccessory2;
         public Warehouse localWarehouse, movingWarehouse;
         public Contact contact;
         public Machine machine;
@@ -184,6 +184,7 @@ namespace TestValidation
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
 
+            typeAdhesive = _itemTypeService.CreateObject("Adhesive", "Adhesive");
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
             typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);
@@ -280,6 +281,16 @@ namespace TestValidation
             };
             _uomService.CreateObject(Tubs);
 
+            itemAdhesive= new Item()
+            {
+                ItemTypeId = _itemTypeService.GetObjectByName("Adhesive").Id,
+                Name = "Adhesive Default",
+                Category = "Adhesive",
+                Sku = "ADD123",
+                UoMId = Tubs.Id
+            };
+            itemAdhesive = _itemService.CreateObject(itemAdhesive, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+
             itemCompound = new Item()
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("Compound").Id,
@@ -338,6 +349,13 @@ namespace TestValidation
                 WarehouseId = localWarehouse.Id
             };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
+            StockAdjustmentDetail sadAdhesive = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                Quantity = 100,
+                ItemId = itemAdhesive.Id
+            };
+            _stockAdjustmentDetailService.CreateObject(sadAdhesive, _stockAdjustmentService, _itemService, _warehouseItemService);
             StockAdjustmentDetail sadCompound = new StockAdjustmentDetail()
             {
                 StockAdjustmentId = sa.Id,
@@ -433,7 +451,8 @@ namespace TestValidation
                 Name = "Core X",
                 Description = "X",
                 UoMId = Pcs.Id,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder = _coreBuilderService.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService,
                                                            _warehouseService, _priceMutationService, _contactGroupService, _machineService);
@@ -446,7 +465,8 @@ namespace TestValidation
                 Name = "Core A 001",
                 Description = "A",
                 UoMId = Pcs.Id,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder1 = _coreBuilderService.CreateObject(coreBuilder1, _uomService, _itemService, _itemTypeService, _warehouseItemService,
                                                             _warehouseService, _priceMutationService, _contactGroupService, _machineService);
@@ -459,7 +479,8 @@ namespace TestValidation
                 Name = "Core A 002",
                 Description = "A",
                 UoMId = Pcs.Id,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder2 = _coreBuilderService.CreateObject(coreBuilder2, _uomService, _itemService, _itemTypeService, _warehouseItemService,
                                                             _warehouseService, _priceMutationService, _contactGroupService, _machineService);
@@ -472,7 +493,8 @@ namespace TestValidation
                 Name = "Core A 003",
                 Description = "A",
                 UoMId = Pcs.Id,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder3 = _coreBuilderService.CreateObject(coreBuilder3, _uomService, _itemService, _itemTypeService, _warehouseItemService,
                                                             _warehouseService, _priceMutationService, _contactGroupService, _machineService);
@@ -485,7 +507,8 @@ namespace TestValidation
                 Name = "Core A 004",
                 Description = "A",
                 UoMId = Pcs.Id,
-                MachineId = machine.Id
+                MachineId = machine.Id,
+                CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder4 = _coreBuilderService.CreateObject(coreBuilder4, _uomService, _itemService, _itemTypeService, _warehouseItemService,
                                                             _warehouseService, _priceMutationService, _contactGroupService, _machineService);
@@ -506,7 +529,8 @@ namespace TestValidation
                 CompoundId = itemCompound.Id,
                 MachineId = machine.Id,
                 RollerTypeId = typeDamp.Id,
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                AdhesiveId = itemAdhesive.Id
             };
             rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService, _uomService, _itemService, _itemTypeService,
                                                                _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -528,7 +552,8 @@ namespace TestValidation
                 CompoundId = itemCompound1.Id,
                 MachineId = machine.Id,
                 RollerTypeId = typeFoundDT.Id,
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                AdhesiveId = itemAdhesive.Id
             };
             rollerBuilder1 = _rollerBuilderService.CreateObject(rollerBuilder1, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -550,7 +575,8 @@ namespace TestValidation
                 CompoundId = itemCompound2.Id,
                 MachineId = machine.Id,
                 RollerTypeId = typeDampFormDQ.Id,
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                AdhesiveId = itemAdhesive.Id
             };
             rollerBuilder2 = _rollerBuilderService.CreateObject(rollerBuilder2, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -572,7 +598,8 @@ namespace TestValidation
                 CompoundId = itemCompound.Id,
                 MachineId = machine.Id,
                 RollerTypeId = typeInkDistD.Id,
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                AdhesiveId = itemAdhesive.Id
             };
             rollerBuilder3 = _rollerBuilderService.CreateObject(rollerBuilder3, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -594,7 +621,8 @@ namespace TestValidation
                 CompoundId = itemCompound.Id,
                 MachineId = machine.Id,
                 RollerTypeId = typeInkDistH.Id,
-                UoMId = Pcs.Id
+                UoMId = Pcs.Id,
+                AdhesiveId = itemAdhesive.Id
             };
             rollerBuilder4 = _rollerBuilderService.CreateObject(rollerBuilder4, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -805,7 +833,8 @@ namespace TestValidation
                 TL = (decimal) 11.9,
                 WL = (decimal) 11.3,
                 RL = (decimal) 9.2,
-                MaterialCase = Core.Constants.Constant.MaterialCase.Used
+                MaterialCase = Core.Constants.Constant.MaterialCase.Used,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.CentreDrill,
             };
             coreIdentificationDetail = _coreIdentificationDetailService.CreateObject(coreIdentificationDetail,
                                        _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
@@ -822,7 +851,8 @@ namespace TestValidation
                 TL = (decimal)9.9,
                 WL = (decimal)9.3,
                 RL = (decimal)9.2,
-                MaterialCase = Core.Constants.Constant.MaterialCase.Used
+                MaterialCase = Core.Constants.Constant.MaterialCase.Used,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
             };
             coreIDInHouse1 = _coreIdentificationDetailService.CreateObject(coreIDInHouse1, _coreIdentificationService,
                              _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
@@ -839,7 +869,8 @@ namespace TestValidation
                 TL = (decimal)9.9,
                 WL = (decimal)9.3,
                 RL = (decimal)9.2,
-                MaterialCase = Core.Constants.Constant.MaterialCase.Used
+                MaterialCase = Core.Constants.Constant.MaterialCase.Used,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
             };
             coreIDInHouse2 = _coreIdentificationDetailService.CreateObject(coreIDInHouse2, _coreIdentificationService,
                              _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
@@ -856,7 +887,8 @@ namespace TestValidation
                 TL = (decimal)9.9,
                 WL = (decimal)9.3,
                 RL = (decimal)12.2,
-                MaterialCase = Core.Constants.Constant.MaterialCase.Used
+                MaterialCase = Core.Constants.Constant.MaterialCase.Used,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.CentreDrill,
             };
             coreIDInHouse3 = _coreIdentificationDetailService.CreateObject(coreIDInHouse3, _coreIdentificationService,
                              _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
@@ -873,7 +905,8 @@ namespace TestValidation
                 TL = (decimal)9.9,
                 WL = (decimal)9.3,
                 RL = (decimal)8.2,
-                MaterialCase = Core.Constants.Constant.MaterialCase.Used
+                MaterialCase = Core.Constants.Constant.MaterialCase.Used,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
             };
             coreIDContact1 = _coreIdentificationDetailService.CreateObject(coreIDContact1, _coreIdentificationService,
                              _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
@@ -890,7 +923,8 @@ namespace TestValidation
                 TL = (decimal)9.9,
                 WL = (decimal)9.3,
                 RL = (decimal)8.2,
-                MaterialCase = Core.Constants.Constant.MaterialCase.Used
+                MaterialCase = Core.Constants.Constant.MaterialCase.Used,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
             };
             coreIDContact2 = _coreIdentificationDetailService.CreateObject(coreIDContact2, _coreIdentificationService,
                              _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
@@ -907,7 +941,8 @@ namespace TestValidation
                 TL = (decimal)9.9,
                 WL = (decimal)9.3,
                 RL = (decimal)8.2,
-                MaterialCase = Core.Constants.Constant.MaterialCase.Used
+                MaterialCase = Core.Constants.Constant.MaterialCase.Used,
+                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
             };
             coreIDContact3 = _coreIdentificationDetailService.CreateObject(coreIDContact3, _coreIdentificationService,
                              _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
@@ -950,9 +985,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderInHouse.Id,
                 CoreIdentificationDetailId = coreIDInHouse1.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder1.Id
             };
             recoveryODInHouse1 = _recoveryOrderDetailService.CreateObject(recoveryODInHouse1, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
@@ -961,9 +994,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderInHouse.Id,
                 CoreIdentificationDetailId = coreIDInHouse2.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder1.Id
             };
             recoveryODInHouse2 = _recoveryOrderDetailService.CreateObject(recoveryODInHouse2, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
@@ -972,9 +1003,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderInHouse.Id,
                 CoreIdentificationDetailId = coreIDInHouse3.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder2.Id
             };
             recoveryODInHouse3 = _recoveryOrderDetailService.CreateObject(recoveryODInHouse3, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
@@ -983,9 +1012,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderContact.Id,
                 CoreIdentificationDetailId = coreIDContact1.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder3.Id
             };
             recoveryODContact1 = _recoveryOrderDetailService.CreateObject(recoveryODContact1, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
@@ -994,9 +1021,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderContact.Id,
                 CoreIdentificationDetailId = coreIDContact2.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder3.Id
             };
             recoveryODContact2 = _recoveryOrderDetailService.CreateObject(recoveryODContact2, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
@@ -1005,9 +1030,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderContact.Id,
                 CoreIdentificationDetailId = coreIDContact3.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder4.Id
             };
             recoveryODContact3 = _recoveryOrderDetailService.CreateObject(recoveryODContact3, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
@@ -1185,9 +1208,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderContact2.Id,
                 CoreIdentificationDetailId = coreIDContact2.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder3.Id
             };
             _recoveryOrderDetailService.CreateObject(recoveryODContact2b, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
@@ -1196,9 +1217,7 @@ namespace TestValidation
             {
                 RecoveryOrderId = recoveryOrderInHouse2.Id,
                 CoreIdentificationDetailId = coreIDInHouse3.Id,
-                Acc = "Y",
                 CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
                 RollerBuilderId = rollerBuilder2.Id
             };
             _recoveryOrderDetailService.CreateObject(recoveryODInHouse3b, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);

@@ -16,8 +16,6 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasNoRecoveryAccessoryDetails(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrderDetail VHasRollerBuilder(RecoveryOrderDetail recoveryOrderDetail, IRollerBuilderService _rollerBuilderService);
         RecoveryOrderDetail VHasCoreTypeCase(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VHasAcc(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VHasRepairRequestCase(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasCompoundQuantity(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         RecoveryOrderDetail VHasBeenDisassembled(RecoveryOrderDetail recoveryOrderDetail);

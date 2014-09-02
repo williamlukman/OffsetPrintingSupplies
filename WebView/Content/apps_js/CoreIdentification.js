@@ -413,7 +413,7 @@ $(document).ready(function () {
             data: JSON.stringify({
                 Id: id, Code: $("#Code").val(), WarehouseId: $("#WarehouseId").val(), ContactId: $("#ContactId").val(),
                 IsInHouse: moving, Quantity: $("#Quantity").numberbox('getValue'),
-                IdentifiedDate: $('#IdentifiedDate').datebox('getValue'),
+                IdentifiedDate: $('#IdentifiedDate').datebox('getValue')
             }),
             async: false,
             cache: false,
@@ -445,8 +445,9 @@ $(document).ready(function () {
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'RollerIdentificationId','Material', 'CoreBuilder Id', 'Core Sku', 'Core', 'RollerType Id', 'RollerType'
-                  ,'Machine Id','Machine','RD','CD','RL','WL','TL'
+        colNames: ['Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
+                    'Core Sku', 'Core', 'RollerType Id', 'RollerType',
+                    'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL'
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 30, sortable: false},
@@ -459,6 +460,7 @@ $(document).ready(function () {
                   { name: 'rollertypename', index: 'rollertypename', width: 70, sortable: false },
                   { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true},
                   { name: 'machinename', index: 'machinename', width: 90, sortable: false },
+                  { name: 'repairrequestcase', index: 'repairrequestcase', width: 90, sortable: false },
                   { name: 'rd', index: 'rd', width: 40, align: 'right', sortable: false },
                   { name: 'cd', index: 'cd', width: 40, align: 'right', sortable: false },
                   { name: 'rl', index: 'rl', width: 40, align: 'right', sortable: false },
@@ -531,6 +533,13 @@ $(document).ready(function () {
                             }
                             else {
                                 e.selectedIndex = 1;
+                            }
+                            var f = document.getElementById("RepairRequestCase");
+                            if (result.RepairRequestCase == 1) {
+                                f.selectedIndex = 0;
+                            }
+                            else {
+                                f.selectedIndex = 1;
                             }
                             $('#CoreIdentificationId').val(result.CoreIdentificationId);
                             $('#CoreBuilderId').val(result.CoreBuilderId);
@@ -613,6 +622,8 @@ $(document).ready(function () {
         }
         var e = document.getElementById("MaterialCase");
         var moving = e.options[e.selectedIndex].value;
+        var f = document.getElementById("RepairRequestCase");
+        var repairrequestcase = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
@@ -622,7 +633,7 @@ $(document).ready(function () {
                 Id: id, DetailId: $("#DetailId").val(), CoreIdentificationId: $("#id").val(),
                 MaterialCase: moving, CoreBuilderId: $("#CoreBuilderId").val(), CoreBuilderBaseSku: $("#CoreBuilderBaseSku").val(), RollerTypeId: $("#RollerTypeId").val(),
                 MachineId: $("#MachineId").val(), RD: $("#RD").numberbox('getValue'), CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'),
-                WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'),
+                WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'), RepairRequestCase: repairrequestcase
             }),
             async: false,
             cache: false,
@@ -852,11 +863,15 @@ $(document).ready(function () {
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Sku', 'Name'],
+        colNames: ['Id', 'Sku', 'Name', 'Description', 'Machine', 'Type'],
         colModel: [
                   { name: 'id', index: 'id', width: 40, align: 'right' },
                   { name: 'sku', index: 'sku', width: 100 },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 200 },
+                  { name: 'description', index: 'description', width: 70, hidden: true },
+                  { name: 'machine', index: 'machine', width: 100 },
+                  { name: 'corebuildertypecase', index: 'corebuildertypecase', width: 60 }
+        ],
         page: '1',
         pager: $('#lookup_pager_corebuilder'),
         rowNum: 20,

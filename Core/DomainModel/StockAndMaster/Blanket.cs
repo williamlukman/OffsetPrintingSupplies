@@ -29,5 +29,6 @@ namespace Core.DomainModel
         public virtual Contact Contact { get; set; }
         public virtual Machine Machine { get; set; }
         public virtual ICollection<BlanketOrderDetail> BlanketOrderDetails { get; set; }
+        public virtual Item RollBlanketItem { get; set; }
     }
 }

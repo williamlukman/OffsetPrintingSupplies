@@ -115,6 +115,7 @@ namespace WebView.Controllers
                             item.Name,
                             item.Description,
                             _machineService.GetObjectById(item.MachineId).Name,
+                            item.CoreBuilderTypeCase,
                             item.SkuUsedCore, 
                             _itemService.GetObjectById(item.UsedCoreItemId).Quantity,
                             _uomService.GetObjectById(item.UoMId).Name,
@@ -149,6 +150,7 @@ namespace WebView.Controllers
                 model.Description,
                 model.MachineId,
                 Machine = _machineService.GetObjectById(model.MachineId).Name,
+                model.CoreBuilderTypeCase,
                 model.UoMId,
                 UoM = _uomService.GetObjectById(model.UoMId).Name,
                 model.BaseSku,
@@ -187,6 +189,13 @@ namespace WebView.Controllers
             {
                 var data = _coreBuilderService.GetObjectById(model.Id);
                 data.Name = model.Name;
+                data.BaseSku = model.BaseSku;
+                data.SkuNewCore = model.SkuNewCore;
+                data.SkuUsedCore = model.SkuUsedCore;
+                data.MachineId = model.MachineId;
+                data.Description = model.Description;
+                data.UoMId = model.UoMId;
+                data.CoreBuilderTypeCase = model.CoreBuilderTypeCase;
                 model = _coreBuilderService.UpdateObject(data,_uomService,_itemService,_itemTypeService,_warehouseItemService
                     ,_warehouseService,_blanketService,_contactService,_machineService,_priceMutationService,_contactGroupService);
             }

@@ -22,6 +22,10 @@ namespace Data.Mapping
             HasMany(b => b.BlanketOrderDetails)
                 .WithRequired(bod => bod.Blanket)
                 .HasForeignKey(bod => bod.BlanketId);
+            HasRequired(b => b.RollBlanketItem)
+                .WithMany()
+                .HasForeignKey(b => b.RollBlanketItemId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

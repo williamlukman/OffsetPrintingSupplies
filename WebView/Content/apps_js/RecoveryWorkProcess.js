@@ -50,8 +50,8 @@
     $("#list").jqGrid({
         url: base_url + 'RecoveryWorkProcess/GetList',
         datatype: "json",
-        colNames: ['Recovery Order Id','CoreIdentificationDetailId', 'RIFD Id', 'Material Case', 'RollerBuilder Id', 'RollerBuilder Sku', 'RollerBuilder Name',
-                   'CoreTypeCase', 'Acc', 'RepairRequestCase',
+        colNames: ['Recovery Order Id', 'CoreIdentificationDetailId', 'RIFD Id', 'Material Case',
+                    'RollerBuilder Id', 'RollerBuilder Sku', 'RollerBuilder Name', 'CoreTypeCase', 
                    'IsDisassembled', 'IsStrippedAndGlued', 'IsWrapped', 'CompoundUsage',
                    'IsVulcanized', 'IsFacedOff', 'IsConventionalGrinded', 'IsCWCGrinded',
                    'IsPolishedAndQC','IsPackaged',
@@ -66,8 +66,6 @@
                   { name: 'rollerbuildersku', index: 'rollerbuildername', width: 100, sortable: false },
                   { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
 				  { name: 'coretypecase', index: 'coretypecase', width: 100, sortable: false },
-                  { name: 'acc', index: 'acc', width: 100, sortable: false },
-                  { name: 'repairrequestcase', index: 'repairrequestcase', width: 100, sortable: false },
                   { name: 'isdisassembled', index: 'isdisassembled', width: 100, sortable: false },
                   { name: 'isstrippedangGlued', index: 'isstrippedangGlued', width: 100, sortable: false },
                   { name: 'iswrapped', index: 'iswrapped', width: 100, sortable: false },
@@ -150,8 +148,6 @@
                             $('#RollerBuilderSku').val(result.RollerBuilderSku);
                             $('#RollerBuilder').val(result.RollerBuilder);
                             $('#CoreTypeCase').val(result.CoreTypeCase);
-                            $('#Acc').val(result.Acc);
-                            $('#RepairRequestCase').val(result.RepairRequestCase);
                             $('#CompoundUsage').numberbox('setValue', result.CompoundUsage);
                             document.getElementById("IsDisassembled").checked = result.IsDisassembled;
                             document.getElementById("IsStrippedAndGlued").checked = result.IsStrippedAndGlued;
@@ -211,8 +207,6 @@
                             $('#RollerBuilderSku').val(result.RollerBuilderSku);
                             $('#RollerBuilder').val(result.RollerBuilder);
                             $('#CoreTypeCase').val(result.CoreTypeCase);
-                            $('#Acc').val(result.Acc);
-                            $('#RepairRequestCase').val(result.RepairRequestCase);
                             $('#process_div').hide();
                             $('#tabledetail_div').show();
                             $('#form_btn_save').hide();

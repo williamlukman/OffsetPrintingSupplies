@@ -159,8 +159,6 @@ namespace WebView.Controllers
                             model.RollerBuilderId,
                             _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                             model.CoreTypeCase,
-                            model.Acc,
-                            model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
                             model.CompoundUsage,
                             model.IsRejected,
                             model.RejectedDate,
@@ -216,8 +214,6 @@ namespace WebView.Controllers
                             _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
                             _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                             model.CoreTypeCase,
-                            model.Acc,
-                            model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
@@ -290,8 +286,6 @@ namespace WebView.Controllers
                 model.RollerBuilderId,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                 model.CoreTypeCase,
-                model.Acc,
-                RepairRequestCase = model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
                 model.IsWrapped,
@@ -422,8 +416,6 @@ namespace WebView.Controllers
                 data.CoreIdentificationDetailId = model.CoreIdentificationDetailId;
                 data.RollerBuilderId = model.RollerBuilderId;
                 data.CoreTypeCase = model.CoreTypeCase;
-                data.Acc = model.Acc;
-                data.RepairRequestCase = model.RepairRequestCase;
                 model = _recoveryOrderDetailService.UpdateObject(data,_recoveryOrderService,_coreIdentificationDetailService,_rollerBuilderService);
             }
             catch (Exception ex)
@@ -469,7 +461,6 @@ namespace WebView.Controllers
         {
             try
             {
-
                 var data = _recoveryOrderService.GetObjectById(model.Id);
                 model = _recoveryOrderService.UnconfirmObject(data,_coreIdentificationDetailService,_recoveryOrderDetailService,_recoveryAccessoryDetailService,
                     _coreBuilderService,_stockMutationService,_itemService,_blanketService,_warehouseItemService,_warehouseService);

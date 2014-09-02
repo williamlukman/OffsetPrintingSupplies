@@ -20,12 +20,6 @@ namespace Core.Interface.Service
         RollerBuilder GetObjectById(int Id);
         Item GetRollerUsedCore(int id);
         Item GetRollerNewCore(int id);
-        RollerBuilder CreateObject(string BaseSku, string SkuRollerNewCore, string SkuRollerUsedCore, string Name, string Description,
-                                   int CD, int RD, int RL, int WL, int TL,
-                                   IMachineService _machineService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                   ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
-                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                   IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService, IItemService _itemService,
                                    IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,

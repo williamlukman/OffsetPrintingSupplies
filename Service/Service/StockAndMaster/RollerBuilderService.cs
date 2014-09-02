@@ -79,30 +79,6 @@ namespace Service.Service
             return _repository.GetObjectByName(name);
         }
 
-        public RollerBuilder CreateObject(string BaseSku, string SkuRollerNewCore, string SkuRollerUsedCore, string Name, string Description,
-                                          int CD, int RD, int RL, int WL, int TL, IMachineService _machineService, IUoMService _uomService,
-                                          IItemService _itemService, IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService,
-                                          IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                          IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
-        {
-            RollerBuilder rollerBuilder = new RollerBuilder
-            {
-                BaseSku = BaseSku,
-                SkuRollerNewCore = SkuRollerNewCore,
-                SkuRollerUsedCore = SkuRollerUsedCore,
-                Name = Name,
-                Description = Description,
-                CD = CD,
-                RD = RD,
-                RL = RL,
-                WL = WL,
-                TL = TL
-            };
-            return this.CreateObject(rollerBuilder, _machineService, _uomService, _itemService, _itemTypeService,
-                                     _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
-                                     _priceMutationService, _contactGroupService);
-        }
-
         public RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService,
                                           IItemService _itemService, IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService,
                                           IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,

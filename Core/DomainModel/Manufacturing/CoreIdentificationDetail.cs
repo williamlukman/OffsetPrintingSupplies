@@ -15,6 +15,8 @@ namespace Core.DomainModel
         public int RollerTypeId { get; set; }
 
         public int MachineId { get; set; }
+        public int RepairRequestCase { get; set; }
+ 
         public decimal RD { get; set; }
         public decimal CD { get; set; }
         public decimal RL { get; set; }

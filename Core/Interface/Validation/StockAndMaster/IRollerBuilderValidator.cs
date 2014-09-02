@@ -17,6 +17,7 @@ namespace Core.Interface.Validation
         RollerBuilder VHasRollerType(RollerBuilder rollerBuilder, IRollerTypeService _rollerTypeService);
         RollerBuilder VHasRollerUsedCoreItem(RollerBuilder rollerBuilder, IItemService _itemService);
         RollerBuilder VHasRollerNewCoreItem(RollerBuilder rollerBuilder, IItemService _itemService);
+        RollerBuilder VHasAdhesive(RollerBuilder rollerBuilder, IItemService _itemService);
         RollerBuilder VHasMeasurement(RollerBuilder rollerBuilder);
         RollerBuilder VHasUoM(RollerBuilder rollerBuilder, IUoMService _uomService);
         RollerBuilder VIsInRecoveryOrderDetails(RollerBuilder rollerBuilder, IRecoveryOrderDetailService _recoveryOrderDetailService);

@@ -31,15 +31,16 @@
     $("#list").jqGrid({
         url: base_url + 'MstCoreBuilder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Base Sku', 'Name', 'Description', 'Machine',
-                    'Sku Used', 'QTY', 'UoM',
-                    'Sku New', 'QTY', 'UoM', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Base Sku', 'Name', 'Description', 'Machine', 'Type',
+                    'Used Sku', 'QTY', 'UoM',
+                    'New Sku', 'QTY', 'UoM', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'basesku', index: 'basesku', width: 60 },
 				  { name: 'name', index: 'name', width: 100 },
                   { name: 'description', index: 'description', width: 70 },
                   { name: 'machine', index: 'machine', width: 100 },
+                  { name: 'corebuildertypecase', index: 'corebuildertypecase', width: 60 },
                   { name: 'skuusedcore', index: 'skuusedcore', width: 80 },
                   { name: 'usedcorequantity', index: 'usedcorequantity', width: 30, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 30 },
@@ -118,6 +119,7 @@
                             $('#Machine').val(result.Machine);
                             $('#UsedCoreQuantity').numberbox('setValue', (result.UsedCoreQuantity));
                             $('#NewCoreQuantity').numberbox('setValue', (result.NewCoreQuantity));
+                            document.getElementById("CoreBuilderTypeCase").value = result.CoreBuilderTypeCase;
                             $('#form_div').dialog('open');
                         }
                     }
@@ -199,6 +201,9 @@
             submitURL = base_url + 'MstCoreBuilder/Insert';
         }
 
+        var e = document.getElementById("CoreBuilderTypeCase");
+        var corebuildertypecase = e.options[e.selectedIndex].value;
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -206,7 +211,8 @@
             data: JSON.stringify({
                 Id: id, BaseSku: $("#BaseSku").val(), SkuUsedCore: $("#BaseSku").val() + "U",
                 SkuNewCore: $("#BaseSku").val() + "N", UoMId: $("#UoMId").val(), Name: $("#Name").val(),
-                MachineId: $("MachineId").val(), Description: $("#Description").val(), MachineId: $("#MachineId").val()
+                MachineId: $("MachineId").val(), Description: $("#Description").val(), MachineId: $("#MachineId").val(),
+                CoreBuilderTypeCase: corebuildertypecase
             }),
             async: false,
             cache: false,

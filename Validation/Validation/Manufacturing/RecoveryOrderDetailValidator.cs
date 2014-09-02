@@ -80,25 +80,6 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VHasAcc(RecoveryOrderDetail recoveryOrderDetail)
-        {
-            if (String.IsNullOrEmpty(recoveryOrderDetail.Acc) || recoveryOrderDetail.Acc.Trim() == "")
-            {
-                recoveryOrderDetail.Errors.Add("Acc", "Tidak boleh kosong");
-            }
-            return recoveryOrderDetail;
-        }
-
-        public RecoveryOrderDetail VHasRepairRequestCase(RecoveryOrderDetail recoveryOrderDetail)
-        {
-            if (recoveryOrderDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.BearingSeat &&
-                recoveryOrderDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrill)
-            {
-                recoveryOrderDetail.Errors.Add("RepairRequestCase", "Hanya dapat diisi dengan 1 untuk Bearing Seat atau 2 untuk CentreDrill");
-            }
-            return recoveryOrderDetail;
-        }
-
         public RecoveryOrderDetail VHasCompoundQuantity(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                         IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
@@ -364,10 +345,6 @@ namespace Validation.Validation
             VHasRollerBuilder(recoveryOrderDetail, _rollerBuilderService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasCoreTypeCase(recoveryOrderDetail);
-            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VHasAcc(recoveryOrderDetail);
-            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VHasRepairRequestCase(recoveryOrderDetail);
             return recoveryOrderDetail;
         }
 

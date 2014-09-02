@@ -106,7 +106,8 @@ namespace TestValidation
                     Name = "CoreBuilder00001",
                     Description = "X",
                     UoMId = d.Pcs.Id,
-                    MachineId = d.machine.Id
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
                                                                    d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
@@ -131,7 +132,8 @@ namespace TestValidation
                     CD = 12,
                     RL = 12,
                     WL = 12,
-                    TL = 12
+                    TL = 12,
+                    RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat                    
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail,
                                              d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);
@@ -152,7 +154,8 @@ namespace TestValidation
                     CoreBuilderId = d.coreBuilder.Id,
                     MachineId = d.machine.Id,
                     RollerTypeId = d._rollerTypeService.GetObjectByName("Damp").Id,
-                    UoMId = d.Pcs.Id
+                    UoMId = d.Pcs.Id,
+                    AdhesiveId = d.itemAdhesive.Id
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService,
                                                                        d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService,
@@ -230,8 +233,6 @@ namespace TestValidation
                     CoreIdentificationDetailId = d.coreIdentificationDetail.Id,
                     RollerBuilderId = d.rollerBuilder.Id,
                     CoreTypeCase = Core.Constants.Constant.CoreTypeCase.R,
-                    RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat,
-                    Acc = "Y",
                 };
                 recoveryOrderDetail = d._recoveryOrderDetailService.CreateObject(recoveryOrderDetail, d._recoveryOrderService, d._coreIdentificationDetailService, d._rollerBuilderService);
                 recoveryOrderDetail.Errors.Count().should_be(0);

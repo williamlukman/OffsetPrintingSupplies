@@ -73,6 +73,16 @@ namespace Validation.Validation
             return coreBuilder;
         }
 
+        public CoreBuilder VHasCoreBuilderTypeCase(CoreBuilder coreBuilder)
+        {
+            if (coreBuilder.CoreBuilderTypeCase != Core.Constants.Constant.CoreBuilderTypeCase.Hollow &&
+                coreBuilder.CoreBuilderTypeCase != Core.Constants.Constant.CoreBuilderTypeCase.Shaft)
+            {
+                coreBuilder.Errors.Add("CoreBuilderTypeCase", "Hanya boleh Hollow atau Shaft");
+            }
+            return coreBuilder;
+        }
+
         public CoreBuilder VIsInCoreIdentificationDetail(CoreBuilder coreBuilder, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreBuilderId(coreBuilder.Id);
@@ -103,6 +113,8 @@ namespace Validation.Validation
             VHasUoM(coreBuilder, _uomService);
             if (!isValid(coreBuilder)) { return coreBuilder; }
             VHasMachine(coreBuilder, _machineService);
+            if (!isValid(coreBuilder)) { return coreBuilder; }
+            VHasCoreBuilderTypeCase(coreBuilder);
             return coreBuilder;
         }
 

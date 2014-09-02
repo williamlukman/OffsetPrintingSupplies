@@ -70,6 +70,14 @@
                         </tr>
                         <tr>
                             <td>
+                                <label>Adhesive</label></td>
+                            <td colspan="3">
+                                <input id="AdhesiveId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnAdhesive" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Adhesive" name="AdhesiveId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
                                 <label>UoM</label></td>
                             <td colspan="3">
                                 <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
@@ -92,13 +100,13 @@
                         </tr>
                           <tr>
                             <td>
-                                <label>Sku Roller UsedCore</label></td>
+                                <label>Used Sku</label></td>
                             <td >
                                 <input id="SkuRollerUsedCore" name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/></td>
                         </tr>
                           <tr>
                             <td>
-                                <label>Sku Roller NewCore</label></td>
+                                <label>New Sku</label></td>
                             <td >
                                 <input id="SkuRollerNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/></td>
                         </tr>
@@ -147,13 +155,13 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Roller UsedCore Quantity</label></td>
+                                <label>Used Quantity</label></td>
                             <td colspan="3">
                         <input id="RollerUsedCoreQuantity" name="RollerUsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
                         </tr>
                          <tr>
                             <td>
-                                <label>Roller NewCore Quantity</label></td>
+                                <label>New Quantity</label></td>
                             <td colspan="3">
                         <input id="RollerNewCoreQuantity" name="RollerNewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
                         </tr>
@@ -208,7 +216,6 @@
         <div id="lookup_pager_rollertype" class="scroll" style="text-align: center;"></div>
     </div>
 <!-- END Look Up rollertype -->
-
     
  <!-- Look Up compound -->
     <div id="lookup_div_compound" class="easyui-dialog" title="List Compound" style="padding: 0px 5px; height: 490px; width: 480px;"
@@ -224,6 +231,19 @@
     </div>
 <!-- END Look Up compound -->
 
+    <!-- Look Up adhesive -->
+    <div id="lookup_div_adhesive" class="easyui-dialog" title="List Adhesive" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_adhesive" class="grid_toolbar">
+            <a id="lookup_btn_add_adhesive" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_adhesive" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_adhesive" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_adhesive" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up adhesive -->
     
  <!-- Look Up corebuilder -->
     <div id="lookup_div_corebuilder" class="easyui-dialog" title="List CoreBuilder" style="padding: 0px 5px; height: 490px; width: 480px;"

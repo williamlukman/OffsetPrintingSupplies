@@ -15,6 +15,7 @@ namespace Core.Interface.Validation
         CoreBuilder VHasNewCoreItem(CoreBuilder coreBuilder, IItemService _itemService);
         CoreBuilder VHasUoM(CoreBuilder coreBuilder, IUoMService _uomService);
         CoreBuilder VHasMachine(CoreBuilder coreBuilder, IMachineService _machineService);
+        CoreBuilder VHasCoreBuilderTypeCase(CoreBuilder coreBuilder);
         CoreBuilder VIsInCoreIdentificationDetail(CoreBuilder coreBuilder, ICoreIdentificationDetailService _coreIdentificationDetailService);
         CoreBuilder VIsInRollerBuilder(CoreBuilder coreBuilder, IRollerBuilderService _rollerBuilderService);
         CoreBuilder VCreateObject(CoreBuilder coreBuilder, ICoreBuilderService _coreBuilderService, IUoMService _uomService, IItemService _itemService, IMachineService _machineService);
