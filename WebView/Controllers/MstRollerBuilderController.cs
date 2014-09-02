@@ -121,6 +121,13 @@ namespace WebView.Controllers
                             _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
                             _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                             model.Description,
+                            model.IsCrowning,
+                            model.CrowningSize,
+                            model.IsGrooving,
+                            model.GroovingWidth,
+                            model.GroovingDepth,
+                            model.GroovingPosition,
+                            model.IsChamfer,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -280,7 +287,13 @@ namespace WebView.Controllers
                 model.TL,
                 RollerUsedCoreQuantity = _itemService.GetObjectById(model.RollerUsedCoreItemId).Quantity,
                 RollerNewCoreQuantity =_itemService.GetObjectById(model.RollerNewCoreItemId).Quantity,
-
+                model.IsCrowning,
+                model.CrowningSize,
+                model.IsGrooving,
+                model.GroovingWidth,
+                model.GroovingDepth,
+                model.GroovingPosition,
+                model.IsChamfer,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -328,6 +341,13 @@ namespace WebView.Controllers
                 data.RL = model.RL;
                 data.WL = model.WL;
                 data.TL = model.TL;
+                data.IsCrowning = model.IsCrowning;
+                data.CrowningSize = model.CrowningSize;
+                data.IsGrooving = model.IsGrooving;
+                data.GroovingWidth = model.GroovingWidth;
+                data.GroovingDepth = model.GroovingDepth;
+                data.GroovingPosition = model.GroovingPosition;
+                data.IsChamfer = model.IsChamfer;
 
                 model = _rollerBuilderService.UpdateObject(data, _machineService, _uomService, _itemService,
                     _itemTypeService,_coreBuilderService,_rollerTypeService,_warehouseItemService,_warehouseService,

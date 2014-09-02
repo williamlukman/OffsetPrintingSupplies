@@ -162,3 +162,15 @@ textarea {
 {
   text-align: center;
 }
+
+tr.border_top td 
+{
+  border-top: 1px solid #959595;
+  padding-top: 0.1in;
+}
+
+tr.border_bottom td 
+{
+  border-bottom: 1px solid #959595;
+  padding-bottom: 0.1in;
+}

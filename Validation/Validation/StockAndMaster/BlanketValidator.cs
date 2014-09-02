@@ -65,6 +65,16 @@ namespace Validation.Validation
             return blanket;
         }
 
+        public Blanket VHasApplicationCase(Blanket blanket)
+        {
+            if (blanket.ApplicationCase != Core.Constants.Constant.ApplicationCase.Sheetfed &&
+                blanket.ApplicationCase != Core.Constants.Constant.ApplicationCase.Web)
+            {
+                blanket.Errors.Add("ApplicationCase", "Harus Sheetfed atau Web");
+            }
+            return blanket;
+        }
+
         public Blanket VNonNegativeQuantity(Blanket blanket)
         {
             if (blanket.Quantity < 0)
@@ -122,6 +132,16 @@ namespace Validation.Validation
             if (machine == null)
             {
                 blanket.Errors.Add("MachineId", "Tidak terasosiasi dengan mesin");
+            }
+            return blanket;
+        }
+
+        public Blanket VHasAdhesive(Blanket blanket, IItemService _itemService)
+        {
+            Item adhesive = _itemService.GetObjectById(blanket.AdhesiveId);
+            if (adhesive == null)
+            {
+                blanket.Errors.Add("AdhesiveId", "Tidak terasosiasi dengan adhesive");
             }
             return blanket;
         }
@@ -254,6 +274,8 @@ namespace Validation.Validation
             if (!isValid(blanket)) { return blanket; }
             VHasUoM(blanket, _uomService);
             if (!isValid(blanket)) { return blanket; }
+            VHasApplicationCase(blanket);
+            if (!isValid(blanket)) { return blanket; }
             VNonNegativeQuantity(blanket);
             if (!isValid(blanket)) { return blanket; }
             
@@ -263,6 +285,8 @@ namespace Validation.Validation
             VHasContact(blanket, _contactService);
             if (!isValid(blanket)) { return blanket; }
             VHasMachine(blanket, _machineService);
+            if (!isValid(blanket)) { return blanket; }
+            VHasAdhesive(blanket, _itemService);
             if (!isValid(blanket)) { return blanket; }
             VHasMeasurement(blanket);
             if (!isValid(blanket)) { return blanket; }

@@ -7,6 +7,12 @@ namespace Core.Constants
 {
     public partial class Constant
     {
+        public class ApplicationCase
+        {
+            public static string Sheetfed = "Sheetfed";
+            public static string Web = "Web";
+        }
+
         public class CoreBuilderTypeCase
         {
             public static string Hollow = "Hollow";

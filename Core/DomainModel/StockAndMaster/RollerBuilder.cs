@@ -28,6 +28,14 @@ namespace Core.DomainModel
         public decimal WL { get; set; }
         public decimal TL { get; set; }
 
+        public bool IsCrowning { get; set; }
+        public Nullable<int> CrowningSize { get; set; }
+        public bool IsGrooving { get; set; }
+        public Nullable<int> GroovingWidth { get; set; }
+        public Nullable<int> GroovingDepth { get; set; }
+        public Nullable<int> GroovingPosition { get; set; }
+        public bool IsChamfer { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }

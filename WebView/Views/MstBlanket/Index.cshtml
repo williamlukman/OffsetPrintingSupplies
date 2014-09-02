@@ -108,6 +108,14 @@
                         </tr>
                         <tr>
                             <td>
+                                <label>Adhesive</label></td>
+                            <td colspan="3">
+                                <input id="AdhesiveId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnAdhesive" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Adhesive" name="AdhesiveId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
                                 <label>RollBlanket Item</label></td>
                             <td colspan="3">
                                 <input id="RollBlanketItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
@@ -157,13 +165,25 @@
                             <td>
                                 <label>Thick</label></td>
                             <td colspan="3">
-                            <input id="thickness" name="thickness" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="thickness" name="thickness" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                            </td>
                         </tr>
                         <tr id="KSRow">
                             <td>
                                 <label>KS</label></td>
                             <td colspan="3">
-                            <input id="KS" name="KS" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="KS" name="KS" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Application</label></td>
+                            <td colspan="3">
+                                <select id="ApplicationCase">
+                                      <option value="Sheetfed">Sheetfed</option>
+                                      <option value="Web">Web</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -221,7 +241,20 @@
     </div>
 <!-- END Look Up machine -->
 
-    
+        <!-- Look Up adhesive -->
+    <div id="lookup_div_adhesive" class="easyui-dialog" title="List Adhesive" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_adhesive" class="grid_toolbar">
+            <a id="lookup_btn_add_adhesive" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_adhesive" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_adhesive" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_adhesive" class="scroll" style="text-align: center;"></div>
+    </div>
+<!-- END Look Up adhesive -->
+
  <!-- Look Up rollBlanket -->
     <div id="lookup_div_rollBlanket" class="easyui-dialog" title="List RollBlanket" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">

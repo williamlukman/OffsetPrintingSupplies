@@ -20,6 +20,8 @@ namespace Core.Interface.Validation
         RollerBuilder VHasAdhesive(RollerBuilder rollerBuilder, IItemService _itemService);
         RollerBuilder VHasMeasurement(RollerBuilder rollerBuilder);
         RollerBuilder VHasUoM(RollerBuilder rollerBuilder, IUoMService _uomService);
+        RollerBuilder VIfIsCrowningThenHasCrowningSize(RollerBuilder rollerBuilder);
+        RollerBuilder VIfIsGroovingThenHasDimensions(RollerBuilder rollerBuilder);
         RollerBuilder VIsInRecoveryOrderDetails(RollerBuilder rollerBuilder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RollerBuilder VCreateObject(RollerBuilder rollerBuilder, IRollerBuilderService _rollerBuilderService, IMachineService _machineService,
                                     IUoMService _uomService, IItemService _itemService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService);

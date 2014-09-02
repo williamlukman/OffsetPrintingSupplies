@@ -96,21 +96,13 @@
                             <td>
                                 <label>Base Sku</label></td>
                             <td >
-                                <input id="BaseSku" name ="BaseSKU" type="text" size="10" maxlength="60" align="left"/></td>
-                        </tr>
-                          <tr>
-                            <td>
-                                <label>Used Sku</label></td>
-                            <td >
-                                <input id="SkuRollerUsedCore" name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/></td>
-                        </tr>
-                          <tr>
-                            <td>
-                                <label>New Sku</label></td>
-                            <td >
-                                <input id="SkuRollerNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/></td>
-                        </tr>
-                        
+                                <input id="BaseSku" name ="BaseSKU" type="text" size="10" maxlength="60" align="left"/>
+                                <label style="margin-left: 0.3in; margin-right: 0.1in">Used</label>
+                                <input id="SkuRollerUsedCore"    name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/>
+                                <label style="margin-left: 0.1in; margin-right: 0.1in">New</label>
+                                <input id="SkuRollerNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/>
+                            </td>
+                         </tr>
                         <tr>
                             <td>
                                 <label>Name</label></td>
@@ -126,44 +118,72 @@
                         <tr>
                             <td>
                                 <label>RD</label></td>
-                            <td colspan="3">
-                        <input id="RD" name="RD" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                            <td>
+                                <input id="RD" name="RD" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <label style="margin-left: 0.3in; margin-right: 0.2in">CD</label>
+                                <input id="CD" name="CD" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                            </td>
                         </tr>
                          <tr>
                             <td>
-                                <label>CD</label></td>
-                            <td colspan="3">
-                        <input id="CD" name="CD" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <label>RL</label>
+                            </td>
+                             <td>
+                                <input id="RL" name="RL" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <label style="margin-left: 0.3in; margin-right: 0.2in">WL</label>
+                                <input id="WL" name="WL" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <label style="margin-left: 0.1in; margin-right: 0.2in">TL</label>
+                                <input id="TL" name="TL" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                             </td>
                         </tr>
-                         <tr>
+                        <tr class="border_bottom">
                             <td>
-                                <label>RL</label></td>
-                            <td colspan="3">
-                        <input id="RL" name="RL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <label>QTY - Used:</label></td>
+                            <td>
+                                <input id="RollerUsedCoreQuantity" name="RollerUsedCoreQuantity" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                <label style="margin-left: 0.3in; margin-right: 0.1in">New:</label>
+                                <input id="RollerNewCoreQuantity" name="RollerNewCoreQuantity" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                            </td>
                         </tr>
-                         <tr>
+                        <tr class="border_top">
+                            <td style:"padding-top: 0.1in;">
+                                <label>Crowning</label>
+                            </td>
                             <td>
-                                <label>WL</label></td>
-                            <td colspan="3">
-                        <input id="WL" name="WL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input type="checkbox" name="iscrowning" id="iscrowning" />
+                                <input id="CrowningSize" name="CrowningSize" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                                <label>mm</label>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                                <label>TL</label></td>
-                            <td colspan="3">
-                        <input id="TL" name="TL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <label>Grooving</label>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="isgrooving" id="isgrooving" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Used Quantity</label></td>
-                            <td colspan="3">
-                        <input id="RollerUsedCoreQuantity" name="RollerUsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
-                        </tr>
-                         <tr>
+                                <label>&nbsp;</label>
+                            </td>
                             <td>
-                                <label>New Quantity</label></td>
-                            <td colspan="3">
-                        <input id="RollerNewCoreQuantity" name="RollerNewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                <label style="margin-right: 0.1in">Dimension - W:</label>
+                                <input id="GroovingWidth" name="GroovingWidth" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                                <label style="margin-left: 0.1in; margin-right: 0.1in">D:</label>
+                                <input id="GroovingDepth" name="GroovingDepth" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                                <label style="margin-left: 0.1in; margin-right: 0.1in">P:</label>
+                                <input id="GroovingPosition" name="GroovingPosition" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                                <label>mm</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Chamfer</label>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="ischamfer" id="ischamfer" />
+                            </td>
                         </tr>
                     </table>
                 @*</fieldset>*@

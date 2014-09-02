@@ -1455,7 +1455,9 @@ namespace TestValidation
                 ContactId = contact.Id,
                 thickness = 1,
                 MachineId = machine.Id,
-                CroppingType = Core.Constants.Constant.CroppingType.Normal
+                AdhesiveId = itemAdhesive.Id,
+                CroppingType = Core.Constants.Constant.CroppingType.Normal,
+                ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
             _blanketService.CreateObject(blanket1, _blanketService, _uomService, _itemService, _itemTypeService, _contactService,
                                          _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -1479,7 +1481,9 @@ namespace TestValidation
                 ContactId = contact.Id,
                 thickness = 1,
                 MachineId = machine.Id,
-                CroppingType = Core.Constants.Constant.CroppingType.Normal
+                AdhesiveId = itemAdhesive.Id,
+                CroppingType = Core.Constants.Constant.CroppingType.Normal,
+                ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
             _blanketService.CreateObject(blanket2, _blanketService, _uomService, _itemService, _itemTypeService, _contactService,
                                          _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
@@ -1503,9 +1507,11 @@ namespace TestValidation
                 ContactId = contact.Id,
                 thickness = 1,
                 MachineId = machine.Id,
+                AdhesiveId = itemAdhesive.Id,
                 CroppingType = Core.Constants.Constant.CroppingType.Special,
                 LeftOverAC = 6,
-                LeftOverAR = 9
+                LeftOverAR = 9,
+                ApplicationCase = Core.Constants.Constant.ApplicationCase.Sheetfed
             };
             _blanketService.CreateObject(blanket3, _blanketService, _uomService, _itemService, _itemTypeService, _contactService,
                                          _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);

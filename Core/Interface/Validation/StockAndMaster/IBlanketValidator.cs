@@ -14,6 +14,8 @@ namespace Core.Interface.Validation
         Blanket VHasName(Blanket blanket);
         Blanket VHasCategory(Blanket blanket);
         Blanket VHasUoM(Blanket blanket, IUoMService _uomService);
+        Blanket VHasApplicationCase(Blanket blanket);
+        Blanket VHasAdhesive(Blanket blanket, IItemService _itemService);
         Blanket VWarehouseQuantityMustBeZero(Blanket blanket, IWarehouseItemService _warehouseItemService);
         Blanket VNonNegativeQuantity(Blanket blanket);
 

@@ -106,10 +106,12 @@ namespace WebView.Controllers
                             model.Description,
                             _itemTypeService.GetObjectById(model.ItemTypeId).Name,
                             _machineService.GetObjectById(model.MachineId).Name,
+                            _itemService.GetObjectById(model.AdhesiveId).Name,
                             _itemService.GetObjectById(model.RollBlanketItemId).Name,
                             model.HasLeftBar ? _itemService.GetObjectById(model.LeftBarItemId.Value).Name : "",
                             model.HasRightBar ? _itemService.GetObjectById(model.RightBarItemId.Value).Name : "",
                             _contactService.GetObjectById(model.ContactId).Name,
+                            model.ApplicationCase,
                             model.CroppingType,
                             model.LeftOverAC,
                             model.LeftOverAR,
@@ -284,6 +286,62 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetListAdhesive(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+
+            // Get Data
+            int itemtypeId = _itemTypeService.GetObjectByName("Adhesive").Id;
+            var query = _itemService.GetAll().Where(d => d.IsDeleted == false && d.ItemTypeId == itemtypeId);
+
+            var list = query as IEnumerable<Item>;
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Name,
+                            model.Sku,
+                            model.Category,
+                            model.Description,
+                            model.Quantity,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.UoMId,
+                            _uomService.GetObjectById(model.UoMId).Name,
+                            model.CreatedAt,
+                            model.UpdatedAt
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         public dynamic GetInfo(int Id)
         {
             Blanket model = new Blanket();
@@ -313,6 +371,8 @@ namespace WebView.Controllers
                 Contact =_contactService.GetObjectById(model.ContactId).Name,
                 model.MachineId,
                 Machine = _machineService.GetObjectById(model.MachineId).Name,
+                model.AdhesiveId,
+                Adhesive = _itemService.GetObjectById(model.AdhesiveId).Name,
                 model.RollBlanketItemId,
                 RollBlanketItem = _itemService.GetObjectById(model.RollBlanketItemId).Name,
                 model.IsBarRequired,
@@ -327,6 +387,7 @@ namespace WebView.Controllers
                 model.thickness,
                 model.KS,
                 model.Quantity,
+                model.ApplicationCase,
                 model.CroppingType,
                 model.LeftOverAC,
                 model.LeftOverAR,
@@ -372,12 +433,14 @@ namespace WebView.Controllers
                 data.KS = model.KS;
                 data.Description = model.Description;
                 data.MachineId = model.MachineId;
+                data.AdhesiveId = model.AdhesiveId;
                 data.RollBlanketItemId = model.RollBlanketItemId;
                 data.IsBarRequired = model.IsBarRequired;
                 data.HasLeftBar = model.HasLeftBar;
                 data.LeftBarItemId = model.LeftBarItemId;
                 data.HasRightBar = model.HasRightBar;
                 data.ContactId = model.ContactId;
+                data.ApplicationCase = model.ApplicationCase;
                 data.CroppingType = model.CroppingType;
                 data.LeftOverAC = model.LeftOverAC;
                 data.LeftOverAR = model.LeftOverAR;
