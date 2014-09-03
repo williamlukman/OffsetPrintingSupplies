@@ -48,30 +48,18 @@ namespace Service.Service
         }
 
         public WarehouseMutationDetail CreateObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService,
-                                                         IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                    IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService)
         {
             WarehouseMutationDetail.Errors = new Dictionary<String, String>();
-            return (WarehouseMutationDetail = _validator.ValidCreateObject(WarehouseMutationDetail, _WarehouseMutationService, this, _itemService, _warehouseItemService) ?
-                                                   _repository.CreateObject(WarehouseMutationDetail) : WarehouseMutationDetail);
+            return (WarehouseMutationDetail = _validator.ValidCreateObject(WarehouseMutationDetail, _WarehouseMutationService, this, _itemService, _warehouseItemService, _blanketService) ?
+                                              _repository.CreateObject(WarehouseMutationDetail) : WarehouseMutationDetail);
         }
 
-        public WarehouseMutationDetail CreateObject(int WarehouseMutationId, int itemId, int quantity,
-                                                    IWarehouseMutationService _WarehouseMutationService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        public WarehouseMutationDetail UpdateObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService, IItemService _itemService,
+                                                    IWarehouseItemService _warehouseItemService, IBlanketService _blanketService)
         {
-            WarehouseMutationDetail WarehouseMutationDetail = new WarehouseMutationDetail
-            {
-                WarehouseMutationId = WarehouseMutationId,
-                ItemId = itemId,
-                Quantity = quantity,
-                // Price = price
-            };
-            return this.CreateObject(WarehouseMutationDetail, _WarehouseMutationService, _itemService, _warehouseItemService);
-        }
-
-        public WarehouseMutationDetail UpdateObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
-        {
-            return (WarehouseMutationDetail = _validator.ValidUpdateObject(WarehouseMutationDetail, _WarehouseMutationService, this, _itemService, _warehouseItemService) ?
-                                                   _repository.UpdateObject(WarehouseMutationDetail) : WarehouseMutationDetail);
+            return (WarehouseMutationDetail = _validator.ValidUpdateObject(WarehouseMutationDetail, _WarehouseMutationService, this, _itemService, _warehouseItemService, _blanketService) ?
+                                              _repository.UpdateObject(WarehouseMutationDetail) : WarehouseMutationDetail);
         }
 
         public WarehouseMutationDetail SoftDeleteObject(WarehouseMutationDetail WarehouseMutationDetail, IWarehouseMutationService _WarehouseMutationService, IWarehouseItemService _warehouseItemService)

@@ -121,7 +121,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Batik Tulis",
-                    Description = "Item",
+                    Category = "Item",
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
@@ -132,6 +132,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Busway",
+                    Category = "Item",
                     Description = "Untuk disumbangkan bagi kebutuhan DKI Jakarta",
                     Sku = "DKI002",
                     UoMId = Pcs.Id
@@ -142,6 +143,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Botol Aqua",
+                    Category = "Item",
                     Description = "Minuman",
                     Sku = "DKI003",
                     UoMId = Pcs.Id

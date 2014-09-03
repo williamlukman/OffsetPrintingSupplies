@@ -26,8 +26,6 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
 
-                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
-
                 d.Pcs = new UoM()
                 {
                     Name = "Pcs"
@@ -51,7 +49,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Description = "ABC123",
+                    Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -65,6 +63,14 @@ namespace TestValidation
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
                 d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
+
+                d.machine = new Machine()
+                {
+                    Code = "MX0001",
+                    Name = "Printing Machine",
+                    Description = "Generic"
+                };
+                d.machine = d._machineService.CreateObject(d.machine);
 
                 d.coreBuilder = new CoreBuilder()
                 {
@@ -156,13 +162,6 @@ namespace TestValidation
 
             it["delete_corebuilder_with_coreidentificationdetail"] = () =>
             {
-                d.machine = new Machine()
-                {
-                    Code = "M00001",
-                    Name = "Machine 00001",
-                    Description = "Machine"
-                };
-                d.machine = d._machineService.CreateObject(d.machine);
                 d.coreIdentification = new CoreIdentification()
                 {
                     ContactId = d.contact.Id,
@@ -184,7 +183,8 @@ namespace TestValidation
                     CD = 12,
                     RL = 12,
                     WL = 12,
-                    TL = 12
+                    TL = 12,
+                    RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService,
                                              d._rollerTypeService, d._machineService, d._warehouseItemService);

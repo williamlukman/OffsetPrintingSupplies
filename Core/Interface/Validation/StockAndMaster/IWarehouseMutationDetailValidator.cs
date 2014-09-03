@@ -14,14 +14,16 @@ namespace Core.Interface.Validation
         WarehouseMutationDetail VHasWarehouseItemTo(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationDetail VUniqueItem(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService);
         WarehouseMutationDetail VNonNegativeStockQuantity(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
-                                                               IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, bool CaseConfirmOrConfirm);
+                                                          IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, bool CaseConfirm);
         WarehouseMutationDetail VWarehouseMutationHasBeenConfirmed(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService);
         WarehouseMutationDetail VHasNotBeenConfirmed(WarehouseMutationDetail warehouseMutationDetail);
         WarehouseMutationDetail VHasBeenConfirmed(WarehouseMutationDetail warehouseMutationDetail);
         WarehouseMutationDetail VCreateObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
-                                                   IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                              IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService,
+                                              IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
         WarehouseMutationDetail VUpdateObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
-                                                   IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                              IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService,
+                                              IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
         WarehouseMutationDetail VDeleteObject(WarehouseMutationDetail warehouseMutationDetail);
         WarehouseMutationDetail VHasConfirmationDate(WarehouseMutationDetail warehouseMutationDetail);
         WarehouseMutationDetail VConfirmObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
@@ -29,9 +31,11 @@ namespace Core.Interface.Validation
         WarehouseMutationDetail VUnconfirmObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
                                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         bool ValidCreateObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
-                               IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                               IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService,
+                               IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
         bool ValidUpdateObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
-                               IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                               IWarehouseMutationDetailService _warehouseMutationDetailService, IItemService _itemService,
+                               IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
         bool ValidConfirmObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
                                 IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,

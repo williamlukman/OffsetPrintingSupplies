@@ -60,7 +60,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Description = "ABC123",
+                    Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -170,7 +170,8 @@ namespace TestValidation
                     CD = 12,
                     RL = 12,
                     WL = 12,
-                    TL = 12
+                    TL = 12,
+                    RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail,
                            d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);

@@ -24,10 +24,6 @@ namespace Core.Interface.Service
         CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                               ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
                                               IWarehouseItemService _warehouseItemService);
-        CoreIdentificationDetail CreateObject(int CoreIdentificationId, int DetailId, int MaterialCase, int CoreBuilderId, int RollerTypeId,
-                                              int MachineId, decimal RD, decimal CD, decimal RL, decimal WL, decimal TL, ICoreIdentificationService _coreIdentificationService,
-                                              ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
-                                              IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail UpdateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                               ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
                                               IWarehouseItemService _warehouseItemService);

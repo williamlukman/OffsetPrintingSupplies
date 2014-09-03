@@ -81,6 +81,7 @@ namespace WebView.Controllers
                              model.QuantityReceived,
                              model.QuantityFinal,
                              model.QuantityRejected,
+                             model.DueDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.CreatedAt,
@@ -127,6 +128,7 @@ namespace WebView.Controllers
                             model.QuantityReceived,
                             model.QuantityFinal,
                             model.QuantityRejected,
+                            model.DueDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -323,6 +325,8 @@ namespace WebView.Controllers
                 WarehouseCode = _warehouseService.GetObjectById(model.WarehouseId).Code,
                 Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
                 model.QuantityReceived,
+                model.HasDueDate,
+                model.DueDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

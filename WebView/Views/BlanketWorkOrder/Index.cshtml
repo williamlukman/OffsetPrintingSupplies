@@ -80,18 +80,25 @@
                              <td colspan="5">
                                <input id="QuantityReceived" name="QuantityReceived" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
                                 </td>     
-                         </tr>   
+                         </tr>
+                        <tr>
+                            <td>Due Date</td>
+                            <td>
+                                <input type="checkbox" name="HasDueDate" id="HasDueDate" >
+                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                            </td>
+                        </tr>   
                         <tr>
                             <td width ="800px" colspan ="2">
                                  <div id="tabledetail_div">
-                        <div id="toolbardetail" class="grid_toolbar">
-                            <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
-                            <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
-                            <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
-                        </div>
-                        <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
-                        <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
-                    </div>
+                                    <div id="toolbardetail" class="grid_toolbar">
+                                        <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+                                        <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
+                                        <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
+                                    </div>
+                                    <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+                                    <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
+                                </div>
                             </td>
                         </tr>
                     </table>

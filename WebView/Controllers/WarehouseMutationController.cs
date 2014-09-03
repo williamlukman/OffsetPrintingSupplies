@@ -245,7 +245,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _warehouseMutationDetailService.CreateObject(model,_warehouseMutationService,_itemService,_warehouseItemService);
+                model = _warehouseMutationDetailService.CreateObject(model, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
             }
             catch (Exception ex)
             {
@@ -330,7 +330,7 @@ namespace WebView.Controllers
                 var data = _warehouseMutationDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
-                model = _warehouseMutationDetailService.UpdateObject(data,_warehouseMutationService,_itemService,_warehouseItemService);
+                model = _warehouseMutationDetailService.UpdateObject(data, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
             }
             catch (Exception ex)
             {

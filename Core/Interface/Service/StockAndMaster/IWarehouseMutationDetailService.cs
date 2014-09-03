@@ -16,11 +16,9 @@ namespace Core.Interface.Service
         IList<WarehouseMutationDetail> GetObjectsByWarehouseMutationId(int warehouseMutationId);
         WarehouseMutationDetail GetObjectById(int Id);
         WarehouseMutationDetail CreateObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
-                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService);
-        WarehouseMutationDetail CreateObject(int warehouseMutationId, int itemId, int quantity, IWarehouseMutationService _warehouseMutationService,
-                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                             IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
         WarehouseMutationDetail UpdateObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService,
-                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                             IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
         WarehouseMutationDetail SoftDeleteObject(WarehouseMutationDetail warehouseMutationDetail, IWarehouseMutationService _warehouseMutationService, IWarehouseItemService _warehouseItemService);
         WarehouseMutationDetail ConfirmObject(WarehouseMutationDetail WarehouseMutationDetail, DateTime ConfirmationDate, IWarehouseMutationService _warehouseMutationService,
                                                    IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);

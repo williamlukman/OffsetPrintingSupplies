@@ -78,28 +78,6 @@ namespace Service.Service
             return core;
         }
 
-        public CoreIdentificationDetail CreateObject(int CoreIdentificationId, int DetailId, int MaterialCase, int CoreBuilderId, int RollerTypeId,
-                                                     int MachineId, decimal RD, decimal CD, decimal RL, decimal WL, decimal TL, ICoreIdentificationService _coreIdentificationService,
-                                                     ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService, IMachineService _machineService,
-                                                     IWarehouseItemService _warehouseItemService)
-        {
-            CoreIdentificationDetail coreIdentificationDetail = new CoreIdentificationDetail
-            {
-                CoreIdentificationId = CoreIdentificationId,
-                DetailId = DetailId,
-                MaterialCase = MaterialCase,
-                CoreBuilderId = CoreBuilderId,
-                RollerTypeId = RollerTypeId,
-                MachineId = MachineId,
-                RD = RD,
-                CD = CD,
-                RL = RL,
-                WL = WL,
-                TL = TL
-            };
-            return this.CreateObject(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _rollerTypeService, _machineService, _warehouseItemService);
-        }
-
         public CoreIdentificationDetail CreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService,
                                                      IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
         {

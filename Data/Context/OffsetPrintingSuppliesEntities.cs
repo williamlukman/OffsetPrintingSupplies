@@ -20,8 +20,6 @@ namespace Data.Context
         {
             IList<String> tableNames = new List<String>();
 
-            IList<String> financeNames = new List<String>()
-                                        { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank"};
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -35,16 +33,17 @@ namespace Data.Context
                                         { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
                                           "RetailSalesInvoice", "RetailSalesInvoiceDetail", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
+            IList<String> financeNames = new List<String>() { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" };
             IList<String> stockAndMasterNames = new List<String>()
                                         {  "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
                                           "Warehouse", "Blanket", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
 
-            financeNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
             salesOperationNames.ToList().ForEach(x => tableNames.Add(x));
+            financeNames.ToList().ForEach(x => tableNames.Add(x));
             stockAndMasterNames.ToList().ForEach(x => tableNames.Add(x));
 
             foreach (var tableName in tableNames)

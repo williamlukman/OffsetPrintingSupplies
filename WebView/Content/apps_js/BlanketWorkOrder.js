@@ -51,7 +51,7 @@
         url: base_url + 'BlanketWorkOrder/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
-                    'QTY Rejected', 'Confirmation Date', 'Created At', 'Updated At'
+                    'QTY Rejected', 'Due Date', 'Confirmation Date', 'Created At', 'Updated At'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -61,6 +61,7 @@
                   { name: 'quantityreceived', index: 'quantityreceived', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quantityfinal', index: 'quantityfinal', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quantityrejected', index: 'quantityrejected', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'duedate', index: 'duedate', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -88,7 +89,7 @@
 		              rowIsConfirmed = "NO";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
-		      }
+              }
 		  }
 
     });//END GRID
@@ -108,8 +109,6 @@
         ClearData();
         clearForm('#frm');
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#DueDateDiv').show();
-        $('#DueDateDiv2').hide();
         $('#btnContact').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
@@ -166,8 +165,6 @@
         }
     });
 
-
-
     $('#btn_edit').click(function () {
         ClearData();
         clearForm("#frm");
@@ -197,10 +194,9 @@
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#QuantityReceived').val(result.QuantityReceived);
+                            document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-                            $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#DueDateDiv').show();
-                            $('#DueDateDiv2').hide();
+                            if (document.getElementById("HasDueDate").checked) { $('#DueDateDiv').show(); }
                             $('#btnContact').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#Code').removeAttr('disabled');
@@ -214,6 +210,14 @@
             });
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#HasDueDate').click(function () {
+        if (document.getElementById("HasDueDate").checked) {
+            $('#DueDateDiv').show();
+        } else {
+            $('#DueDateDiv').hide();
         }
     });
 
@@ -300,8 +304,6 @@
         $('#confirm_div').dialog('close');
     });
 
-
-
     $('#btn_del').click(function () {
         clearForm("#frm");
 
@@ -370,6 +372,8 @@
             submitURL = base_url + 'BlanketWorkOrder/Insert';
         }
 
+        var duedate = (document.getElementById("HasDueDate").checked) ? $('#DueDate').datebox('getValue') : null;
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -378,7 +382,7 @@
                 Id: id, ContactId: $("#ContactId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
                 QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
-                DueDate: $('#DueDate').datebox('getValue'),
+                DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked
             }),
             async: false,
             cache: false,

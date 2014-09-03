@@ -75,8 +75,8 @@
     <Compile Include="Validation\SalesOperation\SalesOrderDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\SalesOrderValidator.cs" />
     <Compile Include="Validation\StockAndMaster\UoMValidator.cs" />
-    <Compile Include="Validation\StockAndMaster\WarehouseMutationOrderValidator.cs" />
-    <Compile Include="Validation\StockAndMaster\WarehouseMutationOrderDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\WarehouseMutationValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\WarehouseMutationDetailValidator.cs" />
     <Compile Include="Validation\StockAndMaster\StockAdjustmentDetailValidator.cs" />
     <Compile Include="Validation\StockAndMaster\StockAdjustmentValidator.cs" />
     <Compile Include="Validation\StockAndMaster\StockMutationValidator.cs" />

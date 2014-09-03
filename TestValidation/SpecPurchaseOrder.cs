@@ -104,7 +104,7 @@ namespace NSpec
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Batik Tulis",
-                    Description = "Item",
+                    Category = "Item",
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
@@ -114,7 +114,7 @@ namespace NSpec
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Buku Gambar",
-                    Description = "Item",
+                    Category = "Item",
                     Sku = "bg123",
                     UoMId = Pcs.Id
                 };

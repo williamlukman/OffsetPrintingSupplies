@@ -336,7 +336,7 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
                 Name = "Accessory Sample 2",
-                Description = "Accessory",
+                Category = "Accessory",
                 Sku = "ACC002",
                 UoMId = Pcs.Id
             };
@@ -719,7 +719,7 @@ namespace TestValidation
                 ItemId = coreBuilder1.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail1 = _warehouseMutationDetailService.CreateObject(wmoDetail1, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail1 = _warehouseMutationDetailService.CreateObject(wmoDetail1, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail2 = new WarehouseMutationDetail()
             {
@@ -727,7 +727,7 @@ namespace TestValidation
                 ItemId = coreBuilder2.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail2 = _warehouseMutationDetailService.CreateObject(wmoDetail2, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail2 = _warehouseMutationDetailService.CreateObject(wmoDetail2, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail3 = new WarehouseMutationDetail()
             {
@@ -735,7 +735,7 @@ namespace TestValidation
                 ItemId = coreBuilder3.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail3 = _warehouseMutationDetailService.CreateObject(wmoDetail3, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail3 = _warehouseMutationDetailService.CreateObject(wmoDetail3, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail4 = new WarehouseMutationDetail()
             {
@@ -743,7 +743,7 @@ namespace TestValidation
                 ItemId = itemCompound.Id,
                 Quantity = 500
             };
-            wmoDetail4 = _warehouseMutationDetailService.CreateObject(wmoDetail4, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail4 = _warehouseMutationDetailService.CreateObject(wmoDetail4, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail5 = new WarehouseMutationDetail()
             {
@@ -751,7 +751,7 @@ namespace TestValidation
                 ItemId = itemCompound1.Id,
                 Quantity = 500
             };
-            wmoDetail5 = _warehouseMutationDetailService.CreateObject(wmoDetail5, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail5 = _warehouseMutationDetailService.CreateObject(wmoDetail5, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail6 = new WarehouseMutationDetail()
             {
@@ -759,7 +759,7 @@ namespace TestValidation
                 ItemId = itemCompound2.Id,
                 Quantity = 500
             };
-            wmoDetail6 = _warehouseMutationDetailService.CreateObject(wmoDetail6, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail6 = _warehouseMutationDetailService.CreateObject(wmoDetail6, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail7 = new WarehouseMutationDetail()
             {
@@ -767,7 +767,7 @@ namespace TestValidation
                 ItemId = itemAccessory1.Id,
                 Quantity = 1
             };
-            wmoDetail7 = _warehouseMutationDetailService.CreateObject(wmoDetail7, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail7 = _warehouseMutationDetailService.CreateObject(wmoDetail7, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail8 = new WarehouseMutationDetail()
             {
@@ -775,7 +775,7 @@ namespace TestValidation
                 ItemId = blanket3.Id,
                 Quantity = 1
             };
-            wmoDetail8 = _warehouseMutationDetailService.CreateObject(wmoDetail8, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail8 = _warehouseMutationDetailService.CreateObject(wmoDetail8, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
 
             wmoDetail9 = new WarehouseMutationDetail()
             {
@@ -783,7 +783,7 @@ namespace TestValidation
                 ItemId = coreBuilder4.UsedCoreItemId,
                 Quantity = 2
             };
-            wmoDetail9 = _warehouseMutationDetailService.CreateObject(wmoDetail9, _warehouseMutationService, _itemService, _warehouseItemService);
+            wmoDetail9 = _warehouseMutationDetailService.CreateObject(wmoDetail9, _warehouseMutationService, _itemService, _warehouseItemService, _blanketService);
         }
 
         public void PopulateCoreIdentifications()

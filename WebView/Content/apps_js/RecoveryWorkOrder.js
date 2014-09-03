@@ -115,7 +115,6 @@
         clearForm('#frm');
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDateDiv').show();
-        $('#DueDateDiv2').hide();
         $('#btnCoreIdentification').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
@@ -202,10 +201,9 @@
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#QuantityReceived').val(result.QuantityReceived);
+                            document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-                            $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#DueDateDiv').show();
-                            $('#DueDateDiv2').hide();
+                            if (document.getElementById("HasDueDate").checked) { $('#DueDateDiv').show(); }
                             $('#btnCoreIdentification').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#Code').removeAttr('disabled');
@@ -219,6 +217,14 @@
             });
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#HasDueDate').click(function () {
+        if (document.getElementById("HasDueDate").checked) {
+            $('#DueDateDiv').show();
+        } else {
+            $('#DueDateDiv').hide();
         }
     });
 
@@ -305,8 +311,6 @@
         $('#confirm_div').dialog('close');
     });
 
-
-
     $('#btn_del').click(function () {
         clearForm("#frm");
 
@@ -375,6 +379,8 @@
             submitURL = base_url + 'RecoveryWorkOrder/Insert';
         }
 
+        var duedate = (document.getElementById("HasDueDate").checked) ? $('#DueDate').datebox('getValue') : null;
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -383,7 +389,7 @@
                 Id: id, CoreIdentificationId: $("#CoreIdentificationId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
                 QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
-                DueDate: $('#DueDate').datebox('getValue')
+                DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked
             }),
             async: false,
             cache: false,

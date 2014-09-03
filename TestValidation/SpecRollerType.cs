@@ -25,7 +25,6 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
-                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
                 d.Pcs = new UoM()
                 {
@@ -50,7 +49,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Description = "ABC123",
+                    Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -106,10 +105,20 @@ namespace TestValidation
                         ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
                         Sku = "Cmp10001",
                         Name = "Cmp 10001",
-                        Description = "cmp",
+                        Category = "cmp",
                         UoMId = d.Pcs.Id
                     };
                     d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+
+                    d.itemAdhesive = new Item()
+                    {
+                        ItemTypeId = d._itemTypeService.GetObjectByName("Adhesive").Id,
+                        Name = "Adhesive Default",
+                        Category = "Adhesive",
+                        Sku = "ADD123",
+                        UoMId = d.Tubs.Id
+                    };
+                    d.itemAdhesive = d._itemService.CreateObject(d.itemAdhesive, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
                     d.stockAdjustment = new StockAdjustment()
                     {
@@ -124,6 +133,14 @@ namespace TestValidation
                         ItemId = d.itemCompound.Id
                     };
                     d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
+
+                    d.stockAD2 = new StockAdjustmentDetail()
+                    {
+                        StockAdjustmentId = d.stockAdjustment.Id,
+                        Quantity = 20,
+                        ItemId = d.itemAdhesive.Id
+                    };
+                    d._stockAdjustmentDetailService.CreateObject(d.stockAD2, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                     d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
                                                             d._itemService, d._blanketService, d._warehouseItemService);
@@ -175,7 +192,8 @@ namespace TestValidation
                         CD = 12,
                         RL = 12,
                         WL = 12,
-                        TL = 12
+                        TL = 12,
+                        RepairRequestCase = Core.Constants.Constant.RepairRequestCase.BearingSeat
                     };
                     d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService,
                                                                                                  d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);
