@@ -46,6 +46,7 @@
     <Compile Include="Validation\Finance\CashBankMutationValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderDetailValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderValidator.cs" />
+    <Compile Include="Validation\Manufacturing\CoreAccessoryDetailValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PayableValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PaymentVoucherDetailValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\PaymentVoucherValidator.cs" />

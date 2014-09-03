@@ -48,6 +48,7 @@
     <Compile Include="DomainModel\Finance\CashBankAdjustment.cs" />
     <Compile Include="DomainModel\Finance\CashMutation.cs" />
     <Compile Include="DomainModel\Finance\CashBankMutation.cs" />
+    <Compile Include="DomainModel\Manufacturing\CoreAccessoryDetail.cs" />
     <Compile Include="DomainModel\PurchaseOperation\Payable.cs" />
     <Compile Include="DomainModel\PurchaseOperation\PaymentVoucher.cs" />
     <Compile Include="DomainModel\PurchaseOperation\PaymentVoucherDetail.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Interface\Repository\Finance\ICashMutationRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ICashBankRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ICashBankMutationRepository.cs" />
+    <Compile Include="Interface\Repository\Manufacturing\ICoreAccessoryDetailRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IPayableRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IPaymentVoucherDetailRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IPaymentVoucherRepository.cs" />
@@ -157,6 +159,7 @@
     <Compile Include="Interface\Service\Finance\ICashBankService.cs" />
     <Compile Include="Interface\Service\Finance\ICashBankAdjustmentService.cs" />
     <Compile Include="Interface\Service\Finance\ICashBankMutationService.cs" />
+    <Compile Include="Interface\Service\Manufacturing\ICoreAccessoryDetailService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IPayableService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IPaymentVoucherDetailService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IPaymentVoucherService.cs" />
@@ -211,6 +214,7 @@
     <Compile Include="Interface\Validation\Finance\ICashMutationValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankAdjustmentValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ICashBankMutationValidator.cs" />
+    <Compile Include="Interface\Validation\Manufacturing\ICoreAccessoryDetailValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IPayableValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IPaymentVoucherDetailValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IPaymentVoucherValidator.cs" />

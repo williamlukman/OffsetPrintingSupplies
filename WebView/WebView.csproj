@@ -149,12 +149,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
-    <Compile Include="Controllers\BarringWorkOrderController.cs" />
     <Compile Include="Controllers\BlanketWorkOrderController.cs" />
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\CashMutationController.cs" />
+    <Compile Include="Controllers\CoreAccessoryDetailController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
     <Compile Include="Controllers\StockMutationController.cs" />
@@ -175,7 +175,6 @@
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
-    <Compile Include="Controllers\RetailSalesInvoiceController.cs" />
     <Compile Include="Controllers\UserAccessController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WarehouseItemController.cs" />
@@ -203,6 +202,7 @@
     <Content Include="Content\apps_js\CashBankMutation.js" />
     <Content Include="Content\apps_js\BlanketWorkProcess.js" />
     <Content Include="Content\apps_js\CashMutation.js" />
+    <Content Include="Content\apps_js\CoreAccessoryDetail.js" />
     <Content Include="Content\apps_js\MasterUser.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
@@ -1127,6 +1127,7 @@
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\UserAccess\Index.cshtml" />
+    <Content Include="Views\CoreAccessoryDetail\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
