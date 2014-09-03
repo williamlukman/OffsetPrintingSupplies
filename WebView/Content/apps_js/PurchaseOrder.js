@@ -83,6 +83,7 @@
 		          } else {
 		              rowIsConfirmed = "NO";
 		          }
+		          $(this).find(">tbody>tr.jqgrow:odd").css("background", "#E0E0E0");
 		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
 		      }
 		  }

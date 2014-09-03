@@ -9,12 +9,65 @@
         }
     }
 
+    // NOT Loggin YET
+    if (!WebView.AuthenticationModel.IsAuthenticated())
+    {
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - Freight Express Indonesia</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/Content/themes/base/css")
+
+        <script type="text/javascript">
+            var base_url = '@Url.Content("~//")';
+            window.top.location = base_url;
+        </script>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/modernizr")
+        @RenderSection("scripts", required: false)
+        @RenderSection("head", required: false)
+    </head>
+    <body>
+        <span>This site is under maintenance</span>
+    </body>
+    </html>
+        
+    }
+
+    if (underMaintenance)
+    {           // **************************************** Under Maintenance page
+        
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@*@ViewBag.Title -  @infoss.Models.AccountModels.GetCompanyName()*@</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+
+        <script type="text/javascript">
+            window.top.location = '@Url.Action("Logout", "Account")';
+        </script>
+        @RenderBody()
+    </head>
+    <body>
+        <span>This site is under maintenance</span>
+    </body>
+    </html>
+    }           // **************************************** END Under Maintenance page
+    else
+    {       // NOT Under Maintenance
 
     <!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>@ViewBag.Title</title>
+        <title>@*@ViewBag.Title -  @infoss.Models.AccountModels.GetCompanyName()*@</title>
         <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta name="viewport" content="width=device-width" />
         @Styles.Render("~/Content/css")
@@ -112,6 +165,7 @@
 
                 });
 
+
                 /*-------- Change Password -------- */
                 $('#frm_change_pass_div').dialog('close');
                 $("#frm_change_pass_btn_save").click(function () {
@@ -149,6 +203,7 @@
                 });
                 /*-------- End Change Password -------- */
 
+
                 $(".btnPrintSA").click(function () {
                     $(".printsapanel").slideToggle('slow');
 
@@ -158,9 +213,10 @@
                     $(".list_master").setGridWidth($(window).width() - 20).setGridHeight($(window).height() - 200);
                 }).trigger('resize');
 
-                $(window).bind('resize', function () {
-                    $(".list_master_verify").setGridWidth($(window).width() - 80).setGridHeight($(window).height() - 250);
-                }).trigger('resize');
+                //$(window).bind('resize', function () {
+                //    $(".list_master_filemapping").setGridWidth($(window).width() - 80).setGridHeight($(window).height() - 300);
+                //}).trigger('resize');
+
             });
         </script>
     </head>
@@ -177,21 +233,22 @@
 
             <div id="datetime_message">
             </div>
-            <div id="header-message">| &nbsp; ACCOUNTING SYSTEM</div>
+            <div id="header-message">| &nbsp; INTEGRATED FORWARDING &amp; SHIPPING SYSTEM</div>
 
-           @* @if (infoss.Models.AccountModels.IsAuthenticated())
+            @if (WebView.AuthenticationModel.IsAuthenticated())
             {
-                *@<div id="user-greeting">
-                    Welcome <strong>@*@infoss.Models.AccountModels.GetUserName()*@</strong> &nbsp;|&nbsp; <a href="@Url.Action("Logout", "Account")">Logout
+                <div id="user-greeting">
+                    Welcome <strong>@WebView.AuthenticationModel.GetUserName()</strong> &nbsp;|&nbsp; <a href="@Url.Action("Logout", "Account")">Logout
                     </a>
                 </div>
-            @*}*@
+            }
         </div>
         <div data-options="region:'south',border:false" style="height: 10px; background: #E7EBF2 !important;">
             &nbsp;
         </div>
         <div data-options="region:'center',border:false" style="margin-right: 5px;">
-            <div id="menusisi">
+
+       <div id="menusisi">
                 <div id="menusisixx">
                     <div id="logo">
                        @* <img src='@Url.Content(infoss.Models.AccountModels.GetCompanyLogoPath())' 
@@ -213,6 +270,7 @@
                                                <li><a href="@Url.Action("Index", "MstMachine")">Machine</a> </li>
                                                <li><a href="@Url.Action("Index", "MstRollerType")">RollerType</a> </li>
                                                <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
+                                                <li><a href="@Url.Action("Index", "User")">User</a> </li>
                                                 </ul>
                                             </li>
                                                 <li><a href="#">Finance</a>
@@ -226,6 +284,7 @@
                                             </li>
                                                <li><a href="#">Stock</a>
                                                 <ul>
+
                                                     <li><a href="@Url.Action("Index", "MstBlanket")">Blanket</a> </li>
                                                     <li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>
                                                     <li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>
@@ -251,6 +310,7 @@
                                            <li><a href="#">Roller Recovery</a>
                                              <ul>
                                                  <li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification</a></li>
+                                                 <li><a href="@Url.Action("Index", "CoreAccessoryDetail")">Roller Accessory Detail</a></li>
                                                  <li><a href="@Url.Action("Index", "RollerWarehouseMutation")">Roller Warehouse Mutation</a></li>
                                                  <li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Recovery Work Order</a></li>
                                                  <li><a href="@Url.Action("Index", "RecoveryWorkProcess")">Recovery Work Process</a></li>
@@ -382,8 +442,8 @@
             data-options="modal:true" title=".: CHANGE PASSWORD :.">
 
             <div id="frm_change_pass_toolbar" style="border: 1px solid #ddd;" class="form_toolbar">
-                <a id="frm_change_pass_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">SAVE</a>
-                <a id="frm_change_pass_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+                <a id="frm_change_pass_btn_save" tabindex="98" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">SAVE</a>
+                <a id="frm_change_pass_btn_cancel" tabindex="99" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
             </div>
 
             <div style="height: 160px; overflow: auto">
@@ -394,19 +454,19 @@
                                 <td>
                                     <label>Old Password</label></td>
                                 <td>
-                                    <input id="txtoldpass" type="password" size="20" maxlength="20" align="left" /></td>
+                                    <input id="txtoldpass" type="password" size="20" maxlength="20" align="left" tabindex="95" /></td>
                             </tr>
                             <tr>
                                 <td>
                                     <label>New Password</label></td>
                                 <td>
-                                    <input id="txtnewpass" type="password" size="20" maxlength="20" align="left" /></td>
+                                    <input id="txtnewpass" type="password" size="20" maxlength="20" align="left" tabindex="96" /></td>
                             </tr>
                             <tr>
                                 <td>
                                     <label>Confirm Password</label></td>
                                 <td>
-                                    <input id="txtconfirmpass" type="password" size="20" maxlength="20" align="left" /></td>
+                                    <input id="txtconfirmpass" type="password" size="20" maxlength="20" align="left" tabindex="97" /></td>
                             </tr>
                         </table>
                     </fieldset>
@@ -417,3 +477,4 @@
     </html>
 
     }   // END NOT Under Maintenance
+}

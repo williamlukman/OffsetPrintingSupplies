@@ -49,6 +49,7 @@
     <Compile Include="Mapping\Finance\CashMutationMapping.cs" />
     <Compile Include="Mapping\Finance\CashBankAdjustmentMapping.cs" />
     <Compile Include="Mapping\Finance\CashBankMutationMapping.cs" />
+    <Compile Include="Mapping\Manufacturing\CoreAccessoryDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PayableMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PaymentVoucherDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PaymentVoucherMapping.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Repository\Finance\CashBankMutationRepository.cs" />
     <Compile Include="Repository\Manufacturing\BlanketOrderDetailRepository.cs" />
     <Compile Include="Repository\Manufacturing\BlanketOrderRepository.cs" />
+    <Compile Include="Repository\Manufacturing\CoreAccessoryDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\PayableRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\PaymentVoucherDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\PaymentVoucherRepository.cs" />

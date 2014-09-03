@@ -662,6 +662,7 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
+
         colNames: ['Id', 'Sku', 'Name', 'Description', 'Machine', 'Type'],
         colModel: [
                   { name: 'id', index: 'id', width: 40, align: 'right' },

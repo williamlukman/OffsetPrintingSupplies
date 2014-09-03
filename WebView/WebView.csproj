@@ -148,11 +148,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\BlanketWorkOrderController.cs" />
     <Compile Include="Controllers\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\CashBankMutationController.cs" />
     <Compile Include="Controllers\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\CashMutationController.cs" />
+    <Compile Include="Controllers\CoreAccessoryDetailController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
     <Compile Include="Controllers\StockMutationController.cs" />
@@ -173,6 +175,8 @@
     <Compile Include="Controllers\MstRollerTypeController.cs" />
     <Compile Include="Controllers\MstUoMController.cs" />
     <Compile Include="Controllers\MstWarehouseController.cs" />
+    <Compile Include="Controllers\UserAccessController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\WarehouseItemController.cs" />
     <Compile Include="Controllers\PaymentVoucherController.cs" />
     <Compile Include="Controllers\PurchaseInvoiceController.cs" />
@@ -188,6 +192,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AuthenticationModel.cs" />
+    <Compile Include="Models\ConfigurationModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +202,8 @@
     <Content Include="Content\apps_js\CashBankMutation.js" />
     <Content Include="Content\apps_js\BlanketWorkProcess.js" />
     <Content Include="Content\apps_js\CashMutation.js" />
+    <Content Include="Content\apps_js\CoreAccessoryDetail.js" />
+    <Content Include="Content\apps_js\MasterUser.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
     <Content Include="Content\apps_js\StockMutation.js" />
@@ -966,6 +974,7 @@
     <Content Include="Content\uploadify\check.php" />
     <Content Include="Content\uploadify\uploadify.php" />
     <Content Include="ClassDiagram1.cd" />
+    <None Include="Properties\PublishProfiles\webui.pubxml" />
     <None Include="Properties\PublishProfiles\Zengra.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\collapsiblePanel.js" />
@@ -1115,10 +1124,13 @@
     <Content Include="Views\CashMutation\Index.cshtml" />
     <Content Include="Views\Receivable\Index.cshtml" />
     <Content Include="Views\Payable\Index.cshtml" />
+    <Content Include="Views\Authentication\Login.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\UserAccess\Index.cshtml" />
+    <Content Include="Views\CoreAccessoryDetail\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

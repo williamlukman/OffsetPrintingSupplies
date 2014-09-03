@@ -438,7 +438,7 @@
         rowList: [20, 30, 60],
         sortname: 'id',
         viewrecords: true,
-        scrollrows: true,
+        scrollrows: true, 
         shrinkToFit: false,
         sortorder: "ASC",
         width: $("#form_div").width() - 3,
