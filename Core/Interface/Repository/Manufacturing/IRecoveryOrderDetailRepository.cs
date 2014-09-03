@@ -24,7 +24,7 @@ namespace Core.Interface.Repository
         RecoveryOrderDetail VulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail FaceOffObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail ConventionalGrindObject(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail CWCGrindObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail CNCGrindObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail PolishAndQCObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail PackageObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail);

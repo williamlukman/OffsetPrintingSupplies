@@ -53,7 +53,7 @@
         colNames: ['Recovery Order Id', 'CoreIdentificationDetailId', 'RIFD Id', 'Material Case',
                     'RollerBuilder Id', 'RollerBuilder Sku', 'RollerBuilder Name', 'CoreTypeCase', 
                    'IsDisassembled', 'IsStrippedAndGlued', 'IsWrapped', 'CompoundUsage',
-                   'IsVulcanized', 'IsFacedOff', 'IsConventionalGrinded', 'IsCWCGrinded',
+                   'IsVulcanized', 'IsFacedOff', 'IsConventionalGrinded', 'IsCNCGrinded',
                    'IsPolishedAndQC','IsPackaged',
                    'Rejected Date', 'Finished Date'
         ],
@@ -73,7 +73,7 @@
                   { name: 'isvulcanized', index: 'isvulcanized', width: 100, sortable: false },
                   { name: 'isfacedoff', index: 'isfacedoff', width: 100, sortable: false },
                   { name: 'isconventionalgrinded', index: 'isconventionalgrinded', width: 100, sortable: false },
-                  { name: 'iscwcgrinded', index: 'iscwcgrinded', width: 100, sortable: false },
+                  { name: 'isCNCGrinded', index: 'isCNCGrinded', width: 100, sortable: false },
                   { name: 'ispolishedandqc', index: 'ispolishedandqc', width: 100, sortable: false },
                   { name: 'ispackaged', index: 'ispackaged', width: 100, sortable: false },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -155,7 +155,7 @@
                             document.getElementById("IsVulcanized").checked = result.IsVulcanized;
                             document.getElementById("IsFacedOff").checked = result.IsFacedOff;
                             document.getElementById("IsConventionalGrinded").checked = result.IsConventionalGrinded;
-                            document.getElementById("IsCWCGrinded").checked = result.IsCWCGrinded;
+                            document.getElementById("IsCNCGrinded").checked = result.IsCNCGrinded;
                             document.getElementById("IsPolishedAndQC").checked = result.IsPolishedAndQC;
                             document.getElementById("IsPackaged").checked = result.IsPackaged;
                             if (result.IsDisassembled) { $('#IsDisassembled').attr('disabled', true); } else { $('#IsDisassembled').removeAttr('disabled'); }
@@ -164,7 +164,7 @@
                             if (result.IsVulcanized) { $('#IsVulcanized').attr('disabled', true); } else { $('#IsVulcanized').removeAttr('disabled'); }
                             if (result.IsFacedOff) { $('#IsFacedOff').attr('disabled', true); } else { $('#IsFacedOff').removeAttr('disabled'); }
                             if (result.IsConventionalGrinded) { $('#IsConventionalGrinded').attr('disabled', true); } else { $('#IsConventionalGrinded').removeAttr('disabled'); }
-                            if (result.IsCWCGrinded) { $('#IsCWCGrinded').attr('disabled', true); } else { $('#IsCWCGrinded').removeAttr('disabled'); }
+                            if (result.IsCNCGrinded) { $('#IsCNCGrinded').attr('disabled', true); } else { $('#IsCNCGrinded').removeAttr('disabled'); }
                             if (result.IsPolishedAndQC) { $('#IsPolishedAndQC').attr('disabled', true); } else { $('#IsPolishedAndQC').removeAttr('disabled'); }
                             if (result.IsPackaged) { $('#IsPackaged').attr('disabled', true); } else { $('#IsPackaged').removeAttr('disabled'); }
                             $('#process_div').show();
@@ -428,7 +428,7 @@
                 IsVulcanized: document.getElementById("IsVulcanized").checked,
                 IsFacedOff: document.getElementById("IsFacedOff").checked,
                 IsConventionalGrinded: document.getElementById("IsConventionalGrinded").checked,
-                IsCWCGrinded: document.getElementById("IsCWCGrinded").checked,
+                IsCNCGrinded: document.getElementById("IsCNCGrinded").checked,
                 IsPolishedAndQC: document.getElementById("IsPolishedAndQC").checked,
                 IsPackaged: document.getElementById("IsPackaged").checked,
             }),

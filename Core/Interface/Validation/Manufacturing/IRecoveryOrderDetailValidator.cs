@@ -25,7 +25,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenFacedOff(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenConventionalGrinded (RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VHasBeenCWCGrinded(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenCNCGrinded(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenPolishedAndQC(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenPackaged(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
@@ -38,7 +38,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VHasNotBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenFacedOff(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenConventionalGrinded(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VHasNotBeenCWCGrinded(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasNotBeenCNCGrinded(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenPolishedAndQC(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenPackaged(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasNotBeenRejected(RecoveryOrderDetail recoveryOrderDetail);
@@ -63,7 +63,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VFaceOffObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VConventionalGrindObject(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail VCWCGrindObject(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VCNCGrindObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VPolishAndQCObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VPackageObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VRejectObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
@@ -84,7 +84,7 @@ namespace Core.Interface.Validation
         bool ValidVulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidFaceOffObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidConventionalGrindObject(RecoveryOrderDetail recoveryOrderDetail);
-        bool ValidCWCGrindObject(RecoveryOrderDetail recoveryOrderDetail);
+        bool ValidCNCGrindObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidPolishAndQCObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidPackageObject(RecoveryOrderDetail recoveryOrderDetail);
         bool ValidRejectObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);

@@ -1058,7 +1058,7 @@ namespace TestValidation
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact1);
-            _recoveryOrderDetailService.CWCGrindObject(recoveryODContact1);
+            _recoveryOrderDetailService.CNCGrindObject(recoveryODContact1);
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact1);
             _recoveryOrderDetailService.PackageObject(recoveryODContact1);
 
@@ -1068,7 +1068,7 @@ namespace TestValidation
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2);
-            _recoveryOrderDetailService.CWCGrindObject(recoveryODContact2);
+            _recoveryOrderDetailService.CNCGrindObject(recoveryODContact2);
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact2);
             _recoveryOrderDetailService.PackageObject(recoveryODContact2);
 
@@ -1078,7 +1078,7 @@ namespace TestValidation
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact3);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact3);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact3);
-            _recoveryOrderDetailService.CWCGrindObject(recoveryODContact3);
+            _recoveryOrderDetailService.CNCGrindObject(recoveryODContact3);
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact3);
             _recoveryOrderDetailService.PackageObject(recoveryODContact3);
 
@@ -1088,7 +1088,7 @@ namespace TestValidation
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse1);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse1);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse1);
-            _recoveryOrderDetailService.CWCGrindObject(recoveryODInHouse1);
+            _recoveryOrderDetailService.CNCGrindObject(recoveryODInHouse1);
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse1);
             _recoveryOrderDetailService.PackageObject(recoveryODInHouse1);
 
@@ -1098,7 +1098,7 @@ namespace TestValidation
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse2);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse2);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse2);
-            _recoveryOrderDetailService.CWCGrindObject(recoveryODInHouse2);
+            _recoveryOrderDetailService.CNCGrindObject(recoveryODInHouse2);
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse2);
             _recoveryOrderDetailService.PackageObject(recoveryODInHouse2);
 
@@ -1236,7 +1236,7 @@ namespace TestValidation
             _recoveryOrderDetailService.VulcanizeObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODInHouse3b);
-            _recoveryOrderDetailService.CWCGrindObject(recoveryODInHouse3b);
+            _recoveryOrderDetailService.CNCGrindObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODInHouse3b);
             _recoveryOrderDetailService.PackageObject(recoveryODInHouse3b);
 
@@ -1246,7 +1246,7 @@ namespace TestValidation
             _recoveryOrderDetailService.VulcanizeObject(recoveryODContact2b);
             _recoveryOrderDetailService.FaceOffObject(recoveryODContact2b);
             _recoveryOrderDetailService.ConventionalGrindObject(recoveryODContact2b);
-            _recoveryOrderDetailService.CWCGrindObject(recoveryODContact2b);
+            _recoveryOrderDetailService.CNCGrindObject(recoveryODContact2b);
             _recoveryOrderDetailService.PolishAndQCObject(recoveryODContact2b);
             _recoveryOrderDetailService.PackageObject(recoveryODContact2b);
 

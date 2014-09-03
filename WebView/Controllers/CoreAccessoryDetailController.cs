@@ -246,7 +246,7 @@ namespace WebView.Controllers
                 model.IsVulcanized,
                 model.IsFacedOff,
                 model.IsConventionalGrinded,
-                model.IsCWCGrinded,
+                model.IsCNCGrinded,
                 model.IsPolishedAndQC,
                 model.IsPackaged,
                 model.RejectedDate,

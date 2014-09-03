@@ -21,7 +21,7 @@ namespace Core.DomainModel
         public bool IsVulcanized { get; set; }
         public bool IsFacedOff { get; set; }
         public bool IsConventionalGrinded { get; set; }
-        public bool IsCWCGrinded { get; set; }
+        public bool IsCNCGrinded { get; set; }
         public bool IsPolishedAndQC { get; set; }
         public bool IsPackaged { get; set; }
 

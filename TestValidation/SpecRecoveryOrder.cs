@@ -160,7 +160,7 @@ namespace TestValidation
                         d._recoveryOrderDetailService.VulcanizeObject(d.recoveryODContact1);
                         d._recoveryOrderDetailService.FaceOffObject(d.recoveryODContact1);
                         d._recoveryOrderDetailService.ConventionalGrindObject(d.recoveryODContact1);
-                        d._recoveryOrderDetailService.CWCGrindObject(d.recoveryODContact1);
+                        d._recoveryOrderDetailService.CNCGrindObject(d.recoveryODContact1);
                         d._recoveryOrderDetailService.PolishAndQCObject(d.recoveryODContact1);
                         d._recoveryOrderDetailService.PackageObject(d.recoveryODContact1);
 
@@ -169,7 +169,7 @@ namespace TestValidation
                         d._recoveryOrderDetailService.VulcanizeObject(d.recoveryODContact2);
                         d._recoveryOrderDetailService.FaceOffObject(d.recoveryODContact2);
                         d._recoveryOrderDetailService.ConventionalGrindObject(d.recoveryODContact2);
-                        d._recoveryOrderDetailService.CWCGrindObject(d.recoveryODContact2);
+                        d._recoveryOrderDetailService.CNCGrindObject(d.recoveryODContact2);
                         d._recoveryOrderDetailService.PolishAndQCObject(d.recoveryODContact2);
                         d._recoveryOrderDetailService.PackageObject(d.recoveryODContact2);
 
@@ -178,7 +178,7 @@ namespace TestValidation
                         d._recoveryOrderDetailService.VulcanizeObject(d.recoveryODContact3);
                         d._recoveryOrderDetailService.FaceOffObject(d.recoveryODContact3);
                         d._recoveryOrderDetailService.ConventionalGrindObject(d.recoveryODContact3);
-                        d._recoveryOrderDetailService.CWCGrindObject(d.recoveryODContact3);
+                        d._recoveryOrderDetailService.CNCGrindObject(d.recoveryODContact3);
                         d._recoveryOrderDetailService.PolishAndQCObject(d.recoveryODContact3);
                         d._recoveryOrderDetailService.PackageObject(d.recoveryODContact3);
 
@@ -187,7 +187,7 @@ namespace TestValidation
                         d._recoveryOrderDetailService.VulcanizeObject(d.recoveryODInHouse1);
                         d._recoveryOrderDetailService.FaceOffObject(d.recoveryODInHouse1);
                         d._recoveryOrderDetailService.ConventionalGrindObject(d.recoveryODInHouse1);
-                        d._recoveryOrderDetailService.CWCGrindObject(d.recoveryODInHouse1);
+                        d._recoveryOrderDetailService.CNCGrindObject(d.recoveryODInHouse1);
                         d._recoveryOrderDetailService.PolishAndQCObject(d.recoveryODInHouse1);
                         d._recoveryOrderDetailService.PackageObject(d.recoveryODInHouse1);
                         
@@ -205,7 +205,7 @@ namespace TestValidation
                         d._recoveryOrderDetailService.VulcanizeObject(d.recoveryODInHouse2);
                         d._recoveryOrderDetailService.FaceOffObject(d.recoveryODInHouse2);
                         d._recoveryOrderDetailService.ConventionalGrindObject(d.recoveryODInHouse2);
-                        d._recoveryOrderDetailService.CWCGrindObject(d.recoveryODInHouse2);
+                        d._recoveryOrderDetailService.CNCGrindObject(d.recoveryODInHouse2);
                         d._recoveryOrderDetailService.PolishAndQCObject(d.recoveryODInHouse2);
                         d._recoveryOrderDetailService.PackageObject(d.recoveryODInHouse2);
 

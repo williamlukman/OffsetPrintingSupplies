@@ -91,7 +91,7 @@ namespace WebView.Controllers
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
-                            model.IsCWCGrinded,
+                            model.IsCNCGrinded,
                             model.IsPolishedAndQC,
                             model.IsPackaged,
                             model.RejectedDate,
@@ -145,7 +145,7 @@ namespace WebView.Controllers
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
-                            model.IsCWCGrinded,
+                            model.IsCNCGrinded,
                             model.IsPolishedAndQC,
                             model.IsPackaged,
                             model.RejectedDate,
@@ -249,7 +249,7 @@ namespace WebView.Controllers
                 model.IsVulcanized,
                 model.IsFacedOff,
                 model.IsConventionalGrinded,
-                model.IsCWCGrinded,
+                model.IsCNCGrinded,
                 model.IsPolishedAndQC,
                 model.IsPackaged,
                 model.RejectedDate,
@@ -290,7 +290,7 @@ namespace WebView.Controllers
                 model.IsVulcanized,
                 model.IsFacedOff,
                 model.IsConventionalGrinded,
-                model.IsCWCGrinded,
+                model.IsCNCGrinded,
                 model.IsPolishedAndQC,
                 model.IsPackaged,
                 model.Errors
@@ -420,7 +420,7 @@ namespace WebView.Controllers
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsConventionalGrinded && !data.IsConventionalGrinded) { models = _recoveryOrderDetailService.ConventionalGrindObject(data); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsCWCGrinded && !data.IsCWCGrinded) { models = _recoveryOrderDetailService.CWCGrindObject(data); }
+                if (model.IsCNCGrinded && !data.IsCNCGrinded) { models = _recoveryOrderDetailService.CNCGrindObject(data); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsPolishedAndQC && !data.IsPolishedAndQC) { models = _recoveryOrderDetailService.PolishAndQCObject(data); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }

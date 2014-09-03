@@ -131,9 +131,9 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidConventionalGrindObject(recoveryOrderDetail) ? _repository.ConventionalGrindObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail CWCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail CNCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
         {
-            return (recoveryOrderDetail = _validator.ValidCWCGrindObject(recoveryOrderDetail) ? _repository.CWCGrindObject(recoveryOrderDetail) : recoveryOrderDetail);
+            return (recoveryOrderDetail = _validator.ValidCNCGrindObject(recoveryOrderDetail) ? _repository.CNCGrindObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
         public RecoveryOrderDetail PolishAndQCObject(RecoveryOrderDetail recoveryOrderDetail)

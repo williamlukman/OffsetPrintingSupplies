@@ -58,7 +58,7 @@ namespace Data.Repository
             recoveryOrderDetail.IsVulcanized = false;
             recoveryOrderDetail.IsFacedOff = false;
             recoveryOrderDetail.IsConventionalGrinded = false;
-            recoveryOrderDetail.IsCWCGrinded = false;
+            recoveryOrderDetail.IsCNCGrinded = false;
             recoveryOrderDetail.IsPolishedAndQC = false;
             recoveryOrderDetail.IsPackaged = false;
             recoveryOrderDetail.IsRejected = false;
@@ -131,9 +131,9 @@ namespace Data.Repository
             return recoveryOrderDetail;
         }
         
-        public RecoveryOrderDetail CWCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail CNCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
         {
-            recoveryOrderDetail.IsCWCGrinded = true;
+            recoveryOrderDetail.IsCNCGrinded = true;
             recoveryOrderDetail.UpdatedAt = DateTime.Now;
             Update(recoveryOrderDetail);
             return recoveryOrderDetail;

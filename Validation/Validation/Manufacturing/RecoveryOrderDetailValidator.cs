@@ -148,9 +148,9 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VHasBeenCWCGrinded(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail VHasBeenCNCGrinded(RecoveryOrderDetail recoveryOrderDetail)
         {
-            if (!recoveryOrderDetail.IsCWCGrinded)
+            if (!recoveryOrderDetail.IsCNCGrinded)
             {
                 recoveryOrderDetail.Errors.Add("Generic", "Belum di CWC grind");
             }
@@ -256,9 +256,9 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VHasNotBeenCWCGrinded(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail VHasNotBeenCNCGrinded(RecoveryOrderDetail recoveryOrderDetail)
         {
-            if (recoveryOrderDetail.IsCWCGrinded)
+            if (recoveryOrderDetail.IsCNCGrinded)
             {
                 recoveryOrderDetail.Errors.Add("Generic", "Sudah di CWC grind");
             }
@@ -437,9 +437,9 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VCWCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
+        public RecoveryOrderDetail VCNCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
         {
-            VHasNotBeenCWCGrinded(recoveryOrderDetail);
+            VHasNotBeenCNCGrinded(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasBeenConventionalGrinded(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
@@ -451,7 +451,7 @@ namespace Validation.Validation
         {
             VHasNotBeenPolishedAndQC(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VHasBeenCWCGrinded(recoveryOrderDetail);
+            VHasBeenCNCGrinded(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             return recoveryOrderDetail;
@@ -577,10 +577,10 @@ namespace Validation.Validation
             return isValid(recoveryOrderDetail);
         }
 
-        public bool ValidCWCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
+        public bool ValidCNCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
         {
             recoveryOrderDetail.Errors.Clear();
-            VCWCGrindObject(recoveryOrderDetail);
+            VCNCGrindObject(recoveryOrderDetail);
             return isValid(recoveryOrderDetail);
         }
 
