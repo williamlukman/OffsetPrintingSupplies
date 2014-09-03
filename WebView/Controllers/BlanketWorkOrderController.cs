@@ -8,6 +8,9 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
+
 namespace WebView.Controllers
 {
     public class BlanketWorkOrderController : Controller
@@ -44,13 +47,30 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _blanketOrderService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _blanketOrderService.GetQueryable().Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<BlanketOrder>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             Contact = model.Contact.Name,
+                             Warehouse = model.Warehouse.Name,
+                             model.QuantityReceived,
+                             model.QuantityFinal,
+                             model.QuantityRejected,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -81,8 +101,8 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                           _contactService.GetObjectById(model.ContactId).Name,
-                            _warehouseService.GetObjectById(model.WarehouseId).Name,
+                            model.Contact,
+                            model.Warehouse,
                             model.QuantityReceived,
                             model.QuantityFinal,
                             model.QuantityRejected,
@@ -97,13 +117,36 @@ namespace WebView.Controllers
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _blanketOrderDetailService.GetObjectsByBlanketOrderId(id).Where(d => d.IsDeleted == false);
+            var q = _blanketOrderDetailService.GetQueryable().Include("Blanket").Include("BlanketOrder")
+                                              .Include("Item").Where(x => x.Id == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<BlanketOrderDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.BlanketId,
+                             BlanketSku = model.Blanket.Sku,
+                             Blanket = model.Blanket.Name,
+                             model.Blanket.RollBlanketItemId,
+                             RollBlanketItemSku = model.Blanket.RollBlanketItem.Sku,
+                             RollBlanketItem = model.Blanket.RollBlanketItem.Name,
+                             model.Blanket.LeftBarItemId,
+                             LeftBarItemSku = model.Blanket.LeftBarItem.Sku,
+                             LeftBarItem = model.Blanket.LeftBarItem.Name,
+                             model.Blanket.RightBarItemId,
+                             RightBarItemSku = model.Blanket.RightBarItem.Sku,
+                             RightBarItem = model.Blanket.RightBarItem.Name,
+                             model.RejectedDate,
+                             model.FinishedDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -132,16 +175,16 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                            _blanketService.GetObjectById(model.BlanketId).Sku,
-                            _blanketService.GetObjectById(model.BlanketId).Name,
-                            _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                            _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                            _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                            _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                            _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                            _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                            model.RejectedDate,
-                            model.FinishedDate
+                             model.BlanketSku,
+                             model.Blanket,
+                             model.RollBlanketItemSku,
+                             model.RollBlanketItem,
+                             model.LeftBarItemSku,
+                             model.LeftBarItem,
+                             model.RightBarItemSku,
+                             model.RightBarItem,
+                             model.RejectedDate,
+                             model.FinishedDate
                         }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

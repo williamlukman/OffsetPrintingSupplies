@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -35,13 +37,33 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _receivableService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _receivableService.GetQueryable().Include("Contact").Include("ContactGroup").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<Receivable>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             ContactGroup = model.Contact.ContactGroup.Name,
+                             model.ReceivableSource,
+                             model.ReceivableSourceId,
+                             model.Amount,
+                             model.RemainingAmount,
+                             model.PendingClearanceAmount,
+                             model.DueDate,
+                             model.CompletionDate,
+                             model.CreatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -73,8 +95,8 @@ namespace WebView.Controllers
                             receivable.Id,
                             receivable.Code,
                             receivable.ContactId,
-                            _contactService.GetObjectById(receivable.ContactId).Name,
-                            _contactGroupService.GetObjectById(_contactService.GetObjectById(receivable.ContactId).ContactGroupId).Name,
+                            receivable.Contact,
+                            receivable.ContactGroup,
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,
@@ -91,13 +113,34 @@ namespace WebView.Controllers
         public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _receivableService.GetAll().Where(d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false);
+            var q = _receivableService.GetQueryable().Include("Contact").Include("ContactGroup")
+                                      .Where(x => x.CreatedAt >= startdate && x.CreatedAt < enddate.AddDays(1) && !x.IsDeleted);
 
-            var list = query as IEnumerable<Receivable>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             ContactGroup = model.Contact.ContactGroup.Name,
+                             model.ReceivableSource,
+                             model.ReceivableSourceId,
+                             model.Amount,
+                             model.RemainingAmount,
+                             model.PendingClearanceAmount,
+                             model.DueDate,
+                             model.CompletionDate,
+                             model.CreatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -127,17 +170,16 @@ namespace WebView.Controllers
                         id = receivable.Id,
                         cell = new object[] {
                             receivable.Id,
-                            receivable.ContactId,
-                            _contactService.GetObjectById(receivable.ContactId).Name,
                             receivable.Code,
+                            receivable.ContactId,
+                            receivable.Contact,
+                            receivable.ContactGroup,
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,
-                            // receivable.AllowanceAmount,
                             receivable.DueDate,
-                            receivable.IsCompleted,
                             receivable.CompletionDate,
                             receivable.CreatedAt,
                       }

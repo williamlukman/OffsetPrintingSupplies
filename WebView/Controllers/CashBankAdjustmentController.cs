@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -33,13 +35,29 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _cashBankAdjustmentService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _cashBankAdjustmentService.GetQueryable().Include("CashBank").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<CashBankAdjustment>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.CashBankId,
+                             CashBank = model.CashBank.Name,
+                             model.Amount,
+                             model.AdjustmentDate,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -70,7 +88,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            _cashBankService.GetObjectById(model.CashBankId).Name,
+                            model.CashBank,
                             model.Amount,
                             model.AdjustmentDate,
                             model.ConfirmationDate,

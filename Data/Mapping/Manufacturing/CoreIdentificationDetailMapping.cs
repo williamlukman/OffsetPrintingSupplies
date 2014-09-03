@@ -18,6 +18,14 @@ namespace Data.Mapping
             HasRequired(cid => cid.CoreBuilder)
                 .WithMany(cb => cb.CoreIdentificationDetails)
                 .HasForeignKey(cid => cid.CoreBuilderId);
+            HasRequired(cid => cid.RollerType)
+                .WithMany()
+                .HasForeignKey(cid => cid.RollerTypeId)
+                .WillCascadeOnDelete(false);
+            HasRequired(cid => cid.Machine)
+                .WithMany()
+                .HasForeignKey(cid => cid.MachineId)
+                .WillCascadeOnDelete(false);
             Ignore(cid => cid.Errors);
         }
     }

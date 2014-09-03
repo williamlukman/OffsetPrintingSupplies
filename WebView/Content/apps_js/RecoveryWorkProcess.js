@@ -473,12 +473,12 @@
         //pager: $('#pageraccessory'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'itemid',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 600,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {

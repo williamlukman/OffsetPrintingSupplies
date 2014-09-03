@@ -34,7 +34,10 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+
         public virtual CoreIdentification CoreIdentification { get; set; }
         public virtual CoreBuilder CoreBuilder { get; set; }
+        public virtual RollerType RollerType { get; set; }
+        public virtual Machine Machine { get; set; }
     }
 }

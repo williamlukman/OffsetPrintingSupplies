@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -38,13 +40,27 @@ namespace WebView.Controllers
         public dynamic GetListItem(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _warehouseItemService.GetObjectsByWarehouseId(id);
+            var q = _warehouseItemService.GetQueryable().Include("Warehouse")
+                                         .Include("Item").Include("UoM").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<WarehouseItem>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.ItemId,
+                             ItemSku = model.Item.Sku,
+                             Item = model.Item.Name,
+                             model.Quantity,
+                             UoM = model.Item.UoM.Name,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -74,26 +90,39 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Sku,
-                            _itemService.GetObjectById(model.ItemId).Name,
+                            model.ItemSku,
+                            model.Item,
                             model.Quantity,
-                           _uoMService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name,
+                            model.UoM
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
-
         public dynamic GetListWarehouse(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _warehouseItemService.GetObjectsByItemId(id);
+            var q = _warehouseItemService.GetQueryable().Include("Warehouse")
+                                         .Include("Item").Include("UoM").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<WarehouseItem>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.WarehouseId,
+                             WarehouseCode = model.Warehouse.Code,
+                             Warehouse = model.Warehouse.Name,
+                             model.Quantity,
+                             UoM = model.Item.UoM.Name,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -123,10 +152,10 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                            model.WarehouseId,
-                           _warehouseService.GetObjectById(model.WarehouseId).Code,
-                           _warehouseService.GetObjectById(model.WarehouseId).Name,
+                           model.WarehouseCode,
+                           model.Warehouse,
                            model.Quantity,
-                           _uoMService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name,                           
+                           model.UoM,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

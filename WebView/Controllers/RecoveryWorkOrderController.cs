@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -51,8 +53,6 @@ namespace WebView.Controllers
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
         }
 
-
-
         public ActionResult Index()
         {
             return View();
@@ -61,13 +61,35 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _recoveryOrderService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _recoveryOrderService.GetQueryable().Include("CoreIdentification").Include("Warehouse").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<RecoveryOrder>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.CoreIdentificationId,
+                             WarehouseId = model.CoreIdentification.WarehouseId,
+                             WarehouseCode = model.CoreIdentification.Warehouse.Code,
+                             Warehouse = model.CoreIdentification.Warehouse.Name,
+                             model.QuantityReceived,
+                             model.QuantityFinal,
+                             model.QuantityRejected,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -100,8 +122,8 @@ namespace WebView.Controllers
                             model.Code,
                             model.CoreIdentificationId,
                             model.WarehouseId,
-                            _warehouseService.GetObjectById(model.WarehouseId).Code,
-                            _warehouseService.GetObjectById(model.WarehouseId).Name,
+                            model.WarehouseCode,
+                            model.Warehouse,
                             model.QuantityReceived,
                             model.QuantityFinal,
                             model.QuantityRejected,
@@ -114,19 +136,34 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-       
-
-
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(id).Where(d => d.IsDeleted == false);
+            var q = _recoveryOrderDetailService.GetQueryable().Include("RollerBuilder")
+                                               .Where(x => x.RecoveryOrderId == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<RecoveryOrderDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.CoreIdentificationDetailId,
+                             model.RollerBuilderId,
+                             RollerBuilder = model.RollerBuilder.Name,
+                             model.CoreTypeCase,
+                             model.CompoundUsage,
+                             model.IsRejected,
+                             model.RejectedDate,
+                             model.IsFinished,
+                             model.FinishedDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -157,7 +194,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.CoreIdentificationDetailId,
                             model.RollerBuilderId,
-                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                            model.RollerBuilder,
                             model.CoreTypeCase,
                             model.CompoundUsage,
                             model.IsRejected,
@@ -169,16 +206,47 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListDetailFinished(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
+        public dynamic GetListDetailFinishedNotDelivered(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(id).Where(d => d.IsDeleted == false);
+            var q = _recoveryOrderDetailService.GetQueryable().Include("CoreIdentificationDetail").Include("RollerBuilder")
+                                               .Where(x => x.RecoveryOrderId == id && x.IsFinished && !x.CoreIdentificationDetail.IsDelivered && !x.IsDeleted);
 
-            var list = query as IEnumerable<RecoveryOrderDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.CoreIdentificationDetailId,
+                            model.CoreIdentificationDetail.DetailId,
+                            MaterialCase = model.CoreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
+                            model.RollerBuilderId,
+                            RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
+                            RollerBuilder = model.RollerBuilder.Name,
+                            model.CoreTypeCase,
+                            model.IsDisassembled,
+                            model.IsStrippedAndGlued,
+                            model.IsWrapped,
+                            model.CompoundUsage,
+                            model.IsVulcanized,
+                            model.IsFacedOff,
+                            model.IsConventionalGrinded,
+                            model.IsCWCGrinded,
+                            model.IsPolishedAndQC,
+                            model.IsPackaged,
+                            model.IsRejected,
+                            model.RejectedDate,
+                            model.IsFinished,
+                            model.FinishedDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -207,12 +275,11 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
+                            model.DetailId,
                             model.CoreIdentificationDetailId,
-                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
+                            model.MaterialCase,
                             model.RollerBuilderId,
-                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
-                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                            model.RollerBuilder,
                             model.CoreTypeCase,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
@@ -232,8 +299,6 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
-    
 
         public dynamic GetInfo(int Id)
         {

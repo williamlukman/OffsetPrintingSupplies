@@ -19,6 +19,10 @@ namespace Data.Mapping
             HasMany(pv => pv.PaymentVoucherDetails)
                 .WithRequired(pvd => pvd.PaymentVoucher)
                 .HasForeignKey(pvd => pvd.PaymentVoucherId);
+            HasRequired(pv => pv.CashBank)
+                .WithMany()
+                .HasForeignKey(pv => pv.CashBankId)
+                .WillCascadeOnDelete(false);
             Ignore(pv => pv.Errors);
         }
     }

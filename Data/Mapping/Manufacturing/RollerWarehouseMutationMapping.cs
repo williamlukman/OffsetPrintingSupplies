@@ -18,6 +18,14 @@ namespace Data.Mapping
             HasRequired(rwm => rwm.RecoveryOrder)
                 .WithMany(ro => ro.RollerWarehouseMutations)
                 .HasForeignKey(rwm => rwm.RecoveryOrderId);
+            HasRequired(rwm => rwm.WarehouseFrom)
+                .WithMany()
+                .HasForeignKey(rwm => rwm.WarehouseFromId)
+                .WillCascadeOnDelete(false);
+            HasRequired(rwm => rwm.WarehouseTo)
+                .WithMany()
+                .HasForeignKey(rwm => rwm.WarehouseToId)
+                .WillCascadeOnDelete(false);
             Ignore(rwm => rwm.Errors);
         }
     }

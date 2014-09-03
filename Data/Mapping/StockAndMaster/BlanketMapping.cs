@@ -26,9 +26,13 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(b => b.AdhesiveId)
                 .WillCascadeOnDelete(false);
-            HasRequired(b => b.RollBlanketItem)
+            HasOptional(b => b.LeftBarItem)
                 .WithMany()
-                .HasForeignKey(b => b.RollBlanketItemId)
+                .HasForeignKey(b => b.LeftBarItemId)
+                .WillCascadeOnDelete(false);
+            HasOptional(b => b.RightBarItem)
+                .WithMany()
+                .HasForeignKey(b => b.RightBarItemId)
                 .WillCascadeOnDelete(false);
         }
     }

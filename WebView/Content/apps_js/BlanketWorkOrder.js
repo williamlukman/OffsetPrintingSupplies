@@ -50,7 +50,7 @@
     $("#list").jqGrid({
         url: base_url + 'BlanketWorkOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact', 'Warehouse', 'QTY Received', 'QTY Final',
+        colNames: ['ID', 'Code', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
                     'QTY Rejected', 'Confirmation Date', 'Created At', 'Updated At'
         ],
         colModel: [
@@ -107,6 +107,9 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#DueDateDiv').show();
+        $('#DueDateDiv2').hide();
         $('#btnContact').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
@@ -194,6 +197,10 @@
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#QuantityReceived').val(result.QuantityReceived);
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#DueDateDiv').show();
+                            $('#DueDateDiv2').hide();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#Code').removeAttr('disabled');
@@ -370,7 +377,8 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
-                QuantityReceived: $('#QuantityReceived').numberbox('getValue')
+                QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
+                DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,
             cache: false,
@@ -402,11 +410,12 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Sku', 'Name', 'Sku', 'Nama',
+        colNames: ['Id', 'Sku', 'Name', 'Sku', 'Nama',
                    'Sku', 'Name', 'Sku', 'Nama',
                    'Rejected Date' ,'Finished Date' 
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 40, align: 'right' },
                   { name: 'blanketsku', align:'right', index: 'blanketsku', width: 50, sortable: false },
                   { name: 'blanketname', index: 'blanketname', width: 70, sortable: false },
                   { name: 'rollBlanketsku', align:'right', index: 'rollBlanketsku', width: 50, sortable: false },
@@ -423,12 +432,12 @@
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'id',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() -600,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {

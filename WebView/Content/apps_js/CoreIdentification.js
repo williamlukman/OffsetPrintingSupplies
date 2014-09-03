@@ -445,12 +445,12 @@ $(document).ready(function () {
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
+        colNames: ['DetailId', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
                     'Core Sku', 'Core', 'RollerType Id', 'RollerType',
                     'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL'
         ],
         colModel: [
-                  { name: 'detailid', index: 'detailid', width: 30, sortable: false},
+                  { name: 'detailid', index: 'detailid', width: 40, sortable: false},
                   { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
@@ -471,12 +471,12 @@ $(document).ready(function () {
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'detailid',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 700,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
@@ -669,72 +669,6 @@ $(document).ready(function () {
         $("#item_div").dialog('close');
     });
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
-
-    // -------------------------------------------------------Look Up coreidentificationreceival-------------------------------------------------------
-    $('#btnCoreIdentificationReceival').click(function () {
-        var lookUpURL = base_url + 'CoreIdentificationReceival/GetListConfirmed';
-        var lookupGrid = $('#lookup_table_coreidentificationreceival');
-        lookupGrid.setGridParam({
-            url: lookUpURL
-        }).trigger("reloadGrid");
-        $('#lookup_div_coreidentificationreceival').dialog('open');
-    });
-
-    jQuery("#lookup_table_coreidentificationreceival").jqGrid({
-        url: base_url,
-        datatype: "json",
-        mtype: 'GET',
-        colNames: ['ID', 'Code', 'CoreIdentificationOrder Id', 'CoreIdentificationOrder Code', 'ReceivalDate', 'Warehouse Id', 'Warehouse Name',
-                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
-        colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'coreidentificationorderid', index: 'coreidentificationorderid', width: 100 },
-                  { name: 'coreidentificationorder', index: 'coreidentificationorder', width: 100 },
-                  { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'warehouseid', index: 'warehouseid', width: 100 },
-                  { name: 'warehousename', index: 'warehousename', width: 100 },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-        ],
-        page: '1',
-        pager: $('#lookup_pager_coreidentificationreceival'),
-        rowNum: 20,
-        rowList: [20, 30, 60],
-        sortname: 'id',
-        viewrecords: true,
-        scrollrows: true,
-        shrinkToFit: false,
-        sortorder: "ASC",
-        width: $("#lookup_div_coreidentificationreceival").width() - 10,
-        height: $("#lookup_div_coreidentificationreceival").height() - 110,
-    });
-    $("#lookup_table_coreidentificationreceival").jqGrid('navGrid', '#lookup_toolbar_coreidentificationreceival', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-
-    // Cancel or CLose
-    $('#lookup_btn_cancel_coreidentificationreceival').click(function () {
-        $('#lookup_div_coreidentificationreceival').dialog('close');
-    });
-
-    // ADD or Select Data
-    $('#lookup_btn_add_coreidentificationreceival').click(function () {
-        var id = jQuery("#lookup_table_coreidentificationreceival").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#lookup_table_coreidentificationreceival").jqGrid('getRowData', id);
-
-            $('#CoreIdentificationReceivalId').val(ret.id).data("kode", id);
-            $('#CoreIdentificationReceival').val(ret.code);
-            $('#lookup_div_coreidentificationreceival').dialog('close');
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        };
-    });
-
-
-    // ---------------------------------------------End Lookup coreidentificationreceival----------------------------------------------------------------
 
     // -------------------------------------------------------Look Up warehouse-------------------------------------------------------
     $('#btnWarehouse').click(function () {

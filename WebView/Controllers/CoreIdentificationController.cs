@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -55,13 +57,31 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _coreIdentificationService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _coreIdentificationService.GetQueryable().Include("Warehouse")
+                                              .Include("Contact").Where(x => !x.IsDeleted);
+    
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.Code,
+                            Warehouse = model.Warehouse.Name,
+                            model.IsInHouse,
+                            Contact = model.Contact.Name,
+                            model.Quantity,
+                            model.IdentifiedDate,
+                            model.ConfirmationDate,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
-            var list = query as IEnumerable<CoreIdentification>;
+            var list = query.AsEnumerable();
           
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -92,9 +112,9 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            _warehouseService.GetObjectById(model.WarehouseId).Name,
+                            model.Warehouse,
                             model.IsInHouse,
-                            model.ContactId.HasValue ?_contactService.GetObjectById(model.ContactId.Value).Name : "",
+                            model.Contact,
                             model.Quantity,
                             model.IdentifiedDate,
                             model.ConfirmationDate,
@@ -108,13 +128,42 @@ namespace WebView.Controllers
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(id).Where(d => d.IsDeleted == false);
+            var q = _coreIdentificationDetailService.GetQueryable().Include("CoreIdentification")
+                                              .Include("CoreBuilder").Include("RollerType")
+                                              .Include("Machine").Include("Item").Where(x => x.Id == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<CoreIdentificationDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.DetailId,
+                            model.CoreIdentificationId,
+                            MaterialCase = model.MaterialCase == 1 ? "New" : "Used",
+                            model.CoreBuilderId,
+                            CoreBuilderBaseSku = model.CoreBuilder.BaseSku,
+                            CoreBuilder = model.CoreBuilder.Name,
+                            model.RollerTypeId,
+                            RollerType = model.RollerType.Name,
+                            model.MachineId,
+                            Machine = model.Machine.Name,
+                            RepairRequestCase = model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
+                            model.RD,
+                            model.CD,
+                            model.RL,
+                            model.WL,
+                            model.TL,
+                            model.IsJobScheduled,
+                            model.IsRollerBuilt,
+                            model.IsDelivered
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -143,25 +192,25 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                        model.DetailId,
-                        model.CoreIdentificationId,
-                        model.MaterialCase == 1 ? "New" : "Used",
-                        model.CoreBuilderId,
-                        _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
-                        _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
-                        model.RollerTypeId,
-                        _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
-                        model.MachineId,
-                        _machineService.GetObjectById(model.MachineId).Name,
-                        model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
-                        model.RD,
-                        model.CD,
-                        model.RL,
-                        model.WL,
-                        model.TL,
-                        model.IsJobScheduled,
-                        model.IsRollerBuilt,
-                        model.IsDelivered
+                            model.DetailId,
+                            model.CoreIdentificationId,
+                            model.MaterialCase,
+                            model.CoreBuilderId,
+                            model.CoreBuilderBaseSku,
+                            model.CoreBuilder,
+                            model.RollerTypeId,
+                            model.RollerType,
+                            model.MachineId,
+                            model.Machine,
+                            model.RepairRequestCase,
+                            model.RD,
+                            model.CD,
+                            model.RL,
+                            model.WL,
+                            model.TL,
+                            model.IsJobScheduled,
+                            model.IsRollerBuilt,
+                            model.IsDelivered
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

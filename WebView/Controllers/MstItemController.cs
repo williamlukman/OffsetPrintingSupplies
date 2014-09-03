@@ -136,9 +136,8 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-
         public dynamic GetListAccessory(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
-        {   
+        {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
             string filter = null;
@@ -146,7 +145,8 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _itemService.GetQueryableAccessories(_itemService, _itemTypeService).Include("ItemType").Include("UoM");
+            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM")
+                                .Where(x => x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.Accessory && !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -154,17 +154,16 @@ namespace WebView.Controllers
                              model.Id,
                              model.Sku,
                              model.Name,
-                             model.ItemTypeId,
-                             ItemType = model.ItemType.Name,
-                             model.Category,
-                             model.Description,
-                             model.UoMId,
-                             UoM = model.UoM.Name,
                              model.Quantity,
-                             model.SellingPrice,
-                             model.AvgPrice,
                              model.PendingReceival,
                              model.PendingDelivery,
+                             model.MinimumQuantity,
+                             UoM = model.UoM.Name,
+                             model.SellingPrice,
+                             model.AvgPrice,
+                             model.Category,
+                             model.Description,
+                             ItemType = model.ItemType.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -193,32 +192,30 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Sku,
-                            item.Name,
-                            item.ItemTypeId,
-                            item.ItemType,
-                            item.Category,
-                            item.Description,
-                            item.UoMId,
-                            item.UoM,
-                            item.Quantity,
-                            item.SellingPrice,
-                            item.AvgPrice,
-                            item.PendingReceival,
-                            item.PendingDelivery,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.Sku,
+                            model.Name,
+                            model.Quantity,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.MinimumQuantity,
+                            model.UoM,
+                            model.SellingPrice,
+                            model.AvgPrice,
+                            model.Category,
+                            model.Description,
+                            model.ItemType,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
 
         public dynamic GetInfo(int Id)
         {

@@ -12,6 +12,10 @@ namespace Data.Mapping
         public StockAdjustmentMapping()
         {
             HasKey(sa => sa.Id);
+            HasRequired(sa => sa.Warehouse)
+                .WithMany()
+                .HasForeignKey(sa => sa.WarehouseId)
+                .WillCascadeOnDelete(false);
             HasMany(sa => sa.StockAdjustmentDetails)
                 .WithRequired(sad => sad.StockAdjustment)
                 .HasForeignKey(sad => sad.StockAdjustmentId);

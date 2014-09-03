@@ -15,6 +15,10 @@ namespace Data.Mapping
             HasOptional(ci => ci.Contact)
                 .WithMany(c => c.CoreIdentifications)
                 .HasForeignKey(ci => ci.ContactId);
+            HasRequired(ci => ci.Warehouse)
+                .WithMany()
+                .HasForeignKey(ci => ci.WarehouseId)
+                .WillCascadeOnDelete(false);
             HasMany(ci => ci.CoreIdentificationDetails)
                 .WithRequired(cid => cid.CoreIdentification)
                 .HasForeignKey(cid => cid.CoreIdentificationId);

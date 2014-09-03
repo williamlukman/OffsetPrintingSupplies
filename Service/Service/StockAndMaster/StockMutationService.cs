@@ -69,12 +69,12 @@ namespace Service.Service
         public StockMutation CreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
         {
             stockMutation.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.CreateObject(stockMutation) : stockMutation);
+            return (_validator.ValidCreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService) ? _repository.CreateObject(stockMutation) : stockMutation);
         }
 
         public StockMutation UpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
         {
-            return (_validator.ValidUpdateObject(stockMutation, _warehouseService, _warehouseItemService) ? _repository.UpdateObject(stockMutation) : stockMutation);
+            return (_validator.ValidUpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService) ? _repository.UpdateObject(stockMutation) : stockMutation);
         }
 
         public StockMutation SoftDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
@@ -91,8 +91,6 @@ namespace Service.Service
         {
             StockMutation stockMutation = new StockMutation();
             stockMutation.ItemId = item.Id;
-            stockMutation.WarehouseId = 0;
-            stockMutation.WarehouseItemId = 0;
             stockMutation.Quantity = purchaseOrderDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseOrder;
             stockMutation.SourceDocumentId = purchaseOrderDetail.PurchaseOrderId;
@@ -162,8 +160,6 @@ namespace Service.Service
         {
             StockMutation stockMutation = new StockMutation();
             stockMutation.ItemId = item.Id;
-            stockMutation.WarehouseId = 0;
-            stockMutation.WarehouseItemId = 0;
             stockMutation.Quantity = salesOrderDetail.Quantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.SalesOrder;
             stockMutation.SourceDocumentId = salesOrderDetail.SalesOrderId;
@@ -494,7 +490,7 @@ namespace Service.Service
             // blanket.AvgCost = _blanketService.CalculateAvgCost(blanket, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
 
             int Quantity = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            WarehouseItem warehouseItem = stockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int) stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(stockMutation.ItemId);
             Blanket blanket = _blanketService.GetObjectById(stockMutation.ItemId);
 
@@ -531,7 +527,7 @@ namespace Service.Service
             // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
 
             int Quantity = (stockMutation.Status == Constant.MutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
+            WarehouseItem warehouseItem = stockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(stockMutation.ItemId);
             Blanket blanket = _blanketService.GetObjectById(stockMutation.ItemId);
             if (warehouseItem != null) {

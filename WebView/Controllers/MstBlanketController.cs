@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -57,13 +59,46 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _blanketService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _blanketService.GetQueryable().Include("UoM").Include("ItemType").Include("Machine")
+                                                  .Include("Item").Include("Contact").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<Blanket>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.Sku,
+                            model.Name,
+                            model.RollNo,
+                            model.Quantity,
+                            UoM = model.UoM.Name,
+                            model.AC,
+                            model.AR,
+                            model.thickness,
+                            model.KS,
+                            model.Category,
+                            model.Description,
+                            ItemType = model.ItemType.Name,
+                            Machine = model.Machine.Name,
+                            Adhesive = model.Adhesive.Name,
+                            RollBlanketItem = model.RollBlanketItem.Name,
+                            LeftBarItem = model.LeftBarItem.Name,
+                            RightBarItem = model.RightBarItem.Name,
+                            Contact = model.Contact.Name,
+                            model.ApplicationCase,
+                            model.CroppingType,
+                            model.LeftOverAC,
+                            model.LeftOverAR,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -97,20 +132,20 @@ namespace WebView.Controllers
                             model.Name,
                             model.RollNo,
                             model.Quantity,
-                            _uomService.GetObjectById(model.UoMId).Name,
+                            model.UoM,
                             model.AC,
                             model.AR,
                             model.thickness,
                             model.KS,
                             model.Category,
                             model.Description,
-                            _itemTypeService.GetObjectById(model.ItemTypeId).Name,
-                            _machineService.GetObjectById(model.MachineId).Name,
-                            _itemService.GetObjectById(model.AdhesiveId).Name,
-                            _itemService.GetObjectById(model.RollBlanketItemId).Name,
-                            model.HasLeftBar ? _itemService.GetObjectById(model.LeftBarItemId.Value).Name : "",
-                            model.HasRightBar ? _itemService.GetObjectById(model.RightBarItemId.Value).Name : "",
-                            _contactService.GetObjectById(model.ContactId).Name,
+                            model.ItemType,
+                            model.Machine,
+                            model.Adhesive,
+                            model.RollBlanketItem,
+                            model.LeftBarItem,
+                            model.RightBarItem,
+                            model.Contact,
                             model.ApplicationCase,
                             model.CroppingType,
                             model.LeftOverAC,
@@ -125,13 +160,30 @@ namespace WebView.Controllers
         public dynamic GetListLookUpItems(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _blanketService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _blanketService.GetQueryable().Include("UoM").Include("ItemType").Include("Machine")
+                                                  .Include("Item").Include("Contact").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<Blanket>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Sku,
+                             model.Name,
+                             RollBlanketItemSku = model.RollBlanketItem.Sku,
+                             RollBlanketItem = model.RollBlanketItem.Name,
+                             LeftBarItemSku = model.LeftBarItem.Sku,
+                             LeftBarItem = model.LeftBarItem.Name,
+                             RightBarItemSku = model.RightBarItem.Sku,
+                             RightBarItem = model.RightBarItem.Name,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -163,12 +215,12 @@ namespace WebView.Controllers
                             model.Id,
                             model.Sku,
                             model.Name,
-                            _itemService.GetObjectById(model.RollBlanketItemId).Sku,
-                            _itemService.GetObjectById(model.RollBlanketItemId).Name,
-                            model.HasLeftBar ? _itemService.GetObjectById(model.LeftBarItemId.Value).Sku : "",
-                            model.HasLeftBar ? _itemService.GetObjectById(model.LeftBarItemId.Value).Name : "",
-                            model.HasRightBar ? _itemService.GetObjectById(model.RightBarItemId.Value).Sku : "",
-                            model.HasRightBar ? _itemService.GetObjectById(model.RightBarItemId.Value).Name : "",
+                            model.RollBlanketItemSku,
+                            model.RollBlanketItem,
+                            model.LeftBarItemSku,
+                            model.LeftBarItem,
+                            model.RightBarItemSku,
+                            model.RightBarItem
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -177,14 +229,32 @@ namespace WebView.Controllers
         public dynamic GetListRollBlanket(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            int itemtypeId = _itemTypeService.GetObjectByName("RollBlanket").Id;
-            var query = _itemService.GetAll().Where(d => d.IsDeleted == false && d.ItemTypeId == itemtypeId);
+            var q = _itemService.GetQueryable().Include("ItemType").Where(x => !x.IsDeleted && x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.RollBlanket);
 
-            var list = query as IEnumerable<Item>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Sku,
+                             model.Name,
+                             model.Category,
+                             model.Description,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.UoMId,
+                             UoM = model.UoM.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -214,15 +284,15 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
                             model.Sku,
+                            model.Name,
                             model.Category,
                             model.Description,
-                            model.UoMId,
-                            _uomService.GetObjectById(model.UoMId).Name,
                             model.Quantity,
                             model.PendingReceival,
                             model.PendingDelivery,
+                            model.UoMId,
+                            model.UoM,
                             model.CreatedAt,
                             model.UpdatedAt
                       }
@@ -233,14 +303,32 @@ namespace WebView.Controllers
         public dynamic GetListBar(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            int itemtypeId = _itemTypeService.GetObjectByName("Bar").Id;
-            var query = _itemService.GetAll().Where(d => d.IsDeleted == false && d.ItemTypeId == itemtypeId);
+            var q = _itemService.GetQueryable().Include("ItemType").Where(x => !x.IsDeleted && x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.Bar);
 
-            var list = query as IEnumerable<Item>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Sku,
+                             model.Name,
+                             model.Category,
+                             model.Description,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.UoMId,
+                             UoM = model.UoM.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -270,15 +358,15 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.Name,
                             model.Sku,
+                            model.Name,
                             model.Category,
                             model.Description,
-                            model.UoMId,
-                            _uomService.GetObjectById(model.UoMId).Name,
                             model.Quantity,
                             model.PendingReceival,
                             model.PendingDelivery,
+                            model.UoMId,
+                            model.UoM,
                             model.CreatedAt,
                             model.UpdatedAt
                       }
@@ -289,14 +377,32 @@ namespace WebView.Controllers
         public dynamic GetListAdhesive(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            int itemtypeId = _itemTypeService.GetObjectByName("Adhesive").Id;
-            var query = _itemService.GetAll().Where(d => d.IsDeleted == false && d.ItemTypeId == itemtypeId);
+            var q = _itemService.GetQueryable().Include("ItemType").Where(x => !x.IsDeleted && x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.Adhesive);
 
-            var list = query as IEnumerable<Item>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.Sku,
+                             model.Category,
+                             model.Description,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.UoMId,
+                             UoM = model.UoM.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -334,7 +440,7 @@ namespace WebView.Controllers
                             model.PendingReceival,
                             model.PendingDelivery,
                             model.UoMId,
-                            _uomService.GetObjectById(model.UoMId).Name,
+                            model.UoM,
                             model.CreatedAt,
                             model.UpdatedAt
                       }

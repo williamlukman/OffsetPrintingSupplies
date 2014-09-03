@@ -8,6 +8,9 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
+
 namespace WebView.Controllers
 {
     public class BlanketWorkProcessController : Controller
@@ -44,14 +47,48 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
+            var q = _blanketOrderDetailService.GetQueryable().Include("Blanket").Include("BlanketOrder")
+                                              .Include("Item").Where(x => !x.IsDeleted);
 
-            var query = _blanketOrderDetailService.GetAll().Where(d => d.IsDeleted == false);
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.BlanketOrderId,
+                             BlanketOrderCode = model.BlanketOrder.Code,
+                             model.BlanketId,
+                             BlanketSku = model.Blanket.Sku,
+                             Blanket = model.Blanket.Name,
+                             RollBlanketItemSku = model.Blanket.RollBlanketItem.Sku,
+                             RollBlanketItem = model.Blanket.RollBlanketItem.Name,
+                             LeftBarItemSku = model.Blanket.LeftBarItem.Sku,
+                             LeftBarItem = model.Blanket.LeftBarItem.Name,
+                             RightBarItemSku = model.Blanket.RightBarItem.Sku,
+                             RightBarItem = model.Blanket.RightBarItem.Name,
+                             model.IsCut,
+                             model.IsSideSealed,
+                             model.IsBarPrepared,
+                             model.IsAdhesiveTapeApplied,
+                             model.IsBarMounted,
+                             model.IsBarHeatPressed,
+                             model.IsBarPullOffTested,
+                             model.IsQCAndMarked,
+                             model.IsPackaged,
+                             model.IsRejected,
+                             model.RejectedDate,
+                             model.IsFinished,
+                             model.FinishedDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
-            var list = query as IEnumerable<BlanketOrderDetail>;
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -82,16 +119,16 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.BlanketOrderId,
-                            _blanketOrderService.GetObjectById(model.BlanketOrderId).Code,
+                            model.BlanketOrderCode,
                             model.BlanketId,
-                            _blanketService.GetObjectById(model.BlanketId).Sku,
-                            _blanketService.GetObjectById(model.BlanketId).Name,
-                            _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                            _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                            _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                            _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                            _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                            _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
+                            model.BlanketSku,
+                            model.Blanket,
+                            model.RollBlanketItemSku,
+                            model.RollBlanketItem,
+                            model.LeftBarItemSku,
+                            model.LeftBarItem,
+                            model.RightBarItemSku,
+                            model.RightBarItem,
                             model.IsCut,
                             model.IsSideSealed,
                             model.IsBarPrepared,
@@ -155,9 +192,6 @@ namespace WebView.Controllers
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
-
-     
-
 
         [HttpPost]
         public dynamic ProgressDetail(BlanketOrderDetail model)

@@ -19,6 +19,10 @@ namespace Data.Mapping
             HasMany(rv => rv.ReceiptVoucherDetails)
                 .WithRequired(rvd => rvd.ReceiptVoucher)
                 .HasForeignKey(rvd => rvd.ReceiptVoucherId);
+            HasRequired(rv => rv.CashBank)
+                .WithMany()
+                .HasForeignKey(rv => rv.CashBankId)
+                .WillCascadeOnDelete(false);
             Ignore(rv => rv.Errors);
         }
     }

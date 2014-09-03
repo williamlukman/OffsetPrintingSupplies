@@ -33,5 +33,7 @@ namespace Core.DomainModel
         public virtual Item Adhesive { get; set; }
         public virtual ICollection<BlanketOrderDetail> BlanketOrderDetails { get; set; }
         public virtual Item RollBlanketItem { get; set; }
+        public virtual Item LeftBarItem { get; set; }
+        public virtual Item RightBarItem { get; set; }
     }
 }

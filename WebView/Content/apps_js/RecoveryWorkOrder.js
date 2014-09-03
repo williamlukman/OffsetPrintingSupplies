@@ -113,6 +113,9 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#DueDateDiv').show();
+        $('#DueDateDiv2').hide();
         $('#btnCoreIdentification').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
@@ -121,7 +124,6 @@
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
-
 
     $('#btn_add_detail').click(function () {
         ClearData();
@@ -200,6 +202,10 @@
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#QuantityReceived').val(result.QuantityReceived);
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#DueDateDiv').show();
+                            $('#DueDateDiv2').hide();
                             $('#btnCoreIdentification').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#Code').removeAttr('disabled');
@@ -376,7 +382,8 @@
             data: JSON.stringify({
                 Id: id, CoreIdentificationId: $("#CoreIdentificationId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
-                QuantityReceived: $('#QuantityReceived').numberbox('getValue')
+                QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
+                DueDate: $('#DueDate').datebox('getValue')
             }),
             async: false,
             cache: false,
@@ -430,12 +437,12 @@
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'coreidentificationdetailid',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 600,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {

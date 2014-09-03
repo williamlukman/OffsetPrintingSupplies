@@ -16,6 +16,8 @@ namespace Core.DomainModel
         public int QuantityRejected { get; set; }
         public int QuantityFinal { get; set; }
         public bool IsConfirmed { get; set; }
+        public bool HasDueDate { get; set; }
+        public Nullable<DateTime> DueDate { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
 
         public bool IsCompleted { get; set; }

@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -75,13 +77,34 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _coreBuilderService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _coreBuilderService.GetQueryable().Include("Machine").Include("Item")
+                                                      .Include("UoM").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<CoreBuilder>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.BaseSku,
+                             model.Name,
+                             model.Description,
+                             Machine = model.Machine.Name,
+                             model.CoreBuilderTypeCase,
+                             model.SkuUsedCore,
+                             UsedCoreItemQuantity = model.UsedCoreItem.Quantity,
+                             model.SkuNewCore,
+                             NewCoreItemQuantity = model.NewCoreItem.Quantity,
+                             UoM = model.UoM.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -105,25 +128,25 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.BaseSku,
-                            item.Name,
-                            item.Description,
-                            _machineService.GetObjectById(item.MachineId).Name,
-                            item.CoreBuilderTypeCase,
-                            item.SkuUsedCore, 
-                            _itemService.GetObjectById(item.UsedCoreItemId).Quantity,
-                            _uomService.GetObjectById(item.UoMId).Name,
-                            item.SkuNewCore,
-                            _itemService.GetObjectById(item.NewCoreItemId).Quantity,
-                            _uomService.GetObjectById(item.UoMId).Name,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.BaseSku,
+                            model.Name,
+                            model.Description,
+                            model.Machine,
+                            model.CoreBuilderTypeCase,
+                            model.SkuUsedCore, 
+                            model.UsedCoreItemQuantity,
+                            model.UoM,
+                            model.SkuNewCore,
+                            model.NewCoreItemQuantity,
+                            model.UoM,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
