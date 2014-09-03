@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -35,14 +37,28 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _cashBankMutationService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _cashBankMutationService.GetQueryable().Include("CashBank").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<CashBankMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             SourceCashBank = model.SourceCashBank.Name,
+                             TargetCashBank = model.TargetCashBank.Name,
+                             model.Amount,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
+            var list = query.AsEnumerable();
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
             var totalRecords = query.Count();
@@ -72,8 +88,8 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            _cashBankService.GetObjectById(model.SourceCashBankId).Name,
-                            _cashBankService.GetObjectById(model.TargetCashBankId).Name,
+                            model.SourceCashBank,
+                            model.TargetCashBank,
                             model.Amount,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -212,6 +228,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
     }
 }

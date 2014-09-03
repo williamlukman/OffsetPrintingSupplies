@@ -61,7 +61,7 @@ namespace Validation.Validation
         }
 
         public StockAdjustment VDetailsAreVerifiedConfirmable(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             IList<StockAdjustmentDetail> details = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
             foreach (var stockAdjustmentDetail in details)
@@ -120,7 +120,7 @@ namespace Validation.Validation
         }
 
         public StockAdjustment VConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(stockAdjustment);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
@@ -128,12 +128,12 @@ namespace Validation.Validation
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VHasStockAdjustmentDetails(stockAdjustment, _stockAdjustmentDetailService);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
-            VDetailsAreVerifiedConfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
+            VDetailsAreVerifiedConfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService);
             return stockAdjustment;
         }
 
         public StockAdjustment VUnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             VHasBeenConfirmed(stockAdjustment);
             return stockAdjustment;
@@ -160,18 +160,18 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                       IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             stockAdjustment.Errors.Clear();
-            VConfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
+            VConfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService);
             return isValid(stockAdjustment);
         }
 
         public bool ValidUnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                         IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                         IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             stockAdjustment.Errors.Clear();
-            VUnconfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _barringService, _warehouseItemService);
+            VUnconfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService);
             return isValid(stockAdjustment);
         }
 

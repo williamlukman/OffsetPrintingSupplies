@@ -41,12 +41,12 @@ namespace Service.Service
 
         public Machine GetObjectByCode(string Code)
         {
-            return _repository.FindAll(c => c.Code == Code && !c.IsDeleted).FirstOrDefault();
+            return _repository.GetObjectByCode(Code);
         }
 
         public Machine GetObjectByName(string name)
         {
-            return _repository.FindAll(c => c.Name == name && !c.IsDeleted).FirstOrDefault();
+            return _repository.GetObjectByName(name);
         }
 
         public Machine CreateObject(string Code, string Name, string Description)
@@ -71,9 +71,9 @@ namespace Service.Service
             return (machine = _validator.ValidUpdateObject(machine, this) ? _repository.UpdateObject(machine) : machine);
         }
 
-        public Machine SoftDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService)
+        public Machine SoftDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBlanketService _blanketService)
         {
-            return (machine = _validator.ValidDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService, _barringService) ? _repository.SoftDeleteObject(machine) : machine);
+            return (machine = _validator.ValidDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService, _blanketService) ? _repository.SoftDeleteObject(machine) : machine);
         }
 
         public bool DeleteObject(int Id)

@@ -23,9 +23,9 @@ namespace OffsetPrintingSupplies
                 db.DeleteAllTables();
 
                 DataBuilder d = new DataBuilder();
-        
+
                 DataFunction(d);
-        
+
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();
 
@@ -34,7 +34,7 @@ namespace OffsetPrintingSupplies
 
         public static void DataFunction(DataBuilder d)
         {
-            d.PopulateData();
+           d.PopulateData();
         }
     }
 }

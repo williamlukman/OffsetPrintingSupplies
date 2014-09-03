@@ -52,12 +52,12 @@ namespace Validation.Validation
             return machine;
         }
 
-        public Machine VIsNotInBarring(Machine machine, IBarringService _barringService)
+        public Machine VIsNotInBlanket(Machine machine, IBlanketService _blanketService)
         {
-            IList<Barring> barrings = _barringService.GetObjectsByMachineId(machine.Id);
-            if (barrings.Any())
+            IList<Blanket> blankets = _blanketService.GetObjectsByMachineId(machine.Id);
+            if (blankets.Any())
             {
-                machine.Errors.Add("Generic", "Machine masih memiliki asosiasi dengan Barring");
+                machine.Errors.Add("Generic", "Machine masih memiliki asosiasi dengan Blanket");
             }
             return machine;
         }
@@ -77,13 +77,13 @@ namespace Validation.Validation
         }
 
         public Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService,
-                                     ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService)
+                                     ICoreIdentificationDetailService _coreIdentificationDetailService, IBlanketService _blanketService)
         {
             VIsNotInCoreIdentificationDetail(machine, _coreIdentificationDetailService);
             if (!isValid(machine)) { return machine; }
             VIsNotInRollerBuilder(machine, _rollerBuilderService);
             if (!isValid(machine)) { return machine; }
-            VIsNotInBarring(machine, _barringService);
+            VIsNotInBlanket(machine, _blanketService);
             return machine;
         }
 
@@ -101,10 +101,10 @@ namespace Validation.Validation
         }
 
         public bool ValidDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService,
-                                      ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService)
+                                      ICoreIdentificationDetailService _coreIdentificationDetailService, IBlanketService _blanketService)
         {
             machine.Errors.Clear();
-            VDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService, _barringService);
+            VDeleteObject(machine, _rollerBuilderService, _coreIdentificationDetailService, _blanketService);
             return isValid(machine);
         }
 

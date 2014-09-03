@@ -60,7 +60,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
+                    Description = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -109,7 +109,7 @@ namespace TestValidation
 
             it["delete_machine"] = () =>
             {
-                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService, d._barringService);
+                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService, d._blanketService);
                 d.machine.Errors.Count().should_be(0);
             };
 
@@ -121,10 +121,13 @@ namespace TestValidation
                     SkuNewCore = "CB00001N",
                     SkuUsedCore = "CB00001U",
                     Name = "CoreBuilder00001",
-                    Category = "X",
-                    UoMId = d.Pcs.Id
+                    Description = "X",
+                    UoMId = d.Pcs.Id,
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
+                                                                   d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     ContactId = null,
@@ -153,7 +156,7 @@ namespace TestValidation
                 d.stockAD1 = d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._barringService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService);
 
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
                 {
@@ -171,7 +174,7 @@ namespace TestValidation
                 };
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail,
                            d._coreIdentificationService, d._coreBuilderService, d._rollerTypeService, d._machineService, d._warehouseItemService);
-                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService, d._barringService);
+                d.machine = d._machineService.SoftDeleteObject(d.machine, d._rollerBuilderService, d._coreIdentificationDetailService, d._blanketService);
                 d.machine.Errors.Count().should_not_be(0);
             };
         }

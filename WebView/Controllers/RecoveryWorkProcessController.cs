@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -17,10 +19,10 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IWarehouseService _warehouseService;
-        private IBarringOrderService _barringOrderService;
-        private IBarringOrderDetailService _barringOrderDetailService;
+        private IBlanketOrderService _blanketOrderService;
+        private IBlanketOrderDetailService _blanketOrderDetailService;
         private IContactService _contactService;
         private IRecoveryOrderService _recoveryOrderService;
         private IRecoveryOrderDetailService _recoveryOrderDetailService;
@@ -36,11 +38,11 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-            _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
-            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
+            _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
+            _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
             _recoveryOrderService = new RecoveryOrderService(new RecoveryOrderRepository(), new RecoveryOrderValidator());
             _recoveryOrderDetailService = new RecoveryOrderDetailService(new RecoveryOrderDetailRepository(), new RecoveryOrderDetailValidator());
             _recoveryAccessoryDetailService = new RecoveryAccessoryDetailService(new RecoveryAccessoryDetailRepository(), new RecoveryAccessoryDetailValidator());
@@ -60,14 +62,46 @@ namespace WebView.Controllers
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
-            // Construct where statement
-
+                        // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _recoveryOrderDetailService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _recoveryOrderDetailService.GetQueryable().Include("CoreIdentificationDetail").Include("RollerBuilder")
+                                               .Where(x => !x.CoreIdentificationDetail.IsDelivered && !x.IsDeleted);
 
-            var list = query as IEnumerable<RecoveryOrderDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.RecoveryOrderId,
+                            model.CoreIdentificationDetail.DetailId,
+                            model.CoreIdentificationDetailId,
+                            MaterialCase = model.CoreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used",
+                            model.RollerBuilderId,
+                            RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
+                            RollerBuilder = model.RollerBuilder.Name,
+                            model.CoreTypeCase,
+                            model.IsDisassembled,
+                            model.IsStrippedAndGlued,
+                            model.IsWrapped,
+                            model.CompoundUsage,
+                            model.IsVulcanized,
+                            model.IsFacedOff,
+                            model.IsConventionalGrinded,
+                            model.IsCWCGrinded,
+                            model.IsPolishedAndQC,
+                            model.IsPackaged,
+                            model.RejectedDate,
+                            model.FinishedDate,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -97,15 +131,13 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.RecoveryOrderId,
-                             _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
+                            model.DetailId,
                             model.CoreIdentificationDetailId,
-                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
+                            model.MaterialCase,
                             model.RollerBuilderId,
-                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
-                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                            model.RollerBuilderBaseSku,
+                            model.RollerBuilder,
                             model.CoreTypeCase,
-                            model.Acc,
-                            model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
@@ -120,89 +152,34 @@ namespace WebView.Controllers
                             model.FinishedDate,
                             model.CreatedAt,
                             model.UpdatedAt,
-                      }
-                    }).ToArray()
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-        public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
-        {
-            // Construct where statement
-
-            string strWhere = GeneralFunction.ConstructWhere(filters);
-
-            // Get Data
-            var query = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(id).Where(d => d.IsDeleted == false);
-
-            var list = query as IEnumerable<RecoveryOrderDetail>;
-
-            var pageIndex = Convert.ToInt32(page) - 1;
-            var pageSize = rows;
-            var totalRecords = query.Count();
-            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
-            // default last page
-            if (totalPages > 0)
-            {
-                if (!page.HasValue)
-                {
-                    pageIndex = totalPages - 1;
-                    page = totalPages;
-                }
-            }
-
-            list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
-            return Json(new
-            {
-                total = totalPages,
-                page = page,
-                records = totalRecords,
-                rows = (
-                    from model in list
-                    select new
-                    {
-                        id = model.Id,
-                        cell = new object[] {
-                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
-                            model.CoreIdentificationDetailId,
-                            _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
-                            model.RollerBuilderId,
-                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
-                            _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
-                            model.CoreTypeCase,
-                            model.Acc,
-                            model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
-                            model.IsDisassembled,
-                            model.IsStrippedAndGlued,
-                            model.IsWrapped,
-                            model.CompoundUsage,
-                            model.IsVulcanized,
-                            model.IsFacedOff,
-                            model.IsConventionalGrinded,
-                            model.IsCWCGrinded,
-                            model.IsPolishedAndQC,
-                            model.IsPackaged,
-                            model.IsRejected,
-                            model.RejectedDate,
-                            model.IsFinished,
-                            model.FinishedDate
                         }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
-  
-
         public dynamic GetListAccessory(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(id).Where(d => d.IsDeleted == false);
+            var q = _recoveryAccessoryDetailService.GetQueryable().Include("Item")
+                                                   .Where(x => x.RecoveryOrderDetailId == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<RecoveryAccessoryDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.ItemId,
+                             ItemSku = model.Item.Sku,
+                             Item = model.Item.Name,
+                             model.Quantity
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -232,8 +209,8 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Sku,
-                            _itemService.GetObjectById(model.ItemId).Name,
+                            model.ItemSku,
+                            model.Item,
                             model.Quantity
                         }
                     }).ToArray()
@@ -265,8 +242,6 @@ namespace WebView.Controllers
                 RollerBuilderSku = _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                 model.CoreTypeCase,
-                model.Acc,
-                RepairRequestCase =  model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
                 model.IsWrapped,
@@ -309,8 +284,6 @@ namespace WebView.Controllers
                 model.RollerBuilderId,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
                 model.CoreTypeCase,
-                model.Acc,
-                RepairRequestCase = model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
                 model.IsWrapped,
@@ -477,7 +450,7 @@ namespace WebView.Controllers
                 model = _recoveryOrderDetailService.FinishObject(data, model.FinishedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
                     _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,
-                    _barringService,_stockMutationService);
+                    _blanketService,_stockMutationService);
             }
             catch (Exception ex)
             {
@@ -500,7 +473,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.UnfinishObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService
-                    ,_coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_barringService
+                    ,_coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService
                     ,_stockMutationService);
             }
             catch (Exception ex)
@@ -523,7 +496,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.RejectObject(data,model.RejectedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,_coreBuilderService
-                    ,_rollerBuilderService,_itemService,_warehouseItemService,_barringService,_stockMutationService);
+                    ,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService);
             }
             catch (Exception ex)
             {
@@ -546,7 +519,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.UndoRejectObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
-                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_barringService,_stockMutationService);
+                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService);
             }
             catch (Exception ex)
             {

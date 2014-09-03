@@ -70,8 +70,7 @@ namespace Service.Service
                 PaymentDate = paymentDate,
                 TotalAmount = totalAmount,
                 IsGBCH = IsGBCH,
-                DueDate = DueDate,
-                IsBank = IsBank
+                DueDate = DueDate
             };
             return this.CreateObject(paymentVoucher, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
         }

@@ -409,9 +409,10 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Sales Order Detail Id', 'SOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price'
+        colNames: ['Id', 'Code', 'Sales Order Detail Id', 'SOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price'
         ],
         colModel: [
+                  { name: 'code', index: 'code', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'salesorderdetailid', index: 'salesorderdetailid', width: 100, sortable: false, hidden: true },
                   { name: 'salesorderdetailcode', index: 'salesorderdetailcode', width: 70, sortable: false },
@@ -425,12 +426,12 @@
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'id',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 700,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
@@ -720,9 +721,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Code', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
+                   { name: 'code', index: 'code', width: 80 },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_warehouse'),

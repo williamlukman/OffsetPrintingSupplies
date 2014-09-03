@@ -65,9 +65,9 @@ namespace Service.Service
             return (warehouse = _validator.ValidUpdateObject(warehouse, this) ? _repository.UpdateObject(warehouse) : warehouse);
         }
 
-        public Warehouse SoftDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, IBarringOrderService _barringOrderService)
+        public Warehouse SoftDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, IBlanketOrderService _blanketOrderService)
         {
-            if (_validator.ValidDeleteObject(warehouse, _warehouseItemService, _coreIdentificationService, _barringOrderService))
+            if (_validator.ValidDeleteObject(warehouse, _warehouseItemService, _coreIdentificationService, _blanketOrderService))
             {
                 IList<WarehouseItem> allwarehouseitems = _warehouseItemService.GetObjectsByWarehouseId(warehouse.Id);
                 foreach (var warehouseitem in allwarehouseitems)

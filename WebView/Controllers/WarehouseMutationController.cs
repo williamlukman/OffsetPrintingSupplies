@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -18,7 +20,7 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IWarehouseMutationService _warehouseMutationService;
         private IWarehouseMutationDetailService _warehouseMutationDetailService;
         private IUoMService _uomService;
@@ -29,12 +31,11 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _warehouseMutationService = new WarehouseMutationService(new WarehouseMutationRepository(), new WarehouseMutationValidator());
             _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
         }
-
 
         public ActionResult Index()
         {
@@ -44,13 +45,28 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _warehouseMutationService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _warehouseMutationService.GetQueryable().Include("Warehouse").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<WarehouseMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             WarehouseFrom = model.WarehouseFrom.Name,
+                             WarehouseTo = model.WarehouseTo.Name,
+                             model.MutationDate,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -81,8 +97,8 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            _warehouseService.GetObjectById(model.WarehouseFromId).Name,
-                            _warehouseService.GetObjectById(model.WarehouseToId).Name,
+                            model.WarehouseFrom,
+                            model.WarehouseTo,
                             model.MutationDate,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -95,13 +111,27 @@ namespace WebView.Controllers
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _warehouseMutationDetailService.GetObjectsByWarehouseMutationId(id).Where(d => d.IsDeleted == false);
+            var q = _warehouseMutationDetailService.GetQueryable().Include("Item").Include("UoM")
+                                                   .Where(x => x.WarehouseMutationId == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<WarehouseMutationDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             ItemSku = model.Item.Sku,
+                             Item = model.Item.Name,
+                             model.Quantity,
+                             UoM = model.Item.UoM.Name,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -130,11 +160,12 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            model.Id,
                             model.Code,
-                            _itemService.GetObjectById(model.ItemId).Sku,
-                            _itemService.GetObjectById(model.ItemId).Name,
+                            model.ItemSku,
+                            model.Item,
                             model.Quantity,
-                            _uomService.GetObjectById(_itemService.GetObjectById(model.ItemId).UoMId).Name
+                            model.UoM
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -320,7 +351,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _warehouseMutationService.GetObjectById(model.Id);
-                model = _warehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_warehouseMutationDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
+                model = _warehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_warehouseMutationDetailService,_itemService,_blanketService,_warehouseItemService,_stockMutationService);
             }
             catch (Exception ex)
             {
@@ -341,7 +372,7 @@ namespace WebView.Controllers
             {
 
                 var data = _warehouseMutationService.GetObjectById(model.Id);
-                model = _warehouseMutationService.UnconfirmObject(data,_warehouseMutationDetailService,_itemService,_barringService,_warehouseItemService,_stockMutationService);
+                model = _warehouseMutationService.UnconfirmObject(data,_warehouseMutationDetailService,_itemService,_blanketService,_warehouseItemService,_stockMutationService);
             }
             catch (Exception ex)
             {

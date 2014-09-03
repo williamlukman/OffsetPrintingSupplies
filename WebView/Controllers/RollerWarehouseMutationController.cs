@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -17,7 +19,7 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IRollerWarehouseMutationService _rollerWarehouseMutationService;
         private IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService;
         private IContactService _contactService;
@@ -36,7 +38,7 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _rollerWarehouseMutationService = new RollerWarehouseMutationService(new RollerWarehouseMutationRepository(), new RollerWarehouseMutationValidator());
             _rollerWarehouseMutationDetailService = new RollerWarehouseMutationDetailService(new RollerWarehouseMutationDetailRepository(), new RollerWarehouseMutationDetailValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -59,13 +61,36 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _rollerWarehouseMutationService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _rollerWarehouseMutationService.GetQueryable().Include("RecoveryOrder").Include("Warehouse")
+                                                   .Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<RollerWarehouseMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.RecoveryOrderId,
+                             RecoveryOrderCode = model.RecoveryOrder.Code,
+                             model.WarehouseFromId,
+                             WarehouseFromCode = model.WarehouseFrom.Code,
+                             WarehouseFrom = model.WarehouseFrom.Name,
+                             model.WarehouseToId,
+                             WarehouseToCode = model.WarehouseTo.Code,
+                             WarehouseTo = model.WarehouseTo.Name,
+                             model.Quantity,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -97,13 +122,13 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.RecoveryOrderId,
-                            _recoveryOrderService.GetObjectById(model.RecoveryOrderId).Code,
+                            model.RecoveryOrderCode,
                             model.WarehouseFromId,
-                            _warehouseService.GetObjectById(model.WarehouseFromId).Code,
-                            _warehouseService.GetObjectById(model.WarehouseFromId).Name,
+                            model.WarehouseFromCode,
+                            model.WarehouseFrom,
                             model.WarehouseToId,
-                            _warehouseService.GetObjectById(model.WarehouseToId).Code,
-                            _warehouseService.GetObjectById(model.WarehouseToId).Name,
+                            model.WarehouseToCode,
+                            model.WarehouseTo,
                             model.Quantity,
                             model.IsConfirmed,
                             model.ConfirmationDate,
@@ -117,13 +142,30 @@ namespace WebView.Controllers
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _rollerWarehouseMutationDetailService.GetObjectsByRollerWarehouseMutationId(id).Where(d => d.IsDeleted == false);
+            var q = _rollerWarehouseMutationDetailService.GetQueryable().Include("RecoveryOrderDetail")
+                                                         .Include("CoreIdentificationDetail").Include("Item")
+                                                         .Where(x => x.RollerWarehouseMutationId == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<RollerWarehouseMutationDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             DetailId = model.RecoveryOrderDetail.CoreIdentificationDetail.DetailId,
+                             model.Code,
+                             model.RollerWarehouseMutationId,
+                             model.RecoveryOrderDetailId,
+                             model.ItemId,
+                             ItemSku = model.Item.Sku,
+                             Item = model.Item.Name,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -152,15 +194,13 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                            _coreIdentificationDetailService.GetObjectById(_recoveryOrderDetailService.GetObjectById
-                                (model.RecoveryOrderDetailId).CoreIdentificationDetailId).DetailId,
+                            model.DetailId,
                             model.Code,
                             model.RollerWarehouseMutationId,
                             model.RecoveryOrderDetailId,
                             model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Sku,
-                            _itemService.GetObjectById(model.ItemId).Name,
-                            
+                            model.ItemSku,
+                            model.Item,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -366,7 +406,7 @@ namespace WebView.Controllers
             {
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
                 model = _rollerWarehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value
-                    ,_rollerWarehouseMutationDetailService,_itemService,_barringService
+                    ,_rollerWarehouseMutationDetailService,_itemService,_blanketService
                     ,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService, _coreIdentificationDetailService,_coreIdentificationService);
             }
             catch (Exception ex)
@@ -389,7 +429,7 @@ namespace WebView.Controllers
 
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
                 model = _rollerWarehouseMutationService.UnconfirmObject(data,_rollerWarehouseMutationDetailService,
-                    _itemService,_barringService,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService,
+                    _itemService,_blanketService,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService,
                     _coreIdentificationDetailService,_coreIdentificationService);
             }
             catch (Exception ex)

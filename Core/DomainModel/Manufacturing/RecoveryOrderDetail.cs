@@ -15,8 +15,6 @@ namespace Core.DomainModel
         public int CompoundUsage { get; set; }
 
         public string CoreTypeCase { get; set; }
-        public string Acc { get; set; }
-        public int RepairRequestCase { get; set; }
         public bool IsDisassembled { get; set; }
         public bool IsStrippedAndGlued { get; set; }
         public bool IsWrapped { get; set; }

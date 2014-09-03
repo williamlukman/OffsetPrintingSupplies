@@ -37,10 +37,10 @@ namespace Core.Interface.Service
         CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
         CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService,
                                               ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                              IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                 ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                                IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail BuildRoller(CoreIdentificationDetail coreIdentificationDetail);

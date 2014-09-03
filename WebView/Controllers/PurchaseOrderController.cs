@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -17,7 +19,7 @@ namespace WebView.Controllers
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IPurchaseOrderService _purchaseOrderService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IContactService _contactService;
@@ -29,7 +31,7 @@ namespace WebView.Controllers
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -37,8 +39,6 @@ namespace WebView.Controllers
             _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
      
         }
-
-
 
         public ActionResult Index()
         {
@@ -48,13 +48,29 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _purchaseOrderService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _purchaseOrderService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<PurchaseOrder>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             model.PurchaseDate,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -86,7 +102,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.ContactId,
-                            _contactService.GetObjectById(model.ContactId).Name,
+                            model.Contact,
                             model.PurchaseDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
@@ -100,14 +116,30 @@ namespace WebView.Controllers
         public dynamic GetListConfirmedNotCompleted(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
+            var q = _purchaseOrderService.GetQueryable().Include("Contact")
+                                         .Where(x => x.IsConfirmed && !x.IsReceivalCompleted && !x.IsDeleted);
 
-            var query = _purchaseOrderService.GetQueryable().Where(d => d.IsConfirmed && !d.IsReceivalCompleted && !d.IsDeleted);
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             model.PurchaseDate,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
-            var list = query as IEnumerable<PurchaseOrder>;
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -139,7 +171,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.ContactId,
-                            _contactService.GetObjectById(model.ContactId).Name,
+                            model.Contact,
                             model.PurchaseDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
@@ -150,17 +182,32 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id,string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query =  _purchaseOrderDetailService.GetObjectsByPurchaseOrderId(id).Where(d => d.IsDeleted == false);
+            var q = _purchaseOrderDetailService.GetQueryable().Include("Item")
+                                               .Where(x => x.PurchaseOrderId == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<PurchaseOrderDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ItemId,
+                             ItemSku =  model.Item.Sku,
+                             Item = model.Item.Name,
+                             model.Quantity,
+                             model.PendingReceivalQuantity,
+                             model.Price
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -189,10 +236,11 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            model.Id,
                             model.Code,
                             model.ItemId,
-                            _itemService.GetObjectById(model.ItemId).Sku,
-                            _itemService.GetObjectById(model.ItemId).Name,
+                            model.ItemSku,
+                            model.Item,
                             model.Quantity,
                             model.PendingReceivalQuantity,
                             model.Price
@@ -200,7 +248,6 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
 
         public dynamic GetInfo(int Id)
         {
@@ -381,7 +428,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseOrderService.GetObjectById(model.Id);
-                model = _purchaseOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseOrderDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _purchaseOrderService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseOrderDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService);
             }
             catch (Exception ex)
             {
@@ -402,7 +449,7 @@ namespace WebView.Controllers
             {
 
                 var data = _purchaseOrderService.GetObjectById(model.Id);
-                model = _purchaseOrderService.UnconfirmObject(data,_purchaseOrderDetailService,_purchaseReceivalService,_purchaseReceivalDetailService,_stockMutationService,_itemService,_barringService,_warehouseItemService);
+                model = _purchaseOrderService.UnconfirmObject(data,_purchaseOrderDetailService,_purchaseReceivalService,_purchaseReceivalDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService);
             }
             catch (Exception ex)
             {

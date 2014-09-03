@@ -22,11 +22,11 @@ namespace Core.Interface.Service
                                          IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IContactService _contactService,
                                          IPriceMutationService _priceMutationService, IReceivableService _receivableService,
                                          IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService,
-                                         IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService);
+                                         IWarehouseService _warehouseService, IItemService _itemService, IBlanketService _blanketService, IStockMutationService _stockMutationService);
         RetailSalesInvoice UnconfirmObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService,
                                            IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                            IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService,
-                                           IBarringService _barringService, IStockMutationService _stockMutationService);
+                                           IBlanketService _blanketService, IStockMutationService _stockMutationService);
         RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, ICashBankService _cashBankService, IReceivableService _receivableService,
                                            IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, IContactService _contactService);
         RetailSalesInvoice UnpaidObject(RetailSalesInvoice retailSalesInvoice, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService);

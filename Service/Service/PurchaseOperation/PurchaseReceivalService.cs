@@ -85,7 +85,7 @@ namespace Service.Service
         public PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, DateTime ConfirmationDate, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                               IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                               IStockMutationService _stockMutationService, IItemService _itemService,
-                                              IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                              IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             purchaseReceival.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService))
@@ -94,7 +94,7 @@ namespace Service.Service
                 foreach (var detail in purchaseReceivalDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _purchaseReceivalDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    _purchaseReceivalDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(purchaseReceival);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
@@ -107,7 +107,7 @@ namespace Service.Service
                                                 IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                                 IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                                 IStockMutationService _stockMutationService, IItemService _itemService,
-                                                IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(purchaseReceival, _purchaseInvoiceService))
             {
@@ -117,7 +117,7 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseReceivalDetailService.UnconfirmObject(detail, this, _purchaseOrderService, _purchaseOrderDetailService,
                                                                    _purchaseInvoiceDetailService, _stockMutationService, _itemService,
-                                                                   _barringService, _warehouseItemService);
+                                                                   _blanketService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(purchaseReceival);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);

@@ -92,6 +92,16 @@ namespace Validation.Validation
             return rollerBuilder;
         }
 
+        public RollerBuilder VHasAdhesive(RollerBuilder rollerBuilder, IItemService _itemService)
+        {
+            Item adhesive = _itemService.GetObjectById(rollerBuilder.AdhesiveId);
+            if (adhesive == null)
+            {
+                rollerBuilder.Errors.Add("AdhesiveId", "Tidak terasosiasi dengan adhesive");
+            }
+            return rollerBuilder;
+        }
+
         public RollerBuilder VHasMeasurement(RollerBuilder rollerBuilder)
         {
             if (rollerBuilder.CD <= 0) { rollerBuilder.Errors.Add("CD", "Tidak boleh 0 atau negatif"); return rollerBuilder; }
@@ -108,6 +118,38 @@ namespace Validation.Validation
             if (uom == null)
             {
                 rollerBuilder.Errors.Add("UoMId", "Tidak terasosiasi dengan unit of measurement");
+            }
+            return rollerBuilder;
+        }
+
+        public RollerBuilder VIfIsCrowningThenHasCrowningSize(RollerBuilder rollerBuilder)
+        {
+            if (rollerBuilder.IsCrowning)
+            {
+                if (rollerBuilder.CrowningSize == 0 || rollerBuilder.CrowningSize == null)
+                {
+                    rollerBuilder.Errors.Add("CrowningSize", "Harus diisi");
+                }
+            }
+            return rollerBuilder;
+        }
+
+        public RollerBuilder VIfIsGroovingThenHasDimensions(RollerBuilder rollerBuilder)
+        {
+            if (rollerBuilder.IsGrooving)
+            {
+                if (rollerBuilder.GroovingDepth == 0 || rollerBuilder.GroovingDepth == null)
+                {
+                    rollerBuilder.Errors.Add("GroovingPosition", "Dimension harus diisi");
+                }
+                else if (rollerBuilder.GroovingWidth == 0 || rollerBuilder.GroovingWidth == null)
+                {
+                    rollerBuilder.Errors.Add("GroovingPosition", "Dimension harus diisi");
+                }
+                else if (rollerBuilder.GroovingPosition == 0 || rollerBuilder.GroovingPosition == null)
+                {
+                    rollerBuilder.Errors.Add("GroovingPosition", "Dimension harus diisi");
+                }
             }
             return rollerBuilder;
         }
@@ -140,6 +182,12 @@ namespace Validation.Validation
             VHasMeasurement(rollerBuilder);
             if (!isValid(rollerBuilder)) { return rollerBuilder; }
             VHasUoM(rollerBuilder, _uomService);
+            if (!isValid(rollerBuilder)) { return rollerBuilder; }
+            VHasAdhesive(rollerBuilder, _itemService);
+            if (!isValid(rollerBuilder)) { return rollerBuilder; }
+            VIfIsCrowningThenHasCrowningSize(rollerBuilder);
+            if (!isValid(rollerBuilder)) { return rollerBuilder; }
+            VIfIsGroovingThenHasDimensions(rollerBuilder);
             return rollerBuilder;
         }
 

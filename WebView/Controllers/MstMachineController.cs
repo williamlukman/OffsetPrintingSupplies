@@ -8,24 +8,26 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
     public class MstMachineController : Controller
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("MachineController");
-        private IMachineService _MachineService;
+        private IMachineService _machineService;
         private IItemService _itemService;
         private IRollerBuilderService _rollerBuilderService;
         private ICoreIdentificationDetailService _coreIdentificationDetailService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         public MstMachineController()
         {
-            _MachineService = new MachineService(new MachineRepository(),new MachineValidator());
+            _machineService = new MachineService(new MachineRepository(),new MachineValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
         }
 
 
@@ -37,13 +39,26 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _MachineService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _machineService.GetQueryable().Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<Machine>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.Name,
+                             model.Description,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -67,17 +82,17 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Code,
-                            item.Name,
-                            item.Description,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.Code,
+                            model.Name,
+                            model.Description,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -88,7 +103,7 @@ namespace WebView.Controllers
             Machine model = new Machine();
             try
             {
-              model = _MachineService.GetObjectById(Id);
+              model = _machineService.GetObjectById(Id);
            
             }
             catch (Exception ex)
@@ -113,7 +128,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _MachineService.CreateObject(model);
+                model = _machineService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -132,10 +147,10 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _MachineService.GetObjectById(model.Id);
+                var data = _machineService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                model = _MachineService.UpdateObject(data);
+                model = _machineService.UpdateObject(data);
             }
             catch (Exception ex)
             {
@@ -154,8 +169,8 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _MachineService.GetObjectById(model.Id);
-                model = _MachineService.SoftDeleteObject(data,_rollerBuilderService,_coreIdentificationDetailService,_barringService);
+                var data = _machineService.GetObjectById(model.Id);
+                model = _machineService.SoftDeleteObject(data,_rollerBuilderService,_coreIdentificationDetailService,_blanketService);
             }
             catch (Exception ex)
             {

@@ -27,12 +27,13 @@
     $("#list").jqGrid({
         url: base_url + 'MstCashBank/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Amount','Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Description', 'Amount', 'Bank', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 120 },
                   { name: 'description', index: 'description', width: 200 },
                   { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'isbank', index: 'isbank', width: 40 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -49,18 +50,17 @@
         height: $(window).height() - 200,
         gridComplete:
 		  function () {
-		      //var ids = $(this).jqGrid('getDataIDs');
-		      //for (var i = 0; i < ids.length; i++) {
-		      //    var cl = ids[i];
-		      //    rowDel = $(this).getRowData(cl).deletedimg;
-		      //    if (rowDel == 'true') {
-		      //        img = "<img src ='" + base_url + "content/assets/images/remove.png' title='Data has been deleted !' width='16px' height='16px'>";
-
-		      //    } else {
-		      //        img = "";
-		      //    }
-		      //    $(this).jqGrid('setRowData', ids[i], { deletedimg: img });
-		      //}
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowIsBank = $(this).getRowData(cl).isbank;
+		          if (rowIsBank == 'true') {
+		              rowIsBank = "YES";
+		          } else {
+		              rowIsBank = "NO";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
+		      }
 		  }
 
     });//END GRID
@@ -81,6 +81,7 @@
         clearForm('#frm');
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
+        $('#IsBank').removeAttr('disabled');
     });
 
     $('#btn_edit').click(function () {
@@ -89,6 +90,10 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             vStatusSaving = 1;//edit data mode
+
+            var f = document.getElementById("IsBank");
+            var bank = f.options[f.selectedIndex].value;
+
             $.ajax({
                 dataType: "json",
                 url: base_url + "MstCashBank/GetInfo?Id=" + id,
@@ -110,7 +115,16 @@
                             $('#Name').val(result.Name);
                             $('#Description').val(result.Description);
                             $('#Amount').numberbox('setValue', (result.Amount));
+                            var f = document.getElementById("IsBank");
+                            if (result.IsBank == true) {
+                                f.selectedIndex = 0;
+                            }
+                            else {
+                                f.selectedIndex = 1;
+                            }
                             $('#form_div').dialog('open');
+                            $('#IsBank').attr('disabled', true);
+
                         }
                     }
                 }
@@ -192,12 +206,15 @@
             submitURL = base_url + 'MstCashBank/Insert';
         }
 
+        var f = document.getElementById("IsBank");
+        var bank = f.options[f.selectedIndex].value;
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Description: $("#Description").val()
+                Id: id, Name: $("#Name").val(), Description: $("#Description").val(), IsBank: bank
             }),
             async: false,
             cache: false,

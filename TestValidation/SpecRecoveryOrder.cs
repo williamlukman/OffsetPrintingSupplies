@@ -29,7 +29,7 @@ namespace TestValidation
                 d.PopulateItem();
                 d.PopulateSingles();
                 d.PopulateBuilders();
-                d.PopulateBarring();
+                d.PopulateBlanket();
                 d.PopulateWarehouseMutationForRollerIdentificationAndRecovery();
                 d.PopulateCoreIdentifications();
                 d.PopulateRecoveryOrders();
@@ -82,7 +82,7 @@ namespace TestValidation
             it["confirms_recovery_order"] = () =>
             {
                 d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService, d._barringService,
+                                                                                d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService, d._blanketService,
                                                                                 d._warehouseItemService, d._warehouseService);
                 d.recoveryOrderContact.IsConfirmed.should_be(true);
                 d.recoveryOrderContact.Errors.Count().should_be(0);
@@ -92,11 +92,11 @@ namespace TestValidation
             {
                 d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                                                 d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                d._barringService, d._warehouseItemService, d._warehouseService);
+                                                                                d._blanketService, d._warehouseItemService, d._warehouseService);
                 d.recoveryOrderContact.IsConfirmed.should_be(true);
                 d.recoveryOrderContact = d._recoveryOrderService.UnconfirmObject(d.recoveryOrderContact, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                                                   d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                  d._barringService, d._warehouseItemService, d._warehouseService);
+                                                                                  d._blanketService, d._warehouseItemService, d._warehouseService);
                 d.recoveryOrderContact.IsConfirmed.should_be(false);
                 d.recoveryOrderContact.Errors.Count().should_be(0);
             };
@@ -105,7 +105,7 @@ namespace TestValidation
             {
                 d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                                                 d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                                                d._barringService, d._warehouseItemService, d._warehouseService);
+                                                                                d._blanketService, d._warehouseItemService, d._warehouseService);
                 d.recoveryODContact1 = d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1, d._recoveryOrderService);
                 d.recoveryODContact1 = d._recoveryOrderDetailService.StripAndGlueObject(d.recoveryODContact1);
                 d.recoveryODContact1 = d._recoveryOrderDetailService.WrapObject(d.recoveryODContact1, 20, d._recoveryOrderService, d._rollerBuilderService, d._itemService, d._warehouseItemService);
@@ -120,10 +120,10 @@ namespace TestValidation
                 {
                     d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                           d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                          d._barringService, d._warehouseItemService, d._warehouseService);
+                                                          d._blanketService, d._warehouseItemService, d._warehouseService);
                     d._recoveryOrderService.ConfirmObject(d.recoveryOrderInHouse, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                           d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
-                                                          d._barringService, d._warehouseItemService, d._warehouseService);
+                                                          d._blanketService, d._warehouseItemService, d._warehouseService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1, d._recoveryOrderService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact2, d._recoveryOrderService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact3, d._recoveryOrderService);
@@ -145,7 +145,7 @@ namespace TestValidation
                 it["validates_unconfirmrecoveryorder"] = () =>
                 {
                     d.recoveryOrderContact = d._recoveryOrderService.UnconfirmObject(d.recoveryOrderContact, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
-                                                                                      d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService, d._barringService,
+                                                                                      d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService, d._blanketService,
                                                                                       d._warehouseItemService, d._warehouseService);
                     d.recoveryOrderContact.IsConfirmed.should_be(true);
                     d.recoveryOrderContact.Errors.Count().should_not_be(0);
@@ -238,22 +238,22 @@ namespace TestValidation
                             
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODContact1, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                    d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                   d._itemService, d._warehouseItemService, d._barringService, d._stockMutationService);
+                                                   d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
                             d._recoveryOrderDetailService.RejectObject(d.recoveryODContact2, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
                                                    d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
-                                                   d._warehouseItemService, d._barringService, d._stockMutationService);
+                                                   d._warehouseItemService, d._blanketService, d._stockMutationService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODContact3, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                    d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                   d._itemService, d._warehouseItemService, d._barringService, d._stockMutationService);
+                                                   d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODInHouse1, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                                       d._itemService, d._warehouseItemService, d._barringService, d._stockMutationService);
+                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODInHouse2, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                                       d._itemService, d._warehouseItemService, d._barringService, d._stockMutationService);
+                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
                             d._recoveryOrderDetailService.RejectObject(d.recoveryODInHouse3, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
                                                                        d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
-                                                                       d._warehouseItemService, d._barringService, d._stockMutationService);
+                                                                       d._warehouseItemService, d._blanketService, d._stockMutationService);
 
                             d.usedCoreBuilder1Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                             d.usedCoreBuilder2Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;

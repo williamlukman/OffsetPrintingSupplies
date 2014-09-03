@@ -11,15 +11,15 @@ namespace Core.Interface.Validation
     {
         Machine VHasUniqueCode(Machine machine, IMachineService _machineService);
         Machine VNameNotEmpty(Machine machine);
-        Machine VIsNotInBarring(Machine machine, IBarringService _barringService);
+        Machine VIsNotInBlanket(Machine machine, IBlanketService _blanketService);
         Machine VIsNotInRollerBuilder(Machine machine, IRollerBuilderService _rollerBuilderService);
         Machine VIsNotInCoreIdentificationDetail(Machine machine, ICoreIdentificationDetailService _coreIdentificationDetailService);
         Machine VCreateObject(Machine machine, IMachineService _machineService);
         Machine VUpdateObject(Machine machine, IMachineService _machineService);
-        Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService);
+        Machine VDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBlanketService _blanketService);
         bool ValidCreateObject(Machine machine, IMachineService _machineService);
         bool ValidUpdateObject(Machine machine, IMachineService _machineService);
-        bool ValidDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBarringService _barringService);
+        bool ValidDeleteObject(Machine machine, IRollerBuilderService _rollerBuilderService, ICoreIdentificationDetailService _coreIdentificationDetailService, IBlanketService _blanketService);
         bool isValid(Machine machine);
         string PrintError(Machine machine);
     }

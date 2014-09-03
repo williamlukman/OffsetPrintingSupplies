@@ -19,7 +19,12 @@ namespace Data.Mapping
             // changing WithMany to WithOptional causes error in the EF
             HasRequired(rwmd => rwmd.RecoveryOrderDetail)
                 .WithMany()
-                .HasForeignKey(rwmd => rwmd.RecoveryOrderDetailId);
+                .HasForeignKey(rwmd => rwmd.RecoveryOrderDetailId)
+                .WillCascadeOnDelete(false);
+            HasRequired(rwmd => rwmd.Item)
+                .WithMany()
+                .HasForeignKey(rwmd => rwmd.ItemId)
+                .WillCascadeOnDelete(false);
             Ignore(rwmd => rwmd.Errors);
         }
     }

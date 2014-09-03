@@ -89,7 +89,7 @@ namespace Service.Service
         }
 
         public SalesOrderDetail ConfirmObject(SalesOrderDetail salesOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
-                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             salesOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesOrderDetail))
@@ -98,14 +98,14 @@ namespace Service.Service
 
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForSalesOrder(salesOrderDetail, item);
-                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 // item.PendingDelivery += salesOrderDetail.Quantity;
             }
             return salesOrderDetail;
         }
 
         public SalesOrderDetail UnconfirmObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                               IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                               IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(salesOrderDetail, _deliveryOrderDetailService, _itemService))
             {
@@ -114,7 +114,7 @@ namespace Service.Service
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForSalesOrder(salesOrderDetail, item);
                 foreach (var stockMutation in stockMutations)
                 {
-                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                     //item.PendingDelivery -= salesOrderDetail.Quantity;
                 }
             }

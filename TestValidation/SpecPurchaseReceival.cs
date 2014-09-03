@@ -54,7 +54,7 @@ namespace TestValidation
         IPurchaseReceivalService _purchaseReceivalService;
         IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         IUoMService _uomService;
-        IBarringService _barringService;
+        IBlanketService _blanketService;
         IItemTypeService _itemTypeService;
         IWarehouseItemService _warehouseItemService;
         IWarehouseService _warehouseService;
@@ -83,7 +83,7 @@ namespace TestValidation
                 _uomService = new UoMService(new UoMRepository(), new UoMValidator());
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
-                _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+                _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -121,7 +121,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Batik Tulis",
-                    Category = "Item",
+                    Description = "Item",
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
@@ -132,7 +132,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Busway",
-                    Category = "Untuk disumbangkan bagi kebutuhan DKI Jakarta",
+                    Description = "Untuk disumbangkan bagi kebutuhan DKI Jakarta",
                     Sku = "DKI002",
                     UoMId = Pcs.Id
                 };
@@ -142,7 +142,7 @@ namespace TestValidation
                 {
                     ItemTypeId = _itemTypeService.GetObjectByName("Item").Id,
                     Name = "Botol Aqua",
-                    Category = "Minuman",
+                    Description = "Minuman",
                     Sku = "DKI003",
                     UoMId = Pcs.Id
                 };
@@ -175,7 +175,7 @@ namespace TestValidation
                 _stockAdjustmentDetailService.CreateObject(sadBotolAqua, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _barringService, _warehouseItemService);
+                                                      _itemService, _blanketService, _warehouseItemService);
 
                 purchaseOrder1 = _purchaseOrderService.CreateObject(contact.Id, new DateTime(2014, 07, 09), _contactService);
                 purchaseOrder2 = _purchaseOrderService.CreateObject(contact.Id, new DateTime(2014, 04, 09), _contactService);
@@ -185,8 +185,8 @@ namespace TestValidation
                 purchaseOrderDetail_batiktulis_so2 = _purchaseOrderDetailService.CreateObject(purchaseOrder2.Id, item_batiktulis.Id, 40, 2000500, _purchaseOrderService, _itemService);
                 purchaseOrderDetail_busway_so2 = _purchaseOrderDetailService.CreateObject(purchaseOrder2.Id, item_busway.Id, 3, 810000000, _purchaseOrderService, _itemService);
                 purchaseOrderDetail_botolaqua_so2 = _purchaseOrderDetailService.CreateObject(purchaseOrder2.Id, item_botolaqua.Id, 340, 5500, _purchaseOrderService, _itemService);
-                purchaseOrder1 = _purchaseOrderService.ConfirmObject(purchaseOrder1, DateTime.Today, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
-                purchaseOrder2 = _purchaseOrderService.ConfirmObject(purchaseOrder2, DateTime.Today, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                purchaseOrder1 = _purchaseOrderService.ConfirmObject(purchaseOrder1, DateTime.Today, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+                purchaseOrder2 = _purchaseOrderService.ConfirmObject(purchaseOrder2, DateTime.Today, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }
         }
 
@@ -231,11 +231,11 @@ namespace TestValidation
                     purchaseReceivalDetail_batiktulis_do2a = _purchaseReceivalDetailService.CreateObject(purchaseReceival3.Id, item_batiktulis.Id, 100, purchaseOrderDetail_batiktulis_so1.Id, _purchaseReceivalService,
                                                                                                                           _purchaseOrderDetailService, _purchaseOrderService, _itemService);
                     purchaseReceival1 = _purchaseReceivalService.ConfirmObject(purchaseReceival1, DateTime.Today, _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                                               _itemService, _barringService, _warehouseItemService);
+                                                                               _itemService, _blanketService, _warehouseItemService);
                     purchaseReceival2 = _purchaseReceivalService.ConfirmObject(purchaseReceival2, DateTime.Today, _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                                               _itemService, _barringService, _warehouseItemService);
+                                                                               _itemService, _blanketService, _warehouseItemService);
                     purchaseReceival3 = _purchaseReceivalService.ConfirmObject(purchaseReceival3, DateTime.Today, _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                                               _itemService, _barringService, _warehouseItemService);
+                                                                               _itemService, _blanketService, _warehouseItemService);
                 };
 
                 it["validates_purchasereceivals"] = () =>
@@ -253,7 +253,7 @@ namespace TestValidation
                 it["unconfirm purchase receival"] = () =>
                 {
                     purchaseReceival1 = _purchaseReceivalService.UnconfirmObject(purchaseReceival1, _purchaseReceivalDetailService, _purchaseInvoiceService, _purchaseInvoiceDetailService,
-                                                                                 _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                                                                                 _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                     purchaseReceival1.Errors.Count().should_be(0);
                 };
 

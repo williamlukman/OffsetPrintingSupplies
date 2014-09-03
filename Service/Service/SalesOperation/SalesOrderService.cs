@@ -82,7 +82,7 @@ namespace Service.Service
         }
 
         public SalesOrder ConfirmObject(SalesOrder salesOrder, DateTime ConfirmationDate, ISalesOrderDetailService _salesOrderDetailService,
-                                        IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                        IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                         IWarehouseItemService _warehouseItemService)
         {
             salesOrder.ConfirmationDate = ConfirmationDate;
@@ -93,7 +93,7 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _salesOrderDetailService.ConfirmObject(detail, ConfirmationDate, _stockMutationService, _itemService,
-                                                           _barringService, _warehouseItemService);
+                                                           _blanketService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(salesOrder);
             }
@@ -103,7 +103,7 @@ namespace Service.Service
         public SalesOrder UnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,
                                           IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                           IStockMutationService _stockMutationService, IItemService _itemService,
-                                          IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                          IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(salesOrder, _deliveryOrderService))
             {
@@ -111,7 +111,7 @@ namespace Service.Service
                 foreach (var detail in salesOrderDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _salesOrderDetailService.UnconfirmObject(detail, this, _deliveryOrderDetailService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    _salesOrderDetailService.UnconfirmObject(detail, this, _deliveryOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(salesOrder);
             }

@@ -8,20 +8,21 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
     public class MstUoMController : Controller
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("UoMController");
-        private IUoMService _UoMService;
+        private IUoMService _uomService;
         private IItemService _itemService;
 
         public MstUoMController()
         {
-            _UoMService = new UoMService(new UoMRepository(),new UoMValidator());
+            _uomService = new UoMService(new UoMRepository(),new UoMValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
-
         }
 
         public ActionResult Index()
@@ -32,13 +33,24 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _UoMService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _uomService.GetQueryable().Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<UoM>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -81,7 +93,7 @@ namespace WebView.Controllers
             UoM model = new UoM();
             try
             {
-                model = _UoMService.GetObjectById(Id);
+                model = _uomService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -103,7 +115,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _UoMService.CreateObject(model);
+                model = _uomService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -122,9 +134,9 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _UoMService.GetObjectById(model.Id);
+                var data = _uomService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                model = _UoMService.UpdateObject(data);
+                model = _uomService.UpdateObject(data);
             }
             catch (Exception ex)
             {
@@ -143,8 +155,8 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _UoMService.GetObjectById(model.Id);
-                model = _UoMService.SoftDeleteObject(data,_itemService);
+                var data = _uomService.GetObjectById(model.Id);
+                model = _uomService.SoftDeleteObject(data,_itemService);
             }
             catch (Exception ex)
             {

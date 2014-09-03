@@ -120,7 +120,7 @@ namespace Service.Service
 
         public CoreIdentification ConfirmObject(CoreIdentification coreIdentification, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IStockMutationService _stockMutationService, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                                ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+                                                ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService)
         {
             coreIdentification.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _itemService, _warehouseItemService))
@@ -129,7 +129,7 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _coreIdentificationDetailService.ConfirmObject(detail, ConfirmationDate, this, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    _coreIdentificationDetailService.ConfirmObject(detail, ConfirmationDate, this, _coreBuilderService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(coreIdentification);
             }
@@ -138,7 +138,7 @@ namespace Service.Service
 
         public CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
                                                   IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService,
-                                                  IWarehouseItemService _warehouseItemService, IBarringService _barringService)
+                                                  IWarehouseItemService _warehouseItemService, IBlanketService _blanketService)
         {
             if (_validator.ValidUnconfirmObject(coreIdentification, _recoveryOrderService))
             {
@@ -146,7 +146,7 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _coreIdentificationDetailService.UnconfirmObject(detail, this, _coreBuilderService, _stockMutationService, _itemService, _barringService, _warehouseItemService);
+                    _coreIdentificationDetailService.UnconfirmObject(detail, this, _coreBuilderService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 }
                 _repository.UnconfirmObject(coreIdentification);
             }

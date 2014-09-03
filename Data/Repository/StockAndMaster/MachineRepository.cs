@@ -35,6 +35,20 @@ namespace Data.Repository
             return machine;
         }
 
+        public Machine GetObjectByName(string Name)
+        {
+            Machine machine = Find(x => x.Name == Name && !x.IsDeleted);
+            if (machine != null) { machine.Errors = new Dictionary<string, string>(); }
+            return machine;
+        }
+
+        public Machine GetObjectByCode(string Code)
+        {
+            Machine machine = Find(x => x.Code == Code && !x.IsDeleted);
+            if (machine != null) { machine.Errors = new Dictionary<string, string>(); }
+            return machine;
+        }
+
         public Machine CreateObject(Machine machine)
         {
             machine.IsDeleted = false;

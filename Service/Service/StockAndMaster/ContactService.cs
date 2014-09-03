@@ -41,7 +41,7 @@ namespace Service.Service
 
         public Contact GetObjectByName(string name)
         {
-            return _repository.FindAll(c => c.Name == name && !c.IsDeleted).FirstOrDefault();
+            return _repository.GetObjectByName(name);
         }
 
         public Contact CreateObject(string Name, string Address, string ContactNo, string PIC,
@@ -71,10 +71,10 @@ namespace Service.Service
             return (contact = _validator.ValidUpdateObject(contact, this, _contactGroupService) ? _repository.UpdateObject(contact) : contact);
         }
 
-        public Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBarringService _barringService,
+        public Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
                                         IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
         {
-            return (contact = _validator.ValidDeleteObject(contact, _coreIdentificationService, _barringService, _purchaseOrderService, _salesOrderService) ?
+            return (contact = _validator.ValidDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService) ?
                     _repository.SoftDeleteObject(contact) : contact);
         }
 

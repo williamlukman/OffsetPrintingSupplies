@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -18,7 +20,7 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IWarehouseService _warehouseService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IUoMService _uomService;
 
         public StockMutationController()
@@ -27,7 +29,7 @@ namespace WebView.Controllers
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(),new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(),new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
         }
 
@@ -39,13 +41,41 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _stockMutationService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _stockMutationService.GetQueryable().Include("Item").Include("Warehouse")
+                                                        .Include("UoM").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<StockMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.ItemId,
+                            ItemSku = model.Item.Sku,
+                            Item = model.Item.Name,
+                            model.WarehouseId,
+                            Warehouse = model.Warehouse.Name,
+                            model.WarehouseItemId,
+                            Ready = model.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
+                                (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                            PendingReceival = model.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
+                                (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                            PendingDelivery = model.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
+                                (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                            UoM = model.Item.UoM.Name,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.SourceDocumentDetailType,
+                            model.SourceDocumentDetailId,
+                            model.CreatedAt,
+                            // model.MutationDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -69,32 +99,29 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from stockmutation in list
+                    from model in list
                     select new
                     {
-                        id = stockmutation.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            stockmutation.Id,
-                            stockmutation.ItemId,
-                            _itemService.GetObjectById(stockmutation.ItemId).Sku,
-                            _itemService.GetObjectById(stockmutation.ItemId).Name,
-                            stockmutation.WarehouseId,
-                            _warehouseService.GetObjectById(stockmutation.WarehouseId).Name,
-                            stockmutation.WarehouseItemId,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            _uomService.GetObjectById(_itemService.GetObjectById(stockmutation.ItemId).UoMId).Name,
-                            stockmutation.SourceDocumentType,
-                            stockmutation.SourceDocumentId,
-                            stockmutation.SourceDocumentDetailType,
-                            stockmutation.SourceDocumentDetailId,
-                            stockmutation.CreatedAt,
+                            model.Id,
+                            model.ItemId,
+                            model.ItemSku,
+                            model.Item,
+                            model.WarehouseId,
+                            model.Warehouse,
+                            model.WarehouseItemId,
+                            model.Ready,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.UoM,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.SourceDocumentDetailType,
+                            model.SourceDocumentDetailId,
+                            model.CreatedAt,
                             // TODO
-                            // stockmutation.MutationDate
+                            // model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -103,13 +130,42 @@ namespace WebView.Controllers
         public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _stockMutationService.GetAll().Where(d => d.CreatedAt >= startdate && d.CreatedAt < enddate.AddDays(1) && d.IsDeleted == false);
+            var q = _stockMutationService.GetQueryable().Include("Item").Include("Warehouse").Include("UoM")
+                                         .Where(x => x.CreatedAt >= startdate && x.CreatedAt < enddate.AddDays(1) && x.IsDeleted == false);
 
-            var list = query as IEnumerable<StockMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.ItemId,
+                             ItemSku = model.Item.Sku,
+                             Item = model.Item.Name,
+                             model.WarehouseId,
+                             Warehouse = model.Warehouse.Name,
+                             model.WarehouseItemId,
+                             Ready = model.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
+                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                             PendingReceival = model.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
+                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                             PendingDelivery = model.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
+                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                             UoM = model.Item.UoM.Name,
+                             model.SourceDocumentType,
+                             model.SourceDocumentId,
+                             model.SourceDocumentDetailType,
+                             model.SourceDocumentDetailId,
+                             model.CreatedAt,
+                             // model.MutationDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -133,30 +189,29 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from stockmutation in list
+                    from model in list
                     select new
                     {
-                        id = stockmutation.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            stockmutation.Id,
-                            stockmutation.ItemId,
-                            _itemService.GetObjectById(stockmutation.ItemId).Sku,
-                            _itemService.GetObjectById(stockmutation.ItemId).Name,
-                            stockmutation.WarehouseId,
-                            _warehouseService.GetObjectById(stockmutation.WarehouseId).Name,
-                            stockmutation.WarehouseItemId,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.Ready ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            stockmutation.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
-                                (stockmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? stockmutation.Quantity : stockmutation.Quantity * (-1)) : 0,
-                            _uomService.GetObjectById(_itemService.GetObjectById(stockmutation.ItemId).UoMId).Name,
-                            stockmutation.SourceDocumentType,
-                            stockmutation.SourceDocumentId,
-                            stockmutation.SourceDocumentDetailType,
-                            stockmutation.SourceDocumentDetailId,
-                            stockmutation.CreatedAt,
+                            model.Id,
+                            model.ItemId,
+                            model.ItemSku,
+                            model.Item,
+                            model.WarehouseId,
+                            model.Warehouse,
+                            model.WarehouseItemId,
+                            model.Ready,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.UoM,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.SourceDocumentDetailType,
+                            model.SourceDocumentDetailId,
+                            model.CreatedAt,
+                            // TODO
+                            // model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

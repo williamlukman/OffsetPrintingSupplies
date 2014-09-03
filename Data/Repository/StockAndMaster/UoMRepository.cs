@@ -34,6 +34,13 @@ namespace Data.Repository
             return unitOfMeasurement;
         }
 
+        public UoM GetObjectByName(string Name)
+        {
+            UoM unitOfMeasurement = Find(x => x.Name == Name && !x.IsDeleted);
+            if (unitOfMeasurement != null) { unitOfMeasurement.Errors = new Dictionary<string, string>(); }
+            return unitOfMeasurement;
+        }
+
         public UoM CreateObject(UoM unitOfMeasurement)
         {
             unitOfMeasurement.IsDeleted = false;

@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     {
         IPurchaseInvoiceValidator GetValidator();
         IList<PurchaseInvoice> GetAll();
+        IQueryable<PurchaseInvoice> GetQueryable();
         PurchaseInvoice GetObjectById(int Id);
         IList<PurchaseInvoice> GetObjectsByPurchaseReceivalId(int purchaseReceivalId);
         PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService);

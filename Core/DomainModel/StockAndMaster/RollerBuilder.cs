@@ -17,24 +17,38 @@ namespace Core.DomainModel
         public string SkuRollerNewCore { get; set; }
         public int RollerUsedCoreItemId { get; set; }
         public int RollerNewCoreItemId { get; set; }
+        public int AdhesiveId { get; set; }
         public int UoMId { get; set; }
 
         public string Name { get; set; }
-        public string Category { get; set; }
+        public string Description { get; set; }
         public decimal RD { get; set; }
         public decimal CD { get; set; }
         public decimal RL { get; set; }
         public decimal WL { get; set; }
         public decimal TL { get; set; }
 
+        public bool IsCrowning { get; set; }
+        public Nullable<int> CrowningSize { get; set; }
+        public bool IsGrooving { get; set; }
+        public Nullable<int> GroovingWidth { get; set; }
+        public Nullable<int> GroovingDepth { get; set; }
+        public Nullable<int> GroovingPosition { get; set; }
+        public bool IsChamfer { get; set; }
+
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+
         public virtual UoM UoM { get; set; }
         public virtual Machine Machine { get; set; }
         public virtual CoreBuilder CoreBuilder { get; set; }
         public virtual RollerType RollerType { get; set; }
+        public virtual Item Compound { get; set; }
+        public virtual Item RollerUsedCoreItem { get; set; }
+        public virtual Item RollerNewCoreItem { get; set; }
+        public virtual Item Adhesive { get; set; }
     }
 }

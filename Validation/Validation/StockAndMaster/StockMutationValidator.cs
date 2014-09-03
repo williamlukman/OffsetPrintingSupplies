@@ -11,22 +11,38 @@ namespace Validation.Validation
 {
     public class StockMutationValidator : IStockMutationValidator
     {
+        public StockMutation VHasItem(StockMutation stockMutation, IItemService _itemService)
+        {
+            Item item = _itemService.GetObjectById(stockMutation.ItemId);
+            if (item == null)
+            {
+                stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan barang");
+            }
+            return stockMutation;
+        }
+
         public StockMutation VHasWarehouse(StockMutation stockMutation, IWarehouseService _warehouseService)
         {
-            Warehouse warehouse = _warehouseService.GetObjectById(stockMutation.WarehouseId);
-            if (warehouse == null)
+            if (stockMutation.WarehouseId != null)
             {
-                stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan warehouse");
+                Warehouse warehouse = _warehouseService.GetObjectById((int)stockMutation.WarehouseId);
+                if (warehouse == null)
+                {
+                    stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan warehouse");
+                }
             }
             return stockMutation;
         }
 
         public StockMutation VHasWarehouseItem(StockMutation stockMutation, IWarehouseItemService _warehouseItemService)
         {
-            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(stockMutation.WarehouseItemId);
-            if (warehouseItem == null)
+            if (stockMutation.WarehouseItemId != null)
             {
-                stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan item di warehouse");
+                WarehouseItem warehouseItem = _warehouseItemService.GetObjectById((int)stockMutation.WarehouseItemId);
+                if (warehouseItem == null)
+                {
+                    stockMutation.Errors.Add("Generic", "Tidak terasosiasi dengan item di warehouse");
+                }
             }
             return stockMutation;
         }
@@ -91,8 +107,10 @@ namespace Validation.Validation
             return stockMutation;
         }
 
-        public StockMutation VCreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        public StockMutation VCreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
+            VHasItem(stockMutation, _itemService);
+            if (!isValid(stockMutation)) { return stockMutation; }
             VHasWarehouse(stockMutation, _warehouseService);
             if (!isValid(stockMutation)) { return stockMutation; }
             VHasWarehouseItem(stockMutation, _warehouseItemService);
@@ -109,9 +127,9 @@ namespace Validation.Validation
             return stockMutation;
         }
 
-        public StockMutation VUpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        public StockMutation VUpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
-            VCreateObject(stockMutation, _warehouseService, _warehouseItemService);
+            VCreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService);
             return stockMutation;
         }
 
@@ -120,16 +138,16 @@ namespace Validation.Validation
             return stockMutation;
         }
 
-        public bool ValidCreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        public bool ValidCreateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
-            VCreateObject(stockMutation, _warehouseService, _warehouseItemService);
+            VCreateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService);
             return isValid(stockMutation);
         }
 
-        public bool ValidUpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService)
+        public bool ValidUpdateObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService)
         {
             stockMutation.Errors.Clear();
-            VUpdateObject(stockMutation, _warehouseService, _warehouseItemService);
+            VUpdateObject(stockMutation, _warehouseService, _warehouseItemService, _itemService);
             return isValid(stockMutation);
         }
 

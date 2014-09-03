@@ -22,9 +22,9 @@ namespace Core.Interface.Service
         SalesOrderDetail SoftDeleteObject(SalesOrderDetail salesOrderDetail);
         bool DeleteObject(int Id);
         SalesOrderDetail ConfirmObject(SalesOrderDetail salesOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
-                                      IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                      IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         SalesOrderDetail UnconfirmObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                        IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                        IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         SalesOrderDetail SetDeliveryComplete(SalesOrderDetail salesOrderDetail, int Quantity);
         SalesOrderDetail UnsetDeliveryComplete(SalesOrderDetail salesOrderDetail, int Quantity, ISalesOrderService _salesOrderService);
     }

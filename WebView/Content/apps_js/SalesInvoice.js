@@ -450,9 +450,10 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Delivery Order Id', 'DOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount'
+        colNames: ['Id', 'Code', 'Delivery Order Id', 'DOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount'
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'deliveryorderdetailid', index: 'deliveryorderdetailid', width: 70, sortable: false, hidden: true },
                   { name: 'deliveryorderdetailcode', index: 'deliveryorderdetailcode', width: 70, sortable: false },
@@ -471,7 +472,7 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 700,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {

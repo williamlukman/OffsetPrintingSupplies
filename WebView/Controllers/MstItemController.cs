@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -20,7 +22,7 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IWarehouseService _warehouseService;
         private IStockMutationService _stockMutationService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
         private IContactGroupService _contactGroupService;
@@ -37,7 +39,7 @@ namespace WebView.Controllers
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(),new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(),new StockMutationValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -55,13 +57,37 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _itemService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM");
 
-            var list = query as IEnumerable<Item>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Sku,
+                             model.Name,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.MinimumQuantity,
+                             model.UoMId,
+                             UoM = model.UoM.Name,
+                             model.SellingPrice,
+                             model.AvgPrice,
+                             model.Category,
+                             model.Description,
+                             model.ItemTypeId,
+                             ItemType = model.ItemType.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -85,40 +111,64 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Sku,
-                            item.Name,
-                            item.Quantity,
-                            item.PendingReceival,
-                            item.PendingDelivery,
-                            _uoMService.GetObjectById(item.UoMId).Name,
-                            item.SellingPrice,
-                            item.AvgPrice,
-                            item.Category,
-                            _itemTypeService.GetObjectById(item.ItemTypeId).Name,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.Sku,
+                            model.Name,
+                            model.Quantity,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.MinimumQuantity,
+                            model.UoM,
+                            model.SellingPrice,
+                            model.AvgPrice,
+                            model.Category,
+                            model.Description,
+                            model.ItemType,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
 
         public dynamic GetListAccessory(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _itemService.GetAllAccessories(_itemService,_itemTypeService).Where(d => d.IsDeleted == false);
+            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM")
+                                .Where(x => x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.Accessory && !x.IsDeleted);
 
-            var list = query as IEnumerable<Item>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Sku,
+                             model.Name,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.MinimumQuantity,
+                             UoM = model.UoM.Name,
+                             model.SellingPrice,
+                             model.AvgPrice,
+                             model.Category,
+                             model.Description,
+                             ItemType = model.ItemType.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -142,31 +192,30 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Sku,
-                            item.Name,
-                            item.ItemTypeId,
-                            _itemTypeService.GetObjectById(item.ItemTypeId).Name,
-                            item.Category,
-                            item.UoMId,
-                            _uoMService.GetObjectById(item.UoMId).Name,
-                            item.Quantity,
-                            item.SellingPrice,
-                            item.AvgPrice,
-                            item.PendingReceival,
-                            item.PendingDelivery,
-                            item.CreatedAt,
-                            item.UpdatedAt,
+                            model.Id,
+                            model.Sku,
+                            model.Name,
+                            model.Quantity,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.MinimumQuantity,
+                            model.UoM,
+                            model.SellingPrice,
+                            model.AvgPrice,
+                            model.Category,
+                            model.Description,
+                            model.ItemType,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
 
         public dynamic GetInfo(int Id)
         {
@@ -195,7 +244,9 @@ namespace WebView.Controllers
                 model.SellingPrice,
                 model.PendingDelivery,
                 model.PendingReceival,
+                model.MinimumQuantity,
                 model.Category,
+                model.Description,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -229,9 +280,11 @@ namespace WebView.Controllers
                 data.Name = model.Name;
                 data.Sku = model.Sku;
                 data.Category = model.Category;
+                data.Description = model.Description;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
                 data.SellingPrice = model.SellingPrice;
+                data.MinimumQuantity = model.MinimumQuantity;
                 model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
@@ -252,7 +305,7 @@ namespace WebView.Controllers
             {
                 var data = _itemService.GetObjectById(model.Id);
                 model = _itemService.SoftDeleteObject(data,_stockMutationService,_itemTypeService,
-                    _warehouseItemService,_barringService,_purchaseOrderDetailService,_stockAdjustmentDetailService,
+                    _warehouseItemService,_blanketService,_purchaseOrderDetailService,_stockAdjustmentDetailService,
                     _salesOrderDetailService,_priceMutationService);
             }
             catch (Exception ex)

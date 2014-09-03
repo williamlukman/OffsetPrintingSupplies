@@ -45,12 +45,13 @@ namespace Service.Service
             return _repository.GetObjectByName(Name);
         }
 
-        public CashBank CreateObject(string name, string description)
+        public CashBank CreateObject(string name, string description, bool IsBank)
         {
             CashBank cashBank = new CashBank
             {
                 Name = name,
                 Description = description,
+                IsBank = IsBank,
                 Amount = 0
             };
             return this.CreateObject(cashBank);

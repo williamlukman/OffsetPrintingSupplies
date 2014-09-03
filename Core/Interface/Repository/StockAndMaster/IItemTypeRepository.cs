@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<ItemType> GetQueryable();
         IList<ItemType> GetAll();
         ItemType GetObjectById(int Id);
+        ItemType GetObjectByName(string Name);
         ItemType CreateObject(ItemType itemType);
         ItemType UpdateObject(ItemType itemType);
         ItemType SoftDeleteObject(ItemType itemType);

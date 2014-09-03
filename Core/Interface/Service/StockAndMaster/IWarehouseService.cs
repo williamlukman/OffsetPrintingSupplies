@@ -19,7 +19,7 @@ namespace Core.Interface.Service
         Warehouse CreateObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, IItemService _itemService);
         Warehouse UpdateObject(Warehouse warehouse);
         Warehouse SoftDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService,
-                                   ICoreIdentificationService _coreIdentificationService, IBarringOrderService _barringOrderService);
+                                   ICoreIdentificationService _coreIdentificationService, IBlanketOrderService _blanketOrderService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(Warehouse warehouse);
     }

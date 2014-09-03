@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -15,7 +17,7 @@ namespace WebView.Controllers
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ContactController");
         private IContactService _contactService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private ICoreIdentificationService _coreIdentificationService;
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
@@ -25,7 +27,7 @@ namespace WebView.Controllers
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
-            _barringService = new BarringService(new BarringRepository(),new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(),new BlanketValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
@@ -39,13 +41,30 @@ namespace WebView.Controllers
          public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _contactService.GetAll().Where(d => d.IsDeleted == false);
-            
-            var list = query as IEnumerable<Contact>;
+            var q = _contactService.GetQueryable().Include("ContactGroup").Where(x => !x.IsDeleted);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.Address,
+                             model.ContactNo,
+                             model.PIC,
+                             model.PICContactNo,
+                             model.Email,
+                             ContactGroup = model.ContactGroup.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -81,7 +100,7 @@ namespace WebView.Controllers
                             model.PIC,
                             model.PICContactNo,
                             model.Email,
-                            _contactGroupService.GetObjectById(model.ContactGroupId).Name,
+                            model.ContactGroup,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -171,7 +190,7 @@ namespace WebView.Controllers
             {
                 var data = _contactService.GetObjectById(model.Id);
                 model = _contactService.SoftDeleteObject(data, _coreIdentificationService, 
-                    _barringService, _purchaseOrderService, _salesOrderService);
+                    _blanketService, _purchaseOrderService, _salesOrderService);
             }
 
             catch (Exception ex)

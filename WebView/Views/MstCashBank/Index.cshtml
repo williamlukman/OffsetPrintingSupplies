@@ -53,15 +53,29 @@
                         <tr>
                             <td valign="top">
                                 <label>Description</label></td>
-                            <td colspan="3"><label>
-                              <textarea name="Description" name="Description" id ="Description" size="60" cols="60" rows="3"></textarea>
-                            </label></td>
+                            <td colspan="3">
+                                <label>
+                                    <textarea name="Description" name="Description" id ="Description" size="60" cols="60" rows="3"></textarea>
+                                </label>
+                            </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Amount</label></td>
                             <td colspan="3">
-                        <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" disabled="disabled" />
+                                <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Bank</label>
+                            </td>
+                            <td>
+                                <select id="IsBank">
+                                  <option value="True">Yes</option>
+                                  <option value="False">No</option>
+                               </select>
+                            </td>
                         </tr>
                     </table>
                 @*</fieldset>*@

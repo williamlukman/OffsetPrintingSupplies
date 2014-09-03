@@ -14,6 +14,7 @@
 
     function ClearData() {
         $('#Description').val('').text('').removeClass('errormessage');
+        $('#Category').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
@@ -31,9 +32,9 @@
         url: base_url + 'MstItem/GetList',
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 
-                    'Ready', 'PendReceival', 'PendDelivery',
+                    'Ready', 'PendReceival', 'PendDelivery', 'MIN',
                     'UoM', 'Selling Price', 'AvgPrice',
-                    'Category', 'Item Type', 'Created At', 'Updated At'],
+                    'Category', 'Description', 'Item Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
@@ -41,10 +42,12 @@
                   { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'minimumquantity', index: 'minimumquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 40 },
                   { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'category', index: 'category', width: 70 },
+                  { name: 'description', index: 'description', width: 70 },
                   { name: 'itemtypename', index: 'itemtypename', width: 70 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -61,9 +64,17 @@
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
-		  function () {
-		      $(this).find(">tbody>tr.jqgrow:odd").css("background", "#E0E0E0");		  }
-
+            function () {
+                var ids = $(this).jqGrid('getDataIDs');
+                for (var i = 0; i < ids.length; i++) {
+                    var cl = ids[i];
+                    rowQuantity = $(this).getRowData(cl).quantity;
+                    rowMinimumQuantity = $(this).getRowData(cl).minimumquantity;
+                    if (rowMinimumQuantity - rowQuantity >= 0) {
+                        $(this).jqGrid('setRowData', ids[i], false, 'fontred');
+                    }
+                }
+            }
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
@@ -110,11 +121,13 @@
                             $('#Name').val(result.Name);
                             $('#SKU').val(result.Sku);
                             $('#Category').val(result.Category);
+                            $('#Description').val(result.Description);
                             $('#ItemTypeId').val(result.ItemTypeId);
                             $('#ItemTypeName').val(result.ItemType);
                             $('#UoMId').val(result.UoMId);
                             $('#UoMName').val(result.UoM);
                             $('#Quantity').numberbox('setValue', (result.Quantity));
+                            $('#MinimumQuantity').numberbox('setValue', (result.MinimumQuantity));
                             $('#SellingPrice').numberbox('setValue', (result.SellingPrice));
                             $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
                             $('#PendingReceival').numberbox('setValue', (result.PendingReceival));
@@ -204,8 +217,9 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice : $("#SellingPrice").val(),
-                Sku: $("#SKU").val(), Category: $("#Category").val(), UoMId: $("#UoMId").val(),
+                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice: $("#SellingPrice").numberbox('getValue'),
+                Sku: $("#SKU").val(), Category: $("#Category").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
+                MinimumQuantity: $("#MinimumQuantity").numberbox('getValue')
             }),
             async: false,
             cache: false,

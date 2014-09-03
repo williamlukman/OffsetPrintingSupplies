@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -18,14 +20,14 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IItemService _itemService;
         private ICoreIdentificationService _coreIdentificationService;
-        private IBarringOrderService _barringOrderService;
+        private IBlanketOrderService _blanketOrderService;
 
         public MstWarehouseController()
         {  
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
              _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
-            _barringOrderService = new BarringOrderService(new BarringOrderRepository(), new BarringOrderValidator());
+            _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
         }
 
@@ -37,13 +39,26 @@ namespace WebView.Controllers
           public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _warehouseService.GetAll().Where(d =>d.IsDeleted ==false);
+            var q = _warehouseService.GetQueryable().Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<Warehouse>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.Name,
+                             model.Description,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -67,18 +82,17 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from item in list
+                    from model in list
                     select new
                     {
-                        id = item.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            item.Id,
-                            item.Code,
-                            item.Name,
-                            item.Description,
-                            
-                            item.CreatedAt,
-                            item.UpdatedAt
+                            model.Id,
+                            model.Code,
+                            model.Name,
+                            model.Description,                           
+                            model.CreatedAt,
+                            model.UpdatedAt
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -156,7 +170,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _warehouseService.GetObjectById(model.Id);
-                model = _warehouseService.SoftDeleteObject(data,_warehouseItemService,_coreIdentificationService,_barringOrderService);
+                model = _warehouseService.SoftDeleteObject(data,_warehouseItemService,_coreIdentificationService,_blanketOrderService);
             }
             catch (Exception ex)
             {

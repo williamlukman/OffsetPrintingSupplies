@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public string Description { get; set; }
 
         public decimal Amount { get; set; }
+        public bool IsBank { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

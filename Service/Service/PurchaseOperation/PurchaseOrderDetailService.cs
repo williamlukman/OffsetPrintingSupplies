@@ -93,7 +93,7 @@ namespace Service.Service
         }
 
         public PurchaseOrderDetail ConfirmObject(PurchaseOrderDetail purchaseOrderDetail, DateTime ConfirmationDate, IStockMutationService _stockMutationService,
-                                                 IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService)
+                                                 IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             purchaseOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseOrderDetail))
@@ -103,13 +103,13 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForPurchaseOrder(purchaseOrderDetail, item);
                 //item.PendingReceival += purchaseOrderDetail.Quantity;
-                _stockMutationService.StockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
             }
             return purchaseOrderDetail;
         }
 
         public PurchaseOrderDetail UnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                                   IStockMutationService _stockMutationService, IItemService _itemService, IBarringService _barringService,
+                                                   IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                                    IWarehouseItemService _warehouseItemService)
         {
             if (_validator.ValidUnconfirmObject(purchaseOrderDetail, _purchaseReceivalDetailService, _itemService))
@@ -120,7 +120,7 @@ namespace Service.Service
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingReceival -= purchaseOrderDetail.Quantity;
-                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _barringService, _warehouseItemService);
+                    _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
             }
             return purchaseOrderDetail;

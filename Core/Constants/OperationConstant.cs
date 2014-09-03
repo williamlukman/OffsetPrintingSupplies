@@ -27,7 +27,7 @@ namespace Core.Constants
 
         public class SourceDocumentType
         {
-            public static string BarringOrder = "BarringOrder";
+            public static string BlanketOrder = "BlanketOrder";
             public static string CashBankMutation = "CashBankMutation";
             public static string CashBankAdjustment = "CashBankAdjustment";
             public static string CoreIdentification = "CoreIdentification";
@@ -48,7 +48,7 @@ namespace Core.Constants
 
         public class SourceDocumentDetailType
         {
-            public static string BarringOrderDetail = "BarringOrderDetail";
+            public static string BlanketOrderDetail = "BlanketOrderDetail";
             public static string CoreIdentificationDetail = "CoreIdentificationDetail";
             public static string DeliveryOrderDetail = "DeliveryOrderDetail";
             public static string PurchaseOrderDetail = "PurchaseOrderDetail";

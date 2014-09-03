@@ -11,6 +11,7 @@ namespace Core.Interface.Repository
         IQueryable<UoM> GetQueryable();
         IList<UoM> GetAll();
         UoM GetObjectById(int Id);
+        UoM GetObjectByName(string Name);
         UoM CreateObject(UoM unitOfMeasurement);
         UoM UpdateObject(UoM unitOfMeasurement);
         UoM SoftDeleteObject(UoM unitOfMeasurement);

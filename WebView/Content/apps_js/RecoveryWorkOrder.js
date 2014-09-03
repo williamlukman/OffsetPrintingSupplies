@@ -113,6 +113,9 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#DueDateDiv').show();
+        $('#DueDateDiv2').hide();
         $('#btnCoreIdentification').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
@@ -121,7 +124,6 @@
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
-
 
     $('#btn_add_detail').click(function () {
         ClearData();
@@ -200,6 +202,10 @@
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#QuantityReceived').val(result.QuantityReceived);
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#DueDateDiv').show();
+                            $('#DueDateDiv2').hide();
                             $('#btnCoreIdentification').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#Code').removeAttr('disabled');
@@ -376,7 +382,8 @@
             data: JSON.stringify({
                 Id: id, CoreIdentificationId: $("#CoreIdentificationId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
-                QuantityReceived: $('#QuantityReceived').numberbox('getValue')
+                QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
+                DueDate: $('#DueDate').datebox('getValue')
             }),
             async: false,
             cache: false,
@@ -411,7 +418,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['RIF Id', 'RollerBuilder Id', 'Roller', 'Core Type', 'Acc', 'Repair Request',
+        colNames: ['RIF Id', 'RollerBuilder Id', 'Roller', 'Core Type',
                    'Compound', 'IsRejected', 'Rejected Date', 'Is Finished', 'Finished Date'
         ],
         colModel: [
@@ -419,8 +426,6 @@
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 100, sortable: false, hidden: true },
                   { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
 				  { name: 'coretypecase', index: 'coretypecase', width: 70, sortable: false },
-                  { name: 'acc', index: 'acc', width: 40, sortable: false },
-                  { name: 'repairrequestcase', index: 'repairrequestcase', width: 90, sortable: false },
                   { name: 'compoundusage', index: 'compoundusage', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isrejected', index: 'isrejected', width: 100, sortable: false, hidden: true },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -432,12 +437,12 @@
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'coreidentificationdetailid',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 600,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
@@ -474,13 +479,6 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            var e = document.getElementById("RepairRequestCase");
-                            if (result.RepairRequestCase == 1) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
                             var f = document.getElementById("CoreTypeCase");
                             if (result.CoreTypeCase == "R") {
                                 f.selectedIndex = 0;
@@ -493,7 +491,6 @@
                             $('#CoreBuilderName').val(result.CoreBuilderName);
                             $('#RollerBuilderId').val(result.RollerBuilderId);
                             $('#RollerBuilder').val(result.RollerBuilder);
-                            $('#Acc').val(result.Acc);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -564,16 +561,14 @@
         }
         var e = document.getElementById("CoreTypeCase");
         var coretypecase = e.options[e.selectedIndex].value;
-        var f = document.getElementById("RepairRequestCase");
-        var repairrequestcase = f.options[f.selectedIndex].value;
-
+       
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, CoreIdentificationDetailId: $("#CoreIdentificationDetailId").val(), CoreTypeCase: coretypecase, RepairRequestCase: repairrequestcase,
-                Acc: $("#Acc").val(), RollerBuilderId: $("#RollerBuilderId").val(), RecoveryOrderId: $("#id").val()
+                Id: id, CoreIdentificationDetailId: $("#CoreIdentificationDetailId").val(), CoreTypeCase: coretypecase,
+                RollerBuilderId: $("#RollerBuilderId").val(), RecoveryOrderId: $("#id").val()
             }),
             async: false,
             cache: false,
@@ -750,11 +745,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'RollerIdentificationId','Material', 'CoreBuilder Id', 'Core Sku', 'Core', 'RollerType Id', 'RollerType'
-                  ,'Machine Id','Machine','RD','CD','RL','WL','TL'
+        colNames: ['Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
+                    'Core Sku', 'Core', 'RollerType Id', 'RollerType',
+                    'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL'
         ],
         colModel: [
-                  { name: 'detailid', index: 'detailid', width: 30, sortable: false},
+                  { name: 'detailid', index: 'detailid', width: 30, sortable: false },
                   { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
@@ -762,8 +758,9 @@
                   { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
                   { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false, hidden: true },
                   { name: 'rollertypename', index: 'rollertypename', width: 70, sortable: false },
-                  { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true},
+                  { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true },
                   { name: 'machinename', index: 'machinename', width: 90, sortable: false },
+                  { name: 'repairrequestcase', index: 'repairrequestcase', width: 90, sortable: false },
                   { name: 'rd', index: 'rd', width: 40, align: 'right', sortable: false },
                   { name: 'cd', index: 'cd', width: 40, align: 'right', sortable: false },
                   { name: 'rl', index: 'rl', width: 40, align: 'right', sortable: false },

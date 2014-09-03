@@ -21,6 +21,18 @@ namespace Data.Mapping
             HasRequired(cb => cb.UoM)
                 .WithMany(uom => uom.CoreBuilders)
                 .HasForeignKey(cb => cb.UoMId);
+            HasRequired(cb => cb.Machine)
+                .WithMany()
+                .HasForeignKey(cb => cb.MachineId)
+                .WillCascadeOnDelete(false);
+            HasRequired(cb => cb.UsedCoreItem)
+                .WithMany()
+                .HasForeignKey(cb => cb.UsedCoreItemId)
+                .WillCascadeOnDelete(false);
+            HasRequired(cb => cb.NewCoreItem)
+                .WithMany()
+                .HasForeignKey(cb => cb.NewCoreItemId)
+                .WillCascadeOnDelete(false);
             Ignore(cb => cb.Errors);
         }
     }

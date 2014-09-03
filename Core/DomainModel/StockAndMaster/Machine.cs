@@ -18,7 +18,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
-        public virtual ICollection<Barring> Barrings { get; set; }
+        public virtual ICollection<Blanket> Blankets { get; set; }
         public virtual ICollection<RollerBuilder> RollerBuilders { get; set; }
     }
 }

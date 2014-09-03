@@ -21,8 +21,8 @@ namespace Core.Interface.Service
         WarehouseMutation SoftDeleteObject(WarehouseMutation warehouseMutation);
         bool DeleteObject(int Id);
         WarehouseMutation ConfirmObject(WarehouseMutation warehouseMutation, DateTime ConfirmationDate, IWarehouseMutationDetailService _warehouseMutationDetailService,
-                                             IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
+                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
         WarehouseMutation UnconfirmObject(WarehouseMutation warehouseMutation, IWarehouseMutationDetailService _warehouseMutationDetailService,
-                                               IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
+                                               IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService);
     }
 }

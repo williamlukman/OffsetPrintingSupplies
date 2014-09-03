@@ -13,6 +13,7 @@ namespace Core.Interface.Service
         IItemValidator GetValidator();
         IItemRepository GetRepository();
         IQueryable<Item> GetQueryable();
+        IQueryable<Item> GetQueryableAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         IList<Item> GetAll();
         IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
@@ -25,19 +26,21 @@ namespace Core.Interface.Service
                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                IBarringService _barringService, IContactService _contactService, IMachineService _machineService,
+                                IBlanketService _blanketService, IContactService _contactService, IMachineService _machineService,
                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
         Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                              IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                              IBlanketService _blanketService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                               IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
                               IPriceMutationService _priceMutationService);
         Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                                    IBarringService _barringService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                    IBlanketService _blanketService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                     IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                    IPriceMutationService _priceMutationService, IBarringOrderDetailService _barringOrderDetailService);
+                                    IPriceMutationService _priceMutationService, IBlanketOrderDetailService _blanketOrderDetailService);
         Item AdjustQuantity(Item item, int quantity);
         Item AdjustPendingReceival(Item item, int quantity);
         Item AdjustPendingDelivery(Item item, int quantity);
+        //Item OnTrial(Item item, int quantity);
+        //Item ReturnTrial(Item item, int quantity);
         decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Item item);

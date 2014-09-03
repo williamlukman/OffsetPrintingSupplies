@@ -433,7 +433,7 @@
                   { name: 'rifid', index: 'rifid', width: 70, sortable: false, align: 'right' },
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'right' },
                   { name: 'rollerwarehousemutationid', index: 'rollerwarehousemutationid', width: 100, sortable: false, hidden: true },
-                  { name: 'recoveryworkorderdetailid', index: 'recoveryworkorderdetailid', width: 50, align: 'right', sortable: false },
+                  { name: 'recoveryworkorderdetailid', index: 'recoveryworkorderdetailid', width: 60, align: 'right', sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
 				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false},
                   { name: 'itemname', index: 'itemname', width: 150, sortable: false },
@@ -442,12 +442,12 @@
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'rifid',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $(window).width() - 700,
+        width: $("#form_div").width() - 3,
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
@@ -607,9 +607,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Code', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
+                   { name: 'code', index: 'code', width: 80 },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_warehouseto'),
@@ -664,9 +665,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['Id', 'Code', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
+                   { name: 'code', index: 'code', width: 80 },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_warehousefrom'),
@@ -765,7 +767,7 @@
 
     // -------------------------------------------------------Look Up recoveryworkorderdetail-------------------------------------------------------
     $('#btnRecoveryWorkOrderDetail').click(function () {
-        var lookUpURL = base_url + 'RecoveryWorkOrder/GetListDetailFinished?id=' + $('#RecoveryWorkOrderId').val();
+        var lookUpURL = base_url + 'RecoveryWorkOrder/GetListDetailFinishedNotDelivered?id=' + $('#RecoveryWorkOrderId').val();
         var lookupGrid = $('#lookup_table_recoveryworkorderdetail');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -783,9 +785,9 @@
                   { name: 'detailid', index: 'detailid', width: 40, sortable: false, align: 'right' },
                   { name: 'rolleridentificationdetailid', index: 'rolleridentificationdetailid', width: 130, sortable: false, hidden: true },
                   { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
-                  { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 80, sortable: false },
+                  { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 80, sortable: false, hidden: true },
                   { name: 'rollerbuildersku', index: 'rollerbuildersku', width: 60, sortable: false },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 70, sortable: false },
+                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
         ],
         page: '1',
         pager: $('#lookup_pager_recoveryworkorderdetail'),

@@ -50,7 +50,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
+                    Description = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -81,7 +81,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1002",
                     Name = "     ",
-                    Category = "ABC222",
+                    Description = "ABC222",
                     UoMId = d.Pcs.Id
                 };
                 nonameitem = d._itemService.CreateObject(nonameitem, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -95,7 +95,7 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "BBC",
-                    Category = "ABC222",
+                    Description = "ABC222",
                     UoMId = d.Pcs.Id
                 };
                 sameskuitem = d._itemService.CreateObject(sameskuitem, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -121,7 +121,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._barringService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService);
 
                 d.item.Errors.Count().should_be(0);
             };
@@ -145,7 +145,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._barringService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService);
 
                 d.stockAdjustment.Errors.Count().should_not_be(0);
                 d.item.Quantity.should_be(0);
@@ -153,7 +153,7 @@ namespace TestValidation
 
             it["delete_item"] = () =>
             {
-                d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService, 
+                d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._blanketService, 
                                                          d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
                 d.item.Errors.Count().should_be(0);
             };
@@ -173,10 +173,13 @@ namespace TestValidation
                     SkuNewCore = "CB00001N",
                     SkuUsedCore = "CB00001U",
                     Name = "CoreBuilder00001",
-                    Category = "X",
-                    UoMId = d.Pcs.Id
+                    Description = "X",
+                    UoMId = d.Pcs.Id,
+                    MachineId = d.machine.Id,
+                    CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
-                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
+                                                                   d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     Code = "CI0001",
@@ -205,7 +208,7 @@ namespace TestValidation
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
                     Name = "Compound",
-                    Category = "Compound",
+                    Description = "Compound",
                     Sku = "CMP0001",
                     UoMId = d.Pcs.Id
                 };
@@ -229,7 +232,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._barringService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService);
 
                 d.rollerBuilder = new RollerBuilder()
                 {
@@ -245,13 +248,13 @@ namespace TestValidation
                     SkuRollerUsedCore = "RB0001U",
                     SkuRollerNewCore = "RB0001N",
                     Name = "Roller Builder",
-                    Category = "RB",
+                    Description = "RB",
                     CompoundId = compound.Id,
                     UoMId = d.Pcs.Id
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
-                compound = d._itemService.SoftDeleteObject(compound, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._barringService,
+                compound = d._itemService.SoftDeleteObject(compound, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._blanketService,
                                                            d._purchaseOrderDetailService, d._stockAdjustmentDetailService, d._salesOrderDetailService, d._priceMutationService);
                 compound.Errors.Count().should_not_be(0);
             };

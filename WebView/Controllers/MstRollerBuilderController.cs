@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -25,14 +27,14 @@ namespace WebView.Controllers
         private IStockMutationService _stockMutationService;
         private IMachineService _machineService;
         private IRollerTypeService _rollerTypeService;
-        private IBarringService _barringService;
+        private IBlanketService _blanketService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
         private IContactGroupService _contactGroupService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
-        private IBarringOrderDetailService _barringOrderDetailService;
+        private IBlanketOrderDetailService _blanketOrderDetailService;
 
         public MstRollerBuilderController()
         {
@@ -47,14 +49,14 @@ namespace WebView.Controllers
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _machineService = new MachineService(new MachineRepository(), new MachineValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
-            _barringService = new BarringService(new BarringRepository(), new BarringValidator());
+            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
-            _barringOrderDetailService = new BarringOrderDetailService(new BarringOrderDetailRepository(), new BarringOrderDetailValidator());
+            _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
         }
 
         public ActionResult Index()
@@ -65,13 +67,51 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _rollerBuilderService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _rollerBuilderService.GetQueryable().Include("Item").Include("RollerType")
+                                                        .Include("UoM").Include("Machine")
+                                                        .Include("CoreBuilder").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<RollerBuilder>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.BaseSku,
+                             model.Name,
+                             RollerType = model.RollerType.Name,
+                             model.RD,
+                             model.CD,
+                             model.RL,
+                             model.WL,
+                             model.TL,
+                             model.SkuRollerUsedCore,
+                             RollerUsedCoreItemQuantity = model.RollerUsedCoreItem.Quantity,
+                             model.SkuRollerNewCore,
+                             RollerNewCoreItemQuantity = model.RollerNewCoreItem.Quantity,
+                             UoM = model.UoM.Name,
+                             Machine = model.Machine.Name,
+                             Compound = model.Compound.Name,
+                             Adhesive = model.Adhesive.Name,
+                             CoreBuilderBaseSku = model.CoreBuilder.BaseSku,
+                             CoreBuilder = model.CoreBuilder.Name,
+                             model.Description,
+                             model.IsCrowning,
+                             model.CrowningSize,
+                             model.IsGrooving,
+                             model.GroovingWidth,
+                             model.GroovingDepth,
+                             model.GroovingPosition,
+                             model.IsChamfer,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -103,23 +143,31 @@ namespace WebView.Controllers
                             model.Id,
                             model.BaseSku,
                             model.Name,
-                            _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
+                            model.RollerType,
                             model.RD,
                             model.CD,
                             model.RL,
                             model.WL,
                             model.TL,
                             model.SkuRollerUsedCore,
-                            _itemService.GetObjectById(model.RollerUsedCoreItemId).Quantity,
-                            _uomService.GetObjectById(model.UoMId).Name,
+                            model.RollerUsedCoreItemQuantity,
+                            model.UoM,
                             model.SkuRollerNewCore,
-                            _itemService.GetObjectById(model.RollerNewCoreItemId).Quantity,
-                            _uomService.GetObjectById(model.UoMId).Name,
-                            _machineService.GetObjectById(model.MachineId).Name,
-                            _itemService.GetObjectById(model.CompoundId).Name,
-                            _coreBuilderService.GetObjectById(model.CoreBuilderId).BaseSku,
-                            _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
-                            model.Category,
+                            model.RollerNewCoreItemQuantity,
+                            model.UoM,
+                            model.Machine,
+                            model.Compound,
+                            model.Adhesive,
+                            model.CoreBuilderBaseSku,
+                            model.CoreBuilder,
+                            model.Description,
+                            model.IsCrowning,
+                            model.CrowningSize,
+                            model.IsGrooving,
+                            model.GroovingWidth,
+                            model.GroovingDepth,
+                            model.GroovingPosition,
+                            model.IsChamfer,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -130,14 +178,32 @@ namespace WebView.Controllers
         public dynamic GetListCompound(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            int itemtypeId = _itemTypeService.GetObjectByName("Compound").Id;
-            var query = _itemService.GetAll().Where(d => d.IsDeleted == false && d.ItemTypeId == itemtypeId);
+            var q = _itemService.GetQueryable().Include("ItemType").Where(x => !x.IsDeleted && x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.Compound);
 
-            var list = query as IEnumerable<Item>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.Sku,
+                             model.Category,
+                             model.Description,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.UoMId,
+                             UoM = model.UoM.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -170,11 +236,12 @@ namespace WebView.Controllers
                             model.Name,
                             model.Sku,
                             model.Category,
-                            model.UoMId,
-                            _uomService.GetObjectById(model.UoMId).Name,
+                            model.Description,
                             model.Quantity,
                             model.PendingReceival,
                             model.PendingDelivery,
+                            model.UoMId,
+                            model.UoM,
                             model.CreatedAt,
                             model.UpdatedAt
                       }
@@ -182,6 +249,79 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetListAdhesive(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _itemService.GetQueryable().Include("ItemType").Where(x => !x.IsDeleted && x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.Adhesive);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.Sku,
+                             model.Category,
+                             model.Description,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.UoMId,
+                             UoM = model.UoM.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Name,
+                            model.Sku,
+                            model.Category,
+                            model.Description,
+                            model.Quantity,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.UoMId,
+                            model.UoM,
+                            model.CreatedAt,
+                            model.UpdatedAt
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
 
         public dynamic GetInfo(int Id)
         {
@@ -200,7 +340,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Name,
-                model.Category,
+                model.Description,
                 model.UoMId,
                 UoM = _uomService.GetObjectById(model.UoMId).Name,
                 model.BaseSku,
@@ -212,6 +352,8 @@ namespace WebView.Controllers
                 RollerType = _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
                 model.CompoundId,
                 Compound = _itemService.GetObjectById(model.CompoundId).Name,
+                model.AdhesiveId,
+                Adhesive = _itemService.GetObjectById(model.AdhesiveId).Name,
                 model.CoreBuilderId,
                 CoreBuilder = _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                 model.RD,
@@ -221,7 +363,13 @@ namespace WebView.Controllers
                 model.TL,
                 RollerUsedCoreQuantity = _itemService.GetObjectById(model.RollerUsedCoreItemId).Quantity,
                 RollerNewCoreQuantity =_itemService.GetObjectById(model.RollerNewCoreItemId).Quantity,
-
+                model.IsCrowning,
+                model.CrowningSize,
+                model.IsGrooving,
+                model.GroovingWidth,
+                model.GroovingDepth,
+                model.GroovingPosition,
+                model.IsChamfer,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -254,9 +402,32 @@ namespace WebView.Controllers
             {
                 var data = _rollerBuilderService.GetObjectById(model.Id);
                 data.Name = model.Name;
-                model = _rollerBuilderService.UpdateObject(data,_machineService,_uomService,_itemService,
+                data.BaseSku = model.BaseSku;
+                data.SkuRollerNewCore = model.SkuRollerNewCore;
+                data.SkuRollerUsedCore = model.SkuRollerUsedCore;
+                data.MachineId = model.MachineId;
+                data.RollerTypeId = model.RollerTypeId;
+                data.CompoundId = model.CompoundId;
+                data.AdhesiveId = model.AdhesiveId;
+                data.UoMId = model.UoMId;
+                data.CoreBuilderId = model.CoreBuilderId;
+                data.Description = model.Description;
+                data.RD = model.RD;
+                data.CD = model.CD;
+                data.RL = model.RL;
+                data.WL = model.WL;
+                data.TL = model.TL;
+                data.IsCrowning = model.IsCrowning;
+                data.CrowningSize = model.CrowningSize;
+                data.IsGrooving = model.IsGrooving;
+                data.GroovingWidth = model.GroovingWidth;
+                data.GroovingDepth = model.GroovingDepth;
+                data.GroovingPosition = model.GroovingPosition;
+                data.IsChamfer = model.IsChamfer;
+
+                model = _rollerBuilderService.UpdateObject(data, _machineService, _uomService, _itemService,
                     _itemTypeService,_coreBuilderService,_rollerTypeService,_warehouseItemService,_warehouseService,
-                    _barringService,_contactService,_priceMutationService,_contactGroupService);
+                    _blanketService,_contactService,_priceMutationService,_contactGroupService);
             }
             catch (Exception ex)
             {
@@ -276,10 +447,10 @@ namespace WebView.Controllers
             try
             {
                 var data = _rollerBuilderService.GetObjectById(model.Id);
-                model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_barringService,
+                model = _rollerBuilderService.SoftDeleteObject(data,_itemService,_blanketService,
                     _priceMutationService,_recoveryOrderDetailService,_coreBuilderService,
                     _warehouseItemService,_stockMutationService,_itemTypeService,_purchaseOrderDetailService,
-                    _stockAdjustmentDetailService,_salesOrderDetailService, _barringOrderDetailService);
+                    _stockAdjustmentDetailService,_salesOrderDetailService, _blanketOrderDetailService);
             }
             catch (Exception ex)
             {

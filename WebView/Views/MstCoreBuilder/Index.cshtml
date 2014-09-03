@@ -52,23 +52,15 @@
                         </tr>
                           <tr>
                             <td>
-                                <label>Sku UsedCore</label></td>
+                                <label>Used Sku</label></td>
                             <td >
                                 <input id="SkuUsedCore" name ="SkuUsedCore" type="text" size="10" maxlength="60" align="left"/></td>
                         </tr>
                           <tr>
                             <td>
-                                <label>Sku NewCore</label></td>
+                                <label>New Sku</label></td>
                             <td >
                                 <input id="SkuNewCore" name ="SkuNewCore" type="text" size="10" maxlength="60" align="left"/></td>
-                        </tr>
-                         <tr>
-                            <td>
-                                <label>UoM</label></td>
-                            <td colspan="3">
-                                <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="UoMName" name="UoMId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
@@ -78,21 +70,48 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Category</label></td>
+                                <label>Description</label></td>
                             <td colspan="3">
-                                <input id="Category" name="Category" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Description" name="Description" type="text" size="60" maxlength="60" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
-                                <label>UsedCore Quantity</label></td>
+                                <label>Used Quantity</label></td>
                             <td colspan="3">
                         <input id="UsedCoreQuantity" name="UsedCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
                         </tr>
                          <tr>
                             <td>
-                                <label>NewCore Quantity</label></td>
+                                <label>New Quantity</label></td>
                             <td colspan="3">
                         <input id="NewCoreQuantity" name="NewCoreQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>UoM</label></td>
+                            <td colspan="3">
+                                <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="UoMName" name="UoMId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                         <tr>
+                            <td>
+                                <label>Machine</label></td>
+                            <td colspan="3">
+                                <input id="MachineId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnMachine" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Machine" name="MachineId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Type</label>
+                            </td>
+                            <td>
+                                <select id="CoreBuilderTypeCase">
+                                  <option value="Hollow">Hollow</option>
+                                  <option value="Shaft">Shaft</option>
+                               </select>
+                            </td>
                         </tr>
                     </table>
                 @*</fieldset>*@
@@ -117,7 +136,7 @@
 <!-- End Dialog Box Delete-->
 
 
- <!-- Look Up UoM -->
+    <!-- Look Up UoM -->
     <div id="lookup_div_uom" class="easyui-dialog" title="List UoM" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -129,7 +148,22 @@
         <table id="lookup_table_uom" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_uom" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up UoM -->
+    <!-- END Look Up UoM -->
+
+     <!-- Look Up Machine -->
+    <div id="lookup_div_machine" class="easyui-dialog" title="List Machine" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_machine" class="grid_toolbar">
+            <a id="lookup_btn_add_machine" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_machine" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_machine" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_machine" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up Machine -->
+
 
   </div>
 

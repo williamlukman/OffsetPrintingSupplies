@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -31,13 +33,28 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _cashMutationService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _cashMutationService.GetQueryable().Include("CashBank").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<CashMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.CashBankId,
+                            CashBank = model.CashBank.Name,
+                            RealAmount = (model.Status == Core.Constants.Constant.MutationStatus.Addition) ? model.Amount : model.Amount * (-1),
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.CreatedAt,
+                            model.MutationDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -61,19 +78,19 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from cashmutation in list
+                    from model in list
                     select new
                     {
-                        id = cashmutation.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            cashmutation.Id,
-                            cashmutation.CashBankId,
-                            _cashBankService.GetObjectById(cashmutation.CashBankId).Name,
-                            cashmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? cashmutation.Amount : cashmutation.Amount * (-1),
-                            cashmutation.SourceDocumentType,
-                            cashmutation.SourceDocumentId,
-                            cashmutation.CreatedAt,
-                            cashmutation.MutationDate
+                            model.Id,
+                            model.CashBankId,
+                            model.CashBank,
+                            model.RealAmount,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.CreatedAt,
+                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -82,13 +99,28 @@ namespace WebView.Controllers
         public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime startdate, DateTime enddate, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _cashMutationService.GetAll().Where(d => d.MutationDate >= startdate && d.MutationDate < enddate.AddDays(1) && d.IsDeleted == false);
+            var q = _cashMutationService.GetQueryable().Include("CashBank").Where(x => x.MutationDate >= startdate && x.MutationDate < enddate.AddDays(1) && !x.IsDeleted);
 
-            var list = query as IEnumerable<CashMutation>;
+            var query = (from model in q
+                         select new
+                         {
+                            model.Id,
+                            model.CashBankId,
+                            CashBank = model.CashBank.Name,
+                            RealAmount = (model.Status == Core.Constants.Constant.MutationStatus.Addition) ? model.Amount : model.Amount * (-1),
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.CreatedAt,
+                            model.MutationDate
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -112,19 +144,19 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from cashmutation in list
+                    from model in list
                     select new
                     {
-                        id = cashmutation.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            cashmutation.Id,
-                            cashmutation.CashBankId,
-                            _cashBankService.GetObjectById(cashmutation.CashBankId).Name,
-                            cashmutation.Status == Core.Constants.Constant.MutationStatus.Addition ? cashmutation.Amount : cashmutation.Amount * (-1),
-                            cashmutation.SourceDocumentType,
-                            cashmutation.SourceDocumentId,
-                            cashmutation.CreatedAt,
-                            cashmutation.MutationDate
+                            model.Id,
+                            model.CashBankId,
+                            model.CashBank,
+                            model.RealAmount,
+                            model.SourceDocumentType,
+                            model.SourceDocumentId,
+                            model.CreatedAt,
+                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

@@ -29,11 +29,11 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail, DateTime ConfirmationDate, IDeliveryOrderService _deliveryOrderService,
                                           ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                          IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                          IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
                                             ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                             ISalesInvoiceDetailService _salesInvoiceDetailService, IStockMutationService _stockMutationService,
-                                            IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity);
         DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity, IDeliveryOrderService _deliveryOrderService);
     }

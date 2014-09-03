@@ -47,10 +47,10 @@ namespace Validation.Validation
             return warehouse;
         }
 
-        public Warehouse VIsInBarringOrderAndIncomplete(Warehouse warehouse, IBarringOrderService _barringOrderService)
+        public Warehouse VIsInBlanketOrderAndIncomplete(Warehouse warehouse, IBlanketOrderService _blanketOrderService)
         {
-            IList<BarringOrder> barringOrders = _barringOrderService.GetAllObjectsByWarehouseId(warehouse.Id);
-            if (barringOrders.Any())
+            IList<BlanketOrder> blanketOrders = _blanketOrderService.GetAllObjectsByWarehouseId(warehouse.Id);
+            if (blanketOrders.Any())
             {
                 warehouse.Errors.Add("Generic", "Tidak dapat menghapus warehouse");
             }
@@ -68,13 +68,13 @@ namespace Validation.Validation
             return VCreateObject(warehouse, _warehouseService);
         }
 
-        public Warehouse VDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, IBarringOrderService _barringOrderService)
+        public Warehouse VDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, IBlanketOrderService _blanketOrderService)
         {
             VWarehouseQuantityMustBeZero(warehouse, _warehouseItemService);
             if (!isValid(warehouse)) { return warehouse; }
             VIsInCoreIdentification(warehouse, _coreIdentificationService);
             if (!isValid(warehouse)) { return warehouse; }
-            VIsInBarringOrderAndIncomplete(warehouse, _barringOrderService);
+            VIsInBlanketOrderAndIncomplete(warehouse, _blanketOrderService);
             return warehouse;
         }
 
@@ -91,10 +91,10 @@ namespace Validation.Validation
             return isValid(warehouse);
         }
 
-        public bool ValidDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, IBarringOrderService _barringOrderService)
+        public bool ValidDeleteObject(Warehouse warehouse, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, IBlanketOrderService _blanketOrderService)
         {
             warehouse.Errors.Clear();
-            VDeleteObject(warehouse, _warehouseItemService, _coreIdentificationService, _barringOrderService);
+            VDeleteObject(warehouse, _warehouseItemService, _coreIdentificationService, _blanketOrderService);
             return isValid(warehouse);
         }
         

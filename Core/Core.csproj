@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\MasterConstant.cs" />
     <Compile Include="Constants\OperationConstant.cs" />
     <Compile Include="Constants\ManufacturingConstant.cs" />
     <Compile Include="DomainModel\Finance\CashBank.cs" />
@@ -64,9 +65,9 @@
     <Compile Include="DomainModel\SalesOperation\ReceiptVoucherDetail.cs" />
     <Compile Include="DomainModel\SalesOperation\SalesInvoice.cs" />
     <Compile Include="DomainModel\SalesOperation\SalesInvoiceDetail.cs" />
-    <Compile Include="DomainModel\StockAndMaster\Barring.cs" />
-    <Compile Include="DomainModel\Manufacturing\BarringOrder.cs" />
-    <Compile Include="DomainModel\Manufacturing\BarringOrderDetail.cs" />
+    <Compile Include="DomainModel\StockAndMaster\Blanket.cs" />
+    <Compile Include="DomainModel\Manufacturing\BlanketOrder.cs" />
+    <Compile Include="DomainModel\Manufacturing\BlanketOrderDetail.cs" />
     <Compile Include="DomainModel\SalesOperation\DeliveryOrder.cs" />
     <Compile Include="DomainModel\SalesOperation\DeliveryOrderDetail.cs" />
     <Compile Include="DomainModel\PurchaseOperation\PurchaseOrder.cs" />
@@ -136,9 +137,9 @@
     <Compile Include="Interface\Repository\StockAndMaster\IWarehouseMutationRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IWarehouseItemRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IWarehouseRepository.cs" />
-    <Compile Include="Interface\Repository\Manufacturing\IBarringOrderDetailRepository.cs" />
-    <Compile Include="Interface\Repository\Manufacturing\IBarringOrderRepository.cs" />
-    <Compile Include="Interface\Repository\StockAndMaster\IBarringRepository.cs" />
+    <Compile Include="Interface\Repository\Manufacturing\IBlanketOrderDetailRepository.cs" />
+    <Compile Include="Interface\Repository\Manufacturing\IBlanketOrderRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\IBlanketRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\IRecoveryOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\IRecoveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\Manufacturing\ICoreIdentificationRepository.cs" />
@@ -191,9 +192,9 @@
     <Compile Include="Interface\Service\StockAndMaster\IWarehouseMutationService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IWarehouseItemService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IWarehouseService.cs" />
-    <Compile Include="Interface\Service\StockAndMaster\IBarringService.cs" />
-    <Compile Include="Interface\Service\Manufacturing\IBarringOrderDetailService.cs" />
-    <Compile Include="Interface\Service\Manufacturing\IBarringOrderService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\IBlanketService.cs" />
+    <Compile Include="Interface\Service\Manufacturing\IBlanketOrderDetailService.cs" />
+    <Compile Include="Interface\Service\Manufacturing\IBlanketOrderService.cs" />
     <Compile Include="Interface\Service\Manufacturing\IRecoveryOrderService.cs" />
     <Compile Include="Interface\Service\Manufacturing\IRecoveryOrderDetailService.cs" />
     <Compile Include="Interface\Service\Manufacturing\IRecoveryAccessoryDetailService.cs" />
@@ -245,9 +246,9 @@
     <Compile Include="Interface\Validation\StockAndMaster\IWarehouseMutationValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IWarehouseItemValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IWarehouseValidator.cs" />
-    <Compile Include="Interface\Validation\Manufacturing\IBarringOrderDetailValidator.cs" />
-    <Compile Include="Interface\Validation\Manufacturing\IBarringOrderValidator.cs" />
-    <Compile Include="Interface\Validation\StockAndMaster\IBarringValidator.cs" />
+    <Compile Include="Interface\Validation\Manufacturing\IBlanketOrderDetailValidator.cs" />
+    <Compile Include="Interface\Validation\Manufacturing\IBlanketOrderValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\IBlanketValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\IRecoveryAccessoryDetailValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\IRecoveryOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\Manufacturing\IRecoveryOrderValidator.cs" />
@@ -264,7 +265,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Interface\Service\Index.cshtml" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

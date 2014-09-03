@@ -24,12 +24,12 @@ namespace Core.Interface.Service
         DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                     ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                     IStockMutationService _stockMutationService, IItemService _itemService,
-                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                    IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                     ISalesInvoiceService _salesInvoiceService, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                     ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                     IStockMutationService _stockMutationService, IItemService _itemService,
-                                    IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                    IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         DeliveryOrder CheckAndSetInvoiceComplete(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
         DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder);
     }

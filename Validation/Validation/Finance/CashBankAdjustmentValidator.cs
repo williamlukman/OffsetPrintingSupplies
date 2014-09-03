@@ -61,7 +61,7 @@ namespace Validation.Validation
             CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
             if (CaseConfirm && cashBankAdjustment.Amount < 0)
             {
-                if (cashBank.Amount - cashBankAdjustment.Amount < 0)
+                if (cashBank.Amount + cashBankAdjustment.Amount < 0)
                 {
                     cashBankAdjustment.Errors.Add("Generic", "CashBank.Amount tidak boleh kurang dari adjustment amount");
                 }

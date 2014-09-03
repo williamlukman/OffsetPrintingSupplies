@@ -25,8 +25,8 @@ namespace Core.Interface.Service
         StockAdjustmentDetail SoftDeleteObject(StockAdjustmentDetail stockAdjustmentDetail);
         bool DeleteObject(int Id);
         StockAdjustmentDetail ConfirmObject(StockAdjustmentDetail stockAdjustmentDetail, DateTime ConfirmationDate, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
-                                            IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         StockAdjustmentDetail UnconfirmObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService, IStockMutationService _stockMutationService,
-                                            IItemService _itemService, IBarringService _barringService, IWarehouseItemService _warehouseItemService);
+                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
     }
 }

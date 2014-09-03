@@ -8,6 +8,8 @@ using Core.Interface.Service;
 using Core.DomainModel;
 using Data.Repository;
 using Validation.Validation;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -46,13 +48,34 @@ namespace WebView.Controllers
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _salesInvoiceService.GetAll().Where(d => d.IsDeleted == false);
+            var q = _salesInvoiceService.GetQueryable().Include("DeliveryOrder").Where(x => !x.IsDeleted);
 
-            var list = query as IEnumerable<SalesInvoice>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.DeliveryOrderId,
+                             DeliveryOrderCode = model.DeliveryOrder.Code,
+                             model.Description,
+                             model.Discount,
+                             model.IsTaxable,
+                             model.InvoiceDate,
+                             model.DueDate,
+                             model.AmountReceivable,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -84,7 +107,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.DeliveryOrderId,
-                            _deliveryOrderService.GetObjectById(model.DeliveryOrderId).Code,
+                            model.DeliveryOrderCode,
                             model.Description,
                             model.Discount,
                             model.IsTaxable,
@@ -103,13 +126,30 @@ namespace WebView.Controllers
         public dynamic GetListDetail(string _search, long nd, int rows, int? page, string sidx, string sord, int id, string filters = "")
         {
             // Construct where statement
-
             string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
 
             // Get Data
-            var query = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(id).Where(d => d.IsDeleted == false);
+            var q = _salesInvoiceDetailService.GetQueryable().Include("DeliveryOrderDetail").Include("Item")
+                                              .Where(x => x.SalesInvoiceId == id && !x.IsDeleted);
 
-            var list = query as IEnumerable<SalesInvoiceDetail>;
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.DeliveryOrderDetailId,
+                             DeliveryOrderDetailCode = model.DeliveryOrderDetail.Code,
+                             model.DeliveryOrderDetail.ItemId,
+                             ItemSku = model.DeliveryOrderDetail.Item.Sku,
+                             Item = model.DeliveryOrderDetail.Item.Name,
+                             model.Quantity,
+                             model.Amount,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;
             var pageSize = rows;
@@ -138,19 +178,19 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            model.Id,
                             model.Code,
                             model.DeliveryOrderDetailId,
-                            _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).Code,
-                            _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).ItemId,
-                            _itemService.GetObjectById( _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).ItemId).Sku,
-                            _itemService.GetObjectById( _deliveryOrderDetailService.GetObjectById(model.DeliveryOrderDetailId).ItemId).Name,
+                            model.DeliveryOrderDetailCode,
+                            model.ItemId,
+                            model.ItemSku,
+                            model.Item,
                             model.Quantity,
                             model.Amount,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
 
         public dynamic GetInfo(int Id)
         {

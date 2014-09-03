@@ -16,6 +16,14 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(sm => sm.ItemId)
                 .WillCascadeOnDelete(false);
+            HasOptional(sm => sm.Warehouse)
+                .WithMany()
+                .HasForeignKey(sm => sm.WarehouseId)
+                .WillCascadeOnDelete(false);
+            HasOptional(sm => sm.WarehouseItem)
+                .WithMany()
+                .HasForeignKey(sm => sm.WarehouseItemId)
+                .WillCascadeOnDelete(false);
             Ignore(sm => sm.Errors);
         }
     }

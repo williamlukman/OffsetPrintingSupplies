@@ -11,7 +11,7 @@ namespace Core.DomainModel
         
         public string Name { get; set; }
         public string Description { get; set; }
-        public bool IsLegacy { get; set; } // Core, Roller, Barring are legacy items
+        public bool IsLegacy { get; set; } // Core, Roller, Blanket are legacy items
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

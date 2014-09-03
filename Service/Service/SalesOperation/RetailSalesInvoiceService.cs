@@ -60,7 +60,7 @@ namespace Service.Service
                                                 IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService, IContactService _contactService,
                                                 IPriceMutationService _priceMutationService, IReceivableService _receivableService, 
                                                 IRetailSalesInvoiceService _retailSalesInvoiceService, IWarehouseItemService _warehouseItemService,
-                                                IWarehouseService _warehouseService, IItemService _itemService, IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                IWarehouseService _warehouseService, IItemService _itemService, IBlanketService _blanketService, IStockMutationService _stockMutationService)
         {
             if (retailSalesInvoice.IsGroupPricing)
             {
@@ -83,7 +83,7 @@ namespace Service.Service
                 {
                     retailSalesInvoiceDetail.Errors = new Dictionary<string,string>();
                     _retailSalesInvoiceDetailService.ConfirmObject(retailSalesInvoiceDetail,_retailSalesInvoiceService,_warehouseItemService,
-                                                                   _warehouseService, _itemService, _barringService, _stockMutationService);
+                                                                   _warehouseService, _itemService, _blanketService, _stockMutationService);
                 }
                 retailSalesInvoice = _repository.ConfirmObject(retailSalesInvoice);
             }
@@ -93,7 +93,7 @@ namespace Service.Service
         public RetailSalesInvoice UnconfirmObject(RetailSalesInvoice retailSalesInvoice, IRetailSalesInvoiceDetailService _retailSalesInvoiceDetailService,
                                                   IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IItemService _itemService, 
-                                                  IBarringService _barringService, IStockMutationService _stockMutationService)
+                                                  IBlanketService _blanketService, IStockMutationService _stockMutationService)
         {
             if (_validator.ValidUnconfirmObject(retailSalesInvoice, _retailSalesInvoiceDetailService, _receivableService, _receiptVoucherDetailService))
             {
@@ -102,7 +102,7 @@ namespace Service.Service
                 foreach (var retailSalesInvoiceDetail in retailSalesInvoiceDetails)
                 {
                     retailSalesInvoiceDetail.Errors = new Dictionary<string, string>();
-                    _retailSalesInvoiceDetailService.UnconfirmObject(retailSalesInvoiceDetail, _warehouseItemService, _warehouseService, _itemService, _barringService, _stockMutationService);
+                    _retailSalesInvoiceDetailService.UnconfirmObject(retailSalesInvoiceDetail, _warehouseItemService, _warehouseService, _itemService, _blanketService, _stockMutationService);
                 }
                 Receivable receivable = _receivableService.GetObjectBySource(Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id);
                 _receivableService.SoftDeleteObject(receivable);

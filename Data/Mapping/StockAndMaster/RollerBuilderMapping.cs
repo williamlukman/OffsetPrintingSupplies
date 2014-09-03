@@ -25,6 +25,14 @@ namespace Data.Mapping
             HasRequired(rb => rb.UoM)
                 .WithMany(uom => uom.RollerBuilders)
                 .HasForeignKey(rb => rb.UoMId);
+            HasRequired(rb => rb.Adhesive)
+                .WithMany()
+                .HasForeignKey(rb => rb.AdhesiveId)
+                .WillCascadeOnDelete(false);
+            HasRequired(rb => rb.RollerUsedCoreItem)
+                .WithMany()
+                .HasForeignKey(rb => rb.RollerUsedCoreItemId)
+                .WillCascadeOnDelete(false);
             Ignore(rb => rb.Errors);
         }
     }

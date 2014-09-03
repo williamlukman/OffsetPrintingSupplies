@@ -25,6 +25,8 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+
+        public virtual Warehouse Warehouse { get; set; }
         public virtual Contact Contact { get; set; }
         public virtual ICollection<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
     }

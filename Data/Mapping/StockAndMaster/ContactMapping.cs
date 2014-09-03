@@ -15,10 +15,10 @@ namespace Data.Mapping
             HasMany(c => c.CoreIdentifications)
                 .WithOptional(ci => ci.Contact)
                 .HasForeignKey(ci => ci.ContactId);
-            HasMany(c => c.BarringOrders)
+            HasMany(c => c.BlanketOrders)
                 .WithRequired(bo => bo.Contact)
                 .HasForeignKey(bo => bo.ContactId);
-            HasMany(c => c.Barrings)
+            HasMany(c => c.Blankets)
                 .WithRequired(b => b.Contact)
                 .HasForeignKey(c => c.ContactId);
             HasMany(c => c.PurchaseOrders)
