@@ -40,22 +40,24 @@ namespace Validation.Validation
             return coreAccessoryDetail;
         }
 
-        public CoreAccessoryDetail VQuantityInStock(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        public CoreAccessoryDetail VHasUniqueDetailId(CoreAccessoryDetail coreAccessorrynDetail, ICoreAccessoryDetailService _coreAccessoryDetailService)
         {
-            CoreIdentificationDetail detail = _coreIdentificationDetailService.GetObjectById(coreAccessoryDetail.CoreIdentificationDetailId);
-            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(detail.CoreIdentificationId);
-            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, coreAccessoryDetail.ItemId);
-            if (warehouseItem.Quantity < coreAccessoryDetail.Quantity)
+            IList<CoreAccessoryDetail> details = _coreAccessoryDetailService.GetObjectsByCoreIdentificationDetailId(coreAccessorrynDetail.CoreIdentificationDetailId);
+            foreach (var detail in details)
             {
-                coreAccessoryDetail.Errors.Add("Quantity", "Tidak boleh lebih dari jumlah stock barang");
+                if (detail.ItemId == coreAccessorrynDetail.ItemId && detail.Id != coreAccessorrynDetail.Id)
+                {
+                    coreAccessorrynDetail.Errors.Add("ItemId", "Tidak boleh di duplikasi");
+                    return coreAccessorrynDetail;
+                }
             }
-            return coreAccessoryDetail;
+            return coreAccessorrynDetail;
         }
 
       
 
         public CoreAccessoryDetail VCreateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                     IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService)
         {
             VHasCoreIdentificationDetail(coreAccessoryDetail, _coreIdentificationDetailService);
             if (!isValid(coreAccessoryDetail)) { return coreAccessoryDetail; }
@@ -63,15 +65,14 @@ namespace Validation.Validation
             if (!isValid(coreAccessoryDetail)) { return coreAccessoryDetail; }
             VNonNegativeNorZeroQuantity(coreAccessoryDetail);
             if (!isValid(coreAccessoryDetail)) { return coreAccessoryDetail; }
-            VQuantityInStock(coreAccessoryDetail, _coreIdentificationService, _coreIdentificationDetailService, _itemService, _warehouseItemService);
-            if (!isValid(coreAccessoryDetail)) { return coreAccessoryDetail; }
+            VHasUniqueDetailId(coreAccessoryDetail, _coreAccessoryDetailService);
             return coreAccessoryDetail;
         }
 
         public CoreAccessoryDetail VUpdateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                     IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,ICoreAccessoryDetailService _coreAccessoryDetailService)
         {
-            VCreateObject(coreAccessoryDetail, _coreIdentificationService, _coreIdentificationDetailService, _itemService, _itemTypeService, _warehouseItemService);
+            VCreateObject(coreAccessoryDetail, _coreIdentificationService, _coreIdentificationDetailService, _itemService, _itemTypeService, _warehouseItemService, _coreAccessoryDetailService);
             if (!isValid(coreAccessoryDetail)) { return coreAccessoryDetail; }
             return coreAccessoryDetail;
         }
@@ -82,17 +83,17 @@ namespace Validation.Validation
         }
 
         public bool ValidCreateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService)
         {
-            VCreateObject(coreAccessoryDetail, _coreIdentificationService, _coreIdentificationDetailService, _itemService, _itemTypeService, _warehouseItemService);
+            VCreateObject(coreAccessoryDetail, _coreIdentificationService, _coreIdentificationDetailService, _itemService, _itemTypeService, _warehouseItemService,_coreAccessoryDetailService);
             return isValid(coreAccessoryDetail);
         }
 
         public bool ValidUpdateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService)
+                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService)
         {
             coreAccessoryDetail.Errors.Clear();
-            VUpdateObject(coreAccessoryDetail, _coreIdentificationService, _coreIdentificationDetailService, _itemService, _itemTypeService, _warehouseItemService);
+            VUpdateObject(coreAccessoryDetail, _coreIdentificationService, _coreIdentificationDetailService, _itemService, _itemTypeService, _warehouseItemService,_coreAccessoryDetailService);
             return isValid(coreAccessoryDetail);
         }
 

@@ -12,20 +12,17 @@ namespace Core.Interface.Validation
         CoreAccessoryDetail VHasCoreIdentificationDetail(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationDetailService _CoreIdentificationDetailService);
         CoreAccessoryDetail VIsAccessory(CoreAccessoryDetail CoreAccessoryDetail, IItemService _itemService, IItemTypeService _itemTypeService);
         CoreAccessoryDetail VNonNegativeNorZeroQuantity(CoreAccessoryDetail CoreAccessoryDetail);
-        CoreAccessoryDetail VQuantityInStock(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationService _CoreIdentificationService,
-                                                 ICoreIdentificationDetailService _CoreIdentificationDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
-
         CoreAccessoryDetail VCreateObject(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationService _CoreIdentificationService, ICoreIdentificationDetailService _CoreIdentificationDetailService,
-                                              IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
-        CoreAccessoryDetail VUpdateObject(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationService _CoreIdentificationService, ICoreIdentificationDetailService _CoreIdentificationDetailService,
-                                              IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+                                              IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService);
+        CoreAccessoryDetail VUpdateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService);
         CoreAccessoryDetail VDeleteObject(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationDetailService _CoreIdentificationDetailService);
-        bool ValidCreateObject(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationService _CoreIdentificationService, ICoreIdentificationDetailService _CoreIdentificationDetailService,
-                               IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+        bool ValidCreateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                      IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService);
         bool ValidUpdateObject(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationService _CoreIdentificationService, ICoreIdentificationDetailService _CoreIdentificationDetailService,
-                               IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+                               IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService);
         bool ValidDeleteObject(CoreAccessoryDetail CoreAccessoryDetail, ICoreIdentificationDetailService _CoreIdentificationDetailService);
         bool isValid(CoreAccessoryDetail CoreAccessoryDetail);
         string PrintError(CoreAccessoryDetail CoreAccessoryDetail);
     }
-}
+}  

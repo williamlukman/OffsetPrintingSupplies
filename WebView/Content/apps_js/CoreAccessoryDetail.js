@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'RecoveryWorkProcess/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'CoreAccessoryDetail/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'RecoveryWorkProcess/GetListAccessory?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'CoreAccessoryDetail/GetListAccessory?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
 
@@ -52,11 +52,11 @@
         datatype: "json",
         colNames: ['DetailId', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
                     'Core Sku', 'Core', 'RollerType Id', 'RollerType',
-                    'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL'
+                    'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL',
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 40, sortable: false },
-                  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
+                  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false},
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 70, sortable: false },
@@ -119,7 +119,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "RecoveryWorkProcess/GetInfo?Id=" + id,
+                url: base_url + "CoreIdentification/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -135,10 +135,10 @@
                         else {
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
-                            $('#RecoveryOrderId').val(result.RecoveryOrderId);
-                            $('#RollerBuilderSku').val(result.RollerBuilderSku);
-                            $('#RollerBuilder').val(result.RollerBuilder);
-                            $('#CoreTypeCase').val(result.CoreTypeCase);
+                            $('#RollerIdentificationId').val(result.CoreIdentificationId);
+                            $('#RollerBuilderSku').val(result.CoreBuilderBaseSku);
+                            $('#RollerBuilder').val(result.CoreBuilder);
+                            $('#CoreTypeCase').val(result.RollerType);
                             $('#process_div').hide();
                             $('#tabledetail_div').show();
                             $('#form_btn_save').hide();
@@ -165,10 +165,11 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['ItemId', 'ItemName', 'Quantity', 
+        colNames: ['ItemId', 'ItemSku', 'ItemName', 'Quantity',
         ],
         colModel: [
                   { name: 'itemid', index: 'itemid', width: 100, sortable: false },
+                  { name: 'itemsku', index: 'itemsku', width: 100, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 100, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
@@ -176,7 +177,7 @@
         //pager: $('#pageraccessory'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'itemid',
+        sortname: 'id',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -203,7 +204,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "RecoveryWorkProcess/GetInfoAccessory?Id=" + $("#id").val(),
+                url: base_url + "CoreAccessoryDetail/GetInfoAccessory?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -220,6 +221,7 @@
                             $("#accessory_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
+                            $('#ItemSku').val(result.ItemSku);
                             $('#Quantity').numberbox('setValue', (result.Quantity));
                             $('#accessory_div').dialog('open');
                         }
@@ -238,7 +240,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "RecoveryWorkProcess/DeleteAccessory",
+                        url: base_url + "CoreAccessoryDetail/DeleteAccessory",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -257,7 +259,7 @@
                                 }
                             }
                             else {
-                                ReloadGridAccessory();
+                                ReloadGridDetail();
                             }
                         }
                     });
@@ -279,11 +281,11 @@
         var id = $("#accessory_btn_submit").data('kode');
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'RecoveryWorkProcess/UpdateAccessory';
+            submitURL = base_url + 'CoreAccessoryDetail/UpdateAccessory';
         }
             // Insert
         else {
-            submitURL = base_url + 'RecoveryWorkProcess/InsertAccessory';
+            submitURL = base_url + 'CoreAccessoryDetail/InsertAccessory';
         }
 
         $.ajax({
@@ -291,7 +293,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'), RecoveryOrderDetailId:  $("#id").val()
+                Id: id, ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'), CoreIdentificationDetailId: $("#id").val()
             }),
             async: false,
             cache: false,
@@ -384,7 +386,7 @@
 
             $('#ItemId').val(ret.id).data("kode", id);
             $('#Item').val(ret.name);
-
+            $('#ItemSku').val(ret.sku);
             $('#lookup_div_item').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

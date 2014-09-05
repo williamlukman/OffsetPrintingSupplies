@@ -66,6 +66,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CashMutationMapping());
             modelBuilder.Configurations.Add(new CoreBuilderMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationMapping());
+            modelBuilder.Configurations.Add(new CoreAccessoryDetailMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationDetailMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
@@ -123,6 +124,7 @@ namespace Data.Context
         public DbSet<CashMutation> CashMutations { get; set; }
         public DbSet<CoreBuilder> CoreBuilders { get; set; }
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
+        public DbSet<CoreAccessoryDetail> CoreAccessoryDetails { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<ContactGroup> ContactGroups { get; set; }
