@@ -155,6 +155,8 @@
     <Compile Include="Controllers\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\CashMutationController.cs" />
     <Compile Include="Controllers\CoreAccessoryDetailController.cs" />
+    <Compile Include="Controllers\GeneralLedgerController.cs" />
+    <Compile Include="Controllers\MstCOAController.cs" />
     <Compile Include="Controllers\ReceivableController.cs" />
     <Compile Include="Controllers\PayableController.cs" />
     <Compile Include="Controllers\StockMutationController.cs" />
@@ -203,6 +205,8 @@
     <Content Include="Content\apps_js\BlanketWorkProcess.js" />
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\CoreAccessoryDetail.js" />
+    <Content Include="Content\apps_js\GeneralLedgerJournal.js" />
+    <Content Include="Content\apps_js\MasterCOA.js" />
     <Content Include="Content\apps_js\MasterUser.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
@@ -1077,7 +1081,9 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\mousetrap.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -1128,6 +1134,8 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\UserAccess\Index.cshtml" />
     <Content Include="Views\CoreAccessoryDetail\Index.cshtml" />
+    <Content Include="Views\GeneralLedger\Index.cshtml" />
+    <Content Include="Views\MstCOA\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

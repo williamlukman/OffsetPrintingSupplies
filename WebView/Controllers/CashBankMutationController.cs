@@ -20,6 +20,8 @@ namespace WebView.Controllers
         private ICashBankAdjustmentService _cashBankAdjustmentService;
         private ICashMutationService _cashMutationService;
         private ICashBankMutationService _cashBankMutationService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
 
         public CashBankMutationController()
         {
@@ -27,6 +29,8 @@ namespace WebView.Controllers
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
         }
 
         public ActionResult Index()
@@ -195,7 +199,8 @@ namespace WebView.Controllers
             {
                 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
-                model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService);
+                model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService,
+                                                               _accountService,_generalLedgerJournalService);
             }
             catch (Exception ex)
             {
@@ -215,7 +220,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _cashBankMutationService.GetObjectById(model.Id);
-                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService);
+                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService,_generalLedgerJournalService);
             }
             catch (Exception ex)
             {

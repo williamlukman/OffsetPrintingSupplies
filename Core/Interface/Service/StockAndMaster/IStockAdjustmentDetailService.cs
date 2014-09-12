@@ -18,7 +18,7 @@ namespace Core.Interface.Service
         StockAdjustmentDetail GetObjectById(int Id);
         StockAdjustmentDetail CreateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
                                            IItemService _itemService, IWarehouseItemService _warehouseItemService);
-        StockAdjustmentDetail CreateObject(int stockAdjustmentId, int itemId, int quantity, IStockAdjustmentService _stockAdjustmentService,
+        StockAdjustmentDetail CreateObject(int stockAdjustmentId, int itemId, int quantity, decimal price, IStockAdjustmentService _stockAdjustmentService,
                                            IItemService _itemService, IWarehouseItemService _warehouseItemService);
         StockAdjustmentDetail UpdateObject(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentService _stockAdjustmentService,
                                            IItemService _itemService, IWarehouseItemService _warehouseItemService);

@@ -96,7 +96,8 @@ namespace Service.Service
         }
 
         public ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher, DateTime ConfirmationDate, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                            ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService)
+                                            ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService)
         {
             receiptVoucher.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(receiptVoucher, this, _receiptVoucherDetailService, _cashBankService, _receivableService))
@@ -114,13 +115,15 @@ namespace Service.Service
                     CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
                     CashMutation cashMutation = _cashMutationService.CreateCashMutationForReceiptVoucher(receiptVoucher, cashBank);
                     _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                    _generalLedgerJournalService.CreateConfirmationJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService);
                 }
             }
             return receiptVoucher;
         }
 
         public ReceiptVoucher UnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                            ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService)
+                                            ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService)
         {
             if (_validator.ValidUnconfirmObject(receiptVoucher))
             {
@@ -140,14 +143,15 @@ namespace Service.Service
                     {
                         _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
                     }
+                    _generalLedgerJournalService.CreateUnconfirmationJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService);
                 }
             }
             return receiptVoucher;
         }
 
-        public ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher, DateTime ReconciliationDate,
-                                              IReceiptVoucherDetailService _receiptVoucherDetailService, ICashMutationService _cashMutationService,
-                                              ICashBankService _cashBankService, IReceivableService _receivableService)
+        public ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher, DateTime ReconciliationDate, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                              ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService)
         {
             receiptVoucher.ReconciliationDate = ReconciliationDate;
             if (_validator.ValidReconcileObject(receiptVoucher))
@@ -175,7 +179,8 @@ namespace Service.Service
         }
 
         public ReceiptVoucher UnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                                ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService)
+                                                ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService)
         {
             if (_validator.ValidUnreconcileObject(receiptVoucher))
             {

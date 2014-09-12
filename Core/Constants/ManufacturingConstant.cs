@@ -27,7 +27,7 @@ namespace Core.Constants
             public static int Vulcanize = 4;
             public static int FaceOff = 5;
             public static int ConventionalGrind = 6;
-            public static int CWCGrind = 7;
+            public static int CNCGrind = 7;
             public static int PolishAndQC = 8;
             public static int Package = 9;
         }

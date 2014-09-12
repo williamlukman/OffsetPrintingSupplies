@@ -463,6 +463,7 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
+                            $('#Price').val(result.Price);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -535,7 +536,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, StockAdjustmentId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").numberbox('getValue')
+                Quantity: $("#Quantity").numberbox('getValue'), Price: $("#Price").numberbox('getValue')
             }),
             async: false,
             cache: false,

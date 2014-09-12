@@ -20,6 +20,8 @@ namespace Data.Context
         {
             IList<String> tableNames = new List<String>();
 
+            IList<String> accountingNames = new List<String>()
+                                        { "ValidComb", "Closing", "GeneralLedgerJournal", "Account" };
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -40,6 +42,7 @@ namespace Data.Context
                                           "Warehouse", "Blanket", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup"};
 
+            accountingNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
             salesOperationNames.ToList().ForEach(x => tableNames.Add(x));
@@ -57,6 +60,7 @@ namespace Data.Context
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
+            modelBuilder.Configurations.Add(new AccountMapping());
             modelBuilder.Configurations.Add(new BlanketMapping());
             modelBuilder.Configurations.Add(new BlanketOrderMapping());
             modelBuilder.Configurations.Add(new BlanketOrderDetailMapping());
@@ -64,6 +68,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CashBankAdjustmentMapping());
             modelBuilder.Configurations.Add(new CashBankMutationMapping());
             modelBuilder.Configurations.Add(new CashMutationMapping());
+            modelBuilder.Configurations.Add(new ClosingMapping());
             modelBuilder.Configurations.Add(new CoreBuilderMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationDetailMapping());
@@ -71,6 +76,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new ContactMapping());
             modelBuilder.Configurations.Add(new ContactGroupMapping());
+            modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
             modelBuilder.Configurations.Add(new GroupItemPriceMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
@@ -107,6 +113,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
             modelBuilder.Configurations.Add(new UoMMapping());
+            modelBuilder.Configurations.Add(new ValidCombMapping());
             modelBuilder.Configurations.Add(new WarehouseMapping());
             modelBuilder.Configurations.Add(new WarehouseItemMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationMapping());
@@ -114,6 +121,7 @@ namespace Data.Context
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<Blanket> Blankets { get; set; }
         public DbSet<BlanketOrder> BlanketOrders { get; set; }
         public DbSet<BlanketOrderDetail> BlanketOrderDetails { get; set; }
@@ -129,6 +137,7 @@ namespace Data.Context
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public DbSet<GroupItemPrice> GroupItemPrices { get; set; }
+        public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<Machine> Machines { get; set; }
@@ -159,6 +168,7 @@ namespace Data.Context
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }
         public DbSet<UoM> UoMs { get; set; }
+        public DbSet<ValidComb> ValidCombs { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseItem> WarehouseItems { get; set; }
         public DbSet<WarehouseMutation> WarehouseMutations { get; set; }

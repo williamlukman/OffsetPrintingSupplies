@@ -156,7 +156,7 @@ namespace TestValidation
                 d.stockAD1 = d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService);
+                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService);
 
                 d.coreIdentificationDetail = new CoreIdentificationDetail()
                 {

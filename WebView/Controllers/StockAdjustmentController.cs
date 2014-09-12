@@ -24,9 +24,13 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
 
         public StockAdjustmentController()
         {
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
@@ -129,7 +133,8 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
-                             UoM = model.Item.UoM.Name
+                             UoM = model.Item.UoM.Name,
+                             model.Price
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -167,6 +172,7 @@ namespace WebView.Controllers
                             model.Item,
                             model.Quantity,
                             model.UoM,
+                            model.Price
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -350,7 +356,9 @@ namespace WebView.Controllers
             try
             {
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService,
+                                                              _itemService, _blanketService, _warehouseItemService,
+                                                              _accountService, _generalLedgerJournalService);
             }
             catch (Exception ex)
             {
@@ -371,7 +379,8 @@ namespace WebView.Controllers
             {
 
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService);
+                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,
+                                                                _blanketService,_warehouseItemService,_accountService,_generalLedgerJournalService);
             }
             catch (Exception ex)
             {
@@ -384,8 +393,6 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-
     }
 }
 

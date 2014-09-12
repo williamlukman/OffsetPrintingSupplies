@@ -13,7 +13,7 @@ namespace Core.DomainModel
         public string Code { get; set; }
 
         public int Quantity { get; set; }
-        // public decimal Price { get; set; }
+        public decimal Price { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

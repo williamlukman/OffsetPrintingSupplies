@@ -65,8 +65,8 @@ namespace Data.Repository
 
         public Item UpdateObject(Item item)
         {
-            Update(item);
             item.UpdatedAt = DateTime.Now;
+            Update(item);
             return item;
         }
 

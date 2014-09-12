@@ -60,7 +60,7 @@ namespace Service.Service
                                             _repository.CreateObject(stockAdjustmentDetail) : stockAdjustmentDetail);
         }
 
-        public StockAdjustmentDetail CreateObject(int stockAdjustmentId, int itemId, int quantity,
+        public StockAdjustmentDetail CreateObject(int stockAdjustmentId, int itemId, int quantity, decimal price,
                                                     IStockAdjustmentService _stockAdjustmentService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             StockAdjustmentDetail stockAdjustmentDetail = new StockAdjustmentDetail
@@ -68,7 +68,7 @@ namespace Service.Service
                 StockAdjustmentId = stockAdjustmentId,
                 ItemId = itemId,
                 Quantity = quantity,
-                // Price = price
+                Price = price
             };
             return this.CreateObject(stockAdjustmentDetail, _stockAdjustmentService, _itemService, _warehouseItemService);
         }
