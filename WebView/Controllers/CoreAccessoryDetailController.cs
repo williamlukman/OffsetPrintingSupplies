@@ -66,14 +66,14 @@ namespace WebView.Controllers
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
-            string filter = null;
+            string filter = null; 
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
             // Get Data
             var q = _coreIdentificationDetailService.GetQueryable().Include("CoreIdentification")
                                              .Include("CoreBuilder").Include("RollerType")
-                                             .Include("Machine").Include("Item").Where(x =>!x.IsDeleted && !x.CoreIdentification.IsInHouse);
+                                             .Include("Machine").Include("Item").Where(x =>!x.IsDeleted && !x.CoreIdentification.IsInHouse && !x.IsDelivered);
 
             var query = (from model in q
                          select new
@@ -217,10 +217,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            RecoveryOrderDetail model = new RecoveryOrderDetail();
+            CoreAccessoryDetail model = new CoreAccessoryDetail();
             try
             {
-                model = _recoveryOrderDetailService.GetObjectById(Id);
+                model = _coreAccessoryDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -231,26 +231,9 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
-                model.RecoveryOrderId,
                 CoreIdentificationDetail =  _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
                 model.CoreIdentificationDetailId,
                 MaterialCase = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
-                model.RollerBuilderId,
-                RollerBuilderSku = _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
-                RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
-                model.CoreTypeCase,
-                model.IsDisassembled,
-                model.IsStrippedAndGlued,
-                model.IsWrapped,
-                model.CompoundUsage,
-                model.IsVulcanized,
-                model.IsFacedOff,
-                model.IsConventionalGrinded,
-                model.IsCNCGrinded,
-                model.IsPolishedAndQC,
-                model.IsPackaged,
-                model.RejectedDate,
-                model.FinishedDate,
                 model.CreatedAt,
                 model.UpdatedAt,
                 model.Errors
@@ -301,6 +284,7 @@ namespace WebView.Controllers
                 model.Id,
                 model.ItemId,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
+                ItemSku  = _itemService.GetObjectById(model.ItemId).Sku,
                 model.Quantity,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
@@ -314,7 +298,7 @@ namespace WebView.Controllers
             try
             {
                 model = _coreAccessoryDetailService.CreateObject(model,_coreIdentificationService,_coreIdentificationDetailService,
-                    _itemService,_itemTypeService,_warehouseItemService);
+                    _itemService,_itemTypeService,_warehouseItemService,_coreAccessoryDetailService);
             }
             catch (Exception ex)
             {
@@ -360,7 +344,7 @@ namespace WebView.Controllers
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
                 model = _coreAccessoryDetailService.UpdateObject(data,_coreIdentificationService,
-                    _coreIdentificationDetailService,_itemService,_itemTypeService,_warehouseItemService
+                    _coreIdentificationDetailService,_itemService,_itemTypeService,_warehouseItemService,_coreAccessoryDetailService
                     );
             }
             catch (Exception ex)

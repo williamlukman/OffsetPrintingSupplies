@@ -347,7 +347,7 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Delete Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
+                if (!model.Errors.ContainsKey("Generic")) { model.Errors.Add("Generic", "Error : " + ex); }
             }
 
             return Json(new

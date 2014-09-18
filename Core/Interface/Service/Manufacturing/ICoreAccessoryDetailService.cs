@@ -18,11 +18,11 @@ namespace Core.Interface.Service
         IList<CoreAccessoryDetail> GetObjectsByItemId(int ItemId);
         CoreAccessoryDetail GetObjectById(int Id);
         CoreAccessoryDetail CreateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                             IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+                                             IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService);
         CoreAccessoryDetail CreateObject(int CoreIdentificationDetailId, int ItemId, int Quantity, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                             IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+                                             IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService);
         CoreAccessoryDetail UpdateObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                             IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService);
+                                             IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, ICoreAccessoryDetailService _coreAccessoryDetailService);
         CoreAccessoryDetail SoftDeleteObject(CoreAccessoryDetail coreAccessoryDetail, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool DeleteObject(int Id);
     }
