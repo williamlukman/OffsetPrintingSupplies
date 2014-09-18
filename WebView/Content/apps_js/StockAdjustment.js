@@ -405,9 +405,10 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Sku', 'Name', 'Adj QTY', 'UoM'
+        colNames: ['Id', 'Code', 'Sku', 'Name', 'Adj QTY', 'UoM'
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 40, sortable: false, hidden: true },
                   { name: 'code', index: 'code', width: 70, sortable: false },
 				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 120, sortable: false },

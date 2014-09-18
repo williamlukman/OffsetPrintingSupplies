@@ -121,8 +121,10 @@ $(document).ready(function () {
         ClearData();
         clearForm('#frm');
         $('#IdentifiedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#Code').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
+        $('#IsInHouse').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#IdentifiedDateDiv').show();
         $('#IdentifiedDateDiv2').hide();

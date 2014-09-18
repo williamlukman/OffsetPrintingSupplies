@@ -1,0 +1,6 @@
+﻿On Package Manager Console:
+- select Default Project = Data
+- type 'enable-migrations -EnableAutomaticMigrations'
+- folder Migrations will be automatically added
+- add the following line on Configuration.cs
+            AutomaticMigrationDataLossAllowed = true;

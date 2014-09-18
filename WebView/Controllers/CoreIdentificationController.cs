@@ -136,7 +136,7 @@ namespace WebView.Controllers
             // Get Data
             var q = _coreIdentificationDetailService.GetQueryable().Include("CoreIdentification")
                                               .Include("CoreBuilder").Include("RollerType")
-                                              .Include("Machine").Include("Item").Where(x => x.Id == id && !x.IsDeleted);
+                                              .Include("Machine").Include("Item").Where(x => x.CoreIdentificationId == id && !x.IsDeleted);
 
             var query = (from model in q
                          select new

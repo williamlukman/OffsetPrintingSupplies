@@ -3,9 +3,10 @@ using Data.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
+using Data.Migrations;
 using System.Linq;
 using System.Text;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace Data.Context
 {
@@ -13,7 +14,7 @@ namespace Data.Context
     {
         public OffsetPrintingSuppliesEntities() : base("OffsetPrinting")
         {
-            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
+            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
         }
 
         public void DeleteAllTables()
