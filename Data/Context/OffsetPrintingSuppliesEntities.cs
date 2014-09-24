@@ -26,7 +26,7 @@ namespace Data.Context
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
-                                          "CoreIdentificationDetail", "CoreIdentification",
+                                          "CoreAccessoryDetail", "CoreIdentificationDetail", "CoreIdentification",
                                           "BlanketOrderDetail", "BlanketOrder" };
             IList<String> purchaseOperationNames = new List<String>()
                                         { "PaymentVoucherDetail", "PaymentVoucher", "Payable", 
