@@ -35,7 +35,8 @@ namespace Data.Context
             IList<String> salesOperationNames = new List<String>()
                                         { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
                                           "RetailSalesInvoice", "RetailSalesInvoiceDetail", "SalesInvoiceDetail", "SalesInvoice",
-                                          "DeliveryOrderDetail", "DeliveryOrder", "SalesOrderDetail", "SalesOrder"};
+                                          "DeliveryOrderDetail", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
+                                          "SalesOrderDetail", "SalesOrder", "VirtualOrderDetail", "VirtualOrder"};
             IList<String> financeNames = new List<String>() { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" };
             IList<String> stockAndMasterNames = new List<String>()
                                         {  "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
@@ -114,8 +115,12 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
+            modelBuilder.Configurations.Add(new TemporaryDeliveryOrderMapping());
+            modelBuilder.Configurations.Add(new TemporaryDeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new UoMMapping());
             modelBuilder.Configurations.Add(new ValidCombMapping());
+            modelBuilder.Configurations.Add(new VirtualOrderMapping());
+            modelBuilder.Configurations.Add(new VirtualOrderDetailMapping());
             modelBuilder.Configurations.Add(new WarehouseMapping());
             modelBuilder.Configurations.Add(new WarehouseItemMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationMapping());
@@ -170,8 +175,12 @@ namespace Data.Context
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }
+        public DbSet<TemporaryDeliveryOrder> TemporaryDeliveryOrders { get; set; }
+        public DbSet<TemporaryDeliveryOrderDetail> TemporaryDeliveryOrderDetails { get; set; }
         public DbSet<UoM> UoMs { get; set; }
         public DbSet<ValidComb> ValidCombs { get; set; }
+        public DbSet<VirtualOrder> VirtualOrders { get; set; }
+        public DbSet<VirtualOrderDetail> VirtualOrderDetails { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseItem> WarehouseItems { get; set; }
         public DbSet<WarehouseMutation> WarehouseMutations { get; set; }

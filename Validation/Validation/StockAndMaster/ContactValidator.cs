@@ -118,6 +118,16 @@ namespace Validation.Validation
             return contact;
         }
 
+        public Contact VHasVirtualOrder(Contact contact, IVirtualOrderService _virtualOrderService)
+        {
+            IList<VirtualOrder> virtualOrders = _virtualOrderService.GetObjectsByContactId(contact.Id);
+            if (virtualOrders.Any())
+            {
+                contact.Errors.Add("Generic", "Contact masih memiliki asosiasi dengan virtual order");
+            }
+            return contact;
+        }
+
         public Contact VCreateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService)
         {
             VHasContactGroup(contact, _contactGroupService);
@@ -143,7 +153,7 @@ namespace Validation.Validation
         }
 
         public Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
-                                     IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
+                                     IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, IVirtualOrderService _virtualOrderService)
         {
             VHasCoreIdentification(contact, _coreIdentificationService);
             if (!isValid(contact)) { return contact; }
@@ -152,6 +162,8 @@ namespace Validation.Validation
             VHasSalesOrder(contact, _salesOrderService);
             if (!isValid(contact)) { return contact; }
             VHasPurchaseOrder(contact, _purchaseOrderService);
+            if (!isValid(contact)) { return contact; }
+            VHasVirtualOrder(contact, _virtualOrderService);
             return contact;
         }
 
@@ -169,10 +181,10 @@ namespace Validation.Validation
         }
 
         public bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
-                                      IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService)
+                                      IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, IVirtualOrderService _virtualOrderService)
         {
             contact.Errors.Clear();
-            VDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService);
+            VDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService, _virtualOrderService);
             return isValid(contact);
         }
 
@@ -194,6 +206,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

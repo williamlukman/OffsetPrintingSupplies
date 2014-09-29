@@ -29,8 +29,12 @@ namespace Core.Interface.Service
          IList<StockMutation> SoftDeleteStockMutationForPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForSalesOrder(SalesOrderDetail salesOrderDetail, Item item);
          IList<StockMutation> SoftDeleteStockMutationForSalesOrder(SalesOrderDetail salesOrderDetail, Item item);
+         StockMutation CreateStockMutationForVirtualOrder(VirtualOrderDetail virtualOrderDetail, Item item);
+         IList<StockMutation> SoftDeleteStockMutationForVirtualOrder(VirtualOrderDetail virtualOrderDetail, Item item);
          IList<StockMutation> CreateStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, WarehouseItem warehouseItem);
          IList<StockMutation> SoftDeleteStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, WarehouseItem warehouseItem);
+         IList<StockMutation> CreateStockMutationForTemporaryDeliveryOrder(TemporaryDeliveryOrderDetail deliveryOrderDetail, WarehouseItem warehouseItem);
+         IList<StockMutation> SoftDeleteStockMutationForTemporaryDeliveryOrder(TemporaryDeliveryOrderDetail deliveryOrderDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem);
          IList<StockMutation> SoftDeleteStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, WarehouseItem warehouseItem);

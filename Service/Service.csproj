@@ -58,6 +58,10 @@
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceService.cs" />
+    <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderDetailService.cs" />
+    <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderService.cs" />
+    <Compile Include="Service\SalesOperation\VirtualOrderDetailService.cs" />
+    <Compile Include="Service\SalesOperation\VirtualOrderService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceDetailService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceService.cs" />
     <Compile Include="Service\StockAndMaster\GroupItemPriceService.cs" />

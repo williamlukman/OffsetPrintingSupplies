@@ -57,5 +57,12 @@ namespace Core.Constants
             public static string InkFormW = "Ink Form W";
             public static string InkFormY = "Ink Form Y";
         }
+
+        public class OrderTypeCase
+        {
+            public static int TrialOrder = 1;
+            public static int SampleOrder = 2;
+            public static int PartDeliveryOrder = 3;
+        }
     }
 }

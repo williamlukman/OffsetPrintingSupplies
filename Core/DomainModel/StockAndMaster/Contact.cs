@@ -29,5 +29,6 @@ namespace Core.DomainModel
         public ICollection<BlanketOrder> BlanketOrders { get; set; }
         public ICollection<SalesOrder> SalesOrders { get; set; }
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
+        public ICollection<VirtualOrder> VirtualOrders { get; set; }
     }
 }

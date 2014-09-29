@@ -22,6 +22,7 @@ namespace WebView.Controllers
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
         private IContactGroupService _contactGroupService;
+        private IVirtualOrderService _virtualOrderService;
 
         public MstContactController()
         {
@@ -31,6 +32,7 @@ namespace WebView.Controllers
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
+            _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
         }
 
         public ActionResult Index()
@@ -190,7 +192,7 @@ namespace WebView.Controllers
             {
                 var data = _contactService.GetObjectById(model.Id);
                 model = _contactService.SoftDeleteObject(data, _coreIdentificationService, 
-                    _blanketService, _purchaseOrderService, _salesOrderService);
+                    _blanketService, _purchaseOrderService, _salesOrderService, _virtualOrderService);
             }
 
             catch (Exception ex)

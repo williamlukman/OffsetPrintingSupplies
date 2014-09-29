@@ -17,6 +17,7 @@ namespace Core.Constants
             public static int Ready = 1;
             public static int PendingReceival = 2;
             public static int PendingDelivery = 3;
+            public static int Virtual = 4;
         }
 
         public class MutationStatus
@@ -42,7 +43,9 @@ namespace Core.Constants
             public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string RollerWarehouseMutation = "RollerWarehouseMutation";
             public static string SalesOrder = "SalesOrder";
+            public static string TemporaryDeliveryOrder = "TemporaryDeliveryOrder";
             public static string StockAdjustment = "StockAdjustment";
+            public static string VirtualOrder = "VirtualOrder";
             public static string WarehouseMutation = "WarehouseMutation";
         }
 
@@ -59,6 +62,8 @@ namespace Core.Constants
             public static string RetailSalesInvoiceDetail = "RetailSalesInvoiceDetail";
             public static string RollerWarehouseMutationDetail = "RollerWarehouseMutationDetail";
             public static string SalesOrderDetail = "SalesOrderDetail";
+            public static string VirtualOrderDetail = "VirtualOrderDetail";
+            public static string TemporaryDeliveryOrderDetail = "TemporaryDeliveryOrderDetail";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
             public static string WarehouseMutationDetail = "WarehouseMutationDetail";
         }

@@ -227,6 +227,77 @@ namespace Service.Service
             return stockMutations;
         }
 
+        public StockMutation CreateStockMutationForVirtualOrder(VirtualOrderDetail virtualOrderDetail, Item item)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = item.Id;
+            stockMutation.Quantity = virtualOrderDetail.Quantity;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.VirtualOrder;
+            stockMutation.SourceDocumentId = virtualOrderDetail.VirtualOrderId;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.VirtualOrderDetail;
+            stockMutation.SourceDocumentDetailId = virtualOrderDetail.Id;
+            stockMutation.ItemCase = Constant.ItemCase.PendingDelivery;
+            stockMutation.Status = Constant.MutationStatus.Addition;
+            return _repository.CreateObject(stockMutation);
+        }
+
+        public IList<StockMutation> SoftDeleteStockMutationForVirtualOrder(VirtualOrderDetail virtualOrderDetail, Item item)
+        {
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForItem(item.Id, Constant.SourceDocumentDetailType.VirtualOrderDetail, virtualOrderDetail.Id);
+            foreach (var stockMutation in stockMutations)
+            {
+                _repository.Delete(stockMutation);
+            }
+            return stockMutations;
+        }
+
+        public IList<StockMutation> CreateStockMutationForTemporaryDeliveryOrder(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, WarehouseItem warehouseItem)
+        {
+            IList<StockMutation> result = new List<StockMutation>();
+
+            StockMutation stockMutationPendingDelivery = new StockMutation();
+            stockMutationPendingDelivery.ItemId = warehouseItem.ItemId;
+            stockMutationPendingDelivery.WarehouseId = warehouseItem.WarehouseId;
+            stockMutationPendingDelivery.WarehouseItemId = warehouseItem.Id;
+            stockMutationPendingDelivery.ItemId = temporaryDeliveryOrderDetail.ItemId;
+            stockMutationPendingDelivery.Quantity = temporaryDeliveryOrderDetail.Quantity;
+            stockMutationPendingDelivery.SourceDocumentType = Constant.SourceDocumentType.TemporaryDeliveryOrder;
+            stockMutationPendingDelivery.SourceDocumentId = temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId;
+            stockMutationPendingDelivery.SourceDocumentDetailType = Constant.SourceDocumentDetailType.TemporaryDeliveryOrderDetail;
+            stockMutationPendingDelivery.SourceDocumentDetailId = temporaryDeliveryOrderDetail.Id;
+            stockMutationPendingDelivery.ItemCase = Constant.ItemCase.PendingDelivery;
+            stockMutationPendingDelivery.Status = Constant.MutationStatus.Deduction;
+            stockMutationPendingDelivery = _repository.CreateObject(stockMutationPendingDelivery);
+
+            StockMutation stockMutationVirtual = new StockMutation();
+            stockMutationVirtual.ItemId = warehouseItem.ItemId;
+            stockMutationVirtual.WarehouseId = warehouseItem.WarehouseId;
+            stockMutationVirtual.WarehouseItemId = warehouseItem.Id;
+            stockMutationVirtual.ItemId = temporaryDeliveryOrderDetail.ItemId;
+            stockMutationVirtual.Quantity = temporaryDeliveryOrderDetail.Quantity;
+            stockMutationVirtual.SourceDocumentType = Constant.SourceDocumentType.TemporaryDeliveryOrder;
+            stockMutationVirtual.SourceDocumentId = temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId;
+            stockMutationVirtual.SourceDocumentDetailType = Constant.SourceDocumentDetailType.TemporaryDeliveryOrderDetail;
+            stockMutationVirtual.SourceDocumentDetailId = temporaryDeliveryOrderDetail.Id;
+            stockMutationVirtual.ItemCase = Constant.ItemCase.Virtual;
+            stockMutationVirtual.Status = Constant.MutationStatus.Deduction;
+            stockMutationVirtual = _repository.CreateObject(stockMutationVirtual);
+
+            result.Add(stockMutationPendingDelivery);
+            result.Add(stockMutationVirtual);
+            return result;
+        }
+
+        public IList<StockMutation> SoftDeleteStockMutationForTemporaryDeliveryOrder(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, WarehouseItem warehouseItem)
+        {
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.TemporaryDeliveryOrderDetail, temporaryDeliveryOrderDetail.Id);
+            foreach (var stockMutation in stockMutations)
+            {
+                _repository.Delete(stockMutation);
+            }
+            return stockMutations;
+        }
+
         public StockMutation CreateStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem)
         {
             StockMutation stockMutation = new StockMutation();

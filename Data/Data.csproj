@@ -61,6 +61,10 @@
     <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\TemporaryDeliveryOrderDetailMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\TemporaryDeliveryOrderMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\VirtualOrderDetailMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\VirtualOrderMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactGroupMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\GroupItemPriceMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\PriceMutationMapping.cs" />
@@ -124,6 +128,10 @@
     <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceRepository.cs" />
+    <Compile Include="Repository\SalesOperation\TemporaryDeliveryOrderDetailRepository.cs" />
+    <Compile Include="Repository\SalesOperation\TemporaryDeliveryOrderRepository.cs" />
+    <Compile Include="Repository\SalesOperation\VirtualOrderDetailRepository.cs" />
+    <Compile Include="Repository\SalesOperation\VirtualOrderRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceRepository.cs" />
     <Compile Include="Repository\StockAndMaster\GroupItemPriceRepository.cs" />
