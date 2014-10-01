@@ -11,24 +11,31 @@ namespace Validation.Validation
 {
     public class AccountValidator : IAccountValidator
     {
+
+        /*public Account VHasCashBank(Account account, ICashBankService _cashBankService)
+        {
+            CashBank cashBank = _cashBankService.GetObjectByAccountId(account.Id);
+            if (cashBank == null)
+            {
+                account.Errors.Add("Generic", "Tidak terasosiasi dengan CashBank");
+            }
+            return account;
+        }*/
+
         public Account VHasCode(Account account)
         {
             if (account.Code == null)
             {
-                account.Errors.Add("Generic", "Code tidak boleh kosong");
+                account.Errors.Add("Code", "Tidak boleh kosong");
             }
             return account;
         }
 
-        public Account VHasName(Account account, IAccountService _accountService)
+        public Account VHasName(Account account)
         {
             if (account.Name == null || account.Name.Trim() == "")
             {
-                account.Errors.Add("Generic", "Name tidak boleh kosong");
-            }
-            else if (_accountService.GetQueryable().Where(x => x.Name == account.Name && x.Id != account.Id).Any())
-            {
-                account.Errors.Add("Generic", "Name tidak boleh kosong");
+                account.Errors.Add("Name", "Tidak boleh kosong");
             }
             return account;
         }
@@ -41,7 +48,7 @@ namespace Validation.Validation
                 !account.Group.Equals(Constant.AccountGroup.Equity) &&
                 !account.Group.Equals(Constant.AccountGroup.Revenue))
             {
-                account.Errors.Add("Generic", "Group harus merupakan bagian dari Constant.AccountGroup");
+                account.Errors.Add("Group", "Harus merupakan bagian dari Constant.AccountGroup");
             }
             return account;
         }
@@ -50,7 +57,7 @@ namespace Validation.Validation
         {
             if (account.Level < 1 || account.Level > 5)
             {
-                account.Errors.Add("Generic", "Leve tidak valid");
+                account.Errors.Add("Level", "Tidak valid");
             }
             return account;
         }
@@ -61,14 +68,14 @@ namespace Validation.Validation
             {
                 if (account.ParentId == null)
                 {
-                    account.Errors.Add("Generic", "Parent tidak boleh kosong");
+                    account.Errors.Add("Parent", "Tidak boleh null");
                 }
                 else
                 {
                     Account parent = _accountService.GetObjectById((int)account.ParentId);
                     if (parent == null)
                     {
-                        account.Errors.Add("Generic", "Parent tidak ada");
+                        account.Errors.Add("Parent", "Tidak ada");
                     }
                 }
             }
@@ -81,7 +88,7 @@ namespace Validation.Validation
             //if (!isValid(account)) { return account; }
             VHasCode(account);
             if (!isValid(account)) { return account; }
-            VHasName(account, _accountService);
+            VHasName(account);
             if (!isValid(account)) { return account; }
             VIsValidGroup(account);
             if (!isValid(account)) { return account; }

@@ -65,6 +65,7 @@
     <Compile Include="DomainModel\SalesOperation\TemporaryDeliveryOrder.cs" />
     <Compile Include="DomainModel\SalesOperation\VirtualOrderDetail.cs" />
     <Compile Include="DomainModel\SalesOperation\VirtualOrder.cs" />
+    <Compile Include="DomainModel\StockAndMaster\Company.cs" />
     <Compile Include="DomainModel\StockAndMaster\ContactGroup.cs" />
     <Compile Include="DomainModel\StockAndMaster\GroupItemPrice.cs" />
     <Compile Include="DomainModel\StockAndMaster\PriceMutation.cs" />
@@ -108,6 +109,9 @@
     <Compile Include="DomainModel\Manufacturing\RecoveryAccessoryDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ItemType.cs" />
     <Compile Include="DomainModel\StockAndMaster\Warehouse.cs" />
+    <Compile Include="DomainModel\UserRole\UserAccess.cs" />
+    <Compile Include="DomainModel\UserRole\UserAccount.cs" />
+    <Compile Include="DomainModel\UserRole\UserMenu.cs" />
     <Compile Include="Interface\Repository\Accounting\IAccountRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IClosingRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IGeneralLedgerJournalRepository.cs" />
@@ -127,6 +131,7 @@
     <Compile Include="Interface\Repository\SalesOperation\ITemporaryDeliveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\ICompanyRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IGroupItemPriceRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IContactGroupRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IPriceMutationRepository.cs" />
@@ -172,6 +177,9 @@
     <Compile Include="Interface\Repository\StockAndMaster\IItemRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IItemTypeRepository.cs" />
     <Compile Include="Interface\Repository\IRepository.cs" />
+    <Compile Include="Interface\Repository\UserRole\IUserAccessRepository.cs" />
+    <Compile Include="Interface\Repository\UserRole\IUserAccountRepository.cs" />
+    <Compile Include="Interface\Repository\UserRole\IUserMenuRepository.cs" />
     <Compile Include="Interface\Service\Accounting\IAccountService.cs" />
     <Compile Include="Interface\Service\Accounting\IClosingService.cs" />
     <Compile Include="Interface\Service\Accounting\IGeneralLedgerJournalService.cs" />
@@ -192,6 +200,7 @@
     <Compile Include="Interface\Service\SalesOperation\ITemporaryDeliveryOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderDetailService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\ICompanyService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IGroupItemPriceService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IContactGroupService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IPriceMutationService.cs" />
@@ -235,6 +244,9 @@
     <Compile Include="Interface\Service\StockAndMaster\IContactService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IItemTypeService.cs" />
+    <Compile Include="Interface\Service\UserRole\IUserAccessService.cs" />
+    <Compile Include="Interface\Service\UserRole\IUserAccountService.cs" />
+    <Compile Include="Interface\Service\UserRole\IUserMenuService.cs" />
     <Compile Include="Interface\Validation\Accounting\IAccountValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IClosingValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IGeneralLedgerJournalValidator.cs" />
@@ -255,6 +267,7 @@
     <Compile Include="Interface\Validation\SalesOperation\ITemporaryDeliveryOrderValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\ICompanyValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IGroupItemPriceValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IContactGroupValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IPriceMutationValidator.cs" />
@@ -298,6 +311,9 @@
     <Compile Include="Interface\Validation\StockAndMaster\IContactValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IItemTypeValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IItemValidator.cs" />
+    <Compile Include="Interface\Validation\UserRole\IUserAccessValidator.cs" />
+    <Compile Include="Interface\Validation\UserRole\IUserAccountValidator.cs" />
+    <Compile Include="Interface\Validation\UserRole\IUserMenuValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

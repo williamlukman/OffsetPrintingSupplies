@@ -9,8 +9,8 @@ namespace Core.Interface.Service
 {
     public interface ICashBankService
     {
-        ICashBankValidator GetValidator();
         IQueryable<CashBank> GetQueryable();
+        ICashBankValidator GetValidator();
         IList<CashBank> GetAll();
         CashBank GetObjectById(int Id);
         CashBank GetObjectByName(string Name);
@@ -19,5 +19,6 @@ namespace Core.Interface.Service
         CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(CashBank cashBank);
+        decimal GetTotalCashBank();
     }
 }

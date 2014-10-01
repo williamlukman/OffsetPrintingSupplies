@@ -57,12 +57,22 @@ namespace Service.Service
         public CashBankMutation CreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
         {
             cashBankMutation.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(cashBankMutation, _cashBankService) ? _repository.CreateObject(cashBankMutation) : cashBankMutation);
+            if (_validator.ValidCreateObject(cashBankMutation, _cashBankService)) {
+                //cashBankMutation.SourceCashBankName = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId).Name;
+                //cashBankMutation.TargetCashBankName = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId).Name;
+                _repository.CreateObject(cashBankMutation);
+            }
+            return cashBankMutation;
         }
 
         public CashBankMutation UpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
         {
-            return (cashBankMutation = _validator.ValidUpdateObject(cashBankMutation, _cashBankService) ? _repository.UpdateObject(cashBankMutation) : cashBankMutation);
+            if(_validator.ValidUpdateObject(cashBankMutation, _cashBankService)) {
+                //cashBankMutation.SourceCashBankName = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId).Name;
+                //cashBankMutation.TargetCashBankName = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId).Name;
+                _repository.UpdateObject(cashBankMutation);
+            }
+            return cashBankMutation;
         }
 
         public CashBankMutation SoftDeleteObject(CashBankMutation cashBankMutation)
@@ -71,10 +81,10 @@ namespace Service.Service
         }
 
         public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             cashBankMutation.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(cashBankMutation, _cashBankService))
+            if (_validator.ValidConfirmObject(cashBankMutation, _cashBankService, _closingService))
             {
                 CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
                 CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
@@ -90,9 +100,9 @@ namespace Service.Service
         }
 
         public CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService)
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(cashBankMutation, _cashBankService))
+            if (_validator.ValidUnconfirmObject(cashBankMutation, _cashBankService, _closingService))
             {
                 CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
                 CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);

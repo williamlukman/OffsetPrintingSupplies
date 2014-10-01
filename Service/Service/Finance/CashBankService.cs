@@ -1,4 +1,5 @@
 ﻿using Core.DomainModel;
+using Core.Constants;
 using Core.Interface.Repository;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.Text;
 using Core.Interface.Service;
 using Core.Interface.Validation;
 using Data.Repository;
-using Core.Constants;
 
 namespace Service.Service
 {
@@ -49,7 +49,8 @@ namespace Service.Service
         public CashBank CreateObject(CashBank cashBank, IAccountService _accountService)
         {
             cashBank.Errors = new Dictionary<string, string>();
-            if (_validator.ValidCreateObject(cashBank, this)) {
+            if (_validator.ValidCreateObject(cashBank, this))
+            {
                 // Create Leaf Cash Bank Account
                 string Code = GenerateAccountCode(_accountService);
                 Account account = new Account()
@@ -89,6 +90,17 @@ namespace Service.Service
         {
             IQueryable<CashBank> cashbanks = _repository.FindAll(cb => cb.Name == cashBank.Name && !cb.IsDeleted && cb.Id != cashBank.Id);
             return (cashbanks.Count() > 0 ? true : false);
+        }
+
+        public decimal GetTotalCashBank()
+        {
+            IList<CashBank> cashBanks = GetAll();
+            decimal Total = 0;
+            foreach (var cashBank in cashBanks)
+            {
+                Total += cashBank.Amount;
+            }
+            return Total;
         }
 
         public string GenerateAccountCode(IAccountService _accountService)

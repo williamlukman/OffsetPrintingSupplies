@@ -21,6 +21,7 @@ namespace Data.Context
         {
             IList<String> tableNames = new List<String>();
 
+            IList<String> userroleNames = new List<String>() { "UserMenu", "UserAccount", "UserAccess" };
             IList<String> accountingNames = new List<String>()
                                         { "ValidComb", "Closing", "GeneralLedgerJournal", "Account" };
             IList<String> manufacturingNames = new List<String>()
@@ -42,8 +43,9 @@ namespace Data.Context
                                         {  "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
                                           "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
                                           "Warehouse", "Blanket", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
-                                          "RollerType", "Machine", "ContactGroup"};
+                                          "RollerType", "Machine", "ContactGroup", "Company"};
 
+            userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
@@ -71,6 +73,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CashBankMutationMapping());
             modelBuilder.Configurations.Add(new CashMutationMapping());
             modelBuilder.Configurations.Add(new ClosingMapping());
+            modelBuilder.Configurations.Add(new CompanyMapping());
             modelBuilder.Configurations.Add(new CoreBuilderMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationMapping());
             modelBuilder.Configurations.Add(new CoreAccessoryDetailMapping());
@@ -118,6 +121,9 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new UoMMapping());
+            modelBuilder.Configurations.Add(new UserAccountMapping());
+            modelBuilder.Configurations.Add(new UserMenuMapping());
+            modelBuilder.Configurations.Add(new UserAccessMapping());
             modelBuilder.Configurations.Add(new ValidCombMapping());
             modelBuilder.Configurations.Add(new VirtualOrderMapping());
             modelBuilder.Configurations.Add(new VirtualOrderDetailMapping());
@@ -136,6 +142,7 @@ namespace Data.Context
         public DbSet<CashBankAdjustment> CashBankAdjustments { get; set; }
         public DbSet<CashBankMutation> CashBankMutations { get; set; }
         public DbSet<CashMutation> CashMutations { get; set; }
+        public DbSet<Company> Companies { get; set; }
         public DbSet<CoreBuilder> CoreBuilders { get; set; }
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
         public DbSet<CoreAccessoryDetail> CoreAccessoryDetails { get; set; }
@@ -178,6 +185,9 @@ namespace Data.Context
         public DbSet<TemporaryDeliveryOrder> TemporaryDeliveryOrders { get; set; }
         public DbSet<TemporaryDeliveryOrderDetail> TemporaryDeliveryOrderDetails { get; set; }
         public DbSet<UoM> UoMs { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<UserMenu> UserMenus { get; set; }
+        public DbSet<UserAccess> UserAccesses { get; set; }
         public DbSet<ValidComb> ValidCombs { get; set; }
         public DbSet<VirtualOrder> VirtualOrders { get; set; }
         public DbSet<VirtualOrderDetail> VirtualOrderDetails { get; set; }

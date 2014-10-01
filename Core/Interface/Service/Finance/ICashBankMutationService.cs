@@ -10,8 +10,8 @@ namespace Core.Interface.Service
 {
     public interface ICashBankMutationService
     {
-        ICashBankMutationValidator GetValidator();
         IQueryable<CashBankMutation> GetQueryable();
+        ICashBankMutationValidator GetValidator();
         IList<CashBankMutation> GetAll();
         CashBankMutation GetObjectById(int Id);
         CashBank GetSourceCashBank(CashBankMutation cashBankMutation);
@@ -21,8 +21,9 @@ namespace Core.Interface.Service
         CashBankMutation SoftDeleteObject(CashBankMutation cashBankMutation);
         bool DeleteObject(int Id);
         CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJounalService);
+                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJounalService);
+                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+
     }
 }

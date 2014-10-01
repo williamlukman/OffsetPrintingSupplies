@@ -19,7 +19,7 @@ namespace Data.Repository
 
         public IQueryable<CashBankAdjustment> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<CashBankAdjustment> GetAll()

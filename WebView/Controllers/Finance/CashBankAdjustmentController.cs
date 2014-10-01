@@ -21,6 +21,7 @@ namespace WebView.Controllers
         private ICashMutationService _cashMutationService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public CashBankAdjustmentController()
         {
@@ -29,6 +30,7 @@ namespace WebView.Controllers
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
         public ActionResult Index()
@@ -197,7 +199,7 @@ namespace WebView.Controllers
                 
                 var data = _cashBankAdjustmentService.GetObjectById(model.Id);
                 model = _cashBankAdjustmentService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService,
-                                                                 _accountService, _generalLedgerJournalService);
+                                                                 _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -217,7 +219,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _cashBankAdjustmentService.GetObjectById(model.Id);
-                model = _cashBankAdjustmentService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService, _generalLedgerJournalService);
+                model = _cashBankAdjustmentService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

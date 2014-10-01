@@ -20,7 +20,7 @@ namespace Data.Repository
 
         public IQueryable<CashBankMutation> GetQueryable()
         {
-            return FindAll();
+            return FindAll(x => !x.IsDeleted);
         }
 
         public IList<CashBankMutation> GetAll()
@@ -115,5 +115,6 @@ namespace Data.Repository
             string Code = DateTime.Today.Year.ToString() + "." + DateTime.Today.Month.ToString() + "." + totalnumberinthemonth;
             return Code;
         }
+
     }
 }

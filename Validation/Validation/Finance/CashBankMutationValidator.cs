@@ -14,7 +14,7 @@ namespace Validation.Validation
         {
             if (cashBankMutation.SourceCashBankId == cashBankMutation.TargetCashBankId)
             {
-                cashBankMutation.Errors.Add("Generic", "CashBank sebelum dan sesudah tidak boleh sama");
+                cashBankMutation.Errors.Add("Generic", "Source CashBank dan Target CashBank tidak boleh sama");
             }
             return cashBankMutation;
         }
@@ -80,7 +80,7 @@ namespace Validation.Validation
             CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
             if (sourceCashBank.Amount - cashBankMutation.Amount < 0)
             {
-                cashBankMutation.Errors.Add("Generic", "Tidak boleh melebihi jumlah amount dari source CashBank");
+                cashBankMutation.Errors.Add("Amount", "Tidak boleh melebihi jumlah amount dari source CashBank");
             }
             return cashBankMutation;
         }
@@ -90,7 +90,31 @@ namespace Validation.Validation
             CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
             if (targetCashBank.Amount - cashBankMutation.Amount < 0)
             {
-                cashBankMutation.Errors.Add("Generic", "Tidak boleh melebihi jumlah amount dari target CashBank");
+                cashBankMutation.Errors.Add("Amount", "Tidak boleh melebihi jumlah amount dari target CashBank");
+            }
+            return cashBankMutation;
+        }
+
+        public CashBankMutation VGeneralLedgerPostingHasNotBeenClosed(CashBankMutation cashBankMutation, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm
+                    {
+                        if (_closingService.IsDateClosed(cashBankMutation.ConfirmationDate.GetValueOrDefault()))
+                        {
+                            cashBankMutation.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
+                case (2): // Unconfirm
+                    {
+                        if (_closingService.IsDateClosed(DateTime.Now))
+                        {
+                            cashBankMutation.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
             }
             return cashBankMutation;
         }
@@ -132,7 +156,7 @@ namespace Validation.Validation
             return obj;
         }
 
-        public CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
+        public CashBankMutation VConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService)
         {
             VHasConfirmationDate(cashBankMutation);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
@@ -143,16 +167,20 @@ namespace Validation.Validation
             VNonNegativeNorZeroAmount(cashBankMutation);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VNonNegativeNorZeroSourceCashBank(cashBankMutation, _cashBankService);
+            if (!isValid(cashBankMutation)) { return cashBankMutation; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashBankMutation, _closingService, 1);
             return cashBankMutation;
         }
 
-        public CashBankMutation VUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
+        public CashBankMutation VUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService)
         {
             VHasNotBeenDeleted(cashBankMutation);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VHasBeenConfirmed(cashBankMutation);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VNonNegativeNorZeroTargetCashBank(cashBankMutation, _cashBankService);
+            if (!isValid(cashBankMutation)) { return cashBankMutation; }
+            VGeneralLedgerPostingHasNotBeenClosed(cashBankMutation, _closingService, 2);
             return cashBankMutation;
         }
 
@@ -176,17 +204,17 @@ namespace Validation.Validation
             return isValid(cashBankMutation);
         }
 
-        public bool ValidConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
+        public bool ValidConfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService)
         {
             cashBankMutation.Errors.Clear();
-            VConfirmObject(cashBankMutation, _cashBankService);
+            VConfirmObject(cashBankMutation, _cashBankService, _closingService);
             return isValid(cashBankMutation);
         }
 
-        public bool ValidUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
+        public bool ValidUnconfirmObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService, IClosingService _closingService)
         {
             cashBankMutation.Errors.Clear();
-            VUnconfirmObject(cashBankMutation, _cashBankService);
+            VUnconfirmObject(cashBankMutation, _cashBankService, _closingService);
             return isValid(cashBankMutation);
         }
 

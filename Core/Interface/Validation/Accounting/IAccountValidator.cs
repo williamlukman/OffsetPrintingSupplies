@@ -12,7 +12,7 @@ namespace Core.Interface.Validation
     {
         //Account VHasCashBank(Account account, ICashBankService _cashBankService);
         Account VHasCode(Account account);
-        Account VHasName(Account account, IAccountService _accountService);
+        Account VHasName(Account account);
         Account VIsValidGroup(Account account);
         Account VIsValidLevel(Account account);
         Account VIsValidParent(Account account, IAccountService _accountService);

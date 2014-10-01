@@ -14,21 +14,30 @@ using System.Data.Objects;
 
 namespace WebView.Controllers
 {
-    public class GeneralLedgerController : Controller
+    public class ValidCombController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("GeneralLedgerController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ValidCombController");
 
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IAccountService _accountService;
+        private IValidCombService _validCombService;
+        private IClosingService _closingService;
 
-        public GeneralLedgerController()
+        public ValidCombController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidComb, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -41,19 +50,19 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _generalLedgerJournalService.GetQueryable().Include("Account");
+            var q = _validCombService.GetQueryable().Include("Account").Include("Closing").Where(x => x.Closing.IsClosed);
 
             var query = (from model in q
                          select new
                          {
                             model.Id,
-                            model.TransactionDate,
-                            model.Status,
-                            AccountCode = model.Account.Code,
-                            Account = model.Account.Name,
-                            model.Amount,
-                            model.SourceDocument,
-                            model.SourceDocumentId
+                            model.Account.Code,
+                            model.Account.Name,
+                            model.Closing.Period,
+                            model.Closing.YearPeriod,
+                            model.Closing.BeginningPeriod,
+                            model.Closing.EndDatePeriod,
+                            model.Amount
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -86,19 +95,19 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                             model.Id,
-                            model.TransactionDate,
-                            model.Status,
-                            model.AccountCode,
-                            model.Account,
-                            model.Amount,
-                            model.SourceDocument,
-                            model.SourceDocumentId
+                            model.Code,
+                            model.Name,
+                            model.Period,
+                            model.YearPeriod,
+                            model.BeginningPeriod,
+                            model.EndDatePeriod,
+                            model.Amount
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, DateTime? startdate, DateTime? enddate, string filters = "")
+        public dynamic GetListByDate(string _search, long nd, int rows, int? page, string sidx, string sord, int? ClosingId, string filters = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -106,26 +115,27 @@ namespace WebView.Controllers
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            if (startdate.HasValue && enddate.HasValue)
+            if (ClosingId.HasValue)
             {
-                filter = "(" + filter + ") AND TransactionDate >= @0 AND TransactionDate < @1";
+                filter = "(" + filter + ") AND ClosingId == @0";
             }
 
             // Get Data
-            var q = _generalLedgerJournalService.GetQueryable().Include("Account");
+            var q = _validCombService.GetQueryable().Include("Account").Include("Closing").Where(x => x.Closing.IsClosed);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
-                             model.TransactionDate,
-                             model.Status,
-                             AccountCode = model.Account.Code,
-                             Account = model.Account.Name,
+                             model.Account.Code,
+                             model.Account.Name,
+                             model.Closing.Period,
+                             model.Closing.YearPeriod,
+                             model.Closing.BeginningPeriod,
+                             model.Closing.EndDatePeriod,
                              model.Amount,
-                             model.SourceDocument,
-                             model.SourceDocumentId
-                         }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
+                             ClosingId = model.Closing.Id
+                         }).Where(filter, ClosingId.GetValueOrDefault()).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
 
@@ -156,15 +166,16 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                                         model.Id,
-                            model.TransactionDate,
-                            model.Status,
-                            model.AccountCode,
-                            model.Account,
+                            model.Id,
+                            model.Code,
+                            model.Name,
+                            model.Period,
+                            model.YearPeriod,
+                            model.BeginningPeriod,
+                            model.EndDatePeriod,
                             model.Amount,
-                            model.SourceDocument,
-                            model.SourceDocumentId
-                         }
+                            model.ClosingId
+                      }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }

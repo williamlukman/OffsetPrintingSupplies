@@ -24,6 +24,7 @@ namespace TestValidation
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
         public ICashMutationService _cashMutationService;
+        public IClosingService _closingService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
         public ICoreIdentificationDetailService _coreIdentificationDetailService;
@@ -60,7 +61,15 @@ namespace TestValidation
         public IStockAdjustmentDetailService _stockAdjustmentDetailService;
         public IStockAdjustmentService _stockAdjustmentService;
         public IStockMutationService _stockMutationService;
+        public ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
+        public ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
         public IUoMService _uomService;
+        public IUserAccountService _userAccountService;
+        public IUserMenuService _userMenuService;
+        public IUserAccessService _userAccessService;
+        public IValidCombService _validCombService;
+        public IVirtualOrderDetailService _virtualOrderDetailService;
+        public IVirtualOrderService _virtualOrderService;
         public IWarehouseItemService _warehouseItemService;
         public IWarehouseService _warehouseService;
         public IWarehouseMutationService _warehouseMutationService;
@@ -69,8 +78,13 @@ namespace TestValidation
         public IPriceMutationService _priceMutationService;
         public IContactGroupService _contactGroupService;
 
-        public CashBank cashBank, pettyCash;
-        public CashBankAdjustment cashBankAdjustment;
+        public CashBank cashBank, pettyCash, cashBank1, cashBank2;
+        public CashBankAdjustment cashBankAdjustment, cashBankAdjustment2, cashBankAdjustment3;
+        public CashBankMutation cashBankMutation;
+
+        public UserAccount admin, user;
+        public UserMenu menudata, menufinance;
+        public UserAccess admindata, userdata, adminfinance, userfinance;
 
         public ContactGroup baseGroup;
         public ItemType typeAdhesive, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
@@ -104,8 +118,27 @@ namespace TestValidation
         public RollerWarehouseMutation rollerWarehouseMutationContact, rollerWarehouseMutationInHouse;
         public RollerWarehouseMutationDetail rwmDetailContact1, rwmDetailContact2, rwmDetailContact3,
                                              rwmDetailInHouse1, rwmDetailInHouse2, rwmDetailInHouse3;
-        public StockAdjustment stockAdjustment;
+        public StockAdjustment stockAdjustment, sa;
         public StockAdjustmentDetail stockAD, stockAD1, stockAD2, stockAD3, stockAD4;
+        public StockAdjustmentDetail sad1, sad2, sad3, sad4, sad5, sadAdhesive;
+
+        public SalesOrder salesOrder1, salesOrder2, salesOrder3;
+        public SalesOrderDetail salesOD1a, salesOD1b, salesOD2a, salesOD2b, salesOD3a, salesOD3b;
+        public DeliveryOrder deliveryOrder1, deliveryOrder2, deliveryOrder3;
+        public DeliveryOrderDetail deliveryOD1a, deliveryOD1b, deliveryOD2a, deliveryOD2b, deliveryOD3a, deliveryOD3b;
+        public SalesInvoice salesInvoice1, salesInvoice2, salesInvoice3;
+        public SalesInvoiceDetail salesID1a, salesID1b, salesID2a, salesID2b, salesID3a, salesID3b;
+        public ReceiptVoucher receiptVoucher1, receiptVoucher2, receiptVoucher3;
+        public ReceiptVoucherDetail receiptVD1a, receiptVD1b, receiptVD2a, receiptVD2b, receiptVD3a, receiptVD3b;
+
+        public PurchaseOrder purchaseOrder1;
+        public PurchaseOrderDetail purchaseOD1a, purchaseOD1b;
+        public PurchaseReceival purchaseReceival1;
+        public PurchaseReceivalDetail purchaseRD1a, purchaseRD1b;
+        public PurchaseInvoice purchaseInvoice1;
+        public PurchaseInvoiceDetail purchaseID1a, purchaseID1b;
+        public PaymentVoucher paymentVoucher1;
+        public PaymentVoucherDetail paymentVD1a, paymentVD1b;
 
         // extended variable
         public int usedCoreBuilderQuantity, usedCoreBuilder1Quantity, usedCoreBuilder2Quantity, usedCoreBuilder3Quantity, usedCoreBuilder4Quantity;
@@ -140,6 +173,8 @@ namespace TestValidation
         private Account Equity, OwnersEquity, EquityAdjustment;
         private Account Revenue;
 
+        public Closing thisMonthClosing;
+
         public DataBuilder()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
@@ -150,6 +185,7 @@ namespace TestValidation
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _coreIdentificationDetailService = new CoreIdentificationDetailService(new CoreIdentificationDetailRepository(), new CoreIdentificationDetailValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -186,6 +222,14 @@ namespace TestValidation
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
+            _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
+            _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
+            _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
+            _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
+            _userAccessService = new UserAccessService(new UserAccessRepository(), new UserAccessValidator());
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
+            _virtualOrderDetailService = new VirtualOrderDetailService(new VirtualOrderDetailRepository(), new VirtualOrderDetailValidator());
+            _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
@@ -223,11 +267,12 @@ namespace TestValidation
             typeInkFormY = _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
 
             baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
+            admin = _userAccountService.FindOrCreateSysAdmin();
 
             if (!_accountService.GetLegacyObjects().Any())
             {
                 Asset = _accountService.CreateLegacyObject(new Account() { Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Level = 1, Group = Constant.AccountGroup.Asset, IsLegacy = true }, _accountService);
-                CashBank = _accountService.CreateLegacyObject(new Account() { Name = "CashBank", IsLeaf = true, Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                CashBank = _accountService.CreateLegacyObject(new Account() { Name = "CashBank", Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
                 AccountReceivable = _accountService.CreateLegacyObject(new Account() { Name = "Account Receivable", IsLeaf = true, Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
                 GBCHReceivable = _accountService.CreateLegacyObject(new Account() { Name = "GBCH Receivable", IsLeaf = true, Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
                 Inventory = _accountService.CreateLegacyObject(new Account() { Name = "Inventory", IsLeaf = true, Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Level = 2, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
@@ -254,6 +299,7 @@ namespace TestValidation
 
         public void PopulateData()
         {
+            PopulateUserRole();
             PopulateWarehouse();
             PopulateItem();
             PopulateSingles();
@@ -278,6 +324,63 @@ namespace TestValidation
             PopulatePurchaseOrderAndPurchaseReceival();
             PopulatePurchaseInvoice();
             PopulatePaymentVoucher();
+
+            PopulateCashBank();
+            PopulateSales();
+            PopulateValidComb();
+        }
+
+        public void PopulateUserRole()
+        {
+            user = new UserAccount()
+            {
+                Username = "admin",
+                Password = "123",
+                Name = "admin",
+                Description = "admin palsu",
+            };
+            user = _userAccountService.CreateObject(user);
+
+            menudata = _userMenuService.CreateObject(Core.Constants.Constant.MenuName.Contact, Core.Constants.Constant.MenuGroupName.Master);
+            menufinance = _userMenuService.CreateObject(Core.Constants.Constant.MenuName.ItemType, Core.Constants.Constant.MenuGroupName.Master);
+
+            admindata = new UserAccess()
+            {
+                UserAccountId = admin.Id,
+                UserMenuId = menudata.Id,
+                AllowView = true,
+                AllowCreate = true,
+                AllowEdit = true,
+                AllowConfirm = true,
+                AllowUnconfirm = true,
+                AllowPaid = true,
+                AllowUnpaid = true,
+                AllowReconcile = true,
+                AllowUnreconcile = true,
+                AllowPrint = true,
+                AllowDelete = true,
+                AllowUndelete = true
+            };
+            admindata = _userAccessService.CreateObject(admindata, _userAccountService, _userMenuService);
+
+            adminfinance = new UserAccess()
+            {
+                UserAccountId = admin.Id,
+                UserMenuId = menufinance.Id,
+                AllowView = true,
+                AllowCreate = true,
+                AllowEdit = true,
+                AllowConfirm = true,
+                AllowUnconfirm = true,
+                AllowPaid = true,
+                AllowUnpaid = true,
+                AllowReconcile = true,
+                AllowUnreconcile = true,
+                AllowPrint = true,
+                AllowDelete = true,
+                AllowUndelete = true
+            };
+            adminfinance = _userAccessService.CreateObject(adminfinance, _userAccountService, _userMenuService);
         }
 
         public void PopulateWarehouse()
@@ -387,48 +490,67 @@ namespace TestValidation
                 WarehouseId = localWarehouse.Id
             };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
-            StockAdjustmentDetail sadAdhesive = new StockAdjustmentDetail()
+            
+            sadAdhesive = new StockAdjustmentDetail()
             {
                 StockAdjustmentId = sa.Id,
                 Quantity = 100,
-                ItemId = itemAdhesive.Id
+                ItemId = itemAdhesive.Id,
+                Code = "IAD001",
+                Price = 3000
             };
             _stockAdjustmentDetailService.CreateObject(sadAdhesive, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadCompound = new StockAdjustmentDetail()
+
+            sad1 = new StockAdjustmentDetail()
             {
                 StockAdjustmentId = sa.Id,
-                Quantity = 100000,
-                ItemId = itemCompound.Id
-            };
-            _stockAdjustmentDetailService.CreateObject(sadCompound, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadCompound1 = new StockAdjustmentDetail()
-            {
-                StockAdjustmentId = sa.Id,
+                ItemId = itemCompound.Id,
                 Quantity = 200000,
-                ItemId = itemCompound1.Id
+                Code = "ITCM000",
+                Price = 50000
             };
-            _stockAdjustmentDetailService.CreateObject(sadCompound1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadCompound2 = new StockAdjustmentDetail()
+            _stockAdjustmentDetailService.CreateObject(sad1, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sad2 = new StockAdjustmentDetail()
             {
                 StockAdjustmentId = sa.Id,
+                ItemId = itemCompound1.Id,
                 Quantity = 200000,
-                ItemId = itemCompound2.Id
+                Code = "ITCM001",
+                Price = 50000
             };
-            _stockAdjustmentDetailService.CreateObject(sadCompound2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadAccessory1 = new StockAdjustmentDetail()
+            _stockAdjustmentDetailService.CreateObject(sad2, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sad3 = new StockAdjustmentDetail()
             {
                 StockAdjustmentId = sa.Id,
-                Quantity = 5,
-                ItemId = itemAccessory1.Id
+                ItemId = itemCompound2.Id,
+                Quantity = 200000,
+                Code = "ITCM002",
+                Price = 50000
             };
-            _stockAdjustmentDetailService.CreateObject(sadAccessory1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadAccessory2 = new StockAdjustmentDetail()
+            _stockAdjustmentDetailService.CreateObject(sad3, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sad4 = new StockAdjustmentDetail()
             {
                 StockAdjustmentId = sa.Id,
-                Quantity = 5,
-                ItemId = itemAccessory2.Id
+                ItemId = itemAccessory1.Id,
+                Quantity = 15,
+                Code = "ITAC001",
+                Price = 50000
             };
-            _stockAdjustmentDetailService.CreateObject(sadAccessory2, _stockAdjustmentService, _itemService, _warehouseItemService);
+            _stockAdjustmentDetailService.CreateObject(sad4, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sad5 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                ItemId = itemAccessory2.Id,
+                Quantity = 10,
+                Code = "ITAC002",
+                Price = 50000
+            };
+            _stockAdjustmentDetailService.CreateObject(sad5, _stockAdjustmentService, _itemService, _warehouseItemService);
+ 
             _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
                                                   _accountService, _generalLedgerJournalService);
         }
@@ -470,15 +592,31 @@ namespace TestValidation
             };
             _cashBankService.CreateObject(pettyCash, _accountService);
 
-            cashBankAdjustment = new CashBankAdjustment()
+            cashBank1 = new CashBank()
+            {
+                Name = "Kontan",
+                IsBank = false,
+                Description = "Kontan"
+            };
+            _cashBankService.CreateObject(cashBank1, _accountService);
+
+            cashBank2 = new CashBank()
+            {
+                Name = "Bank BCA",
+                IsBank = true,
+                Description = "Bank BCA"
+            };
+            _cashBankService.CreateObject(cashBank2, _accountService);
+
+            cashBankAdjustment3 = new CashBankAdjustment()
             {
                 CashBankId = cashBank.Id,
                 Amount = 1000000000,
                 AdjustmentDate = DateTime.Today
             };
-            _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
-            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService);
+            _cashBankAdjustmentService.CreateObject(cashBankAdjustment3, _cashBankService);
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment3, DateTime.Now, _cashMutationService, _cashBankService,
+                                                     _accountService, _generalLedgerJournalService, _closingService);
         }
 
         public void PopulateBuilders()
@@ -1627,6 +1765,44 @@ namespace TestValidation
             _blanketOrderDetailService.CreateObject(blanketODContact4, _blanketOrderService, _blanketService);
         }
 
+        public void PopulateCashBank()
+        {
+            cashBankAdjustment = new CashBankAdjustment()
+            {
+                AdjustmentDate = DateTime.Today,
+                Amount = 200000000,
+                CashBankId = cashBank1.Id,
+            };
+            _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
+
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Today, _cashMutationService, _cashBankService,
+                                                     _accountService, _generalLedgerJournalService, _closingService);
+
+            cashBankAdjustment2 = new CashBankAdjustment()
+            {
+                AdjustmentDate = DateTime.Today,
+                Amount = -50000,
+                CashBankId = cashBank1.Id,
+            };
+            _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
+
+            _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Today, _cashMutationService, _cashBankService,
+                                                     _accountService, _generalLedgerJournalService, _closingService);
+
+            cashBankMutation = new CashBankMutation()
+            {
+                Amount = 50000000,
+                SourceCashBankId = cashBank1.Id,
+                TargetCashBankId = cashBank2.Id,
+                Code = "CBM0001",
+            };
+            _cashBankMutationService.CreateObject(cashBankMutation, _cashBankService);
+
+            _cashBankMutationService.ConfirmObject(cashBankMutation, DateTime.Today, _cashMutationService, _cashBankService,
+                                                   _accountService, _generalLedgerJournalService, _closingService);
+
+        }
+
         // @SalesBuilder
         public void PopulateSalesAndDelivery()
         {
@@ -1917,10 +2093,10 @@ namespace TestValidation
             _receiptVoucherDetailService.CreateObject(rvd3, _receiptVoucherService, _cashBankService, _receivableService);
 
             _receiptVoucherService.ConfirmObject(rv, DateTime.Today, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService,
-                                                 _accountService, _generalLedgerJournalService);
+                                                 _accountService, _generalLedgerJournalService, _closingService);
 
             _receiptVoucherService.ReconcileObject(rv, DateTime.Today.AddDays(10), _receiptVoucherDetailService, _cashMutationService, _cashBankService, _receivableService,
-                                                   _accountService, _generalLedgerJournalService);
+                                                   _accountService, _generalLedgerJournalService, _closingService);
         }
 
         // @PurchaseBuilder
@@ -2213,10 +2389,365 @@ namespace TestValidation
             _paymentVoucherDetailService.CreateObject(pvd3, _paymentVoucherService, _cashBankService, _payableService);
 
             _paymentVoucherService.ConfirmObject(pv, DateTime.Today, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService,
-                                                 _accountService, _generalLedgerJournalService);
+                                                 _accountService, _generalLedgerJournalService, _closingService);
 
             _paymentVoucherService.ReconcileObject(pv, DateTime.Today.AddDays(10), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService,
-                                                   _accountService, _generalLedgerJournalService);
+                                                   _accountService, _generalLedgerJournalService, _closingService);
+        }
+
+
+        public void PopulateSales()
+        {
+            salesOrder1 = new SalesOrder()
+            {
+                SalesDate = DateTime.Today,
+                ContactId = contact.Id
+            };
+            _salesOrderService.CreateObject(salesOrder1, _contactService);
+
+            salesOrder2 = new SalesOrder()
+            {
+                SalesDate = DateTime.Today,
+                ContactId = contact.Id
+            };
+            _salesOrderService.CreateObject(salesOrder2, _contactService);
+
+            salesOrder3 = new SalesOrder()
+            {
+                SalesDate = DateTime.Today,
+                ContactId = contact.Id
+            };
+            _salesOrderService.CreateObject(salesOrder3, _contactService);
+
+            salesOD1a = new SalesOrderDetail()
+            {
+                SalesOrderId = salesOrder1.Id,
+                ItemId = itemAccessory1.Id,
+                Quantity = 2,
+                Price = 52000
+            };
+            _salesOrderDetailService.CreateObject(salesOD1a, _salesOrderService, _itemService);
+
+            salesOD1b = new SalesOrderDetail()
+            {
+                SalesOrderId = salesOrder1.Id,
+                ItemId = itemAccessory2.Id,
+                Quantity = 2,
+                Price = 22000
+            };
+            _salesOrderDetailService.CreateObject(salesOD1b, _salesOrderService, _itemService);
+
+            salesOD2a = new SalesOrderDetail()
+            {
+                SalesOrderId = salesOrder2.Id,
+                ItemId = itemAccessory1.Id,
+                Quantity = 2,
+                Price = 51000
+            };
+            _salesOrderDetailService.CreateObject(salesOD2a, _salesOrderService, _itemService);
+
+            salesOD2b = new SalesOrderDetail()
+            {
+                SalesOrderId = salesOrder2.Id,
+                ItemId = itemAccessory2.Id,
+                Quantity = 2,
+                Price = 21000
+            };
+            _salesOrderDetailService.CreateObject(salesOD2b, _salesOrderService, _itemService);
+
+            salesOD3a = new SalesOrderDetail()
+            {
+                SalesOrderId = salesOrder3.Id,
+                ItemId = itemAccessory1.Id,
+                Quantity = 2,
+                Price = 53000
+            };
+            _salesOrderDetailService.CreateObject(salesOD3a, _salesOrderService, _itemService);
+
+            salesOD3b = new SalesOrderDetail()
+            {
+                SalesOrderId = salesOrder3.Id,
+                ItemId = itemAccessory2.Id,
+                Quantity = 2,
+                Price = 23000
+            };
+            _salesOrderDetailService.CreateObject(salesOD3b, _salesOrderService, _itemService);
+
+            _salesOrderService.ConfirmObject(salesOrder1, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+            _salesOrderService.ConfirmObject(salesOrder2, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+            _salesOrderService.ConfirmObject(salesOrder3, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+
+            deliveryOrder1 = new DeliveryOrder()
+            {
+                DeliveryDate = DateTime.Today,
+                SalesOrderId = salesOrder1.Id,
+                WarehouseId = localWarehouse.Id
+            };
+            _deliveryOrderService.CreateObject(deliveryOrder1, _salesOrderService, _warehouseService);
+
+            deliveryOrder2 = new DeliveryOrder()
+            {
+                DeliveryDate = DateTime.Today,
+                SalesOrderId = salesOrder2.Id,
+                WarehouseId = localWarehouse.Id
+            };
+            _deliveryOrderService.CreateObject(deliveryOrder2, _salesOrderService, _warehouseService);
+
+            deliveryOrder3 = new DeliveryOrder()
+            {
+                DeliveryDate = DateTime.Today,
+                SalesOrderId = salesOrder3.Id,
+                WarehouseId = localWarehouse.Id
+            };
+            _deliveryOrderService.CreateObject(deliveryOrder3, _salesOrderService, _warehouseService);
+
+            deliveryOD1a = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = deliveryOrder1.Id,
+                SalesOrderDetailId = salesOD1a.Id,
+                ItemId = itemAccessory1.Id,
+                Quantity = 2,
+            };
+            _deliveryOrderDetailService.CreateObject(deliveryOD1a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            deliveryOD1b = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = deliveryOrder1.Id,
+                SalesOrderDetailId = salesOD1b.Id,
+                ItemId = itemAccessory2.Id,
+                Quantity = 2,
+            };
+            _deliveryOrderDetailService.CreateObject(deliveryOD1b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            deliveryOD2a = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = deliveryOrder2.Id,
+                SalesOrderDetailId = salesOD2a.Id,
+                ItemId = itemAccessory1.Id,
+                Quantity = 2,
+            };
+            _deliveryOrderDetailService.CreateObject(deliveryOD2a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            deliveryOD2b = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = deliveryOrder2.Id,
+                SalesOrderDetailId = salesOD2b.Id,
+                ItemId = itemAccessory2.Id,
+                Quantity = 2
+            };
+            _deliveryOrderDetailService.CreateObject(deliveryOD2b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            deliveryOD3a = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = deliveryOrder3.Id,
+                SalesOrderDetailId = salesOD3a.Id,
+                ItemId = itemAccessory1.Id,
+                Quantity = 2
+            };
+            _deliveryOrderDetailService.CreateObject(deliveryOD3a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            deliveryOD3b = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = deliveryOrder3.Id,
+                SalesOrderDetailId = salesOD3b.Id,
+                ItemId = itemAccessory2.Id,
+                Quantity = 2
+            };
+            _deliveryOrderDetailService.CreateObject(deliveryOD3b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
+                                                _itemService, _blanketService, _warehouseItemService);
+            _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
+                                                _itemService, _blanketService, _warehouseItemService);
+            _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
+                                                _itemService, _blanketService, _warehouseItemService);
+
+            salesInvoice1 = new SalesInvoice()
+            {
+                DeliveryOrderId = deliveryOrder1.Id,
+                InvoiceDate = DateTime.Today,
+                DueDate = DateTime.Today.AddDays(7),
+                IsTaxable = false,
+                Discount = 0,
+            };
+            _salesInvoiceService.CreateObject(salesInvoice1, _deliveryOrderService);
+
+            salesInvoice2 = new SalesInvoice()
+            {
+                DeliveryOrderId = deliveryOrder2.Id,
+                InvoiceDate = DateTime.Today,
+                DueDate = DateTime.Today.AddDays(7),
+                IsTaxable = false,
+                Discount = 0,
+            };
+            _salesInvoiceService.CreateObject(salesInvoice2, _deliveryOrderService);
+
+            salesInvoice3 = new SalesInvoice()
+            {
+                DeliveryOrderId = deliveryOrder3.Id,
+                InvoiceDate = DateTime.Today,
+                DueDate = DateTime.Today.AddDays(7),
+                IsTaxable = false,
+                Discount = 0,
+            };
+            _salesInvoiceService.CreateObject(salesInvoice3, _deliveryOrderService);
+
+            salesID1a = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = salesInvoice1.Id,
+                DeliveryOrderDetailId = deliveryOD1a.Id,
+                Quantity = 2,
+            };
+            _salesInvoiceDetailService.CreateObject(salesID1a, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            salesID1b = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = salesInvoice1.Id,
+                DeliveryOrderDetailId = deliveryOD1b.Id,
+                Quantity = 2,
+            };
+            _salesInvoiceDetailService.CreateObject(salesID1b, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            salesID2a = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = salesInvoice2.Id,
+                DeliveryOrderDetailId = deliveryOD2a.Id,
+                Quantity = 2,
+            };
+            _salesInvoiceDetailService.CreateObject(salesID2a, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            salesID2b = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = salesInvoice2.Id,
+                DeliveryOrderDetailId = deliveryOD2b.Id,
+                Quantity = 2,
+            };
+            _salesInvoiceDetailService.CreateObject(salesID2b, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            salesID3a = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = salesInvoice3.Id,
+                DeliveryOrderDetailId = deliveryOD3a.Id,
+                Quantity = 2,
+            };
+            _salesInvoiceDetailService.CreateObject(salesID3a, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            salesID3b = new SalesInvoiceDetail()
+            {
+                SalesInvoiceId = salesInvoice3.Id,
+                DeliveryOrderDetailId = deliveryOD3b.Id,
+                Quantity = 2,
+            };
+            _salesInvoiceDetailService.CreateObject(salesID3b, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
+
+            _salesInvoiceService.ConfirmObject(salesInvoice1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService);
+            _salesInvoiceService.ConfirmObject(salesInvoice2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService);
+            _salesInvoiceService.ConfirmObject(salesInvoice3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService);
+
+            receiptVoucher1 = new ReceiptVoucher()
+            {
+                CashBankId = cashBank1.Id,
+                ContactId = contact.Id,
+                DueDate = DateTime.Today.AddDays(6),
+                IsGBCH = false,
+                ReceiptDate = DateTime.Today,
+                TotalAmount = salesInvoice1.AmountReceivable
+            };
+            _receiptVoucherService.CreateObject(receiptVoucher1, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+
+            receiptVoucher2 = new ReceiptVoucher()
+            {
+                CashBankId = cashBank1.Id,
+                ContactId = contact.Id,
+                DueDate = DateTime.Today.AddDays(6),
+                IsGBCH = false,
+                ReceiptDate = DateTime.Today,
+                TotalAmount = salesInvoice2.AmountReceivable
+            };
+            _receiptVoucherService.CreateObject(receiptVoucher2, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+
+            receiptVoucher3 = new ReceiptVoucher()
+            {
+                CashBankId = cashBank1.Id,
+                ContactId = contact.Id,
+                DueDate = DateTime.Today.AddDays(6),
+                IsGBCH = false,
+                ReceiptDate = DateTime.Today,
+                TotalAmount = salesInvoice3.AmountReceivable
+            };
+            _receiptVoucherService.CreateObject(receiptVoucher3, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
+
+            receiptVD1a = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = receiptVoucher1.Id,
+                Amount = salesID1a.Amount,
+                ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice1.Id).Id,
+            };
+            _receiptVoucherDetailService.CreateObject(receiptVD1a, _receiptVoucherService, _cashBankService, _receivableService);
+
+            receiptVD1b = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = receiptVoucher1.Id,
+                Amount = salesID1b.Amount,
+                ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice1.Id).Id,
+            };
+            _receiptVoucherDetailService.CreateObject(receiptVD1b, _receiptVoucherService, _cashBankService, _receivableService);
+
+            receiptVD2a = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = receiptVoucher2.Id,
+                Amount = salesID2a.Amount,
+                ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice2.Id).Id,
+            };
+            _receiptVoucherDetailService.CreateObject(receiptVD2a, _receiptVoucherService, _cashBankService, _receivableService);
+
+            receiptVD2b = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = receiptVoucher2.Id,
+                Amount = salesID2b.Amount,
+                ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice2.Id).Id,
+            };
+            _receiptVoucherDetailService.CreateObject(receiptVD2b, _receiptVoucherService, _cashBankService, _receivableService);
+
+            receiptVD3a = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = receiptVoucher3.Id,
+                Amount = salesID3a.Amount,
+                ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice3.Id).Id,
+            };
+            _receiptVoucherDetailService.CreateObject(receiptVD3a, _receiptVoucherService, _cashBankService, _receivableService);
+
+            receiptVD3b = new ReceiptVoucherDetail()
+            {
+                ReceiptVoucherId = receiptVoucher3.Id,
+                Amount = salesID3b.Amount,
+                ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice3.Id).Id,
+            };
+            _receiptVoucherDetailService.CreateObject(receiptVD3b, _receiptVoucherService, _cashBankService, _receivableService);
+
+            _receiptVoucherService.ConfirmObject(receiptVoucher1, DateTime.Now, _receiptVoucherDetailService, _cashBankService, _receivableService,
+                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService);
+            _receiptVoucherService.ConfirmObject(receiptVoucher2, DateTime.Now, _receiptVoucherDetailService, _cashBankService, _receivableService,
+                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService);
+            _receiptVoucherService.ConfirmObject(receiptVoucher3, DateTime.Now, _receiptVoucherDetailService, _cashBankService, _receivableService,
+                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService);
+        }
+
+        public void PopulateValidComb()
+        {
+            thisMonthClosing = new Closing()
+            {
+                BeginningPeriod = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
+                EndDatePeriod = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month)),
+                Period = DateTime.Today.Month,
+                YearPeriod = DateTime.Today.Year,
+            };
+            _closingService.CreateObject(thisMonthClosing, _accountService, _validCombService);
+
+            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService);
         }
     }
 }

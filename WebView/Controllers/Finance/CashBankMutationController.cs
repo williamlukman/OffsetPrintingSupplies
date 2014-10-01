@@ -22,6 +22,7 @@ namespace WebView.Controllers
         private ICashBankMutationService _cashBankMutationService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public CashBankMutationController()
         {
@@ -31,6 +32,7 @@ namespace WebView.Controllers
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
         public ActionResult Index()
@@ -200,7 +202,7 @@ namespace WebView.Controllers
                 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService,
-                                                               _accountService,_generalLedgerJournalService);
+                                                               _accountService,_generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -220,7 +222,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _cashBankMutationService.GetObjectById(model.Id);
-                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService,_generalLedgerJournalService);
+                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService,_generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

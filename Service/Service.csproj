@@ -64,6 +64,7 @@
     <Compile Include="Service\SalesOperation\VirtualOrderService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceDetailService.cs" />
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceService.cs" />
+    <Compile Include="Service\StockAndMaster\CompanyService.cs" />
     <Compile Include="Service\StockAndMaster\GroupItemPriceService.cs" />
     <Compile Include="Service\StockAndMaster\PriceMutationService.cs" />
     <Compile Include="Service\StockAndMaster\ContactGroupService.cs" />
@@ -103,6 +104,10 @@
     <Compile Include="Service\StockAndMaster\ContactService.cs" />
     <Compile Include="Service\StockAndMaster\ItemService.cs" />
     <Compile Include="Service\StockAndMaster\ItemTypeService.cs" />
+    <Compile Include="Service\UserRole\StringEncryption.cs" />
+    <Compile Include="Service\UserRole\UserAccessService.cs" />
+    <Compile Include="Service\UserRole\UserAccountService.cs" />
+    <Compile Include="Service\UserRole\UserMenuService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

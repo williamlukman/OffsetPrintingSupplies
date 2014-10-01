@@ -18,7 +18,7 @@ namespace Data.Repository
 
         public IQueryable<ReceiptVoucher> GetQueryable()
         {
-            return FindAll();
+            return FindAll(pv => !pv.IsDeleted);
         }
 
         public IList<ReceiptVoucher> GetAll()

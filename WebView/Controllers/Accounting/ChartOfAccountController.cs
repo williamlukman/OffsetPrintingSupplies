@@ -13,18 +13,23 @@ using System.Data.Entity;
 
 namespace WebView.Controllers
 {
-    public class MstCOAController : Controller
+    public class ChartOfAccountController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("MstCOAController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ChartOfAccountController");
         private IAccountService _accountService;
 
-        public MstCOAController()
+        public ChartOfAccountController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
         }
 
         public ActionResult Index()
         {
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Report))
+            {
+                return Content("You are not allowed to View this Page.");
+            }
+
             return View();
         }
 
@@ -221,6 +226,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Create", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Report))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Add record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 model = _accountService.CreateObject(model, _accountService);
             }
             catch (Exception ex)
@@ -274,6 +290,17 @@ namespace WebView.Controllers
         {
             try
             {
+                if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Report))
+                {
+                    Dictionary<string, string> Errors = new Dictionary<string, string>();
+                    Errors.Add("Generic", "You are Not Allowed to Delete Record");
+
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
                 var data = _accountService.GetObjectById(model.Id);
                 model = _accountService.SoftDeleteObject(data);
             }
