@@ -16,11 +16,10 @@ namespace Validation.Validation
         {
             if (!generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankAdjustment) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankMutation) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashSalesInvoice) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CustomPurchaseInvoice) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PaymentVoucher) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.ReceiptVoucher) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RetailSalesInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesInvoice) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.StockAdjustment))
             {
                 generalLedgerJournal.Errors.Add("SourceDocument", "Harus merupakan bagian dari Constant.SourceDocument");

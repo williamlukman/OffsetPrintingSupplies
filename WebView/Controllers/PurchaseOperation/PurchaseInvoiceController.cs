@@ -25,6 +25,9 @@ namespace WebView.Controllers
         private IPaymentVoucherDetailService _paymentVoucherDetailService;
         private IPayableService _payableService;
         private IItemService _itemService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public PurchaseInvoiceController()
         {
@@ -37,6 +40,9 @@ namespace WebView.Controllers
             _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
         public ActionResult Index()
@@ -392,7 +398,8 @@ namespace WebView.Controllers
             //try
             //{
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseReceivalService,_purchaseReceivalDetailService,_payableService);
+                model = _purchaseInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseInvoiceDetailService,_purchaseOrderService,
+                        _purchaseReceivalService,_purchaseReceivalDetailService,_payableService,_accountService,_generalLedgerJournalService,_closingService);
             //}
             //catch (Exception ex)
             //{
@@ -413,7 +420,9 @@ namespace WebView.Controllers
             {
 
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.UnconfirmObject(data,_purchaseInvoiceDetailService,_purchaseReceivalService,_purchaseReceivalDetailService,_paymentVoucherDetailService,_payableService);
+                model = _purchaseInvoiceService.UnconfirmObject(data,_purchaseInvoiceDetailService,
+                        _purchaseReceivalService,_purchaseReceivalDetailService,_paymentVoucherDetailService,_payableService,
+                        _accountService,_generalLedgerJournalService,_closingService);
             }
             catch (Exception ex)
             {

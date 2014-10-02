@@ -152,15 +152,16 @@
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
-    <Compile Include="Controllers\StockAndMaster\AuthenticationController.cs" />
     <Compile Include="Controllers\Manufacturing\BlanketWorkOrderController.cs" />
     <Compile Include="Controllers\Finance\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\Finance\CashBankMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\Finance\CashMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\CoreAccessoryDetailController.cs" />
+    <Compile Include="Controllers\Report\FinanceReportController.cs" />
     <Compile Include="Controllers\SalesOperation\ReceivableController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PayableController.cs" />
+    <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
     <Compile Include="Controllers\StockAndMaster\StockMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkProcessController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkOrderController.cs" />
@@ -179,8 +180,6 @@
     <Compile Include="Controllers\StockAndMaster\MstRollerTypeController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstUoMController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstWarehouseController.cs" />
-    <Compile Include="Controllers\StockAndMaster\UserAccessController.cs" />
-    <Compile Include="Controllers\StockAndMaster\UserController.cs" />
     <Compile Include="Controllers\StockAndMaster\WarehouseItemController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PaymentVoucherController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PurchaseInvoiceController.cs" />
@@ -192,6 +191,9 @@
     <Compile Include="Controllers\SalesOperation\SalesOrderController.cs" />
     <Compile Include="Controllers\StockAndMaster\StockAdjustmentController.cs" />
     <Compile Include="Controllers\StockAndMaster\WarehouseMutationController.cs" />
+    <Compile Include="Controllers\UserRole\AuthenticationController.cs" />
+    <Compile Include="Controllers\UserRole\UserAccessController.cs" />
+    <Compile Include="Controllers\UserRole\UserController.cs" />
     <Compile Include="GeneralFunction.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -208,16 +210,13 @@
     <Content Include="Content\apps_js\BlanketWorkProcess.js" />
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
+    <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\CoreAccessoryDetail.js" />
     <Content Include="Content\apps_js\GeneralLedgerJournal.js" />
     <Content Include="Content\apps_js\MasterCOA.js" />
     <Content Include="Content\apps_js\MasterUser.js" />
     <Content Include="Content\apps_js\Receivable.js" />
     <Content Include="Content\apps_js\Payable.js" />
-    <Content Include="Content\apps_js\ReportItem.js" />
-    <Content Include="Content\apps_js\ReportProfitLoss.js" />
-    <Content Include="Content\apps_js\ReportSales.js" />
-    <Content Include="Content\apps_js\ReportTopSales.js" />
     <Content Include="Content\apps_js\StockMutation.js" />
     <Content Include="Content\apps_js\RecoveryWorkProcess.js" />
     <Content Include="Content\apps_js\CoreIdentification.js" />
@@ -246,6 +245,7 @@
     <Content Include="Content\apps_js\StockAdjustment.js" />
     <Content Include="Content\apps_js\tools.js" />
     <Content Include="Content\apps_js\useraccess.js" />
+    <Content Include="Content\apps_js\ValidComb.js" />
     <Content Include="Content\apps_js\WarehouseItem.js" />
     <Content Include="Content\apps_js\WarehouseMutation.js" />
     <Content Include="Content\assets\images\emkl.png" />
@@ -985,7 +985,6 @@
     <Content Include="Content\themes\easyui\metro\images\Thumbs.db" />
     <Content Include="Content\uploadify\check.php" />
     <Content Include="Content\uploadify\uploadify.php" />
-    <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\webui.pubxml" />
     <None Include="Properties\PublishProfiles\Zengra.pubxml" />
     <Content Include="Reports\Finance\BalanceSheet.rpt" />
@@ -1169,6 +1168,8 @@
     <Content Include="Views\FinanceReport\BalanceSheet.cshtml" />
     <Content Include="Views\FinanceReport\IncomeStatement.cshtml" />
     <Content Include="Views\ValidComb\Index.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Company\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

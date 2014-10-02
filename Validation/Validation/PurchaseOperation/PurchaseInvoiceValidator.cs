@@ -170,6 +170,30 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
+        public PurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(PurchaseInvoice purchaseInvoice, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm
+                    {
+                        if (_closingService.IsDateClosed(purchaseInvoice.ConfirmationDate.GetValueOrDefault()))
+                        {
+                            purchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
+                case (2): // Unconfirm
+                    {
+                        if (_closingService.IsDateClosed(DateTime.Now))
+                        {
+                            purchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
+            }
+            return purchaseInvoice;
+        }
+
         public PurchaseInvoice VCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService)
         {
             VHasPurchaseReceival(purchaseInvoice, _purchaseReceivalService);
@@ -216,7 +240,7 @@ namespace Validation.Validation
         }
 
         public PurchaseInvoice VConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IClosingService _closingService)
         {
             VHasConfirmationDate(purchaseInvoice);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
@@ -229,11 +253,13 @@ namespace Validation.Validation
             VHasPurchaseInvoiceDetails(purchaseInvoice, _purchaseInvoiceDetailService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VAllPurchaseInvoiceDetailsAreConfirmable(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalDetailService);
+            if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(purchaseInvoice, _closingService, 1);
             return purchaseInvoice;
         }
 
         public PurchaseInvoice VUnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                                IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+                                                IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IClosingService _closingService)
         {
             VHasBeenConfirmed(purchaseInvoice);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
@@ -242,6 +268,8 @@ namespace Validation.Validation
             VAllPurchaseInvoiceDetailsAreUnconfirmable(purchaseInvoice, _purchaseInvoiceDetailService, _paymentVoucherDetailService, _payableService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VPayableHasNoOtherAssociation(purchaseInvoice, _payableService, _paymentVoucherDetailService); // _purchaseAllowanceAllocationDetailService
+            if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(purchaseInvoice, _closingService, 2);
             return purchaseInvoice;
         }
 
@@ -266,18 +294,19 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                       IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+                                       IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                        IClosingService _closingService)
         {
             purchaseInvoice.Errors.Clear();
-            VConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService);
+            VConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService);
             return isValid(purchaseInvoice);
         }
 
         public bool ValidUnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                         IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+                                         IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IClosingService _closingService)
         {
             purchaseInvoice.Errors.Clear();
-            VUnconfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _paymentVoucherDetailService, _payableService);
+            VUnconfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _paymentVoucherDetailService, _payableService, _closingService);
             return isValid(purchaseInvoice);
         }
 

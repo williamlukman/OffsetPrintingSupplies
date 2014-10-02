@@ -126,7 +126,7 @@ namespace Service.Service
                                             ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(receiptVoucher, _closingService))
+            if (_validator.ValidUnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService))
             {
                 IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
                 foreach (var detail in details)
@@ -157,10 +157,11 @@ namespace Service.Service
             receiptVoucher.ReconciliationDate = ReconciliationDate;
             if (_validator.ValidReconcileObject(receiptVoucher, _closingService))
             {
-                _repository.ReconcileObject(receiptVoucher);
-
                 CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForReceiptVoucher(receiptVoucher, cashBank);
+
+                _generalLedgerJournalService.CreateConfirmationJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService);
+                _repository.ReconcileObject(receiptVoucher);
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
 
                 IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
@@ -183,12 +184,12 @@ namespace Service.Service
                                                 ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnreconcileObject(receiptVoucher, _closingService))
+            if (_validator.ValidUnreconcileObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService))
             {
+                CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForReceiptVoucher(receiptVoucher, cashBank, _accountService);
                 _repository.UnreconcileObject(receiptVoucher);
 
-
-                CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForReceiptVoucher(receiptVoucher, cashBank);
                 foreach (var cashMutation in cashMutations)
                 {

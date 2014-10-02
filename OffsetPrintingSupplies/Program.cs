@@ -37,21 +37,7 @@ namespace OffsetPrintingSupplies
 
         public static void DataFunction(DataBuilder d)
         {
-           //d.PopulateData();
-
-           d.PopulateUserRole();
-           d.PopulateWarehouse();
-           d.PopulateItem(); // 1. Stock Adjustment
-           d.PopulateSingles();
-           d.PopulateCashBank(); // 2. CashBankAdjustment, 3. CashBankMutation, 4. CashBankAdjustment (Negative)
-
-           d.PopulateSales(); // 5. 3x Cash Invoice
-           d.PopulateValidComb(); // 7. Closing
-
-            decimal InventoryAmount = (d.sad1.Price * d.sad1.Quantity) + (d.sad2.Price * d.sad2.Quantity) +
-                         (d.sad3.Price * d.sad3.Quantity) + (d.sad4.Price * d.sad4.Quantity) +
-                         (d.sad5.Price * d.sad5.Quantity);
-
+           d.PopulateData();
         }
     }
 }

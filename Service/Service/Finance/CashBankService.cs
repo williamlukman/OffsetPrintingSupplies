@@ -53,15 +53,16 @@ namespace Service.Service
             {
                 // Create Leaf Cash Bank Account
                 string Code = GenerateAccountCode(_accountService);
+                Account cashBankAccount =_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank);
                 Account account = new Account()
                 {
                     Name = cashBank.Name,
-                    Level = 3,
+                    Level = cashBankAccount.Level + 1,
                     Group = Constant.AccountGroup.Asset,
                     Code = Code,
                     IsCashBankAccount = true,
                     IsLeaf = true,
-                    ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank).Id
+                    ParentId = cashBankAccount.Id
                 };
                 _accountService.CreateCashBankAccount(account, _accountService);
                 _repository.CreateObject(cashBank);

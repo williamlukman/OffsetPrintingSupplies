@@ -81,8 +81,8 @@ namespace Validation.Validation
         public SalesInvoice VHasReceiptVoucherDetails(SalesInvoice salesInvoice, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
             Receivable receivable = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice.Id);
-            IList<ReceiptVoucherDetail> pvdetails = _receiptVoucherDetailService.GetObjectsByReceivableId(receivable.Id);
-            if (pvdetails.Any())
+            IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceivableId(receivable.Id);
+            if (receiptVoucherDetails.Any())
             {
                 salesInvoice.Errors.Add("Generic", "Tidak boleh sudah ada proses pembayaran");
             }
@@ -170,6 +170,30 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
+        public SalesInvoice VGeneralLedgerPostingHasNotBeenClosed(SalesInvoice salesInvoice, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm
+                {
+                    if (_closingService.IsDateClosed(salesInvoice.ConfirmationDate.GetValueOrDefault()))
+                    {
+                        salesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+                case (2): // Unconfirm
+                {
+                    if (_closingService.IsDateClosed(DateTime.Now))
+                    {
+                        salesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
+                    }
+                    break;
+                }
+            }
+            return salesInvoice;
+        }
+
         public SalesInvoice VCreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService)
         {
             VHasDeliveryOrder(salesInvoice, _deliveryOrderService);
@@ -216,7 +240,8 @@ namespace Validation.Validation
         }
 
         public SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                              IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService)
+                                           IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                           IClosingService _closingService)
         {
             VHasConfirmationDate(salesInvoice);
             if (!isValid(salesInvoice)) { return salesInvoice; }
@@ -229,11 +254,14 @@ namespace Validation.Validation
             VHasSalesInvoiceDetails(salesInvoice, _salesInvoiceDetailService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VAllSalesInvoiceDetailsAreConfirmable(salesInvoice, _salesInvoiceDetailService, _deliveryOrderDetailService);
+            if (!isValid(salesInvoice)) { return salesInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService, 1);
             return salesInvoice;
         }
 
         public SalesInvoice VUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                                IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
+                                             IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
+                                             IClosingService _closingService)
         {
             VHasBeenConfirmed(salesInvoice);
             if (!isValid(salesInvoice)) { return salesInvoice; }
@@ -242,6 +270,8 @@ namespace Validation.Validation
             VAllSalesInvoiceDetailsAreUnconfirmable(salesInvoice, _salesInvoiceDetailService, _receiptVoucherDetailService, _receivableService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VReceivableHasNoOtherAssociation(salesInvoice, _receivableService, _receiptVoucherDetailService); // _salesAllowanceAllocationDetailService
+            if (!isValid(salesInvoice)) { return salesInvoice; }
+            VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService, 2);
             return salesInvoice;
         }
 
@@ -266,18 +296,18 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                       IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService)
+                                       IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IClosingService _closingService)
         {
             salesInvoice.Errors.Clear();
-            VConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService);
+            VConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService, _closingService);
             return isValid(salesInvoice);
         }
 
         public bool ValidUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                         IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
+                                         IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService, IClosingService _closingService)
         {
             salesInvoice.Errors.Clear();
-            VUnconfirmObject(salesInvoice, _salesInvoiceDetailService, _receiptVoucherDetailService, _receivableService);
+            VUnconfirmObject(salesInvoice, _salesInvoiceDetailService, _receiptVoucherDetailService, _receivableService, _closingService);
             return isValid(salesInvoice);
         }
 

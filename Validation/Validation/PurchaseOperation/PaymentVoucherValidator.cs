@@ -40,6 +40,15 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
+        public PaymentVoucher VNotIsGBCH(PaymentVoucher paymentVoucher)
+        {
+            if (!paymentVoucher.IsGBCH)
+            {
+                paymentVoucher.Errors.Add("Generic", "Non GBCH does not need reconcile");
+            }
+            return paymentVoucher;
+        }
+
         public PaymentVoucher VIfGBCHThenIsBank(PaymentVoucher paymentVoucher, ICashBankService _cashBankService)
         {
             if (paymentVoucher.IsGBCH)
@@ -149,19 +158,22 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
-        public PaymentVoucher VCashBankHasMoreAmountPaymentVoucherDetails(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService)
+        public PaymentVoucher VCashBankIsGreaterThanOrEqualPaymentVoucherDetails(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, bool CasePayment)
         {
-            decimal totalamount = 0;
-            IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
-            foreach (var detail in details)
+            if (CasePayment)
             {
-                totalamount += detail.Amount;
-            }
+                decimal totalamount = 0;
+                IList<PaymentVoucherDetail> details = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
+                foreach (var detail in details)
+                {
+                    totalamount += detail.Amount;
+                }
 
-            CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
-            if (cashBank.Amount < totalamount)
-            {
-                paymentVoucher.Errors.Add("Generic", "Cash bank tidak boleh kurang dari total amount");
+                CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
+                if (cashBank.Amount < totalamount)
+                {
+                    paymentVoucher.Errors.Add("Generic", "Cash bank tidak boleh kurang dari total amount");
+                }
             }
             return paymentVoucher;
         }
@@ -294,7 +306,7 @@ namespace Validation.Validation
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VAllPaymentVoucherDetailsAreConfirmable(paymentVoucher, _paymentVoucherService, _paymentVoucherDetailService, _cashBankService, _payableService);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
-            VCashBankHasMoreAmountPaymentVoucherDetails(paymentVoucher, _paymentVoucherDetailService, _cashBankService);
+            VCashBankIsGreaterThanOrEqualPaymentVoucherDetails(paymentVoucher, _paymentVoucherDetailService, _cashBankService, !paymentVoucher.IsGBCH);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VGeneralLedgerPostingHasNotBeenClosed(paymentVoucher, _closingService, 1);
             return paymentVoucher;
@@ -310,8 +322,10 @@ namespace Validation.Validation
             return paymentVoucher;
         }
 
-        public PaymentVoucher VReconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
+        public PaymentVoucher VReconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IClosingService _closingService)
         {
+            VNotIsGBCH(paymentVoucher);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasBeenConfirmed(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VHasNotBeenReconciled(paymentVoucher);
@@ -319,6 +333,8 @@ namespace Validation.Validation
             VHasReconciliationDate(paymentVoucher);
             if (!isValid(paymentVoucher)) { return paymentVoucher; }
             VGeneralLedgerPostingHasNotBeenClosed(paymentVoucher, _closingService, 3);
+            if (!isValid(paymentVoucher)) { return paymentVoucher; }
+            VCashBankIsGreaterThanOrEqualPaymentVoucherDetails(paymentVoucher, _paymentVoucherDetailService, _cashBankService, true);
             return paymentVoucher;
         }
 
@@ -370,10 +386,10 @@ namespace Validation.Validation
             return isValid(paymentVoucher);
         }
 
-        public bool ValidReconcileObject(PaymentVoucher paymentVoucher, IClosingService _closingService)
+        public bool ValidReconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IClosingService _closingService)
         {
             paymentVoucher.Errors.Clear();
-            VReconcileObject(paymentVoucher, _closingService);
+            VReconcileObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _closingService);
             return isValid(paymentVoucher);
         }
 

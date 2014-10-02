@@ -648,10 +648,10 @@
         url: base_url + 'User/GetList',
         datatype: "json",
         colNames: ['ID', 'UserName', 'Name', 'Description', 'Is Admin'],
-        colModel: [{ name: 'id', index: 'id', width: 50, frozen: true },
+        colModel: [{ name: 'id', index: 'id', width: 40, frozen: true },
                   { name: 'username', index: 'username', width: 100, frozen:true },
                   { name: 'name', index: 'name', width: 150 },
-                  { name: 'description', index: 'description', width: 150 },
+                  { name: 'description', index: 'description', width: 150, hidden: true },
                   {
                       name: 'isadmin', index: 'isadmin', width: 60, align: 'center', sortable: false,
                       editable: true,

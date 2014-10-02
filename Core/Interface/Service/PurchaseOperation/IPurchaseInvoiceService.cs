@@ -20,10 +20,12 @@ namespace Core.Interface.Service
         PurchaseInvoice SoftDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         bool DeleteObject(int Id);
         PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice, DateTime ConfirmationDate, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseOrderService _purchaseOrderService,
-                                      IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService);
+                                      IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService,
+                                      IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         PurchaseInvoice UnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                         IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                        IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                        IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
+                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         PurchaseInvoice CalculateAmountPayable(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
     }
 }

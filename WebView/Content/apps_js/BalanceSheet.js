@@ -16,7 +16,12 @@
 
     $('#btnprint').click(function () {
         var closingId = jQuery("#closing").jqGrid('getGridParam', 'selrow');
-        window.open(base_url + "FinanceReport/ReportBalanceSheet?closingId=" + closingId);
+        if (closingId == null) {
+            $.messager.alert('Information', 'Please select closing date!', 'info');
+        }
+        else {
+            window.open(base_url + "FinanceReport/ReportBalanceSheet?closingId=" + closingId);
+        }
     });
 
     $.ajax({

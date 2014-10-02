@@ -82,10 +82,11 @@ namespace Service.Service
         }
 
         public PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice, DateTime ConfirmationDate, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseOrderService _purchaseOrderService,
-                                             IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService)
+                                             IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService,
+                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             purchaseInvoice.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService))
+            if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService))
             {
                 // confirm details
                 // add all amount into amountpayable
@@ -99,6 +100,7 @@ namespace Service.Service
 
                 // confirm object
                 // create payable
+                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseInvoice(purchaseInvoice, _accountService);
                 purchaseInvoice = _repository.ConfirmObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);
@@ -110,9 +112,10 @@ namespace Service.Service
 
         public PurchaseInvoice UnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                               IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+                                               IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
+                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _paymentVoucherDetailService, _payableService))
+            if (_validator.ValidUnconfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _paymentVoucherDetailService, _payableService, _closingService))
             {
                 IList<PurchaseInvoiceDetail> details = _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(purchaseInvoice.Id);
                 foreach (var detail in details)
@@ -120,6 +123,7 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseInvoiceDetailService.UnconfirmObject(detail, _purchaseReceivalService, _purchaseReceivalDetailService);
                 }
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseInvoice(purchaseInvoice, _accountService);
                 _repository.UnconfirmObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.UnsetInvoiceComplete(purchaseReceival);

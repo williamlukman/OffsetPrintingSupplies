@@ -18,6 +18,8 @@ namespace Core.Interface.Validation
         ReceiptVoucherDetail VNonNegativeAmount(ReceiptVoucherDetail receiptVoucherDetail);
         ReceiptVoucherDetail VAmountLessOrEqualReceivable(ReceiptVoucherDetail receiptVoucherDetail, IReceivableService _receivableService);
         ReceiptVoucherDetail VUniqueReceivableId(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+        ReceiptVoucherDetail VDetailsAmountLessOrEqualReceiptVoucherTotal(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
+                                                                          IReceiptVoucherDetailService _receiptVoucherDetailService);
 
         ReceiptVoucherDetail VCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);
         ReceiptVoucherDetail VUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService);

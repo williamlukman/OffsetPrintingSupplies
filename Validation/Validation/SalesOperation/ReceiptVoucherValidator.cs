@@ -40,6 +40,15 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
+        public ReceiptVoucher VNotIsGBCH(ReceiptVoucher receiptVoucher)
+        {
+            if (!receiptVoucher.IsGBCH)
+            {
+                receiptVoucher.Errors.Add("Generic", "Non GBCH does not need reconcile");
+            }
+            return receiptVoucher;
+        }
+
         public ReceiptVoucher VIfGBCHThenIsBank(ReceiptVoucher receiptVoucher, ICashBankService _cashBankService)
         {
             if (receiptVoucher.IsGBCH)
@@ -128,8 +137,8 @@ namespace Validation.Validation
         }
 
         public ReceiptVoucher VAllReceiptVoucherDetailsAreConfirmable(ReceiptVoucher receiptVoucher, IReceiptVoucherService _receiptVoucherService,
-                                                              IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
-                                                              IReceivableService _receivableService)
+                                                                      IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
+                                                                      IReceivableService _receivableService)
         {
             IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
             foreach (var detail in details)
@@ -148,22 +157,26 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
-        public ReceiptVoucher VCashBankHasMoreAmountReceiptVoucherDetails(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService)
+        public ReceiptVoucher VCashBankIsGreaterThanOrEqualReceiptVoucherDetails(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, bool CaseReceipt)
         {
-            decimal totalamount = 0;
-            IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
-            foreach (var detail in details)
+            if (CaseReceipt)
             {
-                totalamount += detail.Amount;
-            }
+                decimal totalamount = 0;
+                IList<ReceiptVoucherDetail> details = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucher.Id);
+                foreach (var detail in details)
+                {
+                    totalamount += detail.Amount;
+                }
 
-            CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
-            if (cashBank.Amount < totalamount)
-            {
-                receiptVoucher.Errors.Add("Generic", "Cash bank tidak boleh kurang dari total amount");
+                CashBank cashBank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
+                if (cashBank.Amount < totalamount)
+                {
+                    receiptVoucher.Errors.Add("Generic", "Cash bank tidak boleh kurang dari total amount");
+                }
             }
             return receiptVoucher;
         }
+
 
         public ReceiptVoucher VHasBeenReconciled(ReceiptVoucher receiptVoucher)
         {
@@ -293,24 +306,27 @@ namespace Validation.Validation
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VAllReceiptVoucherDetailsAreConfirmable(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
-            VCashBankHasMoreAmountReceiptVoucherDetails(receiptVoucher, _receiptVoucherDetailService, _cashBankService);
-            if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VGeneralLedgerPostingHasNotBeenClosed(receiptVoucher, _closingService, 1);
             return receiptVoucher;
         }
 
-        public ReceiptVoucher VUnconfirmObject(ReceiptVoucher receiptVoucher, IClosingService _closingService)
+        public ReceiptVoucher VUnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                               ICashBankService _cashBankService, IClosingService _closingService)
         {
             VHasBeenConfirmed(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasNotBeenReconciled(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VGeneralLedgerPostingHasNotBeenClosed(receiptVoucher, _closingService, 2);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VCashBankIsGreaterThanOrEqualReceiptVoucherDetails(receiptVoucher, _receiptVoucherDetailService, _cashBankService, !receiptVoucher.IsGBCH);
             return receiptVoucher;
         }
 
         public ReceiptVoucher VReconcileObject(ReceiptVoucher receiptVoucher, IClosingService _closingService)
         {
+            VNotIsGBCH(receiptVoucher);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasBeenConfirmed(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasNotBeenReconciled(receiptVoucher);
@@ -321,13 +337,16 @@ namespace Validation.Validation
             return receiptVoucher;
         }
 
-        public ReceiptVoucher VUnreconcileObject(ReceiptVoucher receiptVoucher, IClosingService _closingService)
+        public ReceiptVoucher VUnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, 
+                                                 ICashBankService _cashBankService, IClosingService _closingService)
         {
             VHasBeenConfirmed(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasBeenReconciled(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VGeneralLedgerPostingHasNotBeenClosed(receiptVoucher, _closingService, 4);
+            if (!isValid(receiptVoucher)) { return receiptVoucher; }
+            VCashBankIsGreaterThanOrEqualReceiptVoucherDetails(receiptVoucher, _receiptVoucherDetailService, _cashBankService, true);
             return receiptVoucher;
         }
 
@@ -363,10 +382,10 @@ namespace Validation.Validation
             return isValid(receiptVoucher);
         }
 
-        public bool ValidUnconfirmObject(ReceiptVoucher receiptVoucher, IClosingService _closingService)
+        public bool ValidUnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IClosingService _closingService)
         {
             receiptVoucher.Errors.Clear();
-            VUnconfirmObject(receiptVoucher, _closingService);
+            VUnconfirmObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService);
             return isValid(receiptVoucher);
         }
 
@@ -377,10 +396,10 @@ namespace Validation.Validation
             return isValid(receiptVoucher);
         }
 
-        public bool ValidUnreconcileObject(ReceiptVoucher receiptVoucher, IClosingService _closingService)
+        public bool ValidUnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IClosingService _closingService)
         {
             receiptVoucher.Errors.Clear();
-            VUnreconcileObject(receiptVoucher, _closingService);
+            VUnreconcileObject(receiptVoucher, _receiptVoucherDetailService, _cashBankService, _closingService);
             return isValid(receiptVoucher);
         }
 

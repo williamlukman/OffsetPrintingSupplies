@@ -256,13 +256,12 @@
                             $('#PaymentDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
-                            $('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnCashBank').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
-                            $('#IsBank').removeAttr('disabled');
                             $('#tabledetail_div').hide();
+                            $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
                     }
@@ -515,8 +514,6 @@
 
         var e = document.getElementById("IsGBCH");
         var gbch = e.options[e.selectedIndex].value;
-        var f = document.getElementById("IsBank");
-        var bank = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
@@ -524,7 +521,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, IsBank: bank, TotalAmount : $("#TotalAmount").numberbox('getValue'),
+                IsGBCH: gbch, TotalAmount : $("#TotalAmount").numberbox('getValue'),
                 PaymentDate: $('#PaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,

@@ -25,6 +25,9 @@ namespace WebView.Controllers
         private IReceiptVoucherDetailService _receiptVoucherDetailService;
         private IReceivableService _receivableService;
         private IItemService _itemService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public SalesInvoiceController()
         {
@@ -37,6 +40,9 @@ namespace WebView.Controllers
             _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
 
@@ -393,7 +399,8 @@ namespace WebView.Controllers
             //try
             //{
             var data = _salesInvoiceService.GetObjectById(model.Id);
-            model = _salesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService, _deliveryOrderDetailService, _receivableService);
+            model = _salesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _salesInvoiceDetailService, _salesOrderService,
+                    _deliveryOrderService, _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
             //}
             //catch (Exception ex)
             //{
@@ -414,7 +421,8 @@ namespace WebView.Controllers
             {
 
                 var data = _salesInvoiceService.GetObjectById(model.Id);
-                model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService);
+                model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService, _deliveryOrderService,
+                        _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

@@ -103,6 +103,24 @@ namespace Validation.Validation
             return receiptVoucherDetail;
         }
 
+        public ReceiptVoucherDetail VDetailsAmountLessOrEqualReceiptVoucherTotal(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
+                                                                                 IReceiptVoucherDetailService _receiptVoucherDetailService)
+        {
+            IList<ReceiptVoucherDetail> receiptVoucherDetails = _receiptVoucherDetailService.GetObjectsByReceiptVoucherId(receiptVoucherDetail.ReceiptVoucherId);
+            decimal TotalReceiptVoucherDetails = 0;
+            foreach (var detail in receiptVoucherDetails)
+            {
+                TotalReceiptVoucherDetails += detail.Amount;
+            }
+            ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
+            if (receiptVoucher.TotalAmount < TotalReceiptVoucherDetails)
+            {
+                decimal sisa = receiptVoucher.TotalAmount - TotalReceiptVoucherDetails + receiptVoucherDetail.Amount;
+                receiptVoucherDetail.Errors.Add("Generic", "Receipt Voucher hanya menyediakan sisa dana sebesar " + sisa);
+            }
+            return receiptVoucherDetail;
+        }
+
         public ReceiptVoucherDetail VCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
                                                   IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService)
         {

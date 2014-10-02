@@ -18,7 +18,8 @@ namespace Core.Interface.Validation
         PaymentVoucherDetail VNonNegativeAmount(PaymentVoucherDetail paymentVoucherDetail);
         PaymentVoucherDetail VAmountLessOrEqualPayable(PaymentVoucherDetail paymentVoucherDetail, IPayableService _payableService);
         PaymentVoucherDetail VUniquePayableId(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
-
+        PaymentVoucherDetail VDetailsAmountLessOrEqualPaymentVoucherTotal(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
+                                                                          IPaymentVoucherDetailService _paymentVoucherDetailService);
         PaymentVoucherDetail VCreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail VUpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService);
         PaymentVoucherDetail VDeleteObject(PaymentVoucherDetail paymentVoucherDetail);

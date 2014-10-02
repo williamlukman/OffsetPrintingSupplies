@@ -156,12 +156,13 @@ namespace Service.Service
                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             paymentVoucher.ReconciliationDate = ReconciliationDate;
-            if (_validator.ValidReconcileObject(paymentVoucher, _closingService))
+            if (_validator.ValidReconcileObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _closingService))
             {
-                _repository.ReconcileObject(paymentVoucher);
-
                 CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForPaymentVoucher(paymentVoucher, cashBank);
+                _generalLedgerJournalService.CreateConfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
+                _repository.ReconcileObject(paymentVoucher);
+
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
 
                 IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
@@ -186,9 +187,10 @@ namespace Service.Service
         {
             if (_validator.ValidUnreconcileObject(paymentVoucher, _closingService))
             {
+                CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
                 _repository.UnreconcileObject(paymentVoucher);
 
-                CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForPaymentVoucher(paymentVoucher, cashBank);
                 foreach (var cashMutation in cashMutations)
                 {

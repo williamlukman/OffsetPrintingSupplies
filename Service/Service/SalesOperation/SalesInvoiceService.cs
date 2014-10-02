@@ -82,10 +82,11 @@ namespace Service.Service
         }
 
         public SalesInvoice ConfirmObject(SalesInvoice salesInvoice, DateTime ConfirmationDate, ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService,
-                                             IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService)
+                                          IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService,
+                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             salesInvoice.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService))
+            if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService, _closingService))
             {
                 // confirm details
                 // add all amount into amountreceivable
@@ -99,6 +100,7 @@ namespace Service.Service
 
                 // confirm object
                 // create receivable
+                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoice(salesInvoice, _accountService);
                 salesInvoice = _repository.ConfirmObject(salesInvoice);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
@@ -109,10 +111,11 @@ namespace Service.Service
         }
 
         public SalesInvoice UnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                               IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                               IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
+                                            IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                            IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(salesInvoice, _salesInvoiceDetailService, _receiptVoucherDetailService, _receivableService))
+            if (_validator.ValidUnconfirmObject(salesInvoice, _salesInvoiceDetailService, _receiptVoucherDetailService, _receivableService, _closingService))
             {
                 IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
                 foreach (var detail in details)
@@ -120,6 +123,7 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _salesInvoiceDetailService.UnconfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService);
                 }
+                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoice(salesInvoice, _accountService);
                 _repository.UnconfirmObject(salesInvoice);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.UnsetInvoiceComplete(deliveryOrder);

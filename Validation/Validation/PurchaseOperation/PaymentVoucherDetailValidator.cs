@@ -103,6 +103,24 @@ namespace Validation.Validation
             return paymentVoucherDetail;
         }
 
+        public PaymentVoucherDetail VDetailsAmountLessOrEqualPaymentVoucherTotal(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
+                                                                                 IPaymentVoucherDetailService _paymentVoucherDetailService)
+        {
+            IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucherDetail.PaymentVoucherId);
+            decimal TotalPaymentVoucherDetails = 0;
+            foreach (var detail in paymentVoucherDetails)
+            {
+                TotalPaymentVoucherDetails += detail.Amount;
+            }
+            PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
+            if (paymentVoucher.TotalAmount < TotalPaymentVoucherDetails)
+            {
+                decimal sisa = paymentVoucher.TotalAmount - TotalPaymentVoucherDetails + paymentVoucherDetail.Amount;
+                paymentVoucherDetail.Errors.Add("Generic", "Payment Voucher hanya menyediakan sisa dana sebesar " + sisa);
+            }
+            return paymentVoucherDetail;
+        }
+
         public PaymentVoucherDetail VCreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
                                                   IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService)
         {
@@ -119,6 +137,8 @@ namespace Validation.Validation
             VAmountLessOrEqualPayable(paymentVoucherDetail, _payableService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VUniquePayableId(paymentVoucherDetail, _paymentVoucherDetailService, _payableService);
+            if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
+            VDetailsAmountLessOrEqualPaymentVoucherTotal(paymentVoucherDetail, _paymentVoucherService, _paymentVoucherDetailService);
             return paymentVoucherDetail;
         }
 
