@@ -99,19 +99,20 @@ namespace Service.Service
             purchaseReceivalDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService))
             {
-                purchaseReceivalDetail = _repository.ConfirmObject(purchaseReceivalDetail);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
                 IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
-                    // decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
-                    // item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity, itemPrice);
                     //item.PendingReceival -= purchaseReceivalDetail.Quantity;
                     //item.Quantity += purchaseReceivalDetail.Quantity;
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
+                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
+                item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, purchaseReceivalDetail.Quantity, itemPrice);
+                purchaseReceivalDetail.COGS = item.AvgPrice * purchaseReceivalDetail.Quantity;
+                purchaseReceivalDetail = _repository.ConfirmObject(purchaseReceivalDetail);
                 PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
                 _purchaseOrderDetailService.SetReceivalComplete(purchaseOrderDetail, purchaseReceivalDetail.Quantity);
             }
@@ -125,19 +126,20 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(purchaseReceivalDetail, _purchaseInvoiceDetailService, _itemService))
             {
-                purchaseReceivalDetail = _repository.UnconfirmObject(purchaseReceivalDetail);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
-                    //decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
-                    //item.AvgCost = _itemService.CalculateAvgCost(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
                     //item.PendingReceival += purchaseReceivalDetail.Quantity;
                     //item.Quantity -= purchaseReceivalDetail.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
+                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
+                item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
+                purchaseReceivalDetail.COGS = 0;
+                purchaseReceivalDetail = _repository.UnconfirmObject(purchaseReceivalDetail);
                 PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
                 _purchaseOrderDetailService.UnsetReceivalComplete(purchaseOrderDetail, purchaseReceivalDetail.Quantity, _purchaseOrderService);
             }

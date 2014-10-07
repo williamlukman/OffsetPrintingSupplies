@@ -57,7 +57,7 @@
                                <input id="Code" type="text" size="10" disabled="disabled"/>
                             </td>
                         </tr>
-                         <tr>
+                        <tr>
                             <td>
                                 <label>Contact</label></td>
                             <td>
@@ -66,13 +66,12 @@
                                 <input id="Contact" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
-                        <td>
+                            <td>
                                 <label>Sales Date</label></td>
-                         <td>
-                             <div id="SalesDateDiv"><input id="SalesDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                            </div>
+                            <td>
+                             <div id="SalesDateDiv"><input id="SalesDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
                              <div id="SalesDateDiv2"><input id="SalesDate2" type="text" size="10" disabled="disabled"/></div>
-                                 </td>
+                            </td>
                          </tr>
                     </table>
                     <div id="tabledetail_div">
@@ -81,7 +80,7 @@
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
-                                  <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+                        <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
                         <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
                     </div>
                @* </fieldset>*@
@@ -102,6 +101,14 @@
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
                       <td width="139" nowrap style="width: 100px">
+                          Is Service
+                      </td>
+                      <td>
+                          <input type="checkbox" name="IsService" id="IsService">
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
                           Item
                       </td>
                       <td>
@@ -126,8 +133,7 @@
                                <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
-              </table>
-          
+              </table>          
         </div>
     </div>
 <!-- End Dialog Box Item-->

@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public int DeliveryOrderDetailId { get; set; }
         public string Code { get; set; }
         public int Quantity { get; set; }
+        public decimal COS { get; set; }
         public decimal Amount { get; set; }
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

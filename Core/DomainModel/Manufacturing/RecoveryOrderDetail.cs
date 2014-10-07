@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public int CoreIdentificationDetailId { get; set; }
         public int RollerBuilderId { get; set; }
 
+        public decimal TotalCost { get; set; }
         public int CompoundUsage { get; set; }
 
         public string CoreTypeCase { get; set; }

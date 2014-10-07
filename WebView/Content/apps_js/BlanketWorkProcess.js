@@ -45,7 +45,7 @@
         datatype: "json",
         colNames: ['ID','Blanket Order ID', 'Code', 'Blanket Id', 'Sku','Name','Sku','Name', 'Sku', 'Name',
                    'Sku', 'Name','C', 'SS', 'BP',
-                   'ATA','BM', 'BHP', 'BPOT',
+                   'ATA','Adhesive QTY', 'BM', 'BHP', 'BPOT',
                    'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
         ],
         colModel: [
@@ -65,6 +65,7 @@
                   { name: 'issidesealed', index: 'issidesealed', width: 30, sortable: false },
                   { name: 'isbarprepared', index: 'isbarprepared', width: 30, sortable: false },
                   { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 30, sortable: false },
+                  { name: 'adhesiveusage', index: 'adhesiveusage', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isbarmounted', index: 'isbarmounted', width: 30, sortable: false },
                   { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 30, sortable: false },
                   { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 30, sortable: false },
@@ -230,13 +231,14 @@
                             $('#id').val(result.Id);
                             $('#BlanketOrderId').val(result.BlanketOrderId);
                             $('#BlanketSku').val(result.BlanketSku);
-                            $('#Blanket').val(result.Blanket);
+                            $('#BlanketName').val(result.Blanket);
                             $('#RollBlanketSku').val(result.RollBlanketSku);
                             $('#RollBlanket').val(result.RollBlanket);
                             $('#LeftBarSku').val(result.LeftBarSku);
                             $('#LeftBar').val(result.LeftBar);
                             $('#RightBarSku').val(result.RightBarSku);
                             $('#RightBar').val(result.RightBar);
+                            $('#AdhesiveUsage').val(result.AdhesiveUsage);
                             document.getElementById("iscut").checked = result.IsCut;
                             document.getElementById("issidesealed").checked = result.IsSideSealed;
                             document.getElementById("isbarprepared").checked = result.IsBarPrepared;
@@ -248,11 +250,17 @@
                             document.getElementById("ispackaged").checked = result.IsPackaged;
                             if (result.IsCut) { $('#iscut').attr('disabled', true); } else { $('#iscut').removeAttr('disabled'); }
                             if (result.IsSideSealed) { $('#issidesealed').attr('disabled', true); } else { $('#issidesealed').removeAttr('disabled'); }
-                            if (result.IsBarPrepared) { $('#isbarprepared').attr('disabled', true); } else { $('#isbarprepared').removeAttr('disabled'); }
-                            if (result.IsAdhesiveTapeApplied) { $('#isadhesivetapeapplied').attr('disabled', true); } else { $('#isadhesivetapeapplied').removeAttr('disabled'); }
-                            if (result.IsBarMounted) { $('#isbarmounted').attr('disabled', true); } else { $('#isbarmounted').removeAttr('disabled'); }
-                            if (result.IsBarHeatPressed) { $('#isbarheatpressed').attr('disabled', true); } else { $('#isbarheatpressed').removeAttr('disabled'); }
-                            if (result.IsBarPullOffTested) { $('#isbarpullofftested').attr('disabled', true); } else { $('#isbarpullofftested').removeAttr('disabled'); }
+                            if (!result.HasBar || result.IsBarPrepared) { $('#isbarprepared').attr('disabled', true); } else { $('#isbarprepared').removeAttr('disabled'); }
+                            if (result.IsAdhesiveTapeApplied) {
+                                $('#isadhesivetapeapplied').attr('disabled', true);
+                                $('#AdhesiveUsage').attr('disabled', true);
+                            } else {
+                                $('#isadhesivetapeapplied').removeAttr('disabled');
+                                $('#AdhesiveUsage').removeAttr('disabled');
+                            }
+                            if (!result.HasBar || result.IsBarMounted) { $('#isbarmounted').attr('disabled', true); } else { $('#isbarmounted').removeAttr('disabled'); }
+                            if (!result.HasBar || result.IsBarHeatPressed) { $('#isbarheatpressed').attr('disabled', true); } else { $('#isbarheatpressed').removeAttr('disabled'); }
+                            if (!result.HasBar || result.IsBarPullOffTested) { $('#isbarpullofftested').attr('disabled', true); } else { $('#isbarpullofftested').removeAttr('disabled'); }
                             if (result.IsQCAndMarked) { $('#isqcandmarked').attr('disabled', true); } else { $('#isqcandmarked').removeAttr('disabled'); }
                             if (result.IsPackaged) { $('#ispackaged').attr('disabled', true); } else { $('#ispackaged').removeAttr('disabled'); }
                             $('#form_btn_save').show();
@@ -286,12 +294,12 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, 
+                Id: id, AdhesiveUsage: $('#AdhesiveUsage').numberbox('getValue'),
                 IsCut: document.getElementById("iscut").checked, IsSideSealed: document.getElementById("issidesealed").checked,
                 IsBarPrepared: document.getElementById("isbarprepared").checked, IsAdhesiveTapeApplied: document.getElementById("isadhesivetapeapplied").checked,
                 IsBarMounted: document.getElementById("isbarmounted").checked, IsBarHeatPressed: document.getElementById("isbarheatpressed").checked,
                 IsBarPullOffTested: document.getElementById("isbarpullofftested").checked, IsQCAndMarked: document.getElementById("isqcandmarked").checked,
-                IsPackaged: document.getElementById("ispackaged").checked,
+                IsPackaged: document.getElementById("ispackaged").checked
             }),
             async: false,
             cache: false,

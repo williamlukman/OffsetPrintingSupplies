@@ -120,6 +120,16 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
+        public DeliveryOrderDetail VHasServiceCostQuantity(DeliveryOrderDetail deliveryOrderDetail, IServiceCostService _serviceCostService)
+        {
+            ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(deliveryOrderDetail.ItemId);
+            if (serviceCost.Quantity - deliveryOrderDetail.Quantity < 0)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "Service quantity kurang dari quantity untuk di kirim");
+            }
+            return deliveryOrderDetail;
+        }
+
         public DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
@@ -231,13 +241,21 @@ namespace Validation.Validation
 
         public DeliveryOrderDetail VConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
                                                   IDeliveryOrderDetailService _deliveryOrderDetailService,  ISalesOrderDetailService _salesOrderDetailService,
-                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService)
         {
             VHasConfirmationDate(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VHasNotBeenConfirmed(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
-            VHasItemQuantity(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService);
+            SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+            if (salesOrderDetail.IsService)
+            {
+                VHasServiceCostQuantity(deliveryOrderDetail, _serviceCostService);
+            }
+            else
+            {
+                VHasItemQuantity(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService);
+            }
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService, false);
             return deliveryOrderDetail;
@@ -273,10 +291,11 @@ namespace Validation.Validation
 
         public bool ValidConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
                                        IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                       IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                       IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService)
         {
             deliveryOrderDetail.Errors.Clear();
-            VConfirmObject(deliveryOrderDetail, _deliveryOrderService, _deliveryOrderDetailService, _salesOrderDetailService, _itemService, _warehouseItemService);
+            VConfirmObject(deliveryOrderDetail, _deliveryOrderService, _deliveryOrderDetailService,
+                           _salesOrderDetailService, _itemService, _warehouseItemService, _serviceCostService);
             return isValid(deliveryOrderDetail);
         }
 

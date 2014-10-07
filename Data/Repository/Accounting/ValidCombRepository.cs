@@ -19,12 +19,12 @@ namespace Data.Repository
 
         public IQueryable<ValidComb> GetQueryable()
         {
-            return FindAll(/*x => !x.IsDeleted*/);
+            return FindAll();
         }
 
         public IList<ValidComb> GetAll()
         {
-            return FindAll(/*x => !x.IsDeleted*/).ToList();
+            return FindAll().ToList();
         }
 
         public ValidComb GetObjectById(int Id)

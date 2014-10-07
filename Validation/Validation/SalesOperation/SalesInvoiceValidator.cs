@@ -116,14 +116,16 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
-        public SalesInvoice VAllSalesInvoiceDetailsAreConfirmable(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public SalesInvoice VAllSalesInvoiceDetailsAreConfirmable(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                                                  ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService)
         {
             IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
             foreach (var detail in details)
             {
                 detail.Errors = new Dictionary<string, string>();
                 detail.ConfirmationDate = salesInvoice.ConfirmationDate;
-                _salesInvoiceDetailService.GetValidator().VConfirmObject(detail, _salesInvoiceDetailService, _deliveryOrderDetailService);
+                _salesInvoiceDetailService.GetValidator().VConfirmObject(detail, _salesInvoiceDetailService,
+                                _deliveryOrderDetailService, _salesOrderDetailService, _serviceCostService);
                 foreach (var error in detail.Errors)
                 {
                     salesInvoice.Errors.Add("Generic", error.Value);
@@ -241,6 +243,7 @@ namespace Validation.Validation
 
         public SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                            IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                           ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
                                            IClosingService _closingService)
         {
             VHasConfirmationDate(salesInvoice);
@@ -253,7 +256,8 @@ namespace Validation.Validation
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VHasSalesInvoiceDetails(salesInvoice, _salesInvoiceDetailService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
-            VAllSalesInvoiceDetailsAreConfirmable(salesInvoice, _salesInvoiceDetailService, _deliveryOrderDetailService);
+            VAllSalesInvoiceDetailsAreConfirmable(salesInvoice, _salesInvoiceDetailService, _deliveryOrderDetailService,
+                                                  _salesOrderDetailService, _serviceCostService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService, 1);
             return salesInvoice;
@@ -296,10 +300,13 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                       IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IClosingService _closingService)
+                                       IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
+                                       IClosingService _closingService)
         {
             salesInvoice.Errors.Clear();
-            VConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService, _closingService);
+            VConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService,
+                           _salesOrderDetailService, _serviceCostService, _closingService);
             return isValid(salesInvoice);
         }
 

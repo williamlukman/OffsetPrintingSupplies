@@ -27,6 +27,9 @@ namespace WebView.Controllers
         private IPurchaseInvoiceService _purchaseInvoiceService;
         private IPurchaseInvoiceDetailService _purchaseInvoiceDetailService;
         private IWarehouseService _warehouseService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public PurchaseReceivalController()
         {
@@ -41,8 +44,10 @@ namespace WebView.Controllers
             _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
             _purchaseInvoiceDetailService = new PurchaseInvoiceDetailService(new PurchaseInvoiceDetailRepository(), new PurchaseInvoiceDetailValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
-
 
         public ActionResult Index()
         {
@@ -451,7 +456,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
-                model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService);
+                model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,
+                        _purchaseOrderDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -472,7 +478,9 @@ namespace WebView.Controllers
             {
 
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
-                model = _purchaseReceivalService.UnconfirmObject(data,_purchaseReceivalDetailService,_purchaseInvoiceService,_purchaseInvoiceDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService);
+                model = _purchaseReceivalService.UnconfirmObject(data,_purchaseReceivalDetailService,_purchaseInvoiceService,
+                        _purchaseInvoiceDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,
+                        _itemService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

@@ -148,11 +148,16 @@ namespace Service.Service
 
         public RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail, DateTime RejectedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService)
+                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             recoveryOrderDetail.RejectedDate = RejectedDate;
             if (_validator.ValidRejectObject(recoveryOrderDetail, _recoveryOrderService))
             {
+                // calculate total cost to produce the finished goods, then create general ledger with total cost                
+                CalculateTotalCost(recoveryOrderDetail, _recoveryAccessoryDetailService, _coreIdentificationDetailService, _coreIdentificationService, _coreBuilderService,
+                                   this, _rollerBuilderService, _itemService);
+                _generalLedgerJournalService.CreateRejectedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
                 _repository.RejectObject(recoveryOrderDetail);
 
                 // add recovery order quantity reject
@@ -185,18 +190,21 @@ namespace Service.Service
                 StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore, CaseAddition);
                 _stockMutationService.StockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
                
-
                 // accesories uncounted
             }
             return recoveryOrderDetail;
         }
 
         public RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService)
+                                                    IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
+                                                    IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                    IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUndoRejectObject(recoveryOrderDetail, _recoveryOrderService))
             {
+                // undo reject general ledger with old total cost, then set total cost to 0
+                _generalLedgerJournalService.CreateUndoRejectedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
+                recoveryOrderDetail.TotalCost = 0;
                 _repository.UndoRejectObject(recoveryOrderDetail);
 
                 // add recovery order quantity reject
@@ -237,11 +245,25 @@ namespace Service.Service
 
         public RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService)
+                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IServiceCostService _serviceCostService)
         {
             recoveryOrderDetail.FinishedDate = FinishedDate;
             if (_validator.ValidFinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService))
             {
+                CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+                CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+
+                // calculate total cost to produce the finished goods, then create general ledger with total cost
+                CalculateTotalCost(recoveryOrderDetail, _recoveryAccessoryDetailService, _coreIdentificationDetailService, _coreIdentificationService, _coreBuilderService,
+                                   this, _rollerBuilderService, _itemService);
+                _generalLedgerJournalService.CreateFinishedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
+
+                if (!coreIdentification.IsInHouse)
+                {
+                    ServiceCost serviceCost = _serviceCostService.FindOrCreateObject(recoveryOrderDetail.RollerBuilderId);
+                    _serviceCostService.CalculateAndUpdateAvgPrice(serviceCost, 1, recoveryOrderDetail.TotalCost);
+                }
                 // set object to finish
                 _repository.FinishObject(recoveryOrderDetail);
 
@@ -266,7 +288,6 @@ namespace Service.Service
                 StockMutation stockMutationCompound = _stockMutationService.CreateStockMutationForRecoveryOrderCompound(recoveryOrderDetail, warehouseCompound, CaseAdditionCompound);
                 _stockMutationService.StockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
 
-                CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
                 _coreIdentificationDetailService.UnsetJobScheduled(coreIdentificationDetail, _recoveryOrderService, this);
                 _coreIdentificationDetailService.BuildRoller(coreIdentificationDetail);
 
@@ -302,16 +323,30 @@ namespace Service.Service
         }
 
         public RecoveryOrderDetail UnfinishObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService)
+                                                  IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
+                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                  IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IServiceCostService _serviceCostService)
         {
             if (_validator.ValidUnfinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService))
             {
+                CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
+                CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+
+                if (!coreIdentification.IsInHouse)
+                {
+                    ServiceCost serviceCost = _serviceCostService.GetObjectByRollerBuilderId(recoveryOrderDetail.RollerBuilderId);
+                    _serviceCostService.CalculateAndUpdateAvgPrice(serviceCost, -1, recoveryOrderDetail.TotalCost);
+                }
+
+                // unfinish general ledger with old total cost, then set total cost to 0
+                _generalLedgerJournalService.CreateUnfinishedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
+                recoveryOrderDetail.TotalCost = 0;
+
                 // unfinish object
                 _repository.UnfinishObject(recoveryOrderDetail);
 
                 // add recovery order quantity final
-                RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 recoveryOrder.QuantityFinal += 1;
                 _recoveryOrderService.AdjustQuantity(recoveryOrder);
 
@@ -326,7 +361,6 @@ namespace Service.Service
                 }
                 
                 // reverse stock mutate core
-                CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
                 _coreIdentificationDetailService.SetJobScheduled(coreIdentificationDetail, _recoveryOrderService, this);
 
                 CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
@@ -371,6 +405,36 @@ namespace Service.Service
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
+        }
+
+        public void CalculateTotalCost(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                       ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                       IRollerBuilderService _rollerBuilderService, IItemService _itemService)
+        {
+            CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+            RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
+            Item Core = _coreIdentificationDetailService.GetCore(coreIdentificationDetail, _coreBuilderService);
+            Item Compound = _itemService.GetObjectById(rollerBuilder.CompoundId);
+            IList<RecoveryAccessoryDetail> Accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
+            decimal AccessoriesCost = 0;
+            foreach (var accessory in Accessories)
+            {
+                Item item = _itemService.GetObjectById(accessory.ItemId);
+                AccessoriesCost += item.AvgPrice * accessory.Quantity;
+            }
+            decimal TotalCost = 0;
+            if (coreIdentification.IsInHouse)
+            {
+                TotalCost = Core.AvgPrice + (Compound.AvgPrice * recoveryOrderDetail.CompoundUsage) + AccessoriesCost;
+            }
+            else
+            {
+                TotalCost = (Compound.AvgPrice * recoveryOrderDetail.CompoundUsage) + AccessoriesCost;
+            }
+            recoveryOrderDetail.TotalCost = TotalCost;
+            _repository.UpdateObject(recoveryOrderDetail);
+            return;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Core.DomainModel
         public DateTime DeliveryDate { get; set; }
         public int WarehouseId { get; set; }
 
+        public decimal TotalCOGS { get; set; }
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsInvoiceCompleted { get; set; }

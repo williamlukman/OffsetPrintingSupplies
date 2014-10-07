@@ -67,7 +67,7 @@
                                 <label>Name</label>
                             </td>
                             <td>
-                              <input id="Blanket" type="text" size="30" disabled="disabled"/>
+                              <input id="BlanketName" type="text" size="30" disabled="disabled"/>
                             </td>
                         </tr>
                         <tr>
@@ -118,44 +118,44 @@
                                 <table>
                                     <tr>
                                         <td>1 .</td>
-                                         <td  width="200" nowrap style="width: 180px"> Cutting</td>
-                                         <td><input type="checkbox" name="iscut" id="iscut" ></td>
-                                         <td>6 .</td>
-                                        <td>  BarHeatPressed </td>
+                                        <td  width="160" nowrap style="width: 160px"> Cutting</td>
+                                        <td><input type="checkbox" name="iscut" id="iscut" ></td>
+                                        <td class="bar">5 .</td>
+                                        <td class="bar">Bar Mounted</td>
+                                        <td><input type="checkbox" name="isbarmounted" id="isbarmounted" ></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2 .</td>
+                                        <td width="160" nowrap style="width: 180px"> Side Seal</td>
+                                        <td><input type="checkbox" name="issidesealed" id="issidesealed" ></td>
+                                        <td class="bar">6 .</td>
+                                        <td class="bar">Bar Heat Pressed </td>
                                         <td><input type="checkbox" name="isbarheatpressed" id="isbarheatpressed" ></td>
                                     </tr>
                                     <tr>
-                                         <td>2 .</td>
-                                         <td width="300" nowrap style="width: 180px"> Side Seal</td>
-                                       <td><input type="checkbox" name="issidesealed" id="issidesealed" ></td>
-                                         <td>7 .</td>
-                                        <td>  BarPullOffTested </td>
-                                         <td><input type="checkbox" name="isbarpullofftested" id="isbarpullofftested" ></td>
-                                        
+                                        <td class="bar">3 .</td>
+                                        <td class="bar">Bar Prepared </td>
+                                        <td><input type="checkbox" name="isbarprepared" id="isbarprepared" ></td>
+                                        <td class="bar">7 .</td>
+                                        <td class="bar">Bar Pull Off Tested </td>
+                                        <td><input type="checkbox" name="isbarpullofftested" id="isbarpullofftested" ></td>
                                     </tr>
                                     <tr>
-                                        <td>3 .</td>
-                                        <td> Bar Prepared </td>
-                                       <td><input type="checkbox" name="isbarprepared" id="isbarprepared" ></td>
-                                         <td>8 .</td>
-                                        <td> QCAndMarked </td>
-                                       <td><input type="checkbox" name="isqcandmarked" id="isqcandmarked" ></td>
-                                    </tr>
-                                    <tr>
-                                       <td>4 .</td>
-                                        <td> AdhesiveTape Applied </td>
+                                        <td>4 .</td>
+                                        <td>Adhesive Tape Applied </td>
                                         <td><input type="checkbox" name="isadhesivetapeapplied" id="isadhesivetapeapplied" ></td>
-                                        <td>9 .</td>
-                                        <td> Packaged </td>
-                                        <td><input type="checkbox" name="ispackaged" id="ispackaged" ></td>
+                                        <td>8 .</td>
+                                        <td>QC And Marked </td>
+                                        <td><input type="checkbox" name="isqcandmarked" id="isqcandmarked" ></td>                                                                                
                                     </tr>
                                     <tr>
-                                         <td>5 .</td>
-                                        <td> BarMounted </td>
-                                        <td><input type="checkbox" name="isbarmounted" id="isbarmounted" ></td>
-                                      
-                                        <td>
-                                       </td>
+                                        <td></td>
+                                        <td colspan="2">Adhesive Amount 
+                                            <input id="AdhesiveUsage" name="AdhesiveUsage" type="text" size="8" maxlength="8" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
+                                        </td>
+                                        <td>9 .</td>
+                                        <td>Packaged </td>
+                                        <td><input type="checkbox" name="ispackaged" id="ispackaged" ></td>
                                     </tr>
                                 </table>
                             </td>

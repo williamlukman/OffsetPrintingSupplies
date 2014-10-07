@@ -78,15 +78,17 @@ namespace Service.Service
             stockAdjustment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(stockAdjustment, this, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService))
             {
+                decimal Total = 0;
                 IList<StockAdjustmentDetail> stockAdjustmentDetails = _stockAdjustmentDetailService.GetObjectsByStockAdjustmentId(stockAdjustment.Id);
                 foreach (var detail in stockAdjustmentDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _stockAdjustmentDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
-                    stockAdjustment.Total += (detail.Quantity * detail.Price);
+                    Total += detail.Quantity * detail.Price;
                 }
-                _generalLedgerJournalService.CreateConfirmationJournalForStockAdjustment(stockAdjustment, _accountService);
+                stockAdjustment.Total = Total;
                 _repository.ConfirmObject(stockAdjustment);
+                _generalLedgerJournalService.CreateConfirmationJournalForStockAdjustment(stockAdjustment, _accountService);
             }
             return stockAdjustment;
         }
@@ -104,6 +106,7 @@ namespace Service.Service
                     _stockAdjustmentDetailService.UnconfirmObject(detail, this, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForStockAdjustment(stockAdjustment, _accountService);
+                stockAdjustment.Total = 0;
                 _repository.UnconfirmObject(stockAdjustment);
             }
             return stockAdjustment;

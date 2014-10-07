@@ -202,6 +202,7 @@ namespace WebView.Controllers
                              model.ItemId,
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
+                             model.IsService,
                              model.Quantity,
                              model.PendingDeliveryQuantity,
                              model.Price
@@ -241,6 +242,7 @@ namespace WebView.Controllers
                             model.ItemId,
                             model.ItemSku,
                             model.Item,
+                            model.IsService,
                             model.Quantity,
                             model.PendingDeliveryQuantity,
                             model.Price
@@ -293,6 +295,7 @@ namespace WebView.Controllers
                 model.Id,
                 model.ItemId,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
+                model.IsService,
                 model.Quantity,
                 model.Price,
                 model.Errors
@@ -406,6 +409,7 @@ namespace WebView.Controllers
             {
                 var data = _salesOrderDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
+                data.IsService = model.IsService;
                 data.Quantity = model.Quantity;
                 data.Price = model.Price;
                 model = _salesOrderDetailService.UpdateObject(data, _salesOrderService, _itemService);

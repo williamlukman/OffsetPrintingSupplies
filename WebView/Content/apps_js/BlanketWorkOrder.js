@@ -108,7 +108,9 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#HasDueDate').removeAttr('disabled');
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#DueDateDiv').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
@@ -142,8 +144,8 @@
                         else {
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
-                            $('#Code').val(result.Code);
-                            $('#ContactId').val(result.ContactId);
+                            $('#BlanketOrderId').val(result.Code);
+                            $('#BlanketId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
@@ -153,7 +155,11 @@
                             $('#btnWarehouse').attr('disabled', true);
                             $('#Code').attr('disabled', true);
                             $('#QuantityReceived').attr('disabled', true);
-                            $('#tabledetail_div').show(); 
+                            document.getElementById("HasDueDate").checked = result.HasDueDate;
+                            $('#HasDueDate').attr('disabled', true);
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDateDiv').removeAttr('disabled');
+                            $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
                         }
@@ -195,8 +201,11 @@
                             $('#Warehouse').val(result.Warehouse);
                             $('#QuantityReceived').val(result.QuantityReceived);
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
+                            $('#HasDueDate').removeAttr('disabled');
+                            $('#DueDateDiv').removeAttr('disabled');
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             if (document.getElementById("HasDueDate").checked) { $('#DueDateDiv').show(); }
+                            else { $('#DueDateDiv').hide(); }
                             $('#btnContact').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#Code').removeAttr('disabled');
@@ -414,19 +423,18 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Sku', 'Name', 'Sku', 'Nama',
+        colNames: ['Sku', 'Name', 'Sku', 'Nama',
                    'Sku', 'Name', 'Sku', 'Nama',
                    'Rejected Date' ,'Finished Date' 
         ],
         colModel: [
-                  { name: 'id', index: 'id', width: 40, align: 'right' },
-                  { name: 'blanketsku', align:'right', index: 'blanketsku', width: 50, sortable: false },
+                  { name: 'blanketsku', align: 'right', index: 'blanketsku', width: 50, sortable: false },
                   { name: 'blanketname', index: 'blanketname', width: 70, sortable: false },
                   { name: 'rollBlanketsku', align:'right', index: 'rollBlanketsku', width: 50, sortable: false },
                   { name: 'rollBlanketname', index: 'rollBlanketname', width: 70, sortable: false },
-                  { name: 'leftbarsku', align:'right', index: 'leftbarsku', width: 50, sortable: false },
+                  { name: 'leftbarsku', align: 'right', index: 'leftbarsku', width: 50, sortable: false },
                   { name: 'leftbarname', index: 'leftbarname', width: 70, sortable: false },
-                  { name: 'rightbarsku', align:'right', index: 'rightbarsku', width: 50, sortable: false },
+                  { name: 'rightbarsku', align: 'right', index: 'rightbarsku', width: 50, sortable: false },
                   { name: 'rightbarname', index: 'rightbarname', width: 70, sortable: false },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -569,7 +577,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, BlanketId: $("#BlanketSku").data('kode'), BlanketOrderId: $("#id").val()
+                Id: id, BlanketId: $("#BlanketSku").data('kode'), BlanketOrderId: $("#id").val(),
             }),
             async: false,
             cache: false,

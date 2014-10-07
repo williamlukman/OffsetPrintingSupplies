@@ -41,16 +41,23 @@ namespace Core.Interface.Service
         RecoveryOrderDetail PackageObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail, DateTime RejectedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                          IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                         IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService);
+                                         IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                              IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                             IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService);
+                                             IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                          IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                         IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService);
+                                         IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IServiceCostService _serviceCostService);
         RecoveryOrderDetail UnfinishObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                            IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                           IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService);
+                                           IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IServiceCostService _serviceCostService);
         bool DeleteObject(int Id);
+        void CalculateTotalCost(RecoveryOrderDetail recoveryOrderDetail, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                IRollerBuilderService _rollerBuilderService, IItemService _itemService);
     }
 }

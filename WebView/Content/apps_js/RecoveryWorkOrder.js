@@ -54,7 +54,7 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'CoreIdentification Id', 'Warehouse Id',
                     'Warehouse Code', 'Warehouse Name', 'QTY Rcv', 'QTY Final',
-                    'QTY Rjct', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'
+                    'QTY Rjct', 'Due Date', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -66,6 +66,7 @@
                   { name: 'quantityreceived', index: 'quantityreceived', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quantityfinal', index: 'quantityfinal', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quantityrejected', index: 'quantityrejected', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

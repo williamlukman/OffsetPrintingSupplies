@@ -286,8 +286,6 @@
         $('#confirm_div').dialog('close');
     });
 
-
-
     $('#btn_del').click(function () {
         clearForm("#frm");
 
@@ -397,14 +395,15 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'PendDlv', 'Price',
+        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'Type', 'QTY', 'PendDlv', 'Price',
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 40, sortable: false, align: 'center' },
+                  { name: 'id', index: 'id', width: 40, sortable: false, align: 'center' },
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'type', index: 'type', width: 70, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
@@ -422,6 +421,17 @@
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowType = $(this).getRowData(cl).type;
+		          if (rowType == 'true') {
+		              rowType = "Service";
+		          } else {
+		              rowType = "Trading";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { type: rowType });
+		      }
 		  }
     });//END GRID Detail
     $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
@@ -455,6 +465,7 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
+                            document.getElementById("IsService").checked = result.IsService;
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
@@ -531,7 +542,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, SalesOrderId: $("#id").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'),
-                Price: $("#Price").numberbox('getValue')
+                Price: $("#Price").numberbox('getValue'), IsService: document.getElementById("IsService").checked,
             }),
             async: false,
             cache: false,
@@ -625,7 +636,13 @@
 
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
-        var lookUpURL = base_url + 'MstItem/GetList';
+        var lookUpURL;
+        if (document.getElementById("IsService").checked) {
+            lookUpURL = base_url + 'MstItem/GetLookUpUsedRoller';
+        }
+        else {
+            lookUpURL = base_url + 'MstItem/GetList';
+        }
         var lookupGrid = $('#lookup_table_item');
         lookupGrid.setGridParam({
             url: lookUpURL

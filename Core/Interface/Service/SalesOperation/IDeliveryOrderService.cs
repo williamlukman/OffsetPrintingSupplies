@@ -22,15 +22,16 @@ namespace Core.Interface.Service
         DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
         bool DeleteObject(int Id);
         DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                    ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                    IStockMutationService _stockMutationService, IItemService _itemService,
-                                    IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                    ISalesInvoiceService _salesInvoiceService, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                    ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                    IStockMutationService _stockMutationService, IItemService _itemService,
-                                    IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        DeliveryOrder CheckAndSetInvoiceComplete(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
+                                    ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
+                                    IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                    IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                    IServiceCostService _serviceCostService);
+        DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesInvoiceService _salesInvoiceService,
+                                      ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
+                                      IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
+                                      IWarehouseItemService _warehouseItemService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                      IClosingService _closingService);
+       DeliveryOrder CheckAndSetInvoiceComplete(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
         DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder);
     }
 }

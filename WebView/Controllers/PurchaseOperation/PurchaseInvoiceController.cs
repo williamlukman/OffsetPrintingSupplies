@@ -70,7 +70,7 @@ namespace WebView.Controllers
                              PurchaseReceivalCode = model.PurchaseReceival.Code,
                              model.Description,
                              model.Discount,
-                             model.IsTaxable,
+                             model.Tax,
                              model.InvoiceDate,
                              model.DueDate,
                              model.AmountPayable,
@@ -115,7 +115,7 @@ namespace WebView.Controllers
                             model.PurchaseReceivalCode,
                             model.Description,
                             model.Discount,
-                            model.IsTaxable,
+                            model.Tax,
                             model.InvoiceDate,
                             model.DueDate,
                             model.AmountPayable,
@@ -218,7 +218,7 @@ namespace WebView.Controllers
                 PurchaseReceival = _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
                 model.Discount,
                 model.Description,
-                model.IsTaxable,
+                model.Tax,
                 model.InvoiceDate,
                 model.DueDate,
                 model.AmountPayable,
@@ -305,7 +305,7 @@ namespace WebView.Controllers
                 data.PurchaseReceivalId = model.PurchaseReceivalId;
                 data.Description = model.Description;
                 data.Discount = model.Discount;
-                data.IsTaxable = model.IsTaxable;
+                data.Tax = model.Tax;
                 data.InvoiceDate = model.InvoiceDate;
                 data.DueDate = model.DueDate;
                 model = _purchaseInvoiceService.UpdateObject(data,_purchaseReceivalService,_purchaseInvoiceDetailService);

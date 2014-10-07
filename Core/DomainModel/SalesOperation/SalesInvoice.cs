@@ -12,10 +12,11 @@ namespace Core.DomainModel
         public string Description { get; set; }
         public string Code { get; set; }
 
+        public decimal TotalCOS { get; set; }
         public decimal AmountReceivable { get; set; }
         public decimal Discount { get; set; } // 0 - 100
-        public bool IsTaxable { get; set; } // 10 %
-        
+        public decimal Tax { get; set; } // 0 - 100
+
         public DateTime InvoiceDate { get; set; }
         public DateTime DueDate { get; set; }
 

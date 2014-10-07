@@ -32,7 +32,7 @@ namespace Core.Interface.Validation
                                           IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService);
         DeliveryOrderDetail VDeleteObject(DeliveryOrderDetail deliveryOrderDetail);
         DeliveryOrderDetail VConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                           ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                           ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService);
         DeliveryOrderDetail VUnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, ISalesInvoiceDetailService _salesInvoiceDetailService);
         bool ValidCreateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService);
@@ -40,7 +40,7 @@ namespace Core.Interface.Validation
                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService);
         bool ValidDeleteObject(DeliveryOrderDetail deliveryOrderDetail);
         bool ValidConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService);
         bool ValidUnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, ISalesInvoiceDetailService _salesInvoiceDetailService);
         bool isValid(DeliveryOrderDetail deliveryOrderDetail);
         string PrintError(DeliveryOrderDetail deliveryOrderDetail);

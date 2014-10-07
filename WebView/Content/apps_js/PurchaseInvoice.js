@@ -49,7 +49,7 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax',
+        colNames: ['ID', 'Code', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax(%)',
                    'Invoice Date','Due Date', 'Amount Payable',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
@@ -59,7 +59,7 @@
                   { name: 'purchasereceipt', index: 'purchasereceipt', width: 70 },
                   { name: 'description', index: 'description', width: 100 },
                   { name: 'discount', index: 'discount', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'istax', index: 'istax', width: 30 },
+                  { name: 'tax', index: 'tax', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'invoicedate', index: 'invoicedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'amountpayable', index: 'amountpayable', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
@@ -91,14 +91,6 @@
 		              rowIsConfirmed = "NO";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
-
-		          rowIsTax = $(this).getRowData(cl).istax;
-		          if (rowIsTax == 'true') {
-		              rowIsTax = "YES";
-		          } else {
-		              rowIsTax = "NO";
-		          }
-		          $(this).jqGrid('setRowData', ids[i], { istax: rowIsTax });
 		      }
 		  }
 
@@ -161,14 +153,8 @@
                             $('#PurchaseReceival').val(result.PurchaseReceival);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
+                            $('#Tax').val(result.Tax);
                             $('#AmountPayable').val(result.AmountPayable);
-                            var e = document.getElementById("IsTax");
-                            if (result.IsTaxable == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -221,14 +207,8 @@
                             $('#PurchaseReceival').val(result.PurchaseReceival);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
+                            $('#Tax').val(result.Tax);
                             $('#AmountPayable').val(result.AmountPayable);
-                            var e = document.getElementById("IsTax");
-                            if (result.IsTaxable == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -408,16 +388,13 @@
             submitURL = base_url + 'PurchaseInvoice/Insert';
         }
 
-        var e = document.getElementById("IsTax");
-        var moving = e.options[e.selectedIndex].value;
-
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
                 Id: id, PurchaseReceivalId: $("#PurchaseReceivalId").val(), Description: $("#Description").val(),
-                Discount: $("#Discount").numberbox('getValue'), IsTaxable: moving,
+                Discount: $("#Discount").numberbox('getValue'), Tax: $("#Tax").numberbox('getValue'),
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,

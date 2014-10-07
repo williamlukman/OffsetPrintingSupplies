@@ -151,7 +151,8 @@ namespace TestValidation
                 {
                     ItemId = d._coreBuilderService.GetNewCore(d.coreBuilder.Id).Id,
                     Quantity = 5,
-                    StockAdjustmentId = d.stockAdjustment.Id
+                    StockAdjustmentId = d.stockAdjustment.Id,
+                    Price = 5000
                 };
                 d.stockAD1 = d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 

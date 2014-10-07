@@ -659,14 +659,17 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price',
+        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'Type', 'QTY', 'PendDlv', 'Price',
         ],
         colModel: [
-                  { name: 'code', index: 'code', width: 65, sortable: false },
+                  { name: 'id', index: 'id', width: 40, sortable: false, align: 'center' },
+                  { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
-				  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
+                  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'type', index: 'type', width: 70, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
+                  { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',
@@ -680,6 +683,21 @@
         sortorder: "ASC",
         width: $("#lookup_div_item").width() - 10,
         height: $("#lookup_div_item").height() - 110,
+        gridComplete:
+          function () {
+              var ids = $(this).jqGrid('getDataIDs');
+              for (var i = 0; i < ids.length; i++) {
+                  var cl = ids[i];
+                  rowType = $(this).getRowData(cl).type;
+                  if (rowType == 'true') {
+                      rowType = "Service";
+                  } else {
+                      rowType = "Trading";
+                  }
+                  $(this).jqGrid('setRowData', ids[i], { type: rowType });
+              }
+          }
+
     });
     $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });

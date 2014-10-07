@@ -67,6 +67,7 @@
     <Compile Include="Mapping\SalesOperation\VirtualOrderMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CompanyMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactGroupMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\ServiceCostMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\GroupItemPriceMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\PriceMutationMapping.cs" />
     <Compile Include="Mapping\SalesOperation\RetailSalesInvoiceDetailMapping.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CompanyRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\ServiceCostRepository.cs" />
     <Compile Include="Repository\StockAndMaster\GroupItemPriceRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ContactGroupRepository.cs" />
     <Compile Include="Repository\StockAndMaster\PriceMutationRepository.cs" />

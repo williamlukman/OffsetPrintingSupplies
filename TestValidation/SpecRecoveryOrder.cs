@@ -237,23 +237,29 @@ namespace TestValidation
                             d.accessory1quantity = d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity;
                             
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODContact1, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
-                                                   d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                   d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
+                                                                       d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
+                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
                             d._recoveryOrderDetailService.RejectObject(d.recoveryODContact2, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
-                                                   d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
-                                                   d._warehouseItemService, d._blanketService, d._stockMutationService);
+                                                                       d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
+                                                                       d._warehouseItemService, d._blanketService, d._stockMutationService,
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODContact3, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
-                                                   d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                   d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
+                                                                       d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
+                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODInHouse1, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
+                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODInHouse2, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
-                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService);
+                                                                       d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
                             d._recoveryOrderDetailService.RejectObject(d.recoveryODInHouse3, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
                                                                        d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
-                                                                       d._warehouseItemService, d._blanketService, d._stockMutationService);
+                                                                       d._warehouseItemService, d._blanketService, d._stockMutationService,
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService);
 
                             d.usedCoreBuilder1Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
                             d.usedCoreBuilder2Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;

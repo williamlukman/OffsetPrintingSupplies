@@ -50,7 +50,6 @@ namespace Validation.Validation
             return stockAdjustmentDetail;
         }
 
-        /*
         public StockAdjustmentDetail VNonZeroNorNegativePrice(StockAdjustmentDetail stockAdjustmentDetail)
         {
             if (stockAdjustmentDetail.Price <= 0)
@@ -59,7 +58,6 @@ namespace Validation.Validation
             }
             return stockAdjustmentDetail;
         }
-        */
 
         public StockAdjustmentDetail VUniqueItem(StockAdjustmentDetail stockAdjustmentDetail, IStockAdjustmentDetailService _stockAdjustmentDetailService, IItemService _itemService)
         {
@@ -139,8 +137,8 @@ namespace Validation.Validation
             VHasWarehouseItem(stockAdjustmentDetail, _stockAdjustmentService, _warehouseItemService);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VNonZeroQuantity(stockAdjustmentDetail);
-            // if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
-            // VNonZeroNorNegativePrice(stockAdjustmentDetail);
+            if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
+            VNonZeroNorNegativePrice(stockAdjustmentDetail);
             if (!isValid(stockAdjustmentDetail)) { return stockAdjustmentDetail; }
             VUniqueItem(stockAdjustmentDetail, _stockAdjustmentDetailService, _itemService);
             return stockAdjustmentDetail;

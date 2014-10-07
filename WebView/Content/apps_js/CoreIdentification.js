@@ -1,5 +1,4 @@
-﻿// TODO
-$(document).ready(function () {
+﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
 		vCode;

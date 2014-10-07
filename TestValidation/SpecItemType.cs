@@ -127,7 +127,8 @@ namespace TestValidation
                 {
                     StockAdjustmentId = d.stockAdjustment.Id,
                     Quantity = 100,
-                    ItemId = glue101.Id
+                    ItemId = glue101.Id,
+                    Price = 5000
                 };
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 

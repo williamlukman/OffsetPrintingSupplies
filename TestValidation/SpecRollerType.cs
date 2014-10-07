@@ -130,7 +130,8 @@ namespace TestValidation
                     {
                         StockAdjustmentId = d.stockAdjustment.Id,
                         Quantity = 2,
-                        ItemId = d.itemCompound.Id
+                        ItemId = d.itemCompound.Id,
+                        Price = 50000
                     };
                     d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
@@ -138,7 +139,8 @@ namespace TestValidation
                     {
                         StockAdjustmentId = d.stockAdjustment.Id,
                         Quantity = 20,
-                        ItemId = d.itemAdhesive.Id
+                        ItemId = d.itemAdhesive.Id,
+                        Price = 500
                     };
                     d._stockAdjustmentDetailService.CreateObject(d.stockAD2, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 

@@ -13,6 +13,9 @@ namespace Core.DomainModel
         public int BlanketOrderId { get; set; }
         public int BlanketId { get; set; }
 
+        public decimal AdhesiveUsage { get; set; }
+        public decimal TotalCost { get; set; }
+
         public bool IsCut { get; set; }
         public bool IsSideSealed { get; set; }
         public bool IsBarPrepared { get; set; }

@@ -52,20 +52,6 @@ namespace Service.Service
             return (_validator.ValidCreateObject(salesInvoice, _deliveryOrderService) ? _repository.CreateObject(salesInvoice) : salesInvoice);
         }
 
-        public SalesInvoice CreateObject(int deliveryOrderId, string description, int discount, bool isTaxable, DateTime InvoiceDate, DateTime DueDate, IDeliveryOrderService _deliveryOrderService)
-        {
-            SalesInvoice salesInvoice = new SalesInvoice
-            {
-                DeliveryOrderId = deliveryOrderId,
-                Description = description,
-                Discount = discount,
-                IsTaxable = isTaxable,
-                InvoiceDate = InvoiceDate,
-                DueDate = DueDate
-            };
-            return this.CreateObject(salesInvoice, _deliveryOrderService);
-        }
-
         public SalesInvoice UpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService)
         {
             return (_validator.ValidUpdateObject(salesInvoice, _deliveryOrderService, _salesInvoiceDetailService) ? _repository.UpdateObject(salesInvoice) : salesInvoice);
@@ -82,29 +68,34 @@ namespace Service.Service
         }
 
         public SalesInvoice ConfirmObject(SalesInvoice salesInvoice, DateTime ConfirmationDate, ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService,
-                                          IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService,
-                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                          ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                          IReceivableService _receivableService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                          IClosingService _closingService, IServiceCostService _serviceCostService, IRollerBuilderService _rollerBuilderService, IItemService _itemService)
         {
             salesInvoice.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService, _closingService))
+            if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService,
+                                              _salesOrderDetailService, _serviceCostService, _closingService))
             {
                 // confirm details
-                // add all amount into amountreceivable
+                decimal TotalCOS = 0;
                 IList<SalesInvoiceDetail> details = _salesInvoiceDetailService.GetObjectsBySalesInvoiceId(salesInvoice.Id);
                 foreach (var detail in details)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _salesInvoiceDetailService.ConfirmObject(detail,ConfirmationDate, _deliveryOrderDetailService);
+                    _salesInvoiceDetailService.ConfirmObject(detail,ConfirmationDate, _deliveryOrderDetailService, _salesOrderDetailService, _serviceCostService,
+                                                             _rollerBuilderService, _itemService);
+                    TotalCOS += detail.COS;
                 }
-                salesInvoice = CalculateAmountReceivable(salesInvoice, _salesInvoiceDetailService);
-
+                // add all amount into amountreceivable
                 // confirm object
-                // create receivable
-                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoice(salesInvoice, _accountService);
+                salesInvoice.TotalCOS = TotalCOS;
+                salesInvoice = CalculateAmountReceivable(salesInvoice, _salesInvoiceDetailService);
                 salesInvoice = _repository.ConfirmObject(salesInvoice);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoice(salesInvoice, _accountService);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+                // create receivable
                 Receivable receivable = _receivableService.CreateObject(salesOrder.ContactId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.AmountReceivable, salesInvoice.DueDate);
             }
             return salesInvoice;
@@ -143,7 +134,8 @@ namespace Service.Service
             }
             decimal Discount = salesInvoice.Discount / 100 * AmountReceivable;
             decimal TaxableAmount = AmountReceivable - Discount;
-            salesInvoice.AmountReceivable = salesInvoice.IsTaxable ? TaxableAmount * (decimal)1.1 : TaxableAmount; // 10% Tax
+            decimal Tax = salesInvoice.Tax / 100 * TaxableAmount;
+            salesInvoice.AmountReceivable = TaxableAmount - Tax;
             _repository.Update(salesInvoice);
             return salesInvoice;
         }

@@ -17,6 +17,8 @@ namespace Core.DomainModel
         public int PendingDeliveryQuantity { get; set; }
         public decimal Price { get; set; }
 
+        public bool IsService { get; set; }
+
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeleted { get; set; }

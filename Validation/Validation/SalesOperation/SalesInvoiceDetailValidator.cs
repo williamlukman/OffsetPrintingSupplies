@@ -104,6 +104,22 @@ namespace Validation.Validation
             return salesInvoiceDetail;
         }
 
+        public SalesInvoiceDetail VServiceCostQuantityIsNaturalNumber(SalesInvoiceDetail salesInvoiceDetail, IServiceCostService _serviceCostService,
+                                                                      IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService)
+        {
+            DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(salesInvoiceDetail.DeliveryOrderDetailId);
+            SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+            if (salesOrderDetail.IsService)
+            {
+                ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(deliveryOrderDetail.ItemId);
+                if (serviceCost.Quantity <= 0)
+                {
+                    salesInvoiceDetail.Errors.Add("Generic", "Service Cost Quantity harus >= 1");
+                }
+            }
+            return salesInvoiceDetail;
+        }
+
         public SalesInvoiceDetail VCreateObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService,
                                                    ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService)
         {
@@ -147,13 +163,17 @@ namespace Validation.Validation
             return obj;
         }
 
-        public SalesInvoiceDetail VConfirmObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public SalesInvoiceDetail VConfirmObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceDetailService _salesInvoiceDetailService,
+                                                 IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                                 IServiceCostService _serviceCostService)
         {
             VHasConfirmationDate(salesInvoiceDetail);
             if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
             VHasNotBeenConfirmed(salesInvoiceDetail);
             if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
             VQuantityIsLessThanOrEqualPendingInvoiceQuantity(salesInvoiceDetail, _deliveryOrderDetailService);
+            if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
+            VServiceCostQuantityIsNaturalNumber(salesInvoiceDetail, _serviceCostService, _deliveryOrderDetailService, _salesOrderDetailService);
             return salesInvoiceDetail;
         }
 
@@ -184,10 +204,11 @@ namespace Validation.Validation
             return isValid(salesInvoiceDetail);
         }
 
-        public bool ValidConfirmObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public bool ValidConfirmObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService)
         {
             salesInvoiceDetail.Errors.Clear();
-            VConfirmObject(salesInvoiceDetail, _salesInvoiceDetailService, _deliveryOrderDetailService);
+            VConfirmObject(salesInvoiceDetail, _salesInvoiceDetailService, _deliveryOrderDetailService, _salesOrderDetailService, _serviceCostService);
             return isValid(salesInvoiceDetail);
         }
 

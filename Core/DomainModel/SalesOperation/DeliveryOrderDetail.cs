@@ -16,6 +16,8 @@ namespace Core.DomainModel
         public int PendingInvoicedQuantity { get; set; }
         public int SalesOrderDetailId { get; set; }
 
+        public decimal COS { get; set; }
+        public decimal COGS { get; set; }
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeleted { get; set; }

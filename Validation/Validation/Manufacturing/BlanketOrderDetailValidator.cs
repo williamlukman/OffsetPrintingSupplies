@@ -10,6 +10,12 @@ namespace Validation.Validation
 {
     public class BlanketOrderDetailValidator : IBlanketOrderDetailValidator
     {
+        public bool HasBar(BlanketOrderDetail blanketOrderDetail, IBlanketService _blankService)
+        {
+            Blanket blanket = _blankService.GetObjectById(blanketOrderDetail.BlanketId);
+            return (blanket.HasLeftBar || blanket.HasRightBar);
+        }
+
         public BlanketOrderDetail VHasBlanketOrder(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
         {
             BlanketOrder blanketOrder = _blanketOrderService.GetObjectById(blanketOrderDetail.BlanketOrderId);
@@ -53,6 +59,15 @@ namespace Validation.Validation
             if (!blanketOrderDetail.IsBarPrepared)
             {
                 blanketOrderDetail.Errors.Add("Generic", "Bar belum di prepare");
+            }
+            return blanketOrderDetail;
+        }
+
+        public BlanketOrderDetail VHasAdhesiveAmount(BlanketOrderDetail blanketOrderDetail)
+        {
+            if (blanketOrderDetail.AdhesiveUsage <= 0)
+            {
+                blanketOrderDetail.Errors.Add("Generic", "Adhesive Amount belum diisi");
             }
             return blanketOrderDetail;
         }
@@ -326,61 +341,77 @@ namespace Validation.Validation
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VPrepareObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VPrepareObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            VHasNotBeenBarPrepared(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenSideSealed(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasNotBeenRejected(blanketOrderDetail);
+            if (HasBar(blanketOrderDetail, _blanketService))
+            {
+                VHasNotBeenBarPrepared(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasBeenSideSealed(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasNotBeenRejected(blanketOrderDetail);
+            }
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
+            VHasAdhesiveAmount(blanketOrderDetail);
+            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenAdhesiveTapeApplied(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenBarPrepared(blanketOrderDetail);
+            if (HasBar(blanketOrderDetail, _blanketService)) { VHasBeenBarPrepared(blanketOrderDetail); }
+            else { VHasBeenSideSealed(blanketOrderDetail); }
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenRejected(blanketOrderDetail);
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VMountObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VMountObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            VHasNotBeenBarMounted(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenAdhesiveTapeApplied(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasNotBeenRejected(blanketOrderDetail);
+            if (HasBar(blanketOrderDetail, _blanketService))
+            {
+                VHasNotBeenBarMounted(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasBeenAdhesiveTapeApplied(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasNotBeenRejected(blanketOrderDetail);
+            }
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VHeatPressObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VHeatPressObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            VHasNotBeenBarHeatPressed(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenBarMounted(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasNotBeenRejected(blanketOrderDetail);
+            if (HasBar(blanketOrderDetail, _blanketService))
+            {
+                VHasNotBeenBarHeatPressed(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasBeenBarMounted(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasNotBeenRejected(blanketOrderDetail);
+            }
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VPullOffTestObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VPullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            VHasNotBeenBarPullOffTested(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenBarHeatPressed(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasNotBeenRejected(blanketOrderDetail);
+            if (HasBar(blanketOrderDetail, _blanketService))
+            {
+                VHasNotBeenBarPullOffTested(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasBeenBarHeatPressed(blanketOrderDetail);
+                if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+                VHasNotBeenRejected(blanketOrderDetail);
+            }
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VQCAndMarkObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VQCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
             VHasNotBeenQCAndMarked(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenBarPullOffTested(blanketOrderDetail);
+            if (HasBar(blanketOrderDetail, _blanketService)) { VHasBeenBarPullOffTested(blanketOrderDetail); }
+            else { VHasBeenAdhesiveTapeApplied(blanketOrderDetail); }
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenRejected(blanketOrderDetail);
             return blanketOrderDetail;
@@ -472,45 +503,45 @@ namespace Validation.Validation
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidPrepareObject(BlanketOrderDetail blanketOrderDetail)
+        public bool ValidPrepareObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
             blanketOrderDetail.Errors.Clear();
-            VPrepareObject(blanketOrderDetail);
+            VPrepareObject(blanketOrderDetail, _blanketService);
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail)
+        public bool ValidApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
             blanketOrderDetail.Errors.Clear();
-            VApplyTapeAdhesiveToObject(blanketOrderDetail);
+            VApplyTapeAdhesiveToObject(blanketOrderDetail, _blanketService);
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidMountObject(BlanketOrderDetail blanketOrderDetail)
+        public bool ValidMountObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
             blanketOrderDetail.Errors.Clear();
-            VMountObject(blanketOrderDetail);
+            VMountObject(blanketOrderDetail, _blanketService);
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidHeatPressObject(BlanketOrderDetail blanketOrderDetail)
+        public bool ValidHeatPressObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
             blanketOrderDetail.Errors.Clear();
-            VHeatPressObject(blanketOrderDetail);
+            VHeatPressObject(blanketOrderDetail, _blanketService);
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidPullOffTestObject(BlanketOrderDetail blanketOrderDetail)
+        public bool ValidPullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
             blanketOrderDetail.Errors.Clear();
-            VPullOffTestObject(blanketOrderDetail);
+            VPullOffTestObject(blanketOrderDetail, _blanketService);
             return isValid(blanketOrderDetail);
         }
 
-        public bool ValidQCAndMarkObject(BlanketOrderDetail blanketOrderDetail)
+        public bool ValidQCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
             blanketOrderDetail.Errors.Clear();
-            VQCAndMarkObject(blanketOrderDetail);
+            VQCAndMarkObject(blanketOrderDetail, _blanketService);
             return isValid(blanketOrderDetail);
         }
         

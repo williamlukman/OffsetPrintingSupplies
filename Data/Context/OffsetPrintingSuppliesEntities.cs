@@ -41,8 +41,9 @@ namespace Data.Context
             IList<String> financeNames = new List<String>() { "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" };
             IList<String> stockAndMasterNames = new List<String>()
                                         {  "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
-                                          "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment", "WarehouseItem",
-                                          "Warehouse", "Blanket", "CoreBuilder", "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
+                                          "ServiceCost", "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment",
+                                          "WarehouseItem", "Warehouse", "Blanket", "CoreBuilder",
+                                          "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "ContactGroup", "Company"};
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
@@ -115,6 +116,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new SalesInvoiceMapping());
             modelBuilder.Configurations.Add(new SalesOrderMapping());
             modelBuilder.Configurations.Add(new SalesOrderDetailMapping());
+            modelBuilder.Configurations.Add(new ServiceCostMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
@@ -179,6 +181,7 @@ namespace Data.Context
         public DbSet<SalesInvoice> SalesInvoices { get; set; }
         public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
         public DbSet<SalesOrder> SalesOrders { get; set; }
+        public DbSet<ServiceCost> ServiceCosts { get; set; }
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }

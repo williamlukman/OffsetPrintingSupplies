@@ -51,9 +51,9 @@
                              <label>Period</label>
                             </td>
                             <td>
-                               <input id="Period" type="text" size="10"/>
+                               <input id="Period" name="Period" type="text" size="10"/>
                                <label class="label-space">&nbsp;&nbsp;&nbsp;Year</label>
-                               <input id="YearPeriod" type="text" size="10"/>
+                               <input id="YearPeriod" name="YearPeriod" type="text" size="10"/>
                             </td>
                         </tr>
                         <tr>
@@ -97,7 +97,7 @@
                           Closing Date
                       </td>
                       <td>
-                         <input id="ClosedAt"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
+                         <input id="ClosedAt" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
                          <input name="ClosedAt" type="text" size="1" hidden="hidden"/>
                          <input name="IsClosed" type="text" size="1" hidden="hidden"/>
                       </td>

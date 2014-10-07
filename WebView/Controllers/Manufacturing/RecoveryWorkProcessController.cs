@@ -32,6 +32,10 @@ namespace WebView.Controllers
         private IRollerBuilderService _rollerBuilderService;
         private ICoreBuilderService _coreBuilderService;
         private IItemTypeService _itemTypeService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
+        private IServiceCostService _serviceCostService;
 
         public RecoveryWorkProcessController()
         {
@@ -51,9 +55,11 @@ namespace WebView.Controllers
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
         }
-
-
 
         public ActionResult Index()
         {
@@ -343,12 +349,6 @@ namespace WebView.Controllers
             });
         }
 
-      
-
-
-      
-
-
         [HttpPost]
         public dynamic DeleteAccessory(RecoveryAccessoryDetail model)
         {
@@ -369,8 +369,6 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-       
 
         [HttpPost]
         public dynamic UpdateAccessory(RecoveryAccessoryDetail model)
@@ -449,8 +447,8 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.FinishObject(data, model.FinishedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
-                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,
-                    _blanketService,_stockMutationService);
+                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService, _blanketService,
+                    _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             }
             catch (Exception ex)
             {
@@ -474,7 +472,7 @@ namespace WebView.Controllers
                 model = _recoveryOrderDetailService.UnfinishObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService
                     ,_coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService
-                    ,_stockMutationService);
+                    ,_stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             }
             catch (Exception ex)
             {
@@ -496,7 +494,8 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.RejectObject(data,model.RejectedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,_coreBuilderService
-                    ,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService);
+                    ,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService,
+                    _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -515,11 +514,11 @@ namespace WebView.Controllers
         {
             try
             {
-
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.UndoRejectObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
-                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService);
+                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,
+                    _stockMutationService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

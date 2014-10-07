@@ -83,31 +83,34 @@ namespace Service.Service
         }
 
         public PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, DateTime ConfirmationDate, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                              IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                              IStockMutationService _stockMutationService, IItemService _itemService,
-                                              IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                              IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService,
+                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             purchaseReceival.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService))
             {
+                decimal TotalCOGS = 0;
                 IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
                 foreach (var detail in purchaseReceivalDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseReceivalDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+                    TotalCOGS += detail.COGS;
                 }
+                purchaseReceival.TotalCOGS = TotalCOGS;
                 _repository.ConfirmObject(purchaseReceival);
+                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseReceival(purchaseReceival, _accountService);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
                 _purchaseOrderService.CheckAndSetReceivalComplete(purchaseOrder, _purchaseOrderDetailService);
             }
             return purchaseReceival;
         }
 
-        public PurchaseReceival UnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                                IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                                IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                IStockMutationService _stockMutationService, IItemService _itemService,
-                                                IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+        public PurchaseReceival UnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseInvoiceService _purchaseInvoiceService,
+                                                IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
+                                                IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(purchaseReceival, _purchaseInvoiceService))
             {
@@ -119,6 +122,8 @@ namespace Service.Service
                                                                    _purchaseInvoiceDetailService, _stockMutationService, _itemService,
                                                                    _blanketService, _warehouseItemService);
                 }
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseReceival(purchaseReceival, _accountService);
+                purchaseReceival.TotalCOGS = 0;
                 _repository.UnconfirmObject(purchaseReceival);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
                 _purchaseOrderService.UnsetReceivalComplete(purchaseOrder);

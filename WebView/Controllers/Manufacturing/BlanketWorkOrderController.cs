@@ -24,6 +24,9 @@ namespace WebView.Controllers
         private IBlanketOrderService _blanketOrderService;
         private IBlanketOrderDetailService _blanketOrderDetailService;
         private IContactService _contactService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public BlanketWorkOrderController()
         {
@@ -35,6 +38,9 @@ namespace WebView.Controllers
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
             _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
 
@@ -126,7 +132,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _blanketOrderDetailService.GetQueryable().Include("Blanket").Include("BlanketOrder")
-                                              .Include("Item").Where(x => x.Id == id && !x.IsDeleted);
+                                              .Include("Item").Where(x => x.BlanketOrderId == id && !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -243,10 +249,16 @@ namespace WebView.Controllers
                 Blanket = _blanketService.GetObjectById(model.BlanketId).Name,
                 RollBlanketSku = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
                 RollBlanket = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                BlanketLeftBarSku = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                BlanketLeftBar = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                BlanketRightBarSku = _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                BlanketRightBar = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
+                BlanketLeftBarSku = _blanketService.GetObjectById(model.BlanketId).HasLeftBar ?
+                                    _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku : "",
+                BlanketLeftBar = _blanketService.GetObjectById(model.BlanketId).HasLeftBar ?
+                                 _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name : "",
+                BlanketRightBarSku = _blanketService.GetObjectById(model.BlanketId).HasRightBar ?
+                                     _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku : "",
+                BlanketRightBar = _blanketService.GetObjectById(model.BlanketId).HasRightBar ?
+                                  _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name : "",                                  
+                model.RejectedDate,
+                model.FinishedDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -377,36 +389,6 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic ProgressDetail(int Id,string Progress)
-        {
-            var model = new BlanketOrderDetail();
-            try
-            {
-                var data = _blanketOrderDetailService.GetObjectById(Id);
-                if (Progress == "IsCut") { model = _blanketOrderDetailService.CutObject(data, _blanketOrderService); }
-                else if (Progress == "IsSideSealed") { model = _blanketOrderDetailService.SideSealObject(data); }
-                else if (Progress == "IsBarPrepared") { model = _blanketOrderDetailService.PrepareObject(data); }
-                else if (Progress == "IsAdhesiveTapeApplied") { model = _blanketOrderDetailService.ApplyTapeAdhesiveToObject(data); }
-                else if (Progress == "IsBarMounted") { model = _blanketOrderDetailService.MountObject(data); }
-                else if (Progress == "IsBarHeatPressed") { model = _blanketOrderDetailService.HeatPressObject(data); }
-                else if (Progress == "IsBarPullOffTested") { model = _blanketOrderDetailService.PullOffTestObject(data); }
-                else if (Progress == "IsQCAndMarked") { model = _blanketOrderDetailService.QCAndMarkObject(data); }
-                else if (Progress == "IsPackaged") { model = _blanketOrderDetailService.PackageObject(data); }
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Update Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
-
-
-        [HttpPost]
         public dynamic Confirm(BlanketOrder model)
         {
             try
@@ -456,7 +438,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.FinishObject(data, model.FinishedDate.Value, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService);
+                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -478,7 +460,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UnfinishObject(data, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService);
+                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -499,7 +481,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.RejectObject(data,model.RejectedDate.Value,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService);
+                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -521,7 +503,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UndoRejectObject(data,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService);
+                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

@@ -67,6 +67,7 @@
     <Compile Include="DomainModel\SalesOperation\VirtualOrder.cs" />
     <Compile Include="DomainModel\StockAndMaster\Company.cs" />
     <Compile Include="DomainModel\StockAndMaster\ContactGroup.cs" />
+    <Compile Include="DomainModel\StockAndMaster\ServiceCost.cs" />
     <Compile Include="DomainModel\StockAndMaster\GroupItemPrice.cs" />
     <Compile Include="DomainModel\StockAndMaster\PriceMutation.cs" />
     <Compile Include="DomainModel\SalesOperation\RetailSalesInvoice.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Interface\Repository\SalesOperation\ITemporaryDeliveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\IServiceCostRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\ICompanyRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IGroupItemPriceRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IContactGroupRepository.cs" />
@@ -200,6 +202,7 @@
     <Compile Include="Interface\Service\SalesOperation\ITemporaryDeliveryOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderDetailService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\IServiceCostService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\ICompanyService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IGroupItemPriceService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IContactGroupService.cs" />
@@ -267,6 +270,7 @@
     <Compile Include="Interface\Validation\SalesOperation\ITemporaryDeliveryOrderValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\IServiceCostValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\ICompanyValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IGroupItemPriceValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IContactGroupValidator.cs" />

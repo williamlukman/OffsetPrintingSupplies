@@ -288,8 +288,21 @@
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
             success: function (result) {
-                ReloadGrid();
-                $("#delete_confirm_div").dialog('close');
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                }
+                else {
+                    ReloadGrid();
+                    $("#delete_confirm_div").dialog('close');
+                }
             }
         });
     });

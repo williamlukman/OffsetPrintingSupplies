@@ -112,14 +112,25 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                                ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
+                                                IRollerBuilderService _rollerBuilderService, IItemService _itemService)
         {
             salesInvoiceDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(salesInvoiceDetail, this, _deliveryOrderDetailService))
+            if (_validator.ValidConfirmObject(salesInvoiceDetail, this, _deliveryOrderDetailService, _salesOrderDetailService, _serviceCostService))
             {
+                DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(salesInvoiceDetail.DeliveryOrderDetailId);
+                SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
+                if (salesOrderDetail.IsService)
+                {
+                    ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(deliveryOrderDetail.ItemId);
+                    serviceCost.Quantity -= salesInvoiceDetail.Quantity;
+                    _serviceCostService.UpdateObject(serviceCost, _rollerBuilderService, _itemService);
+                    salesInvoiceDetail.COS = deliveryOrderDetail.COS;
+                }
+
                 salesInvoiceDetail = _repository.ConfirmObject(salesInvoiceDetail);
                 // update sales receival detail PendingInvoiceQuantity
-                DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(salesInvoiceDetail.DeliveryOrderDetailId);
                 _deliveryOrderDetailService.InvoiceObject(deliveryOrderDetail, salesInvoiceDetail.Quantity);
             }
             return salesInvoiceDetail;

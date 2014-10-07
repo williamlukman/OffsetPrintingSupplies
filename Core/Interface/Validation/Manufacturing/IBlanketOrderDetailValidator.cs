@@ -14,6 +14,8 @@ namespace Core.Interface.Validation
         BlanketOrderDetail VHasBeenCut(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenSideSealed(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenBarPrepared(BlanketOrderDetail blanketOrderDetail);
+        BlanketOrderDetail VHasAdhesiveAmount(BlanketOrderDetail blanketOrderDetail);
+
         BlanketOrderDetail VHasBeenAdhesiveTapeApplied(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenBarMounted(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenBarHeatPressed(BlanketOrderDetail blanketOrderDetail);
@@ -47,12 +49,12 @@ namespace Core.Interface.Validation
 
         BlanketOrderDetail VCutObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
         BlanketOrderDetail VSideSealObject(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VPrepareObject(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VMountObject(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VHeatPressObject(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VPullOffTestObject(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VQCAndMarkObject(BlanketOrderDetail blanketOrderDetail);
+        BlanketOrderDetail VPrepareObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        BlanketOrderDetail VApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        BlanketOrderDetail VMountObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        BlanketOrderDetail VHeatPressObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        BlanketOrderDetail VPullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        BlanketOrderDetail VQCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail VPackageObject(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
         BlanketOrderDetail VUndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
@@ -65,12 +67,12 @@ namespace Core.Interface.Validation
 
         bool ValidCutObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderSerivce);
         bool ValidSideSealObject(BlanketOrderDetail blanketOrderDetail);
-        bool ValidPrepareObject(BlanketOrderDetail blanketOrderDetail);
-        bool ValidApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail);
-        bool ValidMountObject(BlanketOrderDetail blanketOrderDetail);
-        bool ValidHeatPressObject(BlanketOrderDetail blanketOrderDetail);
-        bool ValidPullOffTestObject(BlanketOrderDetail blanketOrderDetail);
-        bool ValidQCAndMarkObject(BlanketOrderDetail blanketOrderDetail);
+        bool ValidPrepareObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        bool ValidApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        bool ValidMountObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        bool ValidHeatPressObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        bool ValidPullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
+        bool ValidQCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         bool ValidPackageObject(BlanketOrderDetail blanketOrderDetail);
         bool ValidRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
         bool ValidUndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);

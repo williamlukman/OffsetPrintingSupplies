@@ -89,34 +89,39 @@ namespace Service.Service
             return (blanketOrderDetail = _validator.ValidSideSealObject(blanketOrderDetail) ? _repository.SideSealObject(blanketOrderDetail) : blanketOrderDetail);
         }
 
-        public BlanketOrderDetail PrepareObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail PrepareObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            return (blanketOrderDetail = _validator.ValidPrepareObject(blanketOrderDetail) ? _repository.PrepareObject(blanketOrderDetail) : blanketOrderDetail);
+            return (blanketOrderDetail = _validator.ValidPrepareObject(blanketOrderDetail, _blanketService) ? _repository.PrepareObject(blanketOrderDetail) : blanketOrderDetail);
         }
 
-        public BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, decimal AdhesiveUsage, IBlanketService _blanketService)
         {
-            return (blanketOrderDetail = _validator.ValidApplyTapeAdhesiveToObject(blanketOrderDetail) ? _repository.ApplyTapeAdhesiveToObject(blanketOrderDetail) : blanketOrderDetail);
+            blanketOrderDetail.AdhesiveUsage = AdhesiveUsage;
+            if (_validator.ValidApplyTapeAdhesiveToObject(blanketOrderDetail, _blanketService))
+            {
+                _repository.ApplyTapeAdhesiveToObject(blanketOrderDetail);
+            }
+            return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail MountObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail MountObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            return (blanketOrderDetail = _validator.ValidMountObject(blanketOrderDetail) ? _repository.MountObject(blanketOrderDetail) : blanketOrderDetail);
+            return (blanketOrderDetail = _validator.ValidMountObject(blanketOrderDetail, _blanketService) ? _repository.MountObject(blanketOrderDetail) : blanketOrderDetail);
         }
 
-        public BlanketOrderDetail HeatPressObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail HeatPressObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            return (blanketOrderDetail = _validator.ValidHeatPressObject(blanketOrderDetail) ? _repository.HeatPressObject(blanketOrderDetail) : blanketOrderDetail);
+            return (blanketOrderDetail = _validator.ValidHeatPressObject(blanketOrderDetail, _blanketService) ? _repository.HeatPressObject(blanketOrderDetail) : blanketOrderDetail);
         }
 
-        public BlanketOrderDetail PullOffTestObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail PullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            return (blanketOrderDetail = _validator.ValidPullOffTestObject(blanketOrderDetail) ? _repository.PullOffTestObject(blanketOrderDetail) : blanketOrderDetail);
+            return (blanketOrderDetail = _validator.ValidPullOffTestObject(blanketOrderDetail, _blanketService) ? _repository.PullOffTestObject(blanketOrderDetail) : blanketOrderDetail);
         }
 
-        public BlanketOrderDetail QCAndMarkObject(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail QCAndMarkObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            return (blanketOrderDetail = _validator.ValidQCAndMarkObject(blanketOrderDetail) ? _repository.QCAndMarkObject(blanketOrderDetail) : blanketOrderDetail);
+            return (blanketOrderDetail = _validator.ValidQCAndMarkObject(blanketOrderDetail, _blanketService) ? _repository.QCAndMarkObject(blanketOrderDetail) : blanketOrderDetail);
         }
 
         public BlanketOrderDetail PackageObject(BlanketOrderDetail blanketOrderDetail)
@@ -125,11 +130,14 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail RejectObject(BlanketOrderDetail blanketOrderDetail, DateTime RejectedDate, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             blanketOrderDetail.RejectedDate = RejectedDate;
             if (_validator.ValidRejectObject(blanketOrderDetail, _blanketOrderService))
             {
+                CalculateTotalCost(blanketOrderDetail, _blanketService, _itemService);
+                _generalLedgerJournalService.CreateRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
                 _repository.RejectObject(blanketOrderDetail);
 
                 // add blanket order reject quantity
@@ -170,10 +178,13 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail UndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                   IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUndoRejectObject(blanketOrderDetail, _blanketOrderService))
             {
+                _generalLedgerJournalService.CreateUndoRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
+                blanketOrderDetail.TotalCost = 0;
                 _repository.UndoRejectObject(blanketOrderDetail);
 
                 // deduce blanket order reject quantity
@@ -215,11 +226,14 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail FinishObject(BlanketOrderDetail blanketOrderDetail, DateTime FinishedDate, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             blanketOrderDetail.FinishedDate = FinishedDate;
             if (_validator.ValidFinishObject(blanketOrderDetail, _blanketOrderService))
             {
+                CalculateTotalCost(blanketOrderDetail, _blanketService, _itemService);
+                _generalLedgerJournalService.CreateFinishedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
                 _repository.FinishObject(blanketOrderDetail);
 
                 // add blanket order quantity final
@@ -266,11 +280,15 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail UnfinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                                 IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                 IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUnfinishObject(blanketOrderDetail, _blanketOrderService))
             {
+                _generalLedgerJournalService.CreateUnfinishedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
+                blanketOrderDetail.TotalCost = 0;
                 _repository.UnfinishObject(blanketOrderDetail);
+
                 // deduce blanket order quantity final
                 BlanketOrder blanketOrder = _blanketOrderService.GetObjectById(blanketOrderDetail.BlanketOrderId);
                 blanketOrder.QuantityFinal -= 1;
@@ -319,6 +337,32 @@ namespace Service.Service
         public bool DeleteObject(int Id)
         {
             return _repository.DeleteObject(Id);
+        }
+
+        public void CalculateTotalCost(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService, IItemService _itemService)
+        {
+            Item BarLeft, BarRight;
+            Blanket Blanket = _blanketService.GetObjectById(blanketOrderDetail.BlanketId);
+            Item Adhesive = _itemService.GetObjectById(Blanket.AdhesiveId);
+            Item RollBlanket = _itemService.GetObjectById(Blanket.RollBlanketItemId);
+
+            decimal TotalCost = 0;
+            TotalCost = (blanketOrderDetail.AdhesiveUsage * Adhesive.AvgPrice) + RollBlanket.AvgPrice;
+
+            if (Blanket.HasLeftBar)
+            {
+                BarLeft = _itemService.GetObjectById((int)Blanket.LeftBarItemId);
+                TotalCost += BarLeft.AvgPrice;
+            }
+            if (Blanket.HasRightBar)
+            { 
+                BarRight = _itemService.GetObjectById((int)Blanket.RightBarItemId);
+                TotalCost += BarRight.AvgPrice;
+            }
+
+            blanketOrderDetail.TotalCost = TotalCost;
+            _repository.UpdateObject(blanketOrderDetail);
+            return;
         }
 
     }

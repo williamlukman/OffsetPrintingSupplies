@@ -24,8 +24,13 @@ namespace Core.Constants
             public static string ReceiptVoucher = "ReceiptVoucher";
             //public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string StockAdjustment = "StockAdjustment";
+            public static string DeliveryOrder = "DeliveryOrder";
             public static string SalesInvoice = "SalesInvoice";
+            public static string PurchaseReceival = "PurchaseReceival";
             public static string PurchaseInvoice = "PurchaseInvoice";
+            public static string RecoveryOrderDetail = "RecoveryOrderDetail";
+            public static string RecoveryAccessoryDetail = "RecoveryAccessoryDetail";
+            public static string BlanketOrderDetail = "BlanketOrderDetail";
         }
 
         public class AccountGroup
@@ -51,17 +56,23 @@ namespace Core.Constants
 
             public static string Expense = "2";
             public static string COGS = "21";
-            public static string SellingGeneralAndAdministrationExpense = "22";
-            public static string CashBankAdjustmentExpense = "2201";
-            public static string Discount = "2202";
-            public static string SalesAllowance = "2203";
-            public static string StockAdjustmentExpense = "2204";
-            public static string DepreciationExpense = "23";
-            public static string Amortization = "24";            
-            public static string InterestExpense = "25";
-            public static string TaxExpense = "26";
-            public static string DividentExpense = "27";
-            
+            public static string COS = "22";
+            public static string OperationalExpense = "23";
+            public static string ManufacturingExpense = "2301";
+            public static string RecoveryExpense = "2301001";
+            public static string ConversionExpense = "2301002";
+            public static string SellingGeneralAndAdministrationExpense = "2302";
+            public static string CashBankAdjustmentExpense = "2302001";
+            public static string Discount = "2302002";
+            public static string SalesAllowance = "2302003";
+            public static string StockAdjustmentExpense = "2302004";
+            public static string NonOperationalExpense = "24";
+            public static string DepreciationExpense = "2401";
+            public static string Amortization = "2402";            
+            public static string InterestExpense = "2403";
+            public static string TaxExpense = "2404";
+            public static string DividentExpense = "2405";
+
             public static string Liability = "3";
             public static string CurrentLiability = "31";
             public static string AccountPayable = "3101";
@@ -85,21 +96,27 @@ namespace Core.Constants
             public static string GBCHReceivable = "A1103";
             public static string Inventory = "A1104";
             public static string Raw = "A1104001";
-            public static string FinishedGoods = "A114002";
+            public static string FinishedGoods = "A1104002";
             public static string NonCurrentAsset = "A12";
 
             public static string Expense = "X2";
             public static string COGS = "X21";
-            public static string SellingGeneralAndAdministrationExpense = "X22";
-            public static string CashBankAdjustmentExpense = "X2201";
-            public static string Discount = "X2202";
-            public static string SalesAllowance = "X2203";
-            public static string StockAdjustmentExpense = "X2204";
-            public static string DepreciationExpense = "X23";
-            public static string Amortization = "X24";
-            public static string InterestExpense = "X25";
-            public static string TaxExpense = "X26";
-            public static string DividentExpense = "X27";
+            public static string COS = "X22";
+            public static string OperationalExpense = "X23";
+            public static string ManufacturingExpense = "X2301";
+            public static string RecoveryExpense = "X2301001";
+            public static string ConversionExpense = "X2301002";
+            public static string SellingGeneralAndAdministrationExpense = "X2302";
+            public static string CashBankAdjustmentExpense = "X2302001";
+            public static string Discount = "X2302002";
+            public static string SalesAllowance = "X2302003";
+            public static string StockAdjustmentExpense = "X2302004";
+            public static string NonOperationalExpense = "X24";
+            public static string DepreciationExpense = "X2401";
+            public static string Amortization = "X2402";
+            public static string InterestExpense = "X2403";
+            public static string TaxExpense = "X2404";
+            public static string DividentExpense = "X2405";
 
             public static string Liability = "L3";
             public static string CurrentLiability = "L31";

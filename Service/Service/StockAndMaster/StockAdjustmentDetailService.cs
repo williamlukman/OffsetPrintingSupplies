@@ -98,6 +98,7 @@ namespace Service.Service
                 stockAdjustmentDetail = _repository.ConfirmObject(stockAdjustmentDetail);
                 StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+                item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetail.Price);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
                 StockMutation stockMutation = _stockMutationService.CreateStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
@@ -112,6 +113,7 @@ namespace Service.Service
                 stockAdjustmentDetail = _repository.UnconfirmObject(stockAdjustmentDetail);
                 StockAdjustment stockAdjustment = _stockAdjustmentService.GetObjectById(stockAdjustmentDetail.StockAdjustmentId);
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
+                item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, stockAdjustmentDetail.Quantity * (-1), stockAdjustmentDetail.Price);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
                 IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)

@@ -41,7 +41,8 @@ namespace Core.Interface.Service
         Item AdjustPendingDelivery(Item item, int quantity);
         //Item OnTrial(Item item, int quantity);
         //Item ReturnTrial(Item item, int quantity);
-        decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost);
+        decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice);
+        decimal CalculateAndUpdateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice);
         bool DeleteObject(int Id);
         bool IsSkuDuplicated(Item item);
     }

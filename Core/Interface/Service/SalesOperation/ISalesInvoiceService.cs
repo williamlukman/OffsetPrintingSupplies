@@ -15,13 +15,13 @@ namespace Core.Interface.Service
         SalesInvoice GetObjectById(int Id);
         IList<SalesInvoice> GetObjectsByDeliveryOrderId(int deliveryOrderId);
         SalesInvoice CreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
-        SalesInvoice CreateObject(int deliveryOrderId, string description, int discount, bool IsTaxable, DateTime InvoiceDate, DateTime DueDate, IDeliveryOrderService _deliveryOrderService);
         SalesInvoice UpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService);
         SalesInvoice SoftDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
         bool DeleteObject(int Id);
         SalesInvoice ConfirmObject(SalesInvoice salesInvoice, DateTime ConfirmationDate, ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService,
-                                   IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService, IReceivableService _receivableService,
-                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+                                   ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                   IReceivableService _receivableService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                   IClosingService _closingService, IServiceCostService _serviceCostService, IRollerBuilderService _rollerBuilderService, IItemService _itemService);
         SalesInvoice UnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                      IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                      IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,

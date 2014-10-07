@@ -245,14 +245,21 @@ namespace Service.Service
             return (item = _validator.ValidAdjustPendingDelivery(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgCost)
+        public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
         {
-            // Use this function to calculate averageCost
-            int originalQuantity = item.Quantity;
-            decimal originalAvgCost = item.AvgPrice;
-            decimal avgCost = (originalQuantity + addedQuantity == 0) ? 0 :
-                ((originalQuantity * originalAvgCost) + (addedQuantity * addedAvgCost)) / (originalQuantity + addedQuantity);
-            return avgCost;
+            // Use this function to calculate averagePrice
+            int originalQuantity = item.Quantity + item.Virtual;
+            decimal originalAvgPrice = item.AvgPrice;
+            decimal avgPrice = (originalQuantity + addedQuantity == 0) ? 0 :
+                ((originalQuantity * originalAvgPrice) + (addedQuantity * addedAvgPrice)) / (originalQuantity + addedQuantity);
+            return avgPrice;
+        }
+
+        public decimal CalculateAndUpdateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        {
+            item.AvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgPrice);
+            _repository.Update(item);
+            return item.AvgPrice;
         }
 
         public bool DeleteObject(int Id)

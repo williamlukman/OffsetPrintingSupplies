@@ -47,10 +47,6 @@ namespace TestValidation
         public IReceivableService _receivableService;
         public IReceiptVoucherDetailService _receiptVoucherDetailService;
         public IReceiptVoucherService _receiptVoucherService;
-        public ISalesInvoiceDetailService _salesInvoiceDetailService;
-        public ISalesInvoiceService _salesInvoiceService;
-        public ISalesOrderService _salesOrderService;
-        public ISalesOrderDetailService _salesOrderDetailService;
         public IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
         public IRecoveryOrderDetailService _recoveryOrderDetailService;
         public IRecoveryOrderService _recoveryOrderService;
@@ -58,6 +54,11 @@ namespace TestValidation
         public IRollerTypeService _rollerTypeService;
         public IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService;
         public IRollerWarehouseMutationService _rollerWarehouseMutationService;
+        public ISalesInvoiceDetailService _salesInvoiceDetailService;
+        public ISalesInvoiceService _salesInvoiceService;
+        public ISalesOrderService _salesOrderService;
+        public ISalesOrderDetailService _salesOrderDetailService;
+        public IServiceCostService _serviceCostService;
         public IStockAdjustmentDetailService _stockAdjustmentDetailService;
         public IStockAdjustmentService _stockAdjustmentService;
         public IStockMutationService _stockMutationService;
@@ -168,8 +169,9 @@ namespace TestValidation
         public ReceiptVoucherDetail rvd1, rvd2, rvd3;
 
         private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods, NonCurrentAsset;
-        private Account Expense, COGS, SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense;
-        private Account DepreciationExpense, Amortization, InterestExpense, TaxExpense, DividentExpense;
+        private Account Expense, COGS, COS, OperationalExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense;
+        private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense;
+        private Account NonOperationalExpense, DepreciationExpense, Amortization, InterestExpense, TaxExpense, DividentExpense;
         private Account Liability, CurrentLiability, AccountPayable, GBCHPayable, GoodsPendingClearance, NonCurrentLiability;
         private Account Equity, OwnersEquity, EquityAdjustment;
         private Account Revenue;
@@ -220,6 +222,7 @@ namespace TestValidation
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
@@ -279,21 +282,27 @@ namespace TestValidation
                 GBCHReceivable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "GBCH Receivable", Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
                 Inventory = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "Inventory", Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
                 Raw = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Raw Material", Code = Constant.AccountCode.Raw, LegacyCode = Constant.AccountLegacyCode.Raw, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
-                FinishedGoods = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Finished Goods", Code = Constant.AccountCode.FinishedGoods, LegacyCode = Constant.AccountCode.FinishedGoods, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
+                FinishedGoods = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Finished Goods", Code = Constant.AccountCode.FinishedGoods, LegacyCode = Constant.AccountLegacyCode.FinishedGoods, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
                 NonCurrentAsset = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Noncurrent Asset", Code = Constant.AccountCode.NonCurrentAsset, LegacyCode = Constant.AccountLegacyCode.NonCurrentAsset, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
 
                 Expense = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Group = Constant.AccountGroup.Expense, IsLegacy = true }, _accountService);
                 COGS = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Cost Of Goods Sold", Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                SellingGeneralAndAdministrationExpense = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Selling, General, and Administration Expense", Code = Constant.AccountCode.SellingGeneralAndAdministrationExpense, LegacyCode = Constant.AccountLegacyCode.SellingGeneralAndAdministrationExpense, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                CashBankAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "CashBank Adjustment Expense", Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
-                Discount = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Discount", Code = Constant.AccountCode.Discount, LegacyCode = Constant.AccountLegacyCode.Discount, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
-                SalesAllowance = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Sales Allowance", Code = Constant.AccountCode.SalesAllowance, LegacyCode = Constant.AccountLegacyCode.SalesAllowance, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
-                StockAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Stock Adjustment Expense", Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
-                DepreciationExpense = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "Depreciation Expense", Code = Constant.AccountCode.DepreciationExpense, LegacyCode = Constant.AccountLegacyCode.DepreciationExpense, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                Amortization = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "Amortization", Code = Constant.AccountCode.Amortization, LegacyCode = Constant.AccountLegacyCode.Amortization, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                InterestExpense = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "Interest Expense", Code = Constant.AccountCode.InterestExpense, LegacyCode = Constant.AccountLegacyCode.InterestExpense, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                TaxExpense = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "Tax Expense", Code = Constant.AccountCode.TaxExpense, LegacyCode = Constant.AccountLegacyCode.TaxExpense, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
-                DividentExpense = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "Divident Expense", Code = Constant.AccountCode.DividentExpense, LegacyCode = Constant.AccountLegacyCode.DividentExpense, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                COS = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Cost of Services", Code = Constant.AccountCode.COS, LegacyCode = Constant.AccountLegacyCode.COS, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                OperationalExpense = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Operational Expense", Code = Constant.AccountCode.OperationalExpense, LegacyCode = Constant.AccountLegacyCode.OperationalExpense, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                ManufacturingExpense = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "Manufacturing Expense", Code = Constant.AccountCode.ManufacturingExpense, LegacyCode = Constant.AccountLegacyCode.ManufacturingExpense, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpense.Id, IsLegacy = true }, _accountService);
+                RecoveryExpense = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Roller Recovery Expense", Code = Constant.AccountCode.RecoveryExpense, LegacyCode = Constant.AccountLegacyCode.RecoveryExpense, Group = Constant.AccountGroup.Expense, ParentId = ManufacturingExpense.Id, IsLegacy = true }, _accountService);
+                ConversionExpense = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Roller Recovery Expense", Code = Constant.AccountCode.ConversionExpense, LegacyCode = Constant.AccountLegacyCode.ConversionExpense, Group = Constant.AccountGroup.Expense, ParentId = ManufacturingExpense.Id, IsLegacy = true }, _accountService);
+                SellingGeneralAndAdministrationExpense = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "Selling, General, and Administration Expense", Code = Constant.AccountCode.SellingGeneralAndAdministrationExpense, LegacyCode = Constant.AccountLegacyCode.SellingGeneralAndAdministrationExpense, Group = Constant.AccountGroup.Expense, ParentId = OperationalExpense.Id, IsLegacy = true }, _accountService);
+                CashBankAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "CashBank Adjustment Expense", Code = Constant.AccountCode.CashBankAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.CashBankAdjustmentExpense, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
+                Discount = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Discount", Code = Constant.AccountCode.Discount, LegacyCode = Constant.AccountLegacyCode.Discount, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
+                SalesAllowance = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Sales Allowance", Code = Constant.AccountCode.SalesAllowance, LegacyCode = Constant.AccountLegacyCode.SalesAllowance, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
+                StockAdjustmentExpense = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Stock Adjustment Expense", Code = Constant.AccountCode.StockAdjustmentExpense, LegacyCode = Constant.AccountLegacyCode.StockAdjustmentExpense, Group = Constant.AccountGroup.Expense, ParentId = SellingGeneralAndAdministrationExpense.Id, IsLegacy = true }, _accountService);
+                NonOperationalExpense = _accountService.CreateObject(new Account() { Level = 2, Name = "Non Operational Expense", Code = Constant.AccountCode.NonOperationalExpense, LegacyCode = Constant.AccountLegacyCode.NonOperationalExpense, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
+                DepreciationExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Depreciation Expense", Code = Constant.AccountCode.DepreciationExpense, LegacyCode = Constant.AccountLegacyCode.DepreciationExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
+                Amortization = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Amortization", Code = Constant.AccountCode.Amortization, LegacyCode = Constant.AccountLegacyCode.Amortization, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
+                InterestExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Interest Expense", Code = Constant.AccountCode.InterestExpense, LegacyCode = Constant.AccountLegacyCode.InterestExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
+                TaxExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Tax Expense", Code = Constant.AccountCode.TaxExpense, LegacyCode = Constant.AccountLegacyCode.TaxExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
+                DividentExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Divident Expense", Code = Constant.AccountCode.DividentExpense, LegacyCode = Constant.AccountLegacyCode.DividentExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
 
                 Liability = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Group = Constant.AccountGroup.Liability, IsLegacy = true }, _accountService);
                 CurrentLiability = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Current Liability", Code = Constant.AccountCode.CurrentLiability, LegacyCode = Constant.AccountLegacyCode.CurrentLiability, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
@@ -847,48 +856,49 @@ namespace TestValidation
                 WarehouseId = localWarehouse.Id
             };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
-            StockAdjustmentDetail sadNewCore = new StockAdjustmentDetail() { ItemId = NewCore.Id , Quantity = 7, StockAdjustmentId = sa.Id};
+
+            StockAdjustmentDetail sadNewCore = new StockAdjustmentDetail() { ItemId = NewCore.Id , Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000};
             _stockAdjustmentDetailService.CreateObject(sadNewCore, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadNewCore1 = new StockAdjustmentDetail() { ItemId = NewCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadNewCore1 = new StockAdjustmentDetail() { ItemId = NewCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadNewCore1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadNewCore2 = new StockAdjustmentDetail() { ItemId = NewCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadNewCore2 = new StockAdjustmentDetail() { ItemId = NewCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadNewCore2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadNewCore3 = new StockAdjustmentDetail() { ItemId = NewCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadNewCore3 = new StockAdjustmentDetail() { ItemId = NewCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadNewCore3, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadNewCore4 = new StockAdjustmentDetail() { ItemId = NewCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadNewCore4 = new StockAdjustmentDetail() { ItemId = NewCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadNewCore4, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            StockAdjustmentDetail sadUsedCore = new StockAdjustmentDetail() { ItemId = UsedCore.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadUsedCore = new StockAdjustmentDetail() { ItemId = UsedCore.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadUsedCore, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadUsedCore1 = new StockAdjustmentDetail() { ItemId = UsedCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadUsedCore1 = new StockAdjustmentDetail() { ItemId = UsedCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadUsedCore1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadUsedCore2 = new StockAdjustmentDetail() { ItemId = UsedCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadUsedCore2 = new StockAdjustmentDetail() { ItemId = UsedCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadUsedCore2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadUsedCore3 = new StockAdjustmentDetail() { ItemId = UsedCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadUsedCore3 = new StockAdjustmentDetail() { ItemId = UsedCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadUsedCore3, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadUsedCore4 = new StockAdjustmentDetail() { ItemId = UsedCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadUsedCore4 = new StockAdjustmentDetail() { ItemId = UsedCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadUsedCore4, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            StockAdjustmentDetail sadRollerNewCore = new StockAdjustmentDetail() { ItemId = RollerNewCore.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerNewCore = new StockAdjustmentDetail() { ItemId = RollerNewCore.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerNewCore, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerNewCore1 = new StockAdjustmentDetail() { ItemId = RollerNewCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerNewCore1 = new StockAdjustmentDetail() { ItemId = RollerNewCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerNewCore1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerNewCore2 = new StockAdjustmentDetail() { ItemId = RollerNewCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerNewCore2 = new StockAdjustmentDetail() { ItemId = RollerNewCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerNewCore2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerNewCore3 = new StockAdjustmentDetail() { ItemId = RollerNewCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerNewCore3 = new StockAdjustmentDetail() { ItemId = RollerNewCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerNewCore3, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerNewCore4 = new StockAdjustmentDetail() { ItemId = RollerNewCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerNewCore4 = new StockAdjustmentDetail() { ItemId = RollerNewCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerNewCore4, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            StockAdjustmentDetail sadRollerUsedCore = new StockAdjustmentDetail() { ItemId = RollerUsedCore.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerUsedCore = new StockAdjustmentDetail() { ItemId = RollerUsedCore.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerUsedCore, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerUsedCore1 = new StockAdjustmentDetail() { ItemId = RollerUsedCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerUsedCore1 = new StockAdjustmentDetail() { ItemId = RollerUsedCore1.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerUsedCore1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerUsedCore2 = new StockAdjustmentDetail() { ItemId = RollerUsedCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerUsedCore2 = new StockAdjustmentDetail() { ItemId = RollerUsedCore2.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerUsedCore2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerUsedCore3 = new StockAdjustmentDetail() { ItemId = RollerUsedCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerUsedCore3 = new StockAdjustmentDetail() { ItemId = RollerUsedCore3.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerUsedCore3, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollerUsedCore4 = new StockAdjustmentDetail() { ItemId = RollerUsedCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollerUsedCore4 = new StockAdjustmentDetail() { ItemId = RollerUsedCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerUsedCore4, _stockAdjustmentService, _itemService, _warehouseItemService);
 
             _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
@@ -1305,23 +1315,29 @@ namespace TestValidation
             _recoveryOrderDetailService.DisassembleObject(recoveryODInHouse3, _recoveryOrderService);
 
             _recoveryOrderDetailService.FinishObject(recoveryODContact1, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
-                                                       _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                       _itemService, _warehouseItemService, _blanketService, _stockMutationService);
+                                                     _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
+                                                     _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _recoveryOrderDetailService.RejectObject(recoveryODContact2, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
-                                                       _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
-                                                       _warehouseItemService, _blanketService, _stockMutationService);
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
+                                                     _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _accountService, _generalLedgerJournalService, _closingService);
             _recoveryOrderDetailService.FinishObject(recoveryODContact3, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                        _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                       _itemService, _warehouseItemService, _blanketService, _stockMutationService);
+                                                       _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                       _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _recoveryOrderDetailService.FinishObject(recoveryODInHouse1, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
-                                                       _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                       _itemService, _warehouseItemService, _blanketService, _stockMutationService);
+                                                     _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
+                                                     _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _recoveryOrderDetailService.FinishObject(recoveryODInHouse2, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
-                                                       _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                       _itemService, _warehouseItemService, _blanketService, _stockMutationService);
+                                                     _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
+                                                     _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _recoveryOrderDetailService.RejectObject(recoveryODInHouse3, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
-                                                       _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
-                                                       _warehouseItemService, _blanketService, _stockMutationService);
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
+                                                     _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _accountService, _generalLedgerJournalService, _closingService);
         }
 
         public void PopulateStockAdjustment()
@@ -1337,7 +1353,8 @@ namespace TestValidation
             {
                 ItemId = coreBuilder.UsedCoreItemId,
                 Quantity = 3,
-                StockAdjustmentId = stockAdjustment.Id
+                StockAdjustmentId = stockAdjustment.Id,
+                Price = 50000
             };
             stockAD = _stockAdjustmentDetailService.CreateObject(stockAD, _stockAdjustmentService, _itemService, _warehouseItemService);
             
@@ -1345,7 +1362,8 @@ namespace TestValidation
             {
                 ItemId = coreBuilder1.UsedCoreItemId,
                 Quantity = 3,
-                StockAdjustmentId = stockAdjustment.Id
+                StockAdjustmentId = stockAdjustment.Id,
+                Price = 50000
             };
             stockAD1 = _stockAdjustmentDetailService.CreateObject(stockAD1, _stockAdjustmentService, _itemService, _warehouseItemService);
 
@@ -1353,7 +1371,8 @@ namespace TestValidation
             {
                 ItemId = coreBuilder2.UsedCoreItemId,
                 Quantity = 3,
-                StockAdjustmentId = stockAdjustment.Id
+                StockAdjustmentId = stockAdjustment.Id,
+                Price = 50000
             };
             stockAD2 = _stockAdjustmentDetailService.CreateObject(stockAD2, _stockAdjustmentService, _itemService, _warehouseItemService);
 
@@ -1361,7 +1380,8 @@ namespace TestValidation
             {
                 ItemId = coreBuilder3.UsedCoreItemId,
                 Quantity = 3,
-                StockAdjustmentId = stockAdjustment.Id
+                StockAdjustmentId = stockAdjustment.Id,
+                Price = 50000
             };
             stockAD3 = _stockAdjustmentDetailService.CreateObject(stockAD3, _stockAdjustmentService, _itemService, _warehouseItemService);
 
@@ -1369,7 +1389,8 @@ namespace TestValidation
             {
                 ItemId = coreBuilder4.UsedCoreItemId,
                 Quantity = 3,
-                StockAdjustmentId = stockAdjustment.Id
+                StockAdjustmentId = stockAdjustment.Id,
+                Price = 50000
             };
             stockAD1 = _stockAdjustmentDetailService.CreateObject(stockAD4, _stockAdjustmentService, _itemService, _warehouseItemService);
         }
@@ -1445,10 +1466,10 @@ namespace TestValidation
 
             _recoveryOrderDetailService.FinishObject(recoveryODInHouse3b, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
                                                      _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
-                                                     _blanketService, _stockMutationService);
+                                                     _blanketService, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _recoveryOrderDetailService.FinishObject(recoveryODContact2b, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
                                                      _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
-                                                     _blanketService, _stockMutationService);
+                                                     _blanketService, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
         }
 
         public void PopulateRollerWarehouseMutation()
@@ -1711,27 +1732,27 @@ namespace TestValidation
 
             StockAdjustment sa = new StockAdjustment() { WarehouseId = localWarehouse.Id, AdjustmentDate = DateTime.Today, Description = "Bar Related Adjustment" };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
-            StockAdjustmentDetail sadBarGeneric = new StockAdjustmentDetail () { ItemId = bargeneric.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBarGeneric = new StockAdjustmentDetail () { ItemId = bargeneric.Id , Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBarGeneric, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBarleft1= new StockAdjustmentDetail () { ItemId = barleft1.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBarleft1 = new StockAdjustmentDetail() { ItemId = barleft1.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBarleft1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBarleft2 = new StockAdjustmentDetail () { ItemId = barleft1.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBarleft2 = new StockAdjustmentDetail() { ItemId = barleft1.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBarleft2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBarright1 = new StockAdjustmentDetail () { ItemId = barright1.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBarright1 = new StockAdjustmentDetail() { ItemId = barright1.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBarright1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBarright2 = new StockAdjustmentDetail () { ItemId = barright2.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBarright2 = new StockAdjustmentDetail() { ItemId = barright2.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBarright2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollBlanket1 = new StockAdjustmentDetail () { ItemId = rollBlanket1.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollBlanket1 = new StockAdjustmentDetail() { ItemId = rollBlanket1.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollBlanket1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollBlanket2 = new StockAdjustmentDetail () { ItemId = rollBlanket2.Id , Quantity = 20, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollBlanket2 = new StockAdjustmentDetail() { ItemId = rollBlanket2.Id, Quantity = 20, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollBlanket2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadRollBlanket3 = new StockAdjustmentDetail () { ItemId = rollBlanket3.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadRollBlanket3 = new StockAdjustmentDetail() { ItemId = rollBlanket3.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBlanket1 = new StockAdjustmentDetail () { ItemId = blanket1.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBlanket1 = new StockAdjustmentDetail() { ItemId = blanket1.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBlanket1, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBlanket2 = new StockAdjustmentDetail () { ItemId = blanket2.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBlanket2 = new StockAdjustmentDetail() { ItemId = blanket2.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBlanket2, _stockAdjustmentService, _itemService, _warehouseItemService);
-            StockAdjustmentDetail sadBlanket3 = new StockAdjustmentDetail () { ItemId = blanket3.Id , Quantity = 10, StockAdjustmentId = sa.Id };
+            StockAdjustmentDetail sadBlanket3 = new StockAdjustmentDetail() { ItemId = blanket3.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
 
             _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
@@ -1969,18 +1990,18 @@ namespace TestValidation
             TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
             TimeSpan lateDeliveryDate = new TimeSpan(2, 0, 0, 0);
             _deliveryOrderService.ConfirmObject(do1, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                       _itemService, _blanketService, _warehouseItemService);
+                                       _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _deliveryOrderService.ConfirmObject(do2, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                   _itemService, _blanketService, _warehouseItemService);
+                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _deliveryOrderService.ConfirmObject(do3, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
-                                                   _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+                                                   _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
 
             si1 = new SalesInvoice()
             {
                 InvoiceDate = DateTime.Today,
                 Description = "Penjualan DO1",
                 DeliveryOrderId = do1.Id,
-                IsTaxable = true,
+                Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14)
             };
@@ -2007,7 +2028,7 @@ namespace TestValidation
                 InvoiceDate = DateTime.Today,
                 Description = "Penjualan DO2",
                 DeliveryOrderId = do2.Id,
-                IsTaxable = true,
+                Tax = 10,
                 Discount = 5,
                 DueDate = DateTime.Today.AddDays(14)
             };
@@ -2034,7 +2055,7 @@ namespace TestValidation
                 InvoiceDate = DateTime.Today,
                 Description = "Penjualan DO3",
                 DeliveryOrderId = do3.Id,
-                IsTaxable = true,
+                Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14)
             };
@@ -2060,12 +2081,15 @@ namespace TestValidation
 
         public void PopulateReceiptVoucher()
         {
-            _salesInvoiceService.ConfirmObject(si1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
-                                                  _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
-            _salesInvoiceService.ConfirmObject(si2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
-                                                  _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
-            _salesInvoiceService.ConfirmObject(si3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
-                                                  _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
+            _salesInvoiceService.ConfirmObject(si1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
+                                               _serviceCostService, _rollerBuilderService, _itemService);
+            _salesInvoiceService.ConfirmObject(si2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
+                                               _serviceCostService, _rollerBuilderService, _itemService);
+            _salesInvoiceService.ConfirmObject(si3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
+                                               _serviceCostService, _rollerBuilderService, _itemService);
 
             rv = new ReceiptVoucher()
             {
@@ -2265,18 +2289,18 @@ namespace TestValidation
             TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
             TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
             _purchaseReceivalService.ConfirmObject(pr1, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                       _itemService, _blanketService, _warehouseItemService);
+                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             _purchaseReceivalService.ConfirmObject(pr2, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                   _itemService, _blanketService, _warehouseItemService);
-            _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService,
-                                                   _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService, 
+                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
 
             pi1 = new PurchaseInvoice()
             {
                 InvoiceDate = DateTime.Today,
                 Description = "Pembayaran PR1",
                 PurchaseReceivalId = pr1.Id,
-                IsTaxable = true,
+                Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14)
             };
@@ -2303,7 +2327,7 @@ namespace TestValidation
                 InvoiceDate = DateTime.Today,
                 Description = "Pembayaran PR2",
                 PurchaseReceivalId = pr2.Id,
-                IsTaxable = true,
+                Tax = 10,
                 Discount = 5,
                 DueDate = DateTime.Today.AddDays(14)
             };
@@ -2330,7 +2354,7 @@ namespace TestValidation
                 InvoiceDate = DateTime.Today,
                 Description = "Pembayaran PR3",
                 PurchaseReceivalId = pr3.Id,
-                IsTaxable = true,
+                Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14)
             };
@@ -2569,18 +2593,18 @@ namespace TestValidation
             _deliveryOrderDetailService.CreateObject(deliveryOD3b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
 
             _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService);
+                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService);
+                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
             _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService);
+                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
 
             salesInvoice1 = new SalesInvoice()
             {
                 DeliveryOrderId = deliveryOrder1.Id,
                 InvoiceDate = DateTime.Today,
                 DueDate = DateTime.Today.AddDays(7),
-                IsTaxable = false,
+                Tax = 0,
                 Discount = 0,
             };
             _salesInvoiceService.CreateObject(salesInvoice1, _deliveryOrderService);
@@ -2590,7 +2614,7 @@ namespace TestValidation
                 DeliveryOrderId = deliveryOrder2.Id,
                 InvoiceDate = DateTime.Today,
                 DueDate = DateTime.Today.AddDays(7),
-                IsTaxable = false,
+                Tax = 0,
                 Discount = 0,
             };
             _salesInvoiceService.CreateObject(salesInvoice2, _deliveryOrderService);
@@ -2600,7 +2624,7 @@ namespace TestValidation
                 DeliveryOrderId = deliveryOrder3.Id,
                 InvoiceDate = DateTime.Today,
                 DueDate = DateTime.Today.AddDays(7),
-                IsTaxable = false,
+                Tax = 0,
                 Discount = 0,
             };
             _salesInvoiceService.CreateObject(salesInvoice3, _deliveryOrderService);
@@ -2653,12 +2677,15 @@ namespace TestValidation
             };
             _salesInvoiceDetailService.CreateObject(salesID3b, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
 
-            _salesInvoiceService.ConfirmObject(salesInvoice1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
-                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
-            _salesInvoiceService.ConfirmObject(salesInvoice2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
-                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
-            _salesInvoiceService.ConfirmObject(salesInvoice3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _deliveryOrderService,
-                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
+            _salesInvoiceService.ConfirmObject(salesInvoice1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
+                                               _serviceCostService, _rollerBuilderService, _itemService);
+            _salesInvoiceService.ConfirmObject(salesInvoice2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
+                                               _serviceCostService, _rollerBuilderService, _itemService);
+            _salesInvoiceService.ConfirmObject(salesInvoice3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
+                                               _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
+                                               _serviceCostService, _rollerBuilderService, _itemService);
 
             receiptVoucher1 = new ReceiptVoucher()
             {

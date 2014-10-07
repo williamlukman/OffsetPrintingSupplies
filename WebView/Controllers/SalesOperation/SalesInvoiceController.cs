@@ -28,6 +28,8 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IServiceCostService _serviceCostService;
+        private IRollerBuilderService _rollerBuilderService;
 
         public SalesInvoiceController()
         {
@@ -43,8 +45,9 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
+            _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
         }
-
 
         public ActionResult Index()
         {
@@ -71,7 +74,7 @@ namespace WebView.Controllers
                              DeliveryOrderCode = model.DeliveryOrder.Code,
                              model.Description,
                              model.Discount,
-                             model.IsTaxable,
+                             model.Tax,
                              model.InvoiceDate,
                              model.DueDate,
                              model.AmountReceivable,
@@ -116,7 +119,7 @@ namespace WebView.Controllers
                             model.DeliveryOrderCode,
                             model.Description,
                             model.Discount,
-                            model.IsTaxable,
+                            model.Tax,
                             model.InvoiceDate,
                             model.DueDate,
                             model.AmountReceivable,
@@ -219,7 +222,7 @@ namespace WebView.Controllers
                 DeliveryOrder = _deliveryOrderService.GetObjectById(model.DeliveryOrderId).Code,
                 model.Discount,
                 model.Description,
-                model.IsTaxable,
+                model.Tax,
                 model.InvoiceDate,
                 model.DueDate,
                 model.AmountReceivable,
@@ -306,7 +309,7 @@ namespace WebView.Controllers
                 data.DeliveryOrderId = model.DeliveryOrderId;
                 data.Description = model.Description;
                 data.Discount = model.Discount;
-                data.IsTaxable = model.IsTaxable;
+                data.Tax = model.Tax;
                 data.InvoiceDate = model.InvoiceDate;
                 data.DueDate = model.DueDate;
                 model = _salesInvoiceService.UpdateObject(data, _deliveryOrderService, _salesInvoiceDetailService);
@@ -400,7 +403,8 @@ namespace WebView.Controllers
             //{
             var data = _salesInvoiceService.GetObjectById(model.Id);
             model = _salesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _salesInvoiceDetailService, _salesOrderService,
-                    _deliveryOrderService, _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
+                    _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _receivableService, _accountService,
+                    _generalLedgerJournalService, _closingService, _serviceCostService, _rollerBuilderService, _itemService);
             //}
             //catch (Exception ex)
             //{
@@ -422,7 +426,8 @@ namespace WebView.Controllers
 
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService, _deliveryOrderService,
-                        _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
+                        _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _accountService,
+                        _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -435,8 +440,6 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-
     }
 }
 

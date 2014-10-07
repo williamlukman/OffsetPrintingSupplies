@@ -19,12 +19,12 @@ namespace Data.Repository
 
         public IQueryable<Account> GetQueryable()
         {
-            return FindAll(x => !x.IsDeleted);
+            return FindAll();
         }
 
         public IList<Account> GetAll()
         {
-            return FindAll(x => !x.IsDeleted).ToList();
+            return FindAll().ToList();
         }
 
         public IList<Account> GetObjectsByParentId(int ParentId)

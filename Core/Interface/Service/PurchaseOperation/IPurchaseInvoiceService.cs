@@ -15,7 +15,6 @@ namespace Core.Interface.Service
         PurchaseInvoice GetObjectById(int Id);
         IList<PurchaseInvoice> GetObjectsByPurchaseReceivalId(int purchaseReceivalId);
         PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService);
-        PurchaseInvoice CreateObject(int purchaseReceivalId, string description, int discount, bool isTaxable, DateTime InvoiceDate, DateTime DueDate, IPurchaseReceivalService _purchaseReceivalService);
         PurchaseInvoice UpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         PurchaseInvoice SoftDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         bool DeleteObject(int Id);

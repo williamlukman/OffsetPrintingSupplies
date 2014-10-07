@@ -83,35 +83,42 @@ namespace Service.Service
         }
 
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                           ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                           IStockMutationService _stockMutationService, IItemService _itemService,
-                                           IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                           ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
+                                           IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                           IServiceCostService _serviceCostService)
         {
             deliveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService))
             {
+                decimal TotalCOGS = 0;
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var detail in deliveryOrderDetails)
                 {
+                    SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(detail.SalesOrderDetailId);
                     detail.Errors = new Dictionary<string, string>();
                     _deliveryOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _salesOrderDetailService, _stockMutationService, _itemService,
-                                                              _blanketService, _warehouseItemService);
+                                                              _blanketService, _warehouseItemService, _serviceCostService);
+                    TotalCOGS += detail.COGS;
                 }
+                deliveryOrder.TotalCOGS = TotalCOGS;
                 _repository.ConfirmObject(deliveryOrder);
+                _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrder(deliveryOrder, _accountService);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
                 _salesOrderService.CheckAndSetDeliveryComplete(salesOrder, _salesOrderDetailService);
             }
             return deliveryOrder;
         }
 
-        public DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                             ISalesInvoiceService _salesInvoiceService, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                             ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
+        public DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesInvoiceService _salesInvoiceService,
+                                             ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                              IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
-                                             IWarehouseItemService _warehouseItemService)
+                                             IWarehouseItemService _warehouseItemService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                             IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(deliveryOrder, _salesInvoiceService))
             {
+                _generalLedgerJournalService.CreateUnconfirmationJournalForDeliveryOrder(deliveryOrder, _accountService);
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var detail in deliveryOrderDetails)
                 {
@@ -120,6 +127,7 @@ namespace Service.Service
                                                                 _salesInvoiceDetailService, _stockMutationService,
                                                                 _itemService, _blanketService, _warehouseItemService);
                 }
+                deliveryOrder.TotalCOGS = 0;
                 _repository.UnconfirmObject(deliveryOrder);
             }
             return deliveryOrder;

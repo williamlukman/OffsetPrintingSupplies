@@ -24,6 +24,9 @@ namespace WebView.Controllers
         private IBlanketOrderService _blanketOrderService;
         private IBlanketOrderDetailService _blanketOrderDetailService;
         private IContactService _contactService;
+        private IAccountService _accountService;
+        private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public BlanketWorkProcessController()
         {
@@ -35,6 +38,9 @@ namespace WebView.Controllers
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
             _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
+
         }
 
 
@@ -75,6 +81,7 @@ namespace WebView.Controllers
                              model.IsSideSealed,
                              model.IsBarPrepared,
                              model.IsAdhesiveTapeApplied,
+                             model.AdhesiveUsage,
                              model.IsBarMounted,
                              model.IsBarHeatPressed,
                              model.IsBarPullOffTested,
@@ -133,6 +140,7 @@ namespace WebView.Controllers
                             model.IsSideSealed,
                             model.IsBarPrepared,
                             model.IsAdhesiveTapeApplied,
+                            model.AdhesiveUsage,
                             model.IsBarMounted,
                             model.IsBarHeatPressed,
                             model.IsBarPullOffTested,
@@ -172,14 +180,19 @@ namespace WebView.Controllers
                 Blanket =_blanketService.GetObjectById(model.BlanketId).Name,
                 RollBlanketSku = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
                 RollBlanket = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                LeftBarSku = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                LeftBar = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
-                RightBarSku = _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
-                RightBar = _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Name,
+                LeftBarSku = _blanketService.GetObjectById(model.BlanketId).HasLeftBar ?
+                             _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku : "",
+                LeftBar = _blanketService.GetObjectById(model.BlanketId).HasLeftBar ?
+                          _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Name : "",
+                RightBarSku = _blanketService.GetObjectById(model.BlanketId).HasRightBar ?
+                              _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku : "",
+                RightBar = _blanketService.GetObjectById(model.BlanketId).HasRightBar ?
+                          _blanketService.GetRightBarItem(_blanketService.GetObjectById(model.BlanketId)).Name : "",
                 model.IsCut,
                 model.IsSideSealed,
                 model.IsBarPrepared,
                 model.IsAdhesiveTapeApplied,
+                model.AdhesiveUsage,
                 model.IsBarMounted,
                 model.IsBarHeatPressed,
                 model.IsBarPullOffTested,
@@ -189,6 +202,8 @@ namespace WebView.Controllers
                 model.RejectedDate,
                 model.IsFinished,
                 model.FinishedDate,
+                HasBar = _blanketService.GetObjectById(model.BlanketId).HasRightBar || 
+                         _blanketService.GetObjectById(model.BlanketId).HasLeftBar,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -198,6 +213,7 @@ namespace WebView.Controllers
         {
             var models = new BlanketOrderDetail();
             models.Errors = new Dictionary<string, string>();
+            decimal usage = model.AdhesiveUsage;
             try
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
@@ -205,17 +221,17 @@ namespace WebView.Controllers
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsSideSealed && !data.IsSideSealed) { models = _blanketOrderDetailService.SideSealObject(data); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarPrepared && !data.IsBarPrepared) { models = _blanketOrderDetailService.PrepareObject(data); }
+                if (model.IsBarPrepared && !data.IsBarPrepared) { models = _blanketOrderDetailService.PrepareObject(data, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsAdhesiveTapeApplied && !data.IsAdhesiveTapeApplied) { models = _blanketOrderDetailService.ApplyTapeAdhesiveToObject(data); }
+                if (model.IsAdhesiveTapeApplied && !data.IsAdhesiveTapeApplied) { models = _blanketOrderDetailService.ApplyTapeAdhesiveToObject(data, model.AdhesiveUsage, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarMounted && !data.IsBarMounted) { models = _blanketOrderDetailService.MountObject(data); }
+                if (model.IsBarMounted && !data.IsBarMounted) { models = _blanketOrderDetailService.MountObject(data, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarHeatPressed && !data.IsBarHeatPressed) { models = _blanketOrderDetailService.HeatPressObject(data); }
+                if (model.IsBarHeatPressed && !data.IsBarHeatPressed) { models = _blanketOrderDetailService.HeatPressObject(data, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarPullOffTested && !data.IsBarPullOffTested) { models = _blanketOrderDetailService.PullOffTestObject(data); }
+                if (model.IsBarPullOffTested && !data.IsBarPullOffTested) { models = _blanketOrderDetailService.PullOffTestObject(data, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsQCAndMarked && !data.IsQCAndMarked) { models = _blanketOrderDetailService.QCAndMarkObject(data); }
+                if (model.IsQCAndMarked && !data.IsQCAndMarked) { models = _blanketOrderDetailService.QCAndMarkObject(data, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsPackaged  && !data.IsPackaged) { models = _blanketOrderDetailService.PackageObject(data); }
             }
@@ -241,7 +257,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.FinishObject(data, model.FinishedDate.Value, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService);
+                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -263,7 +279,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UnfinishObject(data, _blanketOrderService, _stockMutationService
-                    , _blanketService, _itemService, _warehouseItemService);
+                    , _blanketService, _itemService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -284,7 +300,7 @@ namespace WebView.Controllers
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.RejectObject(data,model.RejectedDate.Value,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService);
+                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -306,7 +322,7 @@ namespace WebView.Controllers
 
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
                 model = _blanketOrderDetailService.UndoRejectObject(data,_blanketOrderService,_stockMutationService
-                    ,_blanketService,_itemService,_warehouseItemService);
+                    ,_blanketService,_itemService,_warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -319,6 +335,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
     }
 }

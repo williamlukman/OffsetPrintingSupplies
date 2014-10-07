@@ -24,7 +24,9 @@ namespace Core.Interface.Service
                                            ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderDetailService _deliveryOrderDetailService);
         SalesInvoiceDetail SoftDeleteObject(SalesInvoiceDetail salesInvoiceDetail, ISalesInvoiceService _salesInvoiceService);
         bool DeleteObject(int Id);
-        SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                                ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
+                                                IRollerBuilderService _rollerBuilderService, IItemService _itemService);
         SalesInvoiceDetail UnconfirmObject(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService);
     }
 }
