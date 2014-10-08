@@ -44,19 +44,20 @@
     $("#item_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#delete_confirm_div").dialog('close');
-   
+    $("#ItemId").hide();
+    $("#ItemSku").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'CoreAccessoryDetail/GetList',
         datatype: "json",
-        colNames: ['DetailId', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
+        colNames: ['RIF Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
                     'Core Sku', 'Core', 'RollerType Id', 'RollerType',
                     'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL',
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 40, sortable: false },
-                  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false},
+                  { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true},
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 70, sortable: false },
@@ -135,7 +136,7 @@
                         else {
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
-                            $('#RollerIdentificationId').val(result.CoreIdentificationId);
+                            //$('#RollerIdentificationId').val(result.CoreIdentificationId);
                             $('#RollerBuilderSku').val(result.CoreBuilderBaseSku);
                             $('#RollerBuilder').val(result.CoreBuilder);
                             $('#CoreTypeCase').val(result.RollerType);

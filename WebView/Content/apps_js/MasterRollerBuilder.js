@@ -29,6 +29,13 @@
     $("#delete_confirm_div").dialog('close');
     $('#SkuRollerUsedCore').attr('disabled', true);
     $('#SkuRollerNewCore').attr('disabled', true);
+    $("#MachineId").hide();
+    $("#RollerTypeId").hide();
+    $("#CompoundId").hide();
+    $("#AdhesiveId").hide();
+    $("#UoMId").hide();
+    $("#CoreBuilderId").hide();
+
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

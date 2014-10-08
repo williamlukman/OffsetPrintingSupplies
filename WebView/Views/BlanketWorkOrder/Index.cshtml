@@ -45,17 +45,17 @@
                        
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                         <tr nowrap>
-                            <td width="139" nowrap style="width: 100px">
+                            <td>
                                 <label>ID</label></td>
-                            <td width="550">
-                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                            <td>
+                                <input id="id" type="text" size="10" disabled="disabled"/></td>                            
                         </tr>
                         <tr>
                             <td>
                              <label>Code</label>
                             </td>
                             <td>
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                               <input id="Code" name="Code" type="text" size="10" disabled="disabled"/>
                             </td>
                         </tr>
                          <tr>
@@ -65,6 +65,7 @@
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Contact" name="ContactId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                          <tr>
                             <td>
@@ -73,23 +74,27 @@
                                 <input id="WarehouseId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Warehouse" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                              <td >
                                 <label>Quantity</label></td>
                              <td colspan="5">
                                <input id="QuantityReceived" name="QuantityReceived" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
-                                </td>     
+                             </td>     
                          </tr>
                         <tr>
-                            <td>Due Date</td>
                             <td>
-                                <input type="checkbox" name="HasDueDate" id="HasDueDate" >
-                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <label>Due Date</label>
+                                <input type="checkbox" name="HasDueDate" id="HasDueDate" style="margin-left: 50px; margin-right: -50px"/>
+                            </td>
+                            <td>
+                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
+                                <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                         </tr>   
                         <tr>
-                            <td width ="800px" colspan ="2">
+                            <td width="800px" colspan ="2">
                                  <div id="tabledetail_div">
                                     <div id="toolbardetail" class="grid_toolbar">
                                         <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -134,7 +139,7 @@
                           RollBlanket
                       </td>
                        <td>
-                               <input id="RollBlanketSku" name="RollBlanketSku" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
+                              <input id="RollBlanketSku" name="RollBlanketSku" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
                               <input id="RollBlanket" name="RollBlanket" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                          </td>
                   </tr>
@@ -164,7 +169,7 @@
 
      <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Confirm Stock Adjustment :.">
+        data-options="modal:true" title=".: Confirm Blanket Work Order :.">
 
         <div id="confirm_toolbar" class="form_toolbar">
             <a id="confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
@@ -310,7 +315,7 @@
 <!-- END Look Up contact -->
 
  <!-- Look Up blanket -->
-    <div id="lookup_div_blanket" class="easyui-dialog" title="List RollerIdentification" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <div id="lookup_div_blanket" class="easyui-dialog" title="List Blanket" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
         <div id="lookup_toolbar_blanket" class="grid_toolbar">

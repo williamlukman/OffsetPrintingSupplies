@@ -98,6 +98,7 @@ namespace Core.Constants
         public class MenuGroupName
         {
             public static string Master = "Master";
+            public static string Manufacturing = "Manufacturing";
             public static string Transaction = "Transaction";
             public static string Report = "Report";
             public static string Setting = "Setting";
@@ -106,21 +107,36 @@ namespace Core.Constants
         public class MenuName
         {
             public static string Contact = "Contact";
+            public static string ContactGroup = "Contact Group";
             public static string ItemType = "ItemType";
             public static string UoM = "UoM";
+            public static string Machine = "Machine";
+            public static string RollerType = "Roller Type";
+
             public static string QuantityPricing = "Quantity Pricing";
             public static string CashBank = "CashBank";
+            public static string CashMutation = "Cash Mutation";
             public static string CashBankAdjustment = "CashBank Adjustment";
             public static string CashBankMutation = "CashBank Mutation";
-            public static string CashMutation = "Cash Mutation";
             public static string PaymentRequest = "Payment Request";
 
+            public static string Blanket = "Blanket";
+            public static string CoreBuilder = "CoreBuilder";
             public static string Item = "Item";
+            public static string RollerBuilder = "RollerBuilder";
             public static string StockAdjustment = "Stock Adjustment";
             public static string StockMutation = "Stock Mutation";
             public static string Warehouse = "Warehouse";
             public static string WarehouseItem = "WarehouseItem";
             public static string WarehouseMutation = "Warehouse Mutation";
+
+            public static string BlanketWorkOrder = "Blanket Work Order";
+            public static string BlanketWorkProcess = "Blanket Work Process";
+            public static string RollerIdentification = "Roller Identification";
+            public static string RollerAccessoryDetail = "Roller Accessory Detail";
+            public static string RollerWarehouseMutation = "Roller Warehouse Mutation";
+            public static string RecoveryWorkOrder = "Recovery Work Order";
+            public static string RecoveryWorkProcess = "Recovery Work Process";
 
             public static string PurchaseOrder = "Purchase Order";
             public static string PurchaseReceival = "Purchase Receival";
@@ -134,11 +150,13 @@ namespace Core.Constants
             public static string SalesInvoice = "Sales Invoice";
             public static string CashSalesInvoice = "Cash Sales Invoice";
             public static string CashSalesReturn = "Cash Sales Return";
-
             public static string RetailSalesInvoice = "Retail Sales Invoice";
             public static string ReceiptVoucher = "Receipt Voucher";
             public static string Receivable = "Receivable";
 
+            public static string Sales = "Sales";
+            public static string TopSales = "Top Sales";
+            public static string ProfitLoss = "Profit/Loss";
             public static string Account = "Account";
             public static string Closing = "Closing";
             public static string GeneralLedger = "GeneralLedger";
@@ -150,10 +168,6 @@ namespace Core.Constants
             public static string UserAccessRight = "User Access Right";
             public static string CompanyInfo = "Company Info";
 
-            //public static string Stock = "Stock";
-            public static string Sales = "Sales";
-            public static string TopSales = "Top Sales";
-            public static string ProfitLoss = "Profit/Loss";
         }
     }
 }

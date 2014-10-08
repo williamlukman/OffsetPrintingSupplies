@@ -44,40 +44,41 @@
     $("#item_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#delete_confirm_div").dialog('close');
-   
+    $("#ItemId").hide();
+    $("#ItemSku").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'RecoveryWorkProcess/GetList',
         datatype: "json",
-        colNames: ['Recovery Order Id', 'CoreIdentificationDetailId', 'RIFD Id', 'Material Case',
-                    'RollerBuilder Id', 'RollerBuilder Sku', 'RollerBuilder Name', 'CoreTypeCase', 
-                   'IsDisassembled', 'IsStrippedAndGlued', 'IsWrapped', 'CompoundUsage',
-                   'IsVulcanized', 'IsFacedOff', 'IsConventionalGrinded', 'IsCNCGrinded',
-                   'IsPolishedAndQC','IsPackaged',
+        colNames: ['RO Id', 'CoreIdentificationDetailId', 'RIFD Id', 'Material',
+                    'RollerBuilder Id', 'Roller Sku', 'Roller Name', 'Type', 
+                   'D', 'S&G', 'W', 'Compound QTY',
+                   'V', 'FO', 'CG', 'CNCG',
+                   'P&QC','P',
                    'Rejected Date', 'Finished Date'
         ],
         colModel: [
-                  { name: 'recoveryorderid', index: 'recoveryorderid', width: 100, sortable: false },
-                  { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 100, sortable: false },
-                  { name: 'rifdid', index: 'rollerbuilderid', width: 100, sortable: false },
-                  { name: 'materialcase', index: 'rollerbuildername', width: 100, sortable: false },
-                  { name: 'rollerbuilderid', index: 'rollerbuildername', width: 100, sortable: false },
-                  { name: 'rollerbuildersku', index: 'rollerbuildername', width: 100, sortable: false },
+                  { name: 'recoveryorderid', index: 'recoveryorderid', width: 40, sortable: false },
+                  { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 100, sortable: false, hidden: true },
+                  { name: 'rifdid', index: 'rollerbuilderid', width: 40, sortable: false } ,
+                  { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
+                  { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 40, sortable: false, hidden: true },
+                  { name: 'rollerbuildersku', index: 'rollerbuildersku', width: 60, sortable: false },
                   { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
-				  { name: 'coretypecase', index: 'coretypecase', width: 100, sortable: false },
-                  { name: 'isdisassembled', index: 'isdisassembled', width: 100, sortable: false },
-                  { name: 'isstrippedangGlued', index: 'isstrippedangGlued', width: 100, sortable: false },
-                  { name: 'iswrapped', index: 'iswrapped', width: 100, sortable: false },
-                  { name: 'compoundusage', index: 'compoundusage', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isvulcanized', index: 'isvulcanized', width: 100, sortable: false },
-                  { name: 'isfacedoff', index: 'isfacedoff', width: 100, sortable: false },
-                  { name: 'isconventionalgrinded', index: 'isconventionalgrinded', width: 100, sortable: false },
-                  { name: 'isCNCGrinded', index: 'isCNCGrinded', width: 100, sortable: false },
-                  { name: 'ispolishedandqc', index: 'ispolishedandqc', width: 100, sortable: false },
-                  { name: 'ispackaged', index: 'ispackaged', width: 100, sortable: false },
-                  { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'coretypecase', index: 'coretypecase', width: 40, sortable: false },
+                  { name: 'isdisassembled', index: 'isdisassembled', width: 30, sortable: false },
+                  { name: 'isstrippedandglued', index: 'isstrippedandglued', width: 30, sortable: false },
+                  { name: 'iswrapped', index: 'iswrapped', width: 30, sortable: false },
+                  { name: 'compoundusage', index: 'compoundusage', width: 90, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'isvulcanized', index: 'isvulcanized', width: 30, sortable: false },
+                  { name: 'isfacedoff', index: 'isfacedoff', width: 30, sortable: false },
+                  { name: 'isconventionalgrinded', index: 'isconventionalgrinded', width: 30, sortable: false },
+                  { name: 'iscncgrinded', index: 'iscncgrinded', width: 35, sortable: false },
+                  { name: 'ispolishedandqc', index: 'ispolishedandqc', width: 35, sortable: false },
+                  { name: 'ispackaged', index: 'ispackaged', width: 30, sortable: false },
+                  { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 90, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 90, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 
         ],
         page: '1',
@@ -96,16 +97,95 @@
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
-		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		          rowDisassembled = $(this).getRowData(cl).isdisassembled;
+		          if (rowDisassembled == 'true') {
+		              rowDisassembled = "Y";
 		          } else {
-		              rowIsConfirmed = "NO";
+		              rowDisassembled = "N";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
-		      }
-		  }
+		          $(this).jqGrid('setRowData', ids[i], { isdisassembled: rowDisassembled });
 
+		          rowStrippedAndGlued = $(this).getRowData(cl).isstrippedandglued;
+		          if (rowStrippedAndGlued == 'true') {
+		              rowStrippedAndGlued = "Y";
+		          } else {
+		              rowStrippedAndGlued = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isstrippedandglued: rowStrippedAndGlued });
+
+		          rowWrapped = $(this).getRowData(cl).iswrapped;
+		          if (rowWrapped == 'true') {
+		              rowWrapped = "Y";
+		          } else {
+		              rowWrapped = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { iswrapped: rowWrapped });
+
+		          rowVulcanized = $(this).getRowData(cl).isvulcanized;
+		          if (rowVulcanized == 'true') {
+		              rowVulcanized = "Y";
+		          } else {
+		              rowVulcanized = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isvulcanized: rowVulcanized });
+
+		          rowFacedOff = $(this).getRowData(cl).isfacedoff;
+		          if (rowFacedOff == 'true') {
+		              rowFacedOff = "Y";
+		          } else {
+		              rowFacedOff = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isfacedoff: rowFacedOff });
+
+		          rowConventionalGrinded = $(this).getRowData(cl).isconventionalgrinded;
+		          if (rowConventionalGrinded == 'true') {
+		              rowConventionalGrinded = "Y";
+		          } else {
+		              rowConventionalGrinded = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isconventionalgrinded: rowConventionalGrinded });
+
+		          rowCNCGrinded = $(this).getRowData(cl).iscncgrinded;
+		          if (rowCNCGrinded == 'true') {
+		              rowCNCGrinded = "Y";
+		          } else {
+		              rowCNCGrinded = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { iscncgrinded: rowCNCGrinded });
+
+		          rowPolishedAndQC = $(this).getRowData(cl).ispolishedandqc;
+		          if (rowPolishedAndQC == 'true') {
+		              rowPolishedAndQC = "Y";
+		          } else {
+		              rowPolishedAndQC = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ispolishedandqc: rowPolishedAndQC });
+
+		          rowPackaged = $(this).getRowData(cl).ispackaged;
+		          if (rowPackaged == 'true') {
+		              rowPackaged = "Y";
+		          } else {
+		              rowPackaged = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ispackaged: rowPackaged });
+
+		          rowRejected = $(this).getRowData(cl).isrejected;
+		          if (rowRejected == 'true') {
+		              rowRejected = "Y";
+		          } else {
+		              rowRejected = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isrejected: rowRejected });
+
+		          rowFinished = $(this).getRowData(cl).isfinished;
+		          if (rowFinished == 'true') {
+		              rowFinished = "Y";
+		          } else {
+		              rowFinished = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isfinished: rowFinished });
+		      }
+		  }    
     });//END GRID
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
@@ -160,7 +240,7 @@
                             document.getElementById("IsPackaged").checked = result.IsPackaged;
                             if (result.IsDisassembled) { $('#IsDisassembled').attr('disabled', true); } else { $('#IsDisassembled').removeAttr('disabled'); }
                             if (result.IsStrippedAndGlued) { $('#IsStrippedAndGlued').attr('disabled', true); } else { $('#IsStrippedAndGlued').removeAttr('disabled'); }
-                            if (result.IsWrapped) { $('#IsWrapped').attr('disabled', true); } else { $('#IsWrapped').removeAttr('disabled'); }
+                            if (result.IsWrapped) { $('#IsWrapped').attr('disabled', true); $("#CompoundUsage").attr('disabled', true); } else { $('#IsWrapped').removeAttr('disabled'); }
                             if (result.IsVulcanized) { $('#IsVulcanized').attr('disabled', true); } else { $('#IsVulcanized').removeAttr('disabled'); }
                             if (result.IsFacedOff) { $('#IsFacedOff').attr('disabled', true); } else { $('#IsFacedOff').removeAttr('disabled'); }
                             if (result.IsConventionalGrinded) { $('#IsConventionalGrinded').attr('disabled', true); } else { $('#IsConventionalGrinded').removeAttr('disabled'); }

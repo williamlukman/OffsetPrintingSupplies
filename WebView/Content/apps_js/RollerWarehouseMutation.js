@@ -46,7 +46,10 @@
     $("#lookup_div_warehousefrom").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#RecoveryWorkOrderId").hide();
+    $("#WarehouseFromId").hide();
+    $("#WarehouseToId").hide();
+    $("#RecoveryWorkOrderDetailId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

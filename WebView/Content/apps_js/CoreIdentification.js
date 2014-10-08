@@ -46,7 +46,9 @@
     $("#lookup_div_machine").dialog('close');
     $("#lookup_div_warehouse").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#CoreBuilderBaseSku").hide();
+    $("#RollerTypeId").hide();
+    $("#MachineId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -446,7 +448,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['DetailId', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
+        colNames: ['RIF Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
                     'Core Sku', 'Core', 'RollerType Id', 'RollerType',
                     'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL'
         ],

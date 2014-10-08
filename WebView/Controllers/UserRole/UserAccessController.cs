@@ -56,6 +56,7 @@ namespace WebView.Controllers
                                 m.AllowPaid,
                                 m.AllowConfirm,
                                 m.AllowReconcile,
+                                m.AllowProcess,
                                 m.AllowUnconfirm,
                                 m.AllowUnpaid,
                                 m.AllowUnreconcile,
@@ -112,6 +113,7 @@ namespace WebView.Controllers
                     case "UnPaid": data.AllowUnpaid = isAllow; break;
                     case "Reconcile": data.AllowReconcile = isAllow; break;
                     case "UnReconcile": data.AllowUnreconcile = isAllow; break;
+                    case "Process": data.AllowProcess = isAllow; break;
                     case "ManualPricing": data.AllowSpecialPricing = isAllow; break;
                     case "Print": data.AllowPrint = isAllow; break;
                 }

@@ -47,6 +47,11 @@
     $("#lookup_div_warehouse").dialog('close');
     $("#wrap_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
+    $("#CoreIdentificationId").hide();
+    $("#WarehouseId").hide();
+    $("#CoreIdentificationDetailId").hide();
+    $("#CoreIdentificationDetail").hide();
+    $("#RollerBuilderId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -115,7 +120,8 @@
         ClearData();
         clearForm('#frm');
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#DueDateDiv').show();
+        $('#DueDateDiv').hide();
+        $('#DueDateDiv2').show();
         $('#btnCoreIdentification').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
@@ -160,6 +166,12 @@
                             $('#Code').attr('disabled', true);
                             $('#QuantityReceived').attr('disabled', true);
                             $('#tabledetail_div').show();
+                            document.getElementById("HasDueDate").checked = result.HasDueDate;
+                            $('#HasDueDate').attr('disabled', true);
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#DueDateDiv').hide();
+                            $('#DueDateDiv2').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
                         }
@@ -170,8 +182,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
-
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -209,6 +219,17 @@
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#Code').removeAttr('disabled');
                             $('#QuantityReceived').removeAttr('disabled');
+                            document.getElementById("HasDueDate").checked = result.HasDueDate;
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            if (document.getElementById("HasDueDate").checked) {
+                                $('#DueDateDiv').show();
+                                $('#DueDateDiv2').hide();
+                            }
+                            else {
+                                $('#DueDateDiv').hide();
+                                $('#DueDateDiv2').show();
+                            }
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -224,8 +245,10 @@
     $('#HasDueDate').click(function () {
         if (document.getElementById("HasDueDate").checked) {
             $('#DueDateDiv').show();
+            $('#DueDateDiv2').hide();
         } else {
             $('#DueDateDiv').hide();
+            $('#DueDateDiv2').show();
         }
     });
 

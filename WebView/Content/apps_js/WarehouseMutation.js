@@ -43,7 +43,9 @@
     $("#lookup_div_warehouseto").dialog('close');
     $("#lookup_div_warehousefrom").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#WarehouseFromId").hide();
+    $("#WarehouseToId").hide();
+    $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

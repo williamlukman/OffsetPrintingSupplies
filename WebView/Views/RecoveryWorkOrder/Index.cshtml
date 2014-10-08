@@ -48,11 +48,8 @@
                                 <label>ID</label></td>
                             <td>
                                 <input id="id" type="text" size="10" disabled="disabled"/>
-                             
-                             <label>Code</label>
-                            
-                          
-                               <input id="Code" name="Code" type="text" size="10"/>
+                                <label>Code</label>
+                                <input id="Code" name="Code" type="text" size="10"/>
                             </td>
                         </tr>
                          <tr>
@@ -61,7 +58,7 @@
                             <td colspan="5">
                                 <input id="CoreIdentificationId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnCoreIdentification" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="CoreIdentification" name="CoreIdentificationId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="CoreIdentification" name="CoreIdentificationId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                             </td>
                         </tr>
                          <tr>
@@ -70,7 +67,7 @@
                             <td colspan="5">
                                 <input id="WarehouseId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Warehouse" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="Warehouse" name="WarehouseId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                                 </td>
                         </tr>
                         <tr>
@@ -81,10 +78,13 @@
                                 </td>     
                          </tr>
                          <tr>
-                            <td>Due Date</td>
                             <td>
-                                <input type="checkbox" name="HasDueDate" id="HasDueDate" >
-                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <label>Due Date</label>
+                                <input type="checkbox" name="HasDueDate" id="HasDueDate" style="margin-left: 40px; margin-right: -40px"/>
+                            </td>
+                            <td>
+                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
+                                <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                         </tr>   
                         <tr>
@@ -156,7 +156,7 @@
 
      <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Confirm Stock Adjustment :.">
+        data-options="modal:true" title=".: Confirm Recovery Work Order:.">
 
         <div id="confirm_toolbar" class="form_toolbar">
             <a id="confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>

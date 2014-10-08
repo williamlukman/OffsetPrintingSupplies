@@ -71,9 +71,9 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
         {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
+            // Credit CashBank, Debit Account Payable
             #region Credit CashBank, Debit AccountPayable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
@@ -105,7 +105,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
         {
-            #region Debit CashBank, Credit AccountPayable, Debit AccountPayable, Credit GoodsPendingClearance
+            // Debit CashBank, Credit AccountPayable
+            #region Debit CashBank, Credit AccountPayable
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
 
@@ -131,33 +132,8 @@ namespace Service.Service
             };
             debitcashbank = CreateObject(debitcashbank, _accountService);
 
-            GeneralLedgerJournal creditGoodsPendingClearance = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            creditGoodsPendingClearance = CreateObject(creditGoodsPendingClearance, _accountService);
-
-            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
-
             journals.Add(creditaccountpayable);
             journals.Add(debitcashbank);
-
-            journals.Add(creditGoodsPendingClearance);
-            journals.Add(debitaccountpayable);
 
             return journals;
             #endregion
@@ -165,7 +141,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
         {
-            #region Debit CashBank, Credit AccountReceivable, Debit AccountReceivable, Credit Revenue
+            // Debit CashBank, Credit AccountReceivable
+            #region Debit CashBank, Credit AccountReceivable
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
             GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
@@ -190,32 +167,8 @@ namespace Service.Service
             };
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
 
-            GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = (DateTime) receiptVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
-
-            GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = (DateTime) receiptVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            creditrevenue = CreateObject(creditrevenue, _accountService);
-
             journals.Add(debitcashbank);
             journals.Add(creditaccountreceivable);
-            journals.Add(debitaccountreceivable);
-            journals.Add(creditrevenue);
 
             return journals;
             #endregion
@@ -223,7 +176,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
         {
-            #region Credit CashBank, Debit AccountReceivable, Credit AccountReceivable, Debit Revenue
+            // Credit CashBank, Debit AccountReceivable
+            #region Credit CashBank, Debit AccountReceivable
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
 
@@ -249,32 +203,8 @@ namespace Service.Service
             };
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
-            GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
-
-            GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            debitrevenue = CreateObject(debitrevenue, _accountService);
-
             journals.Add(creditcashbank);
             journals.Add(debitaccountreceivable);
-            journals.Add(creditaccountreceivable);
-            journals.Add(debitrevenue);
 
             return journals;
             #endregion
@@ -282,6 +212,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService)
         {
+            // if (Amount >= 0) then Debit CashBank, Credit CashBankEquityAdjustment
+            // if (Amount < 0) then Debit CashBankAdjustmentExpense, Credit CashBank
             #region if (Amount >= 0) then Debit CashBank, Credit CashBankEquityAdjustment
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -349,6 +281,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService)
         {
+            // if (Amount >= 0) then Credit CashBank, Debit CashBankEquityAdjustment
+            // if (Amount < 0) then Debit CashBank, Credit CashBankAdjustmentExpense
             #region if (Amount >= 0) then Credit CashBank, Debit CashBankEquityAdjustment
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
@@ -415,6 +349,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService)
         {
+            // Debit TargetCashBank, Credit SourceCashBank
             #region Debit TargetCashBank, Credit SourceCashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -449,6 +384,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService)
         {
+            // Debit SourceCashBank, Credit TargetCashBank
             #region Debit SourceCashBank, Credit TargetCashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
@@ -484,6 +420,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForStockAdjustment(StockAdjustment stockAdjustment, IAccountService _accountService)
         {
+            // if (stockAdjustmentTotal >= 0) then Debit Raw, Credit StockEquityAdjusment
+            // if (stockAdjustmentTotal < 0) then Debit StockAdjustmentExpense, Credit Raw
             #region if (stockAdjustmentTotal >= 0) then Debit Raw, Credit StockEquityAdjustment
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -549,6 +487,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForStockAdjustment(StockAdjustment stockAdjustment, IAccountService _accountService)
         {
+            // if (stockAdjustmentTotal >= 0) then Credit Raw, Debit StockEquityAdjustment
+            // if (stockAdjustmentTotal < 0) then Credit StockAdjustmentExpense, Debit Raw
             #region if (stockAdjustmentTotal >= 0) then Credit Raw, Debit StockEquityAdjustment
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
@@ -615,6 +555,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForDeliveryOrder(DeliveryOrder deliveryOrder, IAccountService _accountService)
         {
+            // Debit COGS, Credit Raw
             #region Debit COGS, Credit Raw
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -649,6 +590,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForDeliveryOrder(DeliveryOrder deliveryOrder, IAccountService _accountService)
         {
+            // Credit COGS, Debit Raw
             #region Credit COGS, Debit Raw
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
@@ -684,6 +626,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, IAccountService _accountService)
         {
+            // Debit AccountReceivable, Debit Discount, Debit TaxExpense, Credit Revenue
+            // Debit COS, Credit FinishedGoods
             #region Debit AccountReceivable, Debit Discount, Debit TaxExpense, Credit Revenue
 
             decimal Tax = salesInvoice.AmountReceivable * salesInvoice.Tax / (100 - salesInvoice.Tax);
@@ -775,6 +719,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, IAccountService _accountService)
         {
+            // Credit AccountReceivable, Credit Discount, Credit TaxExpense, Debit Revenue
+            // Credit COS, Debit FinishedGoods
             #region Credit AccountReceivable, Credit Discount, Credit TaxExpense, Debit Revenue
             DateTime UnconfirmationDate = DateTime.Now;
 
@@ -867,6 +813,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseReceival(PurchaseReceival purchaseReceival, IAccountService _accountService)
         {
+            // Debit Raw, Credit GoodsPendingClearance
             #region Debit Raw, Credit GoodsPendingClearance
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -901,6 +848,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseReceival(PurchaseReceival purchaseReceival, IAccountService _accountService)
         {
+            // Credit Raw, Debit GoodsPendingClearance
             #region Credit Raw, Debit GoodsPendingClearance
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -936,6 +884,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, IAccountService _accountService)
         {
+            // Debit GoodsPendingClearance, Credit AccountPayable
             #region Debit GoodsPendingClearance, Credit AccountPayable
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -970,6 +919,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, IAccountService _accountService)
         {
+            // Credit GoodsPendingClearance, Debit AccountPayable
             #region Credit GoodsPendingClearance, Debit AccountPayable
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
@@ -1005,6 +955,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateFinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
         {
+            // Credit Raw (Core, Compound, Accessories), Debit FinishedGoods (Roller)
             #region Credit Raw (Core, Compound, Accessories), Debit FinishedGoods (Roller)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -1038,6 +989,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnfinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
         {
+            // Debit Raw (Core, Compound, Accessories), Credit FinishedGoods (Roller)
             #region Debit Raw (Core, Compound, Accessories), Credit FinishedGoods (Roller)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnfinishedDate = DateTime.Now;
@@ -1072,6 +1024,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateRejectedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
         {
+            // Credit Raw (Core, Compound, Accessories), Debit RecoveryExpense
             #region Credit Raw (Core, Compound, Accessories), Debit RecoveryExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -1105,6 +1058,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUndoRejectedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
         {
+            // Debit Raw (Core, Compound, Accessories), Credit RecoveryExpense
             #region Debit Raw (Core, Compound, Accessories), Credit RecoveryExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UndoRejectDate = DateTime.Now;
@@ -1139,6 +1093,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateFinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
         {
+            // Credit Raw (RollBlanket, Bars, Adhesive), Debit FinishedGoods (Blanket)
             #region Credit Raw (RollBlanket, Bars, Adhesive), Debit FinishedGoods (Blanket)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -1172,6 +1127,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnfinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
         {
+            // Debit Raw (RollBlanket, Bars, Adhesive), Credit FinishedGoods (Blanket)
             #region Debit Raw (RollBlanket, Bars, Adhesive), Credit FinishedGoods (Blanket)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnfinishedDate = DateTime.Now;
@@ -1206,6 +1162,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateRejectedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
         {
+            // Credit Raw (RollBlanket, Bars, Adhesive), Debit ConversionExpense
             #region Credit Raw (RollBlanket, Bars, Adhesive), Debit ConversionExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -1239,6 +1196,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUndoRejectedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
         {
+            // Debit Raw (RollBlanket, Bars, Adhesive), Credit ConversionExpense
             #region Debit Raw (RollBlanket, Bars, Adhesive), Credit ConversionExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UndoRejectDate = DateTime.Now;

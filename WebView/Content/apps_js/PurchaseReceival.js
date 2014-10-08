@@ -43,7 +43,9 @@
     $("#lookup_div_purchaseorder").dialog('close');
     $("#lookup_div_warehouse").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#PurchaseOrderId").hide();
+    $("#WarehouseId").hide();
+    $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -409,9 +411,10 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code','Purchase Order Detail Id','POD','Item Id', 'Item Sku', 'Name', 'QTY', 'Price'
+        colNames: ['Id', 'Code','Purchase Order Detail Id','POD','Item Id', 'Item Sku', 'Name', 'QTY', 'Price'
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 40, sortable: false, hidden: true },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'purchaseorderdetailid', index: 'purchaseorderdetailid', width: 100, sortable: false, hidden: true },
                   { name: 'purchaseorderdetailcode', index: 'purchaseorderdetailcode', width: 70, sortable: false },
@@ -658,9 +661,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price',
+        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price',
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 50, sortable: false, hidden: true },
                   { name: 'code', index: 'code', width: 65, sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
 				  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },

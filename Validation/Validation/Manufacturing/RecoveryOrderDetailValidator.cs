@@ -139,6 +139,15 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VHasBeenGrinded(RecoveryOrderDetail recoveryOrderDetail)
+        {
+            if (!recoveryOrderDetail.IsCNCGrinded && !recoveryOrderDetail.IsConventionalGrinded)
+            {
+                recoveryOrderDetail.Errors.Add("Generic", "Belum di grind");
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VHasBeenConventionalGrinded(RecoveryOrderDetail recoveryOrderDetail)
         {
             if (!recoveryOrderDetail.IsConventionalGrinded)
@@ -152,7 +161,7 @@ namespace Validation.Validation
         {
             if (!recoveryOrderDetail.IsCNCGrinded)
             {
-                recoveryOrderDetail.Errors.Add("Generic", "Belum di CWC grind");
+                recoveryOrderDetail.Errors.Add("Generic", "Belum di CNC grind");
             }
             return recoveryOrderDetail;
         }
@@ -431,6 +440,8 @@ namespace Validation.Validation
         {
             VHasNotBeenConventionalGrinded(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            VHasNotBeenCNCGrinded(recoveryOrderDetail);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasBeenFacedOff(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
@@ -439,9 +450,11 @@ namespace Validation.Validation
 
         public RecoveryOrderDetail VCNCGrindObject(RecoveryOrderDetail recoveryOrderDetail)
         {
+            VHasNotBeenConventionalGrinded(recoveryOrderDetail);
+            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenCNCGrinded(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VHasBeenConventionalGrinded(recoveryOrderDetail);
+            VHasBeenFacedOff(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             return recoveryOrderDetail;
@@ -451,7 +464,7 @@ namespace Validation.Validation
         {
             VHasNotBeenPolishedAndQC(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VHasBeenCNCGrinded(recoveryOrderDetail);
+            VHasBeenGrinded(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             return recoveryOrderDetail;

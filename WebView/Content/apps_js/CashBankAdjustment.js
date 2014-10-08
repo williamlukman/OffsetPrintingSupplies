@@ -17,7 +17,7 @@
     $("#lookup_div_cashbank").dialog('close');
     $("#confirm_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#CashBankId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

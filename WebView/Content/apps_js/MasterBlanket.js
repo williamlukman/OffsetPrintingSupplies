@@ -30,6 +30,14 @@
     $("#delete_confirm_div").dialog('close');
     $("#ItemTypeRow").hide();
     $("#KSRow").hide();
+    $("#UoMId").hide();
+    $("#ContactId").hide();
+    $("#MachineId").hide();
+    $("#AdhesiveId").hide();
+    $("#RollBlanketItemId").hide();
+    $("#ItemTypeId").hide();
+    $("#LeftBarItemId").hide();
+    $("#RightBarItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

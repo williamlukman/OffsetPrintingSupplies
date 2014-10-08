@@ -26,6 +26,8 @@
     $("#delete_confirm_div").dialog('close');
     $('#SkuUsedCore').attr('disabled', true);
     $('#SkuNewCore').attr('disabled', true);
+    $("#UoMId").hide();
+    $("#MachineId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

@@ -25,7 +25,8 @@
     $("#lookup_div_itemtype").dialog('close');
     $("#lookup_div_uom").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#ItemTypeId").hide();
+    $("#UoMId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

@@ -43,7 +43,8 @@
     $("#lookup_div_purchasereceival").dialog('close');
     $("#lookup_div_warehouse").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#PurchaseReceivalId").hide();
+    $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -120,6 +121,8 @@
         $('#InvoiceDateDiv2').hide();
         $('#DueDateDiv').show();
         $('#DueDateDiv2').hide();
+        $("#Tax").removeAttr('disabled');
+        $("#Discount").removeAttr('disabled');
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -154,6 +157,8 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $("#Tax").attr('disabled', true);
+                            $("#Discount").attr('disabled', true);
                             $('#AmountPayable').val(result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
@@ -176,8 +181,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
-
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -208,6 +211,8 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $("#Tax").removeAttr('disabled');
+                            $("#Discount").removeAttr('disabled');
                             $('#AmountPayable').val(result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
@@ -491,6 +496,8 @@
                             $('#Price').val(result.Price);
                             $('#PurchaseOrderDetailId').val(result.PurchaseOrderDetailId);
                             $('#item_div').dialog('open');
+                            $("#Tax").attr('disabled', true);
+                            $("#Discount").attr('disabled', true);
                         }
                     }
                 }
@@ -613,20 +620,20 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'PurchaseOrder Id', 'PurchaseOrder Code', 'ReceivalDate', 'Warehouse Id', 'Warehouse Name',
+        colNames: ['ID', 'Code', 'PurchaseOrder Id', 'PO Code', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100 },
-                  { name: 'purchaseorder', index: 'purchaseorder', width: 100 },
-                  { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'warehouseid', index: 'warehouseid', width: 100 },
+    			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
+                  { name: 'code', index: 'code', width: 80 },
+				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100, hidden: true },
+                  { name: 'purchaseordercode', index: 'purchaseordercode', width: 80 },
+                  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 100 },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
+                  { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
         ],
         page: '1',
         pager: $('#lookup_pager_purchasereceival'),

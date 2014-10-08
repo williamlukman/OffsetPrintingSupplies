@@ -138,11 +138,11 @@ namespace Validation.Validation
             if (!isValid(contact)) { return contact; }
             VHasContactNo(contact);
             if (!isValid(contact)) { return contact; }
-            VHasPIC(contact);
-            if (!isValid(contact)) { return contact; }
-            VHasPICContactNo(contact);
-            if (!isValid(contact)) { return contact; }
-            VHasEmail(contact);
+            //VHasPIC(contact);
+            //if (!isValid(contact)) { return contact; }
+            //VHasPICContactNo(contact);
+            //if (!isValid(contact)) { return contact; }
+            //VHasEmail(contact);
             return contact;
         }
 

@@ -48,19 +48,25 @@
                             <td>
                                 <label>SKU</label></td>
                             <td >
-                                <input id="Sku" name ="Sku" type="text" size="10" maxlength="60" align="left"/></td>
+                                <input id="Sku" name ="Sku" type="text" size="10" maxlength="40" align="left"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Roll No</label></td>
+                            <td >
+                                <input id="RollNo" name ="RollNo" type="text" size="10" maxlength="60" align="left"/></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Name</label></td>
                             <td colspan="3">
-                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Name" name="Name" type="text" size="40" maxlength="40" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Description</label></td>
                             <td colspan="3">
-                                <input id="Description" name="Description" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Description" name="Description" type="text" size="40" maxlength="40" align="left" /></td>
                         </tr>
                         <tr id="ItemTypeRow">
                             <td>
@@ -70,25 +76,15 @@
                                <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="ItemType" name="ItemTypeId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />                                         
                         </tr>
-                         <tr>
-                            <td>
-                                <label>UoM</label></td>
-                            <td colspan="3">
-                                <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="UoM" name="UoMId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                        </tr>
                         <tr>
                             <td>
                                 <label>Quantity</label></td>
                             <td colspan="3">
-                        <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Roll No</label></td>
-                            <td >
-                                <input id="RollNo" name ="RollNo" type="text" size="10" maxlength="60" align="left"/></td>
+                                <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled" />
+                                <input id="UoMId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnUoM" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="UoM" name="UoMId" type="text" size="26" maxlength="20" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                            <tr>
                             <td>
@@ -96,7 +92,7 @@
                             <td colspan="3">
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Contact" name="ContactId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="Contact" name="ContactId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                         </tr>
                           <tr>
                             <td>
@@ -104,7 +100,7 @@
                             <td colspan="3">
                                 <input id="MachineId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnMachine" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Machine" name="MachineId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="Machine" name="MachineId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
@@ -112,15 +108,15 @@
                             <td colspan="3">
                                 <input id="AdhesiveId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnAdhesive" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Adhesive" name="AdhesiveId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="Adhesive" name="AdhesiveId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
-                                <label>RollBlanket Item</label></td>
+                                <label>Roll Blanket</label></td>
                             <td colspan="3">
                                 <input id="RollBlanketItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnRollBlanketItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="RollBlanketItem" name="RollBlanketItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="RollBlanketItem" name="RollBlanketItemId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
@@ -135,31 +131,29 @@
                         </tr>
                         <tr id="leftBarRow">
                             <td>
-                                <label>Bar 1</label></td>
-                            <td colspan="3">
+                                <label>Bar 1 & 2</label></td>
+                            <td>
                                 <input id="LeftBarItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnLeftBarItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="LeftBarItem" name="LeftBarItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                        </tr>
-                         <tr id="rightBarRow">
-                            <td>
-                                <label>Bar 2</label></td>
-                            <td colspan="3">
+                                <input id="LeftBarItem" name="LeftBarItemId" type="text" size="26" maxlength="20" class="editable upper" disabled="disabled" />
                                 <input id="RightBarItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnRightBarItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="RightBarItem" name="RightBarItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="RightBarItem" name="RightBarItemId" type="text" size="26" maxlength="20" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>AC</label></td>
                             <td colspan="3">
-                        <input id="AC" name="AC" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="AC" name="AC" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                            </td>
                         </tr>
                          <tr>
                             <td>
                                 <label>AR</label></td>
                             <td colspan="3">
-                        <input id="AR" name="AR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <input id="AR" name="AR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                            </td>
                         </tr>
                          <tr>
                             <td>

@@ -42,7 +42,8 @@
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#ContactId").hide();
+    $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

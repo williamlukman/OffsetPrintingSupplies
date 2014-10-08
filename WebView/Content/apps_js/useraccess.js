@@ -47,8 +47,9 @@
 
         // Clear and Reload all grid
         $("#tbl_access_master").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tbl_access_report").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tbl_access_manufacturing").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tbl_access_transaction").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tbl_access_report").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tbl_access_setting").jqGrid("clearGridData", true).trigger("reloadGrid");
 
     });
@@ -81,6 +82,7 @@
                 newData.unpaid = objUserAccess.model[i].AllowUnpaid;
                 newData.reconcile = objUserAccess.model[i].AllowReconcile;
                 newData.unreconcile = objUserAccess.model[i].AllowUnreconcile;
+                newData.process = objUserAccess.model[i].AllowProcess;
                 newData.print = objUserAccess.model[i].AllowPrint;
 
                 // New Record
@@ -256,6 +258,18 @@
 
     // ---- END UnReconcile
 
+    // ---- Process
+    $("input[name=cbAllowProcess]").live("click", function () {
+        UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Process");
+    });
+
+    function cboxAllowProcess(cellvalue, options, rowObject) {
+        return '<input name="cbAllowProcess" rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +
+            '/>';
+    }
+
+    // ---- END Process
+
     // ---- Print
     $("input[name=cbAllowPrint]").live("click", function () {
         UpdateAllow($(this).attr('rel'), $(this).is(":checked"), "Print");
@@ -355,7 +369,7 @@
                       formatter: cboxAllowPrint, formatoptions: { disabled: false }
                   }
         ],
-        sortname: 'kode',
+        sortname: 'code',
         viewrecords: true,
         gridview: true,
         shrinkToFit: false,
@@ -367,6 +381,76 @@
     $("#tbl_access_master").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
     jQuery("#tbl_access_master").jqGrid('setFrozenColumns');
     // END Table User Access Group - Master
+
+    // Table User Access Group - Manufacturing
+    jQuery("#tbl_access_manufacturing").jqGrid({
+        // url: base_url + 'index.html',
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', 'Process', 'Print'],
+        colModel: [{ name: 'code', index: 'code', width: 50, align: 'center', frozen: true },
+                  { name: 'name', index: 'name', width: 160, frozen: true },
+                  {
+                      name: 'read', index: 'read', width: 50, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowView, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'write', index: 'write', width: 50, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowCreate, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'edit', index: 'edit', width: 50, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowEdit, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'delete', index: 'delete', width: 50, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowDelete, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'process', index: 'process', width: 60, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowProcess, formatoptions: { disabled: false }
+                  },
+                  {
+                      name: 'print', index: 'print', width: 50, align: 'center', sortable: false,
+                      editable: true,
+                      edittype: 'checkbox', editoptions: { value: "1:0" },
+                      formatter: cboxAllowPrint, formatoptions: { disabled: false }
+                  }
+        ],
+        sortname: 'code',
+        viewrecords: true,
+        gridview: true,
+        shrinkToFit: false,
+        scroll: 1,
+        sortorder: "asc",
+        width: 580,
+        height: 380
+    });
+    $("#tbl_access_manufacturing").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
+    jQuery("#tbl_access_manufacturing").jqGrid('setFrozenColumns');
+    // END Table User Access Group - Manufacturing
 
     // Table User Access Group - Transaction
     jQuery("#tbl_access_transaction").jqGrid({
@@ -449,7 +533,7 @@
                       formatter: cboxAllowPrint, formatoptions: { disabled: false }
                   }
         ],
-        sortname: 'kode',
+        sortname: 'code',
         viewrecords: true,
         gridview: true,
         shrinkToFit: false,
@@ -460,14 +544,14 @@
     });
     $("#tbl_access_transaction").jqGrid('navGrid', '#toolbar_lookup_table_so_container', { del: false, add: false, edit: false, search: false });
     jQuery("#tbl_access_transaction").jqGrid('setFrozenColumns');
-    // END Table User Access Group - File
+    // END Table User Access Group - Transaction
 
     // Table User Access Group - Report
     jQuery("#tbl_access_report").jqGrid({
       // url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', /*'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', /* 'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
         colModel: [{ name: 'code', index: 'code', width: 50, align: 'center', frozen: true },
                   { name: 'name', index: 'name', width: 160, frozen: true },
                   {
@@ -494,18 +578,18 @@
                       edittype: 'checkbox', editoptions: { value: "1:0" },
                       formatter: cboxAllowDelete, formatoptions: { disabled: false }
                   },
-                  {
-                      name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowConfirm, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
-                  },
+                  //{
+                  //    name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowConfirm, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
+                  //},
                   //{
                   //    name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
                   //    editable: true,
@@ -537,7 +621,7 @@
                       formatter: cboxAllowPrint, formatoptions: { disabled: false }
                   }
         ],
-        sortname: 'kode',
+        sortname: 'code',
         viewrecords: true,
         gridview: true,
         shrinkToFit: false,
@@ -555,7 +639,7 @@
         //url: base_url + 'index.html',
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', 'Confirm', 'UnConfirm', /*'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
+        colNames: ['Code', 'Name', 'View', 'Create', 'Edit', 'Delete', /*'Confirm', 'UnConfirm', 'Paid', 'UnPaid', 'Reconcile', 'UnReconcile',*/ 'Print'],
         colModel: [{ name: 'code', index: 'code', width: 50, align: 'center', frozen:true },
                   { name: 'name', index: 'name', width: 160, frozen:true },
                   {
@@ -582,18 +666,18 @@
                       edittype: 'checkbox', editoptions: { value: "1:0" },
                       formatter: cboxAllowDelete, formatoptions: { disabled: false }
                   },
-                  {
-                      name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowConfirm, formatoptions: { disabled: false }
-                  },
-                  {
-                      name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
-                      editable: true,
-                      edittype: 'checkbox', editoptions: { value: "1:0" },
-                      formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
-                  },
+                  //{
+                  //    name: 'confirm', index: 'confirm', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowConfirm, formatoptions: { disabled: false }
+                  //},
+                  //{
+                  //    name: 'unconfirm', index: 'unconfirm', width: 60, align: 'center', sortable: false,
+                  //    editable: true,
+                  //    edittype: 'checkbox', editoptions: { value: "1:0" },
+                  //    formatter: cboxAllowUnConfirm, formatoptions: { disabled: false }
+                  //},
                   //{
                   //    name: 'paid', index: 'paid', width: 60, align: 'center', sortable: false,
                   //    editable: true,
@@ -625,7 +709,7 @@
                       formatter: cboxAllowPrint, formatoptions: { disabled: false }
                   }
         ],
-        sortname: 'kode',
+        sortname: 'code',
         viewrecords: true,
         gridview: true,
         shrinkToFit: false,
@@ -667,8 +751,9 @@
 
             // Clear and Reload all grid
             $("#tbl_access_master").jqGrid("clearGridData", true).trigger("reloadGrid");
-            $("#tbl_access_report").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $("#tbl_access_manufacturing").jqGrid("clearGridData", true).trigger("reloadGrid");
             $("#tbl_access_transaction").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $("#tbl_access_report").jqGrid("clearGridData", true).trigger("reloadGrid");
             $("#tbl_access_setting").jqGrid("clearGridData", true).trigger("reloadGrid");
 
             usercode = id;
@@ -700,7 +785,6 @@
             return;
         }
 
-
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -717,8 +801,6 @@
                 else {
                     $.messager.alert('Warning', result.message, 'warning');
                 }
-
-
             }
         });
     });
@@ -730,6 +812,20 @@
         var ids = $("#tbl_access_master").jqGrid('getDataIDs');
         for (var i = 0; i < ids.length; i++) {
             var datagrid = jQuery("#tbl_access_master").jqGrid('getRowData', ids[i]);
+            var obj = {};
+            obj['Input'] = datagrid.write;
+            obj['Lihat'] = datagrid.read;
+            obj['Edit'] = datagrid.edit;
+            obj['Hapus'] = datagrid.delete;
+            obj['Un_Hapus'] = datagrid.undelete;
+            obj['Print'] = datagrid.print;
+            obj['Kode'] = datagrid.code;
+            menuList.push(obj);
+        }
+
+        var ids = $("#tbl_access_manufacturing").jqGrid('getDataIDs');
+        for (var i = 0; i < ids.length; i++) {
+            var datagrid = jQuery("#tbl_access_manufacturing").jqGrid('getRowData', ids[i]);
             var obj = {};
             obj['Input'] = datagrid.write;
             obj['Lihat'] = datagrid.read;

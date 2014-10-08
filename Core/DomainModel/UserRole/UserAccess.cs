@@ -21,6 +21,7 @@ namespace Core.DomainModel
         public bool AllowUnpaid { get; set; }
         public bool AllowReconcile { get; set; }
         public bool AllowUnreconcile { get; set; }
+        public bool AllowProcess { get; set; }
         public bool AllowPrint { get; set; }
         public bool AllowUndelete { get; set; }
         public bool AllowSpecialPricing { get; set; }

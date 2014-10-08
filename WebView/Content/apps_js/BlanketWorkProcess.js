@@ -37,7 +37,9 @@
     $("#rejected_div").dialog('close');
     $("#form_div").dialog('close');
     $("#item_div").dialog('close');
-  
+    $("#BlanketId").hide();
+    $("#BlanketLeftBarId").hide();
+    $("#BlanketRightBarId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -100,7 +102,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { iscut: rowCut });
 
-		          var cl = ids[i];
 		          rowSideSealed = $(this).getRowData(cl).issidesealed;
 		          if (rowSideSealed == 'true') {
 		              rowSideSealed = "Y";
@@ -109,7 +110,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { issidesealed: rowSideSealed });
 
-		          var cl = ids[i];
 		          rowBarPrepared = $(this).getRowData(cl).isbarprepared;
 		          if (rowBarPrepared == 'true') {
 		              rowBarPrepared = "Y";
@@ -118,7 +118,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isbarprepared: rowBarPrepared });
 
-		          var cl = ids[i];
 		          rowAdhesiveTapeApplied = $(this).getRowData(cl).isadhesivetapeapplied;
 		          if (rowAdhesiveTapeApplied == 'true') {
 		              rowAdhesiveTapeApplied = "Y";
@@ -127,7 +126,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isadhesivetapeapplied: rowAdhesiveTapeApplied });
 
-		          var cl = ids[i];
 		          rowBarMounted = $(this).getRowData(cl).isbarmounted;
 		          if (rowBarMounted == 'true') {
 		              rowBarMounted = "Y";
@@ -136,7 +134,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isbarmounted: rowBarMounted });
 
-		          var cl = ids[i];
 		          rowBarHeatPressed = $(this).getRowData(cl).isbarheatpressed;
 		          if (rowBarHeatPressed == 'true') {
 		              rowBarHeatPressed = "Y";
@@ -145,7 +142,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isbarheatpressed: rowBarHeatPressed });
                  
-		          var cl = ids[i];
 		          rowBarPullOffTested = $(this).getRowData(cl).isbarpullofftested;
 		          if (rowBarPullOffTested == 'true') {
 		              rowBarPullOffTested = "Y";
@@ -154,7 +150,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isbarpullofftested: rowBarPullOffTested });
 
-		          var cl = ids[i];
 		          rowQCAndMarked = $(this).getRowData(cl).isqcandmarked;
 		          if (rowQCAndMarked == 'true') {
 		              rowQCAndMarked = "Y";
@@ -163,7 +158,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isqcandmarked: rowQCAndMarked });
 
-		          var cl = ids[i];
 		          rowPackaged = $(this).getRowData(cl).ispackaged;
 		          if (rowPackaged == 'true') {
 		              rowPackaged = "Y";
@@ -172,7 +166,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { ispackaged: rowPackaged });
 
-		          var cl = ids[i];
 		          rowRejected = $(this).getRowData(cl).isrejected;
 		          if (rowRejected == 'true') {
 		              rowRejected = "Y";
@@ -181,7 +174,6 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isrejected: rowRejected });
 
-		          var cl = ids[i];
 		          rowFinished = $(this).getRowData(cl).isfinished;
 		          if (rowFinished == 'true') {
 		              rowFinished = "Y";

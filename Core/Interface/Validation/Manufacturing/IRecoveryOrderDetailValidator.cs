@@ -24,6 +24,7 @@ namespace Core.Interface.Validation
         RecoveryOrderDetail VCompoundUsageIsLargerThanZero(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenVulcanized(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenFacedOff(RecoveryOrderDetail recoveryOrderDetail);
+        RecoveryOrderDetail VHasBeenGrinded(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenConventionalGrinded (RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenCNCGrinded(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail VHasBeenPolishedAndQC(RecoveryOrderDetail recoveryOrderDetail);

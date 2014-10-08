@@ -163,22 +163,35 @@ namespace WebView
         public void CreateUserMenus()
         {
             _userMenuService.CreateObject(Constant.MenuName.Contact, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.ContactGroup, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.ItemType, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.UoM, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.QuantityPricing, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.Machine, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.RollerType, Constant.MenuGroupName.Master);
 
             _userMenuService.CreateObject(Constant.MenuName.CashBank, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CashMutation, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.CashBankAdjustment, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.CashBankMutation, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.CashMutation, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.PaymentRequest, Constant.MenuGroupName.Master);
 
+            _userMenuService.CreateObject(Constant.MenuName.Blanket, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CoreBuilder, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.RollerBuilder, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.StockAdjustment, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.StockMutation, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Warehouse, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.WarehouseItem, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.WarehouseMutation, Constant.MenuGroupName.Master);
+
+            _userMenuService.CreateObject(Constant.MenuName.BlanketWorkOrder, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.BlanketWorkProcess, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.RollerIdentification, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.RollerAccessoryDetail, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.RollerWarehouseMutation, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.RecoveryWorkOrder, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.RecoveryWorkProcess, Constant.MenuGroupName.Manufacturing);
 
             _userMenuService.CreateObject(Constant.MenuName.PurchaseOrder, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.PurchaseReceival, Constant.MenuGroupName.Transaction);
