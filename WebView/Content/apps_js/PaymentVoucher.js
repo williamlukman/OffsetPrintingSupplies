@@ -373,10 +373,10 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.reconcile('Confirm', 'Are you sure you want to unreconcile record?', function (r) {
+            $.messager.confirm('Confirm', 'Are you sure you want to unreconcile record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "PaymentVoucher/Unreconcile",
+                        url: base_url + "PaymentVoucher/UnReconcile",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -561,7 +561,7 @@
         colModel: [
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'payableid', index: 'payableid', width: 130, sortable: false, hidden: true },
-                  { name: 'payable', index: 'payable', width: 70, sortable: false },
+                  { name: 'payable', index: 'payable', width: 90, sortable: false },
                   { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],

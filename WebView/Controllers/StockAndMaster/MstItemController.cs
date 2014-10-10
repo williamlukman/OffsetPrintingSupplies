@@ -75,6 +75,7 @@ namespace WebView.Controllers
                              model.PendingReceival,
                              model.PendingDelivery,
                              model.MinimumQuantity,
+                             model.Virtual,
                              model.UoMId,
                              UoM = model.UoM.Name,
                              model.SellingPrice,
@@ -123,6 +124,7 @@ namespace WebView.Controllers
                             model.PendingReceival,
                             model.PendingDelivery,
                             model.MinimumQuantity,
+                            model.Virtual,
                             model.UoM,
                             model.SellingPrice,
                             model.AvgPrice,
@@ -159,6 +161,7 @@ namespace WebView.Controllers
                              model.PendingReceival,
                              model.PendingDelivery,
                              model.MinimumQuantity,
+                             model.Virtual,
                              model.UoMId,
                              UoM = model.UoM.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -199,6 +202,7 @@ namespace WebView.Controllers
                             model.PendingReceival,
                             model.PendingDelivery,
                             model.MinimumQuantity,
+                            model.Virtual,
                             model.UoM,
                       }
                     }).ToArray()
@@ -227,6 +231,7 @@ namespace WebView.Controllers
                              model.PendingReceival,
                              model.PendingDelivery,
                              model.MinimumQuantity,
+                             model.Virtual,
                              UoM = model.UoM.Name,
                              model.SellingPrice,
                              model.AvgPrice,
@@ -314,6 +319,7 @@ namespace WebView.Controllers
                 model.PendingDelivery,
                 model.PendingReceival,
                 model.MinimumQuantity,
+                model.Virtual,
                 model.Category,
                 model.Description,
                 model.Errors

@@ -105,12 +105,7 @@ namespace Service.Service
                 SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.WarehouseId, deliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
-                if (salesOrderDetail.IsService)
-                {
-                    ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(item.Id);
-                    deliveryOrderDetail.COS = deliveryOrderDetail.Quantity * _serviceCostService.GetObjectByItemId(item.Id).AvgPrice;
-                }
-                else
+                if (!salesOrderDetail.IsService)
                 {
                     IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)

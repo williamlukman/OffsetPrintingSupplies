@@ -63,7 +63,7 @@
                             <td>
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Contact" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="Contact" name="WarehouseId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
@@ -101,10 +101,13 @@
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
                       <td width="139" nowrap style="width: 100px">
-                          Is Service
+                          Trading / Service
                       </td>
                       <td>
-                          <input type="checkbox" name="IsService" id="IsService">
+                        <select id="IsService">
+                            <option value="false">Trading</option>
+                            <option value="true">Service</option>
+                        </select>
                       </td>
                   </tr>
                   <tr>

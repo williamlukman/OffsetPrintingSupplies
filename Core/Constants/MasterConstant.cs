@@ -60,9 +60,9 @@ namespace Core.Constants
 
         public class OrderTypeCase
         {
-            public static int TrialOrder = 1;
-            public static int SampleOrder = 2;
-            public static int PartDeliveryOrder = 3;
+            public static int TrialOrder = 0;
+            public static int SampleOrder = 1;
+            public static int PartDeliveryOrder = 2;
         }
     }
 }

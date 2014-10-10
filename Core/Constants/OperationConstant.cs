@@ -146,6 +146,8 @@ namespace Core.Constants
             public static string Payable = "Payable";
 
             public static string SalesOrder = "Sales Order";
+            public static string VirtualOrder = "Virtual Order";
+            public static string TemporaryDeliveryOrder = "Temporary Delivery Order";
             public static string DeliveryOrder = "Delivery Order";
             public static string SalesInvoice = "Sales Invoice";
             public static string CashSalesInvoice = "Cash Sales Invoice";

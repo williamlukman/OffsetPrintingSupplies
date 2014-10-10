@@ -9,7 +9,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'RecoveryWorkOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'RecoveryWorkOrder/GetListIncomplete', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
@@ -55,7 +55,7 @@
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'RecoveryWorkOrder/GetList',
+        url: base_url + 'RecoveryWorkOrder/GetListIncomplete',
         datatype: "json",
         colNames: ['ID', 'Code', 'CoreIdentification Id', 'Warehouse Id',
                     'Warehouse Code', 'Warehouse Name', 'QTY Rcv', 'QTY Final',

@@ -112,9 +112,13 @@ namespace Validation.Validation
             if (salesOrderDetail.IsService)
             {
                 ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(deliveryOrderDetail.ItemId);
-                if (serviceCost.Quantity <= 0)
+                if (serviceCost == null)
                 {
-                    salesInvoiceDetail.Errors.Add("Generic", "Service Cost Quantity harus >= 1");
+                    salesInvoiceDetail.Errors.Add("Generic", "Service Cost harus terbuat melalui Roller Recovery Process terlebih dahulu");
+                }
+                else if(serviceCost.Quantity <= 0)
+                {
+                    salesInvoiceDetail.Errors.Add("Generic", "Service Cost harus terbuat melalui Roller Recovery Process terlebih dahulu");
                 }
             }
             return salesInvoiceDetail;
@@ -172,7 +176,7 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(salesInvoiceDetail);
             if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
             VQuantityIsLessThanOrEqualPendingInvoiceQuantity(salesInvoiceDetail, _deliveryOrderDetailService);
-            if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }
+            if (!isValid(salesInvoiceDetail)) { return salesInvoiceDetail; }            
             VServiceCostQuantityIsNaturalNumber(salesInvoiceDetail, _serviceCostService, _deliveryOrderDetailService, _salesOrderDetailService);
             return salesInvoiceDetail;
         }

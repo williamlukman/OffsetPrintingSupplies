@@ -43,7 +43,8 @@
     $("#lookup_div_deliveryorder").dialog('close');
     $("#lookup_div_warehouse").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#DeliveryOrderId").hide();
+    $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -115,6 +116,9 @@
         $('#InvoiceDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnDeliveryOrder').removeAttr('disabled');
+        $('#Discount').removeAttr('disabled');
+        $('#Tax').removeAttr('disabled');
+        $('#Description').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#InvoiceDateDiv').show();
         $('#InvoiceDateDiv2').hide();
@@ -154,6 +158,9 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $('#Discount').attr('disabled', true);
+                            $('#Tax').attr('disabled', true);
+                            $('#Description').attr('disabled', true);
                             $('#AmountReceivable').val(result.AmountReceivable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
@@ -208,6 +215,9 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $('#Discount').removeAttr('disabled');
+                            $('#Tax').removeAttr('disabled');
+                            $('#Description').removeAttr('disabled');
                             $('#AmountReceivable').val(result.AmountReceivable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
@@ -491,6 +501,9 @@
                             $('#Quantity').val(result.Quantity);
                             $('#Price').val(result.Price);
                             $('#SalesOrderDetailId').val(result.SalesOrderDetailId);
+                            $('#Discount').attr('disabled', true);
+                            $('#Description').attr('disabled', true);
+                            $('#Tax').attr('disabled', true);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -617,17 +630,17 @@
         colNames: ['ID', 'Code', 'SalesOrder Id', 'SalesOrder Code', 'Delivery Date', 'Warehouse Id', 'Warehouse Name',
                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-				  { name: 'salesorderid', index: 'salesorderid', width: 100 },
-                  { name: 'salesorder', index: 'salesorder', width: 100 },
+    			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
+                  { name: 'code', index: 'code', width: 50 },
+				  { name: 'salesorderid', index: 'salesorderid', width: 100, hidden: true },
+                  { name: 'salesorder', index: 'salesorder', width: 85 },
                   { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'warehouseid', index: 'warehouseid', width: 100 },
+                  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 100 },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100 },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
         ],
         page: '1',
         pager: $('#lookup_pager_deliveryorder'),
@@ -680,9 +693,10 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Sales Order Detail Id', 'POD', 'Item Id', 'Item Sku', 'Name', 'QTY',
+        colNames: ['Id', 'DOD Code', 'Sales Order Detail Id', 'SOD Code', 'Item Id', 'Item Sku', 'Name', 'QTY',
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 40, sortable: false, hidden: true },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'salesorderdetailid', index: 'salesorderdetailid', width: 100, sortable: false, hidden: true },
                   { name: 'salesorderdetailcode', index: 'salesorderdetailcode', width: 70, sortable: false },

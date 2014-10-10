@@ -126,7 +126,7 @@ namespace Service.Service
                     ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(deliveryOrderDetail.ItemId);
                     serviceCost.Quantity -= salesInvoiceDetail.Quantity;
                     _serviceCostService.UpdateObject(serviceCost, _rollerBuilderService, _itemService);
-                    salesInvoiceDetail.COS = deliveryOrderDetail.COS;
+                    salesInvoiceDetail.COS = deliveryOrderDetail.Quantity * serviceCost.AvgPrice;
                 }
 
                 salesInvoiceDetail = _repository.ConfirmObject(salesInvoiceDetail);

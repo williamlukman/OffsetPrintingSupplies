@@ -200,8 +200,10 @@ namespace WebView
             _userMenuService.CreateObject(Constant.MenuName.PaymentVoucher, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.Payable, Constant.MenuGroupName.Transaction);
 
-            _userMenuService.CreateObject(Constant.MenuName.SalesOrder, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.SalesOrder, Constant.MenuGroupName.Transaction);            
             _userMenuService.CreateObject(Constant.MenuName.DeliveryOrder, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.VirtualOrder, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.TemporaryDeliveryOrder, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.SalesInvoice, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.RetailSalesInvoice, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.CashSalesInvoice, Constant.MenuGroupName.Transaction);

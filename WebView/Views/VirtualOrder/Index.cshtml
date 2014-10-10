@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Delivery Order";
+    ViewBag.Title = "Virtual Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,12 +8,11 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/deliveryorder.js")"></script>
-
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/virtualorder.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: @ViewBag.Title :.">
-<div id="toolbar" class="form_toolbar">
+    <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add Detail</a>
@@ -29,7 +28,7 @@
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
 
-<!-- Dialog Box -->
+    <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
         title=".:  @ViewBag.Title :.">
 
@@ -59,30 +58,31 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Sales Order Id</label></td>
+                                <label>Order Type</label>
+                            </td>
                             <td>
-                                <input id="SalesOrderId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnSalesOrder" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="SalesOrder" name="SalesOrderId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                            <select id="OrderType">
+                                <option value="0">Trial Order</option>
+                                <option value="1">Sample Order</option>
+                            </select>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Delivery Date</label></td>
+                                <label>Contact</label></td>
                             <td>
-                                 <div id="DeliveryDateDiv"><input id="DeliveryDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
-                                 <div id="DeliveryDateDiv2"><input id="DeliveryDate2" type="text" size="10" disabled="disabled"/></div>
-                            </td>
+                                <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Contact" name="WarehouseId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
                         </tr>
                         <tr>
                             <td>
-                                <label>Warehouse</label></td>
+                                <label>Order Date</label></td>
                             <td>
-                                <input id="WarehouseId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Warehouse" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                             <div id="OrderDateDiv"><input id="OrderDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                             <div id="OrderDateDiv2"><input id="OrderDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
-                        </tr>
+                         </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -110,42 +110,39 @@
         <div id="item_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
-                      <td width="139" nowrap style="width: 100px">
+                      <td>
                           Item
                       </td>
                       <td>
                          <input id="ItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Item" name="ItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                         <input id="SalesOrderDetailId" name="SalesOrderDetailId" type="text" size ="10" hidden="hidden" />
                       </td>
                   </tr>
                     <tr>
                         <td>
-                            <label>QTY</label>
+                            QTY
                         </td>
                         <td>
                                <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
-                    <tr>
+                   <tr>
                         <td>
-                            <label>Price</label>
+                            Price
                         </td>
                         <td>
-                            <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
+                               <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
-
-              </table>
-          
+              </table>          
         </div>
     </div>
-<!-- End Dialog Box Item-->
+    <!-- End Dialog Box Item-->
 
      <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Confirm Delivery Order:.">
+        data-options="modal:true" title=".: Confirm Virtual Order :.">
 
         <div id="confirm_toolbar" class="form_toolbar">
             <a id="confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
@@ -175,9 +172,9 @@
           
         </div>
     </div>
-<!-- End Dialog Box Confirm-->
+    <!-- End Dialog Box Confirm-->
 
-<!-- Dialog Box  Delete-->
+    <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -190,25 +187,23 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
 
-
- <!-- Look Up salesorder -->
-    <div id="lookup_div_salesorder" class="easyui-dialog" title="List SalesOrder" style="padding: 0px 5px; height: 490px; width: 480px;"
+     <!-- Look Up contact -->
+    <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
-        <div id="lookup_toolbar_salesorder" class="grid_toolbar">
-            <a id="lookup_btn_add_salesorder" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_salesorder" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        <div id="lookup_toolbar_contact" class="grid_toolbar">
+            <a id="lookup_btn_add_contact" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_contact" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
         </div>
 
-        <table id="lookup_table_salesorder" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_salesorder" class="scroll" style="text-align: center;"></div>
+        <table id="lookup_table_contact" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_contact" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up salesorder -->
+    <!-- END Look Up contact -->
 
-
- <!-- Look Up item -->
+    <!-- Look Up item -->
     <div id="lookup_div_item" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -220,20 +215,7 @@
         <table id="lookup_table_item" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_item" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up item -->
+    <!-- END Look Up item -->
 
-     <!-- Look Up warehouse -->
-    <div id="lookup_div_warehouse" class="easyui-dialog" title="List Warehouse" style="padding: 0px 5px; height: 490px; width: 480px;"
-        data-options="iconCls:'icon-tip',modal:true">
-
-        <div id="lookup_toolbar_warehouse" class="grid_toolbar">
-            <a id="lookup_btn_add_warehouse" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_warehouse" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
-        </div>
-
-        <table id="lookup_table_warehouse" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_warehouse" class="scroll" style="text-align: center;"></div>
-    </div>
-<!-- END Look Up warehouse -->
   </div>
 

@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'ReceiptVoucher/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'TemporaryDeliveryOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'ReceiptVoucher/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'TemporaryDeliveryOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -38,40 +38,33 @@
 
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
-    $("#reconcile_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
-    $("#lookup_div_cashbank").dialog('close');
-    $("#lookup_div_receivable").dialog('close');
-    $("#lookup_div_contact").dialog('close');
+    $("#lookup_div_previousorder").dialog('close');
+    $("#lookup_div_warehouse").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    $("#ContactId").hide();
-    $("#CashBankId").hide();
-    $("#ReceivableId").hide();
+    $("#PreviousOrderId").hide();
+    $("#WarehouseId").hide();
+    $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'ReceiptVoucher/GetList',
+        url: base_url + 'TemporaryDeliveryOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Receipt Date',
-                   'Is GBCH', 'Due Date', 'Total Amount', 'Is Reconciled', 'ReconciliationDate',
+        colNames: ['ID', 'Code', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'TemporaryDeliveryDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
-				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
-                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
-                  { name: 'receiptdate', index: 'receiptdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isgbch', index: 'isgbch', width: 45 },
-                  { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isreconciled', index: 'isreconciled', width: 100, hidden: true },
-                  { name: 'reconciliationdate', index: 'reconciliationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'ordertype', index: 'ordertype', width: 70 },
+				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
+                  { name: 'ordercode', index: 'ordercode', width: 70 },
+                  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
+                  { name: 'warehousename', index: 'warehousename', width: 130 },
+                  { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -98,21 +91,15 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
 
-		          rowIsGBCH = $(this).getRowData(cl).isgbch;
-		          if (rowIsGBCH == 'true') {
-		              rowIsGBCH = "YES";
+		          rowOrderType = $(this).getRowData(cl).ordertype;
+		          if (rowOrderType == '0') {
+		              rowOrderType = "Trial";
+		          } else if (rowOrderType == '1') {
+		              rowOrderType = "Sample";
 		          } else {
-		              rowIsGBCH = "NO";
+		              rowOrderType = "Part Delivery";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { isgbch: rowIsGBCH });
-
-		          rowIsReconciled = $(this).getRowData(cl).isreconciled;
-		          if (rowIsReconciled == 'true') {
-		              rowIsReconciled = "YES";
-		          } else {
-		              rowIsReconciled = "NO";
-		          }
-		          $(this).jqGrid('setRowData', ids[i], { isreconciled: rowIsReconciled });
+		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });
 		      }
 		  }
 
@@ -134,18 +121,13 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-
-        $('#ReceiptDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#btnContact').removeAttr('disabled');
-        $('#btnCashBank').removeAttr('disabled');
-        $('#TotalAmount').removeAttr('disabled');
-        $('#IsGBCH').removeAttr('disabled');
+        $('#DeliveryDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#btnPreviousOrder').removeAttr('disabled');
+        $('#btnWarehouse').removeAttr('disabled');
+        $('#OrderType').removeAttr('disabled');
         $('#tabledetail_div').hide();
-        $('#ReceiptDateDiv').show();
-        $('#ReceiptDateDiv2').hide();
-        $('#DueDateDiv').show();
-        $('#DueDateDiv2').hide();
+        $('#DeliveryDateDiv').show();
+        $('#DeliveryDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -158,7 +140,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "ReceiptVoucher/GetInfo?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrder/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -175,31 +157,19 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#ContactId').val(result.ContactId);
-                            $('#Contact').val(result.Contact);
-                            $('#CashBankId').val(result.CashBankId);
-                            $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
-                            var e = document.getElementById("IsGBCH");
-                            if (result.IsGBCH == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
-                            $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
-                            $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
-                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-                            $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#ReceiptDateDiv2').show();
-                            $('#ReceiptDateDiv').hide();
-                            $('#DueDateDiv2').show();
-                            $('#DueDateDiv').hide();
+                            document.getElementById("OrderType").selectedIndex = result.OrderType;
+                            $('#PreviousOrderId').val(result.OrderId);
+                            $('#PreviousOrder').val(result.OrderCode);
+                            $('#WarehouseId').val(result.WarehouseId);
+                            $('#Warehouse').val(result.Warehouse);
+                            $('#DeliveryDate').datebox('setValue', dateEnt(result.DeliveryDate));
+                            $('#DeliveryDate2').val(dateEnt(result.DeliveryDate));
+                            $('#DeliveryDateDiv2').show();
+                            $('#DeliveryDateDiv').hide();
                             $('#form_btn_save').hide();
-                            $('#btnContact').attr('disabled', true);
-                            $('#btnCashBank').attr('disabled', true);
-                            $('#TotalAmount').attr('disabled', true);
-                            $('#IsGBCH').attr('disabled', true);
+                            $('#OrderType').attr('disabled', true);
+                            $('#btnPreviousOrder').attr('disabled', true);
+                            $('#btnWarehouse').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -212,8 +182,6 @@
         }
     });
 
-
-
     $('#btn_edit').click(function () {
         ClearData();
         clearForm("#frm");
@@ -221,7 +189,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "ReceiptVoucher/GetInfo?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrder/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -238,32 +206,18 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#ContactId').val(result.ContactId);
-                            $('#Contact').val(result.Contact);
-                            $('#CashBankId').val(result.CashBankId);
-                            $('#CashBank').val(result.CashBank);
-                            $('#TotalAmount').val(result.TotalAmount);
-                            var e = document.getElementById("IsGBCH");
-                            if (result.IsGBCH == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
-                            $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
-                            $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
-                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-                            $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#ReceiptDateDiv2').show();
-                            $('#ReceiptDateDiv').hide();
-                            $('#DueDateDiv2').show();
-                            $('#DueDateDiv').hide();
-                            $('#form_btn_save').hide();
-                            $('#btnContact').removeAttr('disabled');
-                            $('#btnCashBank').removeAttr('disabled');
-                            $('#TotalAmount').removeAttr('disabled');
-                            $('#IsGBCH').removeAttr('disabled');
+                            $('#PreviousOrderId').val(result.OrderId);
+                            $('#PreviousOrder').val(result.OrderCode);
+                            $('#WarehouseId').val(result.WarehouseId);
+                            $('#Warehouse').val(result.Warehouse);
+                            $('#DeliveryDate').datebox('setValue', dateEnt(result.DeliveryDate));
+                            $('#DeliveryDate2').val(dateEnt(result.DeliveryDate));
+                            $('#btnPreviousOrder').removeAttr('disabled');
+                            $('#btnWarehouse').removeAttr('disabled');
                             $('#tabledetail_div').hide();
+                            $('#DeliveryDateDiv2').show();
+                            $('#DeliveryDateDiv').hide();
+                            $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
                     }
@@ -293,7 +247,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "ReceiptVoucher/Unconfirm",
+                        url: base_url + "TemporaryDeliveryOrder/Unconfirm",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -327,7 +281,7 @@
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
         $.ajax({
-            url: base_url + "ReceiptVoucher/Confirm",
+            url: base_url + "TemporaryDeliveryOrder/Confirm",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -357,89 +311,6 @@
         $('#confirm_div').dialog('close');
     });
 
-    $('#btn_reconcile').click(function () {
-        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-            $('#idreconcile').val(ret.id);
-            $("#reconcile_div").dialog("open");
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#btn_unreconcile').click(function () {
-        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to unreconcile record?', function (r) {
-                if (r) {
-                    $.ajax({
-                        url: base_url + "ReceiptVoucher/UnReconcile",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            Id: id,
-                        }),
-                        success: function (result) {
-                            if (JSON.stringify(result.Errors) != '{}') {
-                                for (var key in result.Errors) {
-                                    if (key != null && key != undefined && key != 'Generic') {
-                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                    }
-                                    else {
-                                        $.messager.alert('Warning', result.Errors[key], 'warning');
-                                    }
-                                }
-                            }
-                            else {
-                                ReloadGrid();
-                                $("#delete_reconcile_div").dialog('close');
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#reconcile_btn_submit').click(function () {
-        ClearErrorMessage();
-        $.ajax({
-            url: base_url + "ReceiptVoucher/Reconcile",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({
-                Id: $('#idreconcile').val(), ReconciliationDate: $('#ReconciliationDate').datebox('getValue'),
-            }),
-            success: function (result) {
-                if (JSON.stringify(result.Errors) != '{}') {
-                    for (var key in result.Errors) {
-                        if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                        }
-                        else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
-                        }
-                    }
-                }
-                else {
-                    ReloadGrid();
-                    $("#reconcile_div").dialog('close');
-                }
-            }
-        });
-    });
-
-    $('#reconcile_btn_cancel').click(function () {
-        $('#reconcile_div').dialog('close');
-    });
-
 
 
     $('#btn_del').click(function () {
@@ -463,7 +334,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "ReceiptVoucher/Delete",
+            url: base_url + "TemporaryDeliveryOrder/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -501,30 +372,41 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#ReceiptDate').datebox('getValue') == "") {
-            return $($('#ReceiptDate').addClass('errormessage').before('<span class="errormessage">**' + "Receipt Date Belum Terisi" + '</span>'));
+        if ($('#DeliveryDate').datebox('getValue') == "") {
+            return $($('#DeliveryDate').addClass('errormessage').before('<span class="errormessage">**' + "Adjustment Date Belum Terisi" + '</span>'));
 
         }
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'ReceiptVoucher/Update';
+            submitURL = base_url + 'TemporaryDeliveryOrder/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'ReceiptVoucher/Insert';
+            submitURL = base_url + 'TemporaryDeliveryOrder/Insert';
         }
 
-        var e = document.getElementById("IsGBCH");
-        var gbch = e.options[e.selectedIndex].value;
+        var ordertype = document.getElementById("OrderType").selectedIndex;
+
+        var virtualorderid;
+        var deliveryorderid;
+
+        if (ordertype == 0 || ordertype == 1) {
+            virtualorderid = $("#PreviousOrderId").val();
+            deliveryorderid = null;
+        }
+        else {
+            virtualorderid = null;
+            deliveryorderid = $("#PreviousOrderId").val();
+        }
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, TotalAmount: $("#TotalAmount").numberbox('getValue'),
-                ReceiptDate: $('#ReceiptDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                Id: id, WarehouseId: $("#WarehouseId").val(),
+                DeliveryDate: $('#DeliveryDate').datebox('getValue'), OrderType: ordertype,
+                VirtualOrderId: virtualorderid, DeliveryOrderId: deliveryorderid,
             }),
             async: false,
             cache: false,
@@ -556,15 +438,18 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Receivable Id', 'Receivable Code', 'Amount', 'Description'
+        colNames: ['Id', 'Code', 'Order Detail Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price'
         ],
         colModel: [
-                  { name: 'id', index: 'id', width: 40, sortable: false },
+                  { name: 'code', index: 'code', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
-                  { name: 'receivableid', index: 'receivableid', width: 130, sortable: false, hidden: true },
-                  { name: 'receivable', index: 'receivable', width: 90, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'description', index: 'description', width: 180, sortable: false }
+                  { name: 'orderdetailid', index: 'orderdetailid', width: 100, sortable: false, hidden: true },
+                  { name: 'orderdetailcode', index: 'orderdetailcode', width: 70, sortable: false },
+                  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -581,7 +466,7 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
@@ -597,7 +482,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "ReceiptVoucher/GetInfoDetail?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrder/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -612,11 +497,11 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#ReceivableId').val(result.ReceivableId);
-                            $('#Receivable').val(result.Receivable);
-                            $('#Amount').val(result.Amount);
-                            $('#Description').val(result.Description);
-                            $('#ReceiptVoucherDetailId').val(result.ReceiptVoucherDetailId);
+                            $('#ItemId').val(result.ItemId);
+                            $('#Item').val(result.Item);
+                            $('#Quantity').val(result.Quantity);
+                            $('#Price').val(result.Price);
+                            $('#PreviousOrderDetailId').val(result.OrderDetailId);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -634,7 +519,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "ReceiptVoucher/DeleteDetail",
+                        url: base_url + "TemporaryDeliveryOrder/DeleteDetail",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -676,11 +561,24 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'ReceiptVoucher/UpdateDetail';
+            submitURL = base_url + 'TemporaryDeliveryOrder/UpdateDetail';
         }
             // Insert
         else {
-            submitURL = base_url + 'ReceiptVoucher/InsertDetail';
+            submitURL = base_url + 'TemporaryDeliveryOrder/InsertDetail';
+        }
+        var ordertype = document.getElementById("OrderType").selectedIndex;
+
+        var virtualorderdetailid;
+        var salesorderdetailid;
+
+        if (ordertype == 0 || ordertype == 1) {
+            virtualorderdetailid = $("#PreviousOrderDetailId").val();
+            salesorderdetailid = null;
+        }
+        else {
+            virtualorderdetailid = null;
+            salesorderdetailid = $("#PreviousOrderDetailId").val();
         }
 
         $.ajax({
@@ -688,8 +586,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ReceiptVoucherId: $("#id").val(), ReceivableId: $("#ReceivableId").val(), Description: $("#Description").val(),
-                Amount: $("#Amount").numberbox('getValue'),
+                Id: id, TemporaryDeliveryOrderId: $("#id").val(), ItemId: $("#ItemId").val(),
+                Quantity: $("#Quantity").numberbox('getValue'), SalesOrderDetailId: salesorderdetailid, VirtualOrderDetailId: virtualorderdetailid
             }),
             async: false,
             cache: false,
@@ -725,28 +623,46 @@
     });
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up contact-------------------------------------------------------
-    $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
-        var lookupGrid = $('#lookup_table_contact');
+    // -------------------------------------------------------Look Up previousorder-------------------------------------------------------
+    $('#btnPreviousOrder').click(function () {
+        var lookUpURL;
+        if (document.getElementById("OrderType").selectedIndex == 0) {
+            lookUpURL = base_url + 'VirtualOrder/GetTrialListConfirmedNotCompleted';
+        }
+        else if (document.getElementById("OrderType").selectedIndex == 1) {
+            lookUpURL = base_url + 'VirtualOrder/GetSampleListConfirmedNotCompleted';
+        }
+        else if (document.getElementById("OrderType").selectedIndex == 2) {
+            lookUpURL = base_url + 'TemporaryDeliveryOrder/GetListNotConfirmed';
+        }
+        var lookupGrid = $('#lookup_table_previousorder');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_contact').dialog('open');
+        $('#lookup_div_previousorder').dialog('open');
     });
 
-    jQuery("#lookup_table_contact").jqGrid({
+    jQuery("#lookup_table_previousorder").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name'
-        ],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact', 'Order Date',
+                  'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Warehouse Id', 'Warehouse'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 150 },
+    			  { name: 'id', index: 'id', width: 40, align: "center" },
+                  { name: 'code', index: 'code', width: 60 },
+				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
+                  { name: 'contact', index: 'contact', width: 130 },
+                  { name: 'orderdate', index: 'orderdate', width: 90, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
+                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
+                  { name: 'warehouse', index: 'warehouse', width: 130, hidden: true },
         ],
         page: '1',
-        pager: $('#lookup_pager_contact'),
+        pager: $('#lookup_pager_previousorder'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -754,26 +670,26 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_contact").width() - 10,
-        height: $("#lookup_div_contact").height() - 110,
+        width: $("#lookup_div_previousorder").width() - 10,
+        height: $("#lookup_div_previousorder").height() - 110,
     });
-    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_previousorder").jqGrid('navGrid', '#lookup_toolbar_previousorder', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_contact').click(function () {
-        $('#lookup_div_contact').dialog('close');
+    $('#lookup_btn_cancel_previousorder').click(function () {
+        $('#lookup_div_previousorder').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_contact').click(function () {
-        var id = jQuery("#lookup_table_contact").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_previousorder').click(function () {
+        var id = jQuery("#lookup_table_previousorder").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_previousorder").jqGrid('getRowData', id);
 
-            $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
-            $('#lookup_div_contact').dialog('close');
+            $('#PreviousOrderId').val(ret.id).data("kode", id);
+            $('#PreviousOrder').val(ret.code);
+            $('#lookup_div_previousorder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
@@ -782,28 +698,40 @@
 
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up cashbank-------------------------------------------------------
-    $('#btnCashBank').click(function () {
-        var lookUpURL = base_url + 'MstCashBank/GetList';
-        var lookupGrid = $('#lookup_table_cashbank');
+    // -------------------------------------------------------Look Up item-------------------------------------------------------
+    $('#btnItem').click(function () {
+        var lookUpURL;
+        if (document.getElementById("OrderType").selectedIndex == 0 || document.getElementById("OrderType").selectedIndex == 1) {
+            lookUpURL = base_url + 'VirtualOrder/GetListDetail?Id=' + $("#PreviousOrderId").val();
+        }
+        else {
+            lookUpURL = base_url + 'SalesOrder/GetListDetail?Id=' + $("#PreviousOrderId").val();
+        }
+        var lookupGrid = $('#lookup_table_item');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_cashbank').dialog('open');
+        $('#lookup_div_item').dialog('open');
     });
 
-    jQuery("#lookup_table_cashbank").jqGrid({
+    jQuery("#lookup_table_item").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name'
+        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'PendDlv', 'Price',
         ],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
+                  { name: 'id', index: 'id', width: 40, sortable: false, align: 'center' },
+                  { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
+				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
+                  { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',
-        pager: $('#lookup_pager_cashbank'),
+        pager: $('#lookup_pager_item'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -811,64 +739,71 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_cashbank").width() - 10,
-        height: $("#lookup_div_cashbank").height() - 110,
+        width: $("#lookup_div_item").width() - 10,
+        height: $("#lookup_div_item").height() - 110,
+        gridComplete:
+          function () {
+              var ids = $(this).jqGrid('getDataIDs');
+              for (var i = 0; i < ids.length; i++) {
+                  var cl = ids[i];
+                  rowType = $(this).getRowData(cl).type;
+                  if (rowType == 'true') {
+                      rowType = "Service";
+                  } else {
+                      rowType = "Trading";
+                  }
+                  $(this).jqGrid('setRowData', ids[i], { type: rowType });
+              }
+          }
+
     });
-    $("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_cashbank').click(function () {
-        $('#lookup_div_cashbank').dialog('close');
+    $('#lookup_btn_cancel_item').click(function () {
+        $('#lookup_div_item').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_cashbank').click(function () {
-        var id = jQuery("#lookup_table_cashbank").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_item').click(function () {
+        var id = jQuery("#lookup_table_item").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_cashbank").jqGrid('getRowData', id);
-
-            $('#CashBankId').val(ret.id).data("kode", id);
-            $('#CashBank').val(ret.code);
-            $('#lookup_div_cashbank').dialog('close');
+            var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
+            $('#PreviousOrderDetailId').val(id);
+            $('#ItemId').val(ret.itemid);
+            $('#Item').val(ret.itemname);
+            $('#Price').val(ret.price);
+            $('#lookup_div_item').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup cashbank----------------------------------------------------------------
+    // ---------------------------------------------End Lookup item----------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up receivable-------------------------------------------------------
-    $('#btnReceivable').click(function () {
-        var lookUpURL = base_url + 'ReceiptVoucher/GetListReceivable';
-        var lookupGrid = $('#lookup_table_receivable');
+    // -------------------------------------------------------Look Up warehouse-------------------------------------------------------
+    $('#btnWarehouse').click(function () {
+        var lookUpURL = base_url + 'MstWarehouse/GetList';
+        var lookupGrid = $('#lookup_table_warehouse');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_receivable').dialog('open');
+        $('#lookup_div_warehouse').dialog('open');
     });
 
-    jQuery("#lookup_table_receivable").jqGrid({
+    jQuery("#lookup_table_warehouse").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Contact Id', 'Contact', 'Receivable Source', 'Id',
-                    'Due Date', 'Total', 'Remaining', 'PendClearance'
-        ],
+        colNames: ['Id', 'Code', 'Name'],
         colModel: [
-                  { name: 'code', index: 'code', width: 55, sortable: false },
-                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150, sortable: false, hidden: true },
-                  { name: 'receivablesource', index: 'receivablesource', width: 100, sortable: false },
-                  { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
-                  { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
-                  { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-        ],
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                   { name: 'code', index: 'code', width: 80 },
+                  { name: 'name', index: 'name', width: 200 }],
         page: '1',
-        pager: $('#lookup_pager_receivable'),
+        pager: $('#lookup_pager_warehouse'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -876,33 +811,33 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_receivable").width() - 10,
-        height: $("#lookup_div_receivable").height() - 110,
+        width: $("#lookup_div_warehouse").width() - 10,
+        height: $("#lookup_div_warehouse").height() - 110,
     });
-    $("#lookup_table_receivable").jqGrid('navGrid', '#lookup_toolbar_receivable', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_receivable').click(function () {
-        $('#lookup_div_receivable').dialog('close');
+    $('#lookup_btn_cancel_warehouse').click(function () {
+        $('#lookup_div_warehouse').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_receivable').click(function () {
-        var id = jQuery("#lookup_table_receivable").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_warehouse').click(function () {
+        var id = jQuery("#lookup_table_warehouse").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_receivable").jqGrid('getRowData', id);
-            $('#ReceivableId').val(id);
-            $('#Receivable').val(ret.code);
+            var ret = jQuery("#lookup_table_warehouse").jqGrid('getRowData', id);
 
-            $('#lookup_div_receivable').dialog('close');
+            $('#WarehouseId').val(ret.id).data("kode", id);
+            $('#Warehouse').val(ret.name);
+
+            $('#lookup_div_warehouse').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup receivable----------------------------------------------------------------
-
+    // ---------------------------------------------End Lookup warehouse----------------------------------------------------------------
 
 }); //END DOCUMENT READY

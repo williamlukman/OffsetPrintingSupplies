@@ -9,7 +9,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'BlanketWorkOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'BlanketWorkOrder/GetListIncomplete', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
@@ -54,7 +54,7 @@
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'BlanketWorkOrder/GetList',
+        url: base_url + 'BlanketWorkOrder/GetListIncomplete',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
                     'QTY Rejected', 'Due Date', 'Confirmation Date', 'Created At', 'Updated At'

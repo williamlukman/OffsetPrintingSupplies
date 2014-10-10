@@ -120,16 +120,6 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail VHasServiceCostQuantity(DeliveryOrderDetail deliveryOrderDetail, IServiceCostService _serviceCostService)
-        {
-            ServiceCost serviceCost = _serviceCostService.GetObjectByItemId(deliveryOrderDetail.ItemId);
-            if (serviceCost.Quantity - deliveryOrderDetail.Quantity < 0)
-            {
-                deliveryOrderDetail.Errors.Add("Generic", "Service quantity kurang dari quantity untuk di kirim");
-            }
-            return deliveryOrderDetail;
-        }
-
         public DeliveryOrderDetail VHasItemQuantity(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
@@ -248,11 +238,7 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
-            if (salesOrderDetail.IsService)
-            {
-                VHasServiceCostQuantity(deliveryOrderDetail, _serviceCostService);
-            }
-            else
+            if (!salesOrderDetail.IsService)
             {
                 VHasItemQuantity(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService);
             }

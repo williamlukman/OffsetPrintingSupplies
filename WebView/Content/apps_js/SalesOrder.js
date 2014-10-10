@@ -42,7 +42,8 @@
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#ContactId").hide();
+    $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -54,7 +55,7 @@
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
+                  { name: 'contact', index: 'contact', width: 150 },
                   { name: 'salesdate', index: 'salesdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -466,6 +467,13 @@
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
                             document.getElementById("IsService").checked = result.IsService;
+                            var f = document.getElementById("IsService");
+                            if (result.IsService == false) {
+                                f.selectedIndex = 0;
+                            }
+                            else {
+                                f.selectedIndex = 1;
+                            }
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
@@ -536,13 +544,16 @@
             submitURL = base_url + 'SalesOrder/InsertDetail';
         }
 
+        var e = document.getElementById("IsService");
+        var isservice = e.options[e.selectedIndex].value;
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
                 Id: id, SalesOrderId: $("#id").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'),
-                Price: $("#Price").numberbox('getValue'), IsService: document.getElementById("IsService").checked,
+                Price: $("#Price").numberbox('getValue'), IsService: isservice
             }),
             async: false,
             cache: false,
@@ -637,7 +648,7 @@
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
         var lookUpURL;
-        if (document.getElementById("IsService").checked) {
+        if (document.getElementById("IsService").selectedIndex == 1) {
             lookUpURL = base_url + 'MstItem/GetLookUpUsedRoller';
         }
         else {
@@ -654,7 +665,7 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'UoM'],
+        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
@@ -663,6 +674,7 @@
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'uom', index: 'uom', width: 40 },
         ],
         page: '1',

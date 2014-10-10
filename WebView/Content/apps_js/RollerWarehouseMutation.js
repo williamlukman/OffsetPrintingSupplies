@@ -433,19 +433,19 @@
         colNames: ['RIF ID','Code', 'RollerWarehouseMutation Id','RWOD Id', 'Item Id', 'Sku', 'Item'
         ],
         colModel: [
-                  { name: 'rifid', index: 'rifid', width: 70, sortable: false, align: 'right' },
+                  { name: 'detailid', index: 'detailid', width: 70, sortable: false, align: 'right' },
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'right' },
                   { name: 'rollerwarehousemutationid', index: 'rollerwarehousemutationid', width: 100, sortable: false, hidden: true },
                   { name: 'recoveryworkorderdetailid', index: 'recoveryworkorderdetailid', width: 60, align: 'right', sortable: false },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
 				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false},
-                  { name: 'itemname', index: 'itemname', width: 150, sortable: false },
+                  { name: 'item', index: 'item', width: 150, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'rifid',
+        sortname: 'detailid',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -456,7 +456,7 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {

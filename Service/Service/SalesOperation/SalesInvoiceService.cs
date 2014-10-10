@@ -91,7 +91,7 @@ namespace Service.Service
                 salesInvoice.TotalCOS = TotalCOS;
                 salesInvoice = CalculateAmountReceivable(salesInvoice, _salesInvoiceDetailService);
                 salesInvoice = _repository.ConfirmObject(salesInvoice);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoice(salesInvoice, _accountService);
+                _generalLedgerJournalService.CreateConfirmationJournalForSalesInvoice(salesInvoice, _accountService);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);

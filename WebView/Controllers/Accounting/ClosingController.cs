@@ -281,18 +281,24 @@ namespace WebView.Controllers
         {
             try
             {
+                Dictionary<string, string> Errors = new Dictionary<string, string>();
                 if (!AuthenticationModel.IsAllowed("Delete", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Report))
                 {
-                    Dictionary<string, string> Errors = new Dictionary<string, string>();
                     Errors.Add("Generic", "You are Not Allowed to Confirm Record");
-
                     return Json(new
                     {
                         Errors
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                _closingService.DeleteObject(model.Id, _accountService, _validCombService);
+                if (!_closingService.DeleteObject(model.Id, _accountService, _validCombService))
+                {
+                    Errors.Add("Generic", "This period has been closed.");
+                    return Json(new
+                    {
+                        Errors
+                    }, JsonRequestBehavior.AllowGet);
+                };
             }
             catch (Exception ex)
             {
