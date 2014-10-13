@@ -69,7 +69,7 @@ namespace Service.Service
         }
         #endregion
 
-        // CASH BANK
+        // FINANCE
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService)
         {
@@ -279,7 +279,431 @@ namespace Service.Service
             #endregion
         }
 
-        // STOCK MUTATION
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
+        {
+            // Credit CashBank, Debit Account Payable
+            #region Credit CashBank, Debit AccountPayable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = paymentVoucher.TotalAmount
+            };
+            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
+
+            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = paymentVoucher.TotalAmount
+            };
+            creditcashbank = CreateObject(creditcashbank, _accountService);
+
+            journals.Add(debitaccountpayable);
+            journals.Add(creditcashbank);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
+        {
+            // Debit CashBank, Credit AccountPayable
+            #region Debit CashBank, Credit AccountPayable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = paymentVoucher.TotalAmount
+            };
+            creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
+
+            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = paymentVoucher.TotalAmount
+            };
+            debitcashbank = CreateObject(debitcashbank, _accountService);
+
+            journals.Add(creditaccountpayable);
+            journals.Add(debitcashbank);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank, IAccountService _accountService)
+        {
+            // Credit CashBank, Debit Account Payable
+            #region Credit CashBank, Debit AccountPayable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPayment,
+                SourceDocumentId = purchaseDownPayment.Id,
+                TransactionDate = (DateTime)purchaseDownPayment.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = purchaseDownPayment.TotalAmount
+            };
+            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
+
+            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPayment,
+                SourceDocumentId = purchaseDownPayment.Id,
+                TransactionDate = (DateTime)purchaseDownPayment.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = purchaseDownPayment.TotalAmount
+            };
+            creditcashbank = CreateObject(creditcashbank, _accountService);
+
+            journals.Add(debitaccountpayable);
+            journals.Add(creditcashbank);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank, IAccountService _accountService)
+        {
+            // Debit CashBank, Credit AccountPayable
+            #region Debit CashBank, Credit AccountPayable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPayment,
+                SourceDocumentId = purchaseDownPayment.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = purchaseDownPayment.TotalAmount
+            };
+            creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
+
+            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPayment,
+                SourceDocumentId = purchaseDownPayment.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = purchaseDownPayment.TotalAmount
+            };
+            debitcashbank = CreateObject(debitcashbank, _accountService);
+
+            journals.Add(creditaccountpayable);
+            journals.Add(debitcashbank);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank, IAccountService _accountService)
+        {
+            // Credit CashBank, Debit Account Payable
+            #region Credit CashBank, Debit AccountPayable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseAllowance,
+                SourceDocumentId = purchaseAllowance.Id,
+                TransactionDate = (DateTime)purchaseAllowance.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = purchaseAllowance.TotalAmount
+            };
+            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
+
+            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseAllowance,
+                SourceDocumentId = purchaseAllowance.Id,
+                TransactionDate = (DateTime)purchaseAllowance.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = purchaseAllowance.TotalAmount
+            };
+            creditcashbank = CreateObject(creditcashbank, _accountService);
+
+            journals.Add(debitaccountpayable);
+            journals.Add(creditcashbank);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank, IAccountService _accountService)
+        {
+            // Debit CashBank, Credit AccountPayable
+            #region Debit CashBank, Credit AccountPayable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseAllowance,
+                SourceDocumentId = purchaseAllowance.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = purchaseAllowance.TotalAmount
+            };
+            creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
+
+            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseAllowance,
+                SourceDocumentId = purchaseAllowance.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = purchaseAllowance.TotalAmount
+            };
+            debitcashbank = CreateObject(debitcashbank, _accountService);
+
+            journals.Add(creditaccountpayable);
+            journals.Add(debitcashbank);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
+        {
+            // Debit CashBank, Credit AccountReceivable
+            #region Debit CashBank, Credit AccountReceivable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                SourceDocumentId = receiptVoucher.Id,
+                TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = receiptVoucher.TotalAmount
+            };
+            debitcashbank = CreateObject(debitcashbank, _accountService);
+
+            GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                SourceDocumentId = receiptVoucher.Id,
+                TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = receiptVoucher.TotalAmount
+            };
+            creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
+
+            journals.Add(debitcashbank);
+            journals.Add(creditaccountreceivable);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
+        {
+            // Credit CashBank, Debit AccountReceivable
+            #region Credit CashBank, Debit AccountReceivable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                SourceDocumentId = receiptVoucher.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = receiptVoucher.TotalAmount
+            };
+            creditcashbank = CreateObject(creditcashbank, _accountService);
+
+            GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                SourceDocumentId = receiptVoucher.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = receiptVoucher.TotalAmount
+            };
+            debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
+
+            journals.Add(creditcashbank);
+            journals.Add(debitaccountreceivable);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank, IAccountService _accountService)
+        {
+            // Debit CashBank, Credit AccountReceivable
+            #region Debit CashBank, Credit AccountReceivable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
+                SourceDocumentId = salesDownPayment.Id,
+                TransactionDate = (DateTime)salesDownPayment.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = salesDownPayment.TotalAmount
+            };
+            debitcashbank = CreateObject(debitcashbank, _accountService);
+
+            GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
+                SourceDocumentId = salesDownPayment.Id,
+                TransactionDate = (DateTime)salesDownPayment.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = salesDownPayment.TotalAmount
+            };
+            creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
+
+            journals.Add(debitcashbank);
+            journals.Add(creditaccountreceivable);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank, IAccountService _accountService)
+        {
+            // Credit CashBank, Debit AccountReceivable
+            #region Credit CashBank, Debit AccountReceivable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
+                SourceDocumentId = salesDownPayment.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = salesDownPayment.TotalAmount
+            };
+            creditcashbank = CreateObject(creditcashbank, _accountService);
+
+            GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
+                SourceDocumentId = salesDownPayment.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = salesDownPayment.TotalAmount
+            };
+            debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
+
+            journals.Add(creditcashbank);
+            journals.Add(debitaccountreceivable);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank, IAccountService _accountService)
+        {
+            // Debit CashBank, Credit AccountReceivable
+            #region Debit CashBank, Credit AccountReceivable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesAllowance,
+                SourceDocumentId = salesAllowance.Id,
+                TransactionDate = (DateTime)salesAllowance.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = salesAllowance.TotalAmount
+            };
+            debitcashbank = CreateObject(debitcashbank, _accountService);
+
+            GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesAllowance,
+                SourceDocumentId = salesAllowance.Id,
+                TransactionDate = (DateTime)salesAllowance.ConfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = salesAllowance.TotalAmount
+            };
+            creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
+
+            journals.Add(debitcashbank);
+            journals.Add(creditaccountreceivable);
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank, IAccountService _accountService)
+        {
+            // Credit CashBank, Debit AccountReceivable
+            #region Credit CashBank, Debit AccountReceivable
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesAllowance,
+                SourceDocumentId = salesAllowance.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = salesAllowance.TotalAmount
+            };
+            creditcashbank = CreateObject(creditcashbank, _accountService);
+
+            GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesAllowance,
+                SourceDocumentId = salesAllowance.Id,
+                TransactionDate = UnconfirmationDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = salesAllowance.TotalAmount
+            };
+            debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
+
+            journals.Add(creditcashbank);
+            journals.Add(debitaccountreceivable);
+
+            return journals;
+            #endregion
+        }
+
+        // MASTER & STOCK
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForStockAdjustment(StockAdjustment stockAdjustment, IAccountService _accountService)
         {
@@ -560,76 +984,6 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
-        {
-            // Credit CashBank, Debit Account Payable
-            #region Credit CashBank, Debit AccountPayable
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
-
-            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            creditcashbank = CreateObject(creditcashbank, _accountService);
-
-            journals.Add(debitaccountpayable);
-            journals.Add(creditcashbank);
-
-            return journals;
-            #endregion
-        }
-
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
-        {
-            // Debit CashBank, Credit AccountPayable
-            #region Debit CashBank, Credit AccountPayable
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime UnconfirmationDate = DateTime.Now;
-
-            GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
-
-            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            debitcashbank = CreateObject(debitcashbank, _accountService);
-
-            journals.Add(creditaccountpayable);
-            journals.Add(debitcashbank);
-
-            return journals;
-            #endregion
-        }
-
         // SALES OPERATION
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForDeliveryOrder(DeliveryOrder deliveryOrder, IAccountService _accountService)
@@ -888,77 +1242,6 @@ namespace Service.Service
             }
             #endregion
             return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
-        {
-            // Debit CashBank, Credit AccountReceivable
-            #region Debit CashBank, Credit AccountReceivable
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            debitcashbank = CreateObject(debitcashbank, _accountService);
-
-            GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
-
-            journals.Add(debitcashbank);
-            journals.Add(creditaccountreceivable);
-
-            return journals;
-            #endregion
-        }
-
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
-        {
-            // Credit CashBank, Debit AccountReceivable
-            #region Credit CashBank, Debit AccountReceivable
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime UnconfirmationDate = DateTime.Now;
-
-            GeneralLedgerJournal creditcashbank = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            creditcashbank = CreateObject(creditcashbank, _accountService);
-
-            GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = receiptVoucher.TotalAmount
-            };
-            debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
-
-            journals.Add(creditcashbank);
-            journals.Add(debitaccountreceivable);
-
-            return journals;
-            #endregion
         }
 
         // MANUFACTURING RECOVERY

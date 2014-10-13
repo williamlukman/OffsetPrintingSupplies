@@ -20,7 +20,11 @@ namespace Validation.Validation
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.ReceiptVoucher) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseInvoice) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesInvoice) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.StockAdjustment))
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.StockAdjustment) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesDownPayment) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesAllowance) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseDownPayment) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseAllowance))
             {
                 generalLedgerJournal.Errors.Add("SourceDocument", "Harus merupakan bagian dari Constant.SourceDocument");
             }

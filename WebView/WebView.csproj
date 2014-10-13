@@ -207,17 +207,22 @@
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
+    <Compile Include="Controllers\Finance\PurchaseAllowanceController.cs" />
+    <Compile Include="Controllers\Finance\PurchaseDownPaymentController.cs" />
+    <Compile Include="Controllers\Finance\SalesAllowanceController.cs" />
+    <Compile Include="Controllers\Finance\SalesDownPaymentController.cs" />
     <Compile Include="Controllers\Manufacturing\BlanketWorkOrderController.cs" />
     <Compile Include="Controllers\Finance\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\Finance\CashBankMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\Finance\CashMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\CoreAccessoryDetailController.cs" />
+    <Compile Include="Controllers\PurchaseOperation\PaymentRequestController.cs" />
     <Compile Include="Controllers\Report\FinanceReportController.cs" />
     <Compile Include="Controllers\SalesOperation\VirtualOrderController.cs" />
     <Compile Include="Controllers\SalesOperation\TemporaryDeliveryOrderController.cs" />
-    <Compile Include="Controllers\SalesOperation\ReceivableController.cs" />
-    <Compile Include="Controllers\PurchaseOperation\PayableController.cs" />
+    <Compile Include="Controllers\Finance\ReceivableController.cs" />
+    <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
     <Compile Include="Controllers\StockAndMaster\StockMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkProcessController.cs" />
@@ -238,11 +243,11 @@
     <Compile Include="Controllers\StockAndMaster\MstUoMController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstWarehouseController.cs" />
     <Compile Include="Controllers\StockAndMaster\WarehouseItemController.cs" />
-    <Compile Include="Controllers\PurchaseOperation\PaymentVoucherController.cs" />
+    <Compile Include="Controllers\Finance\PaymentVoucherController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PurchaseInvoiceController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PurchaseOrderController.cs" />
     <Compile Include="Controllers\PurchaseOperation\PurchaseReceivalController.cs" />
-    <Compile Include="Controllers\SalesOperation\ReceiptVoucherController.cs" />
+    <Compile Include="Controllers\Finance\ReceiptVoucherController.cs" />
     <Compile Include="Controllers\Manufacturing\RollerWarehouseMutationController.cs" />
     <Compile Include="Controllers\SalesOperation\SalesInvoiceController.cs" />
     <Compile Include="Controllers\SalesOperation\SalesOrderController.cs" />
@@ -268,6 +273,11 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\SalesAllowance.js" />
+    <Content Include="Content\apps_js\SalesDownPayment.js" />
+    <Content Include="Content\apps_js\PurchaseAllowance.js" />
+    <Content Include="Content\apps_js\PurchaseDownPayment.js" />
+    <Content Include="Content\apps_js\PaymentRequest.js" />
     <Content Include="Content\apps_js\TemporaryDeliveryOrder.js" />
     <Content Include="Content\apps_js\VirtualOrder.js" />
     <Content Include="Content\apps_js\CoreAccessoryDetail.js" />
@@ -1231,6 +1241,11 @@
     <Content Include="Views\Company\Index.cshtml" />
     <Content Include="Views\VirtualOrder\Index.cshtml" />
     <Content Include="Views\TemporaryDeliveryOrder\Index.cshtml" />
+    <Content Include="Views\PaymentRequest\Index.cshtml" />
+    <Content Include="Views\PurchaseDownPayment\Index.cshtml" />
+    <Content Include="Views\PurchaseAllowance\Index.cshtml" />
+    <Content Include="Views\SalesDownPayment\Index.cshtml" />
+    <Content Include="Views\SalesAllowance\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

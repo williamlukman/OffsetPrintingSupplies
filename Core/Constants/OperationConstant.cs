@@ -49,6 +49,8 @@ namespace Core.Constants
             public static string CoreIdentification = "CoreIdentification";
             public static string DeliveryOrder = "DeliveryOrder";
             public static string PaymentVoucher = "PaymentVoucher";
+            public static string PurchaseDownPayment = "PurchaseDownPayment";
+            public static string PurchaseAllowance = "PurchaseAllowance";
             public static string PurchaseOrder = "PurchaseOrder";
             public static string PurchaseReceival = "PurchaseReceival";
             public static string ReceiptVoucher = "ReceiptVoucher";
@@ -57,6 +59,8 @@ namespace Core.Constants
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string RollerWarehouseMutation = "RollerWarehouseMutation";
+            public static string SalesDownPayment = "SalesDownPayment";
+            public static string SalesAllowance = "SalesAllowance";
             public static string SalesOrder = "SalesOrder";
             public static string TemporaryDeliveryOrder = "TemporaryDeliveryOrder";
             public static string StockAdjustment = "StockAdjustment";
@@ -85,6 +89,7 @@ namespace Core.Constants
 
         public class PayableSource
         {
+            public static string PaymentRequest = "PaymentRequest";
             public static string PurchaseInvoice = "PurchaseInvoice";
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
         }
@@ -119,6 +124,9 @@ namespace Core.Constants
             public static string CashBankAdjustment = "CashBank Adjustment";
             public static string CashBankMutation = "CashBank Mutation";
             public static string PaymentRequest = "Payment Request";
+            public static string DownPayment = "Down Payment";
+            public static string PurchaseAllowance = "Purchase Allowance";
+            public static string SalesAllowance = "Sales Allowance";
 
             public static string Blanket = "Blanket";
             public static string CoreBuilder = "CoreBuilder";
@@ -127,7 +135,7 @@ namespace Core.Constants
             public static string StockAdjustment = "Stock Adjustment";
             public static string StockMutation = "Stock Mutation";
             public static string Warehouse = "Warehouse";
-            public static string WarehouseItem = "WarehouseItem";
+            public static string WarehouseItem = "Warehouse Item";
             public static string WarehouseMutation = "Warehouse Mutation";
 
             public static string BlanketWorkOrder = "Blanket Work Order";

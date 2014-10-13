@@ -123,9 +123,16 @@ namespace Service.Service
                 Payable payable = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id);
                 if (payable != null)
                 {
-                    PaymentVoucher paymentVoucher = _paymentVoucherService.CreateObject(retailPurchaseInvoice.CashBankId, retailPurchaseInvoice.ContactId, DateTime.Now, retailPurchaseInvoice.Total, 
-                                                                            retailPurchaseInvoice.IsGBCH, (DateTime)retailPurchaseInvoice.DueDate, retailPurchaseInvoice.IsBank, _paymentVoucherDetailService, 
-                                                                            _payableService, _contactService, _cashBankService ); 
+                    PaymentVoucher paymentVoucher = new PaymentVoucher()
+                    {
+                        CashBankId = retailPurchaseInvoice.CashBankId,
+                        ContactId = retailPurchaseInvoice.ContactId,
+                        PaymentDate = DateTime.Now,
+                        TotalAmount = retailPurchaseInvoice.Total,
+                        IsGBCH = retailPurchaseInvoice.IsGBCH,
+                        DueDate = (DateTime) retailPurchaseInvoice.DueDate,
+                    };
+                    paymentVoucher = _paymentVoucherService.CreateObject(paymentVoucher, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService); 
                     retailPurchaseInvoice = _repository.PaidObject(retailPurchaseInvoice);
                 }
             }

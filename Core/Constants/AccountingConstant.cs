@@ -21,10 +21,14 @@ namespace Core.Constants
             //public static string CashSalesInvoice = "CashSalesInvoice";
             //public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
             public static string PaymentVoucher = "PaymentVoucher";
+            public static string PurchaseDownPayment = "PurchaseDownPayment";
+            public static string PurchaseAllowance = "PurchaseAllowance";
             public static string ReceiptVoucher = "ReceiptVoucher";
             //public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string StockAdjustment = "StockAdjustment";
             public static string DeliveryOrder = "DeliveryOrder";
+            public static string SalesDownPayment = "SalesDownPayment";
+            public static string SalesAllowance = "SalesAllowance";
             public static string SalesInvoice = "SalesInvoice";
             public static string PurchaseReceival = "PurchaseReceival";
             public static string PurchaseInvoice = "PurchaseInvoice";

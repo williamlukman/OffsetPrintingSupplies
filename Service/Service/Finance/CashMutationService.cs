@@ -67,6 +67,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
+        #region PaymentVoucher
         public CashMutation CreateCashMutationForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank)
         {
             CashMutation cashMutation = new CashMutation();
@@ -89,7 +90,59 @@ namespace Service.Service
             }
             return cashMutations;
         }
+        #endregion
 
+        #region Purchase Down Payment
+        public CashMutation CreateCashMutationForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank)
+        {
+            CashMutation cashMutation = new CashMutation();
+            cashMutation.CashBankId = cashBank.Id;
+            cashMutation.Amount = Math.Abs(purchaseDownPayment.TotalAmount);
+            cashMutation.MutationDate = purchaseDownPayment.IsGBCH ? (DateTime)purchaseDownPayment.ReconciliationDate.GetValueOrDefault() : (DateTime)purchaseDownPayment.ConfirmationDate.GetValueOrDefault();
+            cashMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseDownPayment;
+            cashMutation.SourceDocumentId = purchaseDownPayment.Id;
+            cashMutation.SourceDocumentCode = purchaseDownPayment.Code;
+            cashMutation.Status = Constant.MutationStatus.Deduction;
+            return _repository.CreateObject(cashMutation);
+        }
+
+        public IList<CashMutation> SoftDeleteCashMutationForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank)
+        {
+            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.PurchaseDownPayment, purchaseDownPayment.Id);
+            foreach (var cashMutation in cashMutations)
+            {
+                _repository.Delete(cashMutation);
+            }
+            return cashMutations;
+        }
+        #endregion
+
+        #region Purchase Allownance
+        public CashMutation CreateCashMutationForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank)
+        {
+            CashMutation cashMutation = new CashMutation();
+            cashMutation.CashBankId = cashBank.Id;
+            cashMutation.Amount = Math.Abs(purchaseAllowance.TotalAmount);
+            cashMutation.MutationDate = purchaseAllowance.IsGBCH ? (DateTime)purchaseAllowance.ReconciliationDate.GetValueOrDefault() : (DateTime)purchaseAllowance.ConfirmationDate.GetValueOrDefault();
+            cashMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseAllowance;
+            cashMutation.SourceDocumentId = purchaseAllowance.Id;
+            cashMutation.SourceDocumentCode = purchaseAllowance.Code;
+            cashMutation.Status = Constant.MutationStatus.Deduction;
+            return _repository.CreateObject(cashMutation);
+        }
+
+        public IList<CashMutation> SoftDeleteCashMutationForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank)
+        {
+            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.PurchaseAllowance, purchaseAllowance.Id);
+            foreach (var cashMutation in cashMutations)
+            {
+                _repository.Delete(cashMutation);
+            }
+            return cashMutations;
+        }
+        #endregion
+
+        #region Receipt Voucher
         public CashMutation CreateCashMutationForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank)
         {
             CashMutation cashMutation = new CashMutation();
@@ -112,7 +165,59 @@ namespace Service.Service
             }
             return cashMutations;
         }
+        #endregion
 
+        #region Sales Down Payment
+        public CashMutation CreateCashMutationForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank)
+        {
+            CashMutation cashMutation = new CashMutation();
+            cashMutation.CashBankId = cashBank.Id;
+            cashMutation.Amount = Math.Abs(salesDownPayment.TotalAmount);
+            cashMutation.MutationDate = salesDownPayment.IsGBCH ? (DateTime)salesDownPayment.ReconciliationDate.GetValueOrDefault() : (DateTime)salesDownPayment.ConfirmationDate.GetValueOrDefault();
+            cashMutation.SourceDocumentType = Constant.SourceDocumentType.SalesDownPayment;
+            cashMutation.SourceDocumentId = salesDownPayment.Id;
+            cashMutation.SourceDocumentCode = salesDownPayment.Code;
+            cashMutation.Status = Constant.MutationStatus.Addition;
+            return _repository.CreateObject(cashMutation);
+        }
+
+        public IList<CashMutation> SoftDeleteCashMutationForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank)
+        {
+            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.SalesDownPayment, salesDownPayment.Id);
+            foreach (var cashMutation in cashMutations)
+            {
+                _repository.Delete(cashMutation);
+            }
+            return cashMutations;
+        }
+        #endregion
+
+        #region Sales Allowance
+        public CashMutation CreateCashMutationForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank)
+        {
+            CashMutation cashMutation = new CashMutation();
+            cashMutation.CashBankId = cashBank.Id;
+            cashMutation.Amount = Math.Abs(salesAllowance.TotalAmount);
+            cashMutation.MutationDate = salesAllowance.IsGBCH ? (DateTime)salesAllowance.ReconciliationDate.GetValueOrDefault() : (DateTime)salesAllowance.ConfirmationDate.GetValueOrDefault();
+            cashMutation.SourceDocumentType = Constant.SourceDocumentType.SalesAllowance;
+            cashMutation.SourceDocumentId = salesAllowance.Id;
+            cashMutation.SourceDocumentCode = salesAllowance.Code;
+            cashMutation.Status = Constant.MutationStatus.Addition;
+            return _repository.CreateObject(cashMutation);
+        }
+
+        public IList<CashMutation> SoftDeleteCashMutationForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank)
+        {
+            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.SalesAllowance, salesAllowance.Id);
+            foreach (var cashMutation in cashMutations)
+            {
+                _repository.Delete(cashMutation);
+            }
+            return cashMutations;
+        }
+        #endregion
+
+        #region Cash Bank Adjustment
         public CashMutation CreateCashMutationForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank)
         {
             CashMutation cashMutation = new CashMutation();
@@ -135,7 +240,9 @@ namespace Service.Service
             }
             return cashMutations;
         }
+        #endregion
 
+        #region Cash Bank Mutation
         public IList<CashMutation> CreateCashMutationForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank)
         {
             IList<CashMutation> results = new List<CashMutation>();
@@ -185,6 +292,7 @@ namespace Service.Service
 
             return cashMutations;
         }
+        #endregion
 
         public void CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService)
         {
