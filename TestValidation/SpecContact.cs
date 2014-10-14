@@ -138,21 +138,21 @@ namespace TestValidation
             {
                 d.contact.PIC = "   ";
                 d.contact = d._contactService.UpdateObject(d.contact, d._contactGroupService);
-                d.contact.Errors.Count().should_not_be(0);
+                d.contact.Errors.Count().should_be(0);
             };
 
             it["update_with_empty_pic_contactno"] = () =>
             {
                 d.contact.PICContactNo = "   ";
                 d.contact = d._contactService.UpdateObject(d.contact, d._contactGroupService);
-                d.contact.Errors.Count().should_not_be(0);
+                d.contact.Errors.Count().should_be(0);
             };
 
             it["update_with_empty_email"] = () =>
             {
                 d.contact.Email = "   ";
                 d.contact = d._contactService.UpdateObject(d.contact, d._contactGroupService);
-                d.contact.Errors.Count().should_not_be(0);
+                d.contact.Errors.Count().should_be(0);
             };
 
             it["delete_contact"] = () =>

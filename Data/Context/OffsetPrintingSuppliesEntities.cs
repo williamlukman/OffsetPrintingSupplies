@@ -31,19 +31,19 @@ namespace Data.Context
                                           "CoreAccessoryDetail", "CoreIdentificationDetail", "CoreIdentification",
                                           "BlanketOrderDetail", "BlanketOrder" };
             IList<String> purchaseOperationNames = new List<String>()
-                                        { "Payable", "RetailPurchaseInvoice", "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail",
-                                          "PurchaseInvoice", "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail",
+                                        { "PaymentVoucherDetail", "PaymentVoucher", "PurchaseDownPaymentDetail", "PurchaseDownPayment",
+                                          "PurchaseAllowanceDetail", "PurchaseAllowance", "Payable", "RetailPurchaseInvoice",
+                                          "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail", "PurchaseInvoice",
+                                          "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail",
                                           "PurchaseOrder", "PaymentRequest" };
             IList<String> salesOperationNames = new List<String>()
-                                        { "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
+                                        { "SalesDownPaymentDetail", "SalesDownPayment", "SalesAllowanceDetail", "SalesAllowance",
+                                          "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
                                           "RetailSalesInvoice", "RetailSalesInvoiceDetail", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
                                           "SalesOrderDetail", "SalesOrder", "VirtualOrderDetail", "VirtualOrder"};
             IList<String> financeNames = new List<String>() {
-                                          "PaymentVoucherDetail", "PaymentVoucher", "PurchaseDownPaymentDetail", "PurchaseDownPayment",
-                                          "PurchaseAllowanceDetail", "PurchaseAllowance", "SalesDownPaymentDetail", "SalesDownPayment",
-                                          "SalesAllowanceDetail", "SalesAllowance", "CashMutation", "CashBankAdjustment", "CashBankMutation",
-                                          "CashBank" };
+                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" };
             IList<String> stockAndMasterNames = new List<String>()
                                         { "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
                                           "ServiceCost", "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment",

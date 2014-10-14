@@ -519,6 +519,7 @@
     <Content Include="Content\easyui\icons\export.png" />
     <Content Include="Content\easyui\icons\filesave.png" />
     <Content Include="Content\easyui\icons\filesave30.png" />
+    <Content Include="Content\easyui\icons\forward.png" />
     <Content Include="Content\easyui\icons\help.png" />
     <Content Include="Content\easyui\icons\iconBL - Copy.png" />
     <Content Include="Content\easyui\icons\iconBL.png" />

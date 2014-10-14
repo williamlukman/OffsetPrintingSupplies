@@ -20,6 +20,8 @@
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
+        <a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push DO</a>
+        <a id="btn_back" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'">Back</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
         <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
@@ -185,6 +187,39 @@
         </div>
     </div>
     <!-- End Dialog Box Confirm-->
+
+        <!-- Dialog Box Push-->
+    <div id="push_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
+        data-options="modal:true" title=".: Push to Delivery Order :.">
+
+        <div id="push_toolbar" class="form_toolbar">
+            <a id="push_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
+            <a id="push_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
+        </div>
+        <div id="push_info">
+              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+                  <tr>
+                      <td width="139" nowrap style="width: 100px">
+                          Id
+                      </td>
+                      <td>
+                         <input id="idpush" type="text" size="10" disabled="disabled"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          Delivery Date
+                      </td>
+                      <td>
+                         <input id="PushDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
+                         <input name="PushDate" type="text" size="1" hidden="hidden"/>
+                         <input name="IsPushed" type="text" size="1" hidden="hidden"/>
+                      </td>
+                  </tr>
+              </table>      
+        </div>
+    </div>
+    <!-- End Dialog Box Push-->
 
     <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"

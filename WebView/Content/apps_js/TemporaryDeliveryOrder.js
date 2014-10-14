@@ -51,7 +51,7 @@
     $("#list").jqGrid({
         url: base_url + 'TemporaryDeliveryOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'TemporaryDeliveryDate',
+        colNames: ['ID', 'Code', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -61,7 +61,7 @@
                   { name: 'ordercode', index: 'ordercode', width: 70 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 130 },
-                  { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -311,7 +311,43 @@
         $('#confirm_div').dialog('close');
     });
 
-
+    $('#btn_forward').click(function () {
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#list").jqGrid('getRowData', id);
+            $.messager.confirm('Confirm', 'Are you sure you want to push record to delivery order?', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: base_url + "TemporaryDeliveryOrder/Push",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            Id: id,
+                        }),
+                        success: function (result) {
+                            if (JSON.stringify(result.Errors) != '{}') {
+                                for (var key in result.Errors) {
+                                    if (key != null && key != undefined && key != 'Generic') {
+                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                    }
+                                    else {
+                                        $.messager.alert('Warning', result.Errors[key], 'warning');
+                                    }
+                                }
+                            }
+                            else {
+                                ReloadGrid();
+                                $("#delete_confirm_div").dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -332,7 +368,6 @@
     });
 
     $('#delete_confirm_btn_submit').click(function () {
-
         $.ajax({
             url: base_url + "TemporaryDeliveryOrder/Delete",
             type: "POST",
@@ -367,7 +402,6 @@
     });
 
     $("#form_btn_save").click(function () {
-
         ClearErrorMessage();
 
         var submitURL = '';

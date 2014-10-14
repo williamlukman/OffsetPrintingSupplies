@@ -46,6 +46,9 @@
 .icon-back{
 	background:url('icons/back.png') no-repeat center center;
 }
+.icon-forward{
+	background:url('icons/forward.png') no-repeat center center;
+}
 .icon-sum{
 	background:url('icons/sum.png') no-repeat center center;
 }
