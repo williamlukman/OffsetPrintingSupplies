@@ -12,6 +12,7 @@ namespace Core.Interface.Repository
         IList<TemporaryDeliveryOrderDetail> GetAll();
         IList<TemporaryDeliveryOrderDetail> GetAllByMonthCreated();
         IList<TemporaryDeliveryOrderDetail> GetObjectsByTemporaryDeliveryOrderId(int temporaryDeliveryOrderId);
+        TemporaryDeliveryOrderDetail GetObjectByCode(string Code); 
         TemporaryDeliveryOrderDetail GetObjectById(int Id);
         IList<TemporaryDeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId);
         IList<TemporaryDeliveryOrderDetail> GetObjectsByVirtualOrderDetailId(int salesOrderDetailId);

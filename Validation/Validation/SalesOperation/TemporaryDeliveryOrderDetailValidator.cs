@@ -241,6 +241,24 @@ namespace Validation.Validation
             return temporaryDeliveryOrderDetail;
         }
 
+        public TemporaryDeliveryOrderDetail VHasBeenReconciled(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            if (!temporaryDeliveryOrderDetail.IsReconciled)
+            {
+                temporaryDeliveryOrderDetail.Errors.Add("Generic", "Harus sudah direkonsiliasi.");
+            }
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail VHasNotBeenReconciled(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            if (temporaryDeliveryOrderDetail.IsReconciled)
+            {
+                temporaryDeliveryOrderDetail.Errors.Add("Generic", "Tidak boleh sudah direkonsiliasi.");
+            }
+            return temporaryDeliveryOrderDetail;
+        }
+
         public TemporaryDeliveryOrderDetail VHasConfirmationDate(TemporaryDeliveryOrderDetail obj)
         {
             if (obj.ConfirmationDate == null)
@@ -248,6 +266,24 @@ namespace Validation.Validation
                 obj.Errors.Add("ConfirmationDate", "Tidak boleh kosong");
             }
             return obj;
+        }
+
+        public TemporaryDeliveryOrderDetail VQuantityEqualsWasteAndRestock(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            if (temporaryDeliveryOrderDetail.WasteQuantity + temporaryDeliveryOrderDetail.RestockQuantity != temporaryDeliveryOrderDetail.Quantity)
+            {
+                temporaryDeliveryOrderDetail.Errors.Add("Generic", "Waste + Restock harus = Quantity");
+            }
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail VQuantityLessThanOrEqualWasteAndRestock(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            if (temporaryDeliveryOrderDetail.WasteQuantity + temporaryDeliveryOrderDetail.RestockQuantity > temporaryDeliveryOrderDetail.Quantity)
+            {
+                temporaryDeliveryOrderDetail.Errors.Add("Generic", "Waste + Restock harus <= Quantity");
+            }
+            return temporaryDeliveryOrderDetail;
         }
 
         public TemporaryDeliveryOrderDetail VCreateObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
@@ -304,6 +340,8 @@ namespace Validation.Validation
             if (!isValid(temporaryDeliveryOrderDetail)) { return temporaryDeliveryOrderDetail; }
             VUniqueVirtualOrSalesOrderDetail(temporaryDeliveryOrderDetail, _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService,
                                              _virtualOrderDetailService, _salesOrderDetailService, _itemService);
+            if (!isValid(temporaryDeliveryOrderDetail)) { return temporaryDeliveryOrderDetail; }
+            VQuantityLessThanOrEqualWasteAndRestock(temporaryDeliveryOrderDetail);
             return temporaryDeliveryOrderDetail;
         }
 
@@ -329,6 +367,30 @@ namespace Validation.Validation
         }
 
         public TemporaryDeliveryOrderDetail VUnconfirmObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail VReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService)
+        {
+            VHasNotBeenReconciled(temporaryDeliveryOrderDetail);
+            if (!isValid(temporaryDeliveryOrderDetail)) { return temporaryDeliveryOrderDetail; }
+            VQuantityEqualsWasteAndRestock(temporaryDeliveryOrderDetail);
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail VUnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService)
+        {
+            VHasBeenReconciled(temporaryDeliveryOrderDetail);
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail VCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail VUndoCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
         {
             return temporaryDeliveryOrderDetail;
         }
@@ -376,6 +438,34 @@ namespace Validation.Validation
             return isValid(temporaryDeliveryOrderDetail);
         }
 
+        public bool ValidReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService)
+        {
+            temporaryDeliveryOrderDetail.Errors.Clear();
+            VReconcileObject(temporaryDeliveryOrderDetail, _closingService);
+            return isValid(temporaryDeliveryOrderDetail);
+        }
+
+        public bool ValidUnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService)
+        {
+            temporaryDeliveryOrderDetail.Errors.Clear();
+            VUnreconcileObject(temporaryDeliveryOrderDetail, _closingService);
+            return isValid(temporaryDeliveryOrderDetail);
+        }
+
+        public bool ValidCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            temporaryDeliveryOrderDetail.Errors.Clear();
+            VCompleteObject(temporaryDeliveryOrderDetail);
+            return isValid(temporaryDeliveryOrderDetail);
+        }
+
+        public bool ValidUndoCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            temporaryDeliveryOrderDetail.Errors.Clear();
+            VUndoCompleteObject(temporaryDeliveryOrderDetail);
+            return isValid(temporaryDeliveryOrderDetail);
+        }
+
         public bool isValid(TemporaryDeliveryOrderDetail obj)
         {
             bool isValid = !obj.Errors.Any();
@@ -394,6 +484,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

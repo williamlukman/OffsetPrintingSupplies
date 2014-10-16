@@ -35,6 +35,7 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IServiceCostService _serviceCostService;
+        private IContactService _contactService;
 
         public TemporaryDeliveryOrderController()
         {
@@ -57,6 +58,7 @@ namespace WebView.Controllers
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
         }
 
         public ActionResult Index()
@@ -249,6 +251,8 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
+                             model.RestockQuantity,
+                             model.WasteQuantity,
                              Price = (model.TemporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.SalesOrderDetail.Price : model.VirtualOrderDetail.Price,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -289,6 +293,8 @@ namespace WebView.Controllers
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
+                            model.RestockQuantity,
+                            model.WasteQuantity,
                             model.Price,
                       }
                     }).ToArray()
@@ -351,6 +357,8 @@ namespace WebView.Controllers
                 ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
+                model.RestockQuantity,
+                model.WasteQuantity,
                 Price = _temporaryDeliveryOrderService.GetObjectById(model.TemporaryDeliveryOrderId).OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
                         _salesOrderDetailService.GetObjectById((int) model.SalesOrderDetailId).Price : _virtualOrderDetailService.GetObjectById((int) model.VirtualOrderDetailId).Price,
                 model.Errors
@@ -469,6 +477,8 @@ namespace WebView.Controllers
                 data.VirtualOrderDetailId = model.VirtualOrderDetailId;
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.WasteQuantity = model.WasteQuantity;
+                data.RestockQuantity = model.RestockQuantity;
                 model = _temporaryDeliveryOrderDetailService.UpdateObject(data, _temporaryDeliveryOrderService, _virtualOrderDetailService, 
                                                                           _salesOrderDetailService, _deliveryOrderService, _itemService);
             }
@@ -521,6 +531,28 @@ namespace WebView.Controllers
             catch (Exception ex)
             {
                 LOG.Error("Unconfirm Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Errors
+            });
+        }
+
+        [HttpPost]
+        public dynamic Push(TemporaryDeliveryOrder model)
+        {
+            try
+            {
+                var data = _temporaryDeliveryOrderService.GetObjectById(model.Id);
+                model = _temporaryDeliveryOrderService.PushObject(data, model.ConfirmationDate.Value, _temporaryDeliveryOrderDetailService, _virtualOrderService, _virtualOrderDetailService,
+                        _salesOrderService, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _itemService, _stockMutationService, 
+                        _contactService, _blanketService, _warehouseService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Push to DO Failed", ex);
                 model.Errors.Add("Generic", "Error : " + ex);
             }
 

@@ -72,7 +72,7 @@ namespace WebView.Controllers
                             model.SourceDocumentDetailType,
                             model.SourceDocumentDetailId,
                             model.CreatedAt,
-                            // model.MutationDate
+                            model.MutationDate
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -120,8 +120,7 @@ namespace WebView.Controllers
                             model.SourceDocumentDetailType,
                             model.SourceDocumentDetailId,
                             model.CreatedAt,
-                            // TODO
-                            // model.MutationDate
+                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -161,7 +160,7 @@ namespace WebView.Controllers
                              model.SourceDocumentDetailType,
                              model.SourceDocumentDetailId,
                              model.CreatedAt,
-                             // model.MutationDate
+                             model.MutationDate
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -210,8 +209,7 @@ namespace WebView.Controllers
                             model.SourceDocumentDetailType,
                             model.SourceDocumentDetailId,
                             model.CreatedAt,
-                            // TODO
-                            // model.MutationDate
+                            model.MutationDate
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

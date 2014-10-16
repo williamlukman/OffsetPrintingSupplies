@@ -98,7 +98,6 @@ namespace Service.Service
 
         public PurchaseInvoiceDetail SoftDeleteObject(PurchaseInvoiceDetail purchaseInvoiceDetail, IPurchaseInvoiceService _purchaseInvoiceService)
         {
-            // TODO : Hard Delete
             if (_validator.ValidDeleteObject(purchaseInvoiceDetail))
             {
                 PurchaseInvoice purchaseInvoice = _purchaseInvoiceService.GetObjectById(purchaseInvoiceDetail.PurchaseInvoiceId);

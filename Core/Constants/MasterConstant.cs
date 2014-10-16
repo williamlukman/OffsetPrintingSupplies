@@ -63,6 +63,7 @@ namespace Core.Constants
             public static int TrialOrder = 0;
             public static int SampleOrder = 1;
             public static int PartDeliveryOrder = 2;
+            public static int SalesOrder = 3;
         }
     }
 }

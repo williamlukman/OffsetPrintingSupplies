@@ -1057,6 +1057,76 @@ namespace Service.Service
             #endregion
         }
 
+        public IList<GeneralLedgerJournal> CreateReconciliationJournalForTemporaryDeliveryOrderWaste(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, IAccountService _accountService)
+        {
+            // Credit Raw, Debit SampleAndTrialExpense
+            #region Credit Raw , Debit SampleAndTrialExpense
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrder.Id,
+                TransactionDate = PushDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+            };
+            creditraw = CreateObject(creditraw, _accountService);
+
+            GeneralLedgerJournal debitsampleandtrialexpense = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SampleAndTrialExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrder.Id,
+                TransactionDate = PushDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+            };
+            debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
+
+            journals.Add(creditraw);
+            journals.Add(debitsampleandtrialexpense);
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnreconciliationJournalForTemporaryDeliveryOrderWaste(TemporaryDeliveryOrder temporaryDeliveryOrder, IAccountService _accountService)
+        {
+            // Debit Raw, Credit SampleAndTrialExpense
+            #region Debit Raw , Credit SampleAndTrialExpense
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            DateTime UnreconcileDate = DateTime.Now;
+
+            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrder.Id,
+                TransactionDate = UnreconcileDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+            };
+            debitraw = CreateObject(debitraw, _accountService);
+
+            GeneralLedgerJournal creditsampleandtrialexpense = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SampleAndTrialExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrder.Id,
+                TransactionDate = UnreconcileDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+            };
+            creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
+
+            journals.Add(debitraw);
+            journals.Add(creditsampleandtrialexpense);
+            return journals;
+            #endregion
+        }
+        
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, IAccountService _accountService)
         {
             // Debit AccountReceivable, Debit Discount, Debit TaxExpense, Credit Revenue

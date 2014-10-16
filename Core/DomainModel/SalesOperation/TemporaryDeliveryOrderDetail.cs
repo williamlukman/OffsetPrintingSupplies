@@ -12,7 +12,9 @@ namespace Core.DomainModel
         public int TemporaryDeliveryOrderId { get; set; }
         public int ItemId { get; set; }
         public int Quantity { get; set; }
+        public bool IsReconciled { get; set; }
         public bool IsAllCompleted { get; set; }
+        public decimal WasteCOGS { get; set; }
         public int WasteQuantity { get; set; }
         public int RestockQuantity { get; set; }
         public Nullable<int> SalesOrderDetailId { get; set; }

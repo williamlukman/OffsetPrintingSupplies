@@ -25,7 +25,7 @@ namespace Core.Interface.Service
                                     ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                    IServiceCostService _serviceCostService);
+                                    IServiceCostService _serviceCostService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService);
         DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesInvoiceService _salesInvoiceService,
                                       ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                       IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,

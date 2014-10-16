@@ -46,6 +46,11 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
+        public TemporaryDeliveryOrderDetail GetObjectByCode(string Code)
+        {
+            return _repository.GetObjectByCode(Code);
+        }
+
         public IList<TemporaryDeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId)
         {
             return _repository.GetObjectsBySalesOrderDetailId(salesOrderDetailId);
@@ -135,7 +140,7 @@ namespace Service.Service
                 TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(temporaryDeliveryOrderDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForTemporaryDeliveryOrder(temporaryDeliveryOrderDetail, warehouseItem);
+                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrder(temporaryDeliveryOrderDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingDelivery += temporaryDeliveryOrderDetail.Quantity;
@@ -158,27 +163,89 @@ namespace Service.Service
             return temporaryDeliveryOrderDetail;
         }
 
-        public TemporaryDeliveryOrderDetail ReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity)
+        public TemporaryDeliveryOrderDetail ProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity)
         {
-            // TODO: validasi + automation
             temporaryDeliveryOrderDetail.WasteQuantity = wasteQuantity;
             temporaryDeliveryOrderDetail.RestockQuantity = restockQuantity;
-            if (temporaryDeliveryOrderDetail.WasteQuantity + temporaryDeliveryOrderDetail.RestockQuantity == temporaryDeliveryOrderDetail.Quantity)
-            {
-                temporaryDeliveryOrderDetail.IsAllCompleted = true;
-            }
             _repository.UpdateObject(temporaryDeliveryOrderDetail);
             return temporaryDeliveryOrderDetail;
         }
 
-        public TemporaryDeliveryOrderDetail UnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService)
+        public TemporaryDeliveryOrderDetail ReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, DateTime PushDate, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
+                                                            IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                                            IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
         {
-            temporaryDeliveryOrderDetail.WasteQuantity = 0;
-            temporaryDeliveryOrderDetail.RestockQuantity = 0;
+            if (_validator.ValidReconcileObject(temporaryDeliveryOrderDetail, _closingService))
+            {
+                TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderDetail.ItemId);
+                Item item = _itemService.GetObjectById(temporaryDeliveryOrderDetail.ItemId);
+                if (temporaryDeliveryOrderDetail.WasteQuantity > 0)
+                {
+                    IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderWaste(temporaryDeliveryOrderDetail, PushDate, warehouseItem);
+                    foreach (var stockMutation in stockMutations)
+                    {
+                        _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                    }
+                    temporaryDeliveryOrderDetail.WasteCOGS = temporaryDeliveryOrderDetail.WasteQuantity * item.AvgPrice;
+                }
+                if (temporaryDeliveryOrderDetail.RestockQuantity > 0)
+                {
+                    IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderRestock(temporaryDeliveryOrderDetail, PushDate, warehouseItem);
+                    foreach (var stockMutation in stockMutations)
+                    {
+                        _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                    }
+                }
+                temporaryDeliveryOrderDetail.IsReconciled = true;
+                _repository.UpdateObject(temporaryDeliveryOrderDetail);
+            }
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail UnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
+                                                              IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                                              IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
+        {
+            if (_validator.ValidUnreconcileObject(temporaryDeliveryOrderDetail, _closingService))
+            {
+                temporaryDeliveryOrderDetail.IsReconciled = false;
+                temporaryDeliveryOrderDetail.WasteCOGS = 0;
+                _repository.UpdateObject(temporaryDeliveryOrderDetail);
+                TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderDetail.ItemId);
+                if (temporaryDeliveryOrderDetail.WasteQuantity > 0)
+                {
+                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrderWaste(temporaryDeliveryOrderDetail, warehouseItem);
+                    foreach (var stockMutation in stockMutations)
+                    {
+                        _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                    }
+                }
+                if (temporaryDeliveryOrderDetail.RestockQuantity > 0)
+                {
+                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrderRestock(temporaryDeliveryOrderDetail, warehouseItem);
+                    foreach (var stockMutation in stockMutations)
+                    {
+                        _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                    }
+                }
+            }
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail CompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            temporaryDeliveryOrderDetail.IsAllCompleted = true;
+            _repository.UpdateObject(temporaryDeliveryOrderDetail);
+            return temporaryDeliveryOrderDetail;
+        }
+
+        public TemporaryDeliveryOrderDetail UndoCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
             temporaryDeliveryOrderDetail.IsAllCompleted = false;
             _repository.UpdateObject(temporaryDeliveryOrderDetail);
             return temporaryDeliveryOrderDetail;
         }
-
     }
 }

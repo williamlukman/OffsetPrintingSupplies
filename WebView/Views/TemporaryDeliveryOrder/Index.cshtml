@@ -20,8 +20,8 @@
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
-        <a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push DO</a>
-        <a id="btn_back" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'">Back</a>
+        <a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push2DO</a>
+        <!--a id="btn_back" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'">Back</a-->
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
         <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
@@ -31,7 +31,7 @@
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
 
-<!-- Dialog Box -->
+    <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
         title=".:  @ViewBag.Title :.">
 
@@ -102,6 +102,7 @@
                         <div id="toolbardetail" class="grid_toolbar">
                             <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
+                            <a id="btn_process_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Process</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
                         <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -111,9 +112,9 @@
             </form>
         </div>
     </div>
-<!-- End Dialog Box -->
+    <!-- End Dialog Box -->
 
- <!-- Dialog Box  Item-->
+    <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
         data-options="modal:true" title=".: Input Item :.">
 
@@ -122,7 +123,7 @@
             <a id="item_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
         </div>
         <div id="item_info">
-              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+              <table width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
                       <td width="139" nowrap style="width: 100px">
                           Item
@@ -136,18 +137,34 @@
                   </tr>
                     <tr>
                         <td>
-                            QTY
+                            <label>QTY</label>
                         </td>
                         <td>
-                               <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                            <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="row-price">
                         <td>
-                            Price
+                            <label>Price</label>
                         </td>
                         <td>
-                               <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
+                            <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
+                        </td>
+                    </tr>
+                    <tr id="row-restock">
+                        <td>
+                            <label>Restock QTY</label>
+                        </td>
+                        <td>
+                            <input id="RestockQuantity" name="RestockQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
+                    <tr id="row-waste">
+                        <td>
+                            <label>Waste QTY</label>
+                        </td>
+                        <td>
+                            <input id="WasteQuantity" name="WasteQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
               </table>
@@ -188,7 +205,7 @@
     </div>
     <!-- End Dialog Box Confirm-->
 
-        <!-- Dialog Box Push-->
+    <!-- Dialog Box Push-->
     <div id="push_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
         data-options="modal:true" title=".: Push to Delivery Order :.">
 

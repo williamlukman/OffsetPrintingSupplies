@@ -116,7 +116,7 @@ namespace Service.Service
             {
                 purchaseOrderDetail = _repository.UnconfirmObject(purchaseOrderDetail);
                 Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForPurchaseOrder(purchaseOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForPurchaseOrder(purchaseOrderDetail, item);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingReceival -= purchaseOrderDetail.Quantity;

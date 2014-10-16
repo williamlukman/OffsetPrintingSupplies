@@ -98,16 +98,30 @@ namespace Data.Repository
             return temporaryDeliveryOrder;
         }
 
-        public TemporaryDeliveryOrder SetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder)
+        public TemporaryDeliveryOrder ReconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder)
         {
-            temporaryDeliveryOrder.IsReconcileCompleted = true;
+            temporaryDeliveryOrder.IsReconciled = true;
             UpdateObject(temporaryDeliveryOrder);
             return temporaryDeliveryOrder;
         }
 
-        public TemporaryDeliveryOrder UnsetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder)
+        public TemporaryDeliveryOrder UnreconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder)
         {
-            temporaryDeliveryOrder.IsReconcileCompleted = false;
+            temporaryDeliveryOrder.IsReconciled = false;
+            UpdateObject(temporaryDeliveryOrder);
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder SetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder)
+        {
+            temporaryDeliveryOrder.IsDeliveryCompleted = true;
+            UpdateObject(temporaryDeliveryOrder);
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder UnsetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder)
+        {
+            temporaryDeliveryOrder.IsDeliveryCompleted = false;
             UpdateObject(temporaryDeliveryOrder);
             return temporaryDeliveryOrder;
         }

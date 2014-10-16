@@ -38,6 +38,7 @@
 
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
+    $("#push_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_previousorder").dialog('close');
@@ -315,14 +316,26 @@
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to push record to delivery order?', function (r) {
+            $('#PushDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+            $('#idpush').val(ret.id);
+            $("#push_div").dialog("open");
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#push_btn_submit').click(function () {
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#list").jqGrid('getRowData', id);
+            $.messager.confirm('Confirm', 'Are you sure you want to create delivery order?', function (r) {
                 if (r) {
                     $.ajax({
                         url: base_url + "TemporaryDeliveryOrder/Push",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
-                            Id: id,
+                            Id: $('#idpush').val(), ConfirmationDate: $('#PushDate').datebox('getValue'),
                         }),
                         success: function (result) {
                             if (JSON.stringify(result.Errors) != '{}') {
@@ -338,7 +351,7 @@
                             }
                             else {
                                 ReloadGrid();
-                                $("#delete_confirm_div").dialog('close');
+                                $("#push_div").dialog('close');
                             }
                         }
                     });
@@ -347,6 +360,10 @@
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
+    });
+
+    $('#push_btn_cancel').click(function () {
+        $('#push_div').dialog('close');
     });
 
     $('#btn_del').click(function () {
@@ -472,7 +489,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Order Detail Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price'
+        colNames: ['Id', 'Code', 'Order Detail Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Restock', 'Waste', 'Price'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 40, sortable: false },
@@ -483,6 +500,8 @@
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'restockquantity', index: 'restockquantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'wastequantity', index: 'wastequantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         //page: '1',
@@ -506,6 +525,12 @@
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
+        $('#Price').removeAttr('disabled');
+        $('#Quantity').removeAttr('disabled');
+        $('#btnItem').removeAttr('disabled');
+        $('#row-price').show();
+        $('#row-restock').hide();
+        $('#row-waste').hide();
         $('#item_div').dialog('open');
     });
 
@@ -534,8 +559,61 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
+                            $('#WasteQuantity').val(result.WasteQuantity);
+                            $('#RestockQuantity').val(result.RestockQuantity);
                             $('#Price').val(result.Price);
                             $('#PreviousOrderDetailId').val(result.OrderDetailId);
+                            $('#Price').removeAttr('disabled');
+                            $('#Quantity').removeAttr('disabled');
+                            $('#btnItem').removeAttr('disabled');
+                            $('#row-price').show();
+                            $('#row-waste').hide();
+                            $('#row-restock').hide();
+                            $('#item_div').dialog('open');
+                        }
+                    }
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#btn_process_detail').click(function () {
+        ClearData();
+        clearForm("#item_div");
+        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "TemporaryDeliveryOrder/GetInfoDetail?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#item_btn_submit").data('kode', result.Id);
+                            $('#ItemId').val(result.ItemId);
+                            $('#Item').val(result.Item);
+                            $('#Quantity').val(result.Quantity);
+                            $('#WasteQuantity').val(result.WasteQuantity);
+                            $('#RestockQuantity').val(result.RestockQuantity);
+                            $('#Price').val(result.Price);
+                            $('#PreviousOrderDetailId').val(result.OrderDetailId);
+                            $('#Price').attr('disabled', true);
+                            $('#Quantity').attr('disabled', true);
+                            $('#btnItem').attr('disabled', true);
+                            $('#row-price').hide();
+                            $('#row-waste').show();
+                            $('#row-restock').show();
                             $('#item_div').dialog('open');
                         }
                     }
@@ -621,7 +699,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, TemporaryDeliveryOrderId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").numberbox('getValue'), SalesOrderDetailId: salesorderdetailid, VirtualOrderDetailId: virtualorderdetailid
+                Quantity: $("#Quantity").numberbox('getValue'), SalesOrderDetailId: salesorderdetailid, VirtualOrderDetailId: virtualorderdetailid,
+                WasteQuantity: $("#WasteQuantity").numberbox('getValue'), RestockQuantity: $("#RestockQuantity").numberbox('getValue')
             }),
             async: false,
             cache: false,

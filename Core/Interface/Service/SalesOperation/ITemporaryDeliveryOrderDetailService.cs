@@ -15,6 +15,7 @@ namespace Core.Interface.Service
         IList<TemporaryDeliveryOrderDetail> GetAll();
         IList<TemporaryDeliveryOrderDetail> GetObjectsByTemporaryDeliveryOrderId(int temporaryDeliveryOrderId);
         TemporaryDeliveryOrderDetail GetObjectById(int Id);
+        TemporaryDeliveryOrderDetail GetObjectByCode(string Code);
         IList<TemporaryDeliveryOrderDetail> GetObjectsBySalesOrderDetailId(int salesOrderDetailId);
         IList<TemporaryDeliveryOrderDetail> GetObjectsByVirtualOrderDetailId(int virtualOrderDetailId);
         TemporaryDeliveryOrderDetail CreateObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, 
@@ -26,13 +27,20 @@ namespace Core.Interface.Service
         TemporaryDeliveryOrderDetail SoftDeleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         bool DeleteObject(int Id);
         TemporaryDeliveryOrderDetail ConfirmObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, DateTime ConfirmationDate, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
-                                                   IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                                   IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                                  IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
+                                                  IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         TemporaryDeliveryOrderDetail UnconfirmObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
-                                                    IVirtualOrderDetailService _virtualOrderDetailService, IVirtualOrderService _virtualOrderService,
-                                                    ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                                    IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        TemporaryDeliveryOrderDetail ReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity);
-        TemporaryDeliveryOrderDetail UnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService);
+                                                  IVirtualOrderDetailService _virtualOrderDetailService, IVirtualOrderService _virtualOrderService,
+                                                  ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
+                                                  IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+        TemporaryDeliveryOrderDetail ProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity);
+        TemporaryDeliveryOrderDetail ReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, DateTime PushDate, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
+                                                  IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                                  IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);
+        TemporaryDeliveryOrderDetail UnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
+                                                  IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                                  IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);
+        TemporaryDeliveryOrderDetail CompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail UndoCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
     }
 }

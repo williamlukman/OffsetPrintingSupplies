@@ -34,6 +34,10 @@ namespace Core.Interface.Validation
         TemporaryDeliveryOrderDetail VHasBeenConfirmed(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         TemporaryDeliveryOrderDetail VHasNotBeenConfirmed(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         TemporaryDeliveryOrderDetail VHasConfirmationDate(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail VHasBeenReconciled(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail VHasNotBeenReconciled(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail VQuantityEqualsWasteAndRestock(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail VQuantityLessThanOrEqualWasteAndRestock(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         TemporaryDeliveryOrderDetail VCreateObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
                                                    ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderDetailService _virtualOrderDetailService,
                                                    ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService);
@@ -45,6 +49,11 @@ namespace Core.Interface.Validation
                                                     ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IVirtualOrderDetailService _virtualOrderDetailService,
                                                     ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         TemporaryDeliveryOrderDetail VUnconfirmObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail VReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
+        TemporaryDeliveryOrderDetail VUnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
+        TemporaryDeliveryOrderDetail VCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail VUndoCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+
         bool ValidCreateObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
                                ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderDetailService _virtualOrderDetailService,
                                ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService);
@@ -56,6 +65,10 @@ namespace Core.Interface.Validation
                                 ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IVirtualOrderDetailService _virtualOrderDetailService,
                                 ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        bool ValidReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
+        bool ValidUnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
+        bool ValidCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        bool ValidUndoCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         bool isValid(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         string PrintError(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
     }

@@ -32,7 +32,20 @@ namespace Core.Interface.Service
                                                ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                IStockMutationService _stockMutationService, IItemService _itemService,
                                                IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        TemporaryDeliveryOrder SetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
-        TemporaryDeliveryOrder UnsetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        TemporaryDeliveryOrder ReconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                               IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                               IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);
+        TemporaryDeliveryOrder UnreconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                               IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                               IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);
+        TemporaryDeliveryOrder PushObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                          IVirtualOrderService _virtualOrderService, IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderService _salesOrderService,
+                                          ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService,
+                                          IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IStockMutationService _stockMutationService,
+                                          IContactService _contactService, IBlanketService _blanketService, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService,
+                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                          IServiceCostService _serviceCostService);
+        TemporaryDeliveryOrder CheckAndSetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
+        TemporaryDeliveryOrder UnsetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder);
     }
 }

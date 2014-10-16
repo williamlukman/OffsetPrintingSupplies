@@ -83,6 +83,8 @@ namespace Core.Constants
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string VirtualOrderDetail = "VirtualOrderDetail";
             public static string TemporaryDeliveryOrderDetail = "TemporaryDeliveryOrderDetail";
+            public static string TemporaryDeliveryOrderDetailWaste = "TemporaryDeliveryOrderDetailWaste";
+            public static string TemporaryDeliveryOrderDetailRestock = "TemporaryDeliveryOrderDetailRestock";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
             public static string WarehouseMutationDetail = "WarehouseMutationDetail";
         }

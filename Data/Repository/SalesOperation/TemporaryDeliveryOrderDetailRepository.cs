@@ -36,6 +36,13 @@ namespace Data.Repository
             return FindAll(x => x.TemporaryDeliveryOrderId == temporaryDeliveryOrderId && !x.IsDeleted).ToList();
         }
 
+        public TemporaryDeliveryOrderDetail GetObjectByCode(string orderCode)
+        {
+            TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = Find(x => x.Code == orderCode && !x.IsDeleted);
+            if (temporaryDeliveryOrderDetail != null) { temporaryDeliveryOrderDetail.Errors = new Dictionary<string, string>(); }
+            return temporaryDeliveryOrderDetail;
+        }
+
         public TemporaryDeliveryOrderDetail GetObjectById(int Id)
         {
             TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = Find(x => x.Id == Id && !x.IsDeleted);

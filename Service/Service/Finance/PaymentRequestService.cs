@@ -99,6 +99,7 @@ namespace Service.Service
                     DueDate = paymentRequest.DueDate
                 };
                 _payableService.CreateObject(payable);
+                // Pilih Debit Credit COA
             }
             else
             {

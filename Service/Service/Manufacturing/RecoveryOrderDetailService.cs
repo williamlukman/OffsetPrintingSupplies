@@ -176,7 +176,7 @@ namespace Service.Service
                 RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
                 Item compound = _itemService.GetObjectById(rollerBuilder.CompoundId);
                 WarehouseItem warehouseCompound = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compound.Id);
-                StockMutation stockMutationCompound = _stockMutationService.CreateStockMutationForRecoveryOrderCompound(recoveryOrderDetail, warehouseCompound, CaseAddition);
+                StockMutation stockMutationCompound = _stockMutationService.CreateStockMutationForRecoveryOrderCompound(recoveryOrderDetail, RejectedDate, warehouseCompound, CaseAddition);
                 _stockMutationService.StockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
 
                 // deduce core
@@ -187,7 +187,7 @@ namespace Service.Service
                 Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                 WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
-                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore, CaseAddition);
+                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, RejectedDate, warehouseCore, CaseAddition);
                 _stockMutationService.StockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
                
                 // accesories uncounted
@@ -217,7 +217,7 @@ namespace Service.Service
                 RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
                 Item compound = _itemService.GetObjectById(rollerBuilder.CompoundId);
                 WarehouseItem warehouseCompound = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compound.Id);
-                IList<StockMutation> stockMutationCompounds = _stockMutationService.SoftDeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCompound);
+                IList<StockMutation> stockMutationCompounds = _stockMutationService.DeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCompound);
                 foreach (var stockMutationCompound in stockMutationCompounds)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
@@ -232,7 +232,7 @@ namespace Service.Service
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                 WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
                 
-                IList<StockMutation> stockMutationCores = _stockMutationService.SoftDeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore);
+                IList<StockMutation> stockMutationCores = _stockMutationService.DeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore);
                 foreach (var stockMutationCore in stockMutationCores)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
@@ -285,7 +285,7 @@ namespace Service.Service
                 RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
                 Item compound = _itemService.GetObjectById(rollerBuilder.CompoundId);
                 WarehouseItem warehouseCompound = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compound.Id);
-                StockMutation stockMutationCompound = _stockMutationService.CreateStockMutationForRecoveryOrderCompound(recoveryOrderDetail, warehouseCompound, CaseAdditionCompound);
+                StockMutation stockMutationCompound = _stockMutationService.CreateStockMutationForRecoveryOrderCompound(recoveryOrderDetail, FinishedDate, warehouseCompound, CaseAdditionCompound);
                 _stockMutationService.StockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
 
                 _coreIdentificationDetailService.UnsetJobScheduled(coreIdentificationDetail, _recoveryOrderService, this);
@@ -296,14 +296,14 @@ namespace Service.Service
                 Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                 WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
-                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore, CaseAdditionCore);
+                StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, warehouseCore, CaseAdditionCore);
                 _stockMutationService.StockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
 
                 // add roller
                 Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _rollerBuilderService.GetRollerNewCore(rollerBuilder.Id) : _rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id);
                 WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, roller.Id);
-                StockMutation stockMutationRoller = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseRoller, CaseAdditionRoller);
+                StockMutation stockMutationRoller = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, warehouseRoller, CaseAdditionRoller);
                 _stockMutationService.StockMutateObject(stockMutationRoller, _itemService, _blanketService, _warehouseItemService);
 
                 // deduce accessories
@@ -314,7 +314,7 @@ namespace Service.Service
                     {
                         Item accessory = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
                         WarehouseItem warehouseAccessory = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, accessory.Id);
-                        StockMutation stockMutationAccessory = _stockMutationService.CreateStockMutationForRecoveryAccessory(recoveryAccessoryDetail, warehouseAccessory);
+                        StockMutation stockMutationAccessory = _stockMutationService.CreateStockMutationForRecoveryAccessory(recoveryAccessoryDetail, FinishedDate, warehouseAccessory);
                         _stockMutationService.StockMutateObject(stockMutationAccessory, _itemService, _blanketService, _warehouseItemService);
                     }
                 }
@@ -354,7 +354,7 @@ namespace Service.Service
                 RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
                 Item compound = _itemService.GetObjectById(rollerBuilder.CompoundId);
                 WarehouseItem warehouseCompound = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compound.Id);
-                IList<StockMutation> stockMutationCompounds = _stockMutationService.SoftDeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCompound);
+                IList<StockMutation> stockMutationCompounds = _stockMutationService.DeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCompound);
                 foreach (var stockMutationCompound in stockMutationCompounds)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
@@ -367,7 +367,7 @@ namespace Service.Service
                 Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
                 WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
-                IList<StockMutation> stockMutationCores = _stockMutationService.SoftDeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore);
+                IList<StockMutation> stockMutationCores = _stockMutationService.DeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseCore);
                 foreach (var stockMutationCore in stockMutationCores)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
@@ -377,7 +377,7 @@ namespace Service.Service
                 Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _rollerBuilderService.GetRollerNewCore(rollerBuilder.Id) : _rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id);
                 WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, roller.Id);
-                IList<StockMutation> stockMutationRollers = _stockMutationService.SoftDeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseRoller);
+                IList<StockMutation> stockMutationRollers = _stockMutationService.DeleteStockMutationForRecoveryOrder(recoveryOrderDetail, warehouseRoller);
                 foreach (var stockMutationRoller in stockMutationRollers)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationRoller, _itemService, _blanketService, _warehouseItemService);
@@ -391,7 +391,7 @@ namespace Service.Service
                     {
                         Item accessory = _itemService.GetObjectById(recoveryAccessoryDetail.ItemId);
                         WarehouseItem warehouseAccessory = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, accessory.Id);
-                        IList<StockMutation> stockMutationAccessories = _stockMutationService.SoftDeleteStockMutationForRecoveryAccessory(recoveryAccessoryDetail, warehouseAccessory);
+                        IList<StockMutation> stockMutationAccessories = _stockMutationService.DeleteStockMutationForRecoveryAccessory(recoveryAccessoryDetail, warehouseAccessory);
                         foreach (var stockMutationAccessory in stockMutationAccessories)
                         {
                             _stockMutationService.ReverseStockMutateObject(stockMutationAccessory, _itemService, _blanketService, _warehouseItemService);

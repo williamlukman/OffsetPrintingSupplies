@@ -21,8 +21,10 @@ namespace Core.Interface.Repository
         bool DeleteObject(int Id);
         TemporaryDeliveryOrder ConfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder);
         TemporaryDeliveryOrder UnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder);
-        TemporaryDeliveryOrder SetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder);
-        TemporaryDeliveryOrder UnsetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        TemporaryDeliveryOrder ReconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        TemporaryDeliveryOrder UnreconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        TemporaryDeliveryOrder SetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        TemporaryDeliveryOrder UnsetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder);
         string SetObjectCode();
     }
 }

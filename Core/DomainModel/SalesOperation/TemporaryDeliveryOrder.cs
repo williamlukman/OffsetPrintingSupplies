@@ -15,9 +15,12 @@ namespace Core.DomainModel
         public DateTime DeliveryDate { get; set; }
         public int WarehouseId { get; set; }
 
+        public decimal TotalWasteCOGS { get; set; }
+
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
-        public bool IsReconcileCompleted { get; set; }
+        public bool IsDeliveryCompleted { get; set; } // DeliveryOrder has been confirmed, Restock has been processed
+        public bool IsReconciled { get; set; } // Waste + Restock = Quantity, Waste has been thrown
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
 

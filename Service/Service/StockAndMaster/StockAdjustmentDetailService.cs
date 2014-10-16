@@ -115,7 +115,7 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(stockAdjustmentDetail.ItemId);
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, stockAdjustmentDetail.Quantity * (-1), stockAdjustmentDetail.Price);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(stockAdjustment.WarehouseId, item.Id);
-                IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
+                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForStockAdjustment(stockAdjustmentDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

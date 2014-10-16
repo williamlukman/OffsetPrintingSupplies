@@ -9,6 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public string OrderCode { get; set; }
         public int SalesOrderId { get; set; }
         public int ItemId { get; set; }
 

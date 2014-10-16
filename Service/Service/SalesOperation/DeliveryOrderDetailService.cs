@@ -133,7 +133,7 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
                 if (!salesOrderDetail.IsService)
                 {
-                    IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
+                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

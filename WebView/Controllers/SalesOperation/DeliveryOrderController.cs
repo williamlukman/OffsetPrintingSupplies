@@ -31,6 +31,9 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IServiceCostService _serviceCostService;
+        private IContactService _contactService;
+        private ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
+        private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
 
         public DeliveryOrderController()
         {
@@ -49,6 +52,9 @@ namespace WebView.Controllers
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
+            _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
+            _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
         }
 
         public ActionResult Index()
@@ -529,7 +535,8 @@ namespace WebView.Controllers
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
                 model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
-                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
+                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                        _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService);
             }
             catch (Exception ex)
             {

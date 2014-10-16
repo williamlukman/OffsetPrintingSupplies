@@ -124,7 +124,139 @@ namespace Service.Service
             return temporaryDeliveryOrder;
         }
 
-        public TemporaryDeliveryOrder SetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
+        public TemporaryDeliveryOrder ReconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                                      IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                                      IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
+        {
+            decimal TotalWasteCOGS = 0;
+            IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
+            foreach (var detail in details)
+            {
+                _temporaryDeliveryOrderDetailService.ReconcileObject(detail, PushDate, this, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService,
+                                                                     _warehouseItemService, _itemService, _blanketService);
+                TotalWasteCOGS += detail.WasteCOGS;
+            }
+            temporaryDeliveryOrder.TotalWasteCOGS = TotalWasteCOGS;
+            _repository.ReconcileObject(temporaryDeliveryOrder);
+            _generalLedgerJournalService.CreateReconciliationJournalForTemporaryDeliveryOrderWaste(temporaryDeliveryOrder, PushDate, _accountService);
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder UnreconcileObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                                      IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+                                                      IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService)
+        {
+            IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
+            foreach (var detail in details)
+            {
+                _temporaryDeliveryOrderDetailService.UnreconcileObject(detail, this, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService,
+                                                                       _warehouseItemService, _itemService, _blanketService);
+            }
+            _generalLedgerJournalService.CreateUnreconciliationJournalForTemporaryDeliveryOrderWaste(temporaryDeliveryOrder, _accountService);
+            temporaryDeliveryOrder.TotalWasteCOGS = 0;
+            _repository.UnreconcileObject(temporaryDeliveryOrder);
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder PushObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                                 IVirtualOrderService _virtualOrderService, IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderService _salesOrderService,
+                                                 ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService,
+                                                 IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IStockMutationService _stockMutationService,
+                                                 IContactService _contactService, IBlanketService _blanketService, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService,
+                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                                 IServiceCostService _serviceCostService)
+        {
+            if (_validator.ValidPushObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _closingService, _deliveryOrderService))
+            {
+                ReconcileObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _stockMutationService, _accountService, _generalLedgerJournalService,
+                                _closingService, _warehouseItemService, _itemService, _blanketService);
+
+                IList<TemporaryDeliveryOrderDetail> temporaryDeliveryOrderDetails = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
+                #region Part Delivery Order
+                if (temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder)
+                {
+                    DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById((int)temporaryDeliveryOrder.DeliveryOrderId);
+                    foreach (var tempDetail in temporaryDeliveryOrderDetails)
+                    {
+                        DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail()
+                        {
+                            DeliveryOrderId = deliveryOrder.Id,
+                            OrderType = temporaryDeliveryOrder.OrderType,
+                            OrderCode = tempDetail.Code,
+                            ItemId = tempDetail.ItemId,
+                            Quantity = tempDetail.RestockQuantity,
+                            PendingInvoicedQuantity = tempDetail.RestockQuantity,
+                            SalesOrderDetailId = (int)tempDetail.SalesOrderDetailId,
+                        };
+                        _deliveryOrderDetailService.CreateObject(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+                    }
+                }
+                #endregion
+                #region Virtual Order
+                else
+                {
+                    VirtualOrder virtualOrder = _virtualOrderService.GetObjectById((int)temporaryDeliveryOrder.VirtualOrderId);
+                    SalesOrder salesOrder = new SalesOrder()
+                    {
+                        ContactId = virtualOrder.ContactId,
+                        SalesDate = PushDate,
+                        OrderType = virtualOrder.OrderType,
+                        OrderCode = virtualOrder.Code
+                    };
+                    _salesOrderService.CreateObject(salesOrder, _contactService);
+
+                    foreach (var tempDetail in temporaryDeliveryOrderDetails)
+                    {
+                        VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)tempDetail.VirtualOrderDetailId);
+                        SalesOrderDetail salesOrderDetail = new SalesOrderDetail()
+                        {
+                            ItemId = tempDetail.ItemId,
+                            Quantity = tempDetail.RestockQuantity,
+                            Price = virtualOrderDetail.Price,
+                            SalesOrderId = salesOrder.Id,
+                            OrderCode = virtualOrderDetail.Code,
+                            PendingDeliveryQuantity = tempDetail.RestockQuantity
+                        };
+                        _salesOrderDetailService.CreateObject(salesOrderDetail, _salesOrderService, _itemService);
+                    }
+
+                    _salesOrderService.ConfirmObject(salesOrder, PushDate, _salesOrderDetailService,
+                                                     _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+
+                    IList<SalesOrderDetail> salesOrderDetails = _salesOrderDetailService.GetObjectsBySalesOrderId(salesOrder.Id);
+                    DeliveryOrder deliveryOrder = new DeliveryOrder()
+                    {
+                        SalesOrderId = salesOrder.Id,
+                        WarehouseId = temporaryDeliveryOrder.WarehouseId,
+                        DeliveryDate = PushDate
+                    };
+                    _deliveryOrderService.CreateObject(deliveryOrder, _salesOrderService, _warehouseService);
+
+                    foreach (var salesDetail in salesOrderDetails)
+                    {
+                        DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail()
+                        {
+                            OrderType = salesOrder.OrderType,
+                            OrderCode = salesDetail.OrderCode,
+                            SalesOrderDetailId = salesDetail.Id,
+                            DeliveryOrderId = deliveryOrder.Id,
+                            ItemId = salesDetail.ItemId,
+                            Quantity = salesDetail.Quantity,
+                            PendingInvoicedQuantity = salesDetail.Quantity,
+                        };
+                        _deliveryOrderDetailService.CreateObject(deliveryOrderDetail, _deliveryOrderService,
+                                                                 _salesOrderDetailService, _salesOrderService, _itemService);
+                    }
+                    _deliveryOrderService.ConfirmObject(deliveryOrder, PushDate, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
+                                                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService,
+                                                        _generalLedgerJournalService, _closingService, _serviceCostService, _temporaryDeliveryOrderDetailService, this);
+                }
+                #endregion
+            }
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder CheckAndSetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
             IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
 
@@ -135,12 +267,12 @@ namespace Service.Service
                     return temporaryDeliveryOrder;
                 }
             }
-            return _repository.SetReconcileComplete(temporaryDeliveryOrder);
+            return _repository.SetDeliveryComplete(temporaryDeliveryOrder);
         }
 
-        public TemporaryDeliveryOrder UnsetReconcileComplete(TemporaryDeliveryOrder temporaryDeliveryOrder)
+        public TemporaryDeliveryOrder UnsetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder)
         {
-            _repository.UnsetReconcileComplete(temporaryDeliveryOrder);
+            _repository.UnsetDeliveryComplete(temporaryDeliveryOrder);
             return temporaryDeliveryOrder;
         }
     }

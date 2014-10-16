@@ -161,14 +161,6 @@ namespace Validation.Validation
                 salesInvoice.Errors.Add("Generic", "Receivable memiliki asosiasi dengan receipt voucher detail");
                 return salesInvoice;
             }
-
-            /*
-            IList<SalesAllowanceAllocationDetail> salesAllowanceAllocationDetails = _salesAllowanceAllocationDetailService.GetObjectsByReceivableId(receivable.Id);
-            if (salesAllowanceAllocationDetails.Any())
-            {
-                salesInvoice.Errors.Add("Generic", "Receivable memiliki asosiasi dengan sales allowance allocation detail");
-            }
-             */
             return salesInvoice;
         }
 

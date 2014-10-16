@@ -151,7 +151,7 @@ namespace Service.Service
                                     _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
                     WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
-                    IList<StockMutation> stockMutations = _stockMutationService.SoftDeleteStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
+                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

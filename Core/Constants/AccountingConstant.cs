@@ -71,6 +71,7 @@ namespace Core.Constants
             public static string Discount = "2302002";
             public static string SalesAllowance = "2302003";
             public static string StockAdjustmentExpense = "2302004";
+            public static string SampleAndTrialExpense = "2302005";
             public static string NonOperationalExpense = "24";
             public static string DepreciationExpense = "2401";
             public static string Amortization = "2402";            
@@ -119,6 +120,7 @@ namespace Core.Constants
             public static string Discount = "X2302002";
             public static string SalesAllowance = "X2302003";
             public static string StockAdjustmentExpense = "X2302004";
+            public static string SampleAndTrialExpense = "X2302005";
             public static string NonOperationalExpense = "X24";
             public static string DepreciationExpense = "X2401";
             public static string Amortization = "X2402";

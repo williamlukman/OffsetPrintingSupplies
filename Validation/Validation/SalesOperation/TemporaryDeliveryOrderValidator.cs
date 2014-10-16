@@ -127,6 +127,42 @@ namespace Validation.Validation
             return obj;
         }
 
+        public TemporaryDeliveryOrder VGeneralLedgerPostingHasNotBeenClosed(TemporaryDeliveryOrder temporaryDeliveryOrder, IClosingService _closingService, DateTime PushDate)
+        {
+            if (_closingService.IsDateClosed(PushDate))
+            {
+                temporaryDeliveryOrder.Errors.Add("Generic", "Ledger sudah tutup buku");
+            }
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder VAllQuantitiesEqualWasteAndRestock(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
+        {
+            IList<TemporaryDeliveryOrderDetail> temporaryDeliveryOrderDetails = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
+            foreach (var detail in temporaryDeliveryOrderDetails)
+            {
+                if (detail.WasteQuantity + detail.RestockQuantity != detail.Quantity)
+                {
+                    temporaryDeliveryOrder.Errors.Add("Generic", "WasteQuantity + RestockQuantity harus sama dengan Quantity");
+                    return temporaryDeliveryOrder;
+                }
+            }
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder VDeliveryOrderHasNotBeenConfirmedForPartDeliveryOrder(TemporaryDeliveryOrder temporaryDeliveryOrder, IDeliveryOrderService _deliveryOrderService)
+        {
+            if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.PartDeliveryOrder)
+            {
+                DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById((int)temporaryDeliveryOrder.DeliveryOrderId);
+                if (deliveryOrder.IsConfirmed)
+                {
+                    temporaryDeliveryOrder.Errors.Add("Generic", "Delivery order sudah terkonfirmasi");
+                }
+            }
+            return temporaryDeliveryOrder;
+        }
+        
         public TemporaryDeliveryOrder VCreateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
         {
             VHasWarehouse(temporaryDeliveryOrder, _warehouseService);
@@ -146,6 +182,7 @@ namespace Validation.Validation
             VCreateObject(temporaryDeliveryOrder, _virtualOrderService, _deliveryOrderService, _warehouseService);
             if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
             VHasNotBeenConfirmed(temporaryDeliveryOrder);
+            
             return temporaryDeliveryOrder;
         }
 
@@ -170,6 +207,17 @@ namespace Validation.Validation
         public TemporaryDeliveryOrder VUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder)
         {
             VHasBeenConfirmed(temporaryDeliveryOrder);
+            return temporaryDeliveryOrder;
+        }
+
+        public TemporaryDeliveryOrder VPushObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IClosingService _closingService,
+                                                  IDeliveryOrderService _deliveryOrderService)
+        {
+            VGeneralLedgerPostingHasNotBeenClosed(temporaryDeliveryOrder, _closingService, PushDate);
+            if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
+            VAllQuantitiesEqualWasteAndRestock(temporaryDeliveryOrder, _temporaryDeliveryOrderDetailService);
+            if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
+            VDeliveryOrderHasNotBeenConfirmedForPartDeliveryOrder(temporaryDeliveryOrder, _deliveryOrderService);
             return temporaryDeliveryOrder;
         }
 
@@ -204,6 +252,14 @@ namespace Validation.Validation
         {
             temporaryDeliveryOrder.Errors.Clear();
             VUnconfirmObject(temporaryDeliveryOrder);
+            return isValid(temporaryDeliveryOrder);
+        }
+
+        public bool ValidPushObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                    IClosingService _closingService, IDeliveryOrderService _deliveryOrderService)
+        {
+            temporaryDeliveryOrder.Errors.Clear();
+            VPushObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _closingService, _deliveryOrderService);
             return isValid(temporaryDeliveryOrder);
         }
 

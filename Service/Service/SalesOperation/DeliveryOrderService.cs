@@ -86,7 +86,8 @@ namespace Service.Service
                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                           IServiceCostService _serviceCostService)
+                                           IServiceCostService _serviceCostService,
+                                           ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService)
         {
             deliveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService))
@@ -99,6 +100,16 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _deliveryOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _salesOrderDetailService, _stockMutationService, _itemService,
                                                               _blanketService, _warehouseItemService, _serviceCostService);
+                    if (detail.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
+                        detail.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
+                        detail.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder)
+                    {
+                        TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectByCode(detail.OrderCode);
+                        if (temporaryDeliveryOrderDetail != null)
+                        {
+                            _temporaryDeliveryOrderDetailService.CompleteObject(temporaryDeliveryOrderDetail);
+                        }
+                    }
                     TotalCOGS += detail.COGS;
                 }
                 deliveryOrder.TotalCOGS = TotalCOGS;
@@ -106,6 +117,11 @@ namespace Service.Service
                 _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrder(deliveryOrder, _accountService);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
                 _salesOrderService.CheckAndSetDeliveryComplete(salesOrder, _salesOrderDetailService);
+                IList<TemporaryDeliveryOrder> temporaryDeliveryOrders = _temporaryDeliveryOrderService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+                foreach (var temporaryDeliveryOrder in temporaryDeliveryOrders)
+                {
+                    _temporaryDeliveryOrderService.CheckAndSetDeliveryComplete(temporaryDeliveryOrder, _temporaryDeliveryOrderDetailService);
+                }
             }
             return deliveryOrder;
         }
