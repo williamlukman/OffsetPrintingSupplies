@@ -171,10 +171,11 @@ namespace Core.Constants
             public static string ProfitLoss = "Profit/Loss";
             public static string Account = "Account";
             public static string Closing = "Closing";
-            public static string GeneralLedger = "GeneralLedger";
-            public static string ValidComb = "ValidComb";
-            public static string BalanceSheet = "BalanceSheet";
-            public static string IncomeStatement = "IncomeStatement";
+            public static string GeneralLedger = "General Ledger";
+            public static string ValidComb = "Valid Comb";
+            public static string BalanceSheet = "Balance Sheet";
+            public static string IncomeStatement = "Income Statement";
+            public static string Memorial = "Memorial";
 
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";

@@ -207,17 +207,20 @@
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
+    <Compile Include="Controllers\Finance\SalesDownPaymentAllocationController.cs" />
+    <Compile Include="Controllers\Finance\SalesDownPaymentController.cs" />
+    <Compile Include="Controllers\Finance\PurchaseDownPaymentAllocationController.cs" />
+    <Compile Include="Controllers\Finance\MemorialController.cs" />
     <Compile Include="Controllers\Finance\PurchaseAllowanceController.cs" />
     <Compile Include="Controllers\Finance\PurchaseDownPaymentController.cs" />
     <Compile Include="Controllers\Finance\SalesAllowanceController.cs" />
-    <Compile Include="Controllers\Finance\SalesDownPaymentController.cs" />
     <Compile Include="Controllers\Manufacturing\BlanketWorkOrderController.cs" />
     <Compile Include="Controllers\Finance\CashBankAdjustmentController.cs" />
     <Compile Include="Controllers\Finance\CashBankMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\Finance\CashMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\CoreAccessoryDetailController.cs" />
-    <Compile Include="Controllers\PurchaseOperation\PaymentRequestController.cs" />
+    <Compile Include="Controllers\Finance\PaymentRequestController.cs" />
     <Compile Include="Controllers\Report\FinanceReportController.cs" />
     <Compile Include="Controllers\SalesOperation\VirtualOrderController.cs" />
     <Compile Include="Controllers\SalesOperation\TemporaryDeliveryOrderController.cs" />
@@ -273,8 +276,9 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
-    <Content Include="Content\apps_js\SalesAllowance.js" />
     <Content Include="Content\apps_js\SalesDownPayment.js" />
+    <Content Include="Content\apps_js\Memorial.js" />
+    <Content Include="Content\apps_js\SalesAllowance.js" />
     <Content Include="Content\apps_js\PurchaseAllowance.js" />
     <Content Include="Content\apps_js\PurchaseDownPayment.js" />
     <Content Include="Content\apps_js\PaymentRequest.js" />
@@ -1245,8 +1249,11 @@
     <Content Include="Views\PaymentRequest\Index.cshtml" />
     <Content Include="Views\PurchaseDownPayment\Index.cshtml" />
     <Content Include="Views\PurchaseAllowance\Index.cshtml" />
-    <Content Include="Views\SalesDownPayment\Index.cshtml" />
     <Content Include="Views\SalesAllowance\Index.cshtml" />
+    <Content Include="Views\Memorial\Index.cshtml" />
+    <Content Include="Views\PurchaseDownPaymentAllocation\Index.cshtml" />
+    <Content Include="Views\SalesDownPayment\Index.cshtml" />
+    <Content Include="Views\SalesDownPaymentAllocation\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -53,8 +53,8 @@
     $("#list").jqGrid({
         url: base_url + 'SalesDownPayment/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Receipt Date',
-                   'Is GBCH', 'Due Date', 'Total Amount', 'Is Reconciled', 'ReconciliationDate',
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Payment Date',
+                   'Is GBCH', 'Due Date', 'Total Amount','Is Reconciled','ReconciliationDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -63,13 +63,13 @@
                   { name: 'contactname', index: 'contactname', width: 150 },
                   { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
                   { name: 'cashbankname', index: 'cashbankname', width: 100 },
-                  { name: 'receiptdate', index: 'receiptdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'paymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isgbch', index: 'isgbch', width: 45 },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isreconciled', index: 'isreconciled', width: 100, hidden: true },
                   { name: 'reconciliationdate', index: 'reconciliationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden :true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -106,7 +106,7 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isgbch: rowIsGBCH });
 
-		          rowIsReconciled = $(this).getRowData(cl).isreconciled;
+		          rowIsReconciled= $(this).getRowData(cl).isreconciled;
 		          if (rowIsReconciled == 'true') {
 		              rowIsReconciled = "YES";
 		          } else {
@@ -135,15 +135,15 @@
         ClearData();
         clearForm('#frm');
 
-        $('#ReceiptDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#DownPaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
         $('#tabledetail_div').hide();
-        $('#ReceiptDateDiv').show();
-        $('#ReceiptDateDiv2').hide();
+        $('#DownPaymentDateDiv').show();
+        $('#DownPaymentDateDiv2').hide();
         $('#DueDateDiv').show();
         $('#DueDateDiv2').hide();
         $('#form_btn_save').show();
@@ -187,12 +187,12 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#ReceiptDate').datebox('setValue', dateEnt(result.DownPaymentDate));
-                            $('#ReceiptDate2').val(dateEnt(result.DownPaymentDate));
+                            $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownDownPaymentDate));
+                            $('#DownPaymentDate2').val(dateEnt(result.DownDownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#ReceiptDateDiv2').show();
-                            $('#ReceiptDateDiv').hide();
+                            $('#DownPaymentDateDiv2').show();
+                            $('#DownPaymentDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
                             $('#form_btn_save').hide();
@@ -211,8 +211,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
-
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -250,20 +248,20 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#ReceiptDate').datebox('setValue', dateEnt(result.DownPaymentDate));
-                            $('#ReceiptDate2').val(dateEnt(result.DownPaymentDate));
+                            $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownDownPaymentDate));
+                            $('#DownPaymentDate2').val(dateEnt(result.DownDownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#ReceiptDateDiv2').show();
-                            $('#ReceiptDateDiv').hide();
+                            $('#DownPaymentDateDiv2').show();
+                            $('#DownPaymentDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
-                            $('#form_btn_save').show();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnCashBank').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
                             $('#tabledetail_div').hide();
+                            $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
                     }
@@ -501,8 +499,8 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#ReceiptDate').datebox('getValue') == "") {
-            return $($('#ReceiptDate').addClass('errormessage').before('<span class="errormessage">**' + "Receipt Date Belum Terisi" + '</span>'));
+        if ($('#DownPaymentDate').datebox('getValue') == "") {
+            return $($('#DownPaymentDate').addClass('errormessage').before('<span class="errormessage">**' + "Payment Date Belum Terisi" + '</span>'));
 
         }
         // Update
@@ -523,8 +521,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, TotalAmount: $("#TotalAmount").numberbox('getValue'),
-                DownPaymentDate: $('#ReceiptDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                IsGBCH: gbch, TotalAmount : $("#TotalAmount").numberbox('getValue'),
+                DownDownPaymentDate: $('#DownPaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,
             cache: false,
@@ -556,10 +554,9 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Receivable Id', 'Receivable Code', 'Amount', 'Description'
+        colNames: ['Code', 'Receivable Id', 'Receivable Code', 'Amount', 'Description'
         ],
         colModel: [
-                  { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'receivableid', index: 'receivableid', width: 130, sortable: false, hidden: true },
                   { name: 'receivable', index: 'receivable', width: 90, sortable: false },
@@ -570,7 +567,7 @@
         //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'id',
+        sortname: 'Code',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -855,10 +852,10 @@
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Receivable Source', 'Id',
                     'Due Date', 'Total', 'Remaining', 'PendClearance'
-        ],
+                  ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
-                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true },
+                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true},
                   { name: 'contactname', index: 'contactname', width: 150, sortable: false, hidden: true },
                   { name: 'receivablesource', index: 'receivablesource', width: 100, sortable: false },
                   { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },

@@ -24,22 +24,23 @@ namespace Data.Context
             IList<String> userroleNames = new List<String>()
                                         { "UserMenu", "UserAccount", "UserAccess" };
             IList<String> accountingNames = new List<String>()
-                                        { "ValidComb", "Closing", "GeneralLedgerJournal", "Account" };
+                                        { "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal", "Account" };
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                           "CoreAccessoryDetail", "CoreIdentificationDetail", "CoreIdentification",
                                           "BlanketOrderDetail", "BlanketOrder" };
             IList<String> purchaseOperationNames = new List<String>()
-                                        { "PaymentVoucherDetail", "PaymentVoucher", "PurchaseDownPaymentDetail", "PurchaseDownPayment",
-                                          "PurchaseAllowanceDetail", "PurchaseAllowance", "Payable", "RetailPurchaseInvoice",
-                                          "RetailPurchaseInvoiceDetail", "PurchaseInvoiceDetail", "PurchaseInvoice",
-                                          "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail",
-                                          "PurchaseOrder", "PaymentRequest" };
+                                        { "PurchaseDownPaymentAllocationDetail", "PurchaseDownPaymentAllocation", "PaymentVoucherDetail",
+                                          "PaymentVoucher", "PurchaseDownPayment",
+                                          "PurchaseAllowanceDetail", "PurchaseAllowance", "Payable", "RetailPurchaseInvoiceDetail",
+                                          "RetailPurchaseInvoice", "PurchaseInvoiceDetail", "PurchaseInvoice",
+                                          "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder" };
             IList<String> salesOperationNames = new List<String>()
-                                        { "SalesDownPaymentDetail", "SalesDownPayment", "SalesAllowanceDetail", "SalesAllowance",
-                                          "ReceiptVoucherDetail", "ReceiptVoucher", "Receivable",
-                                          "RetailSalesInvoice", "RetailSalesInvoiceDetail", "SalesInvoiceDetail", "SalesInvoice",
+                                        { "SalesDownPaymentAllocationDetail", "SalesDownPaymentAllocation", "ReceiptVoucherDetail",
+                                          "ReceiptVoucher", "SalesDownPayment", 
+                                          "SalesAllowanceDetail", "SalesAllowance", "Receivable", "RetailSalesInvoiceDetail",
+                                          "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
                                           "SalesOrderDetail", "SalesOrder", "VirtualOrderDetail", "VirtualOrder"};
             IList<String> financeNames = new List<String>() {
@@ -94,12 +95,16 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
             modelBuilder.Configurations.Add(new MachineMapping());
-            modelBuilder.Configurations.Add(new PurchaseDownPaymentDetailMapping());
+            modelBuilder.Configurations.Add(new MemorialMapping());
+            modelBuilder.Configurations.Add(new MemorialDetailMapping());
+            modelBuilder.Configurations.Add(new PurchaseDownPaymentAllocationDetailMapping());
+            modelBuilder.Configurations.Add(new PurchaseDownPaymentAllocationMapping());
             modelBuilder.Configurations.Add(new PurchaseDownPaymentMapping());
             modelBuilder.Configurations.Add(new PurchaseAllowanceDetailMapping());
             modelBuilder.Configurations.Add(new PurchaseAllowanceMapping());
             modelBuilder.Configurations.Add(new PayableMapping());
             modelBuilder.Configurations.Add(new PaymentRequestMapping());
+            modelBuilder.Configurations.Add(new PaymentRequestDetailMapping());
             modelBuilder.Configurations.Add(new PaymentVoucherDetailMapping());
             modelBuilder.Configurations.Add(new PaymentVoucherMapping());
             modelBuilder.Configurations.Add(new PriceMutationMapping());
@@ -123,7 +128,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new RollerTypeMapping());
             modelBuilder.Configurations.Add(new RollerWarehouseMutationMapping());
             modelBuilder.Configurations.Add(new RollerWarehouseMutationDetailMapping());
-            modelBuilder.Configurations.Add(new SalesDownPaymentDetailMapping());
+            modelBuilder.Configurations.Add(new SalesDownPaymentAllocationMapping());
+            modelBuilder.Configurations.Add(new SalesDownPaymentAllocationDetailMapping());
             modelBuilder.Configurations.Add(new SalesDownPaymentMapping());
             modelBuilder.Configurations.Add(new SalesAllowanceDetailMapping());
             modelBuilder.Configurations.Add(new SalesAllowanceMapping());
@@ -174,11 +180,14 @@ namespace Data.Context
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }
         public DbSet<Machine> Machines { get; set; }
+        public DbSet<Memorial> Memorials { get; set; }
+        public DbSet<MemorialDetail> MemorialDetails { get; set; }
         public DbSet<Payable> Payables { get; set; }
         public DbSet<PaymentRequest> PaymentRequests { get; set; }
         public DbSet<PaymentVoucherDetail> PaymentVoucherDetails { get; set; }
         public DbSet<PaymentVoucher> PaymentVouchers { get; set; }
-        public DbSet<PurchaseDownPaymentDetail> PurchaseDownPaymentDetails { get; set; }
+        public DbSet<PurchaseDownPaymentAllocationDetail> PurchaseDownPaymentAllocationDetails { get; set; }
+        public DbSet<PurchaseDownPaymentAllocation> PurchaseDownPaymentAllocations { get; set; }
         public DbSet<PurchaseDownPayment> PurchaseDownPayments { get; set; }
         public DbSet<PurchaseAllowanceDetail> PurchaseAllowanceDetails { get; set; }
         public DbSet<PurchaseAllowance> PurchaseAllowances { get; set; }
@@ -198,7 +207,8 @@ namespace Data.Context
         public DbSet<RollerType> RollerTypes { get; set; }
         public DbSet<RollerWarehouseMutationDetail> RollerWarehouseMutationDetails { get; set; }
         public DbSet<RollerWarehouseMutation> RollerWarehouseMutations { get; set; }
-        public DbSet<SalesDownPaymentDetail> SalesDownPaymentDetails { get; set; }
+        public DbSet<SalesDownPaymentAllocationDetail> SalesDownPaymentAllocationDetails { get; set; }
+        public DbSet<SalesDownPaymentAllocation> SalesDownPaymentAllocations { get; set; }
         public DbSet<SalesDownPayment> SalesDownPayments { get; set; }
         public DbSet<SalesAllowanceDetail> SalesAllowanceDetails { get; set; }
         public DbSet<SalesAllowance> SalesAllowances { get; set; }

@@ -10,12 +10,11 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public int ContactId { get; set; }
         public int CashBankId { get; set; }
+        public int PaymentVoucherId { get; set; }
         public string Code { get; set; }
         public DateTime DownPaymentDate { get; set; }
         public bool IsGBCH { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
-        public bool IsReconciled { get; set; }
-        public Nullable<DateTime> ReconciliationDate { get; set; }
 
         public decimal TotalAmount { get; set; }
 
@@ -28,7 +27,7 @@ namespace Core.DomainModel
 
         public virtual Contact Contact { get; set; }
         public virtual CashBank CashBank { get; set; }
-        public virtual ICollection<PurchaseDownPaymentDetail> PurchaseDownPaymentDetails { get; set; }
+        public virtual PaymentVoucher PaymentVoucher { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
     }

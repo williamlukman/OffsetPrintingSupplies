@@ -15,24 +15,21 @@ namespace Core.Interface.Service
         SalesDownPayment GetObjectById(int Id);
         IList<SalesDownPayment> GetObjectsByCashBankId(int cashBankId);
         IList<SalesDownPayment> GetObjectsByContactId(int contactId);
-        SalesDownPayment CreateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentDetailService _salesDownPaymentDetailService, IReceivableService _receivableService,
-                                    IContactService _contactService, ICashBankService _cashBankService);
-        SalesDownPayment UpdateAmount(SalesDownPayment salesDownPayment);
-        SalesDownPayment UpdateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentDetailService _salesDownPaymentDetailService, IReceivableService _receivableService,
-                                    IContactService _contactService, ICashBankService _cashBankService);
-        SalesDownPayment SoftDeleteObject(SalesDownPayment salesDownPayment, ISalesDownPaymentDetailService _salesDownPaymentDetailService);
+        SalesDownPayment CreateObject(SalesDownPayment salesDownPayment, IContactService _contactService,
+                                      IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _payableService,
+                                      ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService);
+        SalesDownPayment UpdateObject(SalesDownPayment salesDownPayment, IContactService _contactService,
+                                      IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _payableService,
+                                      ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService);
+        SalesDownPayment SoftDeleteObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
+                                          IReceiptVoucherDetailService _receiptVoucherDetailService, IReceiptVoucherService _receiptVoucherService);
         bool DeleteObject(int Id);
-        SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, ISalesDownPaymentDetailService _salesDownPaymentDetailService,
-                                     ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
-                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        SalesDownPayment UnconfirmObject(SalesDownPayment salesDownPayment, ISalesDownPaymentDetailService _salesDownPaymentDetailService,
-                                       ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
+        SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService,
+                                       IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _payableService, IContactService _contactService,
                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        SalesDownPayment ReconcileObject(SalesDownPayment salesDownPayment, DateTime ReconciliationDate, ISalesDownPaymentDetailService _salesDownPaymentDetailService,
-                                       ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        SalesDownPayment UnreconcileObject(SalesDownPayment salesDownPayment, ISalesDownPaymentDetailService _salesDownPaymentDetailService,
-                                         ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
+        SalesDownPayment UnconfirmObject(SalesDownPayment salesDownPayment, ICashBankService _cashBankService,
+                                         ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                         IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _payableService, IContactService _contactService,
                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
     }
 }

@@ -27,7 +27,7 @@ namespace Core.DomainModel
 
         public virtual Contact Contact { get; set; }
         public virtual ICollection<PaymentVoucherDetail> PaymentVoucherDetails { get; set; }
-        public virtual ICollection<PurchaseDownPaymentDetail> PurchaseDownPaymentDetails { get; set; }
+        public virtual ICollection<PurchaseDownPaymentAllocationDetail> PurchaseDownPaymentAllocationDetails { get; set; }
         public virtual ICollection<PurchaseAllowanceDetail> PurchaseAllowanceDetails { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }

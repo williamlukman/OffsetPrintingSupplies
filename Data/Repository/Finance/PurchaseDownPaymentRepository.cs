@@ -53,7 +53,6 @@ namespace Data.Repository
             purchaseDownPayment.Code = SetObjectCode();
             purchaseDownPayment.IsDeleted = false;
             purchaseDownPayment.IsConfirmed = false;
-            purchaseDownPayment.IsReconciled = false;
             purchaseDownPayment.CreatedAt = DateTime.Now;
             return Create(purchaseDownPayment);
         }
@@ -90,21 +89,6 @@ namespace Data.Repository
         {
             purchaseDownPayment.IsConfirmed = false;
             purchaseDownPayment.ConfirmationDate = null;
-            UpdateObject(purchaseDownPayment);
-            return purchaseDownPayment;
-        }
-
-        public PurchaseDownPayment ReconcileObject(PurchaseDownPayment purchaseDownPayment)
-        {
-            purchaseDownPayment.IsReconciled = true;
-            Update(purchaseDownPayment);
-            return purchaseDownPayment;
-        }
-
-        public PurchaseDownPayment UnreconcileObject(PurchaseDownPayment purchaseDownPayment)
-        {
-            purchaseDownPayment.IsReconciled = false;
-            purchaseDownPayment.ReconciliationDate = null;
             UpdateObject(purchaseDownPayment);
             return purchaseDownPayment;
         }

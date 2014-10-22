@@ -33,9 +33,9 @@ namespace Data.Repository
 
         public SalesDownPayment GetObjectById(int Id)
         {
-            SalesDownPayment salesDownPayment = Find(x => x.Id == Id && !x.IsDeleted);
-            if (salesDownPayment != null) { salesDownPayment.Errors = new Dictionary<string, string>(); }
-            return salesDownPayment;
+            SalesDownPayment purchaseDownPayment = Find(x => x.Id == Id && !x.IsDeleted);
+            if (purchaseDownPayment != null) { purchaseDownPayment.Errors = new Dictionary<string, string>(); }
+            return purchaseDownPayment;
         }
 
         public IList<SalesDownPayment> GetObjectsByCashBankId(int cashBankId)
@@ -48,65 +48,49 @@ namespace Data.Repository
             return FindAll(x => x.ContactId == contactId && !x.IsDeleted).ToList();
         }
 
-        public SalesDownPayment CreateObject(SalesDownPayment salesDownPayment)
+        public SalesDownPayment CreateObject(SalesDownPayment purchaseDownPayment)
         {
-            salesDownPayment.Code = SetObjectCode();
-            salesDownPayment.IsDeleted = false;
-            salesDownPayment.IsConfirmed = false;
-            salesDownPayment.IsReconciled = false;
-            salesDownPayment.CreatedAt = DateTime.Now;
-            return Create(salesDownPayment);
+            purchaseDownPayment.Code = SetObjectCode();
+            purchaseDownPayment.IsDeleted = false;
+            purchaseDownPayment.IsConfirmed = false;
+            purchaseDownPayment.CreatedAt = DateTime.Now;
+            return Create(purchaseDownPayment);
         }
 
-        public SalesDownPayment UpdateObject(SalesDownPayment salesDownPayment)
+        public SalesDownPayment UpdateObject(SalesDownPayment purchaseDownPayment)
         {
-            salesDownPayment.UpdatedAt = DateTime.Now;
-            Update(salesDownPayment);
-            return salesDownPayment;
+            purchaseDownPayment.UpdatedAt = DateTime.Now;
+            Update(purchaseDownPayment);
+            return purchaseDownPayment;
         }
 
-        public SalesDownPayment SoftDeleteObject(SalesDownPayment salesDownPayment)
+        public SalesDownPayment SoftDeleteObject(SalesDownPayment purchaseDownPayment)
         {
-            salesDownPayment.IsDeleted = true;
-            salesDownPayment.DeletedAt = DateTime.Now;
-            Update(salesDownPayment);
-            return salesDownPayment;
+            purchaseDownPayment.IsDeleted = true;
+            purchaseDownPayment.DeletedAt = DateTime.Now;
+            Update(purchaseDownPayment);
+            return purchaseDownPayment;
         }
 
         public bool DeleteObject(int Id)
         {
-            SalesDownPayment salesDownPayment = Find(x => x.Id == Id);
-            return (Delete(salesDownPayment) == 1) ? true : false;
+            SalesDownPayment purchaseDownPayment = Find(x => x.Id == Id);
+            return (Delete(purchaseDownPayment) == 1) ? true : false;
         }
 
-        public SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment)
+        public SalesDownPayment ConfirmObject(SalesDownPayment purchaseDownPayment)
         {
-            salesDownPayment.IsConfirmed = true;
-            Update(salesDownPayment);
-            return salesDownPayment;
+            purchaseDownPayment.IsConfirmed = true;
+            Update(purchaseDownPayment);
+            return purchaseDownPayment;
         }
 
-        public SalesDownPayment UnconfirmObject(SalesDownPayment salesDownPayment)
+        public SalesDownPayment UnconfirmObject(SalesDownPayment purchaseDownPayment)
         {
-            salesDownPayment.IsConfirmed = false;
-            salesDownPayment.ConfirmationDate = null;
-            UpdateObject(salesDownPayment);
-            return salesDownPayment;
-        }
-
-        public SalesDownPayment ReconcileObject(SalesDownPayment salesDownPayment)
-        {
-            salesDownPayment.IsReconciled = true;
-            Update(salesDownPayment);
-            return salesDownPayment;
-        }
-
-        public SalesDownPayment UnreconcileObject(SalesDownPayment salesDownPayment)
-        {
-            salesDownPayment.IsReconciled = false;
-            salesDownPayment.ReconciliationDate = null;
-            UpdateObject(salesDownPayment);
-            return salesDownPayment;
+            purchaseDownPayment.IsConfirmed = false;
+            purchaseDownPayment.ConfirmationDate = null;
+            UpdateObject(purchaseDownPayment);
+            return purchaseDownPayment;
         }
 
         public string SetObjectCode()

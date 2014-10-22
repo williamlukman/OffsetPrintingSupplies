@@ -15,24 +15,21 @@ namespace Core.Interface.Service
         PurchaseDownPayment GetObjectById(int Id);
         IList<PurchaseDownPayment> GetObjectsByCashBankId(int cashBankId);
         IList<PurchaseDownPayment> GetObjectsByContactId(int contactId);
-        PurchaseDownPayment CreateObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentDetailService _purchaseDownPaymentDetailService, IPayableService _payableService,
-                                    IContactService _contactService, ICashBankService _cashBankService);
-        PurchaseDownPayment UpdateAmount(PurchaseDownPayment purchaseDownPayment);
-        PurchaseDownPayment UpdateObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentDetailService _purchaseDownPaymentDetailService, IPayableService _payableService,
-                                    IContactService _contactService, ICashBankService _cashBankService);
-        PurchaseDownPayment SoftDeleteObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentDetailService _purchaseDownPaymentDetailService);
+        PurchaseDownPayment CreateObject(PurchaseDownPayment purchaseDownPayment, IContactService _contactService,
+                                         IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
+                                         ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService);
+        PurchaseDownPayment UpdateObject(PurchaseDownPayment purchaseDownPayment, IContactService _contactService,
+                                         IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
+                                         ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService);
+        PurchaseDownPayment SoftDeleteObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
+                                             IPaymentVoucherDetailService _paymentVoucherDetailService, IPaymentVoucherService _paymentVoucherService);
         bool DeleteObject(int Id);
-        PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment, DateTime ConfirmationDate, IPurchaseDownPaymentDetailService _purchaseDownPaymentDetailService,
-                                     ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        PurchaseDownPayment UnconfirmObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentDetailService _purchaseDownPaymentDetailService,
-                                       ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        PurchaseDownPayment ReconcileObject(PurchaseDownPayment purchaseDownPayment, DateTime ReconciliationDate, IPurchaseDownPaymentDetailService _purchaseDownPaymentDetailService,
-                                       ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        PurchaseDownPayment UnreconcileObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentDetailService _purchaseDownPaymentDetailService,
-                                         ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment, DateTime ConfirmationDate, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService,
+                                          IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService,
+                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        PurchaseDownPayment UnconfirmObject(PurchaseDownPayment purchaseDownPayment, ICashBankService _cashBankService,
+                                            IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
+                                            IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService,
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
     }
 }

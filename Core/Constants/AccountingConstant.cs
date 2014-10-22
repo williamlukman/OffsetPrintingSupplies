@@ -20,6 +20,8 @@ namespace Core.Constants
             public static string CashBankMutation = "CashBankMutation";
             //public static string CashSalesInvoice = "CashSalesInvoice";
             //public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
+            public static string Memorial = "Memorial";
+            public static string PaymentRequest = "PaymentRequest";
             public static string PaymentVoucher = "PaymentVoucher";
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string PurchaseAllowance = "PurchaseAllowance";
@@ -86,6 +88,7 @@ namespace Core.Constants
             public static string GoodsPendingClearance = "3103";
             public static string UnearnedRevenue = "3104";
             public static string PurchaseAllowance = "3105";
+            public static string AccountPayableNonTrading = "3106";
             public static string NonCurrentLiability = "32";
 
             public static string Equity = "4";
@@ -135,6 +138,7 @@ namespace Core.Constants
             public static string GoodsPendingClearance = "L3103";
             public static string UnearnedRevenue = "L3104";
             public static string PurchaseAllowance = "L3105";
+            public static string AccountPayableNonTrading = "3106";
             public static string NonCurrentLiability = "L32";
 
             public static string Equity = "E4";

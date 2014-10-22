@@ -20,14 +20,10 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         CashMutation CreateCashMutationForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
         IList<CashMutation> SoftDeleteCashMutationForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank);
-        CashMutation CreateCashMutationForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank);
-        IList<CashMutation> SoftDeleteCashMutationForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank);
         CashMutation CreateCashMutationForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank);
         IList<CashMutation> SoftDeleteCashMutationForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank);
         CashMutation CreateCashMutationForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
         IList<CashMutation> SoftDeleteCashMutationForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank);
-        CashMutation CreateCashMutationForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank);
-        IList<CashMutation> SoftDeleteCashMutationForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank);
         CashMutation CreateCashMutationForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank);
         IList<CashMutation> SoftDeleteCashMutationForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank);
         CashMutation CreateCashMutationForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);

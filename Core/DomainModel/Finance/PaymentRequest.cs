@@ -26,6 +26,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
 
         public virtual Contact Contact { get; set; }
+        public virtual ICollection<PaymentRequestDetail> PaymentRequestDetails { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }

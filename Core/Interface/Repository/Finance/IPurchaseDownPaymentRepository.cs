@@ -20,8 +20,6 @@ namespace Core.Interface.Repository
         bool DeleteObject(int Id);
         PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment);
         PurchaseDownPayment UnconfirmObject(PurchaseDownPayment purchaseDownPayment);
-        PurchaseDownPayment ReconcileObject(PurchaseDownPayment purchaseDownPayment);
-        PurchaseDownPayment UnreconcileObject(PurchaseDownPayment purchaseDownPayment);
         string SetObjectCode();
     }
 }

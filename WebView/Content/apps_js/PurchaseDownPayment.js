@@ -135,15 +135,15 @@
         ClearData();
         clearForm('#frm');
 
-        $('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#DownPaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
         $('#tabledetail_div').hide();
-        $('#PaymentDateDiv').show();
-        $('#PaymentDateDiv2').hide();
+        $('#DownPaymentDateDiv').show();
+        $('#DownPaymentDateDiv2').hide();
         $('#DueDateDiv').show();
         $('#DueDateDiv2').hide();
         $('#form_btn_save').show();
@@ -187,12 +187,12 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#PaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
-                            $('#PaymentDate2').val(dateEnt(result.DownPaymentDate));
+                            $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownDownPaymentDate));
+                            $('#DownPaymentDate2').val(dateEnt(result.DownDownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#PaymentDateDiv2').show();
-                            $('#PaymentDateDiv').hide();
+                            $('#DownPaymentDateDiv2').show();
+                            $('#DownPaymentDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
                             $('#form_btn_save').hide();
@@ -248,12 +248,12 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#PaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
-                            $('#PaymentDate2').val(dateEnt(result.DownPaymentDate));
+                            $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownDownPaymentDate));
+                            $('#DownPaymentDate2').val(dateEnt(result.DownDownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#PaymentDateDiv2').show();
-                            $('#PaymentDateDiv').hide();
+                            $('#DownPaymentDateDiv2').show();
+                            $('#DownPaymentDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
                             $('#btnContact').removeAttr('disabled');
@@ -499,8 +499,8 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#PaymentDate').datebox('getValue') == "") {
-            return $($('#PaymentDate').addClass('errormessage').before('<span class="errormessage">**' + "Payment Date Belum Terisi" + '</span>'));
+        if ($('#DownPaymentDate').datebox('getValue') == "") {
+            return $($('#DownPaymentDate').addClass('errormessage').before('<span class="errormessage">**' + "Payment Date Belum Terisi" + '</span>'));
 
         }
         // Update
@@ -522,7 +522,7 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
                 IsGBCH: gbch, TotalAmount : $("#TotalAmount").numberbox('getValue'),
-                DownPaymentDate: $('#PaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                DownDownPaymentDate: $('#DownPaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,
             cache: false,

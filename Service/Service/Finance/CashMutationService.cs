@@ -92,32 +92,7 @@ namespace Service.Service
         }
         #endregion
 
-        #region Purchase Down Payment
-        public CashMutation CreateCashMutationForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank)
-        {
-            CashMutation cashMutation = new CashMutation();
-            cashMutation.CashBankId = cashBank.Id;
-            cashMutation.Amount = Math.Abs(purchaseDownPayment.TotalAmount);
-            cashMutation.MutationDate = purchaseDownPayment.IsGBCH ? (DateTime)purchaseDownPayment.ReconciliationDate.GetValueOrDefault() : (DateTime)purchaseDownPayment.ConfirmationDate.GetValueOrDefault();
-            cashMutation.SourceDocumentType = Constant.SourceDocumentType.PurchaseDownPayment;
-            cashMutation.SourceDocumentId = purchaseDownPayment.Id;
-            cashMutation.SourceDocumentCode = purchaseDownPayment.Code;
-            cashMutation.Status = Constant.MutationStatus.Deduction;
-            return _repository.CreateObject(cashMutation);
-        }
-
-        public IList<CashMutation> SoftDeleteCashMutationForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, CashBank cashBank)
-        {
-            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.PurchaseDownPayment, purchaseDownPayment.Id);
-            foreach (var cashMutation in cashMutations)
-            {
-                _repository.Delete(cashMutation);
-            }
-            return cashMutations;
-        }
-        #endregion
-
-        #region Purchase Allownance
+        #region Purchase Allowance
         public CashMutation CreateCashMutationForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank)
         {
             CashMutation cashMutation = new CashMutation();
@@ -159,31 +134,6 @@ namespace Service.Service
         public IList<CashMutation> SoftDeleteCashMutationForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank)
         {
             IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.ReceiptVoucher, receiptVoucher.Id);
-            foreach (var cashMutation in cashMutations)
-            {
-                _repository.Delete(cashMutation);
-            }
-            return cashMutations;
-        }
-        #endregion
-
-        #region Sales Down Payment
-        public CashMutation CreateCashMutationForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank)
-        {
-            CashMutation cashMutation = new CashMutation();
-            cashMutation.CashBankId = cashBank.Id;
-            cashMutation.Amount = Math.Abs(salesDownPayment.TotalAmount);
-            cashMutation.MutationDate = salesDownPayment.IsGBCH ? (DateTime)salesDownPayment.ReconciliationDate.GetValueOrDefault() : (DateTime)salesDownPayment.ConfirmationDate.GetValueOrDefault();
-            cashMutation.SourceDocumentType = Constant.SourceDocumentType.SalesDownPayment;
-            cashMutation.SourceDocumentId = salesDownPayment.Id;
-            cashMutation.SourceDocumentCode = salesDownPayment.Code;
-            cashMutation.Status = Constant.MutationStatus.Addition;
-            return _repository.CreateObject(cashMutation);
-        }
-
-        public IList<CashMutation> SoftDeleteCashMutationForSalesDownPayment(SalesDownPayment salesDownPayment, CashBank cashBank)
-        {
-            IList<CashMutation> cashMutations = _repository.GetObjectsBySourceDocument(cashBank.Id, Constant.SourceDocumentType.SalesDownPayment, salesDownPayment.Id);
             foreach (var cashMutation in cashMutations)
             {
                 _repository.Delete(cashMutation);

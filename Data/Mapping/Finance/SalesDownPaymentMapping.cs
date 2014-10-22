@@ -12,16 +12,17 @@ namespace Data.Mapping
         public SalesDownPaymentMapping()
         {
             HasKey(sdp => sdp.Id);
-            HasRequired(sdp => sdp.Contact)
+            HasRequired(sdp => sdp.ReceiptVoucher)
                 .WithMany()
-                .HasForeignKey(sdp => sdp.ContactId)
+                .HasForeignKey(sdp => sdp.ReceiptVoucherId)
                 .WillCascadeOnDelete(false);
-            HasMany(sdp => sdp.SalesDownPaymentDetails)
-                .WithRequired(sdpd => sdpd.SalesDownPayment)
-                .HasForeignKey(sdpd => sdpd.SalesDownPaymentId);
             HasRequired(sdp => sdp.CashBank)
                 .WithMany()
                 .HasForeignKey(sdp => sdp.CashBankId)
+                .WillCascadeOnDelete(false);
+            HasRequired(sdp => sdp.Contact)
+                .WithMany()
+                .HasForeignKey(sdp => sdp.ContactId)
                 .WillCascadeOnDelete(false);
             Ignore(sdp => sdp.Errors);
         }

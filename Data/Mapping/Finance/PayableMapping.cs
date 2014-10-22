@@ -19,9 +19,9 @@ namespace Data.Mapping
             HasMany(p => p.PaymentVoucherDetails)
                 .WithRequired(pvd => pvd.Payable)
                 .HasForeignKey(pvd => pvd.PayableId);
-            HasMany(p => p.PurchaseDownPaymentDetails)
-                .WithRequired(pdpd => pdpd.Payable)
-                .HasForeignKey(pdpd => pdpd.PayableId);
+            HasMany(p => p.PurchaseDownPaymentAllocationDetails)
+                .WithRequired(pdpad => pdpad.Payable)
+                .HasForeignKey(pdpad => pdpad.PayableId);
             HasMany(p => p.PurchaseAllowanceDetails)
                 .WithRequired(pad => pad.Payable)
                 .HasForeignKey(pad => pad.PayableId);

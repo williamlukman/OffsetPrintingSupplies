@@ -46,28 +46,37 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
-        public PaymentRequest CreateObject(PaymentRequest paymentRequest, IContactService _contactService)
+        public PaymentRequest CreateObject(PaymentRequest paymentRequest, IContactService _contactService, IPaymentRequestDetailService _paymentRequestDetailService,
+                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             paymentRequest.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(paymentRequest, _contactService) ? _repository.CreateObject(paymentRequest) : paymentRequest);
-        }
-
-        public PaymentRequest CreateObject(int contactId, string description, decimal amount, DateTime requestedDate, DateTime dueDate, IContactService _contactService)
-        {
-            PaymentRequest paymentRequest = new PaymentRequest
+            if (_validator.ValidCreateObject(paymentRequest, _contactService))
             {
-                ContactId = contactId,
-                Description = description,
-                Amount = amount,
-                RequestedDate = requestedDate,
-                DueDate = dueDate
-            };
-            return this.CreateObject(paymentRequest, _contactService);
+                paymentRequest = _repository.CreateObject(paymentRequest);
+                PaymentRequestDetail paymentRequestDetail = new PaymentRequestDetail()
+                {
+                    PaymentRequestId = paymentRequest.Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayableNonTrading).Id,
+                    Amount = paymentRequest.Amount,
+                    IsLegacy = true,
+                    Status = Constant.GeneralLedgerStatus.Credit
+                };
+                _paymentRequestDetailService.CreateLegacyObject(paymentRequestDetail, this, _accountService);
+            }
+            return paymentRequest;
         }
 
-        public PaymentRequest UpdateObject(PaymentRequest paymentRequest, IContactService _contactService)
+        public PaymentRequest UpdateObject(PaymentRequest paymentRequest, IContactService _contactService, IPaymentRequestDetailService _paymentRequestDetailService,
+                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            return (_validator.ValidUpdateObject(paymentRequest, _contactService) ? _repository.UpdateObject(paymentRequest) : paymentRequest);
+            if (_validator.ValidUpdateObject(paymentRequest, _contactService))
+            {
+                _repository.UpdateObject(paymentRequest);
+                PaymentRequestDetail APNonTrading = _paymentRequestDetailService.GetLegacyObjectByPaymentRequestId(paymentRequest.Id);
+                APNonTrading.Amount = paymentRequest.Amount;
+                _paymentRequestDetailService.UpdateLegacyObject(APNonTrading, this, _accountService);
+            }
+            return paymentRequest;
         }
 
         public PaymentRequest SoftDeleteObject(PaymentRequest paymentRequest)
@@ -80,10 +89,12 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PaymentRequest ConfirmObject(PaymentRequest paymentRequest, DateTime ConfirmationDate, IPayableService _payableService)
+        public PaymentRequest ConfirmObject(PaymentRequest paymentRequest, DateTime ConfirmationDate, IPayableService _payableService,
+                                            IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,
+                                            IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             paymentRequest.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(paymentRequest))
+            if (_validator.ValidConfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
             {
                 // confirm object
                 // create payable
@@ -99,22 +110,20 @@ namespace Service.Service
                     DueDate = paymentRequest.DueDate
                 };
                 _payableService.CreateObject(payable);
-                // Pilih Debit Credit COA
-            }
-            else
-            {
-                paymentRequest.ConfirmationDate = null;
+                _generalLedgerJournalService.CreateConfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
             }
             return paymentRequest;
         }
 
-        public PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+        public PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService,
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(paymentRequest, _paymentVoucherDetailService, _payableService))
+            if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
             {
                 _repository.UnconfirmObject(paymentRequest);
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
-                _payableService.SoftDeleteObject(payable);
+                _payableService.DeleteObject(payable.Id);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
             }
             return paymentRequest;
         }
