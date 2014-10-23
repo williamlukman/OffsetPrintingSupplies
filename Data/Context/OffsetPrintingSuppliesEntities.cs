@@ -32,13 +32,13 @@ namespace Data.Context
                                           "BlanketOrderDetail", "BlanketOrder" };
             IList<String> purchaseOperationNames = new List<String>()
                                         { "PurchaseDownPaymentAllocationDetail", "PurchaseDownPaymentAllocation", "PaymentVoucherDetail",
-                                          "PaymentVoucher", "PurchaseDownPayment",
+                                          "PurchaseDownPayment", "PaymentVoucher",
                                           "PurchaseAllowanceDetail", "PurchaseAllowance", "Payable", "RetailPurchaseInvoiceDetail",
                                           "RetailPurchaseInvoice", "PurchaseInvoiceDetail", "PurchaseInvoice",
                                           "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder" };
             IList<String> salesOperationNames = new List<String>()
                                         { "SalesDownPaymentAllocationDetail", "SalesDownPaymentAllocation", "ReceiptVoucherDetail",
-                                          "ReceiptVoucher", "SalesDownPayment", 
+                                          "SalesDownPayment", "ReceiptVoucher",
                                           "SalesAllowanceDetail", "SalesAllowance", "Receivable", "RetailSalesInvoiceDetail",
                                           "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",

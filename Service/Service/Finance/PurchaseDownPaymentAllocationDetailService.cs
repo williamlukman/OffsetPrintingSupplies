@@ -63,7 +63,6 @@ namespace Service.Service
             purchaseDownPaymentAllocationDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _paymentVoucherDetailService, _payableService))
             {
-                _repository.CreateObject(purchaseDownPaymentAllocationDetail);
                 PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
                 PurchaseDownPayment purchaseDownPayment = _purchaseDownPaymentService.GetObjectById(purchaseDownPaymentAllocation.PurchaseDownPaymentId);
                 PaymentVoucherDetail paymentVoucherDetail = new PaymentVoucherDetail()
@@ -73,6 +72,8 @@ namespace Service.Service
                     PaymentVoucherId = purchaseDownPayment.PaymentVoucherId
                 };
                 _paymentVoucherDetailService.CreateObject(paymentVoucherDetail, _paymentVoucherService, _cashBankService, _payableService);
+                purchaseDownPaymentAllocationDetail.PaymentVoucherDetailId = paymentVoucherDetail.Id;
+                _repository.CreateObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;
         }
@@ -81,13 +82,25 @@ namespace Service.Service
                                                                 IPurchaseDownPaymentService _purchaseDownPaymentService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
                                                                 IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService)
         {
-            return (_validator.ValidUpdateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _paymentVoucherDetailService, _payableService) ?
-                     _repository.UpdateObject(purchaseDownPaymentAllocationDetail) : purchaseDownPaymentAllocationDetail);
+            if (_validator.ValidUpdateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _paymentVoucherDetailService, _payableService))
+            {
+                _repository.UpdateObject(purchaseDownPaymentAllocationDetail);
+                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.GetObjectById(purchaseDownPaymentAllocationDetail.PaymentVoucherDetailId);
+                paymentVoucherDetail.Amount = purchaseDownPaymentAllocationDetail.Amount;
+                paymentVoucherDetail.PayableId = purchaseDownPaymentAllocationDetail.PayableId;
+                _paymentVoucherDetailService.UpdateObject(paymentVoucherDetail, _paymentVoucherService, _cashBankService, _payableService);
+            }
+            return purchaseDownPaymentAllocationDetail;
         }
 
-        public PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail)
+        public PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
-            return (_validator.ValidDeleteObject(purchaseDownPaymentAllocationDetail) ? _repository.SoftDeleteObject(purchaseDownPaymentAllocationDetail) : purchaseDownPaymentAllocationDetail);
+            if (_validator.ValidDeleteObject(purchaseDownPaymentAllocationDetail))
+            {
+                _repository.SoftDeleteObject(purchaseDownPaymentAllocationDetail);
+                _paymentVoucherDetailService.DeleteObject(purchaseDownPaymentAllocationDetail.PaymentVoucherDetailId);
+            }
+            return purchaseDownPaymentAllocationDetail;
         }
 
         public bool DeleteObject(int Id)
@@ -102,19 +115,6 @@ namespace Service.Service
             purchaseDownPaymentAllocationDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseDownPaymentAllocationDetail, _paymentVoucherDetailService, _payableService))
             {
-                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
-                PurchaseDownPayment purchaseDownPayment = _purchaseDownPaymentService.GetObjectById(purchaseDownPaymentAllocation.PurchaseDownPaymentId);
-                Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);
-
-                if (purchaseDownPayment.IsGBCH) { payable.PendingClearanceAmount += purchaseDownPaymentAllocationDetail.Amount; }
-                payable.RemainingAmount -= purchaseDownPaymentAllocationDetail.Amount;
-                if (payable.RemainingAmount == 0 && payable.PendingClearanceAmount == 0)
-                {
-                    payable.IsCompleted = true;
-                    payable.CompletionDate = DateTime.Now;
-                }
-                _payableService.UpdateObject(payable);
-
                 purchaseDownPaymentAllocationDetail = _repository.ConfirmObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;
@@ -126,19 +126,6 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(purchaseDownPaymentAllocationDetail, _paymentVoucherDetailService, _payableService))
             {
-                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
-                PurchaseDownPayment purchaseDownPayment = _purchaseDownPaymentService.GetObjectById(purchaseDownPaymentAllocation.PurchaseDownPaymentId);
-                Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);
-
-                if (purchaseDownPayment.IsGBCH) { payable.PendingClearanceAmount -= purchaseDownPaymentAllocationDetail.Amount; }
-                payable.RemainingAmount += purchaseDownPaymentAllocationDetail.Amount;
-                if (payable.RemainingAmount != 0 || payable.PendingClearanceAmount != 0)
-                {
-                    payable.IsCompleted = false;
-                    payable.CompletionDate = null;
-                }
-                _payableService.UpdateObject(payable);
-
                 purchaseDownPaymentAllocationDetail = _repository.UnconfirmObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;

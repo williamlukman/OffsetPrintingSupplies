@@ -79,8 +79,8 @@ namespace Validation.Validation
 
         public MemorialDetail VHasStatus(MemorialDetail memorialDetail)
         {
-            if (memorialDetail.Status == Constant.GeneralLedgerStatus.Debit ||
-                memorialDetail.Status == Constant.GeneralLedgerStatus.Credit)
+            if (memorialDetail.Status != Constant.GeneralLedgerStatus.Debit &&
+                memorialDetail.Status != Constant.GeneralLedgerStatus.Credit)
             {
                 memorialDetail.Errors.Add("Generic", "Sistem mengharapkan posting General Ledger credit/debit");
             }

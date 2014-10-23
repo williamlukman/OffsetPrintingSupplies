@@ -137,8 +137,6 @@ namespace Validation.Validation
         {
             VHasPurchaseDownPaymentAllocation(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService);
             if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
-            VHasPaymentVoucherDetail(purchaseDownPaymentAllocationDetail, _paymentVoucherDetailService);
-            if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
             VHasNotBeenConfirmed(purchaseDownPaymentAllocationDetail);
             if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
             VHasNotBeenDeleted(purchaseDownPaymentAllocationDetail);
@@ -159,6 +157,8 @@ namespace Validation.Validation
                                                    IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
                                                    IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
         {
+            VHasPaymentVoucherDetail(purchaseDownPaymentAllocationDetail, _paymentVoucherDetailService);
+            if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
             VHasNotBeenConfirmed(purchaseDownPaymentAllocationDetail);
             if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
             VCreateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _paymentVoucherDetailService, _payableService);
@@ -184,6 +184,8 @@ namespace Validation.Validation
 
         public PurchaseDownPaymentAllocationDetail VConfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
         {
+            VHasPaymentVoucherDetail(purchaseDownPaymentAllocationDetail, _paymentVoucherDetailService);
+            if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
             VHasConfirmationDate(purchaseDownPaymentAllocationDetail);
             if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
             VAmountLessOrEqualPayable(purchaseDownPaymentAllocationDetail, _payableService);

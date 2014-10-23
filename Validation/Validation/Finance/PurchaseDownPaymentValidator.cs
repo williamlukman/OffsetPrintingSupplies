@@ -167,8 +167,6 @@ namespace Validation.Validation
             if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
             VHasCashBank(purchaseDownPayment, _cashBankService);
             if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
-            VHasPaymentVoucher(purchaseDownPayment, _paymentVoucherService);
-            if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
             VHasDownPaymentDate(purchaseDownPayment);
             if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
             VIfGBCHThenIsBank(purchaseDownPayment, _cashBankService);
@@ -182,6 +180,8 @@ namespace Validation.Validation
         public PurchaseDownPayment VUpdateObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentService _purchaseDownPaymentService, IContactService _contactService,
                                                  ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService)
         {
+            VHasPaymentVoucher(purchaseDownPayment, _paymentVoucherService);
+            if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
             VHasNotBeenConfirmed(purchaseDownPayment);
             if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
             VCreateObject(purchaseDownPayment, _purchaseDownPaymentService, _contactService, _cashBankService, _paymentVoucherService);
@@ -209,6 +209,8 @@ namespace Validation.Validation
                                                   IPurchaseDownPaymentService _purchaseDownPaymentService, IContactService _contactService,
                                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
+            VHasPaymentVoucher(purchaseDownPayment, _paymentVoucherService);
+            if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
             VHasConfirmationDate(purchaseDownPayment);
             if (!isValid(purchaseDownPayment)) { return purchaseDownPayment; }
             VHasNotBeenConfirmed(purchaseDownPayment);

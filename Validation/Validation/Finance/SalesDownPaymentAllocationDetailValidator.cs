@@ -137,8 +137,6 @@ namespace Validation.Validation
         {
             VHasSalesDownPaymentAllocation(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService);
             if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
-            VHasReceiptVoucherDetail(salesDownPaymentAllocationDetail, _receiptVoucherDetailService);
-            if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
             VHasNotBeenConfirmed(salesDownPaymentAllocationDetail);
             if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
             VHasNotBeenDeleted(salesDownPaymentAllocationDetail);
@@ -159,6 +157,8 @@ namespace Validation.Validation
                                                    ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
                                                    IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
         {
+            VHasReceiptVoucherDetail(salesDownPaymentAllocationDetail, _receiptVoucherDetailService);
+            if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
             VHasNotBeenConfirmed(salesDownPaymentAllocationDetail);
             if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
             VCreateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService, _salesDownPaymentService, _receiptVoucherDetailService, _receivableService);
@@ -184,6 +184,8 @@ namespace Validation.Validation
 
         public SalesDownPaymentAllocationDetail VConfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
         {
+            VHasReceiptVoucherDetail(salesDownPaymentAllocationDetail, _receiptVoucherDetailService);
+            if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
             VHasConfirmationDate(salesDownPaymentAllocationDetail);
             if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
             VAmountLessOrEqualReceivable(salesDownPaymentAllocationDetail, _receivableService);

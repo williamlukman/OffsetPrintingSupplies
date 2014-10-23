@@ -147,6 +147,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.AccountId,
+                             AccountCode = model.Account.Code,
                              Account = model.Account.Name,
                              model.Status,
                              model.Amount,
@@ -184,6 +185,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Code,
                             model.AccountId,
+                            model.AccountCode,
                             model.Account,
                             model.Status,
                             model.Amount
@@ -243,7 +245,8 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.AccountId,
-                model.Account.Name,
+                AccountCode = model.Account.Code,
+                Account = model.Account.Name,
                 model.Status,
                 model.Amount,
                 model.Errors

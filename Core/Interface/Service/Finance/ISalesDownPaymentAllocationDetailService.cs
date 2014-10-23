@@ -22,7 +22,8 @@ namespace Core.Interface.Service
         SalesDownPaymentAllocationDetail UpdateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                       ISalesDownPaymentService _salesDownPaymentService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
                                                       IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService);
-        SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
+        SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
+                                                          IReceiptVoucherDetailService _receiptVoucherDetailService);
         bool DeleteObject(int Id);
         SalesDownPaymentAllocationDetail ConfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, DateTime ConfirmationDate,
                                                        ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,

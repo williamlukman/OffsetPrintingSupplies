@@ -167,8 +167,6 @@ namespace Validation.Validation
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasCashBank(salesDownPayment, _cashBankService);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
-            VHasReceiptVoucher(salesDownPayment, _receiptVoucherService);
-            if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasDownPaymentDate(salesDownPayment);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VIfGBCHThenIsBank(salesDownPayment, _cashBankService);
@@ -182,6 +180,8 @@ namespace Validation.Validation
         public SalesDownPayment VUpdateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService,
                                                  ICashBankService _cashBankService, IReceiptVoucherService _receiptVoucherService)
         {
+            VHasReceiptVoucher(salesDownPayment, _receiptVoucherService);
+            if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasNotBeenConfirmed(salesDownPayment);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VCreateObject(salesDownPayment, _salesDownPaymentService, _contactService, _cashBankService, _receiptVoucherService);
@@ -209,6 +209,8 @@ namespace Validation.Validation
                                                   ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService,
                                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
+            VHasReceiptVoucher(salesDownPayment, _receiptVoucherService);
+            if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasConfirmationDate(salesDownPayment);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasNotBeenConfirmed(salesDownPayment);

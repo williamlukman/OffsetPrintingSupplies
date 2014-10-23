@@ -232,7 +232,7 @@ namespace WebView.Controllers
                             model.PayableId,
                             PayableCode = model.Payable.Code,
                             model.PaymentVoucherDetailId,
-                            PaymentVoucherDetailCode = model.PaymentVoucherDetail.Amount,
+                            PaymentVoucherDetailCode = model.PaymentVoucherDetail.Code,
                             model.Amount,
                             model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -424,7 +424,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseDownPaymentAllocationDetailService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentAllocationDetailService.SoftDeleteObject(data);
+                model = _purchaseDownPaymentAllocationDetailService.SoftDeleteObject(data, _paymentVoucherDetailService);
             }
             catch (Exception ex)
             {

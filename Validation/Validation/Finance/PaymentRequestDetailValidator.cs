@@ -104,6 +104,15 @@ namespace Validation.Validation
             return paymentRequestDetail;
         }
 
+        public PaymentRequestDetail VIsLegacyObject(PaymentRequestDetail paymentRequestDetail)
+        {
+            if (!paymentRequestDetail.IsLegacy)
+            {
+                paymentRequestDetail.Errors.Add("Generic", "Hanya untuk legacy object");
+            }
+            return paymentRequestDetail;
+        }
+
         public PaymentRequestDetail VCreateObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService)
         {
             VHasPaymentRequest(paymentRequestDetail, _paymentRequestService);
@@ -140,7 +149,7 @@ namespace Validation.Validation
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VHasNotBeenDeleted(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
-            VNotLegacyObject(paymentRequestDetail);
+            VIsLegacyObject(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VNonNegativeAmount(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
@@ -162,6 +171,8 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(paymentRequestDetail);
             if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
             VHasNotBeenDeleted(paymentRequestDetail);
+            if (!isValid(paymentRequestDetail)) { return paymentRequestDetail; }
+            VNotLegacyObject(paymentRequestDetail);
             return paymentRequestDetail;
         }
 

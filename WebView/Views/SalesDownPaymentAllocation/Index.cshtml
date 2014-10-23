@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Sales Down Payment";
+    ViewBag.Title = "Sales Down Payment Allocation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,20 +8,18 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/salesdownpayment.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/salesdownpaymentallocation.js")"></script>
 
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: @ViewBag.Title :.">
-<div id="toolbar" class="form_toolbar">
+    <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add Detail</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
-        <a id="btn_reconcile" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Reconcile</a>
-        <a id="btn_unreconcile" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">UnReconcile</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
         <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
     </div>
@@ -31,7 +29,7 @@
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
 
-<!-- Dialog Box -->
+    <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
         title=".:  @ViewBag.Title :.">
 
@@ -71,41 +69,26 @@
                         <tr>
                          <tr>
                             <td>
-                                <label>Cash Bank</label></td>
+                                <label>Sales Down Payment (DP)</label></td>
                                  <td colspan="5">
-                                <input id="CashBankId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="CashBank" name="CashBankId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                        </td>
-                            </tr>
-                        <tr>
-                            <td>Down Payment Date</td>
-                            <td colspan="5">
-                                <div id="DownPaymentDateDiv"><input id="DownPaymentDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
-                                <div id="DownPaymentDateDiv2"><input id="DownPaymentDate2" type="text" size="10" disabled="disabled"/></div>
+                                <input id="SalesDownPaymentId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnSalesDownPayment" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="SalesDownPayment" name="SalesDownPaymentId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                             </td>
                         </tr>
-                       <tr>
-                            <td>GBCH</td>
-                            <td>
-                                <select id="IsGBCH">
-                                  <option value="True">Yes</option>
-                                  <option value="False">No</option>
-                               </select>
+                        <tr>
+                            <td>Allocation Date</td>
+                            <td colspan="5">
+                                <div id="AllocationDateDiv"><input id="AllocationDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
+                                <div id="AllocationDateDiv2"><input id="AllocationDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
-                            <td>
-                                <label>Due Date</label></td>
-                             <td>
-                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/> </div>
-                                <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
-                            </td>
-                       </tr>
+                        </tr>
                        <tr>
                              <td >
                                 <label>Total Amount</label></td>
                              <td colspan="5">
                                <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"  />
-                                </td>     
+                             </td>     
                          </tr>                      
                     </table>
                     <div id="tabledetail_div">
@@ -114,18 +97,18 @@
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
-                                  <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+                        <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
                         <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
                     </div>
                @* </fieldset>*@
             </form>
         </div>
     </div>
-<!-- End Dialog Box -->
+    <!-- End Dialog Box -->
 
- <!-- Dialog Box  Item-->
+    <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
-        data-options="modal:true" title=".: Input Receivable :.">
+        data-options="modal:true" title=".: Input Detail :.">
 
         <div id="item_toolbar" class="form_toolbar">
             <a id="item_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
@@ -144,28 +127,36 @@
                          <input id="SalesDownPaymentDetailId" name="SalesDownPaymentDetailId" type="text" size ="10" hidden="hidden" />
                       </td>
                   </tr>
-                    <tr>
-                        <td>
+                  <tr>
+                      <td>
+                          Receipt Voucher Detail
+                      </td>
+                      <td>
+                         <input id="ReceiptVoucherDetailId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                         <input id="ReceiptVoucherDetail" name="ReceiptVoucherDetailId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
                             Amount
-                        </td>
-                        <td>
-                               <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                        </td>
-                    </tr>
-                   <tr>
-                        <td>
+                      </td>
+                      <td>
+                            <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
                             <label>Description</label></td>
-                            <td colspan="3"><label>
-                              <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
-                            </label></td>
-                        </tr>
+                      <td colspan="3">
+                            <label><textarea name="Description" id="Description" cols="60" rows="3"></textarea></label>
+                      </td>
+                  </tr>
               </table>
-          
         </div>
     </div>
-<!-- End Dialog Box Item-->
+    <!-- End Dialog Box Item-->
 
-     <!-- Dialog Box Confirm-->
+    <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
         data-options="modal:true" title=".: Confirm @ViewBag.Title :.">
 
@@ -194,47 +185,11 @@
                       </td>
                   </tr>
               </table>
-          
         </div>
     </div>
-<!-- End Dialog Box Confirm-->
+    <!-- End Dialog Box Confirm-->
 
-
- <!-- Dialog Box Reconcile-->
-    <div id="reconcile_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Reconcile @ViewBag.Title :.">
-
-        <div id="reconcile_toolbar" class="form_toolbar">
-            <a id="reconcile_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
-            <a id="reconcile_btn_cancel" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close</a>
-        </div>
-        <div id="reconcile_info">
-              <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <tr>
-                      <td width="139" nowrap style="width: 100px">
-                          Id
-                      </td>
-                      <td>
-                         <input id="idreconcile" type="text" size="10" disabled="disabled"/>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>
-                          Reconcilation Date
-                      </td>
-                      <td>
-                         <input id="ReconciliationDate"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                         <input name="ReconciliationDate" type="text" size="1" hidden="hidden"/>
-                         <input name="IsReconciled" type="text" size="1" hidden="hidden"/>
-                      </td>
-                  </tr>
-              </table>
-          
-        </div>
-    </div>
-<!-- End Dialog Box Reconcile-->
-
-<!-- Dialog Box  Delete-->
+    <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -247,10 +202,9 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
 
-
- <!-- Look Up contact -->
+    <!-- Look Up contact -->
     <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -262,24 +216,23 @@
         <table id="lookup_table_contact" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_contact" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up contact -->
+    <!-- END Look Up contact -->
 
-
- <!-- Look Up cashbank -->
-    <div id="lookup_div_cashbank" class="easyui-dialog" title="List CashBank" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <!-- Look Up salesdownpayment -->
+    <div id="lookup_div_salesdownpayment" class="easyui-dialog" title="List Sales DP" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
-        <div id="lookup_toolbar_cashbank" class="grid_toolbar">
-            <a id="lookup_btn_add_cashbank" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_cashbank" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        <div id="lookup_toolbar_salesdownpayment" class="grid_toolbar">
+            <a id="lookup_btn_add_salesdownpayment" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_salesdownpayment" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
         </div>
 
-        <table id="lookup_table_cashbank" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_cashbank" class="scroll" style="text-align: center;"></div>
+        <table id="lookup_table_salesdownpayment" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_salesdownpayment" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up cashbank -->
+    <!-- END Look Up salesdownpayment -->
 
-     <!-- Look Up receivable -->
+    <!-- Look Up receivable -->
     <div id="lookup_div_receivable" class="easyui-dialog" title="List Receivable" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -291,6 +244,6 @@
         <table id="lookup_table_receivable" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_receivable" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up receivable -->
+    <!-- END Look Up receivable -->
   </div>
 

@@ -276,6 +276,8 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\SalesDownPaymentAllocation.js" />
+    <Content Include="Content\apps_js\PurchaseDownPaymentAllocation.js" />
     <Content Include="Content\apps_js\SalesDownPayment.js" />
     <Content Include="Content\apps_js\Memorial.js" />
     <Content Include="Content\apps_js\SalesAllowance.js" />

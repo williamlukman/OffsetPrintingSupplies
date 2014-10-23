@@ -232,7 +232,7 @@ namespace WebView.Controllers
                             model.ReceivableId,
                             ReceivableCode = model.Receivable.Code,
                             model.ReceiptVoucherDetailId,
-                            ReceiptVoucherDetailCode = model.ReceiptVoucherDetail.Amount,
+                            ReceiptVoucherDetailCode = model.ReceiptVoucherDetail.Code,
                             model.Amount,
                             model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -424,7 +424,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _salesDownPaymentAllocationDetailService.GetObjectById(model.Id);
-                model = _salesDownPaymentAllocationDetailService.SoftDeleteObject(data);
+                model = _salesDownPaymentAllocationDetailService.SoftDeleteObject(data, _receiptVoucherDetailService);
             }
             catch (Exception ex)
             {

@@ -12,6 +12,10 @@
         $("#list").setGridParam({ url: base_url + 'PaymentRequest/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
+    function ReloadGridDetail() {
+        $("#listdetail").setGridParam({ url: base_url + 'PaymentRequest/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+    }
+
     function ClearData() {
         $('#form_btn_save').data('kode', '');
         $('#item_btn_submit').data('kode', '');
@@ -19,7 +23,7 @@
     }
 
     function clearForm(form) {
-        $('#Amount').numberbox('setValue', '');
+        $('#TotalAmount').numberbox('setValue', '');
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case
@@ -32,11 +36,14 @@
         });
     }
 
+    $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_contact").dialog('close');
+    $('#lookup_div_account').dialog('close');
     $("#delete_confirm_div").dialog('close');
-
+    $("#AccountId").hide();
+    $("#Contact").attr('disabled', true);
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -111,11 +118,62 @@
         $('#RequestedDateDiv2').hide();
         $('#DueDateDiv').show();
         $('#DueDateDiv2').hide();
+        $("#TotalAmount").removeAttr('disabled');
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
 
-    
+    $('#btn_add_detail').click(function () {
+        ClearData();
+        clearForm('#frm');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PaymentRequest/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#Code').val(result.Code);
+                            $('#ContactId').val(result.ContactId);
+                            $('#Contact').val(result.Contact);
+                            $('#Description').val(result.Description);
+                            $('#TotalAmount').numberbox('setValue', result.Amount);
+                            $('#RequestedDate').datebox('setValue', dateEnt(result.RequestedDate));
+                            $('#RequestedDate2').val(dateEnt(result.RequestedDate));
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#RequestedDateDiv').hide();
+                            $('#RequestedDateDiv2').show();
+                            $('#DueDateDiv').hide();
+                            $('#DueDateDiv2').show();
+                            $('#form_btn_save').hide();
+                            $("#TotalAmount").attr('disabled', true);
+                            $('#btnAccount').removeAttr('disabled');
+                            $('#tabledetail_div').show();
+                            ReloadGridDetail();
+                            $('#form_div').dialog('open');
+                        }
+                    }
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
     $('#btn_edit').click(function () {
         ClearData();
         clearForm("#frm");
@@ -143,7 +201,7 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
-                            $('#Amount').numberbox('setValue', result.Amount);
+                            $('#TotalAmount').numberbox('setValue', result.Amount);
                             $('#RequestedDate').datebox('setValue', dateEnt(result.RequestedDate));
                             $('#RequestedDate2').val(dateEnt(result.RequestedDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -154,6 +212,7 @@
                             $('#DueDateDiv2').hide();
                             $('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
+                            $("#TotalAmount").removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -335,7 +394,7 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), Description: $("#Description").val(),
                 RequestedDate: $('#RequestedDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                Amount: $("#Amount").numberbox('getValue'),
+                Amount: $("#TotalAmount").numberbox('getValue'),
             }),
             async: false,
             cache: false,
@@ -363,7 +422,265 @@
         });
     });
 
-    
+
+    //GRID Detail+++++++++++++++
+    $("#listdetail").jqGrid({
+        url: base_url,
+        datatype: "json",
+        colNames: ['Code', 'Account Id', 'Account Code', 'Account', 'Status', 'Amount'
+        ],
+        colModel: [
+                  { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'accountid', index: 'accountid', width: 130, sortable: false, hidden: true },
+                  { name: 'accountcode', index: 'accountcode', width: 80, sortable: false },
+                  { name: 'account', index: 'account', width: 150, sortable: false },
+                  { name: 'status', index: 'status', width: 40, sortable: false },
+                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+        ],
+        //page: '1',
+        //pager: $('#pagerdetail'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'Code',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#form_div").width() - 3,
+        height: $(window).height() - 500,
+        gridComplete:
+		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowStatus = $(this).getRowData(cl).status;
+		          if (rowStatus == 1) {
+		              rowStatus = "Debit";
+		          } else {
+		              rowStatus = "Credit";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { status: rowStatus });
+		      }
+		  }
+    });//END GRID Detail
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
+    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    $('#btn_add_new_detail').click(function () {
+        ClearData();
+        clearForm('#item_div');
+        $('#item_div').dialog('open');
+    });
+
+    $('#btn_edit_detail').click(function () {
+        ClearData();
+        clearForm("#item_div");
+        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PaymentRequest/GetInfoDetail?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#item_btn_submit").data('kode', result.Id);
+                            $('#btnAccount').removeAttr('disabled');
+                            $('#AccountId').val(result.AccountId);
+                            $('#Account').val(result.Account);
+                            $('#Amount').val(result.Amount);
+                            var e = document.getElementById("Status");
+                            if (result.Status == 1) {
+                                e.selectedIndex = 0;
+                            }
+                            else if (result.Status == 2) {
+                                e.selectedIndex = 1;
+                            }
+                            $('#Description').val(result.Description);
+                            $('#PaymentRequestDetailId').val(result.Id);
+                            $('#item_div').dialog('open');
+                        }
+                    }
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#btn_del_detail').click(function () {
+        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#listdetail").jqGrid('getRowData', id);
+            $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
+                if (r) {
+                    $.ajax({
+                        url: base_url + "PaymentRequest/DeleteDetail",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            Id: id,
+                        }),
+                        success: function (result) {
+                            if (JSON.stringify(result.Errors) != '{}') {
+                                for (var key in result.Errors) {
+                                    if (key != null && key != undefined && key != 'Generic') {
+                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                                    }
+                                    else {
+                                        $.messager.alert('Warning', result.Errors[key], 'warning');
+                                    }
+                                }
+                            }
+                            else {
+                                ReloadGridDetail();
+                                $("#delete_confirm_div").dialog('close');
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+    //--------------------------------------------------------Dialog Item-------------------------------------------------------------
+    // item_btn_submit
+
+    $("#item_btn_submit").click(function () {
+
+        ClearErrorMessage();
+
+        var submitURL = '';
+        var id = $("#item_btn_submit").data('kode');
+
+        // Update
+        if (id != undefined && id != '' && !isNaN(id) && id > 0) {
+            submitURL = base_url + 'PaymentRequest/UpdateDetail';
+        }
+            // Insert
+        else {
+            submitURL = base_url + 'PaymentRequest/InsertDetail';
+        }
+
+        var e = document.getElementById("Status");
+        var status = e.selectedIndex + 1;
+
+        $.ajax({
+            contentType: "application/json",
+            type: 'POST',
+            url: submitURL,
+            data: JSON.stringify({
+                Id: id, PaymentRequestId: $("#id").val(), AccountId: $("#AccountId").val(), Status: status,
+                Amount: $("#Amount").numberbox('getValue'),
+            }),
+            async: false,
+            cache: false,
+            timeout: 30000,
+            error: function () {
+                return false;
+            },
+            success: function (result) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                }
+                else {
+                    ReloadGridDetail();
+                    $("#item_div").dialog('close')
+                }
+            }
+        });
+    });
+
+    // item_btn_cancel
+    $('#item_btn_cancel').click(function () {
+        clearForm('#item_div');
+        $("#item_div").dialog('close');
+    });
+    //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up account-------------------------------------------------------
+    $('#btnAccount').click(function () {
+        var lookUpURL = base_url + 'ChartOfAccount/GetLeaves';
+        var lookupGrid = $('#lookup_table_account');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_account').dialog('open');
+    });
+
+    jQuery("#lookup_table_account").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy', 'CashBank', 'Legacy Code'],
+        colModel: [
+				  { name: 'Id', index: 'Id', width: 40, hidden: true },
+				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+				  { name: 'name', index: 'name', width: 250 },
+                  { name: 'group', index: 'group', width: 90 },
+                  { name: 'level', index: 'level', width: 50 },
+                  { name: 'parentcode', index: 'parentid', width: 80, classes: "grid-col" },
+                  { name: 'parent', index: 'parent', width: 80 },
+                  { name: 'islegacy', index: 'islegacy', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'iscashbank', index: 'iscashbank', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'legacycode', index: 'legacycode', width: 80, hidden: true },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_account'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_account").width() - 10,
+        height: $("#lookup_div_account").height() - 110,
+    });
+    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_account').click(function () {
+        $('#lookup_div_account').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_account').click(function () {
+        var id = jQuery("#lookup_table_account").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_account").jqGrid('getRowData', id);
+
+            $('#AccountId').val(ret.Id).data("kode", id);
+            $('#Account').val(ret.name);
+            $('#lookup_div_account').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup account----------------------------------------------------------------
+
     // -------------------------------------------------------Look Up Contact-------------------------------------------------------
     $('#btnContact').click(function () {
         var lookUpURL = base_url + 'MstContact/GetList';

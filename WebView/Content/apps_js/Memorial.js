@@ -39,7 +39,7 @@
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
-    $("#lookup_div_item").dialog('close');
+    $("#lookup_div_account").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#AccountId").hide();
 
@@ -135,8 +135,6 @@
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
                             $('#Description').val(result.Description);
-                            $('#AccountId').val(result.AccountId);
-                            $('#Account').val(result.Account);
                             $('#TotalAmount').val(result.Amount);
                             $('#form_btn_save').hide();
                             $('#btnAccount').removeAttr('disabled');
@@ -389,7 +387,7 @@
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'accountid', index: 'accountid', width: 130, sortable: false, hidden: true },
                   { name: 'accountcode', index: 'accountcode', width: 80, sortable: false },
-                  { name: 'account', index: 'account', width: 90, sortable: false },
+                  { name: 'account', index: 'account', width: 150, sortable: false },
                   { name: 'status', index: 'status', width: 40, sortable: false },
                   { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
         ],
@@ -406,9 +404,20 @@
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowStatus= $(this).getRowData(cl).status;
+		          if (rowStatus == 1) {
+		              rowStatus = "Debit";
+		          } else {
+		              rowStatus = "Credit";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { status: rowStatus });
+		      }
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
@@ -441,7 +450,7 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#btnAccount').removeAttr('disabled');
                             $('#AccountId').val(result.AccountId);
-                            $('#Account').val(result.Account);
+                            $('#Account').val(result.Name);
                             $('#Amount').val(result.Amount);
                             var e = document.getElementById("Status");
                             if (result.Status == 1) {
@@ -616,8 +625,8 @@
         if (id) {
             var ret = jQuery("#lookup_table_account").jqGrid('getRowData', id);
 
-            $('#AccountId').val(ret.id).data("kode", id);
-            $('#Account').val(ret.code);
+            $('#AccountId').val(ret.Id).data("kode", id);
+            $('#Account').val(ret.name);
             $('#lookup_div_account').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

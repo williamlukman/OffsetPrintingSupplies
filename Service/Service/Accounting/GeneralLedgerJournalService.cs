@@ -103,6 +103,7 @@ namespace Service.Service
             // Use Input Memorial
             #region User Input Memorial
 
+            DateTime UnconfirmationDate = DateTime.Now;
             IList<MemorialDetail> details = _memorialDetailService.GetObjectsByMemorialId(memorial.Id);
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -113,7 +114,7 @@ namespace Service.Service
                     AccountId = memorialDetail.AccountId,
                     SourceDocument = Constant.GeneralLedgerSource.Memorial,
                     SourceDocumentId = memorial.Id,
-                    TransactionDate = (DateTime)memorial.ConfirmationDate,
+                    TransactionDate = UnconfirmationDate,
                     Status = (memorialDetail.Status == Constant.GeneralLedgerStatus.Debit) ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
                     Amount = memorialDetail.Amount
                 };
@@ -438,6 +439,7 @@ namespace Service.Service
 
             IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
 
             foreach (var paymentRequestDetail in details)
             {
@@ -446,7 +448,7 @@ namespace Service.Service
                     AccountId = paymentRequestDetail.AccountId,
                     SourceDocument = Constant.GeneralLedgerSource.PaymentRequest,
                     SourceDocumentId = paymentRequest.Id,
-                    TransactionDate = (DateTime)paymentRequest.ConfirmationDate,
+                    TransactionDate = UnconfirmationDate,
                     Status = (paymentRequestDetail.Status == Constant.GeneralLedgerStatus.Debit) ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
                     Amount = paymentRequestDetail.Amount
                 };
