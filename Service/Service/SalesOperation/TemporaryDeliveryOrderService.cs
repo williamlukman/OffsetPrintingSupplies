@@ -202,9 +202,8 @@ namespace Service.Service
                         SalesDate = PushDate,
                         OrderType = virtualOrder.OrderType,
                         OrderCode = virtualOrder.Code,
-                        IsLegacy = true
                     };
-                    _salesOrderService.CreateObject(salesOrder, _contactService, _salesQuotationService);
+                    _salesOrderService.CreateObject(salesOrder, _contactService);
 
                     foreach (var tempDetail in temporaryDeliveryOrderDetails)
                     {
@@ -218,7 +217,7 @@ namespace Service.Service
                             OrderCode = virtualOrderDetail.Code,
                             PendingDeliveryQuantity = tempDetail.RestockQuantity
                         };
-                        _salesOrderDetailService.CreateObject(salesOrderDetail, _salesOrderService, _itemService, _salesQuotationDetailService);
+                        _salesOrderDetailService.CreateObject(salesOrderDetail, _salesOrderService, _itemService);
                     }
 
                     _salesOrderService.ConfirmObject(salesOrder, PushDate, _salesOrderDetailService,

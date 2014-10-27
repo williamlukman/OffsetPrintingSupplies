@@ -40,11 +40,6 @@ namespace Service.Service
             return _repository.GetConfirmedObjects();
         }
 
-        public IList<SalesOrder> GetObjectsBySalesQuotationId(int salesQuotationId)
-        {
-            return _repository.GetObjectsBySalesQuotationId(salesQuotationId);
-        }
-
         public SalesOrder GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -55,25 +50,25 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
         
-        public SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService)
+        public SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService)
         {
             salesOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(salesOrder, _contactService, _salesQuotationService) ? _repository.CreateObject(salesOrder) : salesOrder);
+            return (_validator.ValidCreateObject(salesOrder, _contactService) ? _repository.CreateObject(salesOrder) : salesOrder);
         }
 
-        public SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService, ISalesQuotationService _salesQuotationService)
+        public SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService)
         {
             SalesOrder so = new SalesOrder
             {
                 ContactId = contactId,
                 SalesDate = salesDate
             };
-            return this.CreateObject(so, _contactService, _salesQuotationService);
+            return this.CreateObject(so, _contactService);
         }
 
-        public SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService)
+        public SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(salesOrder, _contactService, _salesQuotationService) ? _repository.UpdateObject(salesOrder) : salesOrder);
+            return (_validator.ValidUpdateObject(salesOrder, _contactService) ? _repository.UpdateObject(salesOrder) : salesOrder);
         }
 
         public SalesOrder SoftDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService)

@@ -16,17 +16,17 @@ namespace Core.Interface.Service
         SalesOrder GetObjectById(int Id);
         IList<SalesOrder> GetObjectsByContactId(int contactId);
         IList<SalesOrder> GetConfirmedObjects();
-        IList<SalesOrder> GetObjectsBySalesQuotationId(int salesQuotationId);
-        SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService);
-        SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService, ISalesQuotationService _salesQuotationService);
-        SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService);
+        SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService);
+        SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService);
+        SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder SoftDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         bool DeleteObject(int Id);
         SalesOrder ConfirmObject(SalesOrder salesOrder, DateTime ConfirmationDate, ISalesOrderDetailService _salesOrderDetailService,
                                  IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                  IWarehouseItemService _warehouseItemService);
-        SalesOrder UnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService,
-                                   IDeliveryOrderDetailService _deliveryOrderDetailService, IStockMutationService _stockMutationService,
+        SalesOrder UnconfirmObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService,
+                                   IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
+                                   IStockMutationService _stockMutationService,
                                    IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
         SalesOrder CheckAndSetDeliveryComplete(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         SalesOrder UnsetDeliveryComplete(SalesOrder salesOrder);

@@ -58,6 +58,8 @@ namespace TestValidation
         public ISalesInvoiceService _salesInvoiceService;
         public ISalesOrderService _salesOrderService;
         public ISalesOrderDetailService _salesOrderDetailService;
+        public ISalesQuotationDetailService _salesQuotationDetailService;
+        public ISalesQuotationService _salesQuotationService;
         public IServiceCostService _serviceCostService;
         public IStockAdjustmentDetailService _stockAdjustmentDetailService;
         public IStockAdjustmentService _stockAdjustmentService;
@@ -222,6 +224,8 @@ namespace TestValidation
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _salesQuotationDetailService = new SalesQuotationDetailService(new SalesQuotationDetailRepository(), new SalesQuotationDetailValidator());
+            _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
             _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
@@ -466,7 +470,7 @@ namespace TestValidation
                 Sku = "ADR123",
                 UoMId = Tubs.Id
             };
-            itemAdhesiveBlanket = _itemService.CreateObject(itemAdhesiveBlanket, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemAdhesiveRoller = _itemService.CreateObject(itemAdhesiveRoller, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
 
             itemCompound = new Item()
             {

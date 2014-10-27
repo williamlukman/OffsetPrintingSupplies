@@ -41,24 +41,19 @@
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_contact").dialog('close');
-    $("#lookup_div_salesquotation").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ContactId").hide();
     $("#ItemId").hide();
-    $("#SalesQuotationId").show();
-    $("#OrderCode").show();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'SalesOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Sales Quotation Id', 'Quotation Code', 'Contact Id', 'Contact Name', 'SalesDate',
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'SalesDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
-                  { name: 'salesquotationid', index: 'salesquotationid', width: 80, hidden: true },
-                  { name: 'ordercode', index: 'ordercode', width: 80 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 150 },
                   { name: 'salesdate', index: 'salesdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -97,6 +92,8 @@
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
+
+
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
         ReloadGrid();
@@ -117,6 +114,7 @@
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
+
 
     $('#btn_add_detail').click(function () {
         ClearData();
@@ -142,8 +140,6 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#SalesQuotationId').val(result.SalesQuotationId);
-                            $('#OrderCode').val(result.OrderCode);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
@@ -163,6 +159,8 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
+
+
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -188,8 +186,6 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#SalesQuotationId').val(result.SalesQuotationId);
-                            $('#OrderCode').val(result.OrderCode);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
@@ -310,6 +306,7 @@
     });
 
     $('#delete_confirm_btn_submit').click(function () {
+
         $.ajax({
             url: base_url + "SalesOrder/Delete",
             type: "POST",
@@ -362,16 +359,12 @@
             submitURL = base_url + 'SalesOrder/Insert';
         }
 
-        var ordercode = ("#OrderCode").val();
-        var salesquotationid = $("#SalesQuotationId").val();
-
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), SalesDate: $('#SalesDate').datebox('getValue'),
-                OrderType: '4', OrderCode: ("#OrderCode").val(), SalesQuotationId: $("#SalesQuotationId").val()
             }),
             async: false,
             cache: false,
@@ -403,12 +396,11 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Quotation Code', 'Item Id', 'Item Sku', 'Name', 'Type', 'QTY', 'PendDlv', 'Price',
+        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'Type', 'QTY', 'PendDlv', 'Price',
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false, align: 'center' },
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
-                  { name: 'quotationcode', index: 'quotationcode', width: 70, sortable: false, align: 'center' },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
@@ -443,7 +435,7 @@
 		      }
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
@@ -653,86 +645,15 @@
 
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
 
-
-    // -------------------------------------------------------Look Up salesquotation-------------------------------------------------------
-    $('#btnSalesQuotation').click(function () {
-        var lookUpURL = base_url + 'SalesQuotation/GetListApproved';
-        var lookupGrid = $('#lookup_table_salesquotation');
-        lookupGrid.setGridParam({
-            url: lookUpURL
-        }).trigger("reloadGrid");
-        $('#lookup_div_salesquotation').dialog('open');
-    });
-
-    jQuery("#lookup_table_salesquotation").jqGrid({
-        url: base_url,
-        datatype: "json",
-        mtype: 'GET',
-        colNames: ['ID', 'Code', 'Versi #', 'Contact Id', 'Contact Name', 'Quotation Date',
-                    'Total Amount', 'Total RRP', 'Cost Saved', 'Percentage Saved (%)',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
-        colModel: [
-    			  { name: 'id', index: 'id', width: 60, align: "center", hidden: true },
-                  { name: 'code', index: 'code', width: 80 },
-                  { name: 'versionno', index: 'versionno', width: 50 },
-				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contact', index: 'contact', width: 120 },
-                  { name: 'quotationdate', index: 'quotationdate', width: 80, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'totalquotedamount', index: 'totalquotedamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'totalrrpamount', index: 'totalrrpamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
-                  { name: 'costsaved', index: 'costsaved', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
-                  { name: 'percentagesaved', index: 'percentagesaved', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-        ],
-        page: '1',
-        pager: $('#lookup_pager_salesquotation'),
-        rowNum: 20,
-        rowList: [20, 30, 60],
-        sortname: 'code',
-        viewrecords: true,
-        scrollrows: true,
-        shrinkToFit: false,
-        sortorder: "ASC",
-        width: $("#lookup_div_salesquotation").width() - 10,
-        height: $("#lookup_div_salesquotation").height() - 110,
-    });
-    $("#lookup_table_salesquotation").jqGrid('navGrid', '#lookup_toolbar_salesquotation', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-
-    // Cancel or CLose
-    $('#lookup_btn_cancel_salesquotation').click(function () {
-        $('#lookup_div_salesquotation').dialog('close');
-    });
-
-    // ADD or Select Data
-    $('#lookup_btn_add_salesquotation').click(function () {
-        var id = jQuery("#lookup_table_salesquotation").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#lookup_table_salesquotation").jqGrid('getRowData', id);
-
-            $('#SalesQuotationId').val(ret.id).data("kode", id);
-            $('#OrderCode').val(ret.code);
-
-            $('#lookup_div_salesquotation').dialog('close');
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        };
-    });
-
-    // ---------------------------------------------End Lookup salesquotation----------------------------------------------------------------
-
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
         var lookUpURL;
-        //if (document.getElementById("IsService").selectedIndex == 1) {
-        //    lookUpURL = base_url + 'MstItem/GetLookUpUsedRoller';
-        //}
-        //else {
-            lookUpURL = base_url + 'SalesQuotation/GetListDetail';
-        //}
+        if (document.getElementById("IsService").selectedIndex == 1) {
+            lookUpURL = base_url + 'MstItem/GetLookUpUsedRoller';
+        }
+        else {
+            lookUpURL = base_url + 'MstItem/GetList';
+        }
         var lookupGrid = $('#lookup_table_item');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -744,18 +665,17 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'Type', 'QTY', 'Quoted Price', 'RRP'
-        ],
+        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM'],
         colModel: [
-                  { name: 'id', index: 'id', width: 40, sortable: false, align: 'center' },
-                  { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
-                  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
-                  { name: 'type', index: 'type', width: 70, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'quotationprice', index: 'quotationprice', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-                  { name: 'rrp', index: 'rrp', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+    			  { name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'sku', index: 'sku', width: 70 },
+				  { name: 'name', index: 'name', width: 120 },
+                  { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'uom', index: 'uom', width: 40 },
         ],
         page: '1',
         pager: $('#lookup_pager_item'),
@@ -783,8 +703,8 @@
         if (id) {
             var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
 
-            $('#ItemId').val(ret.id).data("kode", itemid);
-            $('#Item').val(ret.itemname);
+            $('#ItemId').val(ret.id).data("kode", id);
+            $('#Item').val(ret.name);
 
             $('#lookup_div_item').dialog('close');
         } else {

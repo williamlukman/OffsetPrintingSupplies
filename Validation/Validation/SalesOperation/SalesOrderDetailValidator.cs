@@ -21,40 +21,6 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VHasSalesQuotationDetail(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService,
-                                                         ISalesQuotationDetailService _salesQuotationDetailService)
-        {
-            SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
-            if (salesOrder.OrderType == Constant.OrderTypeCase.SalesQuotation)
-            {
-                if (salesOrderDetail.SalesQuotationDetailId == null)
-                {
-                    salesOrder.Errors.Add("SalesQuotationDetailId", "Tidak boleh tidak ada");
-                }
-                else if (_salesQuotationDetailService.GetObjectById((int)salesOrderDetail.SalesQuotationDetailId) == null)
-                {
-                    salesOrder.Errors.Add("SalesQuotationDetailId", "Tidak terhubung dengan sales quotation detail");
-                }
-            }
-            return salesOrderDetail;
-        }
-
-        public SalesOrderDetail VHasSameSalesQuotation(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService,
-                                                       ISalesQuotationDetailService _salesQuotationDetailService)
-        {
-            SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
-            SalesQuotationDetail salesQuotationDetail = _salesQuotationDetailService.GetObjectById((int) salesOrderDetail.SalesQuotationDetailId);
-
-            if (salesOrder.OrderType == Constant.OrderTypeCase.SalesQuotation)
-            {
-                if (salesOrder.SalesQuotationId != salesQuotationDetail.SalesQuotationId)
-                {
-                    salesOrder.Errors.Add("Generic", "Sales order dan sales quotation detail memiliki SalesQuotationId berbeda");
-                }
-            }
-            return salesOrderDetail;
-        }
-
         public SalesOrderDetail VSalesOrderHasNotBeenConfirmed(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService)
         {
             SalesOrder salesOrder = _salesOrderService.GetObjectById(salesOrderDetail.SalesOrderId);
@@ -154,14 +120,10 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VCreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService,
-                                              IItemService _itemService, ISalesQuotationDetailService _salesQuotationDetailService)
+        public SalesOrderDetail VCreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             VHasSalesOrder(salesOrderDetail, _salesOrderService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
-            VHasSalesQuotationDetail(salesOrderDetail, _salesOrderService, _salesQuotationDetailService);
-            if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
-            VHasSameSalesQuotation(salesOrderDetail, _salesOrderService, _salesQuotationDetailService);
             VSalesOrderHasNotBeenConfirmed(salesOrderDetail, _salesOrderService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VHasItem(salesOrderDetail, _itemService);
@@ -171,13 +133,13 @@ namespace Validation.Validation
             VNonNegativePrice(salesOrderDetail);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VUniqueSalesOrderDetail(salesOrderDetail, _salesOrderDetailService, _itemService);
+            //VQuantityIsLessThanItemQuantity
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail VUpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService,
-                                              IItemService _itemService, ISalesQuotationDetailService _salesQuotationDetailService)
+        public SalesOrderDetail VUpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
-            VCreateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService, _salesQuotationDetailService);
+            VCreateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService);
             if (!isValid(salesOrderDetail)) { return salesOrderDetail; }
             VHasNotBeenConfirmed(salesOrderDetail);
             return salesOrderDetail;
@@ -207,18 +169,16 @@ namespace Validation.Validation
             return salesOrderDetail;
         }
 
-        public bool ValidCreateObject(SalesOrderDetail salesOrderDetail,  ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService,
-                                      IItemService _itemService, ISalesQuotationDetailService _salesQuotationDetailService)
+        public bool ValidCreateObject(SalesOrderDetail salesOrderDetail,  ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
-            VCreateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService, _salesQuotationDetailService);
+            VCreateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService);
             return isValid(salesOrderDetail);
         }
 
-        public bool ValidUpdateObject(SalesOrderDetail salesOrderDetail,  ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService,
-                                      IItemService _itemService, ISalesQuotationDetailService _salesQuotationDetailService)
+        public bool ValidUpdateObject(SalesOrderDetail salesOrderDetail,  ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             salesOrderDetail.Errors.Clear();
-            VUpdateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService, _salesQuotationDetailService);
+            VUpdateObject(salesOrderDetail, _salesOrderDetailService, _salesOrderService, _itemService);
             return isValid(salesOrderDetail);
         }
 

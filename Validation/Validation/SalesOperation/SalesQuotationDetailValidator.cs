@@ -93,7 +93,7 @@ namespace Validation.Validation
 
         public SalesQuotationDetail VHasNoSalesOrderDetail(SalesQuotationDetail salesQuotationDetail, ISalesOrderDetailService _salesOrderDetailService)
         {
-            IList<SalesOrderDetail> details = _salesOrderDetailService.GetObjectsBySalesQuotationDetailId(salesQuotationDetail.Id);
+            IList<SalesOrderDetail> details = _salesOrderDetailService.GetQueryable().Where(x => x.OrderCode == salesQuotationDetail.Code && !x.IsDeleted).ToList();
             if (details.Any())
             {
                 salesQuotationDetail.Errors.Add("Generic", "Tidak boleh boleh terasosiasi dengan Sales Order Detail");

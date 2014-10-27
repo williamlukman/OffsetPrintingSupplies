@@ -61,7 +61,6 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
                     UoMId = d.Pcs.Id,
                     Quantity = 0
                 };
@@ -109,7 +108,6 @@ namespace TestValidation
                 {
                     ItemTypeId = d.typeGlue.Id,
                     Name = "Glue101",
-                    Category = "Glue",
                     Sku = "G101",
                     UoMId = d.Pcs.Id
                 };

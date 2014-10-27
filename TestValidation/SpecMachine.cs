@@ -60,7 +60,6 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);

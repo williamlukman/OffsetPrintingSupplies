@@ -49,7 +49,6 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -157,8 +156,8 @@ namespace TestValidation
 
             it["delete_contact"] = () =>
             {
-                d.contact = d._contactService.SoftDeleteObject(d.contact, d._coreIdentificationService,
-                                                               d._blanketService, d._purchaseOrderService, d._salesOrderService, d._virtualOrderService);
+                d.contact = d._contactService.SoftDeleteObject(d.contact, d._coreIdentificationService, d._blanketService, d._purchaseOrderService,
+                                                               d._salesOrderService, d._salesQuotationService, d._virtualOrderService);
                 d.contact.Errors.Count().should_be(0);
             };
 
@@ -211,7 +210,7 @@ namespace TestValidation
                 d.coreIdentificationDetail = d._coreIdentificationDetailService.CreateObject(d.coreIdentificationDetail, d._coreIdentificationService, d._coreBuilderService,
                                              d._rollerTypeService, d._machineService, d._warehouseItemService);
                 d.contact = d._contactService.SoftDeleteObject(d.contact, d._coreIdentificationService, d._blanketService,
-                                                               d._purchaseOrderService, d._salesOrderService, d._virtualOrderService);
+                                                               d._purchaseOrderService, d._salesOrderService, d._salesQuotationService, d._virtualOrderService);
                 d.contact.Errors.Count().should_not_be(0);
             };
         }

@@ -70,7 +70,7 @@ namespace Validation.Validation
 
         public SalesQuotation VHasNoSalesOrder(SalesQuotation salesQuotation, ISalesOrderService _salesOrderService)
         {
-            IList<SalesOrder> salesOrders = _salesOrderService.GetObjectsBySalesQuotationId(salesQuotation.Id);
+            IList<SalesOrder> salesOrders = _salesOrderService.GetQueryable().Where(x => x.OrderCode == salesQuotation.Code).ToList();
             if (salesOrders.Any())
             {
                 salesQuotation.Errors.Add("Generic", "Sudah memiliki sales order");

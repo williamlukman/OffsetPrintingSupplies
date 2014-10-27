@@ -9,6 +9,7 @@
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/salesorder.js")"></script>
+
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: @ViewBag.Title :.">
@@ -58,16 +59,6 @@
                         </tr>
                         <tr>
                             <td>
-                             <label>Sales Quotation</label>
-                            </td>
-                            <td>
-                                <input id="SalesQuotationId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnSalesQuotation" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="OrderCode" name="OrderCode" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <label>Contact</label></td>
                             <td>
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
@@ -96,9 +87,9 @@
             </form>
         </div>
     </div>
-    <!-- End Dialog Box -->
+<!-- End Dialog Box -->
 
-    <!-- Dialog Box  Item-->
+ <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
         data-options="modal:true" title=".: Input Item :.">
 
@@ -108,7 +99,7 @@
         </div>
         <div id="item_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
-                  <!--tr>
+                  <tr>
                       <td width="139" nowrap style="width: 100px">
                           Trading / Service
                       </td>
@@ -118,7 +109,7 @@
                             <option value="true">Service</option>
                         </select>
                       </td>
-                  </tr-->
+                  </tr>
                   <tr>
                       <td>
                           Item
@@ -148,9 +139,9 @@
               </table>          
         </div>
     </div>
-    <!-- End Dialog Box Item-->
+<!-- End Dialog Box Item-->
 
-    <!-- Dialog Box Confirm-->
+     <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
         data-options="modal:true" title=".: Confirm Sales Order :.">
 
@@ -182,9 +173,9 @@
           
         </div>
     </div>
-    <!-- End Dialog Box Confirm-->
+<!-- End Dialog Box Confirm-->
 
-    <!-- Dialog Box  Delete-->
+<!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -197,9 +188,10 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-    <!-- End Dialog Box Delete-->
+<!-- End Dialog Box Delete-->
 
-    <!-- Look Up contact -->
+
+ <!-- Look Up contact -->
     <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -211,23 +203,10 @@
         <table id="lookup_table_contact" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_contact" class="scroll" style="text-align: center;"></div>
     </div>
-    <!-- END Look Up contact -->
+<!-- END Look Up contact -->
 
-    <!-- Look Up salesquotation -->
-    <div id="lookup_div_salesquotation" class="easyui-dialog" title="List Sales Quotation" style="padding: 0px 5px; height: 490px; width: 480px;"
-        data-options="iconCls:'icon-tip',modal:true">
 
-        <div id="lookup_toolbar_salesquotation" class="grid_toolbar">
-            <a id="lookup_btn_add_salesquotation" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_salesquotation" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
-        </div>
-
-        <table id="lookup_table_salesquotation" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_salesquotation" class="scroll" style="text-align: center;"></div>
-    </div>
-    <!-- END Look Up salesquotation -->
-
-    <!-- Look Up item -->
+ <!-- Look Up item -->
     <div id="lookup_div_item" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 

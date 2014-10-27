@@ -286,7 +286,6 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("RollBlanket").Id,
                 Name = "RollBlanket1",
-                Category = "RollBlanket",
                 Sku = "BLK1",
                 UoMId = Pcs.Id
             };
@@ -297,7 +296,6 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("RollBlanket").Id,
                 Name = "RollBlanket2",
-                Category = "RollBlanket",
                 Sku = "BLK2",
                 UoMId = Pcs.Id
             };
@@ -308,7 +306,6 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("RollBlanket").Id,
                 Name = "RollBlanket3",
-                Category = "RollBlanket",
                 Sku = "BLK3",
                 UoMId = Pcs.Id
             };

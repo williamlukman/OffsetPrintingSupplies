@@ -50,7 +50,6 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -81,7 +80,6 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1002",
                     Name = "     ",
-                    Category = "ABC222",
                     UoMId = d.Pcs.Id
                 };
                 nonameitem = d._itemService.CreateObject(nonameitem, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -95,7 +93,6 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "BBC",
-                    Category = "ABC222",
                     UoMId = d.Pcs.Id
                 };
                 sameskuitem = d._itemService.CreateObject(sameskuitem, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -211,7 +208,6 @@ namespace TestValidation
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
                     Name = "Compound",
-                    Category = "Compound",
                     Sku = "CMP0001",
                     UoMId = d.Pcs.Id
                 };

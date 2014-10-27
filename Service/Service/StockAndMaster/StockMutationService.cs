@@ -554,7 +554,7 @@ namespace Service.Service
             stockMutationTo.SourceDocumentDetailId = rollerWarehouseMutationDetail.Id;
             stockMutationTo.ItemCase = Constant.ItemCase.Ready;
             stockMutationTo.Status = Constant.MutationStatus.Addition;
-            stockMutationFrom.MutationDate = (DateTime)rollerWarehouseMutationDetail.ConfirmationDate;
+            stockMutationTo.MutationDate = (DateTime)rollerWarehouseMutationDetail.ConfirmationDate;
             stockMutationTo = _repository.CreateObject(stockMutationTo);
 
             stockMutations.Add(stockMutationFrom);

@@ -13,7 +13,6 @@ namespace Core.Interface.Repository
         IList<SalesOrderDetail> GetAllByMonthCreated();
         IList<SalesOrderDetail> GetObjectsBySalesOrderId(int salesOrderId);
         IList<SalesOrderDetail> GetObjectsByItemId(int itemId);
-        IList<SalesOrderDetail> GetObjectsBySalesQuotationDetailId(int salesQuotationDetailId);
         SalesOrderDetail GetObjectById(int Id);
         SalesOrderDetail CreateObject(SalesOrderDetail salesOrderDetail);
         SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail);

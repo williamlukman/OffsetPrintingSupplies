@@ -46,29 +46,22 @@ namespace Service.Service
             return _repository.GetObjectsByItemId(itemId);
         }
 
-        public IList<SalesOrderDetail> GetObjectsBySalesQuotationDetailId(int salesQuotationDetailId)
-        {
-            return _repository.GetObjectsBySalesQuotationDetailId(salesQuotationDetailId);
-        }
-
         public SalesOrderDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
         }
 
-        public SalesOrderDetail CreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService,
-                                             IItemService _itemService, ISalesQuotationDetailService _salesQuotationDetailService)
+        public SalesOrderDetail CreateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             salesOrderDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(salesOrderDetail, this, _salesOrderService, _itemService, _salesQuotationDetailService))
+            if (_validator.ValidCreateObject(salesOrderDetail, this, _salesOrderService, _itemService))
             {
                 _repository.CreateObject(salesOrderDetail);
             }
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail CreateObject(int salesOrderId, int itemId, int quantity, decimal price, ISalesOrderService _salesOrderService,
-                                             IItemService _itemService, ISalesQuotationDetailService _salesQuotationDetailService)
+        public SalesOrderDetail CreateObject(int salesOrderId, int itemId, int quantity, decimal price, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             SalesOrderDetail sod = new SalesOrderDetail
             {
@@ -77,14 +70,12 @@ namespace Service.Service
                 Quantity = quantity,
                 Price = price
             };
-            return this.CreateObject(sod, _salesOrderService, _itemService, _salesQuotationDetailService);
+            return this.CreateObject(sod, _salesOrderService, _itemService);
         }
 
-        public SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService,
-                                             IItemService _itemService, ISalesQuotationDetailService _salesQuotationDetailService)
+        public SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
-            return (_validator.ValidUpdateObject(salesOrderDetail, this, _salesOrderService, _itemService, _salesQuotationDetailService) ?
-                    _repository.UpdateObject(salesOrderDetail) : salesOrderDetail);
+            return (_validator.ValidUpdateObject(salesOrderDetail, this, _salesOrderService, _itemService) ? _repository.UpdateObject(salesOrderDetail) : salesOrderDetail);
         }
 
         public SalesOrderDetail SoftDeleteObject(SalesOrderDetail salesOrderDetail)
