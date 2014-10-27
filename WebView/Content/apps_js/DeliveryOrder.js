@@ -168,8 +168,6 @@
         }
     });
 
-
-
     $('#btn_edit').click(function () {
         ClearData();
         clearForm("#frm");

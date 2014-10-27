@@ -11,6 +11,8 @@ namespace Core.DomainModel
         public string Code { get; set; }
         public int OrderType { get; set; }
         public string OrderCode { get; set; }
+
+        public Nullable<int> SalesQuotationId { get; set; }
         public int ContactId { get; set; }
         public DateTime SalesDate { get; set; }
 
@@ -18,6 +20,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeliveryCompleted { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsLegacy { get; set; } // Created from Temporary Delivery Order
         public Nullable<DateTime> DeletedAt { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -25,6 +28,7 @@ namespace Core.DomainModel
 
         public virtual ICollection<SalesOrderDetail> SalesOrderDetails { get; set; }
         public virtual Contact Contact {get; set;}
+        public virtual SalesQuotation SalesQuotation { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }

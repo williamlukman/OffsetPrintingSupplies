@@ -9,8 +9,11 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public int OrderType { get; set; }
         public string OrderCode { get; set; }
+
         public int SalesOrderId { get; set; }
+        public Nullable<int> SalesQuotationDetailId { get; set; }
         public int ItemId { get; set; }
 
         public int Quantity { get; set; }
@@ -29,6 +32,7 @@ namespace Core.DomainModel
 
         public virtual Item Item { get; set; }
         public virtual SalesOrder SalesOrder { get; set; }
+        public virtual SalesQuotationDetail SalesQuotationDetail { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }

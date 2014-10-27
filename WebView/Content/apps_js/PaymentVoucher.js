@@ -771,7 +771,7 @@
             var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
             $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
+            $('#Contact').val(ret.name);
             $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

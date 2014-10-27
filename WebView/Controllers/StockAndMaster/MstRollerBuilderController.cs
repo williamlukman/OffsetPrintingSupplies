@@ -192,7 +192,6 @@ namespace WebView.Controllers
                              model.Id,
                              model.Name,
                              model.Sku,
-                             model.Category,
                              model.Description,
                              model.Quantity,
                              model.PendingReceival,
@@ -235,7 +234,6 @@ namespace WebView.Controllers
                             model.Id,
                             model.Name,
                             model.Sku,
-                            model.Category,
                             model.Description,
                             model.Quantity,
                             model.PendingReceival,
@@ -249,7 +247,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListAdhesive(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetListAdhesiveRoller(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -258,7 +256,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _itemService.GetQueryable().Include("ItemType").Where(x => !x.IsDeleted && x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.Adhesive);
+            var q = _itemService.GetQueryable().Include("ItemType").Where(x => !x.IsDeleted && x.ItemType.Name == Core.Constants.Constant.ItemTypeCase.AdhesiveRoller);
 
             var query = (from model in q
                          select new
@@ -266,7 +264,6 @@ namespace WebView.Controllers
                              model.Id,
                              model.Name,
                              model.Sku,
-                             model.Category,
                              model.Description,
                              model.Quantity,
                              model.PendingReceival,
@@ -309,7 +306,6 @@ namespace WebView.Controllers
                             model.Id,
                             model.Name,
                             model.Sku,
-                            model.Category,
                             model.Description,
                             model.Quantity,
                             model.PendingReceival,

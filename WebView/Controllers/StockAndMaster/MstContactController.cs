@@ -22,6 +22,7 @@ namespace WebView.Controllers
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
         private IContactGroupService _contactGroupService;
+        private ISalesQuotationService _salesQuotationService;
         private IVirtualOrderService _virtualOrderService;
 
         public MstContactController()
@@ -192,7 +193,7 @@ namespace WebView.Controllers
             {
                 var data = _contactService.GetObjectById(model.Id);
                 model = _contactService.SoftDeleteObject(data, _coreIdentificationService, 
-                    _blanketService, _purchaseOrderService, _salesOrderService, _virtualOrderService);
+                    _blanketService, _purchaseOrderService, _salesOrderService, _salesQuotationService, _virtualOrderService);
             }
 
             catch (Exception ex)

@@ -55,15 +55,6 @@ namespace Validation.Validation
             return compound;
         }
 
-        public Compound VHasCategory(Compound compound)
-        {
-            if (String.IsNullOrEmpty(compound.Category) || compound.Category.Trim() == "")
-            {
-                compound.Errors.Add("Category", "Tidak boleh kosong");
-            }
-            return compound;
-        }
-
         public Compound VHasUoM(Compound compound, IUoMService _uomService)
         {
             UoM uom = _uomService.GetObjectById(compound.UoMId);
@@ -154,8 +145,6 @@ namespace Validation.Validation
             VHasUniqueSku(compound, _compoundService);
             if (!isValid(compound)) { return compound; }
             VHasName(compound);
-            if (!isValid(compound)) { return compound; }
-            VHasCategory(compound);
             if (!isValid(compound)) { return compound; }
             VHasUoM(compound, _uomService);
             if (!isValid(compound)) { return compound; }

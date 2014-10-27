@@ -30,7 +30,7 @@
         colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-				  { name: 'name', index: 'name', width: 80 },
+				  { name: 'name', index: 'name', width: 120 },
                   { name: 'description', index: 'description', width: 250 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

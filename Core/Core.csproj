@@ -75,6 +75,8 @@
     <Compile Include="DomainModel\PurchaseOperation\PurchaseInvoiceDetail.cs" />
     <Compile Include="DomainModel\PurchaseOperation\RetailPurchaseInvoice.cs" />
     <Compile Include="DomainModel\PurchaseOperation\RetailPurchaseInvoiceDetail.cs" />
+    <Compile Include="DomainModel\SalesOperation\SalesQuotation.cs" />
+    <Compile Include="DomainModel\SalesOperation\SalesQuotationDetail.cs" />
     <Compile Include="DomainModel\SalesOperation\TemporaryDeliveryOrderDetail.cs" />
     <Compile Include="DomainModel\SalesOperation\TemporaryDeliveryOrder.cs" />
     <Compile Include="DomainModel\SalesOperation\VirtualOrderDetail.cs" />
@@ -157,6 +159,8 @@
     <Compile Include="Interface\Repository\PurchaseOperation\IPurchaseInvoiceRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IRetailPurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Interface\Repository\PurchaseOperation\IRetailPurchaseInvoiceRepository.cs" />
+    <Compile Include="Interface\Repository\SalesOperation\ISalesQuotationDetailRepository.cs" />
+    <Compile Include="Interface\Repository\SalesOperation\ISalesQuotationRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ITemporaryDeliveryOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\ITemporaryDeliveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderDetailRepository.cs" />
@@ -242,6 +246,8 @@
     <Compile Include="Interface\Service\PurchaseOperation\IPurchaseInvoiceService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IRetailPurchaseInvoiceDetailService.cs" />
     <Compile Include="Interface\Service\PurchaseOperation\IRetailPurchaseInvoiceService.cs" />
+    <Compile Include="Interface\Service\SalesOperation\ISalesQuotationDetailService.cs" />
+    <Compile Include="Interface\Service\SalesOperation\ISalesQuotationService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ITemporaryDeliveryOrderDetailService.cs" />
     <Compile Include="Interface\Service\SalesOperation\ITemporaryDeliveryOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderService.cs" />
@@ -325,6 +331,8 @@
     <Compile Include="Interface\Validation\PurchaseOperation\IPurchaseInvoiceValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IRetailPurchaseInvoiceDetailValidator.cs" />
     <Compile Include="Interface\Validation\PurchaseOperation\IRetailPurchaseInvoiceValidator.cs" />
+    <Compile Include="Interface\Validation\SalesOperation\ISalesQuotationDetailValidator.cs" />
+    <Compile Include="Interface\Validation\SalesOperation\ISalesQuotationValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ITemporaryDeliveryOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\ITemporaryDeliveryOrderValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderDetailValidator.cs" />

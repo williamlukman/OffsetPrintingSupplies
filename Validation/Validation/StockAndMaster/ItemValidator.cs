@@ -56,15 +56,6 @@ namespace Validation.Validation
             return item;
         }
 
-        public Item VHasCategory(Item item)
-        {
-            if (String.IsNullOrEmpty(item.Category) || item.Category.Trim() == "")
-            {
-                item.Errors.Add("Category", "Tidak boleh kosong");
-            }
-            return item;
-        }
-
         public Item VHasUoM(Item item, IUoMService _uomService)
         {
             UoM uom = _uomService.GetObjectById(item.UoMId);
@@ -199,8 +190,6 @@ namespace Validation.Validation
             if (!isValid(item)) { return item; }
             VHasName(item);
             if (!isValid(item)) { return item; }
-            VHasCategory(item);
-            if (!isValid(item)) { return item; }
             VNonNegativePrice(item);
             return item;
         }
@@ -214,8 +203,6 @@ namespace Validation.Validation
             VHasUniqueSku(item, _itemService);
             if (!isValid(item)) { return item; }
             VHasName(item);
-            if (!isValid(item)) { return item; }
-            VHasCategory(item);
             if (!isValid(item)) { return item; }
             VNonNegativePrice(item);
             return item;

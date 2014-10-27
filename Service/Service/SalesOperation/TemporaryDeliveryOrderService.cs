@@ -164,7 +164,7 @@ namespace Service.Service
                                                  IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IStockMutationService _stockMutationService,
                                                  IContactService _contactService, IBlanketService _blanketService, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService,
                                                  IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                                 IServiceCostService _serviceCostService)
+                                                 IServiceCostService _serviceCostService, ISalesQuotationService _salesQuotationService, ISalesQuotationDetailService _salesQuotationDetailService)
         {
             if (_validator.ValidPushObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _closingService, _deliveryOrderService))
             {
@@ -201,9 +201,10 @@ namespace Service.Service
                         ContactId = virtualOrder.ContactId,
                         SalesDate = PushDate,
                         OrderType = virtualOrder.OrderType,
-                        OrderCode = virtualOrder.Code
+                        OrderCode = virtualOrder.Code,
+                        IsLegacy = true
                     };
-                    _salesOrderService.CreateObject(salesOrder, _contactService);
+                    _salesOrderService.CreateObject(salesOrder, _contactService, _salesQuotationService);
 
                     foreach (var tempDetail in temporaryDeliveryOrderDetails)
                     {
@@ -217,7 +218,7 @@ namespace Service.Service
                             OrderCode = virtualOrderDetail.Code,
                             PendingDeliveryQuantity = tempDetail.RestockQuantity
                         };
-                        _salesOrderDetailService.CreateObject(salesOrderDetail, _salesOrderService, _itemService);
+                        _salesOrderDetailService.CreateObject(salesOrderDetail, _salesOrderService, _itemService, _salesQuotationDetailService);
                     }
 
                     _salesOrderService.ConfirmObject(salesOrder, PushDate, _salesOrderDetailService,
@@ -247,9 +248,9 @@ namespace Service.Service
                         _deliveryOrderDetailService.CreateObject(deliveryOrderDetail, _deliveryOrderService,
                                                                  _salesOrderDetailService, _salesOrderService, _itemService);
                     }
-                    _deliveryOrderService.ConfirmObject(deliveryOrder, PushDate, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
-                                                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService,
-                                                        _generalLedgerJournalService, _closingService, _serviceCostService, _temporaryDeliveryOrderDetailService, this);
+                    //_deliveryOrderService.ConfirmObject(deliveryOrder, PushDate, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
+                    //                                    _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService,
+                    //                                    _generalLedgerJournalService, _closingService, _serviceCostService, _temporaryDeliveryOrderDetailService, this);
                 }
                 #endregion
             }

@@ -14,6 +14,7 @@ namespace Core.Interface.Repository
         IList<SalesOrder> GetConfirmedObjects();
         SalesOrder GetObjectById(int Id);
         IList<SalesOrder> GetObjectsByContactId(int contactId);
+        IList<SalesOrder> GetObjectsBySalesQuotationId(int salesQuotationId);
         SalesOrder CreateObject(SalesOrder salesOrder);
         SalesOrder UpdateObject(SalesOrder salesOrder);
         SalesOrder SoftDeleteObject(SalesOrder salesOrder);

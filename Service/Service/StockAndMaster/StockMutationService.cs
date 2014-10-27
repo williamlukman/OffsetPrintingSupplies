@@ -611,7 +611,7 @@ namespace Service.Service
             stockMutationTo.SourceDocumentDetailId = WarehouseMutationDetail.Id;
             stockMutationTo.ItemCase = Constant.ItemCase.Ready;
             stockMutationTo.Status = Constant.MutationStatus.Addition;
-            stockMutationFrom.MutationDate = (DateTime)WarehouseMutationDetail.ConfirmationDate;
+            stockMutationTo.MutationDate = (DateTime)WarehouseMutationDetail.ConfirmationDate;
             stockMutationTo = _repository.CreateObject(stockMutationTo);
 
             stockMutations.Add(stockMutationFrom);

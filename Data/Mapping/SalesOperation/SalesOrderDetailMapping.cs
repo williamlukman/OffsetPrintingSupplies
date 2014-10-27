@@ -13,8 +13,12 @@ namespace Data.Mapping
         {
             HasKey(sod => sod.Id);
             HasRequired(sod => sod.SalesOrder)
-                .WithMany(po => po.SalesOrderDetails)
+                .WithMany(so => so.SalesOrderDetails)
                 .HasForeignKey(sod => sod.SalesOrderId);
+            HasRequired(sod => sod.SalesQuotationDetail)
+                .WithMany()
+                .HasForeignKey(sod => sod.SalesQuotationDetailId)
+                .WillCascadeOnDelete(false);
             Ignore(sod => sod.Errors);
         }
     }

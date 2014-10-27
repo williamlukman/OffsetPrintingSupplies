@@ -25,7 +25,8 @@ namespace WebView.Controllers
         private IContactService _contactService;
         private IDeliveryOrderDetailService _deliveryOrderDetailService;
         private IDeliveryOrderService _deliveryOrderService;
-
+        private ISalesQuotationDetailService _salesQuotationDetailService;
+        private ISalesQuotationService _salesQuotationService;
         public SalesOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -37,7 +38,8 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
             _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
-
+            _salesQuotationDetailService = new SalesQuotationDetailService(new SalesQuotationDetailRepository(), new SalesQuotationDetailValidator());
+            _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
         }
 
         public ActionResult Index()
@@ -61,6 +63,8 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.SalesQuotationId,
+                             model.OrderCode,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.SalesDate,
@@ -101,6 +105,8 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.SalesQuotationId,
+                            model.OrderCode,
                             model.ContactId,
                             model.Contact,
                             model.SalesDate,
@@ -269,6 +275,8 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.SalesQuotationId,
+                model.OrderCode,
                 model.ContactId,
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.SalesDate,
@@ -307,7 +315,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _salesOrderService.CreateObject(model, _contactService);
+                model = _salesOrderService.CreateObject(model, _contactService, _salesQuotationService);
             }
             catch (Exception ex)
             {
@@ -326,7 +334,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _salesOrderDetailService.CreateObject(model, _salesOrderService, _itemService);
+                model = _salesOrderDetailService.CreateObject(model, _salesOrderService, _itemService, _salesQuotationDetailService);
             }
             catch (Exception ex)
             {
@@ -348,7 +356,10 @@ namespace WebView.Controllers
                 var data = _salesOrderService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
                 data.SalesDate = model.SalesDate;
-                model = _salesOrderService.UpdateObject(data, _contactService);
+                data.OrderType = model.OrderType;
+                data.OrderCode = model.OrderCode;
+                data.SalesQuotationId = model.SalesQuotationId;
+                model = _salesOrderService.UpdateObject(data, _contactService, _salesQuotationService);
             }
             catch (Exception ex)
             {
@@ -412,7 +423,7 @@ namespace WebView.Controllers
                 data.IsService = model.IsService;
                 data.Quantity = model.Quantity;
                 data.Price = model.Price;
-                model = _salesOrderDetailService.UpdateObject(data, _salesOrderService, _itemService);
+                model = _salesOrderDetailService.UpdateObject(data, _salesOrderService, _itemService, _salesQuotationDetailService);
             }
             catch (Exception ex)
             {
@@ -452,7 +463,6 @@ namespace WebView.Controllers
         {
             try
             {
-
                 var data = _salesOrderService.GetObjectById(model.Id);
                 model = _salesOrderService.UnconfirmObject(data, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }

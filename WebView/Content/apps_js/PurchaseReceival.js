@@ -661,7 +661,7 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price',
+        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'PendRcvl QTY', 'Price',
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 50, sortable: false, hidden: true },
@@ -670,6 +670,7 @@
 				  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingreceivalquantity', index: 'pendingreceivalquantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true},
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',

@@ -44,7 +44,7 @@ namespace Core.Interface.Service
                                           IDeliveryOrderDetailService _deliveryOrderDetailService, IItemService _itemService, IStockMutationService _stockMutationService,
                                           IContactService _contactService, IBlanketService _blanketService, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService,
                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                          IServiceCostService _serviceCostService);
+                                          IServiceCostService _serviceCostService, ISalesQuotationService _salesQuotationService, ISalesQuotationDetailService _salesQuotationDetailService);
         TemporaryDeliveryOrder CheckAndSetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrder UnsetDeliveryComplete(TemporaryDeliveryOrder temporaryDeliveryOrder);
     }

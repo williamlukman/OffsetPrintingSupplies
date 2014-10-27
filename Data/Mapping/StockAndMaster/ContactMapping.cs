@@ -30,6 +30,9 @@ namespace Data.Mapping
             HasMany(c => c.VirtualOrders)
                 .WithRequired(vo => vo.Contact)
                 .HasForeignKey(vo => vo.ContactId);
+            HasMany(c => c.SalesQuotations)
+                .WithRequired(sq => sq.Contact)
+                .HasForeignKey(sq => sq.ContactId); 
             HasRequired(c => c.ContactGroup)
                 .WithMany(cg => cg.Contacts)
                 .HasForeignKey(c => c.ContactGroupId);

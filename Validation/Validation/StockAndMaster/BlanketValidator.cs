@@ -46,15 +46,6 @@ namespace Validation.Validation
             return blanket;
         }
 
-        public Blanket VHasCategory(Blanket blanket)
-        {
-            if (String.IsNullOrEmpty(blanket.Category) || blanket.Category.Trim() == "")
-            {
-                blanket.Errors.Add("Category", "Tidak boleh kosong");
-            }
-            return blanket;
-        }
-
         public Blanket VHasUoM(Blanket blanket, IUoMService _uomService)
         {
             UoM uom = _uomService.GetObjectById(blanket.UoMId);
@@ -269,8 +260,6 @@ namespace Validation.Validation
             VHasUniqueSku(blanket, _blanketService);
             if (!isValid(blanket)) { return blanket; }
             VHasName(blanket);
-            if (!isValid(blanket)) { return blanket; }
-            VHasCategory(blanket);
             if (!isValid(blanket)) { return blanket; }
             VHasUoM(blanket, _uomService);
             if (!isValid(blanket)) { return blanket; }

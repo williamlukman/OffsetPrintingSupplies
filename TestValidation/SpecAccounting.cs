@@ -92,7 +92,8 @@ namespace TestValidation
 
                     decimal InventoryAmount = (d.sad1.Price * d.sad1.Quantity) + (d.sad2.Price * d.sad2.Quantity) +
                                               (d.sad3.Price * d.sad3.Quantity) + (d.sad4.Price * d.sad4.Quantity) +
-                                              (d.sad5.Price * d.sad5.Quantity) + (d.sadAdhesive.Price * d.sadAdhesive.Quantity);
+                                              (d.sad5.Price * d.sad5.Quantity) + (d.sadAdhesiveBlanket.Price * d.sadAdhesiveBlanket.Quantity) +
+                                              (d.sadAdhesiveRoller.Price * d.sadAdhesiveRoller.Quantity);
                     decimal GBCHReceivableAmount = 0;
                     decimal ReceivableAmount = (d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount)
                                                -(d.salesInvoice1.AmountReceivable + d.salesInvoice2.AmountReceivable + d.salesInvoice3.AmountReceivable);
@@ -130,7 +131,9 @@ namespace TestValidation
                     decimal EquityAdjustmentAmount = (d.sad1.Price * d.sad1.Quantity) + (d.sad2.Price * d.sad2.Quantity) +
                                                      (d.sad3.Price * d.sad3.Quantity) + (d.sad4.Price * d.sad4.Quantity) +
                                                      (d.sad5.Price * d.sad5.Quantity) + d.cashBankAdjustment.Amount +
-                                                     (d.sadAdhesive.Price * d.sadAdhesive.Quantity) + d.cashBankAdjustment3.Amount;
+                                                     (d.sadAdhesiveBlanket.Price * d.sadAdhesiveBlanket.Quantity) +
+                                                     (d.sadAdhesiveRoller.Price * d.sadAdhesiveRoller.Quantity) +
+                                                     d.cashBankAdjustment3.Amount;
 
                     OwnersEquity = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.OwnersEquity);
                     decimal OwnersEquityAmount = EquityAdjustmentAmount;

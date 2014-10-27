@@ -36,6 +36,8 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private IServiceCostService _serviceCostService;
         private IContactService _contactService;
+        private ISalesQuotationDetailService _salesQuotationDetailService;
+        private ISalesQuotationService _salesQuotationService;
 
         public TemporaryDeliveryOrderController()
         {
@@ -59,6 +61,8 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
+            _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
+            _salesQuotationDetailService = new SalesQuotationDetailService(new SalesQuotationDetailRepository(), new SalesQuotationDetailValidator());
         }
 
         public ActionResult Index()
@@ -547,8 +551,8 @@ namespace WebView.Controllers
             {
                 var data = _temporaryDeliveryOrderService.GetObjectById(model.Id);
                 model = _temporaryDeliveryOrderService.PushObject(data, model.ConfirmationDate.Value, _temporaryDeliveryOrderDetailService, _virtualOrderService, _virtualOrderDetailService,
-                        _salesOrderService, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _itemService, _stockMutationService, 
-                        _contactService, _blanketService, _warehouseService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
+                        _salesOrderService, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _itemService, _stockMutationService, _contactService, _blanketService,
+                        _warehouseService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService, _salesQuotationService, _salesQuotationDetailService);
             }
             catch (Exception ex)
             {

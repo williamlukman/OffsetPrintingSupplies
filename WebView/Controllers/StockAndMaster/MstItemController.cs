@@ -80,7 +80,6 @@ namespace WebView.Controllers
                              UoM = model.UoM.Name,
                              model.SellingPrice,
                              model.AvgPrice,
-                             model.Category,
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
@@ -128,7 +127,6 @@ namespace WebView.Controllers
                             model.UoM,
                             model.SellingPrice,
                             model.AvgPrice,
-                            model.Category,
                             model.Description,
                             model.ItemType,
                             model.CreatedAt,
@@ -235,7 +233,6 @@ namespace WebView.Controllers
                              UoM = model.UoM.Name,
                              model.SellingPrice,
                              model.AvgPrice,
-                             model.Category,
                              model.Description,
                              ItemType = model.ItemType.Name,
                              model.CreatedAt,
@@ -281,7 +278,6 @@ namespace WebView.Controllers
                             model.UoM,
                             model.SellingPrice,
                             model.AvgPrice,
-                            model.Category,
                             model.Description,
                             model.ItemType,
                             model.CreatedAt,
@@ -320,7 +316,6 @@ namespace WebView.Controllers
                 model.PendingReceival,
                 model.MinimumQuantity,
                 model.Virtual,
-                model.Category,
                 model.Description,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
@@ -354,7 +349,6 @@ namespace WebView.Controllers
                 var data = _itemService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Sku = model.Sku;
-                data.Category = model.Category;
                 data.Description = model.Description;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;

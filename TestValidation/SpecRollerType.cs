@@ -49,7 +49,6 @@ namespace TestValidation
                     ItemTypeId = d._itemTypeService.GetObjectByName("Accessory").Id,
                     Sku = "ABC1001",
                     Name = "ABC",
-                    Category = "ABC123",
                     UoMId = d.Pcs.Id
                 };
                 d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
@@ -105,20 +104,18 @@ namespace TestValidation
                         ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
                         Sku = "Cmp10001",
                         Name = "Cmp 10001",
-                        Category = "cmp",
                         UoMId = d.Pcs.Id
                     };
                     d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
-                    d.itemAdhesive = new Item()
+                    d.itemAdhesiveRoller = new Item()
                     {
-                        ItemTypeId = d._itemTypeService.GetObjectByName("Adhesive").Id,
+                        ItemTypeId = d._itemTypeService.GetObjectByName("AdhesiveRoller").Id,
                         Name = "Adhesive Default",
-                        Category = "Adhesive",
-                        Sku = "ADD123",
+                        Sku = "ADDR123",
                         UoMId = d.Tubs.Id
                     };
-                    d.itemAdhesive = d._itemService.CreateObject(d.itemAdhesive, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                    d.itemAdhesiveRoller = d._itemService.CreateObject(d.itemAdhesiveRoller, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
 
                     d.stockAdjustment = new StockAdjustment()
                     {
@@ -139,7 +136,7 @@ namespace TestValidation
                     {
                         StockAdjustmentId = d.stockAdjustment.Id,
                         Quantity = 20,
-                        ItemId = d.itemAdhesive.Id,
+                        ItemId = d.itemAdhesiveRoller.Id,
                         Price = 500
                     };
                     d._stockAdjustmentDetailService.CreateObject(d.stockAD2, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
@@ -222,7 +219,7 @@ namespace TestValidation
                         MachineId = d.machine.Id,
                         RollerTypeId = d._rollerTypeService.GetObjectByName("Damp").Id,
                         UoMId = d.Pcs.Id,
-                        AdhesiveId = d.itemAdhesive.Id
+                        AdhesiveId = d.itemAdhesiveRoller.Id
                     };
                     d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService,
                                                                            d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService,

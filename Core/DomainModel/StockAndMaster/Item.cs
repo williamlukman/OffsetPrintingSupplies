@@ -26,7 +26,6 @@ namespace Core.DomainModel
         public int MinimumQuantity { get; set; }
         //public int OnTrial { get; set; }
 
-        public string Category { get; set; }
         public decimal SellingPrice { get; set; }
         public int PriceMutationId { get; set; }
         public decimal AvgPrice { get; set; }

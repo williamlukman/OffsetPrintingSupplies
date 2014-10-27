@@ -30,14 +30,7 @@ namespace Data.Repository
         {
             return FindAll(x => x.CreatedAt.Month == DateTime.Today.Month && !x.IsDeleted).ToList();
         }
-
-        public SalesOrder GetObjectById(int Id)
-        {
-            SalesOrder salesOrder = Find(so => so.Id == Id && !so.IsDeleted);
-            if (salesOrder != null) { salesOrder.Errors = new Dictionary<string, string>(); }
-            return salesOrder;
-        }
-
+        
         public IList<SalesOrder> GetObjectsByContactId(int contactId)
         {
             return FindAll(so => so.ContactId == contactId && !so.IsDeleted).ToList();
@@ -46,6 +39,18 @@ namespace Data.Repository
         public IList<SalesOrder> GetConfirmedObjects()
         {
             return FindAll(x => x.IsConfirmed && !x.IsDeleted).ToList();
+        }
+
+        public IList<SalesOrder> GetObjectsBySalesQuotationId(int salesQuotationId)
+        {
+            return FindAll(x => x.SalesQuotationId == salesQuotationId).ToList();
+        }
+
+        public SalesOrder GetObjectById(int Id)
+        {
+            SalesOrder salesOrder = Find(so => so.Id == Id && !so.IsDeleted);
+            if (salesOrder != null) { salesOrder.Errors = new Dictionary<string, string>(); }
+            return salesOrder;
         }
 
         public SalesOrder CreateObject(SalesOrder salesOrder)

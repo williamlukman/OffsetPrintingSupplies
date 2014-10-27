@@ -12,7 +12,6 @@ namespace Core.Interface.Validation
         Blanket VHasItemTypeAndIsLegacy(Blanket blanket, IItemTypeService _itemTypeService);
         Blanket VHasUniqueSku(Blanket blanket, IBlanketService _blanketService);
         Blanket VHasName(Blanket blanket);
-        Blanket VHasCategory(Blanket blanket);
         Blanket VHasUoM(Blanket blanket, IUoMService _uomService);
         Blanket VHasApplicationCase(Blanket blanket);
         Blanket VHasAdhesive(Blanket blanket, IItemService _itemService);

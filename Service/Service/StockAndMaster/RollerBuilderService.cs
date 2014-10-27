@@ -95,7 +95,6 @@ namespace Service.Service
             {
                 Name = rollerBuilder.Name,
                 Description = rollerBuilder.Description,
-                Category = typeRoller.Name,
                 UoMId = rollerBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
@@ -107,7 +106,6 @@ namespace Service.Service
             {
                 Name = rollerBuilder.Name,
                 Description = rollerBuilder.Description,
-                Category = typeRoller.Name,
                 UoMId = rollerBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,

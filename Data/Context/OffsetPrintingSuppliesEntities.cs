@@ -12,7 +12,7 @@ namespace Data.Context
 {
     public class OffsetPrintingSuppliesEntities : DbContext
     {
-        public OffsetPrintingSuppliesEntities() : base("OffsetPrinting")
+        public OffsetPrintingSuppliesEntities() : base("LocalOffsetPrinting")
         {
             Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
         }
@@ -38,11 +38,11 @@ namespace Data.Context
                                           "PurchaseReceivalDetail", "PurchaseReceival", "PurchaseOrderDetail", "PurchaseOrder" };
             IList<String> salesOperationNames = new List<String>()
                                         { "SalesDownPaymentAllocationDetail", "SalesDownPaymentAllocation", "ReceiptVoucherDetail",
-                                          "SalesDownPayment", "ReceiptVoucher",
-                                          "SalesAllowanceDetail", "SalesAllowance", "Receivable", "RetailSalesInvoiceDetail",
-                                          "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
+                                          "SalesDownPayment", "ReceiptVoucher", "SalesAllowanceDetail", "SalesAllowance", "Receivable",
+                                          "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
                                           "DeliveryOrderDetail", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
-                                          "SalesOrderDetail", "SalesOrder", "VirtualOrderDetail", "VirtualOrder"};
+                                          "SalesOrderDetail", "SalesOrder", "SalesQuotationDetail", "SalesQuotation", 
+                                          "VirtualOrderDetail", "VirtualOrder"};
             IList<String> financeNames = new List<String>() {
                                           "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" };
             IList<String> stockAndMasterNames = new List<String>()
@@ -137,6 +137,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new SalesInvoiceMapping());
             modelBuilder.Configurations.Add(new SalesOrderMapping());
             modelBuilder.Configurations.Add(new SalesOrderDetailMapping());
+            modelBuilder.Configurations.Add(new SalesQuotationDetailMapping());
+            modelBuilder.Configurations.Add(new SalesQuotationMapping());
             modelBuilder.Configurations.Add(new ServiceCostMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
@@ -216,6 +218,8 @@ namespace Data.Context
         public DbSet<SalesInvoice> SalesInvoices { get; set; }
         public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
         public DbSet<SalesOrder> SalesOrders { get; set; }
+        public DbSet<SalesQuotationDetail> SalesQuotationDetails { get; set; }
+        public DbSet<SalesQuotation> SalesQuotations { get; set; }
         public DbSet<ServiceCost> ServiceCosts { get; set; }
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }

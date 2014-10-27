@@ -40,7 +40,7 @@ namespace WebView
         private Account Equity, OwnersEquity, EquityAdjustment;
         private Account Revenue;
 
-        public ItemType typeAdhesive, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
+        public ItemType typeAdhesiveBlanket, typeAdhesiveRoller, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                           typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
@@ -81,7 +81,8 @@ namespace WebView
 
             if (!_itemTypeService.GetAll().Any())
             {
-                typeAdhesive = _itemTypeService.CreateObject("Adhesive", "Adhesive");
+                typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket");
+                typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller");
                 typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
                 typeBar = _itemTypeService.CreateObject("Bar", "Bar");
                 typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);

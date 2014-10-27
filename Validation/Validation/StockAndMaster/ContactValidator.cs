@@ -118,6 +118,17 @@ namespace Validation.Validation
             return contact;
         }
 
+
+        public Contact VHasSalesQuotation(Contact contact, ISalesQuotationService _salesQuotationService)
+        {
+            IList<SalesQuotation> salesQuotations = _salesQuotationService.GetObjectsByContactId(contact.Id);
+            if (salesQuotations.Any())
+            {
+                contact.Errors.Add("Generic", "Contact masih memiliki asosiasi dengan sales quotation");
+            }
+            return contact;
+        }
+
         public Contact VHasVirtualOrder(Contact contact, IVirtualOrderService _virtualOrderService)
         {
             IList<VirtualOrder> virtualOrders = _virtualOrderService.GetObjectsByContactId(contact.Id);
@@ -153,13 +164,16 @@ namespace Validation.Validation
         }
 
         public Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
-                                     IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, IVirtualOrderService _virtualOrderService)
+                                     IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService,
+                                     ISalesQuotationService _salesQuotationService, IVirtualOrderService _virtualOrderService)
         {
             VHasCoreIdentification(contact, _coreIdentificationService);
             if (!isValid(contact)) { return contact; }
             VHasBlanket(contact, _blanketService);
             if (!isValid(contact)) { return contact; }
             VHasSalesOrder(contact, _salesOrderService);
+            if (!isValid(contact)) { return contact; }
+            VHasSalesQuotation(contact, _salesQuotationService);
             if (!isValid(contact)) { return contact; }
             VHasPurchaseOrder(contact, _purchaseOrderService);
             if (!isValid(contact)) { return contact; }
@@ -181,10 +195,12 @@ namespace Validation.Validation
         }
 
         public bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
-                                      IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, IVirtualOrderService _virtualOrderService)
+                                      IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService,
+                                      ISalesQuotationService _salesQuotationService, IVirtualOrderService _virtualOrderService)
         {
             contact.Errors.Clear();
-            VDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService, _virtualOrderService);
+            VDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService,
+                          _salesQuotationService, _virtualOrderService);
             return isValid(contact);
         }
 

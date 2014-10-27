@@ -21,6 +21,22 @@ namespace Validation.Validation
             return salesOrder;
         }
 
+        public SalesOrder VHasSalesQuotation(SalesOrder salesOrder, ISalesQuotationService _salesQuotationService)
+        {
+            if (salesOrder.OrderType == Constant.OrderTypeCase.SalesQuotation)
+            {
+                if (salesOrder.SalesQuotationId == null)
+                {
+                    salesOrder.Errors.Add("SalesQuotationId", "Tidak boleh tidak ada");
+                }
+                else if (_salesQuotationService.GetObjectById((int)salesOrder.SalesQuotationId) == null)
+                {
+                    salesOrder.Errors.Add("SalesQuotationId", "Tidak terhubung dengan sales quotation");
+                }
+            }
+            return salesOrder;
+        }
+
         public SalesOrder VHasSalesDate(SalesOrder salesOrder)
         {
             if (salesOrder.SalesDate == null)
@@ -87,17 +103,19 @@ namespace Validation.Validation
             return obj;
         }
 
-        public SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService)
+        public SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService)
         {
             VHasContact(salesOrder, _contactService);
+            if (!isValid(salesOrder)) { return salesOrder; }
+            VHasSalesQuotation(salesOrder, _salesQuotationService);
             if (!isValid(salesOrder)) { return salesOrder; }
             VHasSalesDate(salesOrder);
             return salesOrder;
         }
 
-        public SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService)
+        public SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService)
         {
-            VCreateObject(salesOrder, _contactService);
+            VCreateObject(salesOrder, _contactService, _salesQuotationService);
             if (!isValid(salesOrder)) { return salesOrder; }
             VHasNotBeenConfirmed(salesOrder);
             return salesOrder;
@@ -129,16 +147,16 @@ namespace Validation.Validation
             return salesOrder;
         }
 
-        public bool ValidCreateObject(SalesOrder salesOrder, IContactService _contactService)
+        public bool ValidCreateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService)
         {
-            VCreateObject(salesOrder, _contactService);
+            VCreateObject(salesOrder, _contactService, _salesQuotationService);
             return isValid(salesOrder);
         }
 
-        public bool ValidUpdateObject(SalesOrder salesOrder, IContactService _contactService)
+        public bool ValidUpdateObject(SalesOrder salesOrder, IContactService _contactService, ISalesQuotationService _salesQuotationService)
         {
             salesOrder.Errors.Clear();
-            VUpdateObject(salesOrder, _contactService);
+            VUpdateObject(salesOrder, _contactService, _salesQuotationService);
             return isValid(salesOrder);
         }
 
@@ -181,6 +199,5 @@ namespace Validation.Validation
             }
             return erroroutput;
         }
-
     }
 }

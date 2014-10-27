@@ -72,9 +72,11 @@ namespace Service.Service
         }
 
         public Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
-                                        IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, IVirtualOrderService _virtualOrderService)
+                                        IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService,
+                                        ISalesQuotationService _salesQuotationService, IVirtualOrderService _virtualOrderService)
         {
-            return (contact = _validator.ValidDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService, _virtualOrderService) ?
+            return (contact = _validator.ValidDeleteObject(contact, _coreIdentificationService, _blanketService, _purchaseOrderService, _salesOrderService,
+                              _salesQuotationService, _virtualOrderService) ?
                     _repository.SoftDeleteObject(contact) : contact);
         }
 

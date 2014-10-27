@@ -88,12 +88,12 @@ namespace TestValidation
         public UserAccess admindata, userdata, adminfinance, userfinance;
 
         public ContactGroup baseGroup;
-        public ItemType typeAdhesive, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
+        public ItemType typeAdhesiveBlanket, typeAdhesiveRoller, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
         public UoM Pcs, Boxes, Tubs;
-        public Item item, itemAdhesive, itemCompound, itemCompound1, itemCompound2, itemAccessory1, itemAccessory2;
+        public Item item, itemAdhesiveBlanket, itemAdhesiveRoller, itemCompound, itemCompound1, itemCompound2, itemAccessory1, itemAccessory2;
         public Warehouse localWarehouse, movingWarehouse;
         public Contact contact;
         public Machine machine;
@@ -121,7 +121,7 @@ namespace TestValidation
                                              rwmDetailInHouse1, rwmDetailInHouse2, rwmDetailInHouse3;
         public StockAdjustment stockAdjustment, sa;
         public StockAdjustmentDetail stockAD, stockAD1, stockAD2, stockAD3, stockAD4;
-        public StockAdjustmentDetail sad1, sad2, sad3, sad4, sad5, sadAdhesive;
+        public StockAdjustmentDetail sad1, sad2, sad3, sad4, sad5, sadAdhesiveRoller, sadAdhesiveBlanket;
 
         public SalesOrder salesOrder1, salesOrder2, salesOrder3;
         public SalesOrderDetail salesOD1a, salesOD1b, salesOD2a, salesOD2b, salesOD3a, salesOD3b;
@@ -243,7 +243,8 @@ namespace TestValidation
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
 
-            typeAdhesive = _itemTypeService.CreateObject("Adhesive", "Adhesive");
+            typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket");
+            typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller");
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
             typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);
@@ -449,21 +450,28 @@ namespace TestValidation
             };
             _uomService.CreateObject(Tubs);
 
-            itemAdhesive= new Item()
+            itemAdhesiveBlanket = new Item()
             {
-                ItemTypeId = _itemTypeService.GetObjectByName("Adhesive").Id,
-                Name = "Adhesive Default",
-                Category = "Adhesive",
-                Sku = "ADD123",
+                ItemTypeId = _itemTypeService.GetObjectByName("AdhesiveBlanket").Id,
+                Name = "Adhesive Blanket",
+                Sku = "ADB123",
                 UoMId = Tubs.Id
             };
-            itemAdhesive = _itemService.CreateObject(itemAdhesive, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemAdhesiveBlanket = _itemService.CreateObject(itemAdhesiveBlanket, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+
+            itemAdhesiveRoller = new Item()
+            {
+                ItemTypeId = _itemTypeService.GetObjectByName("AdhesiveRoller").Id,
+                Name = "Adhesive Default",
+                Sku = "ADR123",
+                UoMId = Tubs.Id
+            };
+            itemAdhesiveBlanket = _itemService.CreateObject(itemAdhesiveBlanket, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
 
             itemCompound = new Item()
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("Compound").Id,
                 Name = "Compound RB else",
-                Category = "Compound",
                 Sku = "CMP123",
                 UoMId = Tubs.Id,
                 MinimumQuantity = 150000
@@ -474,7 +482,6 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("Compound").Id,
                 Name = "Compound RB1",
-                Category = "Compound",
                 Sku = "CMP101",
                 UoMId = _uomService.GetObjectByName("Tubs").Id
             };
@@ -484,7 +491,6 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("Compound").Id,
                 Name = "Compound RB2",
-                Category = "Compound",
                 Sku = "CMP102",
                 UoMId = Tubs.Id
             };
@@ -494,7 +500,6 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
                 Name = "Accessory Sample 1",
-                Category = "Accessory",
                 Sku = "ACC001",
                 UoMId = Pcs.Id
             };
@@ -504,7 +509,6 @@ namespace TestValidation
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("Accessory").Id,
                 Name = "Accessory Sample 2",
-                Category = "Accessory",
                 Sku = "ACC002",
                 UoMId = Pcs.Id
             };
@@ -517,16 +521,26 @@ namespace TestValidation
                 WarehouseId = localWarehouse.Id
             };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
-            
-            sadAdhesive = new StockAdjustmentDetail()
+
+            sadAdhesiveBlanket = new StockAdjustmentDetail()
             {
                 StockAdjustmentId = sa.Id,
                 Quantity = 100,
-                ItemId = itemAdhesive.Id,
-                Code = "IAD001",
+                ItemId = itemAdhesiveBlanket.Id,
+                Code = "IADB001",
                 Price = 3000
             };
-            _stockAdjustmentDetailService.CreateObject(sadAdhesive, _stockAdjustmentService, _itemService, _warehouseItemService);
+            _stockAdjustmentDetailService.CreateObject(sadAdhesiveBlanket, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sadAdhesiveRoller = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                Quantity = 100,
+                ItemId = itemAdhesiveRoller.Id,
+                Code = "IADR001",
+                Price = 3000
+            };
+            _stockAdjustmentDetailService.CreateObject(sadAdhesiveRoller, _stockAdjustmentService, _itemService, _warehouseItemService);
 
             sad1 = new StockAdjustmentDetail()
             {
@@ -735,7 +749,7 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeDamp.Id,
                 UoMId = Pcs.Id,
-                AdhesiveId = itemAdhesive.Id
+                AdhesiveId = itemAdhesiveRoller.Id
             };
             rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService, _uomService, _itemService, _itemTypeService,
                                                                _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -758,7 +772,7 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeFoundDT.Id,
                 UoMId = Pcs.Id,
-                AdhesiveId = itemAdhesive.Id
+                AdhesiveId = itemAdhesiveRoller.Id
             };
             rollerBuilder1 = _rollerBuilderService.CreateObject(rollerBuilder1, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -781,7 +795,7 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeDampFormDQ.Id,
                 UoMId = Pcs.Id,
-                AdhesiveId = itemAdhesive.Id
+                AdhesiveId = itemAdhesiveRoller.Id
             };
             rollerBuilder2 = _rollerBuilderService.CreateObject(rollerBuilder2, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -804,7 +818,7 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeInkDistD.Id,
                 UoMId = Pcs.Id,
-                AdhesiveId = itemAdhesive.Id
+                AdhesiveId = itemAdhesiveRoller.Id
             };
             rollerBuilder3 = _rollerBuilderService.CreateObject(rollerBuilder3, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -827,7 +841,7 @@ namespace TestValidation
                 MachineId = machine.Id,
                 RollerTypeId = typeInkDistH.Id,
                 UoMId = Pcs.Id,
-                AdhesiveId = itemAdhesive.Id
+                AdhesiveId = itemAdhesiveRoller.Id
             };
             rollerBuilder4 = _rollerBuilderService.CreateObject(rollerBuilder4, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
@@ -1578,7 +1592,6 @@ namespace TestValidation
             bargeneric = new Item()
             {
                 ItemTypeId = typeBar.Id,
-                Category = "bar",
                 Name = "Bar Generic",
                 UoMId = Pcs.Id,
                 Sku = "BGEN"
@@ -1588,7 +1601,6 @@ namespace TestValidation
             barleft1 = new Item()
             {
                 ItemTypeId = typeBar.Id,
-                Category = "bar",
                 Name = "Bar Left 1",
                 UoMId = Pcs.Id,
                 Sku = "BL1"
@@ -1598,7 +1610,6 @@ namespace TestValidation
             barleft2 = new Item()
             {
                 ItemTypeId = typeBar.Id,
-                Category = "bar",
                 Name = "Bar Left 2",
                 UoMId = Pcs.Id,
                 Sku = "BL2"
@@ -1608,7 +1619,6 @@ namespace TestValidation
             barright1 = new Item()
             {
                 ItemTypeId = typeBar.Id,
-                Category = "bar",
                 Name = "Bar Right 1",
                 UoMId = Pcs.Id,
                 Sku = "BR1"
@@ -1618,7 +1628,6 @@ namespace TestValidation
             barright2 = new Item()
             {
                 ItemTypeId = typeBar.Id,
-                Category = "bar",
                 Name = "Bar Right 2",
                 UoMId = Pcs.Id,
                 Sku = "BR2"
@@ -1628,7 +1637,6 @@ namespace TestValidation
             rollBlanket1 = new Item()
             {
                 ItemTypeId = typeRollBlanket.Id,
-                Category = "RollBlanket",
                 Name = "RollBlanket1",
                 UoMId = Pcs.Id,
                 Sku = "BLK1"
@@ -1638,7 +1646,6 @@ namespace TestValidation
             rollBlanket2 = new Item()
             {
                 ItemTypeId = typeRollBlanket.Id,
-                Category = "RollBlanket",
                 Name = "RollBlanket2",
                 UoMId = Pcs.Id,
                 Sku = "BLK2"
@@ -1648,7 +1655,6 @@ namespace TestValidation
             rollBlanket3 = new Item()
             {
                 ItemTypeId = typeRollBlanket.Id,
-                Category = "RollBlanket",
                 Name = "RollBlanket3",
                 UoMId = Pcs.Id,
                 Sku = "BLK3"
@@ -1658,7 +1664,6 @@ namespace TestValidation
             blanket1 = new Blanket()
             {
                 ItemTypeId = typeBlanket.Id,
-                Category = "Blanket",
                 Name = "Blanket1",
                 UoMId = Pcs.Id,
                 Sku = "BRG1",
@@ -1674,7 +1679,7 @@ namespace TestValidation
                 ContactId = contact.Id,
                 thickness = 1,
                 MachineId = machine.Id,
-                AdhesiveId = itemAdhesive.Id,
+                AdhesiveId = itemAdhesiveBlanket.Id,
                 CroppingType = Core.Constants.Constant.CroppingType.Normal,
                 ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
@@ -1684,7 +1689,6 @@ namespace TestValidation
             blanket2 = new Blanket()
             {
                 ItemTypeId = typeBlanket.Id,
-                Category = "Blanket",
                 Name = "Blanket2",
                 UoMId = Pcs.Id,
                 Sku = "BRG2",
@@ -1700,7 +1704,7 @@ namespace TestValidation
                 ContactId = contact.Id,
                 thickness = 1,
                 MachineId = machine.Id,
-                AdhesiveId = itemAdhesive.Id,
+                AdhesiveId = itemAdhesiveBlanket.Id,
                 CroppingType = Core.Constants.Constant.CroppingType.Normal,
                 ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
@@ -1710,7 +1714,6 @@ namespace TestValidation
             blanket3 = new Blanket()
             {
                 ItemTypeId = typeBlanket.Id,
-                Category = "Blanket",
                 Name = "Blanket3",
                 UoMId = Pcs.Id,
                 Sku = "BRG3",
@@ -1726,7 +1729,7 @@ namespace TestValidation
                 ContactId = contact.Id,
                 thickness = 1,
                 MachineId = machine.Id,
-                AdhesiveId = itemAdhesive.Id,
+                AdhesiveId = itemAdhesiveBlanket.Id,
                 CroppingType = Core.Constants.Constant.CroppingType.Special,
                 LeftOverAC = 6,
                 LeftOverAR = 9,

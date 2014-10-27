@@ -72,6 +72,8 @@
     <Compile Include="Validation\PurchaseOperation\PurchaseInvoiceValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\RetailPurchaseInvoiceDetailValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\RetailPurchaseInvoiceValidator.cs" />
+    <Compile Include="Validation\SalesOperation\SalesQuotationDetailValidator.cs" />
+    <Compile Include="Validation\SalesOperation\SalesQuotationValidator.cs" />
     <Compile Include="Validation\SalesOperation\TemporaryDeliveryOrderDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\TemporaryDeliveryOrderValidator.cs" />
     <Compile Include="Validation\SalesOperation\VirtualOrderDetailValidator.cs" />

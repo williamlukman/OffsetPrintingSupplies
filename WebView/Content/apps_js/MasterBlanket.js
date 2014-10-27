@@ -44,7 +44,7 @@
         url: base_url + 'MstBlanket/GetList',
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 'Roll No', 'QTY', 'UoM',
-                   'AC', 'AR', 'Thickness', 'KS', 'Category', 'Description',
+                   'AC', 'AR', 'Thickness', 'KS', 'Description',
                    'ItemType', 'Machine', 'Adhesive', 'Roll Blanket', 
                    'Bar1', 'Bar2', 'Customer',
                    'Application', 'Cropping', 'AC-', 'AR-',
@@ -60,7 +60,6 @@
                   { name: 'ar', index: 'ar', width: 30, formatter: 'integer', align: 'right', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'thickness', index: 'thickness', width: 30, formatter: 'integer', align: 'right', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'ks', index: 'ks', width: 30, formatter: 'integer', align: 'right', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                  { name: 'category', index: 'category', width: 60, hidden: true },
                   { name: 'description', index: 'description', width: 90, align: 'right', hidden: true },
                   { name: 'itemtypename', index: 'itemtypename', width: 60, hidden: true },
                   { name: 'machinename', index: 'machinename', width: 90 },
@@ -283,7 +282,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ItemTypeId: $("#ItemTypeId").val(), Sku: $("#Sku").val(), Name: $("#Name").val(),
-                Category: $("#ItemType").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(), RollNo: $("#RollNo").val(),
+                Description: $("#Description").val(), UoMId: $("#UoMId").val(), RollNo: $("#RollNo").val(),
                 ContactId: $("#ContactId").val(), MachineId: $("#MachineId").val(), AdhesiveId: $("#AdhesiveId").val(),
                 RollBlanketItemId: $("#RollBlanketItemId").val(), IsBarRequired: isbar, HasLeftBar : hasleftbar, HasRightBar : hasrightbar,
                 LeftBarItemId: $("#LeftBarItemId").val(), RightBarItemId: $("#RightBarItemId").val(), AC: $("#AC").val(),
@@ -502,7 +501,7 @@
 
     // -------------------------------------------------------Look Up adhesive-------------------------------------------------------
     $('#btnAdhesive').click(function () {
-        var lookUpURL = base_url + 'MstRollerBuilder/GetListAdhesive';
+        var lookUpURL = base_url + 'MstBlanket/GetListAdhesiveBlanket';
         var lookupGrid = $('#lookup_table_adhesive');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -515,13 +514,12 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['ID', 'SKU', 'Name',
-                     'Category', 'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
+                     'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
                      'UoM Id', 'UoM', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
 				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'category', index: 'category', width: 100, hidden: true },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -640,13 +638,12 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['ID', 'SKU', 'Name',
-                     'Category', 'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
+                     'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
                      'UoM Id', 'UoM', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
 				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'category', index: 'category', width: 100, hidden: true },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -709,13 +706,12 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['ID', 'SKU', 'Name',
-                     'Category', 'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
+                     'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
                      'UoM Id', 'UoM', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
 				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'category', index: 'category', width: 100, hidden: true },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -777,13 +773,12 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['ID', 'SKU', 'Name',
-                     'Category', 'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
+                     'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
                      'UoM Id', 'UoM', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
 				  { name: 'name', index: 'name', width: 100 },
-                  { name: 'category', index: 'category', width: 100, hidden: true },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },

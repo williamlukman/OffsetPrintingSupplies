@@ -13,7 +13,6 @@ namespace Core.Interface.Validation
         Compound VHasItemTypeAndIsLegacy(Compound compound, IItemTypeService _itemTypeService);
         Compound VHasUniqueSku(Compound compound, ICompoundService _compoundService);
         Compound VHasName(Compound compound);
-        Compound VHasCategory(Compound compound);
         Compound VHasUoM(Compound compound, IUoMService _uomService);
         Compound VWarehouseQuantityMustBeZero(Compound compound, IWarehouseItemService _warehouseItemService);
         Compound VNonNegativeQuantity(Compound compound);

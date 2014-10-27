@@ -28,7 +28,8 @@ namespace Core.Constants
         public class ItemTypeCase
         {
             public static string Accessory = "Accessory";
-            public static string Adhesive = "Adhesive";
+            public static string AdhesiveBlanket = "AdhesiveBlanket";
+            public static string AdhesiveRoller = "AdhesiveRoller";
             public static string Bar = "Bar";
             public static string Blanket = "Blanket";
             public static string Bearing = "Bearing";
@@ -64,6 +65,7 @@ namespace Core.Constants
             public static int SampleOrder = 1;
             public static int PartDeliveryOrder = 2;
             public static int SalesOrder = 3;
+            public static int SalesQuotation = 4;
         }
     }
 }

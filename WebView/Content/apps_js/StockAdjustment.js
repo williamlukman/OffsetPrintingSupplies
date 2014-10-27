@@ -406,7 +406,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Sku', 'Name', 'Adj QTY', 'UoM'
+        colNames: ['Id', 'Code', 'Sku', 'Name', 'Adj QTY', 'UoM', 'Price'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false, hidden: true },
@@ -415,6 +415,7 @@
                   { name: 'itemname', index: 'itemname', width: 120, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'uom', index: 'uom', width: 40, sortable: false },
+                  { name: 'price', index: 'price', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),

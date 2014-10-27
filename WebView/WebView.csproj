@@ -222,6 +222,7 @@
     <Compile Include="Controllers\Manufacturing\CoreAccessoryDetailController.cs" />
     <Compile Include="Controllers\Finance\PaymentRequestController.cs" />
     <Compile Include="Controllers\Report\FinanceReportController.cs" />
+    <Compile Include="Controllers\SalesOperation\SalesQuotationController.cs" />
     <Compile Include="Controllers\SalesOperation\VirtualOrderController.cs" />
     <Compile Include="Controllers\SalesOperation\TemporaryDeliveryOrderController.cs" />
     <Compile Include="Controllers\Finance\ReceivableController.cs" />
@@ -276,6 +277,7 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\SalesQuotation.js" />
     <Content Include="Content\apps_js\SalesDownPaymentAllocation.js" />
     <Content Include="Content\apps_js\PurchaseDownPaymentAllocation.js" />
     <Content Include="Content\apps_js\SalesDownPayment.js" />
@@ -1256,6 +1258,7 @@
     <Content Include="Views\PurchaseDownPaymentAllocation\Index.cshtml" />
     <Content Include="Views\SalesDownPayment\Index.cshtml" />
     <Content Include="Views\SalesDownPaymentAllocation\Index.cshtml" />
+    <Content Include="Views\SalesQuotation\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

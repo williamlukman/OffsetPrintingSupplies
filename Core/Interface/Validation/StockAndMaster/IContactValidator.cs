@@ -20,15 +20,18 @@ namespace Core.Interface.Validation
         Contact VHasBlanket(Contact contact, IBlanketService _blanketService);
         Contact VHasPurchaseOrder(Contact contact, IPurchaseOrderService _purchaseOrderService);
         Contact VHasSalesOrder(Contact contact, ISalesOrderService _salesOrderService);
+        Contact VHasSalesQuotation(Contact contact, ISalesQuotationService _salesQuotationService);
         Contact VHasVirtualOrder(Contact contact, IVirtualOrderService _virtualOrderService);
         Contact VCreateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
         Contact VUpdateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
         Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
-                              IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, IVirtualOrderService _virtualOrderService);
+                              IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService,
+                              ISalesQuotationService _salesQuotationService, IVirtualOrderService _virtualOrderService);
         bool ValidCreateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
         bool ValidUpdateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
         bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
-                               IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, IVirtualOrderService _virtualOrderService);
+                               IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService,
+                               ISalesQuotationService _salesQuotationService, IVirtualOrderService _virtualOrderService);
         bool isValid(Contact contact);
         string PrintError(Contact contact);
     }

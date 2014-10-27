@@ -89,7 +89,6 @@ namespace Service.Service
             {
                 Name = coreBuilder.Name,
                 Description = coreBuilder.Description,
-                Category = typeCore.Name,
                 UoMId = coreBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = typeCore.Id,
@@ -101,7 +100,6 @@ namespace Service.Service
             {
                 Name = coreBuilder.Name,
                 Description = coreBuilder.Description,
-                Category = typeCore.Name,
                 UoMId = coreBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = typeCore.Id,
