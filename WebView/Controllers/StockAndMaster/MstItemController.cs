@@ -25,7 +25,6 @@ namespace WebView.Controllers
         private IBlanketService _blanketService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
-        private IContactGroupService _contactGroupService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
@@ -42,7 +41,6 @@ namespace WebView.Controllers
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
@@ -328,7 +326,7 @@ namespace WebView.Controllers
             {
 
                 model = _itemService.CreateObject(model,_uoMService,_itemTypeService,_warehouseItemService,
-                    _warehouseService,_priceMutationService,_contactGroupService);
+                    _warehouseService,_priceMutationService);
             }
             catch (Exception ex)
             {
@@ -354,7 +352,28 @@ namespace WebView.Controllers
                 data.ItemTypeId = model.ItemTypeId;
                 data.SellingPrice = model.SellingPrice;
                 data.MinimumQuantity = model.MinimumQuantity;
-                model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService,_contactGroupService);
+                model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Update Failed", ex);
+            }
+
+            return Json(new
+            {
+                model.Errors
+            });
+        }
+
+        [HttpPost]
+        public dynamic UpdatePrice(Item model)
+        {
+            try
+            {
+                var data = _itemService.GetObjectById(model.Id);
+                data.SellingPrice = model.SellingPrice;
+                data.MinimumQuantity = model.MinimumQuantity;
+                model = _itemService.UpdateObject(data, _uoMService, _itemTypeService, _priceMutationService);
             }
             catch (Exception ex)
             {

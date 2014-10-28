@@ -21,7 +21,6 @@ namespace WebView
     public class MvcApplication : System.Web.HttpApplication
     {
         private IAccountService _accountService;
-        private IContactGroupService _contactGroupService;
         private IContactService _contactService;
         private IItemTypeService _itemTypeService;
         private IRollerTypeService _rollerTypeService;
@@ -31,7 +30,6 @@ namespace WebView
         private ICompanyService _companyService;
 
         private Company baseCompany;
-        private ContactGroup baseContactGroup;
         private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods, PrepaidExpense, NonCurrentAsset;
         private Account Expense, COGS, COS, OperationalExpense, SampleAndTrialExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense;
         private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense;
@@ -60,7 +58,6 @@ namespace WebView
         public void PopulateData()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
             _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
@@ -72,11 +69,6 @@ namespace WebView
             if (baseCompany == null)
             {
                 baseCompany = _companyService.CreateObject("PT Zentrum Graphics Asia", "Jl. Raya Serpong KM 7, Komplek Multiguna A1 / 1, Serpong Tangerang", "+62 21 5312 3222", "", "zga@zengra.com");
-            }
-
-            if (!_contactGroupService.GetAll().Any())
-            {
-                baseContactGroup = _contactGroupService.CreateObject(Constant.GroupType.Base, "Base Group", true);
             }
 
             if (!_itemTypeService.GetAll().Any())
@@ -169,7 +161,6 @@ namespace WebView
         public void CreateUserMenus()
         {
             _userMenuService.CreateObject(Constant.MenuName.Contact, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.ContactGroup, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.ItemType, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.UoM, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Machine, Constant.MenuGroupName.Master);

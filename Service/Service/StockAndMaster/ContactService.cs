@@ -45,7 +45,7 @@ namespace Service.Service
         }
 
         public Contact CreateObject(string Name, string Address, string ContactNo, string PIC,
-                                    string PICContactNo, string Email, IContactGroupService _contactGroupService)
+                                    string PICContactNo, string Email)
         {
             Contact contact = new Contact
             {
@@ -56,19 +56,18 @@ namespace Service.Service
                 PICContactNo = PICContactNo,
                 Email = Email
             };
-            return this.CreateObject(contact, _contactGroupService);
+            return this.CreateObject(contact);
         }
 
-        public Contact CreateObject(Contact contact, IContactGroupService _contactGroupService)
+        public Contact CreateObject(Contact contact)
         {
-            if (contact.ContactGroupId == 0) { contact.ContactGroupId = _contactGroupService.GetObjectByIsLegacy(true).Id; }
             contact.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(contact, this, _contactGroupService) ? _repository.CreateObject(contact) : contact);
+            return (_validator.ValidCreateObject(contact, this) ? _repository.CreateObject(contact) : contact);
         }
 
-        public Contact UpdateObject(Contact contact, IContactGroupService _contactGroupService)
+        public Contact UpdateObject(Contact contact)
         {
-            return (contact = _validator.ValidUpdateObject(contact, this, _contactGroupService) ? _repository.UpdateObject(contact) : contact);
+            return (contact = _validator.ValidUpdateObject(contact, this) ? _repository.UpdateObject(contact) : contact);
         }
 
         public Contact SoftDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,

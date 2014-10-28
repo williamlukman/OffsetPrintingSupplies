@@ -18,14 +18,12 @@ namespace WebView.Controllers
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ReceivableController");
         private IReceivableService _receivableService;
         private IContactService _contactService;
-        private IContactGroupService _contactGroupService;
         private IPriceMutationService _priceMutationService;
 
         public ReceivableController()
         {
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
         }
 
@@ -43,7 +41,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _receivableService.GetQueryable().Include("Contact").Include("ContactGroup").Where(x => !x.IsDeleted);
+            var q = _receivableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -52,7 +50,6 @@ namespace WebView.Controllers
                              model.Code,
                              model.ContactId,
                              Contact = model.Contact.Name,
-                             ContactGroup = model.Contact.ContactGroup.Name,
                              model.ReceivableSource,
                              model.ReceivableSourceId,
                              model.Amount,
@@ -96,7 +93,6 @@ namespace WebView.Controllers
                             receivable.Code,
                             receivable.ContactId,
                             receivable.Contact,
-                            receivable.ContactGroup,
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,
@@ -129,7 +125,6 @@ namespace WebView.Controllers
                              model.Code,
                              model.ContactId,
                              Contact = model.Contact.Name,
-                             ContactGroup = model.Contact.ContactGroup.Name,
                              model.ReceivableSource,
                              model.ReceivableSourceId,
                              model.Amount,
@@ -173,7 +168,6 @@ namespace WebView.Controllers
                             receivable.Code,
                             receivable.ContactId,
                             receivable.Contact,
-                            receivable.ContactGroup,
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,

@@ -79,8 +79,7 @@ namespace TestValidation
         public IWarehouseMutationDetailService _warehouseMutationDetailService;
 
         public IPriceMutationService _priceMutationService;
-        public IContactGroupService _contactGroupService;
-
+       
         public CashBank cashBank, pettyCash, cashBank1, cashBank2;
         public CashBankAdjustment cashBankAdjustment, cashBankAdjustment2, cashBankAdjustment3;
         public CashBankMutation cashBankMutation;
@@ -89,7 +88,6 @@ namespace TestValidation
         public UserMenu menudata, menufinance;
         public UserAccess admindata, userdata, adminfinance, userfinance;
 
-        public ContactGroup baseGroup;
         public ItemType typeAdhesiveBlanket, typeAdhesiveRoller, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
@@ -245,8 +243,7 @@ namespace TestValidation
             _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
-
+   
             typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket");
             typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller");
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
@@ -275,7 +272,6 @@ namespace TestValidation
             typeDampFormDQ = _rollerTypeService.CreateObject("Damp Form DQ", "Damp Form DQ");
             typeInkFormY = _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
 
-            baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
             admin = _userAccountService.FindOrCreateSysAdmin();
 
             if (!_accountService.GetLegacyObjects().Any())
@@ -461,7 +457,7 @@ namespace TestValidation
                 Sku = "ADB123",
                 UoMId = Tubs.Id
             };
-            itemAdhesiveBlanket = _itemService.CreateObject(itemAdhesiveBlanket, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemAdhesiveBlanket = _itemService.CreateObject(itemAdhesiveBlanket, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             itemAdhesiveRoller = new Item()
             {
@@ -470,7 +466,7 @@ namespace TestValidation
                 Sku = "ADR123",
                 UoMId = Tubs.Id
             };
-            itemAdhesiveRoller = _itemService.CreateObject(itemAdhesiveRoller, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemAdhesiveRoller = _itemService.CreateObject(itemAdhesiveRoller, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             itemCompound = new Item()
             {
@@ -480,7 +476,7 @@ namespace TestValidation
                 UoMId = Tubs.Id,
                 MinimumQuantity = 150000
             };
-            itemCompound = _itemService.CreateObject(itemCompound, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemCompound = _itemService.CreateObject(itemCompound, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             itemCompound1 = new Item()
             {
@@ -489,7 +485,7 @@ namespace TestValidation
                 Sku = "CMP101",
                 UoMId = _uomService.GetObjectByName("Tubs").Id
             };
-            itemCompound1 = _itemService.CreateObject(itemCompound1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemCompound1 = _itemService.CreateObject(itemCompound1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             itemCompound2 = new Item()
             {
@@ -498,7 +494,7 @@ namespace TestValidation
                 Sku = "CMP102",
                 UoMId = Tubs.Id
             };
-            itemCompound2 = _itemService.CreateObject(itemCompound2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemCompound2 = _itemService.CreateObject(itemCompound2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             itemAccessory1 = new Item()
             {
@@ -507,7 +503,7 @@ namespace TestValidation
                 Sku = "ACC001",
                 UoMId = Pcs.Id
             };
-            itemAccessory1 = _itemService.CreateObject(itemAccessory1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemAccessory1 = _itemService.CreateObject(itemAccessory1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             itemAccessory2 = new Item()
             {
@@ -516,7 +512,7 @@ namespace TestValidation
                 Sku = "ACC002",
                 UoMId = Pcs.Id
             };
-            itemAccessory2 = _itemService.CreateObject(itemAccessory2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            itemAccessory2 = _itemService.CreateObject(itemAccessory2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             StockAdjustment sa = new StockAdjustment()
             {
@@ -611,7 +607,7 @@ namespace TestValidation
                 PICContactNo = "021 3863777",
                 Email = "random@ri.gov.au"
             };
-            contact = _contactService.CreateObject(contact, _contactGroupService);
+            contact = _contactService.CreateObject(contact);
 
             machine = new Machine()
             {
@@ -678,7 +674,7 @@ namespace TestValidation
                 CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder = _coreBuilderService.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService,
-                                                           _warehouseService, _priceMutationService, _contactGroupService, _machineService);
+                                                           _warehouseService, _priceMutationService, _machineService);
 
             coreBuilder1 = new CoreBuilder()
             {
@@ -692,7 +688,7 @@ namespace TestValidation
                 CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder1 = _coreBuilderService.CreateObject(coreBuilder1, _uomService, _itemService, _itemTypeService, _warehouseItemService,
-                                                            _warehouseService, _priceMutationService, _contactGroupService, _machineService);
+                                                            _warehouseService, _priceMutationService, _machineService);
 
             coreBuilder2 = new CoreBuilder()
             {
@@ -706,7 +702,7 @@ namespace TestValidation
                 CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder2 = _coreBuilderService.CreateObject(coreBuilder2, _uomService, _itemService, _itemTypeService, _warehouseItemService,
-                                                            _warehouseService, _priceMutationService, _contactGroupService, _machineService);
+                                                            _warehouseService, _priceMutationService, _machineService);
 
             coreBuilder3 = new CoreBuilder()
             {
@@ -720,7 +716,7 @@ namespace TestValidation
                 CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder3 = _coreBuilderService.CreateObject(coreBuilder3, _uomService, _itemService, _itemTypeService, _warehouseItemService,
-                                                            _warehouseService, _priceMutationService, _contactGroupService, _machineService);
+                                                            _warehouseService, _priceMutationService, _machineService);
 
             coreBuilder4 = new CoreBuilder()
             {
@@ -734,7 +730,7 @@ namespace TestValidation
                 CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
             };
             coreBuilder4 = _coreBuilderService.CreateObject(coreBuilder4, _uomService, _itemService, _itemTypeService, _warehouseItemService,
-                                                            _warehouseService, _priceMutationService, _contactGroupService, _machineService);
+                                                            _warehouseService, _priceMutationService, _machineService);
 
             rollerBuilder = new RollerBuilder()
             {
@@ -757,7 +753,7 @@ namespace TestValidation
             };
             rollerBuilder = _rollerBuilderService.CreateObject(rollerBuilder, _machineService, _uomService, _itemService, _itemTypeService,
                                                                _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
-                                                               _priceMutationService, _contactGroupService);
+                                                               _priceMutationService);
 
             rollerBuilder1 = new RollerBuilder()
             {
@@ -780,7 +776,7 @@ namespace TestValidation
             };
             rollerBuilder1 = _rollerBuilderService.CreateObject(rollerBuilder1, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
-                                                                _priceMutationService, _contactGroupService);
+                                                                _priceMutationService);
 
             rollerBuilder2 = new RollerBuilder()
             {
@@ -803,7 +799,7 @@ namespace TestValidation
             };
             rollerBuilder2 = _rollerBuilderService.CreateObject(rollerBuilder2, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
-                                                                _priceMutationService, _contactGroupService);
+                                                                _priceMutationService);
 
             rollerBuilder3 = new RollerBuilder()
             {
@@ -826,7 +822,7 @@ namespace TestValidation
             };
             rollerBuilder3 = _rollerBuilderService.CreateObject(rollerBuilder3, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
-                                                                _priceMutationService, _contactGroupService);
+                                                                _priceMutationService);
 
             rollerBuilder4 = new RollerBuilder()
             {
@@ -849,7 +845,7 @@ namespace TestValidation
             };
             rollerBuilder4 = _rollerBuilderService.CreateObject(rollerBuilder4, _machineService, _uomService, _itemService, _itemTypeService,
                                                                 _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService,
-                                                                _priceMutationService, _contactGroupService);
+                                                                _priceMutationService);
 
             Item NewCore = _coreBuilderService.GetNewCore(coreBuilder.Id);
             Item NewCore1 = _coreBuilderService.GetNewCore(coreBuilder1.Id);
@@ -1600,7 +1596,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BGEN"
             };
-            _itemService.CreateObject(bargeneric, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(bargeneric, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             barleft1 = new Item()
             {
@@ -1609,7 +1605,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BL1"
             };
-            _itemService.CreateObject(barleft1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(barleft1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             barleft2 = new Item()
             {
@@ -1618,7 +1614,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BL2"
             };
-            _itemService.CreateObject(barleft2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(barleft2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             barright1 = new Item()
             {
@@ -1627,7 +1623,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BR1"
             };
-            _itemService.CreateObject(barright1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(barright1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             barright2 = new Item()
             {
@@ -1636,7 +1632,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BR2"
             };
-            _itemService.CreateObject(barright2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(barright2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             rollBlanket1 = new Item()
             {
@@ -1645,7 +1641,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BLK1"
             };
-            _itemService.CreateObject(rollBlanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(rollBlanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             rollBlanket2 = new Item()
             {
@@ -1654,7 +1650,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BLK2"
             };
-            _itemService.CreateObject(rollBlanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(rollBlanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             rollBlanket3 = new Item()
             {
@@ -1663,7 +1659,7 @@ namespace TestValidation
                 UoMId = Pcs.Id,
                 Sku = "BLK3"
             };
-            _itemService.CreateObject(rollBlanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            _itemService.CreateObject(rollBlanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             blanket1 = new Blanket()
             {
@@ -1688,7 +1684,7 @@ namespace TestValidation
                 ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
             _blanketService.CreateObject(blanket1, _blanketService, _uomService, _itemService, _itemTypeService, _contactService,
-                                         _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                                         _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             blanket2 = new Blanket()
             {
@@ -1713,7 +1709,7 @@ namespace TestValidation
                 ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
             _blanketService.CreateObject(blanket2, _blanketService, _uomService, _itemService, _itemTypeService, _contactService,
-                                         _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                                         _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             blanket3 = new Blanket()
             {
@@ -1740,7 +1736,7 @@ namespace TestValidation
                 ApplicationCase = Core.Constants.Constant.ApplicationCase.Sheetfed
             };
             _blanketService.CreateObject(blanket3, _blanketService, _uomService, _itemService, _itemTypeService, _contactService,
-                                         _machineService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                                         _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             StockAdjustment sa = new StockAdjustment() { WarehouseId = localWarehouse.Id, AdjustmentDate = DateTime.Today, Description = "Bar Related Adjustment" };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);

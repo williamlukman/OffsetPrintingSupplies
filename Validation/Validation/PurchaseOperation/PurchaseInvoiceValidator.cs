@@ -138,6 +138,7 @@ namespace Validation.Validation
             IList<PurchaseInvoiceDetail> details = _purchaseInvoiceDetailService.GetObjectsByPurchaseInvoiceId(purchaseInvoice.Id);
             foreach (var detail in details)
             {
+                detail.Errors = new Dictionary<string, string>();
                 if (!_purchaseInvoiceDetailService.GetValidator().ValidUnconfirmObject(detail))
                 {
                     foreach (var error in detail.Errors)

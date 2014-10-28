@@ -114,7 +114,6 @@ namespace Core.Constants
         public class MenuName
         {
             public static string Contact = "Contact";
-            public static string ContactGroup = "Contact Group";
             public static string ItemType = "ItemType";
             public static string UoM = "UoM";
             public static string Machine = "Machine";

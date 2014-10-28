@@ -19,10 +19,8 @@ namespace Core.Interface.Service
         Compound GetObjectById(int Id);
         Compound GetObjectBySku(string Sku);
         Compound CreateObject(Compound compound, ICompoundService _compoundService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                              IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                              IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
-        Compound UpdateObject(Compound compound, IUoMService _uomService, IItemTypeService _itemTypeService, IItemService _itemService,
-                              IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+                              IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IPriceMutationService _priceMutationService);
+        Compound UpdateObject(Compound compound, IUoMService _uomService, IItemTypeService _itemTypeService, IItemService _itemService, IPriceMutationService _priceMutationService);
         Compound SoftDeleteObject(Compound compound, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                   IPriceMutationService _priceMutationService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                   IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,

@@ -73,9 +73,7 @@ namespace TestValidation
         public IDeliveryOrderDetailService _deliveryOrderDetailService;
 
         public IPriceMutationService _priceMutationService;
-        public IContactGroupService _contactGroupService;
 
-        public ContactGroup baseGroup;
         public ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
@@ -165,8 +163,7 @@ namespace TestValidation
             _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
-
+          
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
             typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);
@@ -192,8 +189,6 @@ namespace TestValidation
             typeInkDistHQ = _rollerTypeService.CreateObject("Ink Dist HQ", "Ink Dist HQ");
             typeDampFormDQ = _rollerTypeService.CreateObject("Damp Form DQ", "Damp Form DQ");
             typeInkFormY = _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
-
-            baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
             if (!_accountService.GetLegacyObjects().Any())
             {
@@ -290,7 +285,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            rollBlanket1 = _itemService.CreateObject(rollBlanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            rollBlanket1 = _itemService.CreateObject(rollBlanket1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             rollBlanket2 = new Item()
             {
@@ -300,7 +295,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            rollBlanket2 = _itemService.CreateObject(rollBlanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            rollBlanket2 = _itemService.CreateObject(rollBlanket2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             rollBlanket3 = new Item()
             {
@@ -310,7 +305,7 @@ namespace TestValidation
                 UoMId = Pcs.Id
             };
 
-            rollBlanket3 = _itemService.CreateObject(rollBlanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+            rollBlanket3 = _itemService.CreateObject(rollBlanket3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
             StockAdjustment sa = new StockAdjustment() { WarehouseId = localWarehouse.Id, AdjustmentDate = DateTime.Today, Description = "Bar Related Adjustment" };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
@@ -334,7 +329,7 @@ namespace TestValidation
                 PICContactNo = "021 3863777",
                 Email = "random@ri.gov.au"
             };
-            contact = _contactService.CreateObject(contact, _contactGroupService);
+            contact = _contactService.CreateObject(contact);
 
             cashBank = new CashBank()
             {

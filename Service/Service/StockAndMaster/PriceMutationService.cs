@@ -34,9 +34,9 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
-        public IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ItemId, int GroupId, int ExcludePriceMutationId)
+        public IList<PriceMutation> GetObjectsByIsActive(bool IsActive, int ItemId, int ExcludePriceMutationId)
         {
-            return _repository.GetObjectsByIsActive(IsActive, ExcludePriceMutationId, ItemId, GroupId);
+            return _repository.GetObjectsByIsActive(IsActive, ExcludePriceMutationId, ItemId);
         }
 
         public IList<PriceMutation> GetActiveObjectsByItemId(int ItemId)
@@ -55,21 +55,15 @@ namespace Service.Service
             return _repository.DeactivateObject(priceMutation);
         }
 
-        public PriceMutation CreateObject(int ItemId, int ContactGroupId, decimal Price, DateTime CreationDate)
+        public PriceMutation CreateObject(Item Item, DateTime CreationDate)
         {
             PriceMutation priceMutation = new PriceMutation()
             {
-                ItemId = ItemId,
-                ContactGroupId = ContactGroupId,
-                Amount = Price,
+                ItemId = Item.Id,
+                Amount = Item.SellingPrice,
                 CreatedAt = CreationDate
             };
             return this.CreateObject(priceMutation);
-        }
-
-        public PriceMutation CreateObject(Item item, ContactGroup contactGroup, DateTime CreationDate)
-        {
-            return this.CreateObject(item.Id, contactGroup.Id, item.SellingPrice, CreationDate);
         }
 
         public PriceMutation CreateObject(PriceMutation priceMutation)
@@ -78,7 +72,7 @@ namespace Service.Service
             if (_validator.ValidCreateObject(priceMutation, this))
             {
                 priceMutation = _repository.CreateObject(priceMutation);
-                IList<PriceMutation> priceMutations = _repository.GetObjectsByIsActive(true, priceMutation.Id, priceMutation.ItemId, priceMutation.ContactGroupId);
+                IList<PriceMutation> priceMutations = _repository.GetObjectsByIsActive(true, priceMutation.Id, priceMutation.ItemId);
                 foreach (var priceMutation2 in priceMutations)
                 {
                     priceMutation2.Errors = new Dictionary<String, String>();

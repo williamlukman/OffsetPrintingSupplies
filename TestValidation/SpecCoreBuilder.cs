@@ -51,7 +51,7 @@ namespace TestValidation
                     Name = "ABC",
                     UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 
                 d.localWarehouse = new Warehouse()
                 {
@@ -61,7 +61,7 @@ namespace TestValidation
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
-                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
                 d.machine = new Machine()
                 {
@@ -83,7 +83,7 @@ namespace TestValidation
                     CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService,
-                                d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
+                                d._warehouseItemService, d._warehouseService, d._priceMutationService, d._machineService);
             }
         }
 
@@ -109,7 +109,7 @@ namespace TestValidation
                     CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 coreBuilderCopySku = d._coreBuilderService.CreateObject(coreBuilderCopySku, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
-                                                                        d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
+                                                                        d._warehouseService, d._priceMutationService, d._machineService);
                 coreBuilderCopySku.Errors.Count().should_not_be(0);
             };
 
@@ -127,7 +127,7 @@ namespace TestValidation
                     CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Shaft
                 };
                 coreBuilderCopySkuNew = d._coreBuilderService.CreateObject(coreBuilderCopySkuNew, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService ,
-                                                                           d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
+                                                                           d._warehouseService, d._priceMutationService, d._machineService);
                 coreBuilderCopySkuNew.Errors.Count().should_not_be(0);
             };
 
@@ -146,7 +146,7 @@ namespace TestValidation
                     CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 coreBuilderCopySkuUsed = d._coreBuilderService.CreateObject(coreBuilderCopySkuUsed, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
-                                                                            d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
+                                                                            d._warehouseService, d._priceMutationService, d._machineService);
                 coreBuilderCopySkuUsed.Errors.Count().should_not_be(0);
             };
 

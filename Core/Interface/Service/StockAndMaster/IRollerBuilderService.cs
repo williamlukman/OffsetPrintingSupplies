@@ -22,13 +22,11 @@ namespace Core.Interface.Service
         Item GetRollerNewCore(int id);
         RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService, IItemService _itemService,
                                    IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService, IRollerTypeService _rollerTypeService,
-                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                   IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+                                   IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IPriceMutationService _priceMutationService);
         RollerBuilder UpdateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService,
                                           IItemService _itemService, IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService,
                                           IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                          IBlanketService _blanketService, IContactService _contactService, IPriceMutationService _priceMutationService,
-                                          IContactGroupService _contactGroupService);
+                                          IBlanketService _blanketService, IContactService _contactService, IPriceMutationService _priceMutationService);
         RollerBuilder SoftDeleteObject(RollerBuilder rollerBuilder, IItemService _itemService, IBlanketService _blanketService, IPriceMutationService _priceMutationService,
                                        IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService,
                                        IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IPurchaseOrderDetailService _purchaseOrderDetailService,

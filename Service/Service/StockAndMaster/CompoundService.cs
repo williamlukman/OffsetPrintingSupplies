@@ -60,15 +60,13 @@ namespace Service.Service
         }
 
         public Compound CreateObject(Compound compound, ICompoundService _compoundService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                    IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IPriceMutationService _priceMutationService)
         {
             compound.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(compound, _compoundService, _uomService, _itemService, _itemTypeService))
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 compound = _repository.CreateObject(compound);
-                PriceMutation priceMutation = _priceMutationService.CreateObject(compound, contactGroup, compound.CreatedAt);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(compound, compound.CreatedAt);
                 compound.PriceMutationId = priceMutation.Id;
                 compound = _repository.UpdateObject(compound);
             }
@@ -76,17 +74,16 @@ namespace Service.Service
         }
 
         public Compound UpdateObject(Compound compound, IUoMService _uomService, IItemTypeService _itemTypeService, IItemService _itemService,
-                                     IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                     IPriceMutationService _priceMutationService)
         {
             if (_validator.ValidUpdateObject(compound, this, _uomService, _itemService, _itemTypeService))
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 Compound oldcompound = _repository.GetObjectById(compound.Id);
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(compound.PriceMutationId);
                 if (oldcompound.SellingPrice != compound.SellingPrice)
                 {
                     DateTime priceMutationTimeStamp = DateTime.Now;
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(oldcompound, contactGroup, priceMutationTimeStamp);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(oldcompound, priceMutationTimeStamp);
                     compound.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }

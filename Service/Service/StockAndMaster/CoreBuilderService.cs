@@ -57,7 +57,7 @@ namespace Service.Service
         public CoreBuilder CreateObject(string BaseSku, string SkuNewCore, string SkuUsedCore, string Name, string Description, int UoMId, int MachineId,
                                         IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                        IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService, IMachineService _machineService)
+                                        IPriceMutationService _priceMutationService, IMachineService _machineService)
         {
             CoreBuilder coreBuilder = new CoreBuilder
             {
@@ -70,12 +70,12 @@ namespace Service.Service
                 MachineId = MachineId
             };
             return this.CreateObject(coreBuilder, _uomService, _itemService, _itemTypeService, _warehouseItemService,
-                                     _warehouseService, _priceMutationService, _contactGroupService, _machineService);
+                                     _warehouseService, _priceMutationService, _machineService);
         }
 
         public CoreBuilder CreateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IPriceMutationService _priceMutationService, 
-                                        IContactGroupService _contactGroupService, IMachineService _machineService)
+                                        IMachineService _machineService)
         {
             coreBuilder.Errors = new Dictionary<String, String>();
 
@@ -112,9 +112,9 @@ namespace Service.Service
             {
                 if (_validator.ValidCreateObject(coreBuilder, this, _uomService, _itemService, _machineService))
                 {
-                    UsedCore = _itemService.CreateLegacyObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                    UsedCore = _itemService.CreateLegacyObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
                     UsedCore.Id = UsedCore.Id;
-                    NewCore = _itemService.CreateLegacyObject(NewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                    NewCore = _itemService.CreateLegacyObject(NewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
                     NewCore.Id = NewCore.Id;
                     coreBuilder.UsedCoreItemId = UsedCore.Id;
                     coreBuilder.NewCoreItemId = NewCore.Id;
@@ -132,8 +132,7 @@ namespace Service.Service
 
         public CoreBuilder UpdateObject(CoreBuilder coreBuilder, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
                                         IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IBlanketService _blanketService,
-                                        IContactService _contactService, IMachineService _machineService, IPriceMutationService _priceMutationService,
-                                        IContactGroupService _contactGroupService)
+                                        IContactService _contactService, IMachineService _machineService, IPriceMutationService _priceMutationService)
         {
             Item UsedCore = _itemService.GetObjectById(coreBuilder.UsedCoreItemId);
             UsedCore.Name = coreBuilder.Name;
@@ -148,9 +147,9 @@ namespace Service.Service
                 if (_validator.ValidUpdateObject(coreBuilder, this, _uomService, _itemService, _machineService))
                 {
                     _itemService.UpdateLegacyObject(UsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService,
-                                                    _blanketService, _contactService, _machineService, _priceMutationService, _contactGroupService);
+                                                    _blanketService, _contactService, _machineService, _priceMutationService);
                     _itemService.UpdateLegacyObject(NewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService,
-                                                    _blanketService, _contactService, _machineService, _priceMutationService, _contactGroupService);
+                                                    _blanketService, _contactService, _machineService, _priceMutationService);
                     coreBuilder = _repository.UpdateObject(coreBuilder);
                 }
             }

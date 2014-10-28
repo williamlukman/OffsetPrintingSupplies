@@ -16,9 +16,6 @@ namespace Core.DomainModel
         public string PICContactNo { get; set; }
         public string Email { get; set; }
 
-        public int ContactGroupId { get; set; }
-        public virtual ContactGroup ContactGroup { get; set; }
-        
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }

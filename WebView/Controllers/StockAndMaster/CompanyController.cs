@@ -16,7 +16,7 @@ namespace WebView.Controllers
     public class CompanyController : Controller
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CompanyController");
-        private ICompanyService _companyService;
+        public ICompanyService _companyService;
 
         public CompanyController()
         {

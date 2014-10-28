@@ -21,6 +21,7 @@
     }
 
     $("#form_div").dialog('close');
+    $("#search_div").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

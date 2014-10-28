@@ -82,7 +82,7 @@ namespace Service.Service
         public RollerBuilder CreateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService,
                                           IItemService _itemService, IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService,
                                           IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                          IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                          IPriceMutationService _priceMutationService)
         {
             rollerBuilder.Errors = new Dictionary<String, String>();
             ItemType typeRoller = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller);
@@ -119,10 +119,10 @@ namespace Service.Service
                 if (_validator.ValidCreateObject(rollerBuilder, this, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
                     RollerUsedCore = _itemService.CreateLegacyObject(RollerUsedCore, _uomService, _itemTypeService, _warehouseItemService,
-                                                                     _warehouseService, _priceMutationService, _contactGroupService);
+                                                                     _warehouseService, _priceMutationService);
                     RollerUsedCore.Id = RollerUsedCore.Id;
                     RollerNewCore = _itemService.CreateLegacyObject(RollerNewCore, _uomService, _itemTypeService, _warehouseItemService,
-                                                                    _warehouseService, _priceMutationService, _contactGroupService);
+                                                                    _warehouseService, _priceMutationService);
                     RollerNewCore.Id = RollerNewCore.Id;
                     rollerBuilder.RollerUsedCoreItemId = RollerUsedCore.Id;
                     rollerBuilder.RollerNewCoreItemId = RollerNewCore.Id;
@@ -143,8 +143,7 @@ namespace Service.Service
         public RollerBuilder UpdateObject(RollerBuilder rollerBuilder, IMachineService _machineService, IUoMService _uomService,
                                           IItemService _itemService, IItemTypeService _itemTypeService, ICoreBuilderService _coreBuilderService,
                                           IRollerTypeService _rollerTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                          IBlanketService _blanketService, IContactService _contactService, IPriceMutationService _priceMutationService,
-                                          IContactGroupService _contactGroupService)
+                                          IBlanketService _blanketService, IContactService _contactService, IPriceMutationService _priceMutationService)
         {
             Item RollerUsedCore = _itemService.GetObjectById(rollerBuilder.RollerUsedCoreItemId);
             RollerUsedCore.Name = rollerBuilder.Name;
@@ -159,9 +158,9 @@ namespace Service.Service
                 if (_validator.ValidUpdateObject(rollerBuilder, this, _machineService, _uomService, _itemService, _coreBuilderService, _rollerTypeService))
                 {
                     _itemService.UpdateLegacyObject(RollerUsedCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _blanketService,
-                                                    _contactService, _machineService, _priceMutationService, _contactGroupService);
+                                                    _contactService, _machineService, _priceMutationService);
                     _itemService.UpdateLegacyObject(RollerNewCore, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _blanketService,
-                                                    _contactService, _machineService, _priceMutationService, _contactGroupService);
+                                                    _contactService, _machineService, _priceMutationService);
                     rollerBuilder = _repository.UpdateObject(rollerBuilder);
                 }
             }

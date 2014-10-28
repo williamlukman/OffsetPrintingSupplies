@@ -51,7 +51,7 @@ namespace TestValidation
                     Name = "ABC",
                     UoMId = d.Pcs.Id
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 
                 d.localWarehouse = new Warehouse()
                 {
@@ -61,7 +61,7 @@ namespace TestValidation
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
-                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
             }
         }
 
@@ -84,7 +84,7 @@ namespace TestValidation
                     PICContactNo = "001234",
                     Email = "empty@noname.com"
                 };
-                noname = d._contactService.CreateObject(noname, d._contactGroupService);
+                noname = d._contactService.CreateObject(noname);
                 noname.Errors.Count().should_not_be(0);
             };
 
@@ -99,7 +99,7 @@ namespace TestValidation
                     PICContactNo = "001234",
                     Email = "empty@noname.com"
                 }; 
-                samename = d._contactService.CreateObject(samename, d._contactGroupService);
+                samename = d._contactService.CreateObject(samename);
                 samename.Errors.Count().should_not_be(0);
             };
 
@@ -114,7 +114,7 @@ namespace TestValidation
                     PICContactNo = "001234",
                     Email = "empty@noname.com"
                 };
-                emptyaddress = d._contactService.CreateObject(emptyaddress, d._contactGroupService);
+                emptyaddress = d._contactService.CreateObject(emptyaddress);
                 emptyaddress.Errors.Count().should_not_be(0);
             };
 
@@ -129,28 +129,28 @@ namespace TestValidation
                     PICContactNo = "001234",
                     Email = "empty@noname.com"
                 };
-                emptycontact = d._contactService.CreateObject(emptycontact, d._contactGroupService);
+                emptycontact = d._contactService.CreateObject(emptycontact);
                 emptycontact.Errors.Count().should_not_be(0);
             };
 
             it["update_with_empty_pic"] = () =>
             {
                 d.contact.PIC = "   ";
-                d.contact = d._contactService.UpdateObject(d.contact, d._contactGroupService);
+                d.contact = d._contactService.UpdateObject(d.contact);
                 d.contact.Errors.Count().should_be(0);
             };
 
             it["update_with_empty_pic_contactno"] = () =>
             {
                 d.contact.PICContactNo = "   ";
-                d.contact = d._contactService.UpdateObject(d.contact, d._contactGroupService);
+                d.contact = d._contactService.UpdateObject(d.contact);
                 d.contact.Errors.Count().should_be(0);
             };
 
             it["update_with_empty_email"] = () =>
             {
                 d.contact.Email = "   ";
-                d.contact = d._contactService.UpdateObject(d.contact, d._contactGroupService);
+                d.contact = d._contactService.UpdateObject(d.contact);
                 d.contact.Errors.Count().should_be(0);
             };
 
@@ -182,7 +182,7 @@ namespace TestValidation
                     CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
-                                                                   d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
+                                                                   d._warehouseService, d._priceMutationService, d._machineService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     ContactId = d.contact.Id,

@@ -17,7 +17,6 @@ namespace NSpec
 
     public class SpecPurchaseOrder : nspec
     {
-        ContactGroup baseGroup;
         Contact contact;
         PurchaseOrderDetail poDetail1;
         PurchaseOrderDetail poDetail2;
@@ -39,7 +38,6 @@ namespace NSpec
         IWarehouseService _warehouseService;
 
         IPriceMutationService _priceMutationService;
-        IContactGroupService _contactGroupService;
         IStockAdjustmentService _stockAdjustmentService;
         IStockAdjustmentDetailService _stockAdjustmentDetailService;
         IStockMutationService _stockMutationService;
@@ -76,7 +74,6 @@ namespace NSpec
                 _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
-                _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
                 _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
                 _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
                 _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
@@ -84,8 +81,6 @@ namespace NSpec
 
                 _accountService = new AccountService(new AccountRepository(), new AccountValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
-
-                baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
                 if (!_accountService.GetLegacyObjects().Any())
                 {
@@ -152,7 +147,7 @@ namespace NSpec
                     PICContactNo = "021 3863777",
                     Email = "random@ri.gov.au"
                 };
-                contact = contactService.CreateObject(contact, _contactGroupService);
+                contact = contactService.CreateObject(contact);
 
                 type = _itemTypeService.CreateObject("Item", "Item");
 
@@ -171,7 +166,7 @@ namespace NSpec
                     Sku = "bt123",
                     UoMId = Pcs.Id
                 };
-                itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                itemService.CreateObject(item1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
                 item2 = new Item()
                 {
@@ -180,7 +175,7 @@ namespace NSpec
                     Sku = "bg123",
                     UoMId = Pcs.Id
                 };
-                itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                itemService.CreateObject(item2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
                 StockAdjustment sa = new StockAdjustment() { AdjustmentDate = DateTime.Today, WarehouseId = warehouse.Id, Description = "item adjustment" };
                 _stockAdjustmentService.CreateObject(sa, _warehouseService);

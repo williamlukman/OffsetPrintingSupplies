@@ -21,7 +21,6 @@ namespace WebView.Controllers
         private ICoreIdentificationService _coreIdentificationService;
         private IPurchaseOrderService _purchaseOrderService;
         private ISalesOrderService _salesOrderService;
-        private IContactGroupService _contactGroupService;
         private ISalesQuotationService _salesQuotationService;
         private IVirtualOrderService _virtualOrderService;
 
@@ -32,7 +31,6 @@ namespace WebView.Controllers
             _blanketService = new BlanketService(new BlanketRepository(),new BlanketValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
         }
 
@@ -50,7 +48,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _contactService.GetQueryable().Include("ContactGroup").Where(x => !x.IsDeleted);
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -62,7 +60,6 @@ namespace WebView.Controllers
                              model.PIC,
                              model.PICContactNo,
                              model.Email,
-                             ContactGroup = model.ContactGroup.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -103,7 +100,6 @@ namespace WebView.Controllers
                             model.PIC,
                             model.PICContactNo,
                             model.Email,
-                            model.ContactGroup,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -134,8 +130,6 @@ namespace WebView.Controllers
                  model.PIC,
                  model.PICContactNo,
                  model.Email,
-                 model.ContactGroupId,
-                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId).Name,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -145,7 +139,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _contactService.CreateObject(model,_contactGroupService);
+                model = _contactService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -171,8 +165,6 @@ namespace WebView.Controllers
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
-                data.ContactGroupId = model.ContactGroupId;
-                model = _contactService.UpdateObject(data,_contactGroupService);
             }
             catch (Exception ex)
             {

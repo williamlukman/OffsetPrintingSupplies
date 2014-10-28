@@ -10,16 +10,6 @@ namespace Validation.Validation
 {
     public class ContactValidator : IContactValidator
     {
-        public Contact VHasContactGroup(Contact contact, IContactGroupService _contactGroupService)
-        {
-            ContactGroup contactGroup = _contactGroupService.GetObjectById(contact.ContactGroupId);
-            if (contactGroup == null)
-            {
-                contact.Errors.Add("ContactGroupId", "Tidak memiliki asosiasi dengan Contact Group");
-            }
-            return contact;
-        }
-
         public Contact VHasUniqueName(Contact contact, IContactService _contactService)
         {
             if (String.IsNullOrEmpty(contact.Name) || contact.Name.Trim() == "")
@@ -139,10 +129,8 @@ namespace Validation.Validation
             return contact;
         }
 
-        public Contact VCreateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService)
+        public Contact VCreateObject(Contact contact, IContactService _contactService)
         {
-            VHasContactGroup(contact, _contactGroupService);
-            if (!isValid(contact)) { return contact; }
             VHasUniqueName(contact, _contactService);
             if (!isValid(contact)) { return contact; }
             VHasAddress(contact);
@@ -157,9 +145,9 @@ namespace Validation.Validation
             return contact;
         }
 
-        public Contact VUpdateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService)
+        public Contact VUpdateObject(Contact contact, IContactService _contactService)
         {
-            VCreateObject(contact, _contactService, _contactGroupService);
+            VCreateObject(contact, _contactService);
             return contact;
         }
 
@@ -181,16 +169,16 @@ namespace Validation.Validation
             return contact;
         }
 
-        public bool ValidCreateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService)
+        public bool ValidCreateObject(Contact contact, IContactService _contactService)
         {
-            VCreateObject(contact, _contactService, _contactGroupService);
+            VCreateObject(contact, _contactService);
             return isValid(contact);
         }
 
-        public bool ValidUpdateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService)
+        public bool ValidUpdateObject(Contact contact, IContactService _contactService)
         {
             contact.Errors.Clear();
-            VUpdateObject(contact, _contactService, _contactGroupService);
+            VUpdateObject(contact, _contactService);
             return isValid(contact);
         }
 

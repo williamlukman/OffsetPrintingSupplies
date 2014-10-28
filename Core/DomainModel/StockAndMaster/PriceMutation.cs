@@ -9,7 +9,6 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int ItemId { get; set; }
-        public int ContactGroupId { get; set; }
         public decimal Amount { get; set; }
 
         public bool IsActive { get; set; }
@@ -19,6 +18,5 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
 
         public virtual Item Item { get; set; }
-        public virtual ContactGroup ContactGroup { get; set; }
     }
 }

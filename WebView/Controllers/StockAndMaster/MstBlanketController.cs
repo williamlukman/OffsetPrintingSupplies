@@ -24,7 +24,6 @@ namespace WebView.Controllers
         private IWarehouseItemService _warehouseItemService;
         private IBlanketService _blanketService;
         private IContactService _contactService;
-        private IContactGroupService _contactGroupService;
         private IPriceMutationService _priceMutationService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
@@ -42,7 +41,6 @@ namespace WebView.Controllers
              _machineService = new MachineService(new MachineRepository(), new MachineValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(),new ContactValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
@@ -501,7 +499,7 @@ namespace WebView.Controllers
             {
                 model = _blanketService.CreateObject(model,_blanketService,_uomService,
                     _itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,
-                    _warehouseService,_priceMutationService,_contactGroupService);
+                    _warehouseService,_priceMutationService);
             }
             catch (Exception ex)
             {
@@ -541,7 +539,7 @@ namespace WebView.Controllers
                 data.CroppingType = model.CroppingType;
                 data.LeftOverAC = model.LeftOverAC;
                 data.LeftOverAR = model.LeftOverAR;
-                model = _blanketService.UpdateObject(data,_blanketService,_uomService,_itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,_warehouseService,_contactGroupService,_priceMutationService);
+                model = _blanketService.UpdateObject(data,_blanketService,_uomService,_itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,_warehouseService,_priceMutationService);
             }
             catch (Exception ex)
             {

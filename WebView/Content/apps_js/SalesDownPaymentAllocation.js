@@ -40,30 +40,28 @@
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
-    $("#lookup_div_cashbank").dialog('close');
+    $("#lookup_div_salesdownpayment").dialog('close');
     $("#lookup_div_receivable").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ContactId").hide();
-    $("#CashBankId").hide();
+    $("#SalesDownPaymentId").hide();
     $("#ReceivableId").hide();
+    $('#ReceiptVoucherDetailId').hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'SalesDownPaymentAllocation/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Payment Date',
-                   'Is GBCH', 'Due Date', 'Total Amount', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Sales DP Id', 'Allocation Date',
+                   'Total Amount', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
-                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
-                  { name: 'paymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isgbch', index: 'isgbch', width: 45 },
-                  { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'salesdownpaymentid', index: 'salesdownpaymentid', width: 100 },
+                  { name: 'allocationdate', index: 'allocationdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -123,17 +121,13 @@
         ClearData();
         clearForm('#frm');
 
-        $('#DownPaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#AllocationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
-        $('#btnCashBank').removeAttr('disabled');
+        $('#btnSalesDownPayment').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
-        $('#IsGBCH').removeAttr('disabled');
         $('#tabledetail_div').hide();
-        $('#DownPaymentDateDiv').show();
-        $('#DownPaymentDateDiv2').hide();
-        $('#DueDateDiv').show();
-        $('#DueDateDiv2').hide();
+        $('#AllocationDateDiv').show();
+        $('#AllocationDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -165,29 +159,17 @@
                             $('#Code').val(result.Code);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#CashBankId').val(result.CashBankId);
-                            $('#CashBank').val(result.CashBank);
+                            $('#SalesDownPaymentId').val(result.SalesDownPaymentId);
+                            $('#SalesDownPayment').val(result.SalesDownPayment);
                             $('#TotalAmount').val(result.TotalAmount);
-                            var e = document.getElementById("IsGBCH");
-                            if (result.IsGBCH == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
-                            $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
-                            $('#DownPaymentDate2').val(dateEnt(result.DownPaymentDate));
-                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-                            $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#DownPaymentDateDiv2').show();
-                            $('#DownPaymentDateDiv').hide();
-                            $('#DueDateDiv2').show();
-                            $('#DueDateDiv').hide();
+                            $('#AllocationDate').datebox('setValue', dateEnt(result.AllocationDate));
+                            $('#AllocationDate2').val(dateEnt(result.AllocationDate));
+                            $('#AllocationDateDiv2').show();
+                            $('#AllocationDateDiv').hide();
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
-                            $('#btnCashBank').attr('disabled', true);
+                            $('#btnSalesDownPayment').attr('disabled', true);
                             $('#TotalAmount').attr('disabled', true);
-                            $('#IsGBCH').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -226,8 +208,8 @@
                             $('#Code').val(result.Code);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#CashBankId').val(result.CashBankId);
-                            $('#CashBank').val(result.CashBank);
+                            $('#SalesDownPaymentId').val(result.SalesDownPaymentId);
+                            $('#SalesDownPayment').val(result.SalesDownPayment);
                             $('#TotalAmount').val(result.TotalAmount);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
@@ -236,18 +218,13 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
-                            $('#DownPaymentDate2').val(dateEnt(result.DownPaymentDate));
-                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
-                            $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#DownPaymentDateDiv2').show();
-                            $('#DownPaymentDateDiv').hide();
-                            $('#DueDateDiv2').show();
-                            $('#DueDateDiv').hide();
+                            $('#AllocationDate').datebox('setValue', dateEnt(result.AllocationDate));
+                            $('#AllocationDate2').val(dateEnt(result.AllocationDate));
+                            $('#AllocationDateDiv2').show();
+                            $('#AllocationDateDiv').hide();
                             $('#btnContact').removeAttr('disabled');
-                            $('#btnCashBank').removeAttr('disabled');
+                            $('#btnSalesDownPayment').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
-                            $('#IsGBCH').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -401,8 +378,8 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#DownPaymentDate').datebox('getValue') == "") {
-            return $($('#DownPaymentDate').addClass('errormessage').before('<span class="errormessage">**' + "Payment Date Belum Terisi" + '</span>'));
+        if ($('#AllocationDate').datebox('getValue') == "") {
+            return $($('#AllocationDate').addClass('errormessage').before('<span class="errormessage">**' + "Payment Date Belum Terisi" + '</span>'));
 
         }
         // Update
@@ -414,17 +391,13 @@
             submitURL = base_url + 'SalesDownPaymentAllocation/Insert';
         }
 
-        var e = document.getElementById("IsGBCH");
-        var gbch = e.options[e.selectedIndex].value;
-
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, TotalAmount: $("#TotalAmount").numberbox('getValue'),
-                DownPaymentDate: $('#DownPaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                Id: id, ContactId: $("#ContactId").val(), SalesDownPaymentId: $("#SalesDownPaymentId").val(),
+                TotalAmount: $("#TotalAmount").numberbox('getValue'), AllocationDate: $('#AllocationDate').datebox('getValue'),
             }),
             async: false,
             cache: false,
@@ -456,7 +429,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Receivable Id', 'Receivable Code', 'Receipt Voucher Detail Id', 'Receipt Voucher Detail Code', 'Amount', 'Description'
+        colNames: ['Code', 'Receivable Id', 'Receivable Code', 'Receipt Voucher Detail Id', 'RV Detail Code', 'Amount', 'Description'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 70, sortable: false },
@@ -685,28 +658,41 @@
 
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up cashbank-------------------------------------------------------
-    $('#btnCashBank').click(function () {
-        var lookUpURL = base_url + 'MstCashBank/GetList';
-        var lookupGrid = $('#lookup_table_cashbank');
+    // -------------------------------------------------------Look Up salesdownpayment-------------------------------------------------------
+    $('#btnSalesDownPayment').click(function () {
+        var lookUpURL = base_url + 'SalesDownPayment/GetList';
+        var lookupGrid = $('#lookup_table_salesdownpayment');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_cashbank').dialog('open');
+        $('#lookup_div_salesdownpayment').dialog('open');
     });
 
-    jQuery("#lookup_table_cashbank").jqGrid({
+    jQuery("#lookup_table_salesdownpayment").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name'
-        ],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Down Payment Date',
+                   'Is GBCH', 'Due Date', 'Total Amount',
+                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
+                  { name: 'code', index: 'code', width: 70 },
+				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
+                  { name: 'contactname', index: 'contactname', width: 150 },
+                  { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
+                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
+                  { name: 'downpaymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isgbch', index: 'isgbch', width: 45 },
+                  { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
+                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
-        pager: $('#lookup_pager_cashbank'),
+        pager: $('#lookup_pager_salesdownpayment'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -714,33 +700,33 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_cashbank").width() - 10,
-        height: $("#lookup_div_cashbank").height() - 110,
+        width: $("#lookup_div_salesdownpayment").width() - 10,
+        height: $("#lookup_div_salesdownpayment").height() - 110,
     });
-    $("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_salesdownpayment").jqGrid('navGrid', '#lookup_toolbar_salesdownpayment', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_cashbank').click(function () {
-        $('#lookup_div_cashbank').dialog('close');
+    $('#lookup_btn_cancel_salesdownpayment').click(function () {
+        $('#lookup_div_salesdownpayment').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_cashbank').click(function () {
-        var id = jQuery("#lookup_table_cashbank").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_salesdownpayment').click(function () {
+        var id = jQuery("#lookup_table_salesdownpayment").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_cashbank").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_salesdownpayment").jqGrid('getRowData', id);
 
-            $('#CashBankId').val(ret.id).data("kode", id);
-            $('#CashBank').val(ret.code);
-            $('#lookup_div_cashbank').dialog('close');
+            $('#SalesDownPaymentId').val(ret.id).data("kode", id);
+            $('#SalesDownPayment').val(ret.code);
+            $('#lookup_div_salesdownpayment').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup cashbank----------------------------------------------------------------
+    // ---------------------------------------------End Lookup salesdownpayment----------------------------------------------------------------
 
     // -------------------------------------------------------Look Up receivable-------------------------------------------------------
     $('#btnReceivable').click(function () {

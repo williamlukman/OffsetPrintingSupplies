@@ -32,10 +32,7 @@ namespace Data.Mapping
                 .HasForeignKey(vo => vo.ContactId);
             HasMany(c => c.SalesQuotations)
                 .WithRequired(sq => sq.Contact)
-                .HasForeignKey(sq => sq.ContactId); 
-            HasRequired(c => c.ContactGroup)
-                .WithMany(cg => cg.Contacts)
-                .HasForeignKey(c => c.ContactGroupId);
+                .HasForeignKey(sq => sq.ContactId);
             Ignore(c => c.Errors);
         }
     }

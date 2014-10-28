@@ -17,7 +17,6 @@ namespace TestValidation
 
     public class SpecPurchaseReceival : nspec
     {
-        ContactGroup baseGroup;
         Contact contact;
         Item item_batiktulis;
         Item item_busway;
@@ -64,7 +63,6 @@ namespace TestValidation
         IClosingService _closingService;
 
         IPriceMutationService _priceMutationService;
-        IContactGroupService _contactGroupService;
 
         private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods, PrepaidExpense, NonCurrentAsset;
         private Account Expense, COGS, COS, OperationalExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense;
@@ -98,12 +96,9 @@ namespace TestValidation
                 _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
-                _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
                 _accountService = new AccountService(new AccountRepository(), new AccountValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
                 _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
-
-                baseGroup = _contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
                 if (!_accountService.GetLegacyObjects().Any())
                 {
@@ -170,7 +165,7 @@ namespace TestValidation
                     PICContactNo = "021 3863777",
                     Email = "random@ri.gov.au"
                 };
-                contact = _contactService.CreateObject(contact, _contactGroupService);
+                contact = _contactService.CreateObject(contact);
 
                 type = _itemTypeService.CreateObject("Item", "Item");
 
@@ -190,7 +185,7 @@ namespace TestValidation
                     UoMId = Pcs.Id
                 };
 
-                item_batiktulis = _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                item_batiktulis = _itemService.CreateObject(item_batiktulis, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
                 item_busway = new Item()
                 {
@@ -199,7 +194,7 @@ namespace TestValidation
                     Sku = "DKI002",
                     UoMId = Pcs.Id
                 };
-                item_busway = _itemService.CreateObject(item_busway, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                item_busway = _itemService.CreateObject(item_busway, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
                 item_botolaqua = new Item()
                 {
@@ -208,7 +203,7 @@ namespace TestValidation
                     Sku = "DKI003",
                     UoMId = Pcs.Id
                 };
-                item_botolaqua = _itemService.CreateObject(item_botolaqua, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService, _contactGroupService);
+                item_botolaqua = _itemService.CreateObject(item_botolaqua, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
 
                 StockAdjustment sa = new StockAdjustment() { AdjustmentDate = DateTime.Today, WarehouseId = warehouse.Id, Description = "item adjustment" };
                 _stockAdjustmentService.CreateObject(sa, _warehouseService);

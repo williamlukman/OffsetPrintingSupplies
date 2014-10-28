@@ -74,33 +74,28 @@ namespace Service.Service
         }
 
         public Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                                 IWarehouseService _warehouseService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                 IWarehouseService _warehouseService, IPriceMutationService _priceMutationService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(item, _uomService, this, _itemTypeService))
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
-                if (contactGroup != null)
-                {
-                    item.CreatedAt = DateTime.Now;
-                    item = _repository.CreateObject(item);
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
-                    item.PriceMutationId = priceMutation.Id;
-                    item = _repository.UpdateObject(item);
-                }
+                item.CreatedAt = DateTime.Now;
+                item = _repository.CreateObject(item);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item, item.CreatedAt);
+                item.PriceMutationId = priceMutation.Id;
+                item = _repository.UpdateObject(item);
             }
             return item;
         }
 
         public Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                                       IWarehouseService _warehouseService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                       IWarehouseService _warehouseService, IPriceMutationService _priceMutationService)
         {
             item.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateLegacyObject(item, _uomService, this, _itemTypeService))
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 item = _repository.CreateObject(item);
-                PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, item.CreatedAt);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(item, item.CreatedAt);
                 item.PriceMutationId = priceMutation.Id;
                 _repository.UpdateObject(item);
             }
@@ -108,17 +103,16 @@ namespace Service.Service
         }
 
         public Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService,
-                                 IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                 IPriceMutationService _priceMutationService)
         {
             if (_validator.ValidUpdateObject(item, _uomService, this, _itemTypeService))
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 Item olditem = _repository.GetObjectById(item.Id);
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 item.UpdatedAt = DateTime.Now;
                 if (olditem.SellingPrice != item.SellingPrice)
                 {
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, (DateTime)item.UpdatedAt);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, (DateTime)item.UpdatedAt);
                     item.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, item.UpdatedAt);
                 }
@@ -129,26 +123,24 @@ namespace Service.Service
 
         public Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                        IWarehouseService _warehouseService, IBlanketService _blanketService, IContactService _contactService,
-                                       IMachineService _machineService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                       IMachineService _machineService, IPriceMutationService _priceMutationService)
         {
             Blanket blanket = _blanketService.GetObjectById(item.Id);
             if (blanket != null)
             {
-                _blanketService.UpdateObject(blanket, _blanketService, _uomService, this, _itemTypeService,
-                                             _contactService, _machineService, _warehouseItemService, _warehouseService,
-                                             _contactGroupService, _priceMutationService);
+                _blanketService.UpdateObject(blanket, _blanketService, _uomService, this, _itemTypeService, _contactService,
+                                             _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
                 return blanket;
             }
 
             if(_validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService)) 
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 Item olditem = _repository.GetObjectById(item.Id);
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(item.PriceMutationId);
                 if (olditem.SellingPrice != item.SellingPrice)
                 {
                     DateTime priceMutationTimeStamp = DateTime.Now;
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, contactGroup, priceMutationTimeStamp);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(item, priceMutationTimeStamp);
                     item.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }

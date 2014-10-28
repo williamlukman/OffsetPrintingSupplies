@@ -85,7 +85,7 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        window.open(base_url + 'Report/ReportItem');
     });
 
     $('#btn_add_new').click(function () {

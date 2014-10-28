@@ -30,14 +30,12 @@ namespace WebView.Controllers
         private IBlanketService _blanketService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
-        private IContactGroupService _contactGroupService;
         private IPurchaseOrderDetailService _purchaseOrderDetailService;
         private IStockAdjustmentDetailService _stockAdjustmentDetailService;
         private ISalesOrderDetailService _salesOrderDetailService;
         private IMachineService _machineService;
         private IBlanketOrderDetailService _blanketOrderDetailService;
 
-        private ContactGroup baseGroup;
         private IRollerTypeService _rollerTypeService;
         private ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
@@ -60,7 +58,6 @@ namespace WebView.Controllers
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
-            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
             _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(),new SalesOrderDetailValidator());
@@ -191,7 +188,7 @@ namespace WebView.Controllers
             try
             {
                 model = _coreBuilderService.CreateObject(model,_uomService,_itemService,_itemTypeService,
-                    _warehouseItemService,_warehouseService,_priceMutationService,_contactGroupService,_machineService);
+                    _warehouseItemService,_warehouseService,_priceMutationService,_machineService);
             }
             catch (Exception ex)
             {
@@ -220,7 +217,7 @@ namespace WebView.Controllers
                 data.UoMId = model.UoMId;
                 data.CoreBuilderTypeCase = model.CoreBuilderTypeCase;
                 model = _coreBuilderService.UpdateObject(data,_uomService,_itemService,_itemTypeService,_warehouseItemService
-                    ,_warehouseService,_blanketService,_contactService,_machineService,_priceMutationService,_contactGroupService);
+                    ,_warehouseService,_blanketService,_contactService,_machineService,_priceMutationService);
             }
             catch (Exception ex)
             {

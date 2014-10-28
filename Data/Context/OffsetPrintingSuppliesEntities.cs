@@ -49,8 +49,8 @@ namespace Data.Context
                                         { "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
                                           "ServiceCost", "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment",
                                           "WarehouseItem", "Warehouse", "Compound", "Blanket", "CoreBuilder",
-                                          "GroupItemPrice", "Item", "ItemType", "UoM", "Contact",
-                                          "RollerType", "Machine", "ContactGroup", "Company" };
+                                          "Item", "ItemType", "UoM", "Contact",
+                                          "RollerType", "Machine", "Company" };
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
@@ -89,9 +89,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new DeliveryOrderMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new ContactMapping());
-            modelBuilder.Configurations.Add(new ContactGroupMapping());
             modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
-            modelBuilder.Configurations.Add(new GroupItemPriceMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
             modelBuilder.Configurations.Add(new MachineMapping());
@@ -174,10 +172,8 @@ namespace Data.Context
         public DbSet<CoreAccessoryDetail> CoreAccessoryDetails { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
         public DbSet<Contact> Contacts { get; set; }
-        public DbSet<ContactGroup> ContactGroups { get; set; }
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
-        public DbSet<GroupItemPrice> GroupItemPrices { get; set; }
         public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> ItemTypes { get; set; }

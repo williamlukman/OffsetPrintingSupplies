@@ -24,7 +24,6 @@ namespace TestValidation
             {
                 db.DeleteAllTables();
                 d = new DataBuilder();
-                d.baseGroup = d._contactGroupService.CreateObject(Core.Constants.Constant.GroupType.Base, "Base Group", true);
 
                 d.Pcs = new UoM()
                 {
@@ -60,7 +59,7 @@ namespace TestValidation
                     UoMId = d.Pcs.Id,
                     Quantity = 0
                 };
-                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.item = d._itemService.CreateObject(d.item, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
                 d.itemCompound = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("Compound").Id,
@@ -68,7 +67,7 @@ namespace TestValidation
                     Name = "Cmp 10001",
                     UoMId = d.Pcs.Id
                 };
-                d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.itemCompound = d._itemService.CreateObject(d.itemCompound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
                 d.itemAdhesiveRoller = new Item()
                 {
                     ItemTypeId = d._itemTypeService.GetObjectByName("AdhesiveRoller").Id,
@@ -76,7 +75,7 @@ namespace TestValidation
                     Sku = "ADDB123",
                     UoMId = d.Tubs.Id
                 };
-                d.itemAdhesiveRoller = d._itemService.CreateObject(d.itemAdhesiveRoller, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService, d._contactGroupService);
+                d.itemAdhesiveRoller = d._itemService.CreateObject(d.itemAdhesiveRoller, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 
                 d.stockAdjustment = new StockAdjustment()
                 {
@@ -105,7 +104,7 @@ namespace TestValidation
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
                                                         d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService);
 
-                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com", d._contactGroupService);
+                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
 
                 d.machine = new Machine()
                 {
@@ -126,7 +125,7 @@ namespace TestValidation
                     CoreBuilderTypeCase = Core.Constants.Constant.CoreBuilderTypeCase.Hollow
                 };
                 d.coreBuilder = d._coreBuilderService.CreateObject(d.coreBuilder, d._uomService, d._itemService, d._itemTypeService, d._warehouseItemService,
-                                                                   d._warehouseService, d._priceMutationService, d._contactGroupService, d._machineService);
+                                                                   d._warehouseService, d._priceMutationService, d._machineService);
                 d.coreIdentification = new CoreIdentification()
                 {
                     ContactId = d.contact.Id,
@@ -175,7 +174,7 @@ namespace TestValidation
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService,
                                                                        d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService,
-                                                                       d._priceMutationService, d._contactGroupService);
+                                                                       d._priceMutationService);
             }
         }
 

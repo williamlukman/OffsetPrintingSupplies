@@ -27,13 +27,11 @@ namespace Core.Interface.Service
         Blanket GetObjectById(int Id);
         Blanket GetObjectBySku(string Sku);
         Blanket CreateObject(Blanket blanket, IBlanketService _blanketService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                    IContactService _contactService, IMachineService _machineService,
-                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                    IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+                             IContactService _contactService, IMachineService _machineService, IWarehouseItemService _warehouseItemService,
+                             IWarehouseService _warehouseService, IPriceMutationService _priceMutationService);
         Blanket UpdateObject(Blanket blanket, IBlanketService _blanketService, IUoMService _uomService, IItemService _itemService,
                                IItemTypeService _itemTypeService, IContactService _contactService, IMachineService _machineService,
-                               IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                               IContactGroupService _contactGroupService, IPriceMutationService _priceMutationService);
+                               IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IPriceMutationService _priceMutationService);
         Blanket SoftDeleteObject(Blanket blanket, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                  IPriceMutationService _priceMutationService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                  IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,

@@ -9,7 +9,6 @@ namespace Core.Interface.Validation
 {
     public interface IContactValidator
     {
-        Contact VHasContactGroup(Contact contact, IContactGroupService _contactGroupService);
         Contact VHasUniqueName(Contact contact, IContactService _contactService);
         Contact VHasAddress(Contact contact);
         Contact VHasContactNo(Contact contact);
@@ -22,13 +21,13 @@ namespace Core.Interface.Validation
         Contact VHasSalesOrder(Contact contact, ISalesOrderService _salesOrderService);
         Contact VHasSalesQuotation(Contact contact, ISalesQuotationService _salesQuotationService);
         Contact VHasVirtualOrder(Contact contact, IVirtualOrderService _virtualOrderService);
-        Contact VCreateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
-        Contact VUpdateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
+        Contact VCreateObject(Contact contact, IContactService _contactService);
+        Contact VUpdateObject(Contact contact, IContactService _contactService);
         Contact VDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
                               IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService,
                               ISalesQuotationService _salesQuotationService, IVirtualOrderService _virtualOrderService);
-        bool ValidCreateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
-        bool ValidUpdateObject(Contact contact, IContactService _contactService, IContactGroupService _contactGroupService);
+        bool ValidCreateObject(Contact contact, IContactService _contactService);
+        bool ValidUpdateObject(Contact contact, IContactService _contactService);
         bool ValidDeleteObject(Contact contact, ICoreIdentificationService _coreIdentificationService, IBlanketService _blanketService,
                                IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService,
                                ISalesQuotationService _salesQuotationService, IVirtualOrderService _virtualOrderService);

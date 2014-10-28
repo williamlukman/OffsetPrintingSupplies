@@ -100,16 +100,14 @@ namespace Service.Service
         }
 
         public Blanket CreateObject(Blanket blanket, IBlanketService _blanketService, IUoMService _uomService, IItemService _itemService, IItemTypeService _itemTypeService,
-                                    IContactService _contactService, IMachineService _machineService,
-                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                    IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService)
+                                    IContactService _contactService, IMachineService _machineService, IWarehouseItemService _warehouseItemService,
+                                    IWarehouseService _warehouseService, IPriceMutationService _priceMutationService)
         {
             blanket.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(blanket, _blanketService, _uomService, _itemService, _itemTypeService, _contactService, _machineService))
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 blanket = _repository.CreateObject(blanket);
-                PriceMutation priceMutation = _priceMutationService.CreateObject(blanket, contactGroup, blanket.CreatedAt);
+                PriceMutation priceMutation = _priceMutationService.CreateObject(blanket, blanket.CreatedAt);
                 blanket.PriceMutationId = priceMutation.Id;
                 blanket = _repository.UpdateObject(blanket);
             }
@@ -118,18 +116,16 @@ namespace Service.Service
 
         public Blanket UpdateObject(Blanket blanket, IBlanketService _blanketService, IUoMService _uomService, IItemService _itemService,
                                     IItemTypeService _itemTypeService, IContactService _contactService, IMachineService _machineService,
-                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                    IContactGroupService _contactGroupService, IPriceMutationService _priceMutationService)
+                                    IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService, IPriceMutationService _priceMutationService)
         {
             if (_validator.ValidUpdateObject(blanket, _blanketService, _uomService, _itemService, _itemTypeService, _contactService, _machineService))
             {
-                ContactGroup contactGroup = _contactGroupService.GetObjectByIsLegacy(true);
                 Blanket oldblanket = _repository.GetObjectById(blanket.Id);
                 PriceMutation oldpriceMutation = _priceMutationService.GetObjectById(blanket.PriceMutationId);
                 if (oldblanket.SellingPrice != blanket.SellingPrice)
                 {
                     DateTime priceMutationTimeStamp = DateTime.Now;
-                    PriceMutation priceMutation = _priceMutationService.CreateObject(oldblanket, contactGroup, priceMutationTimeStamp);
+                    PriceMutation priceMutation = _priceMutationService.CreateObject(oldblanket, priceMutationTimeStamp);
                     blanket.PriceMutationId = priceMutation.Id;
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }

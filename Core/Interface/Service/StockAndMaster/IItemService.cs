@@ -21,17 +21,16 @@ namespace Core.Interface.Service
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);
         Item CreateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                          IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+                          IPriceMutationService _priceMutationService);
         Item CreateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
-                                IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
-        Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+                                IPriceMutationService _priceMutationService);
+        Item UpdateObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IPriceMutationService _priceMutationService);
         Item UpdateLegacyObject(Item item, IUoMService _uomService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService,
                                 IBlanketService _blanketService, IContactService _contactService, IMachineService _machineService,
-                                IPriceMutationService _priceMutationService, IContactGroupService _contactGroupService);
+                                IPriceMutationService _priceMutationService);
         Item SoftDeleteObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
-                              IBlanketService _blanketService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                              IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                              IPriceMutationService _priceMutationService);
+                              IBlanketService _blanketService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
+                              ISalesOrderDetailService _salesOrderDetailService, IPriceMutationService _priceMutationService);
         Item SoftDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                     IBlanketService _blanketService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                     IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
