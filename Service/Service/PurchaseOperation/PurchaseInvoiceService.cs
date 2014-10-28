@@ -130,7 +130,7 @@ namespace Service.Service
             decimal Discount = purchaseInvoice.Discount / 100 * AmountPayable;
             decimal TaxableAmount = AmountPayable - Discount;
             decimal Tax = purchaseInvoice.Tax / 100 * TaxableAmount;
-            purchaseInvoice.AmountPayable = TaxableAmount - Tax;
+            purchaseInvoice.AmountPayable = TaxableAmount + Tax;
             _repository.Update(purchaseInvoice);
             return purchaseInvoice;
         }

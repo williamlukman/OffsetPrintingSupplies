@@ -9,6 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface IContactValidator
     {
+        Contact VHasTaxCode(Contact contact);
         Contact VHasUniqueName(Contact contact, IContactService _contactService);
         Contact VHasAddress(Contact contact);
         Contact VHasContactNo(Contact contact);

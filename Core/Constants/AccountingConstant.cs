@@ -8,6 +8,7 @@ namespace Core.Constants
 {
     public partial class Constant
     {
+        #region GeneralLedger
         public class GeneralLedgerStatus
         {
             public static int Debit = 1;
@@ -38,7 +39,9 @@ namespace Core.Constants
             public static string RecoveryAccessoryDetail = "RecoveryAccessoryDetail";
             public static string BlanketOrderDetail = "BlanketOrderDetail";
         }
+        #endregion
 
+        #region Account
         public class AccountGroup
         {
             public static int Asset = 1;
@@ -147,5 +150,6 @@ namespace Core.Constants
 
             public static string Revenue = "R5";
         }
+        #endregion
     }
 }

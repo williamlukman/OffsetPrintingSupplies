@@ -60,6 +60,7 @@ namespace WebView.Controllers
                              model.PIC,
                              model.PICContactNo,
                              model.Email,
+                             model.TaxCode,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -100,6 +101,7 @@ namespace WebView.Controllers
                             model.PIC,
                             model.PICContactNo,
                             model.Email,
+                            model.TaxCode,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -130,6 +132,7 @@ namespace WebView.Controllers
                  model.PIC,
                  model.PICContactNo,
                  model.Email,
+                 model.TaxCode,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -165,6 +168,8 @@ namespace WebView.Controllers
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
+                data.TaxCode = model.TaxCode;
+                _contactService.UpdateObject(data);
             }
             catch (Exception ex)
             {
@@ -184,8 +189,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _contactService.GetObjectById(model.Id);
-                model = _contactService.SoftDeleteObject(data, _coreIdentificationService, 
-                    _blanketService, _purchaseOrderService, _salesOrderService, _salesQuotationService, _virtualOrderService);
+                model = _contactService.SoftDeleteObject(data, _coreIdentificationService, _blanketService, _purchaseOrderService,
+                                                         _salesOrderService, _salesQuotationService, _virtualOrderService);
             }
 
             catch (Exception ex)

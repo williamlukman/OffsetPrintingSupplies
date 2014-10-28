@@ -5,11 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Constants;
 
 namespace Validation.Validation
 {
     public class ContactValidator : IContactValidator
     {
+        public Contact VHasTaxCode(Contact contact)
+        {
+            if (contact.TaxCode != Constant.TaxCode.Code01 && contact.TaxCode != Constant.TaxCode.Code02 ||
+                contact.TaxCode != Constant.TaxCode.Code03 && contact.TaxCode != Constant.TaxCode.Code04 ||
+                contact.TaxCode != Constant.TaxCode.Code05 && contact.TaxCode != Constant.TaxCode.Code06 ||
+                contact.TaxCode != Constant.TaxCode.Code07 && contact.TaxCode != Constant.TaxCode.Code08 ||
+                contact.TaxCode != Constant.TaxCode.Code09)
+            {
+                contact.Errors.Add("TaxCode", "Tax Code harus diantara 01 - 09");                
+            }
+            return contact;
+        }
+
         public Contact VHasUniqueName(Contact contact, IContactService _contactService)
         {
             if (String.IsNullOrEmpty(contact.Name) || contact.Name.Trim() == "")
@@ -131,6 +145,8 @@ namespace Validation.Validation
 
         public Contact VCreateObject(Contact contact, IContactService _contactService)
         {
+            VHasTaxCode(contact);
+            if (!isValid(contact)) { return contact; }
             VHasUniqueName(contact, _contactService);
             if (!isValid(contact)) { return contact; }
             VHasAddress(contact);

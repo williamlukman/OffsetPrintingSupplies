@@ -10,35 +10,20 @@ namespace Core.Constants
         public static string BaseContact = "BaseContact";
         public static TimeSpan PaymentDueDateTimeSpan = new TimeSpan(14, 0, 0);
 
+        #region UI
         public class ControllerOutput
         {
             public static string PageViewNotAllowed = "You are not allowed to View this Page. <br/> <a href='/Authentication/Logout'>[Logout]</a>";
             public static string PagePrintNotAllowed = "You are not allowed to Print this Page. <br/> <a href='/Authentication/Logout'>[Logout]</a>";
             public static string ErrorPageHasNoClosingDate = "No report has been produced for this closing date.";
         }
+        #endregion
 
-        public class GroupType
-        {
-            public static string Base = "Base";
-        }
-
-        public class ItemCase
-        {
-            public static int Ready = 1;
-            public static int PendingReceival = 2;
-            public static int PendingDelivery = 3;
-            public static int Virtual = 4;
-        }
-
+        #region Stock And Cash Mutation
         public class MutationStatus
         {
             public static int Addition = 1;
             public static int Deduction = 2;
-        }
-
-        public class UserType
-        {
-            public static string Admin = "Admin";
         }
 
         public class SourceDocumentType
@@ -89,6 +74,9 @@ namespace Core.Constants
             public static string WarehouseMutationDetail = "WarehouseMutationDetail";
         }
 
+        #endregion
+
+        #region Payable And Receivable
         public class PayableSource
         {
             public static string PaymentRequest = "PaymentRequest";
@@ -100,6 +88,13 @@ namespace Core.Constants
         {
             public static string SalesInvoice = "SalesInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
+        }
+        #endregion
+
+        #region User Menu
+        public class UserType
+        {
+            public static string Admin = "Admin";
         }
 
         public class MenuGroupName
@@ -179,7 +174,7 @@ namespace Core.Constants
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
             public static string CompanyInfo = "Company Info";
-
         }
+        #endregion
     }
 }

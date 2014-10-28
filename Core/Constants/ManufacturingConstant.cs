@@ -7,35 +7,39 @@ namespace Core.Constants
 {
     public partial class Constant
     {
+        public class ApplicationCase
+        {
+            public static string Sheetfed = "Sheetfed";
+            public static string Web = "Web";
+        }
+
         public class MaterialCase
         {
             public static int New = 1;
             public static int Used = 2;
         }
 
-        public class RepairRequestCase
+        public class CoreTypeCase
         {
-            public static int BearingSeat = 1;
-            public static int CentreDrill = 2;
+            public static string R = "R";
+            public static string Z = "Z";
         }
 
-        public class RecoveryOrderDetailProcessCase
+        public class CoreBuilderTypeCase
         {
-            public static int Disassemble = 1;
-            public static int StripAndGlue = 2;
-            public static int Wrap = 3;
-            public static int Vulcanize = 4;
-            public static int FaceOff = 5;
-            public static int ConventionalGrind = 6;
-            public static int CNCGrind = 7;
-            public static int PolishAndQC = 8;
-            public static int Package = 9;
+            public static string Hollow = "Hollow";
+            public static string Shaft = "Shaft";
         }
 
         public class CroppingType
         {
             public static string Special = "Special";
             public static string Normal = "Normal";
+        }
+        public class RepairRequestCase
+        {
+            public static int BearingSeat = 1;
+            public static int CentreDrill = 2;
         }
     }
 }
