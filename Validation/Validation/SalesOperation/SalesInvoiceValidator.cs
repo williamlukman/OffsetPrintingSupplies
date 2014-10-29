@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class SalesInvoiceValidator : ISalesInvoiceValidator
     {
+        public SalesInvoice VHasUniqueNomorSurat(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService)
+        {
+            IList<SalesInvoice> duplicates = _salesInvoiceService.GetQueryable().Where(x => x.NomorSurat == salesInvoice.NomorSurat && x.Id != salesInvoice.Id).ToList();
+            if (duplicates.Any())
+            {
+                salesInvoice.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return salesInvoice;
+        }
+
         public SalesInvoice VHasDeliveryOrder(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService)
         {
             DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
@@ -189,8 +199,10 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
-        public SalesInvoice VCreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService)
+        public SalesInvoice VCreateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService)
         {
+            VHasUniqueNomorSurat(salesInvoice, _salesInvoiceService);
+            if (!isValid(salesInvoice)) { return salesInvoice; }
             VHasDeliveryOrder(salesInvoice, _deliveryOrderService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VDeliveryOrderHasNotBeenInvoiceCompleted(salesInvoice, _deliveryOrderService);
@@ -203,9 +215,9 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
-        public SalesInvoice VUpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService)
+        public SalesInvoice VUpdateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService)
         {
-            VCreateObject(salesInvoice, _deliveryOrderService);
+            VCreateObject(salesInvoice, _salesInvoiceService, _deliveryOrderService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VHasNoSalesInvoiceDetails(salesInvoice, _salesInvoiceDetailService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
@@ -272,16 +284,16 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
-        public bool ValidCreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService)
+        public bool ValidCreateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService)
         {
-            VCreateObject(salesInvoice, _deliveryOrderService);
+            VCreateObject(salesInvoice, _salesInvoiceService, _deliveryOrderService);
             return isValid(salesInvoice);
         }
 
-        public bool ValidUpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService)
+        public bool ValidUpdateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService)
         {
             salesInvoice.Errors.Clear();
-            VUpdateObject(salesInvoice, _deliveryOrderService, _salesInvoiceDetailService);
+            VUpdateObject(salesInvoice, _salesInvoiceService, _deliveryOrderService, _salesInvoiceDetailService);
             return isValid(salesInvoice);
         }
 

@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class DeliveryOrderValidator : IDeliveryOrderValidator
     {
+        public DeliveryOrder VHasUniqueNomorSurat(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService)
+        {
+            IList<DeliveryOrder> duplicates = _deliveryOrderService.GetQueryable().Where(x => x.NomorSurat == deliveryOrder.NomorSurat && x.Id != deliveryOrder.Id).ToList();
+            if (duplicates.Any())
+            {
+                deliveryOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return deliveryOrder;
+        }
+
         public DeliveryOrder VHasWarehouse(DeliveryOrder deliveryOrder, IWarehouseService _warehouseService)
         {
             Warehouse warehouse = _warehouseService.GetObjectById(deliveryOrder.WarehouseId);
@@ -108,8 +118,10 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
+        public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
+            VHasUniqueNomorSurat(deliveryOrder, _deliveryOrderService);
+            if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasWarehouse(deliveryOrder, _warehouseService);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasSalesOrder(deliveryOrder, _salesOrderService);
@@ -120,9 +132,9 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
+        public DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
-            VCreateObject(deliveryOrder, _salesOrderService, _warehouseService);
+            VCreateObject(deliveryOrder, _deliveryOrderService, _salesOrderService, _warehouseService);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasNotBeenConfirmed(deliveryOrder);
             return deliveryOrder;
@@ -154,16 +166,16 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public bool ValidCreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
+        public bool ValidCreateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
-            VCreateObject(deliveryOrder, _salesOrderService, _warehouseService);
+            VCreateObject(deliveryOrder, _deliveryOrderService, _salesOrderService, _warehouseService);
             return isValid(deliveryOrder);
         }
 
-        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
+        public bool ValidUpdateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
             deliveryOrder.Errors.Clear();
-            VUpdateObject(deliveryOrder, _salesOrderService, _warehouseService);
+            VUpdateObject(deliveryOrder, _deliveryOrderService, _salesOrderService, _warehouseService);
             return isValid(deliveryOrder);
         }
 

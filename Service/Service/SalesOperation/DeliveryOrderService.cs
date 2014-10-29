@@ -53,7 +53,7 @@ namespace Service.Service
         public DeliveryOrder CreateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
             deliveryOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(deliveryOrder, _salesOrderService, _warehouseService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidCreateObject(deliveryOrder, this, _salesOrderService, _warehouseService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
         }
 
         public DeliveryOrder CreateObject(int warehouseId, int salesOrderId, DateTime deliveryDate, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
@@ -69,7 +69,7 @@ namespace Service.Service
 
         public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
-            return (_validator.ValidUpdateObject(deliveryOrder, _salesOrderService, _warehouseService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
+            return (_validator.ValidUpdateObject(deliveryOrder, this, _salesOrderService, _warehouseService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
         }
 
         public DeliveryOrder SoftDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)

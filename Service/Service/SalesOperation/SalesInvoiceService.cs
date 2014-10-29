@@ -49,12 +49,12 @@ namespace Service.Service
         public SalesInvoice CreateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService)
         {
             salesInvoice.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(salesInvoice, _deliveryOrderService) ? _repository.CreateObject(salesInvoice) : salesInvoice);
+            return (_validator.ValidCreateObject(salesInvoice, this, _deliveryOrderService) ? _repository.CreateObject(salesInvoice) : salesInvoice);
         }
 
         public SalesInvoice UpdateObject(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService)
         {
-            return (_validator.ValidUpdateObject(salesInvoice, _deliveryOrderService, _salesInvoiceDetailService) ? _repository.UpdateObject(salesInvoice) : salesInvoice);
+            return (_validator.ValidUpdateObject(salesInvoice, this, _deliveryOrderService, _salesInvoiceDetailService) ? _repository.UpdateObject(salesInvoice) : salesInvoice);
         }
 
         public SalesInvoice SoftDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService)

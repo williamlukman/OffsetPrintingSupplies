@@ -11,6 +11,17 @@ namespace Validation.Validation
 {
     public class SalesOrderValidator : ISalesOrderValidator
     {
+
+        public SalesOrder VHasUniqueNomorSurat(SalesOrder salesOrder, ISalesOrderService _salesOrderService)
+        {
+            IList<SalesOrder> duplicates = _salesOrderService.GetQueryable().Where(x => x.NomorSurat == salesOrder.NomorSurat && x.Id != salesOrder.Id).ToList();
+            if (duplicates.Any())
+            {
+                salesOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return salesOrder;
+        }
+
         public SalesOrder VHasContact(SalesOrder salesOrder, IContactService _contactService)
         {
             Contact contact = _contactService.GetObjectById(salesOrder.ContactId);
@@ -87,17 +98,19 @@ namespace Validation.Validation
             return obj;
         }
 
-        public SalesOrder VCreateObject(SalesOrder salesOrder, IContactService _contactService)
+        public SalesOrder VCreateObject(SalesOrder salesOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
+            VHasUniqueNomorSurat(salesOrder, _salesOrderService);
+            if (!isValid(salesOrder)) { return salesOrder; }
             VHasContact(salesOrder, _contactService);
             if (!isValid(salesOrder)) { return salesOrder; }
             VHasSalesDate(salesOrder);
             return salesOrder;
         }
 
-        public SalesOrder VUpdateObject(SalesOrder salesOrder, IContactService _contactService)
+        public SalesOrder VUpdateObject(SalesOrder salesOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
-            VCreateObject(salesOrder, _contactService);
+            VCreateObject(salesOrder, _salesOrderService, _contactService);
             if (!isValid(salesOrder)) { return salesOrder; }
             VHasNotBeenConfirmed(salesOrder);
             return salesOrder;
@@ -129,16 +142,16 @@ namespace Validation.Validation
             return salesOrder;
         }
 
-        public bool ValidCreateObject(SalesOrder salesOrder, IContactService _contactService)
+        public bool ValidCreateObject(SalesOrder salesOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
-            VCreateObject(salesOrder, _contactService);
+            VCreateObject(salesOrder, _salesOrderService, _contactService);
             return isValid(salesOrder);
         }
 
-        public bool ValidUpdateObject(SalesOrder salesOrder, IContactService _contactService)
+        public bool ValidUpdateObject(SalesOrder salesOrder, ISalesOrderService _salesOrderService, IContactService _contactService)
         {
             salesOrder.Errors.Clear();
-            VUpdateObject(salesOrder, _contactService);
+            VUpdateObject(salesOrder, _salesOrderService, _contactService);
             return isValid(salesOrder);
         }
 

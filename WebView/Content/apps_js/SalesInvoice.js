@@ -50,16 +50,17 @@
     $("#list").jqGrid({
         url: base_url + 'SalesInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Delivery Order Id', 'DO', 'Description', 'Disc(%)', 'Tax(%)',
-                   'Invoice Date', 'Due Date', 'Amount Receivable',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Delivery Order Id', 'DO', 'Description', 'Disc(%)', 'Tax(%)',
+                   'Invoice Date', 'Due Date', 'Amount',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
-                  { name: 'code', index: 'code', width: 70 },
+                  { name: 'code', index: 'code', width: 50 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'deliveryorderid', index: 'deliveryorderid', width: 100, hidden: true },
                   { name: 'deliveryorder', index: 'deliveryorder', width: 70 },
                   { name: 'description', index: 'description', width: 100 },
-                  { name: 'discount', index: 'discount', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'discount', index: 'discount', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
                   { name: 'tax', index: 'tax', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'invoicedate', index: 'invoicedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -109,9 +110,21 @@
     $('#btn_print').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
-            window.open(base_url + "Report/ReportSalesInvoice?Id=" + id);
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+            $.ajax({
+                dataType: "json",
+                url: base_url + "SalesInvoice/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/ReportSalesInvoice?Id=" + id);
+                    }
+                }
+            });
         }
     });
 
@@ -121,8 +134,8 @@
         $('#InvoiceDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnDeliveryOrder').removeAttr('disabled');
+        $('#NomorSurat').removeAttr('disabled');
         $('#Discount').removeAttr('disabled');
-        $('#Tax').removeAttr('disabled');
         $('#Description').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#InvoiceDateDiv').show();
@@ -158,14 +171,15 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#DeliveryOrderId').val(result.DeliveryOrderId);
                             $('#DeliveryOrder').val(result.DeliveryOrder);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
                             $('#Discount').attr('disabled', true);
-                            $('#Tax').attr('disabled', true);
                             $('#Description').attr('disabled', true);
+                            $('#NomorSurat').attr('disabled', true);
                             $('#AmountReceivable').val(result.AmountReceivable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
@@ -188,8 +202,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
-
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -215,14 +227,15 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#DeliveryOrderId').val(result.DeliveryOrderId);
                             $('#DeliveryOrder').val(result.DeliveryOrder);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
                             $('#Discount').removeAttr('disabled');
-                            $('#Tax').removeAttr('disabled');
                             $('#Description').removeAttr('disabled');
+                            $('#NomorSurat').removeAttr('disabled');
                             $('#AmountReceivable').val(result.AmountReceivable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
@@ -330,7 +343,6 @@
     });
 
 
-
     $('#btn_del').click(function () {
         clearForm("#frm");
 
@@ -382,6 +394,7 @@
     $('#form_btn_cancel').click(function () {
         clearForm('#frm');
         $("#form_div").dialog('close');
+        ReloadGrid();
     });
 
     $("#form_btn_save").click(function () {
@@ -409,8 +422,9 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, DeliveryOrderId: $("#DeliveryOrderId").val(), Description: $("#Description").val(),
-                Discount: $("#Discount").numberbox('getValue'), Tax: $("#Tax").numberbox('getValue'),
+                Discount: $("#Discount").numberbox('getValue'), Tax: $("#Tax").val(),
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                NomorSurat: $('#NomorSurat').val()
             }),
             async: false,
             cache: false,
@@ -508,7 +522,6 @@
                             $('#SalesOrderDetailId').val(result.SalesOrderDetailId);
                             $('#Discount').attr('disabled', true);
                             $('#Description').attr('disabled', true);
-                            $('#Tax').attr('disabled', true);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -632,13 +645,15 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'SalesOrder Id', 'SalesOrder Code', 'Delivery Date', 'Warehouse Id', 'Warehouse Name',
-                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Nomor Surat DO', 'SalesOrder Id', 'SalesOrder Code', 'Nomor Surat SO', 'Delivery Date', 'Warehouse Id', 'Warehouse Name',
+                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
-                  { name: 'code', index: 'code', width: 50 },
+                  { name: 'code', index: 'code', width: 50, hidden: true },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'salesorderid', index: 'salesorderid', width: 100, hidden: true },
-                  { name: 'salesorder', index: 'salesorder', width: 85 },
+                  { name: 'salesorder', index: 'salesorder', width: 85, hidden: true },
+                  { name: 'nomorsuratso', index: 'nomorsuratso', width: 140 },
                   { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 100 },
@@ -646,6 +661,7 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+                  { name: 'tax', index: 'tax', width: 50 },
         ],
         page: '1',
         pager: $('#lookup_pager_deliveryorder'),
@@ -675,6 +691,8 @@
 
             $('#DeliveryOrderId').val(ret.id).data("kode", id);
             $('#DeliveryOrder').val(ret.code);
+            $('#Discount').val(0);
+            $('#Tax').val(ret.tax);
             $('#lookup_div_deliveryorder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -702,9 +720,9 @@
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false, hidden: true },
-                  { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'code', index: 'code', width: 70, sortable: false, hidden: true },
                   { name: 'salesorderdetailid', index: 'salesorderdetailid', width: 100, sortable: false, hidden: true },
-                  { name: 'salesorderdetailcode', index: 'salesorderdetailcode', width: 70, sortable: false },
+                  { name: 'salesorderdetailcode', index: 'salesorderdetailcode', width: 70, sortable: false, hidden: true },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },

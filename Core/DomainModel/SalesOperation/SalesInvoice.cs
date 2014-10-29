@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int DeliveryOrderId { get; set; }
         public string Description { get; set; }
         public string Code { get; set; }
+        public string NomorSurat { get; set; }
 
         public decimal TotalCOS { get; set; }
         public decimal AmountReceivable { get; set; }

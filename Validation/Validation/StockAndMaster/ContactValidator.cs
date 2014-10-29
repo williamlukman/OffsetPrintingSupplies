@@ -13,10 +13,10 @@ namespace Validation.Validation
     {
         public Contact VHasTaxCode(Contact contact)
         {
-            if (contact.TaxCode != Constant.TaxCode.Code01 && contact.TaxCode != Constant.TaxCode.Code02 ||
-                contact.TaxCode != Constant.TaxCode.Code03 && contact.TaxCode != Constant.TaxCode.Code04 ||
-                contact.TaxCode != Constant.TaxCode.Code05 && contact.TaxCode != Constant.TaxCode.Code06 ||
-                contact.TaxCode != Constant.TaxCode.Code07 && contact.TaxCode != Constant.TaxCode.Code08 ||
+            if (contact.TaxCode != Constant.TaxCode.Code01 && contact.TaxCode != Constant.TaxCode.Code02 &&
+                contact.TaxCode != Constant.TaxCode.Code03 && contact.TaxCode != Constant.TaxCode.Code04 &&
+                contact.TaxCode != Constant.TaxCode.Code05 && contact.TaxCode != Constant.TaxCode.Code06 &&
+                contact.TaxCode != Constant.TaxCode.Code07 && contact.TaxCode != Constant.TaxCode.Code08 &&
                 contact.TaxCode != Constant.TaxCode.Code09)
             {
                 contact.Errors.Add("TaxCode", "Tax Code harus diantara 01 - 09");                

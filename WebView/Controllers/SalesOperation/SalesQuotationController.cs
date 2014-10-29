@@ -57,6 +57,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.VersionNo,
+                             model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.QuotationDate,
@@ -104,6 +105,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.VersionNo,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.QuotationDate,
@@ -140,6 +142,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.VersionNo,
+                             model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.QuotationDate,
@@ -185,6 +188,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.VersionNo,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.QuotationDate,
@@ -287,6 +291,7 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.VersionNo,
+                model.NomorSurat,
                 model.ContactId,
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.QuotationDate,
@@ -294,6 +299,7 @@ namespace WebView.Controllers
                 model.TotalRRPAmount,
                 model.CostSaved,
                 model.PercentageSaved,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -371,6 +377,7 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.QuotationDate = model.QuotationDate;
                 data.VersionNo = model.VersionNo;
+                data.NomorSurat = model.NomorSurat;
                 model = _salesQuotationService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)

@@ -61,6 +61,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.SalesDate,
@@ -101,6 +102,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.SalesDate,
@@ -130,6 +132,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.SalesDate,
@@ -170,6 +173,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.SalesDate,
@@ -269,9 +273,11 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.NomorSurat,
                 model.ContactId,
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.SalesDate,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -348,6 +354,7 @@ namespace WebView.Controllers
                 var data = _salesOrderService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
                 data.SalesDate = model.SalesDate;
+                data.NomorSurat = model.NomorSurat;
                 model = _salesOrderService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
@@ -452,7 +459,6 @@ namespace WebView.Controllers
         {
             try
             {
-
                 var data = _salesOrderService.GetObjectById(model.Id);
                 model = _salesOrderService.UnconfirmObject(data, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }

@@ -10,6 +10,7 @@ using Data.Repository;
 using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -78,6 +79,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.SalesOrderId,
                              SalesOrderCode = model.SalesOrder.Code,
                              model.WarehouseId,
@@ -120,6 +122,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.SalesOrderId,
                             model.SalesOrderCode,
                             model.WarehouseId,
@@ -143,15 +146,18 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _deliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse").Where(x => !x.IsDeleted && x.IsConfirmed);
+            var q = _deliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse").Include("Contact")
+                                                        .Where(x => !x.IsDeleted && x.IsConfirmed);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.SalesOrderId,
                              SalesOrderCode = model.SalesOrder.Code,
+                             NomorSuratSO = model.SalesOrder.NomorSurat,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
                              model.DeliveryDate,
@@ -159,6 +165,15 @@ namespace WebView.Controllers
                              model.ConfirmationDate,
                              model.CreatedAt,
                              model.UpdatedAt,
+                             Tax = (model.SalesOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                                   (model.SalesOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
+                                   (model.SalesOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
+                                   (model.SalesOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
+                                   (model.SalesOrder.Contact.TaxCode == "05") ? Constant.TaxValue.Code05 :
+                                   (model.SalesOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
+                                   (model.SalesOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
+                                   (model.SalesOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
+                                   (model.SalesOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0                                 
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -192,8 +207,10 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.SalesOrderId,
                             model.SalesOrderCode,
+                            model.NomorSuratSO,
                             model.DeliveryDate,
                             model.WarehouseId,
                             model.Warehouse,
@@ -201,6 +218,7 @@ namespace WebView.Controllers
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
+                            model.Tax
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -222,6 +240,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.SalesOrder.ContactId,
                              Contact = model.SalesOrder.Contact.Name,
                              model.DeliveryDate,
@@ -264,6 +283,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.DeliveryDate,
@@ -364,11 +384,13 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.NomorSurat,
                 model.SalesOrderId,
                 SalesOrder = _salesOrderService.GetObjectById(model.SalesOrderId).Code,
                 model.DeliveryDate,
                 model.WarehouseId,
                 Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -450,6 +472,7 @@ namespace WebView.Controllers
                 data.SalesOrderId = model.SalesOrderId;
                 data.DeliveryDate = model.DeliveryDate;
                 data.WarehouseId = model.WarehouseId;
+                data.NomorSurat = model.NomorSurat;
                 model = _deliveryOrderService.UpdateObject(data, _salesOrderService, _warehouseService);
             }
             catch (Exception ex)
@@ -572,7 +595,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-
     }
 }

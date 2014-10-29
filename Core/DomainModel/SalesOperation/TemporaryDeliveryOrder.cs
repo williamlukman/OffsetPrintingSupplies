@@ -14,6 +14,7 @@ namespace Core.DomainModel
         public Nullable<int> DeliveryOrderId { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int WarehouseId { get; set; }
+        public string NomorSurat { get; set; }
 
         public decimal TotalWasteCOGS { get; set; }
 

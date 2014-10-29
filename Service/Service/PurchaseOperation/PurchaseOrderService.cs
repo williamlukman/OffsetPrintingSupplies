@@ -53,7 +53,7 @@ namespace Service.Service
         public PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
             purchaseOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(purchaseOrder, _contactService) ? _repository.CreateObject(purchaseOrder) : purchaseOrder);
+            return (_validator.ValidCreateObject(purchaseOrder, this, _contactService) ? _repository.CreateObject(purchaseOrder) : purchaseOrder);
         }
 
         public PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService)
@@ -68,7 +68,7 @@ namespace Service.Service
 
         public PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(purchaseOrder, _contactService) ? _repository.UpdateObject(purchaseOrder) : purchaseOrder);
+            return (_validator.ValidUpdateObject(purchaseOrder, this, _contactService) ? _repository.UpdateObject(purchaseOrder) : purchaseOrder);
         }
 
         public PurchaseOrder SoftDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService)

@@ -11,7 +11,8 @@ namespace Core.DomainModel
         public string Code { get; set; }
         public int ContactId { get; set; }
         public DateTime PurchaseDate { get; set; }
-        
+        public string NomorSurat { get; set; }
+
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsReceivalCompleted { get; set; }

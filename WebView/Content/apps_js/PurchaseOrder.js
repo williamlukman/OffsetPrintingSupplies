@@ -49,11 +49,12 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'PurchaseDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'PurchaseDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -109,13 +110,13 @@
         clearForm('#frm');
         $('#PurchaseDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
+        $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#PurchaseDateDiv').show();
         $('#PurchaseDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
-
 
     $('#btn_add_detail').click(function () {
         ClearData();
@@ -141,6 +142,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
@@ -149,6 +151,7 @@
                             $('#PurchaseDateDiv').hide();
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
+                            $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -160,8 +163,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
-
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -187,13 +188,14 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
                             $('#btnContact').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#PurchaseDateDiv2').show();
-                            $('#PurchaseDateDiv').hide();
+                            $('#PurchaseDateDiv2').hide();
+                            $('#PurchaseDateDiv').show();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -368,6 +370,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), PurchaseDate: $('#PurchaseDate').datebox('getValue'),
+                NomorSurat: $('#NomorSurat').val()
             }),
             async: false,
             cache: false,
@@ -639,7 +642,7 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM'],
+        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM', 'Price', 'Avg Price'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
@@ -650,6 +653,8 @@
                   { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'uom', index: 'uom', width: 40 },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
+                  { name: 'avgprice', index: 'avgprice', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',
         pager: $('#lookup_pager_item'),

@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int PurchaseReceivalId { get; set; }
         public string Description { get; set; }
         public string Code { get; set; }
+        public string NomorSurat { get; set; }
 
         public decimal AmountPayable { get; set; }
         public decimal Discount { get; set; } // 0 - 100 %

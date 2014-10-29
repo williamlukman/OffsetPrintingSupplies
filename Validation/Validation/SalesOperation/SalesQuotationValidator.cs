@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class SalesQuotationValidator : ISalesQuotationValidator
     {
+        public SalesQuotation VHasUniqueNomorSurat(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService)
+        {
+            IList<SalesQuotation> duplicates = _salesQuotationService.GetQueryable().Where(x => x.NomorSurat == salesQuotation.NomorSurat && x.Id != salesQuotation.Id).ToList();
+            if (duplicates.Any())
+            {
+                salesQuotation.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return salesQuotation;
+        }
+
         public SalesQuotation VHasContact(SalesQuotation salesQuotation, IContactService _contactService)
         {
             Contact contact = _contactService.GetObjectById(salesQuotation.ContactId);
@@ -105,17 +115,19 @@ namespace Validation.Validation
             return salesQuotation;
         }
 
-        public SalesQuotation VCreateObject(SalesQuotation salesQuotation, IContactService _contactService)
+        public SalesQuotation VCreateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService)
         {
+            VHasUniqueNomorSurat(salesQuotation, _salesQuotationService);
+            if (!isValid(salesQuotation)) { return salesQuotation; }
             VHasContact(salesQuotation, _contactService);
             if (!isValid(salesQuotation)) { return salesQuotation; }
             VHasQuotationDate(salesQuotation);
             return salesQuotation;
         }
 
-        public SalesQuotation VUpdateObject(SalesQuotation salesQuotation, IContactService _contactService)
+        public SalesQuotation VUpdateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService)
         {
-            VCreateObject(salesQuotation, _contactService);
+            VCreateObject(salesQuotation, _salesQuotationService, _contactService);
             if (!isValid(salesQuotation)) { return salesQuotation; }
             VHasNotBeenConfirmed(salesQuotation);
             return salesQuotation;
@@ -167,16 +179,16 @@ namespace Validation.Validation
             return salesQuotation;
         }
 
-        public bool ValidCreateObject(SalesQuotation salesQuotation, IContactService _contactService)
+        public bool ValidCreateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService)
         {
-            VCreateObject(salesQuotation, _contactService);
+            VCreateObject(salesQuotation, _salesQuotationService, _contactService);
             return isValid(salesQuotation);
         }
 
-        public bool ValidUpdateObject(SalesQuotation salesQuotation, IContactService _contactService)
+        public bool ValidUpdateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService)
         {
             salesQuotation.Errors.Clear();
-            VUpdateObject(salesQuotation, _contactService);
+            VUpdateObject(salesQuotation, _salesQuotationService, _contactService);
             return isValid(salesQuotation);
         }
 

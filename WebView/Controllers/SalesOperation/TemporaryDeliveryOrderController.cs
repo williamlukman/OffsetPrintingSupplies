@@ -417,6 +417,7 @@ namespace WebView.Controllers
                 data.DeliveryOrderId = model.DeliveryOrderId;
                 data.DeliveryDate = model.DeliveryDate;
                 data.WarehouseId = model.WarehouseId;
+                data.NomorSurat = model.NomorSurat;
                 model = _temporaryDeliveryOrderService.UpdateObject(data, _virtualOrderService, _deliveryOrderService, _warehouseService);
             }
             catch (Exception ex)

@@ -45,19 +45,22 @@
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                         <tr nowrap>
                             <td width="139" nowrap style="width: 100px">
-                                <label>ID</label></td>
-                            <td width="550" colspan="3">
-                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                                <label>ID</label>
+                            </td>
+                            <td width="550">
+                                <input id="id" type="text" size="5" disabled="disabled"/>
+                                <input id="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                             <label>Code</label>
+                                <label>Nomor Surat</label>
                             </td>
-                            <td  colspan="3">
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                            <td>
+                                <input id="NomorSurat" name="NomorSurat" type="text" size="25"/>
                             </td>
                         </tr>
-                         <tr>
+                        <tr>
                             <td>
                                 <label>Purchase Receival</label></td>
                             <td colspan="3">
@@ -65,7 +68,7 @@
                                 <input id="btnPurchaseReceival" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="PurchaseReceival" name="PurchaseReceivalId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
                         
-                            </tr>
+                        </tr>
                         <tr>
                             <td >
                                 <label>Description</label></td>
@@ -74,45 +77,43 @@
                             </label></td>
                         </tr>
                         <tr>
-                        <td>
-                            Discount
-                        </td>
-                        <td>
-                               <input id="Discount" name="Discount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
-                        </td>
                             <td>
-                                <label>Invoice Date</label></td>
-                         <td>
-                             <div id="InvoiceDateDiv"><input id="InvoiceDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                            </div>
-                             <div id="InvoiceDateDiv2"><input id="InvoiceDate2" type="text" size="10" disabled="disabled"/></div>
-                                 </td>
+                                 <label>Invoice Date</label>
+                            </td>
+                            <td>
+                                <div id="InvoiceDateDiv"><input id="InvoiceDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <div id="InvoiceDateDiv2"><input id="InvoiceDate2" type="text" size="10" disabled="disabled"/></div>
+                            </td>
+                        </tr>
+                        <tr>
+                             <td>
+                                <label>Due Date</label></td>
+                             <td>
+                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
+                             </td>
+                        </tr>
+                        <tr class="border_top hide-row">
+                            <td style:"padding-top: 0.1in;">
+                                Discount
+                            </td>
+                            <td>
+                                <input id="Discount" name="Discount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
+                            </td>
                         </tr>
                         <tr>
                             <td>Tax</td>
                             <td>
-                               <input id="Tax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
+                               <input id="Tax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>%
                             </td>
-                            <td>
-                                <label>Due Date</label></td>
-                             <td>
-                                 <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                                </div>
-                                 <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
-                             </td>
                         </tr>
-                      
                          <tr>
-                             <td >
-                                <label>Amount Payable</label></td>
+                             <td>
+                                <label>Amount</label></td>
                              <td colspan="3">
                                <input id="AmountPayable" name="AmountPayable" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled ="disabled" />
                                 </td>     
                          </tr>
-                          <tr>
-                                
-
-                          </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -120,7 +121,7 @@
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
-                                  <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
+                        <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
                         <div id="pagerdetail" class="scroll" style="text-align: center;"></div>
                     </div>
                @* </fieldset>*@

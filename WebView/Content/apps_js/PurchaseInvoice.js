@@ -50,12 +50,13 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax(%)',
-                   'Invoice Date','Due Date', 'Amount Payable',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax(%)',
+                   'Invoice Date','Due Date', 'Amount',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'purchasereceiptid', index: 'purchasereceiptid', width: 100, hidden: true },
                   { name: 'purchasereceipt', index: 'purchasereceipt', width: 70 },
                   { name: 'description', index: 'description', width: 100 },
@@ -109,9 +110,21 @@
     $('#btn_print').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
-            window.open(base_url + "Report/ReportPurchaseInvoice?Id=" + id);
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+            $.ajax({
+                dataType: "json",
+                url: base_url + "PurchaseInvoice/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/ReportPurchaseInvoice?Id=" + id);
+                    }
+                }
+            });
         }
     });
 
@@ -121,13 +134,14 @@
         $('#InvoiceDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnPurchaseReceival').removeAttr('disabled');
+        $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#InvoiceDateDiv').show();
         $('#InvoiceDateDiv2').hide();
         $('#DueDateDiv').show();
         $('#DueDateDiv2').hide();
-        $("#Tax").removeAttr('disabled');
         $("#Discount").removeAttr('disabled');
+        $('#Description').removeAttr('disabled');
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -157,24 +171,26 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#PurchaseReceivalId').val(result.PurchaseReceivalId);
                             $('#PurchaseReceival').val(result.PurchaseReceival);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
-                            $("#Tax").attr('disabled', true);
                             $("#Discount").attr('disabled', true);
                             $('#AmountPayable').val(result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
-                            $('#InvoiceDateDiv').show();
-                            $('#InvoiceDateDiv2').hide();
-                            $('#DueDateDiv').show();
-                            $('#DueDateDiv2').hide();
+                            $('#InvoiceDateDiv').hide();
+                            $('#InvoiceDateDiv2').show();
+                            $('#DueDateDiv').hide();
+                            $('#DueDateDiv2').show();
                             $('#form_btn_save').hide();
                             $('#btnPurchaseReceival').attr('disabled', true);
+                            $('#NomorSurat').attr('disabled', true);
+                            $('#Description').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -211,12 +227,12 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#PurchaseReceivalId').val(result.PurchaseReceivalId);
                             $('#PurchaseReceival').val(result.PurchaseReceival);
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
-                            $("#Tax").removeAttr('disabled');
                             $("#Discount").removeAttr('disabled');
                             $('#AmountPayable').val(result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
@@ -229,6 +245,8 @@
                             $('#DueDateDiv2').hide();
                             $('#form_btn_save').hide();
                             $('#btnPurchaseReceival').removeAttr('disabled');
+                            $('#NomorSurat').removeAttr('disabled');
+                            $('#Description').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -377,6 +395,7 @@
     $('#form_btn_cancel').click(function () {
         clearForm('#frm');
         $("#form_div").dialog('close');
+        ReloadGrid();
     });
 
     $("#form_btn_save").click(function () {
@@ -404,8 +423,9 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, PurchaseReceivalId: $("#PurchaseReceivalId").val(), Description: $("#Description").val(),
-                Discount: $("#Discount").numberbox('getValue'), Tax: $("#Tax").numberbox('getValue'),
+                Discount: $("#Discount").numberbox('getValue'), Tax: $("#Tax").val(),
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                NomorSurat: $('#NomorSurat').val()
             }),
             async: false,
             cache: false,
@@ -501,7 +521,6 @@
                             $('#Price').val(result.Price);
                             $('#PurchaseOrderDetailId').val(result.PurchaseOrderDetailId);
                             $('#item_div').dialog('open');
-                            $("#Tax").attr('disabled', true);
                             $("#Discount").attr('disabled', true);
                         }
                     }
@@ -625,20 +644,23 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'PurchaseOrder Id', 'PO Code', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
-                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseOrder Id', 'PO Code', 'Nomor Surat PO', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
+                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
-                  { name: 'code', index: 'code', width: 80 },
+                  { name: 'code', index: 'code', width: 80, hidden: true },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100, hidden: true },
-                  { name: 'purchaseordercode', index: 'purchaseordercode', width: 80 },
-                  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
+                  { name: 'purchaseordercode', index: 'purchaseordercode', width: 80, hidden: true },
+                  { name: 'nomorsuratpo', index: 'nomorsuratpo', width: 120 },
+				  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 100 },
                   { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+                  { name: 'tax', index: 'tax', width: 50 },
         ],
         page: '1',
         pager: $('#lookup_pager_purchasereceival'),
@@ -668,6 +690,9 @@
 
             $('#PurchaseReceivalId').val(ret.id).data("kode", id);
             $('#PurchaseReceival').val(ret.code);
+            $('#Discount').val(0);
+            $('#Tax').val(ret.tax);
+
             $('#lookup_div_purchasereceival').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

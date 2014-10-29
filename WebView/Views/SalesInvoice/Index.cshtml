@@ -13,7 +13,7 @@
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: @ViewBag.Title :.">
-<div id="toolbar" class="form_toolbar">
+    <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_add_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add Detail</a>
@@ -29,7 +29,7 @@
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
 
-<!-- Dialog Box -->
+    <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
         title=".:  @ViewBag.Title :.">
 
@@ -45,16 +45,19 @@
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                         <tr nowrap>
                             <td width="139" nowrap style="width: 100px">
-                                <label>ID</label></td>
-                            <td width="550" colspan="3">
-                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                                <label>ID</label>
+                            </td>
+                            <td width="550">
+                                <input id="id" type="text" size="5" disabled="disabled"/>
+                                <input id="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                             <label>Code</label>
+                                <label>Nomor Surat:</label>
                             </td>
-                            <td  colspan="3">
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                            <td>
+                                <input id="NomorSurat" name="NomorSurat" type="text" size="25"/>
                             </td>
                         </tr>
                          <tr>
@@ -64,8 +67,8 @@
                                 <input id="DeliveryOrderId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnDeliveryOrder" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="DeliveryOrder" name="DeliveryOrderId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                        
-                            </tr>
+                            </td>                        
+                        </tr>
                         <tr>
                             <td >
                                 <label>Description</label></td>
@@ -74,45 +77,43 @@
                             </label></td>
                         </tr>
                         <tr>
-                        <td>
-                            Discount
-                        </td>
-                        <td>
-                               <input id="Discount" name="Discount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
-                        </td>
                             <td>
-                                <label>Invoice Date</label></td>
-                         <td>
-                             <div id="InvoiceDateDiv"><input id="InvoiceDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                            </div>
-                             <div id="InvoiceDateDiv2"><input id="InvoiceDate2" type="text" size="10" disabled="disabled"/></div>
-                                 </td>
+                                 <label>Invoice Date</label>
+                            </td>
+                            <td>
+                                <div id="InvoiceDateDiv"><input id="InvoiceDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <div id="InvoiceDateDiv2"><input id="InvoiceDate2" type="text" size="10" disabled="disabled"/></div>
+                            </td>
+                        </tr>
+                        <tr>
+                             <td>
+                                <label>Due Date</label></td>
+                             <td>
+                                <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
+                             </td>
+                        </tr>
+                        <tr class="border_top hide-row">
+                            <td style:"padding-top: 0.1in;">
+                                Discount
+                            </td>
+                            <td>
+                                <input id="Discount" name="Discount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
+                            </td>
                         </tr>
                         <tr>
                             <td>Tax</td>
                             <td>
-                               <input id="Tax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />%
+                               <input id="Tax" name="Tax" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>%
                             </td>
-                            <td>
-                                <label>Due Date</label></td>
-                             <td>
-                             <div id="DueDateDiv"><input id="DueDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                            </div>
-                             <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
-                             </td>
                         </tr>
-                      
                          <tr>
-                             <td >
-                                <label>Amount Receivable</label></td>
+                             <td>
+                                <label>Amount</label></td>
                              <td colspan="3">
                                <input id="AmountReceivable" name="AmountReceivable" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled ="disabled" />
-                                </td>     
+                             </td>     
                          </tr>
-                          <tr>
-                                
-
-                          </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -127,9 +128,9 @@
             </form>
         </div>
     </div>
-<!-- End Dialog Box -->
+    <!-- End Dialog Box -->
 
- <!-- Dialog Box  Item-->
+    <!-- Dialog Box  Item-->
     <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
         data-options="modal:true" title=".: Input Item :.">
 
@@ -162,9 +163,9 @@
           
         </div>
     </div>
-<!-- End Dialog Box Item-->
+    <!-- End Dialog Box Item-->
 
-     <!-- Dialog Box Confirm-->
+    <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
         data-options="modal:true" title=".: Confirm Sales Invoice:.">
 
@@ -196,11 +197,9 @@
           
         </div>
     </div>
-<!-- End Dialog Box Confirm-->
+    <!-- End Dialog Box Confirm-->
 
-
-
-<!-- Dialog Box  Delete-->
+    <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -213,10 +212,9 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
 
-
- <!-- Look Up deliveryorder -->
+    <!-- Look Up deliveryorder -->
     <div id="lookup_div_deliveryorder" class="easyui-dialog" title="List DeliveryOrder" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -228,10 +226,9 @@
         <table id="lookup_table_deliveryorder" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_deliveryorder" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up deliveryorder -->
+    <!-- END Look Up deliveryorder -->
 
-
- <!-- Look Up item -->
+    <!-- Look Up item -->
     <div id="lookup_div_item" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -243,6 +240,6 @@
         <table id="lookup_table_item" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_item" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up item -->
+    <!-- END Look Up item -->
   </div>
 

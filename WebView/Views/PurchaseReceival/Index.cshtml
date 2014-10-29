@@ -45,16 +45,19 @@
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                         <tr nowrap>
                             <td width="139" nowrap style="width: 100px">
-                                <label>ID</label></td>
+                                <label>ID</label>
+                            </td>
                             <td width="550">
-                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                                <input id="id" type="text" size="5" disabled="disabled"/>
+                                <input id="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                             <label>Code</label>
+                                <label>No. Surat:</label>
                             </td>
                             <td>
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                                <input id="NomorSurat" name="NomorSurat" type="text" size="25"/>
                             </td>
                         </tr>
                          <tr>
@@ -128,12 +131,12 @@
                                <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="hide-row">
                         <td>
                             Price
                         </td>
                         <td>
-                               <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
+                            <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
                         </td>
                     </tr>
 

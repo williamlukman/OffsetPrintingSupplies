@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class TemporaryDeliveryOrderValidator : ITemporaryDeliveryOrderValidator
     {
+        public TemporaryDeliveryOrder VHasUniqueNomorSurat(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService)
+        {
+            IList<TemporaryDeliveryOrder> duplicates = _temporaryDeliveryOrderService.GetQueryable().Where(x => x.NomorSurat == temporaryDeliveryOrder.NomorSurat && x.Id != temporaryDeliveryOrder.Id).ToList();
+            if (duplicates.Any())
+            {
+                temporaryDeliveryOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return temporaryDeliveryOrder;
+        }
+
         public TemporaryDeliveryOrder VHasWarehouse(TemporaryDeliveryOrder temporaryDeliveryOrder, IWarehouseService _warehouseService)
         {
             Warehouse warehouse = _warehouseService.GetObjectById(temporaryDeliveryOrder.WarehouseId);
@@ -163,8 +173,10 @@ namespace Validation.Validation
             return temporaryDeliveryOrder;
         }
         
-        public TemporaryDeliveryOrder VCreateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
+        public TemporaryDeliveryOrder VCreateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
         {
+            VHasUniqueNomorSurat(temporaryDeliveryOrder, _temporaryDeliveryOrderService);
+            if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
             VHasWarehouse(temporaryDeliveryOrder, _warehouseService);
             if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
             VHasVirtualOrderOrDeliveryOrder(temporaryDeliveryOrder, _virtualOrderService, _deliveryOrderService);
@@ -177,9 +189,9 @@ namespace Validation.Validation
             return temporaryDeliveryOrder;
         }
 
-        public TemporaryDeliveryOrder VUpdateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
+        public TemporaryDeliveryOrder VUpdateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
         {
-            VCreateObject(temporaryDeliveryOrder, _virtualOrderService, _deliveryOrderService, _warehouseService);
+            VCreateObject(temporaryDeliveryOrder, _temporaryDeliveryOrderService, _virtualOrderService, _deliveryOrderService, _warehouseService);
             if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
             VHasNotBeenConfirmed(temporaryDeliveryOrder);
             
@@ -221,16 +233,16 @@ namespace Validation.Validation
             return temporaryDeliveryOrder;
         }
 
-        public bool ValidCreateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
+        public bool ValidCreateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
         {
-            VCreateObject(temporaryDeliveryOrder, _virtualOrderService, _deliveryOrderService, _warehouseService);
+            VCreateObject(temporaryDeliveryOrder, _temporaryDeliveryOrderService, _virtualOrderService, _deliveryOrderService, _warehouseService);
             return isValid(temporaryDeliveryOrder);
         }
 
-        public bool ValidUpdateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
+        public bool ValidUpdateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
         {
             temporaryDeliveryOrder.Errors.Clear();
-            VUpdateObject(temporaryDeliveryOrder, _virtualOrderService, _deliveryOrderService, _warehouseService);
+            VUpdateObject(temporaryDeliveryOrder, _temporaryDeliveryOrderService, _virtualOrderService, _deliveryOrderService, _warehouseService);
             return isValid(temporaryDeliveryOrder);
         }
 

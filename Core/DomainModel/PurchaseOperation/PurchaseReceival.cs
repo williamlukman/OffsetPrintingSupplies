@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public int PurchaseOrderId { get; set; }
         public DateTime ReceivalDate { get; set; }
         public int WarehouseId { get; set; }
+        public string NomorSurat { get; set; }
 
         public decimal TotalCOGS { get; set; }
         public decimal TotalAmount { get; set; }

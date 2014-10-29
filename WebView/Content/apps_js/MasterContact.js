@@ -36,7 +36,7 @@
                   { name: 'pic', index: 'pic', width: 120 },
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },
-                  { name: 'taxcode', index: 'taxcode', width: 150 },
+                  { name: 'taxcode', index: 'taxcode', width: 50 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -118,15 +118,16 @@
                             $('#PICContactNo').val(result.PICContactNo);
                             $('#Email').val(result.Email);
                             var e = document.getElementById("TaxCode");
-                            if (result.TaxCode == "01") { e.selectedIndex = 0; }
-                            else if (result.TaxCode = "02") { e.selectedIndex = 1; }
-                            else if (result.TaxCode = "03") { e.selectedIndex = 2; }
-                            else if (result.TaxCode = "04") { e.selectedIndex = 3; }
-                            else if (result.TaxCode = "05") { e.selectedIndex = 4; }
-                            else if (result.TaxCode = "06") { e.selectedIndex = 5; }
-                            else if (result.TaxCode = "07") { e.selectedIndex = 6; }
-                            else if (result.TaxCode = "08") { e.selectedIndex = 7; }
-                            else if (result.TaxCode = "09") { e.selectedIndex = 8; }
+                            var taxcode = result.TaxCode;
+                            if (result.TaxCode == "01"){ e.selectedIndex = 0; }
+                            else if (result.TaxCode == "02") { e.selectedIndex = 1; }
+                            else if (result.TaxCode == "03") { e.selectedIndex = 2; }
+                            else if (result.TaxCode == "04") { e.selectedIndex = 3; }
+                            else if (result.TaxCode == "05") { e.selectedIndex = 4; }
+                            else if (result.TaxCode == "06") { e.selectedIndex = 5; }
+                            else if (result.TaxCode == "07") { e.selectedIndex = 6; }
+                            else if (result.TaxCode == "08") { e.selectedIndex = 7; }
+                            else if (result.TaxCode == "09") { e.selectedIndex = 8; }
                             $("#form_div").dialog("open");
                         }
                     }

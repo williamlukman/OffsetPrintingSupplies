@@ -47,16 +47,19 @@
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                         <tr nowrap>
                             <td width="139" nowrap style="width: 100px">
-                                <label>ID</label></td>
+                                <label>ID</label>
+                            </td>
                             <td width="550">
-                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                                <input id="id" type="text" size="5" disabled="disabled"/>
+                                <input id="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                             <label>Code</label>
+                                <label>No. Surat:</label>
                             </td>
                             <td>
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                                <input id="NomorSurat" name="NomorSurat" type="text" size="25"/>
                             </td>
                         </tr>
                         <tr>
@@ -101,11 +104,11 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Cost Saved</label>
+                                <label>Disc</label>
                             </td>
                             <td>
                                 <input id="CostSaved" name="CostSaved" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
-                                <label>% Saved</label>
+                                <label>% Disc</label>
                                 <input id="PercentageSaved" name="PercentageSaved" type="text" size="10" maxlength="15" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
                             </td>
                         </tr>
@@ -160,7 +163,7 @@
                         <td>
                             <input id="QuotationPrice" name="QuotationPrice" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                             <label>RRP</label>
-                            <input id="RRP" name="RRP" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                            <input id="RRP" name="RRP" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
                         </td>
                     </tr>
               </table>          

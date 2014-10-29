@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class VirtualOrderValidator : IVirtualOrderValidator
     {
+        public VirtualOrder VHasUniqueNomorSurat(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService)
+        {
+            IList<VirtualOrder> duplicates = _virtualOrderService.GetQueryable().Where(x => x.NomorSurat == virtualOrder.NomorSurat && x.Id != virtualOrder.Id).ToList();
+            if (duplicates.Any())
+            {
+                virtualOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return virtualOrder;
+        }
+
         public VirtualOrder VHasContact(VirtualOrder virtualOrder, IContactService _contactService)
         {
             Contact contact = _contactService.GetObjectById(virtualOrder.ContactId);
@@ -87,17 +97,19 @@ namespace Validation.Validation
             return obj;
         }
 
-        public VirtualOrder VCreateObject(VirtualOrder virtualOrder, IContactService _contactService)
+        public VirtualOrder VCreateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService)
         {
+            VHasUniqueNomorSurat(virtualOrder, _virtualOrderService);
+            if (!isValid(virtualOrder)) { return virtualOrder; }
             VHasContact(virtualOrder, _contactService);
             if (!isValid(virtualOrder)) { return virtualOrder; }
             VHasOrderDate(virtualOrder);
             return virtualOrder;
         }
 
-        public VirtualOrder VUpdateObject(VirtualOrder virtualOrder, IContactService _contactService)
+        public VirtualOrder VUpdateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService)
         {
-            VCreateObject(virtualOrder, _contactService);
+            VCreateObject(virtualOrder, _virtualOrderService, _contactService);
             if (!isValid(virtualOrder)) { return virtualOrder; }
             VHasNotBeenConfirmed(virtualOrder);
             return virtualOrder;
@@ -129,16 +141,16 @@ namespace Validation.Validation
             return virtualOrder;
         }
 
-        public bool ValidCreateObject(VirtualOrder virtualOrder, IContactService _contactService)
+        public bool ValidCreateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService)
         {
-            VCreateObject(virtualOrder, _contactService);
+            VCreateObject(virtualOrder, _virtualOrderService, _contactService);
             return isValid(virtualOrder);
         }
 
-        public bool ValidUpdateObject(VirtualOrder virtualOrder, IContactService _contactService)
+        public bool ValidUpdateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService)
         {
             virtualOrder.Errors.Clear();
-            VUpdateObject(virtualOrder, _contactService);
+            VUpdateObject(virtualOrder, _virtualOrderService, _contactService);
             return isValid(virtualOrder);
         }
 

@@ -70,6 +70,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.DeliveryOrderId,
                              DeliveryOrderCode = model.DeliveryOrder.Code,
                              model.Description,
@@ -115,6 +116,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.DeliveryOrderId,
                             model.DeliveryOrderCode,
                             model.Description,
@@ -218,6 +220,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.NomorSurat,
                 model.DeliveryOrderId,
                 DeliveryOrder = _deliveryOrderService.GetObjectById(model.DeliveryOrderId).Code,
                 model.Discount,
@@ -226,6 +229,7 @@ namespace WebView.Controllers
                 model.InvoiceDate,
                 model.DueDate,
                 model.AmountReceivable,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -312,6 +316,7 @@ namespace WebView.Controllers
                 data.Tax = model.Tax;
                 data.InvoiceDate = model.InvoiceDate;
                 data.DueDate = model.DueDate;
+                data.NomorSurat = model.NomorSurat;
                 model = _salesInvoiceService.UpdateObject(data, _deliveryOrderService, _salesInvoiceDetailService);
             }
             catch (Exception ex)

@@ -1086,6 +1086,8 @@
     <Content Include="Reports\General\SalesReturnInvoice.ttx" />
     <Content Include="Reports\General\TopSales.rpt" />
     <Content Include="Reports\General\TopSales.ttx" />
+    <Content Include="Reports\General\SalesQuotation.ttx" />
+    <Content Include="Reports\General\SalesQuotation.rpt" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
     <Content Include="Scripts\collapsiblePanel.js" />

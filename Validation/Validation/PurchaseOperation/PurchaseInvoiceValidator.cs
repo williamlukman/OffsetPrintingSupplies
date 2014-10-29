@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class PurchaseInvoiceValidator : IPurchaseInvoiceValidator
     {
+        public PurchaseInvoice VHasUniqueNomorSurat(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService)
+        {
+            IList<PurchaseInvoice> duplicates =_purchaseInvoiceService.GetQueryable().Where(x => x.NomorSurat == purchaseInvoice.NomorSurat && x.Id != purchaseInvoice.Id).ToList();
+            if (duplicates.Any())
+            {
+                purchaseInvoice.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return purchaseInvoice;
+        }
+
         public PurchaseInvoice VHasPurchaseReceival(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService)
         {
             PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
@@ -195,8 +205,10 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
-        public PurchaseInvoice VCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService)
+        public PurchaseInvoice VCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService)
         {
+            VHasUniqueNomorSurat(purchaseInvoice, _purchaseInvoiceService);
+            if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VHasPurchaseReceival(purchaseInvoice, _purchaseReceivalService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VPurchaseReceivalHasNotBeenInvoiceCompleted(purchaseInvoice, _purchaseReceivalService);
@@ -209,9 +221,9 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
-        public PurchaseInvoice VUpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService)
+        public PurchaseInvoice VUpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService)
         {
-            VCreateObject(purchaseInvoice, _purchaseReceivalService);
+            VCreateObject(purchaseInvoice, _purchaseInvoiceService, _purchaseReceivalService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VHasNoPurchaseInvoiceDetails(purchaseInvoice, _purchaseInvoiceDetailService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
@@ -274,16 +286,16 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
-        public bool ValidCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService)
+        public bool ValidCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService)
         {
-            VCreateObject(purchaseInvoice, _purchaseReceivalService);
+            VCreateObject(purchaseInvoice, _purchaseInvoiceService, _purchaseReceivalService);
             return isValid(purchaseInvoice);
         }
 
-        public bool ValidUpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService)
+        public bool ValidUpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService)
         {
             purchaseInvoice.Errors.Clear();
-            VUpdateObject(purchaseInvoice, _purchaseReceivalService, _purchaseInvoiceDetailService);
+            VUpdateObject(purchaseInvoice, _purchaseInvoiceService, _purchaseReceivalService, _purchaseInvoiceDetailService);
             return isValid(purchaseInvoice);
         }
 

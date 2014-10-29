@@ -10,6 +10,7 @@ using Data.Repository;
 using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -70,6 +71,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.PurchaseOrderId,
                              PurchaseOrderCode = model.PurchaseOrder.Code,
                              model.WarehouseId,
@@ -112,6 +114,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.PurchaseOrderId,
                             model.PurchaseOrderCode,
                             model.WarehouseId,
@@ -135,7 +138,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseReceivalService.GetQueryable().Include("PurchaseOrder").Include("Warehouse")
+            var q = _purchaseReceivalService.GetQueryable().Include("PurchaseOrder").Include("Warehouse").Include("Contact")
                                             .Where(x => x.IsConfirmed && !x.IsDeleted);
 
             var query = (from model in q
@@ -143,8 +146,10 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.PurchaseOrderId,
                              PurchaseOrderCode = model.PurchaseOrder.Code,
+                             NomorSuratPO = model.PurchaseOrder.NomorSurat,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
                              model.ReceivalDate,
@@ -152,6 +157,15 @@ namespace WebView.Controllers
                              model.ConfirmationDate,
                              model.CreatedAt,
                              model.UpdatedAt,
+                             Tax = (model.PurchaseOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "05") ? Constant.TaxValue.Code05 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0   
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -185,8 +199,10 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.PurchaseOrderId,
                             model.PurchaseOrderCode,
+                            model.NomorSuratPO,
                             model.WarehouseId,
                             model.Warehouse,
                             model.ReceivalDate,
@@ -194,6 +210,7 @@ namespace WebView.Controllers
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
+                            model.Tax
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -268,7 +285,6 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-      
         public dynamic GetInfo(int Id)
         {
             PurchaseReceival model = new PurchaseReceival();
@@ -286,11 +302,13 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.NomorSurat,
                 model.PurchaseOrderId,
                 PurchaseOrder = _purchaseOrderService.GetObjectById(model.PurchaseOrderId).Code,
                 model.ReceivalDate, 
                 model.WarehouseId, 
                 Warehouse =_warehouseService.GetObjectById(model.WarehouseId).Name,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -328,8 +346,7 @@ namespace WebView.Controllers
         public dynamic Insert(PurchaseReceival model)
         {
             try
-            {
-             
+            {             
                 model = _purchaseReceivalService.CreateObject(model,_purchaseOrderService,_warehouseService);
             }
             catch (Exception ex)
@@ -372,6 +389,7 @@ namespace WebView.Controllers
                 data.PurchaseOrderId = model.PurchaseOrderId;
                 data.ReceivalDate = model.ReceivalDate;
                 data.WarehouseId = model.WarehouseId;
+                data.NomorSurat = model.NomorSurat;
                 model = _purchaseReceivalService.UpdateObject(data,_purchaseOrderService,_warehouseService);
             }
             catch (Exception ex)
@@ -476,7 +494,6 @@ namespace WebView.Controllers
         {
             try
             {
-
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.UnconfirmObject(data,_purchaseReceivalDetailService,_purchaseInvoiceService,
                         _purchaseInvoiceDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,
@@ -493,7 +510,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-
     }
 }

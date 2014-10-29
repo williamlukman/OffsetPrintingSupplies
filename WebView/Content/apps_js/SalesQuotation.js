@@ -49,13 +49,14 @@
     $("#list").jqGrid({
         url: base_url + 'SalesQuotation/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Version No', 'Contact Id', 'Contact Name', 'Quotation Date',
-                    'Total Amount', 'Total RRP', 'Cost Saved', '% Saved',
+        colNames: ['ID', 'Code', 'Version No', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Quotation Date',
+                    'Total Amount', 'Total RRP', 'Disc', '% Disc',
                     'Is Confirmed', 'Confirmation Date', 'Approved', 'Rejected', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
-                  { name: 'versionno', index: 'versionno', width: 80 },
+                  { name: 'versionno', index: 'versionno', width: 40 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 80 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 150 },
                   { name: 'quotationdate', index: 'quotationdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -124,14 +125,32 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "SalesQuotation/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/ReportSalesQuotation?Id=" + id);
+                    }
+                }
+            });
+        }
     });
-
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
         $('#QuotationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
+        $('#NomorSurat').removeAttr('disabled');
+        $('#VersionNo').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#QuotationDateDiv').show();
         $('#QuotationDateDiv2').hide();
@@ -165,6 +184,7 @@
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
                             $('#VersionNo').val(result.VersionNo);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#TotalQuotationAmount').val(result.TotalQuotationAmount);
@@ -177,6 +197,8 @@
                             $('#QuotationDateDiv').hide();
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
+                            $('#NomorSurat').attr('disabled', true);
+                            $('#VersionNo').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -214,6 +236,7 @@
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
                             $('#VersionNo').val(result.VersionNo);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#QuotationDate').datebox('setValue', dateEnt(result.QuotationDate));
@@ -222,6 +245,8 @@
                             $('#CostSaved').val(result.CostSaved);
                             $('#PercentageSaved').val(result.PercentageSaved);
                             $('#btnContact').removeAttr('disabled');
+                            $('#NomorSurat').removeAttr('disabled');
+                            $('#VersionNo').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#QuotationDateDiv2').show();
                             $('#QuotationDateDiv').hide();
@@ -471,7 +496,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), VersionNo: $("#VersionNo").val(),
-                QuotationDate: $('#QuotationDate').datebox('getValue')
+                QuotationDate: $('#QuotationDate').datebox('getValue'), NomorSurat: $("#NomorSurat").val()
             }),
             async: false,
             cache: false,
@@ -638,7 +663,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, SalesQuotationId: $("#id").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'),
-                QuotationPrice: $("#QuotationPrice").numberbox('getValue'), RRP: $("#RRP").numberbox('getValue')
+                QuotationPrice: $("#QuotationPrice").numberbox('getValue'), RRP: $("#RRP").val()
             }),
             async: false,
             cache: false,
@@ -787,6 +812,7 @@
 
             $('#ItemId').val(ret.id).data("kode", id);
             $('#Item').val(ret.name);
+            $('#RRP').val(ret.price);
 
             $('#lookup_div_item').dialog('close');
         } else {

@@ -9,6 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface ISalesQuotationValidator
     {
+        SalesQuotation VHasUniqueNomorSurat(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService);
         SalesQuotation VHasContact(SalesQuotation salesQuotation, IContactService _contactService);
         SalesQuotation VHasQuotationDate(SalesQuotation salesQuotation);
         SalesQuotation VHasBeenConfirmed(SalesQuotation salesQuotation);
@@ -20,15 +21,15 @@ namespace Core.Interface.Validation
         SalesQuotation VHasNotBeenApproved(SalesQuotation salesQuotation);
         SalesQuotation VHasNotBeenRejected(SalesQuotation salesQuotation);
 
-        SalesQuotation VCreateObject(SalesQuotation salesQuotation, IContactService _contactService);
-        SalesQuotation VUpdateObject(SalesQuotation salesQuotation, IContactService _contactService);
+        SalesQuotation VCreateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService);
+        SalesQuotation VUpdateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService);
         SalesQuotation VDeleteObject(SalesQuotation salesQuotation, ISalesQuotationDetailService _salesQuotationDetailService);
         SalesQuotation VConfirmObject(SalesQuotation salesQuotation, ISalesQuotationDetailService _salesQuotationDetailService);
         SalesQuotation VUnconfirmObject(SalesQuotation salesQuotation, ISalesOrderService _salesOrderService);
         SalesQuotation VApproveObject(SalesQuotation salesQuotation);
         SalesQuotation VRejectObject(SalesQuotation salesQuotation);
-        bool ValidCreateObject(SalesQuotation salesQuotation, IContactService _contactService);
-        bool ValidUpdateObject(SalesQuotation salesQuotation, IContactService _contactService);
+        bool ValidCreateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService);
+        bool ValidUpdateObject(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService, IContactService _contactService);
         bool ValidDeleteObject(SalesQuotation salesQuotation, ISalesQuotationDetailService _salesQuotationDetailService);
         bool ValidConfirmObject(SalesQuotation salesQuotation, ISalesQuotationDetailService _salesQuotationDetailService);
         bool ValidUnconfirmObject(SalesQuotation salesQuotation, ISalesOrderService _salesOrderService);

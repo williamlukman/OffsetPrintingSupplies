@@ -9,6 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface IVirtualOrderValidator
     {
+        VirtualOrder VHasUniqueNomorSurat(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService);
         VirtualOrder VHasContact(VirtualOrder virtualOrder, IContactService _contactService);
         VirtualOrder VHasOrderDate(VirtualOrder virtualOrder);
         VirtualOrder VHasBeenConfirmed(VirtualOrder virtualOrder);
@@ -17,13 +18,13 @@ namespace Core.Interface.Validation
         VirtualOrder VHasNoVirtualOrderDetail(VirtualOrder virtualOrder, IVirtualOrderDetailService _virtualOrderDetailService);
         VirtualOrder VHasNoTemporaryDeliveryOrder(VirtualOrder virtualOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService);
         VirtualOrder VHasConfirmationDate(VirtualOrder virtualOrder);
-        VirtualOrder VCreateObject(VirtualOrder virtualOrder, IContactService _contactService);
-        VirtualOrder VUpdateObject(VirtualOrder virtualOrder, IContactService _contactService);
+        VirtualOrder VCreateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService);
+        VirtualOrder VUpdateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService);
         VirtualOrder VDeleteObject(VirtualOrder virtualOrder, IVirtualOrderDetailService _virtualOrderDetailService);
         VirtualOrder VConfirmObject(VirtualOrder virtualOrder, IVirtualOrderDetailService _virtualOrderDetailService);
         VirtualOrder VUnconfirmObject(VirtualOrder virtualOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService);
-        bool ValidCreateObject(VirtualOrder virtualOrder, IContactService _contactService);
-        bool ValidUpdateObject(VirtualOrder virtualOrder, IContactService _contactService);
+        bool ValidCreateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService);
+        bool ValidUpdateObject(VirtualOrder virtualOrder, IVirtualOrderService _virtualOrderService, IContactService _contactService);
         bool ValidDeleteObject(VirtualOrder virtualOrder, IVirtualOrderDetailService _virtualOrderDetailService);
         bool ValidConfirmObject(VirtualOrder virtualOrder, IVirtualOrderDetailService _virtualOrderDetailService);
         bool ValidUnconfirmObject(VirtualOrder virtualOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService);

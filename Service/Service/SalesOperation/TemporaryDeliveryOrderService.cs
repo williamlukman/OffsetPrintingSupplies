@@ -58,12 +58,12 @@ namespace Service.Service
         public TemporaryDeliveryOrder CreateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
         {
             temporaryDeliveryOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(temporaryDeliveryOrder, _virtualOrderService, _deliveryOrderService, _warehouseService) ? _repository.CreateObject(temporaryDeliveryOrder) : temporaryDeliveryOrder);
+            return (_validator.ValidCreateObject(temporaryDeliveryOrder, this, _virtualOrderService, _deliveryOrderService, _warehouseService) ? _repository.CreateObject(temporaryDeliveryOrder) : temporaryDeliveryOrder);
         }
 
         public TemporaryDeliveryOrder UpdateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService)
         {
-            return (_validator.ValidUpdateObject(temporaryDeliveryOrder, _virtualOrderService, _deliveryOrderService, _warehouseService) ? _repository.UpdateObject(temporaryDeliveryOrder) : temporaryDeliveryOrder);
+            return (_validator.ValidUpdateObject(temporaryDeliveryOrder, this, _virtualOrderService, _deliveryOrderService, _warehouseService) ? _repository.UpdateObject(temporaryDeliveryOrder) : temporaryDeliveryOrder);
         }
 
         public TemporaryDeliveryOrder SoftDeleteObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)

@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public int SalesOrderId { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int WarehouseId { get; set; }
+        public string NomorSurat { get; set; }
 
         public decimal TotalCOGS { get; set; }
         public bool IsConfirmed { get; set; }

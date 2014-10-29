@@ -422,6 +422,7 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.OrderType = model.OrderType;
                 data.OrderDate = model.OrderDate;
+                data.NomorSurat = model.NomorSurat;
                 model = _virtualOrderService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)

@@ -49,12 +49,12 @@ namespace Service.Service
         public PurchaseInvoice CreateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService)
         {
             purchaseInvoice.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(purchaseInvoice, _purchaseReceivalService) ? _repository.CreateObject(purchaseInvoice) : purchaseInvoice);
+            return (_validator.ValidCreateObject(purchaseInvoice, this, _purchaseReceivalService) ? _repository.CreateObject(purchaseInvoice) : purchaseInvoice);
         }
 
         public PurchaseInvoice UpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService)
         {
-            return (_validator.ValidUpdateObject(purchaseInvoice, _purchaseReceivalService, _purchaseInvoiceDetailService) ? _repository.UpdateObject(purchaseInvoice) : purchaseInvoice);
+            return (_validator.ValidUpdateObject(purchaseInvoice, this, _purchaseReceivalService, _purchaseInvoiceDetailService) ? _repository.UpdateObject(purchaseInvoice) : purchaseInvoice);
         }
 
         public PurchaseInvoice SoftDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService)

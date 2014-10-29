@@ -51,11 +51,12 @@
     $("#list").jqGrid({
         url: base_url + 'DeliveryOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'SalesOrder Id', 'SO', 'Warehouse Id', 'Warehouse', 'DeliveryDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'SalesOrder Id', 'SO', 'Warehouse Id', 'Warehouse', 'DeliveryDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'salesorderid', index: 'salesorderid', width: 100, hidden: true },
                   { name: 'salesorder', index: 'salesorder', width: 70 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
@@ -96,8 +97,6 @@
     $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
-
-
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
         ReloadGrid();
@@ -113,6 +112,7 @@
         $('#DeliveryDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnSalesOrder').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
+        $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#DeliveryDateDiv').show();
         $('#DeliveryDateDiv2').hide();
@@ -145,6 +145,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#SalesOrderId').val(result.SalesOrderId);
                             $('#SalesOrder').val(result.SalesOrder);
                             $('#WarehouseId').val(result.WarehouseId);
@@ -156,6 +157,7 @@
                             $('#form_btn_save').hide();
                             $('#btnSalesOrder').attr('disabled', true);
                             $('#btnWarehouse').attr('disabled', true);
+                            $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -192,6 +194,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#SalesOrderId').val(result.SalesOrderId);
                             $('#SalesOrder').val(result.SalesOrder);
                             $('#WarehouseId').val(result.WarehouseId);
@@ -200,9 +203,10 @@
                             $('#DeliveryDate2').val(dateEnt(result.DeliveryDate));
                             $('#btnSalesOrder').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
+                            $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#DeliveryDateDiv2').show();
-                            $('#DeliveryDateDiv').hide();
+                            $('#DeliveryDateDiv2').hide();
+                            $('#DeliveryDateDiv').show();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -377,7 +381,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, SalesOrderId: $("#SalesOrderId").val(), WarehouseId: $("#WarehouseId").val(),
-                DeliveryDate: $('#DeliveryDate').datebox('getValue'),
+                DeliveryDate: $('#DeliveryDate').datebox('getValue'), NomorSurat: $("#NomorSurat").val()
             }),
             async: false,
             cache: false,
@@ -420,7 +424,7 @@
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -595,11 +599,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact', 'SalesDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact', 'SalesDate',
                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 40, align: "center" },
-                  { name: 'code', index: 'code', width: 60 },
+                  { name: 'code', index: 'code', width: 60, hidden: true },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 80 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 130 },
                   { name: 'salesdate', index: 'salesdate', width: 90, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -667,10 +672,10 @@
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
-                  { name: 'type', index: 'type', width: 70, sortable: false },
+                  { name: 'type', index: 'type', width: 70, sortable: false, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
                   { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
         ],
         page: '1',
         pager: $('#lookup_pager_item'),

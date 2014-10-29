@@ -53,12 +53,12 @@ namespace Service.Service
         public VirtualOrder CreateObject(VirtualOrder virtualOrder, IContactService _contactService)
         {
             virtualOrder.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(virtualOrder, _contactService) ? _repository.CreateObject(virtualOrder) : virtualOrder);
+            return (_validator.ValidCreateObject(virtualOrder, this, _contactService) ? _repository.CreateObject(virtualOrder) : virtualOrder);
         }
 
         public VirtualOrder UpdateObject(VirtualOrder virtualOrder, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(virtualOrder, _contactService) ? _repository.UpdateObject(virtualOrder) : virtualOrder);
+            return (_validator.ValidUpdateObject(virtualOrder, this, _contactService) ? _repository.UpdateObject(virtualOrder) : virtualOrder);
         }
 
         public VirtualOrder SoftDeleteObject(VirtualOrder virtualOrder, IVirtualOrderDetailService _virtualOrderDetailService)

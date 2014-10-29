@@ -11,6 +11,16 @@ namespace Validation.Validation
 {
     public class PurchaseOrderValidator : IPurchaseOrderValidator
     {
+        public PurchaseOrder VHasUniqueNomorSurat(PurchaseOrder purchaseOrder, IPurchaseOrderService _purchaseOrderService)
+        {
+            IList<PurchaseOrder> duplicates = _purchaseOrderService.GetQueryable().Where(x => x.NomorSurat == purchaseOrder.NomorSurat && x.Id != purchaseOrder.Id).ToList();
+            if (duplicates.Any())
+            {
+                purchaseOrder.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
+            }
+            return purchaseOrder;
+        }
+
         public PurchaseOrder VHasContact(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
             Contact contact = _contactService.GetObjectById(purchaseOrder.ContactId);
@@ -87,17 +97,19 @@ namespace Validation.Validation
             return obj;
         }
         
-        public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
+        public PurchaseOrder VCreateObject(PurchaseOrder purchaseOrder, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
+            VHasUniqueNomorSurat(purchaseOrder, _purchaseOrderService);
+            if (!isValid(purchaseOrder)) { return purchaseOrder; }
             VHasContact(purchaseOrder, _contactService);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
             VHasPurchaseDate(purchaseOrder);
             return purchaseOrder;
         }
 
-        public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
+        public PurchaseOrder VUpdateObject(PurchaseOrder purchaseOrder, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
-            VCreateObject(purchaseOrder, _contactService);
+            VCreateObject(purchaseOrder, _purchaseOrderService, _contactService);
             if (!isValid(purchaseOrder)) { return purchaseOrder; }
             VHasNotBeenConfirmed(purchaseOrder);
             return purchaseOrder;
@@ -129,16 +141,16 @@ namespace Validation.Validation
             return purchaseOrder;
         }
 
-        public bool ValidCreateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
+        public bool ValidCreateObject(PurchaseOrder purchaseOrder, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
-            VCreateObject(purchaseOrder, _contactService);
+            VCreateObject(purchaseOrder, _purchaseOrderService, _contactService);
             return isValid(purchaseOrder);
         }
 
-        public bool ValidUpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
+        public bool ValidUpdateObject(PurchaseOrder purchaseOrder, IPurchaseOrderService _purchaseOrderService, IContactService _contactService)
         {
             purchaseOrder.Errors.Clear();
-            VUpdateObject(purchaseOrder, _contactService);
+            VUpdateObject(purchaseOrder, _purchaseOrderService, _contactService);
             return isValid(purchaseOrder);
         }
 

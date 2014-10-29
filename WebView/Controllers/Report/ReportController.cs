@@ -28,6 +28,8 @@ namespace WebView.Controllers
         private ICashBankService _cashBankService;
         private IPayableService _payableService;
         private IReceivableService _receivableService;
+        private ISalesQuotationDetailService _salesQuotationDetailService;
+        private ISalesQuotationService _salesQuotationService;
         private ISalesInvoiceService _salesInvoiceService;
         private ISalesInvoiceDetailService _salesInvoiceDetailService;
         private IPurchaseInvoiceService _purchaseInvoiceService;
@@ -70,6 +72,8 @@ namespace WebView.Controllers
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
 
+            _salesQuotationDetailService = new SalesQuotationDetailService(new SalesQuotationDetailRepository(), new SalesQuotationDetailValidator());
+            _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
             _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
             _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
@@ -156,9 +160,9 @@ namespace WebView.Controllers
                              GlobalDiscount = model.PurchaseInvoice.Discount,
                              Tax = model.PurchaseInvoice.Tax,
                              Allowance = 0,
-                             Code = model.PurchaseInvoice.Code,
+                             Code = model.PurchaseInvoice.NomorSurat,
                              Date = model.PurchaseInvoice.ConfirmationDate.Value,
-                             contact = "",
+                             Contact = model.PurchaseInvoice.PurchaseReceival.PurchaseOrder.Contact.Name,
                              CompanyName = company.Name,
                              CompanyAddress = company.Address,
                              CompanyContactNo = company.ContactNo,
@@ -170,6 +174,63 @@ namespace WebView.Controllers
 
             //Loading Report
             rd.Load(Server.MapPath("~/") + "Reports/General/PurchaseInvoice.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+
+        public ActionResult SalesQuotation()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesQuotation(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _salesQuotationDetailService.GetQueryable().Include("SalesQuotation")
+                                              .Include("SalesQuotationDetail").Include("Item").Include("UoM").Include("Contact")
+                                              .Where(x => x.SalesQuotationId == Id);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = model.QuotationPrice,
+                             Discount = 0,
+                             GlobalDiscount = 0,
+                             Tax = (model.SalesQuotation.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                                   (model.SalesQuotation.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
+                                   (model.SalesQuotation.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
+                                   (model.SalesQuotation.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
+                                   (model.SalesQuotation.Contact.TaxCode == "05") ? Constant.TaxValue.Code05 :
+                                   (model.SalesQuotation.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
+                                   (model.SalesQuotation.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
+                                   (model.SalesQuotation.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
+                                   (model.SalesQuotation.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                             Allowance = 0,
+                             Code = model.SalesQuotation.NomorSurat,
+                             VersionNo = model.SalesQuotation.VersionNo,
+                             Date = model.SalesQuotation.ConfirmationDate.Value,
+                             Contact = model.SalesQuotation.Contact.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = "",
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/SalesQuotation.rpt");
 
             // Setting report data source
             rd.SetDataSource(query);
@@ -204,7 +265,7 @@ namespace WebView.Controllers
                              GlobalDiscount = model.SalesInvoice.Discount,
                              Tax = model.SalesInvoice.Tax,
                              Allowance = 0,
-                             Code = model.SalesInvoice.Code,
+                             Code = model.SalesInvoice.NomorSurat,
                              Date = model.SalesInvoice.ConfirmationDate.Value,
                              Contact = model.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
                              CompanyName = company.Name,

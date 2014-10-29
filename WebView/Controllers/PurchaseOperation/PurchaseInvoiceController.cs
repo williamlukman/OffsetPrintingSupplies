@@ -66,6 +66,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.PurchaseReceivalId,
                              PurchaseReceivalCode = model.PurchaseReceival.Code,
                              model.Description,
@@ -111,6 +112,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.PurchaseReceivalId,
                             model.PurchaseReceivalCode,
                             model.Description,
@@ -214,6 +216,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.NomorSurat,
                 model.PurchaseReceivalId,
                 PurchaseReceival = _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
                 model.Discount,
@@ -222,6 +225,7 @@ namespace WebView.Controllers
                 model.InvoiceDate,
                 model.DueDate,
                 model.AmountPayable,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -308,6 +312,7 @@ namespace WebView.Controllers
                 data.Tax = model.Tax;
                 data.InvoiceDate = model.InvoiceDate;
                 data.DueDate = model.DueDate;
+                data.NomorSurat = model.NomorSurat;
                 model = _purchaseInvoiceService.UpdateObject(data,_purchaseReceivalService,_purchaseInvoiceDetailService);
             }
             catch (Exception ex)
@@ -395,17 +400,17 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic Confirm(PurchaseInvoice model)
         {
-            //try
-            //{
+            try
+            {
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
-                model = _purchaseInvoiceService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseInvoiceDetailService,_purchaseOrderService,
-                        _purchaseReceivalService,_purchaseReceivalDetailService,_payableService,_accountService,_generalLedgerJournalService,_closingService);
-            //}
-            //catch (Exception ex)
-            //{
-            //    LOG.Error("Confirm Failed", ex);
-            //    model.Errors.Add("Generic", "Error : " + ex);
-            //}
+                model = _purchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _purchaseInvoiceDetailService, _purchaseOrderService,
+                        _purchaseReceivalService, _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Confirm Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
 
             return Json(new
             {
@@ -435,8 +440,6 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-
     }
 }
 

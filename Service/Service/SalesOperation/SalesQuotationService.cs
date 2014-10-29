@@ -53,12 +53,12 @@ namespace Service.Service
         public SalesQuotation CreateObject(SalesQuotation salesQuotation, IContactService _contactService)
         {
             salesQuotation.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(salesQuotation, _contactService) ? _repository.CreateObject(salesQuotation) : salesQuotation);
+            return (_validator.ValidCreateObject(salesQuotation, this, _contactService) ? _repository.CreateObject(salesQuotation) : salesQuotation);
         }
 
         public SalesQuotation UpdateObject(SalesQuotation salesQuotation, IContactService _contactService)
         {
-            return (_validator.ValidUpdateObject(salesQuotation, _contactService) ? _repository.UpdateObject(salesQuotation) : salesQuotation);
+            return (_validator.ValidUpdateObject(salesQuotation, this, _contactService) ? _repository.UpdateObject(salesQuotation) : salesQuotation);
         }
 
         public SalesQuotation SoftDeleteObject(SalesQuotation salesQuotation, ISalesQuotationDetailService _salesQuotationDetailService)

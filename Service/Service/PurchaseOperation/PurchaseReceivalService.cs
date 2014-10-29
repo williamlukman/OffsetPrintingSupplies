@@ -53,7 +53,7 @@ namespace Service.Service
         public PurchaseReceival CreateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
         {
             purchaseReceival.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(purchaseReceival, _purchaseOrderService, _warehouseService) ? _repository.CreateObject(purchaseReceival) : purchaseReceival);
+            return (_validator.ValidCreateObject(purchaseReceival, this, _purchaseOrderService, _warehouseService) ? _repository.CreateObject(purchaseReceival) : purchaseReceival);
         }
 
         public PurchaseReceival CreateObject(int warehouseId, int purchaseOrderId, DateTime receivalDate, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
@@ -69,7 +69,7 @@ namespace Service.Service
 
         public PurchaseReceival UpdateObject(PurchaseReceival purchaseReceival, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
         {
-            return (_validator.ValidUpdateObject(purchaseReceival, _purchaseOrderService, _warehouseService) ? _repository.UpdateObject(purchaseReceival) : purchaseReceival);
+            return (_validator.ValidUpdateObject(purchaseReceival, this, _purchaseOrderService, _warehouseService) ? _repository.UpdateObject(purchaseReceival) : purchaseReceival);
         }
 
         public PurchaseReceival SoftDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService)

@@ -31,6 +31,7 @@ namespace WebView.Controllers
             _blanketService = new BlanketService(new BlanketRepository(),new BlanketValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
+            _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
         }
 
@@ -169,7 +170,7 @@ namespace WebView.Controllers
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
                 data.TaxCode = model.TaxCode;
-                _contactService.UpdateObject(data);
+                model = _contactService.UpdateObject(data);
             }
             catch (Exception ex)
             {
