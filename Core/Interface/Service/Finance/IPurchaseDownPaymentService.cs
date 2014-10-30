@@ -22,7 +22,7 @@ namespace Core.Interface.Service
                                          IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
                                          ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService);
         PurchaseDownPayment SoftDeleteObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                             IPaymentVoucherDetailService _paymentVoucherDetailService, IPaymentVoucherService _paymentVoucherService);
+                                             IPaymentVoucherDetailService _paymentVoucherDetailService, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService);
         bool DeleteObject(int Id);
         PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment, DateTime ConfirmationDate, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService,
                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService,

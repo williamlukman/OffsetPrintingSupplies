@@ -371,6 +371,16 @@ namespace Validation.Validation
             return temporaryDeliveryOrderDetail;
         }
 
+        public TemporaryDeliveryOrderDetail VProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            VHasNotBeenReconciled(temporaryDeliveryOrderDetail);
+            if (!isValid(temporaryDeliveryOrderDetail)) { return temporaryDeliveryOrderDetail; }
+            VHasBeenConfirmed(temporaryDeliveryOrderDetail);
+            if (!isValid(temporaryDeliveryOrderDetail)) { return temporaryDeliveryOrderDetail; }
+            VQuantityEqualsWasteAndRestock(temporaryDeliveryOrderDetail);
+            return temporaryDeliveryOrderDetail;
+        }
+
         public TemporaryDeliveryOrderDetail VReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService)
         {
             VHasNotBeenReconciled(temporaryDeliveryOrderDetail);
@@ -435,6 +445,13 @@ namespace Validation.Validation
         {
             temporaryDeliveryOrderDetail.Errors.Clear();
             VUnconfirmObject(temporaryDeliveryOrderDetail);
+            return isValid(temporaryDeliveryOrderDetail);
+        }
+
+        public bool ValidProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
+        {
+            temporaryDeliveryOrderDetail.Errors.Clear();
+            VProcessObject(temporaryDeliveryOrderDetail);
             return isValid(temporaryDeliveryOrderDetail);
         }
 

@@ -46,11 +46,6 @@ namespace Service.Service
             return _repository.GetObjectsByPayableId(payableId);
         }
 
-        public PurchaseDownPaymentAllocationDetail GetObjectByPaymentVoucherDetailId(int paymentVoucherDetailId)
-        {
-            return _repository.GetObjectByPaymentVoucherDetailId(paymentVoucherDetailId);
-        }
-
         public PurchaseDownPaymentAllocationDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -65,14 +60,6 @@ namespace Service.Service
             {
                 PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
                 PurchaseDownPayment purchaseDownPayment = _purchaseDownPaymentService.GetObjectById(purchaseDownPaymentAllocation.PurchaseDownPaymentId);
-                PaymentVoucherDetail paymentVoucherDetail = new PaymentVoucherDetail()
-                {
-                    Amount = purchaseDownPaymentAllocationDetail.Amount,
-                    PayableId = purchaseDownPaymentAllocationDetail.PayableId,
-                    PaymentVoucherId = purchaseDownPayment.PaymentVoucherId
-                };
-                _paymentVoucherDetailService.CreateObject(paymentVoucherDetail, _paymentVoucherService, _cashBankService, _payableService);
-                purchaseDownPaymentAllocationDetail.PaymentVoucherDetailId = paymentVoucherDetail.Id;
                 _repository.CreateObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;
@@ -85,10 +72,6 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _paymentVoucherDetailService, _payableService))
             {
                 _repository.UpdateObject(purchaseDownPaymentAllocationDetail);
-                PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.GetObjectById(purchaseDownPaymentAllocationDetail.PaymentVoucherDetailId);
-                paymentVoucherDetail.Amount = purchaseDownPaymentAllocationDetail.Amount;
-                paymentVoucherDetail.PayableId = purchaseDownPaymentAllocationDetail.PayableId;
-                _paymentVoucherDetailService.UpdateObject(paymentVoucherDetail, _paymentVoucherService, _cashBankService, _payableService);
             }
             return purchaseDownPaymentAllocationDetail;
         }
@@ -98,7 +81,6 @@ namespace Service.Service
             if (_validator.ValidDeleteObject(purchaseDownPaymentAllocationDetail))
             {
                 _repository.SoftDeleteObject(purchaseDownPaymentAllocationDetail);
-                _paymentVoucherDetailService.DeleteObject(purchaseDownPaymentAllocationDetail.PaymentVoucherDetailId);
             }
             return purchaseDownPaymentAllocationDetail;
         }

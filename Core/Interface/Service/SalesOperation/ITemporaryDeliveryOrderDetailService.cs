@@ -33,7 +33,7 @@ namespace Core.Interface.Service
                                                   IVirtualOrderDetailService _virtualOrderDetailService, IVirtualOrderService _virtualOrderService,
                                                   ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
                                                   IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        TemporaryDeliveryOrderDetail ProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity);
+        TemporaryDeliveryOrderDetail ProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         TemporaryDeliveryOrderDetail ReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, DateTime PushDate, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
                                                   IStockMutationService _stockMutationService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
                                                   IClosingService _closingService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);

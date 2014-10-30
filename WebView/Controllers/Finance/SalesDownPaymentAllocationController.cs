@@ -222,7 +222,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _salesDownPaymentAllocationDetailService.GetQueryable().Include("SalesDownPaymentAllocation").Include("Receivable")
-                    .Include("ReceiptVoucherDetail").Where(x => x.SalesDownPaymentAllocationId == id && !x.IsDeleted);
+                    .Where(x => x.SalesDownPaymentAllocationId == id && !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -231,8 +231,6 @@ namespace WebView.Controllers
                             model.Code,
                             model.ReceivableId,
                             ReceivableCode = model.Receivable.Code,
-                            model.ReceiptVoucherDetailId,
-                            ReceiptVoucherDetailCode = model.ReceiptVoucherDetail.Code,
                             model.Amount,
                             model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -270,8 +268,6 @@ namespace WebView.Controllers
                             model.Code,
                             model.ReceivableId,
                             model.ReceivableCode,
-                            model.ReceiptVoucherDetailId,
-                            model.ReceiptVoucherDetailCode,
                             model.Amount,
                             model.Description,
                       }
@@ -325,8 +321,6 @@ namespace WebView.Controllers
                 model.Code,
                 model.ReceivableId,
                 Receivable =_receivableService.GetObjectById(model.ReceivableId).Code,
-                model.ReceiptVoucherDetailId,
-                ReceiptVoucherDetail = _receiptVoucherDetailService.GetObjectById(model.ReceiptVoucherDetailId).Code,
                 model.Amount,
                 model.Description,
                 model.Errors

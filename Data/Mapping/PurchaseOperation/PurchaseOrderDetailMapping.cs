@@ -15,6 +15,10 @@ namespace Data.Mapping
             HasRequired(pod => pod.PurchaseOrder)
                 .WithMany(po => po.PurchaseOrderDetails)
                 .HasForeignKey(pod => pod.PurchaseOrderId);
+            HasRequired(pod => pod.Item)
+                .WithMany()
+                .HasForeignKey(pod => pod.ItemId)
+                .WillCascadeOnDelete(false);
             Ignore(pod => pod.Errors);
         }
     }

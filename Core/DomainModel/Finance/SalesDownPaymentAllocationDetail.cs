@@ -10,7 +10,6 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public int SalesDownPaymentAllocationId { get; set; }
         public int ReceivableId { get; set; }
-        public int ReceiptVoucherDetailId { get; set; }
         public string Code { get; set; }
 
         public decimal Amount { get; set; }
@@ -26,7 +25,6 @@ namespace Core.DomainModel
 
         public virtual SalesDownPaymentAllocation SalesDownPaymentAllocation { get; set; }
         public virtual Receivable Receivable { get; set; }
-        public virtual ReceiptVoucherDetail ReceiptVoucherDetail { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
     }

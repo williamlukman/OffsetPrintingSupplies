@@ -49,11 +49,12 @@
     $("#list").jqGrid({
         url: base_url + 'VirtualOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Type', 'Order Date',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Type', 'Order Date',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
-                  { name: 'code', index: 'code', width: 80 },
+                  { name: 'code', index: 'code', width: 60 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 150 },
                   { name: 'ordertype', index: 'ordertype', width: 50 },
@@ -101,7 +102,24 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "VirtualOrder/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/ReportVirtualOrder?Id=" + id);
+                    }
+                }
+            });
+        }
     });
 
     $('#btn_add_new').click(function () {
@@ -109,6 +127,7 @@
         clearForm('#frm');
         $('#OrderDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
+        $('#NomorSurat').removeAttr('disabled');
         $('#OrderType').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#OrderDateDiv').show();
@@ -142,6 +161,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#OrderType').val(result.OrderType);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
@@ -152,6 +172,7 @@
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
                             $('#OrderType').attr('disabled', true);
+                            $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -163,8 +184,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-
-
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -190,15 +209,17 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#OrderType').val(result.OrderType);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#OrderDate').datebox('setValue', dateEnt(result.OrderDate));
                             $('#btnContact').removeAttr('disabled');
                             $('#OrderType').removeAttr('disabled');
+                            $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#OrderDateDiv2').show();
-                            $('#OrderDateDiv').hide();
+                            $('#OrderDateDiv2').hide();
+                            $('#OrderDateDiv').show();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -374,7 +395,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), OrderDate: $('#OrderDate').datebox('getValue'),
-                OrderType: ordertype
+                OrderType: ordertype, NomorSurat: $('#NomorSurat').val()
             }),
             async: false,
             cache: false,

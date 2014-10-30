@@ -33,11 +33,6 @@ namespace Validation.Validation
 
         public PurchaseDownPayment VHasPaymentVoucher(PurchaseDownPayment purchaseDownPayment, IPaymentVoucherService _paymentVoucherService)
         {
-            PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(purchaseDownPayment.PaymentVoucherId);
-            if (paymentVoucher == null)
-            {
-                purchaseDownPayment.Errors.Add("Generic", "PaymentVoucherId tidak terasosiasi dengan payment voucher");
-            }
             return purchaseDownPayment;
         }
 

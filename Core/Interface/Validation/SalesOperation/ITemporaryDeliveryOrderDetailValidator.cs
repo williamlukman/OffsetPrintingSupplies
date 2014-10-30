@@ -49,6 +49,7 @@ namespace Core.Interface.Validation
                                                     ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IVirtualOrderDetailService _virtualOrderDetailService,
                                                     ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         TemporaryDeliveryOrderDetail VUnconfirmObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        TemporaryDeliveryOrderDetail VProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         TemporaryDeliveryOrderDetail VReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
         TemporaryDeliveryOrderDetail VUnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
         TemporaryDeliveryOrderDetail VCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
@@ -65,6 +66,7 @@ namespace Core.Interface.Validation
                                 ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IVirtualOrderDetailService _virtualOrderDetailService,
                                 ISalesOrderDetailService _salesOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
+        bool ValidProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);
         bool ValidReconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
         bool ValidUnreconcileObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, IClosingService _closingService);
         bool ValidCompleteObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail);

@@ -52,11 +52,12 @@
     $("#list").jqGrid({
         url: base_url + 'TemporaryDeliveryOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
+                    'Is Confirmed', 'Confirmation Date', 'Reconciled', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
-                  { name: 'code', index: 'code', width: 70 },
+                  { name: 'code', index: 'code', width: 60 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
                   { name: 'ordertype', index: 'ordertype', width: 70 },
 				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
                   { name: 'ordercode', index: 'ordercode', width: 70 },
@@ -65,6 +66,7 @@
                   { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'isreconciled', index: 'isreconciled', width: 60 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -86,11 +88,19 @@
 		          var cl = ids[i];
 		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		              rowIsConfirmed = "Y";
 		          } else {
-		              rowIsConfirmed = "NO";
+		              rowIsConfirmed = "N";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
+
+		          rowIsReconciled = $(this).getRowData(cl).isreconciled;
+		          if (rowIsReconciled == 'true') {
+		              rowIsReconciled = "Y";
+		          } else {
+		              rowIsReconciled = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isreconciled: rowIsReconciled });
 
 		          rowOrderType = $(this).getRowData(cl).ordertype;
 		          if (rowOrderType == '0') {
@@ -116,7 +126,24 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Print_Forms/Printmstbank.aspx');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "TemporaryDeliveryOrder/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/ReportTemporaryDeliveryOrder?Id=" + id);
+                    }
+                }
+            });
+        }
     });
 
     $('#btn_add_new').click(function () {
@@ -126,6 +153,7 @@
         $('#btnPreviousOrder').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#OrderType').removeAttr('disabled');
+        $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#DeliveryDateDiv').show();
         $('#DeliveryDateDiv2').hide();
@@ -158,6 +186,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             document.getElementById("OrderType").selectedIndex = result.OrderType;
                             $('#PreviousOrderId').val(result.OrderId);
                             $('#PreviousOrder').val(result.OrderCode);
@@ -171,6 +200,7 @@
                             $('#OrderType').attr('disabled', true);
                             $('#btnPreviousOrder').attr('disabled', true);
                             $('#btnWarehouse').attr('disabled', true);
+                            $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -207,6 +237,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorSurat').val(result.NomorSurat);
                             $('#PreviousOrderId').val(result.OrderId);
                             $('#PreviousOrder').val(result.OrderCode);
                             $('#WarehouseId').val(result.WarehouseId);
@@ -215,6 +246,7 @@
                             $('#DeliveryDate2').val(dateEnt(result.DeliveryDate));
                             $('#btnPreviousOrder').removeAttr('disabled');
                             $('#btnWarehouse').removeAttr('disabled');
+                            $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#DeliveryDateDiv2').show();
                             $('#DeliveryDateDiv').hide();
@@ -458,6 +490,7 @@
                 Id: id, WarehouseId: $("#WarehouseId").val(),
                 DeliveryDate: $('#DeliveryDate').datebox('getValue'), OrderType: ordertype,
                 VirtualOrderId: virtualorderid, DeliveryOrderId: deliveryorderid,
+                NomorSurat: $('#NomorSurat').val()
             }),
             async: false,
             cache: false,
@@ -500,9 +533,9 @@
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'restockquantity', index: 'restockquantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'restockquantity', index: 'restockquantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'wastequantity', index: 'wastequantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -528,7 +561,6 @@
         $('#Price').removeAttr('disabled');
         $('#Quantity').removeAttr('disabled');
         $('#btnItem').removeAttr('disabled');
-        $('#row-price').show();
         $('#row-restock').hide();
         $('#row-waste').hide();
         $('#item_div').dialog('open');
@@ -556,7 +588,7 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#ItemId').val(result.ItemId);
+                            $('#ItemId').val(result.ItemId).data('process', '');
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
                             $('#WasteQuantity').val(result.WasteQuantity);
@@ -566,7 +598,6 @@
                             $('#Price').removeAttr('disabled');
                             $('#Quantity').removeAttr('disabled');
                             $('#btnItem').removeAttr('disabled');
-                            $('#row-price').show();
                             $('#row-waste').hide();
                             $('#row-restock').hide();
                             $('#item_div').dialog('open');
@@ -601,7 +632,7 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#ItemId').val(result.ItemId);
+                            $('#ItemId').val(result.ItemId).data('process', '1');
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
                             $('#WasteQuantity').val(result.WasteQuantity);
@@ -611,7 +642,6 @@
                             $('#Price').attr('disabled', true);
                             $('#Quantity').attr('disabled', true);
                             $('#btnItem').attr('disabled', true);
-                            $('#row-price').hide();
                             $('#row-waste').show();
                             $('#row-restock').show();
                             $('#item_div').dialog('open');
@@ -670,12 +700,15 @@
 
         var submitURL = '';
         var id = $("#item_btn_submit").data('kode');
-
-        // Update
+        var process = $('#ItemId').data('process');
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'TemporaryDeliveryOrder/UpdateDetail';
+            if (process == '1') {
+                submitURL = base_url + 'TemporaryDeliveryOrder/ProcessDetail';
+            }
+            else {
+                submitURL = base_url + 'TemporaryDeliveryOrder/UpdateDetail';
+            }
         }
-            // Insert
         else {
             submitURL = base_url + 'TemporaryDeliveryOrder/InsertDetail';
         }
@@ -746,7 +779,7 @@
             lookUpURL = base_url + 'VirtualOrder/GetSampleListConfirmedNotCompleted';
         }
         else if (document.getElementById("OrderType").selectedIndex == 2) {
-            lookUpURL = base_url + 'TemporaryDeliveryOrder/GetListNotConfirmed';
+            lookUpURL = base_url + 'DeliveryOrder/GetListNotConfirmed';
         }
         var lookupGrid = $('#lookup_table_previousorder');
         lookupGrid.setGridParam({
@@ -759,11 +792,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact', 'Order Date',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact', 'Order Date',
                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Warehouse Id', 'Warehouse'],
         colModel: [
     			  { name: 'id', index: 'id', width: 40, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 130 },
                   { name: 'orderdate', index: 'orderdate', width: 90, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -841,7 +875,7 @@
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
                   { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
         ],
         page: '1',
         pager: $('#lookup_pager_item'),

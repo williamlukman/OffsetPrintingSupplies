@@ -87,6 +87,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.OrderType,
                              model.VirtualOrderId,
                              VirtualOrderCode = model.VirtualOrder.Code,
@@ -99,6 +100,7 @@ namespace WebView.Controllers
                              model.DeliveryDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.IsReconciled,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -134,6 +136,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.OrderType,
                             model.OrderId,
                             model.OrderCode,
@@ -142,6 +145,7 @@ namespace WebView.Controllers
                             model.DeliveryDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.IsReconciled,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -165,6 +169,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.OrderType,
                              model.VirtualOrderId,
                              VirtualOrderCode = model.VirtualOrder.Code,
@@ -212,6 +217,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.OrderType,
                             model.OrderId,
                             model.OrderCode,
@@ -323,6 +329,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.NomorSurat,
                 model.OrderType,
                 OrderId = model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
                           model.DeliveryOrderId : model.VirtualOrderId,
@@ -331,6 +338,7 @@ namespace WebView.Controllers
                 model.DeliveryDate,
                 model.WarehouseId,
                 Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -356,7 +364,7 @@ namespace WebView.Controllers
                 OrderDetailId = _temporaryDeliveryOrderService.GetObjectById(model.TemporaryDeliveryOrderId).OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
                                 model.SalesOrderDetailId : model.VirtualOrderDetailId,
                 OrderDetailCode = _temporaryDeliveryOrderService.GetObjectById(model.TemporaryDeliveryOrderId).OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
-                                _salesInvoiceDetailService.GetObjectById((int) model.SalesOrderDetailId).Code : _virtualOrderDetailService.GetObjectById((int) model.VirtualOrderDetailId).Code,
+                                _salesOrderDetailService.GetObjectById((int) model.SalesOrderDetailId).Code : _virtualOrderDetailService.GetObjectById((int) model.VirtualOrderDetailId).Code,
                 model.ItemId,
                 ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
@@ -499,6 +507,27 @@ namespace WebView.Controllers
             });
         }
 
+        [HttpPost]
+        public dynamic ProcessDetail(TemporaryDeliveryOrderDetail model)
+        {
+            try
+            {
+                var data = _temporaryDeliveryOrderDetailService.GetObjectById(model.Id);
+                data.WasteQuantity = model.WasteQuantity;
+                data.RestockQuantity = model.RestockQuantity;
+                model = _temporaryDeliveryOrderDetailService.ProcessObject(data);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Update Failed", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Errors
+            });
+        }
 
         [HttpPost]
         public dynamic Confirm(TemporaryDeliveryOrder model)

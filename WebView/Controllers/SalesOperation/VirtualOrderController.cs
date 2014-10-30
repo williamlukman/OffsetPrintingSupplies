@@ -61,6 +61,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.OrderType,
@@ -102,6 +103,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.OrderType,
@@ -132,6 +134,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.OrderDate,
@@ -172,6 +175,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.OrderDate,
@@ -203,6 +207,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.OrderType,
@@ -244,6 +249,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorSurat,
                             model.ContactId,
                             model.Contact,
                             model.OrderDate,
@@ -342,10 +348,12 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.NomorSurat,
                 model.ContactId,
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.OrderType,
                 model.OrderDate,
+                ConfirmationDate = model.ConfirmationDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

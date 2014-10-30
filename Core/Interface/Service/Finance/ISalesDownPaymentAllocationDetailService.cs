@@ -14,7 +14,6 @@ namespace Core.Interface.Service
         IList<SalesDownPaymentAllocationDetail> GetAll();
         IList<SalesDownPaymentAllocationDetail> GetObjectsBySalesDownPaymentAllocationId(int salesDownPaymentAllocationId);
         IList<SalesDownPaymentAllocationDetail> GetObjectsByReceivableId(int receivableId);
-        SalesDownPaymentAllocationDetail GetObjectByReceiptVoucherDetailId(int receiptVoucherDetailId);
         SalesDownPaymentAllocationDetail GetObjectById(int Id);
         SalesDownPaymentAllocationDetail CreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                       ISalesDownPaymentService _salesDownPaymentService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,

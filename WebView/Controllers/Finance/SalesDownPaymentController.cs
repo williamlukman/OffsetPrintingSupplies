@@ -298,7 +298,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _salesDownPaymentService.GetObjectById(model.Id);
-                model = _salesDownPaymentService.SoftDeleteObject(data, _salesDownPaymentAllocationService, _receiptVoucherDetailService, _receiptVoucherService);
+                model = _salesDownPaymentService.SoftDeleteObject(data, _salesDownPaymentAllocationService, _receiptVoucherDetailService, _receiptVoucherService, _receivableService);
             }
             catch (Exception ex)
             {

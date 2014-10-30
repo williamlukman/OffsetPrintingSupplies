@@ -18,10 +18,6 @@ namespace Data.Mapping
             HasRequired(pdpad => pdpad.Payable)
                 .WithMany(p => p.PurchaseDownPaymentAllocationDetails)
                 .HasForeignKey(pdpad => pdpad.PayableId);
-            HasRequired(pdpad => pdpad.PaymentVoucherDetail)
-                .WithMany()
-                .HasForeignKey(pdpad => pdpad.PaymentVoucherDetailId)
-                .WillCascadeOnDelete(false);
             Ignore(pdpd => pdpd.Errors);
         }
     }

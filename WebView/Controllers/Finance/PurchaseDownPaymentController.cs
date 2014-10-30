@@ -298,7 +298,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentService.SoftDeleteObject(data, _purchaseDownPaymentAllocationService, _paymentVoucherDetailService, _paymentVoucherService);
+                model = _purchaseDownPaymentService.SoftDeleteObject(data, _purchaseDownPaymentAllocationService, _paymentVoucherDetailService, _paymentVoucherService, _payableService);
             }
             catch (Exception ex)
             {

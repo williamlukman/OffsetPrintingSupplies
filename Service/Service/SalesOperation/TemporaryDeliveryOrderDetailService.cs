@@ -163,11 +163,12 @@ namespace Service.Service
             return temporaryDeliveryOrderDetail;
         }
 
-        public TemporaryDeliveryOrderDetail ProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail, int wasteQuantity, int restockQuantity)
+        public TemporaryDeliveryOrderDetail ProcessObject(TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail)
         {
-            temporaryDeliveryOrderDetail.WasteQuantity = wasteQuantity;
-            temporaryDeliveryOrderDetail.RestockQuantity = restockQuantity;
-            _repository.UpdateObject(temporaryDeliveryOrderDetail);
+            if (_validator.ValidProcessObject(temporaryDeliveryOrderDetail))
+            {
+                _repository.UpdateObject(temporaryDeliveryOrderDetail);
+            }
             return temporaryDeliveryOrderDetail;
         }
 

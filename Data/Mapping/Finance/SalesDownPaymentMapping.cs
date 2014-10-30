@@ -12,9 +12,9 @@ namespace Data.Mapping
         public SalesDownPaymentMapping()
         {
             HasKey(sdp => sdp.Id);
-            HasRequired(sdp => sdp.ReceiptVoucher)
+            HasRequired(sdp => sdp.Receivable)
                 .WithMany()
-                .HasForeignKey(sdp => sdp.ReceiptVoucherId)
+                .HasForeignKey(sdp => sdp.ReceivableId)
                 .WillCascadeOnDelete(false);
             HasRequired(sdp => sdp.CashBank)
                 .WithMany()

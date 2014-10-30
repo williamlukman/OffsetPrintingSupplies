@@ -33,11 +33,6 @@ namespace Validation.Validation
 
         public SalesDownPaymentAllocationDetail VHasReceiptVoucherDetail(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, IReceiptVoucherDetailService _receiptVoucherDetailService)
         {
-            ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.GetObjectById(salesDownPaymentAllocationDetail.ReceiptVoucherDetailId);
-            if (receiptVoucherDetail == null)
-            {
-                salesDownPaymentAllocationDetail.Errors.Add("ReceiptVoucherDetailId", "Tidak terasosiasi dengan payment voucher detail");
-            }
             return salesDownPaymentAllocationDetail;
         }
 

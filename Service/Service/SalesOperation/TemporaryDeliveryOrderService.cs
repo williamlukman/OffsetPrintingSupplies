@@ -132,6 +132,7 @@ namespace Service.Service
             IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
             foreach (var detail in details)
             {
+                detail.Errors = new Dictionary<string, string>();
                 _temporaryDeliveryOrderDetailService.ReconcileObject(detail, PushDate, this, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService,
                                                                      _warehouseItemService, _itemService, _blanketService);
                 TotalWasteCOGS += detail.WasteCOGS;
@@ -149,6 +150,7 @@ namespace Service.Service
             IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
             foreach (var detail in details)
             {
+                detail.Errors = new Dictionary<string, string>();
                 _temporaryDeliveryOrderDetailService.UnreconcileObject(detail, this, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService,
                                                                        _warehouseItemService, _itemService, _blanketService);
             }

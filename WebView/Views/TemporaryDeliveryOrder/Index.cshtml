@@ -21,6 +21,7 @@
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
         <a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push2DO</a>
         <!--a id="btn_back" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'">Back</a-->
     </div>
@@ -46,16 +47,19 @@
                     <table id = "tablefrm" width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                         <tr nowrap>
                             <td width="139" nowrap style="width: 100px">
-                                <label>ID</label></td>
+                                <label>ID</label>
+                            </td>
                             <td width="550">
-                                <input id="id" type="text" size="10" disabled="disabled"/></td>
+                                <input id="id" type="text" size="5" disabled="disabled"/>
+                                <input id="Code" type="text" size="10" disabled="disabled"/>
+                            </td>
                         </tr>
                         <tr>
                             <td>
-                             <label>Code</label>
+                                <label>No. Surat:</label>
                             </td>
                             <td>
-                               <input id="Code" type="text" size="10" disabled="disabled"/>
+                                <input id="NomorSurat" name="NomorSurat" type="text" size="25"/>
                             </td>
                         </tr>
                         <tr>
@@ -142,7 +146,7 @@
                             <input id="Quantity" name="Quantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
-                    <tr id="row-price">
+                    <tr id="row-price" class="hide-row">
                         <td>
                             <label>Price</label>
                         </td>

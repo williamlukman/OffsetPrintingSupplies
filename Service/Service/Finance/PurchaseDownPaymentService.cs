@@ -58,17 +58,17 @@ namespace Service.Service
             purchaseDownPayment.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseDownPayment, this, _contactService, _cashBankService, _paymentVoucherService))
             {
-                PaymentVoucher paymentVoucher = new PaymentVoucher()
+                Payable payable = new Payable()
                 {
                     ContactId = purchaseDownPayment.ContactId,
-                    CashBankId = purchaseDownPayment.CashBankId,
-                    IsGBCH = purchaseDownPayment.IsGBCH,
-                    PaymentDate = purchaseDownPayment.DownPaymentDate,
-                    TotalAmount = purchaseDownPayment.TotalAmount,
-                    DueDate = purchaseDownPayment.DueDate,
+                    Amount = purchaseDownPayment.TotalAmount,
+                    DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value,
+                    CompletionDate = purchaseDownPayment.DownPaymentDate,
+                    PayableSource = Constant.SourceDocumentType.PurchaseDownPayment,
+                    PayableSourceId = purchaseDownPayment.Id
                 };
-                _paymentVoucherService.CreateObject(paymentVoucher, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
-                purchaseDownPayment.PaymentVoucherId = paymentVoucher.Id;
+                _payableService.CreateObject(payable);
+                purchaseDownPayment.PayableId = payable.Id;
                 _repository.CreateObject(purchaseDownPayment);
             }
             return purchaseDownPayment;
@@ -81,25 +81,23 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(purchaseDownPayment, this, _contactService, _cashBankService, _paymentVoucherService))
             {
                 _repository.UpdateObject(purchaseDownPayment);
-                PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(purchaseDownPayment.PaymentVoucherId);
-                paymentVoucher.ContactId = purchaseDownPayment.ContactId;
-                paymentVoucher.CashBankId = purchaseDownPayment.CashBankId;
-                paymentVoucher.IsGBCH = purchaseDownPayment.IsGBCH;
-                paymentVoucher.PaymentDate = purchaseDownPayment.DownPaymentDate;
-                paymentVoucher.TotalAmount = purchaseDownPayment.TotalAmount;
-                paymentVoucher.DueDate = purchaseDownPayment.DueDate;
-                _paymentVoucherService.UpdateObject(paymentVoucher, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
+                Payable payable = _payableService.GetObjectBySource(Constant.SourceDocumentType.PurchaseDownPayment, purchaseDownPayment.Id);
+                payable.ContactId = purchaseDownPayment.ContactId;
+                payable.CompletionDate = purchaseDownPayment.DownPaymentDate;
+                payable.Amount = purchaseDownPayment.TotalAmount;
+                payable.DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value;
+                _payableService.UpdateObject(payable);
             }
             return purchaseDownPayment;
         }
 
         public PurchaseDownPayment SoftDeleteObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                    IPaymentVoucherDetailService _paymentVoucherDetailService, IPaymentVoucherService _paymentVoucherService)
+                                                    IPaymentVoucherDetailService _paymentVoucherDetailService, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService)
         {
             if (_validator.ValidDeleteObject(purchaseDownPayment, _purchaseDownPaymentAllocationService, _paymentVoucherDetailService))
             {
                 _repository.SoftDeleteObject(purchaseDownPayment);
-                _paymentVoucherService.DeleteObject(purchaseDownPayment.PaymentVoucherId);
+                _payableService.DeleteObject(purchaseDownPayment.PayableId);
             }
             return purchaseDownPayment;
         }

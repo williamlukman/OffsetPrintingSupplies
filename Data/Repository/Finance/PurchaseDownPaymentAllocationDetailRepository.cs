@@ -41,13 +41,6 @@ namespace Data.Repository
             return FindAll(x => x.PayableId == payableId && !x.IsDeleted).ToList();
         }
 
-        public PurchaseDownPaymentAllocationDetail GetObjectByPaymentVoucherDetailId(int PaymentVoucherDetailId)
-        {
-            PurchaseDownPaymentAllocationDetail detail = Find(x => x.PaymentVoucherDetailId == PaymentVoucherDetailId);
-            if (detail != null) { detail.Errors = new Dictionary<string, string>(); }
-            return detail;
-        }
-
         public PurchaseDownPaymentAllocationDetail GetObjectById(int Id)
         {
             PurchaseDownPaymentAllocationDetail detail = Find(x => x.Id == Id);

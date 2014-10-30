@@ -231,8 +231,6 @@ namespace WebView.Controllers
                             model.Code,
                             model.PayableId,
                             PayableCode = model.Payable.Code,
-                            model.PaymentVoucherDetailId,
-                            PaymentVoucherDetailCode = model.PaymentVoucherDetail.Code,
                             model.Amount,
                             model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -270,8 +268,6 @@ namespace WebView.Controllers
                             model.Code,
                             model.PayableId,
                             model.PayableCode,
-                            model.PaymentVoucherDetailId,
-                            model.PaymentVoucherDetailCode,
                             model.Amount,
                             model.Description,
                       }
@@ -325,8 +321,6 @@ namespace WebView.Controllers
                 model.Code,
                 model.PayableId,
                 Payable =_payableService.GetObjectById(model.PayableId).Code,
-                model.PaymentVoucherDetailId,
-                PaymentVoucherDetail = _paymentVoucherDetailService.GetObjectById(model.PaymentVoucherDetailId).Code,
                 model.Amount,
                 model.Description,
                 model.Errors

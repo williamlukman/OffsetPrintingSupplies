@@ -13,7 +13,6 @@ namespace Core.Interface.Repository
         IList<SalesDownPaymentAllocationDetail> GetAllByMonthCreated();
         IList<SalesDownPaymentAllocationDetail> GetObjectsBySalesDownPaymentAllocationId(int salesDownPaymentAllocationId);
         IList<SalesDownPaymentAllocationDetail> GetObjectsByReceivableId(int receivableId);
-        SalesDownPaymentAllocationDetail GetObjectByReceiptVoucherDetailId(int receiptVoucherDetailId);
         SalesDownPaymentAllocationDetail GetObjectById(int Id);
         SalesDownPaymentAllocationDetail CreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
         SalesDownPaymentAllocationDetail UpdateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);

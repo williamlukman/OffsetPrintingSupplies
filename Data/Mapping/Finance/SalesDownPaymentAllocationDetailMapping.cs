@@ -18,10 +18,6 @@ namespace Data.Mapping
             HasRequired(sdpad => sdpad.Receivable)
                 .WithMany(p => p.SalesDownPaymentAllocationDetails)
                 .HasForeignKey(sdpad => sdpad.ReceivableId);
-            HasRequired(sdpad => sdpad.ReceiptVoucherDetail)
-                .WithMany()
-                .HasForeignKey(sdpad => sdpad.ReceiptVoucherDetailId)
-                .WillCascadeOnDelete(false);
             Ignore(sdpd => sdpd.Errors);
         }
     }

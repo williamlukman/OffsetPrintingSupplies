@@ -20,6 +20,7 @@ namespace Core.Interface.Validation
         TemporaryDeliveryOrder VVirtualOrderHasBeenConfirmed(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService);
         TemporaryDeliveryOrder VDeliveryOrderHasNotBeenConfirmed(TemporaryDeliveryOrder temporaryDeliveryOrder, IDeliveryOrderService _virtualOrderService);
         TemporaryDeliveryOrder VHasConfirmationDate(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        TemporaryDeliveryOrder VHasNotBeenReconciled(TemporaryDeliveryOrder temporaryDeliveryOrder);
         TemporaryDeliveryOrder VGeneralLedgerPostingHasNotBeenClosed(TemporaryDeliveryOrder temporaryDeliveryOrder, IClosingService _closingService, DateTime PushDate);
         TemporaryDeliveryOrder VAllQuantitiesEqualWasteAndRestock(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrder VDeliveryOrderHasNotBeenConfirmedForPartDeliveryOrder(TemporaryDeliveryOrder temporaryDeliveryOrder, IDeliveryOrderService _deliveryOrderService);

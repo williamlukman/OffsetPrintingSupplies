@@ -137,6 +137,14 @@ namespace Validation.Validation
             return obj;
         }
 
+        public TemporaryDeliveryOrder VHasNotBeenReconciled(TemporaryDeliveryOrder obj)
+        {
+            if (obj.IsReconciled)
+            {
+                obj.Errors.Add("Generic", "Sudah di reconcile");
+            }
+            return obj;
+        }
         public TemporaryDeliveryOrder VGeneralLedgerPostingHasNotBeenClosed(TemporaryDeliveryOrder temporaryDeliveryOrder, IClosingService _closingService, DateTime PushDate)
         {
             if (_closingService.IsDateClosed(PushDate))
@@ -193,8 +201,7 @@ namespace Validation.Validation
         {
             VCreateObject(temporaryDeliveryOrder, _temporaryDeliveryOrderService, _virtualOrderService, _deliveryOrderService, _warehouseService);
             if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
-            VHasNotBeenConfirmed(temporaryDeliveryOrder);
-            
+            VHasNotBeenConfirmed(temporaryDeliveryOrder);            
             return temporaryDeliveryOrder;
         }
 
@@ -225,6 +232,8 @@ namespace Validation.Validation
         public TemporaryDeliveryOrder VPushObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IClosingService _closingService,
                                                   IDeliveryOrderService _deliveryOrderService)
         {
+            VHasNotBeenReconciled(temporaryDeliveryOrder);
+            if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
             VGeneralLedgerPostingHasNotBeenClosed(temporaryDeliveryOrder, _closingService, PushDate);
             if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
             VAllQuantitiesEqualWasteAndRestock(temporaryDeliveryOrder, _temporaryDeliveryOrderDetailService);

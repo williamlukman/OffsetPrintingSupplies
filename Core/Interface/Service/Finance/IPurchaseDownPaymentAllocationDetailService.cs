@@ -14,7 +14,6 @@ namespace Core.Interface.Service
         IList<PurchaseDownPaymentAllocationDetail> GetAll();
         IList<PurchaseDownPaymentAllocationDetail> GetObjectsByPurchaseDownPaymentAllocationId(int purchaseDownPaymentAllocationId);
         IList<PurchaseDownPaymentAllocationDetail> GetObjectsByPayableId(int payableId);
-        PurchaseDownPaymentAllocationDetail GetObjectByPaymentVoucherDetailId(int paymentVoucherDetailId);
         PurchaseDownPaymentAllocationDetail GetObjectById(int Id);
         PurchaseDownPaymentAllocationDetail CreateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                                          IPurchaseDownPaymentService _purchaseDownPaymentService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,

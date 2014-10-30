@@ -15,6 +15,10 @@ namespace Data.Mapping
             HasRequired(sod => sod.SalesOrder)
                 .WithMany(po => po.SalesOrderDetails)
                 .HasForeignKey(sod => sod.SalesOrderId);
+            HasRequired(sod => sod.Item)
+               .WithMany()
+               .HasForeignKey(sod => sod.ItemId)
+               .WillCascadeOnDelete(false);
             Ignore(sod => sod.Errors);
         }
     }

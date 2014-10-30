@@ -30,10 +30,22 @@ namespace WebView.Controllers
         private IReceivableService _receivableService;
         private ISalesQuotationDetailService _salesQuotationDetailService;
         private ISalesQuotationService _salesQuotationService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+        private ISalesOrderService _salesOrderService;
+        private IDeliveryOrderDetailService _deliveryOrderDetailService;
+        private IDeliveryOrderService _deliveryOrderService;
         private ISalesInvoiceService _salesInvoiceService;
         private ISalesInvoiceDetailService _salesInvoiceDetailService;
+        private IPurchaseOrderService _purchaseOrderService;
+        private IPurchaseOrderDetailService _purchaseOrderDetailService;
+        private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
+        private IPurchaseReceivalService _purchaseReceivalService;
         private IPurchaseInvoiceService _purchaseInvoiceService;
         private IPurchaseInvoiceDetailService _purchaseInvoiceDetailService;
+        private IVirtualOrderDetailService _virtualOrderDetailService;
+        private IVirtualOrderService _virtualOrderService;
+        private ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
+        private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
 
         public class ModelProfitLoss
         {
@@ -74,12 +86,26 @@ namespace WebView.Controllers
 
             _salesQuotationDetailService = new SalesQuotationDetailService(new SalesQuotationDetailRepository(), new SalesQuotationDetailValidator());
             _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
+            _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
+            _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
             _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
+            _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
+            _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
+            _purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
+            _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
             _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
             _purchaseInvoiceDetailService = new PurchaseInvoiceDetailService(new PurchaseInvoiceDetailRepository(), new PurchaseInvoiceDetailValidator());
+
+            _virtualOrderDetailService = new VirtualOrderDetailService(new VirtualOrderDetailRepository(), new VirtualOrderDetailValidator());
+            _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
+            _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
+            _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
         }
 
+        #region Item
         public ActionResult Item()
         {
             if (!AuthenticationModel.IsAllowed("View", Constant.MenuName.Item, Constant.MenuGroupName.Report))
@@ -134,7 +160,115 @@ namespace WebView.Controllers
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
         }
+        #endregion
 
+        #region PurchaseOrder
+        public ActionResult PurchaseOrder()
+        {
+            return View();
+        }
+
+        public ActionResult ReportPurchaseOrder(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            var q = _purchaseOrderDetailService.GetQueryable().Include("PurchaseOrder")
+                                               .Include("Item").Include("UoM").Include("Contact")
+                                               .Where(x => x.PurchaseOrderId == Id);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = model.Price,
+                             Discount = 0,
+                             GlobalDiscount = 0,
+                             Tax = (model.PurchaseOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "05") ? Constant.TaxValue.Code05 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
+                                   (model.PurchaseOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                             Allowance = 0,
+                             Code = model.PurchaseOrder.NomorSurat,
+                             Date = model.PurchaseOrder.ConfirmationDate.Value,
+                             Contact = model.PurchaseOrder.Contact.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = "",
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/PurchaseOrder.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region PurchaseReceival
+        public ActionResult PurchaseReceival()
+        {
+            return View();
+        }
+
+        public ActionResult ReportPurchaseReceival(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            var q = _purchaseReceivalDetailService.GetQueryable().Include("PurchaseReceival")
+                                              .Include("PurchaseOrderDetail").Include("Item").Include("UoM").Include("Contact")
+                                              .Where(x => x.PurchaseReceivalId == Id);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = 0,
+                             Discount = 0,
+                             GlobalDiscount = 0,
+                             Tax = 0,
+                             Allowance = 0,
+                             Code = model.PurchaseReceival.NomorSurat,
+                             Date = model.PurchaseReceival.ConfirmationDate.Value,
+                             Contact = model.PurchaseReceival.PurchaseOrder.Contact.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = "",
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/PurchaseReceival.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region PurchaseInvoice
         public ActionResult PurchaseInvoice()
         {
             return View();
@@ -181,7 +315,124 @@ namespace WebView.Controllers
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
         }
+        #endregion
 
+        #region VirtualOrder
+        public ActionResult VirtualOrder()
+        {
+            return View();
+        }
+
+        public ActionResult ReportVirtualOrder(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesOrder = _salesOrderService.GetObjectById(Id);
+            var q = _virtualOrderDetailService.GetQueryable().Include("VirtualOrder")
+                                              .Include("VirtualOrderDetail").Include("Item").Include("UoM").Include("Contact")
+                                              .Where(x => x.VirtualOrderId == Id);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             OrderType = model.VirtualOrder.OrderType == Constant.OrderTypeCase.SampleOrder ? "SAMPLE ORDER" : "TRIAL ORDER",
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = model.Price,
+                             Discount = 0,
+                             GlobalDiscount = 0,
+                             Tax = (model.VirtualOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                                   (model.VirtualOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
+                                   (model.VirtualOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
+                                   (model.VirtualOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
+                                   (model.VirtualOrder.Contact.TaxCode == "05") ? Constant.TaxValue.Code05 :
+                                   (model.VirtualOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
+                                   (model.VirtualOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
+                                   (model.VirtualOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
+                                   (model.VirtualOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                             Allowance = 0,
+                             Code = model.VirtualOrder.NomorSurat,
+                             Date = model.VirtualOrder.ConfirmationDate.Value,
+                             Contact = model.VirtualOrder.Contact.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = "",
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/VirtualOrder.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region TemporaryDeliveryOrder
+        public ActionResult TemporaryDeliveryOrder()
+        {
+            return View();
+        }
+
+        public ActionResult ReportTemporaryDeliveryOrder(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _temporaryDeliveryOrderDetailService.GetQueryable().Include("TemporaryDeliveryOrder")
+                                              .Include("DeliveryOrder").Include("SalesOrder").Include("Item")
+                                              .Include("UoM").Include("Contact")
+                                              .Where(x => x.TemporaryDeliveryOrderId == Id);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             OrderType = (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.PartDeliveryOrder) ? "Part Delivery Order" :
+                                         (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder) ? "Trial Order" :
+                                         (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder) ? "Sample Order" : "",
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = 0,
+                             Discount = 0,
+                             GlobalDiscount = 0,
+                             Tax = 0,
+                             Allowance = 0,
+                             Code = model.TemporaryDeliveryOrder.NomorSurat,
+                             Date = model.TemporaryDeliveryOrder.ConfirmationDate.Value,
+                             Contact = (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.PartDeliveryOrder) ?
+                                        model.TemporaryDeliveryOrder.DeliveryOrder.SalesOrder.Contact.Name :
+                                        model.TemporaryDeliveryOrder.VirtualOrder.Contact.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = "",
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/TemporaryDeliveryOrder.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region SalesQuotation
         public ActionResult SalesQuotation()
         {
             return View();
@@ -238,7 +489,117 @@ namespace WebView.Controllers
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
         }
+        #endregion
 
+        #region SalesOrder
+        public ActionResult SalesOrder()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesOrder(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesOrder = _salesOrderService.GetObjectById(Id);
+            var q = _salesOrderDetailService.GetQueryable().Include("SalesOrder")
+                                              .Include("SalesOrderDetail").Include("Item").Include("UoM").Include("Contact")
+                                              .Where(x => x.SalesOrderId == Id);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = model.Price,
+                             Discount = 0,
+                             GlobalDiscount = 0,
+                             Tax = (model.SalesOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                                   (model.SalesOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
+                                   (model.SalesOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
+                                   (model.SalesOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
+                                   (model.SalesOrder.Contact.TaxCode == "05") ? Constant.TaxValue.Code05 :
+                                   (model.SalesOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
+                                   (model.SalesOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
+                                   (model.SalesOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
+                                   (model.SalesOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                             Allowance = 0,
+                             Code = model.SalesOrder.NomorSurat,
+                             Date = model.SalesOrder.ConfirmationDate.Value,
+                             Contact = model.SalesOrder.Contact.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = "",
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/SalesOrder.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region DeliveryOrder
+        public ActionResult DeliveryOrder()
+        {
+            return View();
+        }
+
+        public ActionResult ReportDeliveryOrder(int Id)
+        {
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _deliveryOrderDetailService.GetQueryable().Include("DeliveryOrder")
+                                              .Include("SalesOrderDetail").Include("Item").Include("UoM").Include("Contact")
+                                              .Where(x => x.DeliveryOrderId == Id);
+            string user = AuthenticationModel.GetUserName();
+
+            var query = (from model in q
+                         select new
+                         {
+                             SKU = model.Item.Sku,
+                             Name = model.Item.Name,
+                             UoM = model.Item.UoM.Name,
+                             model.Quantity,
+                             Price = 0,
+                             Discount = 0,
+                             GlobalDiscount = 0,
+                             Tax = 0,
+                             Allowance = 0,
+                             Code = model.DeliveryOrder.NomorSurat,
+                             Date = model.DeliveryOrder.ConfirmationDate.Value,
+                             Contact = model.DeliveryOrder.SalesOrder.Contact.Name,
+                             CompanyName = company.Name,
+                             CompanyAddress = company.Address,
+                             CompanyContactNo = company.ContactNo,
+                             User = user,
+                             Description = "",
+                         }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/DeliveryOrder.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region SalesInvoice
         public ActionResult SalesInvoice()
         {
             return View();
@@ -286,5 +647,6 @@ namespace WebView.Controllers
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
         }
+        #endregion
     }
 }

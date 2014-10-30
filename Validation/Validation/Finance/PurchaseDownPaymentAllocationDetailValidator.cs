@@ -33,11 +33,6 @@ namespace Validation.Validation
 
         public PurchaseDownPaymentAllocationDetail VHasPaymentVoucherDetail(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPaymentVoucherDetailService _paymentVoucherDetailService)
         {
-            PaymentVoucherDetail paymentVoucherDetail = _paymentVoucherDetailService.GetObjectById(purchaseDownPaymentAllocationDetail.PaymentVoucherDetailId);
-            if (paymentVoucherDetail == null)
-            {
-                purchaseDownPaymentAllocationDetail.Errors.Add("PaymentVoucherDetailId", "Tidak terasosiasi dengan payment voucher detail");
-            }
             return purchaseDownPaymentAllocationDetail;
         }
 

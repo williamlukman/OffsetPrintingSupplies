@@ -33,11 +33,6 @@ namespace Validation.Validation
 
         public SalesDownPayment VHasReceiptVoucher(SalesDownPayment salesDownPayment, IReceiptVoucherService _receiptVoucherService)
         {
-            ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(salesDownPayment.ReceiptVoucherId);
-            if (receiptVoucher == null)
-            {
-                salesDownPayment.Errors.Add("Generic", "ReceiptVoucherId tidak terasosiasi dengan payment voucher");
-            }
             return salesDownPayment;
         }
 

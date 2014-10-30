@@ -46,11 +46,6 @@ namespace Service.Service
             return _repository.GetObjectsByReceivableId(receivableId);
         }
 
-        public SalesDownPaymentAllocationDetail GetObjectByReceiptVoucherDetailId(int receiptVoucherDetailId)
-        {
-            return _repository.GetObjectByReceiptVoucherDetailId(receiptVoucherDetailId);
-        }
-
         public SalesDownPaymentAllocationDetail GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -65,14 +60,6 @@ namespace Service.Service
             {
                 SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectById(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
                 SalesDownPayment salesDownPayment = _salesDownPaymentService.GetObjectById(salesDownPaymentAllocation.SalesDownPaymentId);
-                ReceiptVoucherDetail receiptVoucherDetail = new ReceiptVoucherDetail()
-                {
-                    Amount = salesDownPaymentAllocationDetail.Amount,
-                    ReceivableId = salesDownPaymentAllocationDetail.ReceivableId,
-                    ReceiptVoucherId = salesDownPayment.ReceiptVoucherId
-                };
-                _receiptVoucherDetailService.CreateObject(receiptVoucherDetail, _receiptVoucherService, _cashBankService, _receivableService);
-                salesDownPaymentAllocationDetail.ReceiptVoucherDetailId = receiptVoucherDetail.Id;
                 _repository.CreateObject(salesDownPaymentAllocationDetail);
             }
             return salesDownPaymentAllocationDetail;
@@ -85,10 +72,6 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, this, _salesDownPaymentService, _receiptVoucherDetailService, _receivableService))
             {   
                 _repository.UpdateObject(salesDownPaymentAllocationDetail);
-                ReceiptVoucherDetail receiptVoucherDetail = _receiptVoucherDetailService.GetObjectById(salesDownPaymentAllocationDetail.ReceiptVoucherDetailId);
-                receiptVoucherDetail.Amount = salesDownPaymentAllocationDetail.Amount;
-                receiptVoucherDetail.ReceivableId = salesDownPaymentAllocationDetail.ReceivableId;
-                _receiptVoucherDetailService.UpdateObject(receiptVoucherDetail, _receiptVoucherService, _cashBankService, _receivableService);
             }
             return salesDownPaymentAllocationDetail;
         }
@@ -98,7 +81,6 @@ namespace Service.Service
             if (_validator.ValidDeleteObject(salesDownPaymentAllocationDetail))
             {
                 _repository.SoftDeleteObject(salesDownPaymentAllocationDetail);
-                _receiptVoucherDetailService.DeleteObject(salesDownPaymentAllocationDetail.ReceiptVoucherDetailId);
             }
             return salesDownPaymentAllocationDetail;
         }

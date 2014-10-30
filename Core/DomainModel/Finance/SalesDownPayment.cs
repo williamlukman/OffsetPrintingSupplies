@@ -10,7 +10,7 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public int ContactId { get; set; }
         public int CashBankId { get; set; }
-        public int ReceiptVoucherId { get; set; }
+        public int ReceivableId { get; set; }
         public string Code { get; set; }
         public DateTime DownPaymentDate { get; set; }
         public bool IsGBCH { get; set; }
@@ -27,7 +27,7 @@ namespace Core.DomainModel
 
         public virtual Contact Contact { get; set; }
         public virtual CashBank CashBank { get; set; }
-        public virtual ReceiptVoucher ReceiptVoucher { get; set; }
+        public virtual Receivable Receivable { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
     }
