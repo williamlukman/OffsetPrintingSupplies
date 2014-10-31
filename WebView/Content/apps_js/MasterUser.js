@@ -21,7 +21,6 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    $("#lookup_div_contactgroup").dialog('close');
 
     function cboxIsAdmin(cellvalue, options, rowObject) {
         return '<input name="cbIsAdmin" disabled rel="' + rowObject.code + '" type="checkbox"' + (cellvalue ? ' checked="checked"' : '') +

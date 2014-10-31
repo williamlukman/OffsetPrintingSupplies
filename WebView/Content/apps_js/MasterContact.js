@@ -21,8 +21,7 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    $("#lookup_div_contactgroup").dialog('close');
-
+    
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetList',

@@ -16,16 +16,16 @@ namespace Core.Interface.Service
         SalesDownPaymentAllocation GetObjectBySalesDownPaymentId(int salesDownPaymentId);
         IList<SalesDownPaymentAllocation> GetObjectsByContactId(int contactId);
         SalesDownPaymentAllocation CreateObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentService _salesDownPaymentService, 
-                                                   ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService);
+                                                ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService, IPayableService _payableService);
         SalesDownPaymentAllocation UpdateObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentService _salesDownPaymentService,
-                                                   ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService);
+                                                   ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService, IPayableService _payableService);
         SalesDownPaymentAllocation SoftDeleteObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
         bool DeleteObject(int Id);
         SalesDownPaymentAllocation ConfirmObject(SalesDownPaymentAllocation salesDownPaymentAllocation, DateTime ConfirmationDate, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
-                                                 ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService,
+                                                 ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IPayableService _payableService,
                                                  IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         SalesDownPaymentAllocation UnconfirmObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
-                                                   ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService,
+                                                   ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IPayableService _payableService,
                                                    IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
     }
 }

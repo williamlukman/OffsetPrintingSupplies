@@ -115,7 +115,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _receivableService.GetQueryable().Include("Contact").Include("ContactGroup")
+            var q = _receivableService.GetQueryable().Include("Contact")
                                       .Where(x => x.CreatedAt >= startdate && x.CreatedAt < enddate.AddDays(1) && !x.IsDeleted);
 
             var query = (from model in q

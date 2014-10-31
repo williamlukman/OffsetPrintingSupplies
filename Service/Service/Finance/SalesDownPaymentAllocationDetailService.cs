@@ -51,32 +51,38 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public SalesDownPaymentAllocationDetail CreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                                                ISalesDownPaymentService _salesDownPaymentService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                                                IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService)
+        public SalesDownPaymentAllocationDetail CreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
+                                                             ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
+                                                             ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService,
+                                                             IPayableService _payableService)
         {
             salesDownPaymentAllocationDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, this, _salesDownPaymentService, _receiptVoucherDetailService, _receivableService))
+            if (_validator.ValidCreateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, this, _salesDownPaymentService, _receivableService, _payableService))
             {
                 SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectById(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
-                SalesDownPayment salesDownPayment = _salesDownPaymentService.GetObjectById(salesDownPaymentAllocation.SalesDownPaymentId);
+                Payable payable = _payableService.GetObjectById(salesDownPaymentAllocation.PayableId);
+                payable.RemainingAmount -= salesDownPaymentAllocationDetail.Amount;
+                _payableService.UpdateObject(payable);
+                Receivable receivable = _receivableService.GetObjectById(salesDownPaymentAllocationDetail.ReceivableId);
+                receivable.RemainingAmount -= salesDownPaymentAllocationDetail.Amount;
+                _receivableService.UpdateObject(receivable);
+
                 _repository.CreateObject(salesDownPaymentAllocationDetail);
             }
             return salesDownPaymentAllocationDetail;
         }
 
         public SalesDownPaymentAllocationDetail UpdateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                                                ISalesDownPaymentService _salesDownPaymentService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                                                IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService)
+                                                             ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IPayableService _payableService)
         {
-            if (_validator.ValidUpdateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, this, _salesDownPaymentService, _receiptVoucherDetailService, _receivableService))
+            if (_validator.ValidUpdateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, this, _salesDownPaymentService, _receivableService, _payableService))
             {   
                 _repository.UpdateObject(salesDownPaymentAllocationDetail);
             }
             return salesDownPaymentAllocationDetail;
         }
 
-        public SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, IReceiptVoucherDetailService _receiptVoucherDetailService)
+        public SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail)
         {
             if (_validator.ValidDeleteObject(salesDownPaymentAllocationDetail))
             {
@@ -91,11 +97,11 @@ namespace Service.Service
         }
 
         public SalesDownPaymentAllocationDetail ConfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, DateTime ConfirmationDate,
-                                                              ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,
-                                                              IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
+                                                ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,
+                                                IReceivableService _receivableService, IPayableService _payableService)
         {
             salesDownPaymentAllocationDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(salesDownPaymentAllocationDetail, _receiptVoucherDetailService, _receivableService))
+            if (_validator.ValidConfirmObject(salesDownPaymentAllocationDetail, _receivableService, _payableService))
             {
                 salesDownPaymentAllocationDetail = _repository.ConfirmObject(salesDownPaymentAllocationDetail);
             }
@@ -103,10 +109,10 @@ namespace Service.Service
         }
 
         public SalesDownPaymentAllocationDetail UnconfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
-                                                                ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,
-                                                                IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
+                                                ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,
+                                                IReceivableService _receivableService, IPayableService _payableService)
         {
-            if (_validator.ValidUnconfirmObject(salesDownPaymentAllocationDetail, _receiptVoucherDetailService, _receivableService))
+            if (_validator.ValidUnconfirmObject(salesDownPaymentAllocationDetail, _receivableService, _payableService))
             {
                 salesDownPaymentAllocationDetail = _repository.UnconfirmObject(salesDownPaymentAllocationDetail);
             }

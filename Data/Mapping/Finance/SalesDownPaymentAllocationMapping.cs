@@ -23,6 +23,9 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(sdpa => sdpa.SalesDownPaymentId)
                 .WillCascadeOnDelete(false);
+            HasRequired(sdpa => sdpa.Payable)
+                .WithMany(p => p.SalesDownPaymentAllocations)
+                .HasForeignKey(sdpa => sdpa.PayableId);
             Ignore(sdpa => sdpa.Errors);
         }
     }

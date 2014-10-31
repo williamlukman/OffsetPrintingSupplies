@@ -29,6 +29,7 @@ namespace Core.DomainModel
         public virtual ICollection<ReceiptVoucherDetail> ReceiptVoucherDetails { get; set; }
         public virtual ICollection<SalesDownPaymentAllocationDetail> SalesDownPaymentAllocationDetails { get; set; }
         public virtual ICollection<SalesAllowanceDetail> SalesAllowanceDetails { get; set; }
+        public virtual ICollection<PurchaseDownPaymentAllocation> PurchaseDownPaymentAllocations { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }

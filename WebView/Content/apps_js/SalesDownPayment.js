@@ -33,32 +33,28 @@
 
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
-    $("#lookup_div_cashbank").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ContactId").hide();
-    $("#CashBankId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'SalesDownPayment/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Down Payment Date',
-                   'Is GBCH', 'Due Date', 'Total Amount',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Down Payment Date',
+                   'Due Date', 'Total Amount',
+                   'Is Confirmed', 'Confirmation Date', 'Receivable Id', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
-                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
                   { name: 'downpaymentdate', index: 'downpaymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isgbch', index: 'isgbch', width: 45 },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+    			  { name: 'receivableid', index: 'receivableid', width: 50 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -85,14 +81,6 @@
 		              rowIsConfirmed = "NO";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
-
-		          rowIsGBCH = $(this).getRowData(cl).isgbch;
-		          if (rowIsGBCH == 'true') {
-		              rowIsGBCH = "YES";
-		          } else {
-		              rowIsGBCH = "NO";
-		          }
-		          $(this).jqGrid('setRowData', ids[i], { isgbch: rowIsGBCH });
 		      }
 		  }
 
@@ -116,9 +104,7 @@
         $('#DownPaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
-        $('#btnCashBank').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
-        $('#IsGBCH').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#DownPaymentDateDiv').show();
         $('#DownPaymentDateDiv2').hide();
@@ -154,16 +140,8 @@
                             $('#Code').val(result.Code);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#CashBankId').val(result.CashBankId);
-                            $('#CashBank').val(result.CashBank);
                             $('#TotalAmount').val(result.TotalAmount);
-                            var e = document.getElementById("IsGBCH");
-                            if (result.IsGBCH == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
+                            $('#ReceivableId').val(result.ReceivableId);
                             $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
                             $('#DownPaymentDate2').val(dateEnt(result.DownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -173,9 +151,7 @@
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
                             $('#btnContact').removeAttr('disabled');
-                            $('#btnCashBank').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
-                            $('#IsGBCH').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -342,16 +318,12 @@
             submitURL = base_url + 'SalesDownPayment/Insert';
         }
 
-        var e = document.getElementById("IsGBCH");
-        var gbch = e.options[e.selectedIndex].value;
-
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, TotalAmount: $("#TotalAmount").numberbox('getValue'),
+                Id: id, ContactId: $("#ContactId").val(), TotalAmount: $("#TotalAmount").numberbox('getValue'),
                 DownPaymentDate: $('#DownPaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,
@@ -435,62 +407,5 @@
     });
 
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
-
-    // -------------------------------------------------------Look Up cashbank-------------------------------------------------------
-    $('#btnCashBank').click(function () {
-        var lookUpURL = base_url + 'MstCashBank/GetList';
-        var lookupGrid = $('#lookup_table_cashbank');
-        lookupGrid.setGridParam({
-            url: lookUpURL
-        }).trigger("reloadGrid");
-        $('#lookup_div_cashbank').dialog('open');
-    });
-
-    jQuery("#lookup_table_cashbank").jqGrid({
-        url: base_url,
-        datatype: "json",
-        mtype: 'GET',
-        colNames: ['ID', 'Name'
-        ],
-        colModel: [
-    			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
-        ],
-        page: '1',
-        pager: $('#lookup_pager_cashbank'),
-        rowNum: 20,
-        rowList: [20, 30, 60],
-        sortname: 'id',
-        viewrecords: true,
-        scrollrows: true,
-        shrinkToFit: false,
-        sortorder: "ASC",
-        width: $("#lookup_div_cashbank").width() - 10,
-        height: $("#lookup_div_cashbank").height() - 110,
-    });
-    $("#lookup_table_cashbank").jqGrid('navGrid', '#lookup_toolbar_cashbank', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-
-    // Cancel or CLose
-    $('#lookup_btn_cancel_cashbank').click(function () {
-        $('#lookup_div_cashbank').dialog('close');
-    });
-
-    // ADD or Select Data
-    $('#lookup_btn_add_cashbank').click(function () {
-        var id = jQuery("#lookup_table_cashbank").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#lookup_table_cashbank").jqGrid('getRowData', id);
-
-            $('#CashBankId').val(ret.id).data("kode", id);
-            $('#CashBank').val(ret.code);
-            $('#lookup_div_cashbank').dialog('close');
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        };
-    });
-
-
-    // ---------------------------------------------End Lookup cashbank----------------------------------------------------------------
 
 }); //END DOCUMENT READY

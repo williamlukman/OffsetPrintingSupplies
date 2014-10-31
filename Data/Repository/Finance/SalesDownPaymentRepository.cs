@@ -38,11 +38,6 @@ namespace Data.Repository
             return purchaseDownPayment;
         }
 
-        public IList<SalesDownPayment> GetObjectsByCashBankId(int cashBankId)
-        {
-            return FindAll(x => x.CashBankId == cashBankId && !x.IsDeleted).ToList();
-        }
-
         public IList<SalesDownPayment> GetObjectsByContactId(int contactId)
         {
             return FindAll(x => x.ContactId == contactId && !x.IsDeleted).ToList();

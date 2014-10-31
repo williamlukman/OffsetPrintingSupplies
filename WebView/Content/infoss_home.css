@@ -1,6 +1,6 @@
 body, html {
     font-family: Calibri, Arial;
-    background: url(images/infossSSDxx.jpg) repeat-x top #297dd3xx !important;
+    background: #297dd3 !important;
     padding:0px;
 	margin: 0px !important;
 }
@@ -28,7 +28,7 @@ body, html {
     }
 
 #container_login {
-    background: linear-gradient(to right, #FF5D40, white) repeat scroll 0 0 transparent;
+    background: linear-gradient(to right, #9ED5FF 60%, white) repeat scroll 0 0 transparent;
     margin: 0 auto;
     border-radius: 5px;
     padding: 20px;
@@ -38,7 +38,7 @@ body, html {
 }
 
     #container_login #login_header {
-        background: linear-gradient(to right, #A0000F, white) repeat scroll 0 0 transparent;
+        background: linear-gradient(to right, #574FFF 60%, white) repeat scroll 0 0 transparent;
         font-size: 22px;
         font-weight: normal;
         color: #24658c;
@@ -48,14 +48,14 @@ body, html {
     }
 
     #container_login #login_content {
-        border: solid #e5e5e5 1px;
+        border: solid white 1px;
         padding: 30px 0px;
         margin: -20px 0 0 -20px;
         width: 638px;
     }
 
     #container_login #login_footer {
-        background: none repeat scroll 0 0 #A0000F;
+        background: linear-gradient(to right, #574FFF 60%, white) repeat scroll 0 0 transparent;
 		color: #EFFE00;
         padding: 10px;
 		text-align: center;

@@ -16,19 +16,16 @@ namespace Core.Interface.Service
         IList<SalesDownPaymentAllocationDetail> GetObjectsByReceivableId(int receivableId);
         SalesDownPaymentAllocationDetail GetObjectById(int Id);
         SalesDownPaymentAllocationDetail CreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                                      ISalesDownPaymentService _salesDownPaymentService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                                      IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService);
+                                                      ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IPayableService _payableService);
         SalesDownPaymentAllocationDetail UpdateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                                      ISalesDownPaymentService _salesDownPaymentService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                                      IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService);
-        SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
-                                                          IReceiptVoucherDetailService _receiptVoucherDetailService);
+                                                      ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IPayableService _payableService);
+        SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
         bool DeleteObject(int Id);
         SalesDownPaymentAllocationDetail ConfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, DateTime ConfirmationDate,
                                                        ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,
-                                                       IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                                       IReceivableService _receivableService, IPayableService _payableService);
         SalesDownPaymentAllocationDetail UnconfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
                                                          ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,
-                                                         IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                                         IReceivableService _receivableService, IPayableService _payableService);
     }
 }

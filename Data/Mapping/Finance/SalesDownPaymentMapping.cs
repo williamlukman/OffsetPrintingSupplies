@@ -16,10 +16,6 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(sdp => sdp.ReceivableId)
                 .WillCascadeOnDelete(false);
-            HasRequired(sdp => sdp.CashBank)
-                .WithMany()
-                .HasForeignKey(sdp => sdp.CashBankId)
-                .WillCascadeOnDelete(false);
             HasRequired(sdp => sdp.Contact)
                 .WithMany()
                 .HasForeignKey(sdp => sdp.ContactId)

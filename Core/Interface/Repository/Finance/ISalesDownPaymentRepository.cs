@@ -12,7 +12,6 @@ namespace Core.Interface.Repository
         IList<SalesDownPayment> GetAll();
         IList<SalesDownPayment> GetAllByMonthCreated();
         SalesDownPayment GetObjectById(int Id);
-        IList<SalesDownPayment> GetObjectsByCashBankId(int cashBankId);
         IList<SalesDownPayment> GetObjectsByContactId(int contactId);
         SalesDownPayment CreateObject(SalesDownPayment salesDownPayment);
         SalesDownPayment UpdateObject(SalesDownPayment salesDownPayment);

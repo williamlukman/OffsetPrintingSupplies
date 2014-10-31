@@ -25,27 +25,27 @@ namespace Core.Interface.Validation
                                             ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
         SalesDownPaymentAllocationDetail VCreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                        ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
-                                                       IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                                       IReceivableService _receivableService, IPayableService _payableService);
         SalesDownPaymentAllocationDetail VUpdateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                        ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
-                                                       IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                                       IReceivableService _receivableService, IPayableService _payableService);
         SalesDownPaymentAllocationDetail VDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
         SalesDownPaymentAllocationDetail VHasConfirmationDate(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
         SalesDownPaymentAllocationDetail VConfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
-                                                        IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                                        IReceivableService _receivableService, IPayableService _payableService);
         SalesDownPaymentAllocationDetail VUnconfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
-                                                          IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                                          IReceivableService _receivableService, IPayableService _payableService);
         bool ValidCreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
-                               IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                               IReceivableService _receivableService, IPayableService _payableService);
         bool ValidUpdateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
-                               IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                               IReceivableService _receivableService, IPayableService _payableService);
         bool ValidDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
         bool ValidConfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
-                                IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                IReceivableService _receivableService, IPayableService _payableService);
         bool ValidUnconfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
-                                  IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
+                                  IReceivableService _receivableService, IPayableService _payableService);
         bool isValid(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
         string PrintError(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
     }
