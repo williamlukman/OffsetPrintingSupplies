@@ -12,13 +12,13 @@ namespace Data.Mapping
         public PurchaseDownPaymentMapping()
         {
             HasKey(pdp => pdp.Id);
-            HasRequired(pdp => pdp.Payable)
+            HasOptional(pdp => pdp.Payable)
                 .WithMany()
                 .HasForeignKey(pdp => pdp.PayableId)
                 .WillCascadeOnDelete(false);
-            HasRequired(pdp => pdp.CashBank)
+            HasOptional(pdp => pdp.Receivable)
                 .WithMany()
-                .HasForeignKey(pdp => pdp.CashBankId)
+                .HasForeignKey(pdp => pdp.ReceivableId)
                 .WillCascadeOnDelete(false);
             HasRequired(pdp => pdp.Contact)
                 .WithMany()

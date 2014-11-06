@@ -22,6 +22,9 @@ namespace Data.Mapping
             HasMany(r => r.SalesDownPaymentAllocationDetails)
                 .WithRequired(sdpad => sdpad.Receivable)
                 .HasForeignKey(sdpad => sdpad.ReceivableId);
+            HasMany(r => r.PurchaseDownPaymentAllocations)
+                .WithRequired(pdpa => pdpa.Receivable)
+                .HasForeignKey(pdpa => pdpa.ReceivableId);
             HasMany(r => r.SalesAllowanceDetails)
                 .WithRequired(sad => sad.Receivable)
                 .HasForeignKey(sad => sad.ReceivableId);

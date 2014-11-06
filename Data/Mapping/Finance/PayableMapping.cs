@@ -22,6 +22,9 @@ namespace Data.Mapping
             HasMany(p => p.PurchaseDownPaymentAllocationDetails)
                 .WithRequired(pdpad => pdpad.Payable)
                 .HasForeignKey(pdpad => pdpad.PayableId);
+            HasMany(p => p.SalesDownPaymentAllocations)
+                .WithRequired(sdpa => sdpa.Payable)
+                .HasForeignKey(sdpa => sdpa.PayableId);
             HasMany(p => p.PurchaseAllowanceDetails)
                 .WithRequired(pad => pad.Payable)
                 .HasForeignKey(pad => pad.PayableId);

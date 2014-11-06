@@ -36,9 +36,9 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
-        public SalesDownPaymentAllocation GetObjectBySalesDownPaymentId(int salesDownPaymentId)
+        public SalesDownPaymentAllocation GetObjectByPayableId(int PayableId)
         {
-            return _repository.GetObjectBySalesDownPaymentId(salesDownPaymentId);
+            return _repository.GetObjectByPayableId(PayableId);
         }
 
         public SalesDownPaymentAllocation GetObjectById(int Id)
@@ -57,16 +57,6 @@ namespace Service.Service
             salesDownPaymentAllocation.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(salesDownPaymentAllocation, this, _salesDownPaymentAllocationDetailService, _salesDownPaymentService, _contactService, _payableService))
             {
-                Payable payable = new Payable()
-                {
-                    Amount = salesDownPaymentAllocation.TotalAmount,
-                    PayableSourceId = salesDownPaymentAllocation.Id,
-                    PayableSource = Constant.PayableSource.SalesDownPaymentAllocation,
-                    ContactId = salesDownPaymentAllocation.ContactId,
-                    DueDate = salesDownPaymentAllocation.AllocationDate.AddDays(30)
-                };
-                payable = _payableService.CreateObject(payable);
-                salesDownPaymentAllocation.PayableId = payable.Id;
                 _repository.CreateObject(salesDownPaymentAllocation);
             }
             return salesDownPaymentAllocation;
@@ -78,10 +68,6 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(salesDownPaymentAllocation, this, _salesDownPaymentAllocationDetailService,
                                              _salesDownPaymentService, _contactService, _payableService))
             {
-                Payable payable = _payableService.GetObjectById(salesDownPaymentAllocation.PayableId);
-                payable.Amount = salesDownPaymentAllocation.TotalAmount;
-                payable.DueDate = salesDownPaymentAllocation.AllocationDate.AddDays(30);
-                _payableService.UpdateObject(payable);
                 _repository.UpdateObject(salesDownPaymentAllocation);
             }
             return salesDownPaymentAllocation;

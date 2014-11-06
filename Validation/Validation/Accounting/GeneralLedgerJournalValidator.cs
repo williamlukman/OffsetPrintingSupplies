@@ -14,19 +14,27 @@ namespace Validation.Validation
 
         public GeneralLedgerJournal VIsValidSourceDocument(GeneralLedgerJournal generalLedgerJournal)
         {
+
             if (!generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankAdjustment) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CashBankMutation) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.Memorial) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PaymentRequest) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PaymentVoucher) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.ReceiptVoucher) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseInvoice) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesInvoice) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.StockAdjustment) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesDownPayment) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesAllowance) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseDownPayment) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseAllowance))
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseDownPaymentAllocation) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseAllowance) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseReceival) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.PurchaseInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.StockAdjustment) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.ReceiptVoucher) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.DeliveryOrder) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesInvoice) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesDownPayment) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesDownPaymentAllocation) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesAllowance) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RecoveryOrderDetail) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RecoveryAccessoryDetail) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlanketOrderDetail))
             {
                 generalLedgerJournal.Errors.Add("SourceDocument", "Harus merupakan bagian dari Constant.SourceDocument");
             }

@@ -34,7 +34,7 @@
         colNames: ['ID', 'Sku', 'Name', 
                     'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual',
                     'UoM', 'Selling Price', 'AvgPrice',
-                    'Description', 'Item Type', 'Created At', 'Updated At'],
+                    'Description', 'Item Type', 'Tradeable', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
@@ -49,7 +49,8 @@
                   { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'description', index: 'description', width: 70 },
                   { name: 'itemtypename', index: 'itemtypename', width: 70 },
-				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'istradeable', index: 'istradeable', width: 40 },
+			      { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
@@ -73,6 +74,14 @@
                     if (rowMinimumQuantity - rowQuantity >= 0) {
                         $(this).jqGrid('setRowData', ids[i], false, 'fontred');
                     }
+
+                    rowIsTradeable = $(this).getRowData(cl).istradeable;
+                    if (rowIsTradeable == 'true') {
+                        rowIsTradeable = "YES";
+                    } else {
+                        rowIsTradeable = "NO";
+                    }
+                    $(this).jqGrid('setRowData', ids[i], { istradeable: rowIsTradeable });
                 }
             }
     });//END GRID
@@ -123,6 +132,13 @@
                             $('#Description').val(result.Description);
                             $('#ItemTypeId').val(result.ItemTypeId);
                             $('#ItemTypeName').val(result.ItemType);
+                            var f = document.getElementById("IsTradeable");
+                            if (result.IsTradeable == true) {
+                                f.selectedIndex = 0;
+                            }
+                            else {
+                                f.selectedIndex = 1;
+                            }
                             $('#UoMId').val(result.UoMId);
                             $('#UoMName').val(result.UoM);
                             $('#Quantity').numberbox('setValue', (result.Quantity));
@@ -211,6 +227,9 @@
             submitURL = base_url + 'MstItem/Insert';
         }
 
+        var f = document.getElementById("IsTradeable");
+        var tradeable = f.options[f.selectedIndex].value;
+
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -218,7 +237,7 @@
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice: $("#SellingPrice").numberbox('getValue'),
                 Sku: $("#SKU").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
-                MinimumQuantity: $("#MinimumQuantity").numberbox('getValue')
+                MinimumQuantity: $("#MinimumQuantity").numberbox('getValue'), IsTradeable: tradeable
             }),
             async: false,
             cache: false,

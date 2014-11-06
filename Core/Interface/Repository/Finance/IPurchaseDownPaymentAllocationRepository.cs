@@ -12,7 +12,7 @@ namespace Core.Interface.Repository
         IList<PurchaseDownPaymentAllocation> GetAll();
         IList<PurchaseDownPaymentAllocation> GetAllByMonthCreated();
         PurchaseDownPaymentAllocation GetObjectById(int Id);
-        PurchaseDownPaymentAllocation GetObjectByPurchaseDownPaymentId(int purchaseDownPaymentId);
+        PurchaseDownPaymentAllocation GetObjectByReceivableId(int ReceivableId);
         IList<PurchaseDownPaymentAllocation> GetObjectsByContactId(int contactId);
         PurchaseDownPaymentAllocation CreateObject(PurchaseDownPaymentAllocation purchaseDownPayment);
         PurchaseDownPaymentAllocation UpdateObject(PurchaseDownPaymentAllocation purchaseDownPayment);

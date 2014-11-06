@@ -38,9 +38,9 @@ namespace Data.Repository
             return salesDownPaymentAllocation;
         }
 
-        public SalesDownPaymentAllocation GetObjectBySalesDownPaymentId(int salesDownPaymentId)
+        public SalesDownPaymentAllocation GetObjectByPayableId(int PayableId)
         {
-            SalesDownPaymentAllocation salesDownPaymentAllocation = Find(x => x.SalesDownPaymentId == salesDownPaymentId && !x.IsDeleted);
+            SalesDownPaymentAllocation salesDownPaymentAllocation = Find(x => x.PayableId == PayableId && !x.IsDeleted);
             if (salesDownPaymentAllocation != null) { salesDownPaymentAllocation.Errors = new Dictionary<string, string>(); }
             return salesDownPaymentAllocation;
         }

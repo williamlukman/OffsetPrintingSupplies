@@ -11,7 +11,6 @@ namespace Core.Interface.Validation
     {
         SalesDownPaymentAllocation VHasPayable(SalesDownPaymentAllocation salesDownPaymentAllocation, IPayableService _payableService);
         SalesDownPaymentAllocation VHasContact(SalesDownPaymentAllocation salesDownPaymentAllocation, IContactService _contactService);
-        SalesDownPaymentAllocation VHasSalesDownPayment(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentService _salesDownPaymentService);
         SalesDownPaymentAllocation VHasAllocationDate(SalesDownPaymentAllocation salesDownPaymentAllocation);
         SalesDownPaymentAllocation VHasNoSalesDownPaymentAllocationDetail(SalesDownPaymentAllocation salesDownPaymentAllocation,
                                       ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);

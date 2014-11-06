@@ -53,6 +53,7 @@ namespace Service.Service
             if (_validator.ValidCreateObject(paymentRequest, _contactService))
             {
                 paymentRequest = _repository.CreateObject(paymentRequest);
+                /*
                 PaymentRequestDetail paymentRequestDetail = new PaymentRequestDetail()
                 {
                     PaymentRequestId = paymentRequest.Id,
@@ -62,6 +63,7 @@ namespace Service.Service
                     Status = Constant.GeneralLedgerStatus.Credit
                 };
                 _paymentRequestDetailService.CreateLegacyObject(paymentRequestDetail, this, _accountService);
+                 */
             }
             return paymentRequest;
         }
@@ -72,9 +74,11 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(paymentRequest, _contactService))
             {
                 _repository.UpdateObject(paymentRequest);
+                /*
                 PaymentRequestDetail APNonTrading = _paymentRequestDetailService.GetLegacyObjectByPaymentRequestId(paymentRequest.Id);
                 APNonTrading.Amount = paymentRequest.Amount;
                 _paymentRequestDetailService.UpdateLegacyObject(APNonTrading, this, _accountService);
+                 */
             }
             return paymentRequest;
         }

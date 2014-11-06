@@ -19,10 +19,6 @@ namespace Data.Mapping
             HasMany(sdpa => sdpa.SalesDownPaymentAllocationDetails)
                 .WithRequired(sdpad => sdpad.SalesDownPaymentAllocation)
                 .HasForeignKey(sdpad => sdpad.SalesDownPaymentAllocationId);
-            HasRequired(sdpa => sdpa.SalesDownPayment)
-                .WithMany()
-                .HasForeignKey(sdpa => sdpa.SalesDownPaymentId)
-                .WillCascadeOnDelete(false);
             HasRequired(sdpa => sdpa.Payable)
                 .WithMany(p => p.SalesDownPaymentAllocations)
                 .HasForeignKey(sdpa => sdpa.PayableId);

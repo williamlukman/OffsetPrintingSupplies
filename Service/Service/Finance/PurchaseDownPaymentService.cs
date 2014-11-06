@@ -36,11 +36,6 @@ namespace Service.Service
             return _repository.GetAll();
         }
 
-        public IList<PurchaseDownPayment> GetObjectsByCashBankId(int cashBankId)
-        {
-            return _repository.GetObjectsByCashBankId(cashBankId);
-        }
-
         public PurchaseDownPayment GetObjectById(int Id)
         {
             return _repository.GetObjectById(Id);
@@ -51,53 +46,30 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
-        public PurchaseDownPayment CreateObject(PurchaseDownPayment purchaseDownPayment, IContactService _contactService,
-                                                IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                                ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService)
+        public PurchaseDownPayment CreateObject(PurchaseDownPayment purchaseDownPayment, IContactService _contactService)
         {
             purchaseDownPayment.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(purchaseDownPayment, this, _contactService, _cashBankService, _paymentVoucherService))
+            if (_validator.ValidCreateObject(purchaseDownPayment, this, _contactService))
             {
-                Payable payable = new Payable()
-                {
-                    ContactId = purchaseDownPayment.ContactId,
-                    Amount = purchaseDownPayment.TotalAmount,
-                    DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value,
-                    CompletionDate = purchaseDownPayment.DownPaymentDate,
-                    PayableSource = Constant.SourceDocumentType.PurchaseDownPayment,
-                    PayableSourceId = purchaseDownPayment.Id
-                };
-                _payableService.CreateObject(payable);
-                purchaseDownPayment.PayableId = payable.Id;
                 _repository.CreateObject(purchaseDownPayment);
             }
             return purchaseDownPayment;
         }
 
-        public PurchaseDownPayment UpdateObject(PurchaseDownPayment purchaseDownPayment, IContactService _contactService,
-                                                IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                                ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService)
+        public PurchaseDownPayment UpdateObject(PurchaseDownPayment purchaseDownPayment, IContactService _contactService)
         {
-            if (_validator.ValidUpdateObject(purchaseDownPayment, this, _contactService, _cashBankService, _paymentVoucherService))
+            if (_validator.ValidUpdateObject(purchaseDownPayment, this, _contactService))
             {
                 _repository.UpdateObject(purchaseDownPayment);
-                Payable payable = _payableService.GetObjectBySource(Constant.SourceDocumentType.PurchaseDownPayment, purchaseDownPayment.Id);
-                payable.ContactId = purchaseDownPayment.ContactId;
-                payable.CompletionDate = purchaseDownPayment.DownPaymentDate;
-                payable.Amount = purchaseDownPayment.TotalAmount;
-                payable.DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value;
-                _payableService.UpdateObject(payable);
             }
             return purchaseDownPayment;
         }
 
-        public PurchaseDownPayment SoftDeleteObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                    IPaymentVoucherDetailService _paymentVoucherDetailService, IPaymentVoucherService _paymentVoucherService, IPayableService _payableService)
+        public PurchaseDownPayment SoftDeleteObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService)
         {
-            if (_validator.ValidDeleteObject(purchaseDownPayment, _purchaseDownPaymentAllocationService, _paymentVoucherDetailService))
+            if (_validator.ValidDeleteObject(purchaseDownPayment, _purchaseDownPaymentAllocationService))
             {
                 _repository.SoftDeleteObject(purchaseDownPayment);
-                _payableService.DeleteObject(purchaseDownPayment.PayableId);
             }
             return purchaseDownPayment;
         }
@@ -107,28 +79,61 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment, DateTime ConfirmationDate, ICashBankService _cashBankService, IPaymentVoucherService _paymentVoucherService,
-                                                 IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService,
-                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+        public PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment, DateTime ConfirmationDate, IPayableService _payableService, IReceivableService _receivableService,
+                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             purchaseDownPayment.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseDownPayment, _cashBankService, _paymentVoucherService, this, _contactService, _accountService, _generalLedgerJournalService, _closingService))
+            if (_validator.ValidConfirmObject(purchaseDownPayment, _payableService, _receivableService, this, _contactService, _accountService,
+                                              _generalLedgerJournalService, _closingService))
             {
+                Receivable receivable = new Receivable()
+                {
+                    ContactId = purchaseDownPayment.ContactId,
+                    Amount = purchaseDownPayment.TotalAmount,
+                    RemainingAmount = purchaseDownPayment.TotalAmount,
+                    DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value,
+                    CompletionDate = null,
+                    ReceivableSource = Constant.SourceDocumentType.PurchaseDownPayment,
+                    ReceivableSourceId = purchaseDownPayment.Id
+                };
+                _receivableService.CreateObject(receivable);
+
+                Payable payable = new Payable()
+                {
+                    ContactId = purchaseDownPayment.ContactId,
+                    Amount = purchaseDownPayment.TotalAmount,
+                    RemainingAmount = purchaseDownPayment.TotalAmount,
+                    DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value,
+                    CompletionDate = null,
+                    PayableSource = Constant.SourceDocumentType.PurchaseDownPayment,
+                    PayableSourceId = purchaseDownPayment.Id
+                };
+                _payableService.CreateObject(payable);
+
+                purchaseDownPayment.ReceivableId = receivable.Id;
+                purchaseDownPayment.PayableId = payable.Id;
+
                 _repository.ConfirmObject(purchaseDownPayment);
+                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService);
             }
             return purchaseDownPayment;
         }
 
-        public PurchaseDownPayment UnconfirmObject(PurchaseDownPayment purchaseDownPayment, ICashBankService _cashBankService, 
-                                                   IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                                                   IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService,
-                                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+        public PurchaseDownPayment UnconfirmObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
+                                                IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPayableService _payableService, IReceivableService _receivableService, 
+                                                IContactService _contactService, IAccountService _accountService,
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(purchaseDownPayment, _cashBankService, _paymentVoucherService,
-                                                _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService,
+            if (_validator.ValidUnconfirmObject(purchaseDownPayment, _payableService, _receivableService, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService,
                                                 _accountService, _generalLedgerJournalService, _closingService))
             {
+                _receivableService.DeleteObject((int)purchaseDownPayment.ReceivableId);
+                purchaseDownPayment.ReceivableId = null;
+                _payableService.DeleteObject((int)purchaseDownPayment.PayableId);
+                purchaseDownPayment.PayableId = null;
+
                 _repository.UnconfirmObject(purchaseDownPayment);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService);
             }
             return purchaseDownPayment;
         }

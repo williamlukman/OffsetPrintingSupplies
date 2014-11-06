@@ -841,7 +841,7 @@
 
     // -------------------------------------------------------Look Up receivable-------------------------------------------------------
     $('#btnReceivable').click(function () {
-        var lookUpURL = base_url + 'ReceiptVoucher/GetListReceivable';
+        var lookUpURL = base_url + 'ReceiptVoucher/GetListReceivableNonDP';
         var lookupGrid = $('#lookup_table_receivable');
         lookupGrid.setGridParam({
             url: lookUpURL

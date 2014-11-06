@@ -840,7 +840,7 @@
 
     // -------------------------------------------------------Look Up payable-------------------------------------------------------
     $('#btnPayable').click(function () {
-        var lookUpURL = base_url + 'PaymentVoucher/GetListPayable';
+        var lookUpURL = base_url + 'PaymentVoucher/GetListPayableNonDP';
         var lookupGrid = $('#lookup_table_payable');
         lookupGrid.setGridParam({
             url: lookUpURL

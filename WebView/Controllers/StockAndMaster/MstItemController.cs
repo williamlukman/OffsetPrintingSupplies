@@ -81,6 +81,7 @@ namespace WebView.Controllers
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
+                             model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -127,6 +128,91 @@ namespace WebView.Controllers
                             model.AvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.IsTradeable,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListTradeable(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM").Where(x => x.IsTradeable && !x.IsDeleted);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Sku,
+                             model.Name,
+                             model.Quantity,
+                             model.PendingReceival,
+                             model.PendingDelivery,
+                             model.MinimumQuantity,
+                             model.Virtual,
+                             model.UoMId,
+                             UoM = model.UoM.Name,
+                             model.SellingPrice,
+                             model.AvgPrice,
+                             model.Description,
+                             model.ItemTypeId,
+                             ItemType = model.ItemType.Name,
+                             model.IsTradeable,
+                             model.CreatedAt,
+                             model.UpdatedAt
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Sku,
+                            model.Name,
+                            model.Quantity,
+                            model.PendingReceival,
+                            model.PendingDelivery,
+                            model.MinimumQuantity,
+                            model.Virtual,
+                            model.UoM,
+                            model.SellingPrice,
+                            model.AvgPrice,
+                            model.Description,
+                            model.ItemType,
+                            model.IsTradeable,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -352,6 +438,7 @@ namespace WebView.Controllers
                 data.ItemTypeId = model.ItemTypeId;
                 data.SellingPrice = model.SellingPrice;
                 data.MinimumQuantity = model.MinimumQuantity;
+                data.IsTradeable = model.IsTradeable;
                 model = _itemService.UpdateObject(data,_uoMService,_itemTypeService,_priceMutationService);
             }
             catch (Exception ex)

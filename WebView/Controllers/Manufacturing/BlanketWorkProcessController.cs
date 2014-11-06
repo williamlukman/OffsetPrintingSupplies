@@ -40,7 +40,7 @@ namespace WebView.Controllers
             _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
-
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
         }
 
 

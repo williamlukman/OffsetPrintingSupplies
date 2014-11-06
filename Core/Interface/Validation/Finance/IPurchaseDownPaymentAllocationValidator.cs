@@ -9,53 +9,50 @@ namespace Core.Interface.Validation
 {
     public interface IPurchaseDownPaymentAllocationValidator
     {
-        PurchaseDownPaymentAllocation VHasContact(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IContactService _contactService);
-        PurchaseDownPaymentAllocation VHasPurchaseDownPayment(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentService _purchaseDownPaymentService);
-        PurchaseDownPaymentAllocation VHasAllocationDate(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
-        PurchaseDownPaymentAllocation VHasNoPurchaseDownPaymentAllocationDetail(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
-                                      IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService);
-        PurchaseDownPaymentAllocation VHasPurchaseDownPaymentAllocationDetails(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
-                                      IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService);
-        PurchaseDownPaymentAllocation VTotalAmountNotNegativeNorZero(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
-        PurchaseDownPaymentAllocation VHasNotBeenDeleted(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
-        PurchaseDownPaymentAllocation VHasBeenConfirmed(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
-        PurchaseDownPaymentAllocation VHasNotBeenConfirmed(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
-        PurchaseDownPaymentAllocation VTotalAmountEqualDetailsAmount(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
-                                      IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService);
-        PurchaseDownPaymentAllocation VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
-                                      IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
-        PurchaseDownPaymentAllocation VCashBankIsGreaterThanOrEqualPurchaseDownPaymentAllocationDetails(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
-                                      IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                      ICashBankService _cashBankService);
-        PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IClosingService _closingService, int CaseConfirmUnconfirm);
-        PurchaseDownPaymentAllocation VCreateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                    IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                    IContactService _contactService);
-        PurchaseDownPaymentAllocation VUpdateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                    IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                    IContactService _contactService);
-        PurchaseDownPaymentAllocation VDeleteObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService);
-        PurchaseDownPaymentAllocation VHasConfirmationDate(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
-        PurchaseDownPaymentAllocation VConfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                                      IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
-                                      IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        PurchaseDownPaymentAllocation VUnconfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                                      IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                      IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        bool ValidCreateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                               IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                               IContactService _contactService);
-        bool ValidUpdateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                               IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                               IContactService _contactService);
-        bool ValidDeleteObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService);
-        bool ValidConfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                                IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
+        PurchaseDownPaymentAllocation VHasReceivable(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IReceivableService _receivableService);
+        PurchaseDownPaymentAllocation VHasContact(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IContactService _contactService);
+        PurchaseDownPaymentAllocation VHasAllocationDate(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
+        PurchaseDownPaymentAllocation VHasNoPurchaseDownPaymentAllocationDetail(PurchaseDownPaymentAllocation salesDownPaymentAllocation,
+                                      IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+        PurchaseDownPaymentAllocation VHasPurchaseDownPaymentAllocationDetails(PurchaseDownPaymentAllocation salesDownPaymentAllocation,
+                                      IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+        PurchaseDownPaymentAllocation VTotalAmountNotNegativeNorZero(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
+        PurchaseDownPaymentAllocation VHasNotBeenDeleted(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
+        PurchaseDownPaymentAllocation VHasBeenConfirmed(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
+        PurchaseDownPaymentAllocation VHasNotBeenConfirmed(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
+        PurchaseDownPaymentAllocation VTotalAmountEqualDetailsAmount(PurchaseDownPaymentAllocation salesDownPaymentAllocation,
+                                      IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+        PurchaseDownPaymentAllocation VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(PurchaseDownPaymentAllocation salesDownPaymentAllocation,
+                                      IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPayableService _payableService, IReceivableService _receivableService);
+        PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IClosingService _closingService, int CaseConfirmUnconfirm);
+        PurchaseDownPaymentAllocation VCreateObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationService _salesDownPaymentAllocationService,
+                                                 IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPurchaseDownPaymentService _salesDownPaymentService,
+                                                 IContactService _contactService, IReceivableService _receivableService);
+        PurchaseDownPaymentAllocation VUpdateObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationService _salesDownPaymentAllocationService,
+                                                    IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPurchaseDownPaymentService _salesDownPaymentService,
+                                                    IContactService _contactService, IReceivableService _receivableService);
+        PurchaseDownPaymentAllocation VDeleteObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+        PurchaseDownPaymentAllocation VHasConfirmationDate(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
+        PurchaseDownPaymentAllocation VConfirmObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                                  IPurchaseDownPaymentService _salesDownPaymentService, IPayableService _payableService, IReceivableService _receivableService,
+                                                  IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        PurchaseDownPaymentAllocation VUnconfirmObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                                    IPayableService _payableService, IReceivableService _receivableService, IAccountService _accountService,
+                                                    IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        bool ValidCreateObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationService _salesDownPaymentAllocationService,
+                               IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPurchaseDownPaymentService _salesDownPaymentService,
+                               IContactService _contactService, IReceivableService _receivableService);
+        bool ValidUpdateObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationService _salesDownPaymentAllocationService,
+                               IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPurchaseDownPaymentService _salesDownPaymentService,
+                               IContactService _contactService, IReceivableService _receivableService);
+        bool ValidDeleteObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+        bool ValidConfirmObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                IPurchaseDownPaymentService _salesDownPaymentService, IPayableService _payableService, IReceivableService _receivableService,
                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        bool ValidUnconfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                                  IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                  IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        bool isValid(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
-        string PrintError(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation);
+        bool ValidUnconfirmObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                  IPayableService _payableService, IReceivableService _receivableService, IAccountService _accountService,
+                                  IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        bool isValid(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
+        string PrintError(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
     }
 }

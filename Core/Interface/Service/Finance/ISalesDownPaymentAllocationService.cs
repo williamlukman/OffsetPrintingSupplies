@@ -13,12 +13,12 @@ namespace Core.Interface.Service
         IQueryable<SalesDownPaymentAllocation> GetQueryable();
         IList<SalesDownPaymentAllocation> GetAll();
         SalesDownPaymentAllocation GetObjectById(int Id);
-        SalesDownPaymentAllocation GetObjectBySalesDownPaymentId(int salesDownPaymentId);
+        SalesDownPaymentAllocation GetObjectByPayableId(int PayableId);
         IList<SalesDownPaymentAllocation> GetObjectsByContactId(int contactId);
         SalesDownPaymentAllocation CreateObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentService _salesDownPaymentService, 
                                                 ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService, IPayableService _payableService);
         SalesDownPaymentAllocation UpdateObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentService _salesDownPaymentService,
-                                                   ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService, IPayableService _payableService);
+                                                ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService, IPayableService _payableService);
         SalesDownPaymentAllocation SoftDeleteObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
         bool DeleteObject(int Id);
         SalesDownPaymentAllocation ConfirmObject(SalesDownPaymentAllocation salesDownPaymentAllocation, DateTime ConfirmationDate, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,

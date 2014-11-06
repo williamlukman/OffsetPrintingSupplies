@@ -1106,15 +1106,6 @@
     <Content Include="Content\themes\easyui\metro\images\Thumbs.db" />
     <Content Include="Content\uploadify\check.php" />
     <Content Include="Content\uploadify\uploadify.php" />
-    <Content Include="Content\uploadify\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <None Include="Content\uploadify\Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Content\uploadify\Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
     <Content Include="Content\Web.config">
       <SubType>Designer</SubType>
     </Content>

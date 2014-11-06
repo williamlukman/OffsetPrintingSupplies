@@ -31,16 +31,6 @@ namespace Validation.Validation
             return salesDownPaymentAllocation;
         }
 
-        public SalesDownPaymentAllocation VHasSalesDownPayment(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentService _salesDownPaymentService)
-        {
-            SalesDownPayment salesDownPayment = _salesDownPaymentService.GetObjectById(salesDownPaymentAllocation.SalesDownPaymentId);
-            if (salesDownPayment == null)
-            {
-                salesDownPaymentAllocation.Errors.Add("SalesDownPaymentId", "Tidak boleh tidak ada");
-            }
-            return salesDownPaymentAllocation;
-        }
-
         public SalesDownPaymentAllocation VHasAllocationDate(SalesDownPaymentAllocation salesDownPaymentAllocation)
         {
             if (salesDownPaymentAllocation.AllocationDate == null)
@@ -170,10 +160,9 @@ namespace Validation.Validation
                                                         ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
                                                         IContactService _contactService, IPayableService _payableService)
         {
+            VHasPayable(salesDownPaymentAllocation, _payableService);
             if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
             VHasContact(salesDownPaymentAllocation, _contactService);
-            if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
-            VHasSalesDownPayment(salesDownPaymentAllocation, _salesDownPaymentService);
             if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
             VHasAllocationDate(salesDownPaymentAllocation);
             return salesDownPaymentAllocation;
@@ -183,8 +172,6 @@ namespace Validation.Validation
                                           ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
                                           IContactService _contactService, IPayableService _payableService)
         {
-            VHasPayable(salesDownPaymentAllocation, _payableService);
-            if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
             VHasNotBeenConfirmed(salesDownPaymentAllocation);
             if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
             VHasNoSalesDownPaymentAllocationDetail(salesDownPaymentAllocation, _salesDownPaymentAllocationDetailService);

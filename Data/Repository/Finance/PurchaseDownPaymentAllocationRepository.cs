@@ -38,9 +38,9 @@ namespace Data.Repository
             return purchaseDownPaymentAllocation;
         }
 
-        public PurchaseDownPaymentAllocation GetObjectByPurchaseDownPaymentId(int purchaseDownPaymentId)
+        public PurchaseDownPaymentAllocation GetObjectByReceivableId(int ReceivableId)
         {
-            PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = Find(x => x.PurchaseDownPaymentId == purchaseDownPaymentId && !x.IsDeleted);
+            PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = Find(x => x.ReceivableId == ReceivableId && !x.IsDeleted);
             if (purchaseDownPaymentAllocation != null) { purchaseDownPaymentAllocation.Errors = new Dictionary<string, string>(); }
             return purchaseDownPaymentAllocation;
         }

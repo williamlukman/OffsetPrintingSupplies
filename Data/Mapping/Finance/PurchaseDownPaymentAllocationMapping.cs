@@ -19,10 +19,9 @@ namespace Data.Mapping
             HasMany(pdpa => pdpa.PurchaseDownPaymentAllocationDetails)
                 .WithRequired(pdpad => pdpad.PurchaseDownPaymentAllocation)
                 .HasForeignKey(pdpad => pdpad.PurchaseDownPaymentAllocationId);
-            HasRequired(pdpa => pdpa.PurchaseDownPayment)
-                .WithMany()
-                .HasForeignKey(pdpa => pdpa.PurchaseDownPaymentId)
-                .WillCascadeOnDelete(false);
+            HasRequired(pdpa => pdpa.Receivable)
+                .WithMany(r => r.PurchaseDownPaymentAllocations)
+                .HasForeignKey(pdpa => pdpa.ReceivableId);
             Ignore(pdpa => pdpa.Errors);
         }
     }

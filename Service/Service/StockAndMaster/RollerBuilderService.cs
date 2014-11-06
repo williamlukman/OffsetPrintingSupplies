@@ -98,7 +98,8 @@ namespace Service.Service
                 UoMId = rollerBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
-                Sku = rollerBuilder.SkuRollerUsedCore
+                Sku = rollerBuilder.SkuRollerUsedCore,
+                IsTradeable = true,
             };
             RollerUsedCore.Errors = new Dictionary<string, string>();
 
@@ -109,7 +110,8 @@ namespace Service.Service
                 UoMId = rollerBuilder.UoMId,
                 Quantity = 0,
                 ItemTypeId = _itemTypeService.GetObjectByName(Core.Constants.Constant.ItemTypeCase.Roller).Id,
-                Sku = rollerBuilder.SkuRollerNewCore
+                Sku = rollerBuilder.SkuRollerNewCore,
+                IsTradeable = true
             };
             RollerNewCore.Errors = new Dictionary<string, string>();
 

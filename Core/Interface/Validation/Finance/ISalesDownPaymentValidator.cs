@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
     public interface ISalesDownPaymentValidator
     {
         SalesDownPayment VHasContact(SalesDownPayment salesDownPayment, IContactService _contactService);
+        SalesDownPayment VHasPayable(SalesDownPayment salesDownPayment, IPayableService _payableService);
         SalesDownPayment VHasReceivable(SalesDownPayment salesDownPayment, IReceivableService _receivableService);
         SalesDownPayment VHasDownPaymentDate(SalesDownPayment salesDownPayment);
         SalesDownPayment VReceivableHasNotBeenPaidAndHasNoSalesDownPaymentAllocation(SalesDownPayment salesDownPayment, IReceivableService _receivable,
@@ -24,18 +25,18 @@ namespace Core.Interface.Validation
         SalesDownPayment VUpdateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService);
         SalesDownPayment VDeleteObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService);
         SalesDownPayment VHasConfirmationDate(SalesDownPayment salesDownPayment);
-        SalesDownPayment VConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService,
+        SalesDownPayment VConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService,
                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        SalesDownPayment VUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
+        SalesDownPayment VUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                           ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
 
         bool ValidCreateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService);
         bool ValidUpdateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService);
         bool ValidDeleteObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService);
-        bool ValidConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService, 
+        bool ValidConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService, 
                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
-        bool ValidUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
+        bool ValidUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                   ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         bool isValid(SalesDownPayment salesDownPayment);

@@ -82,14 +82,18 @@ namespace Core.Constants
             public static string PaymentRequest = "PaymentRequest";
             public static string PurchaseInvoice = "PurchaseInvoice";
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
-            public static string SalesDownPaymentAllocation = "SalesDownPaymentAllocation"; // ask for better understanding of this
+            public static string SalesDownPayment = "SalesDownPayment";
+            public static string PurchaseDownPayment = "PurchaseDownPayment";
+            public static string PurchaseDownPaymentAllocationDetail = "PurchaseDownPaymentAllocationDetail";
         }
 
         public class ReceivableSource
         {
             public static string SalesInvoice = "SalesInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
-            public static string PurchaseDownPaymentAllocation = "PurchaseDownPaymentAllocation";
+            public static string PurchaseDownPayment = "PurchaseDownPayment";
+            public static string SalesDownPayment = "SalesDownPayment";
+            public static string SalesDownPaymentAllocationDetail = "SalesDownPaymentAllocationDetail";
         }
         #endregion
 

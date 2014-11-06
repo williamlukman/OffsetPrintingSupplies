@@ -10,6 +10,7 @@ using Data.Repository;
 using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
+using Core.Constants;
 
 namespace WebView.Controllers
 {
@@ -117,6 +118,228 @@ namespace WebView.Controllers
             // Get Data
             var q = _payableService.GetQueryable().Include("Contact")
                                    .Where(x => !x.IsDeleted && x.CreatedAt >= startdate && x.CreatedAt < enddate.AddDays(1));
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             model.PayableSource,
+                             model.PayableSourceId,
+                             model.Amount,
+                             model.RemainingAmount,
+                             model.PendingClearanceAmount,
+                             model.DueDate,
+                             model.CompletionDate,
+                             model.CreatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from payable in list
+                    select new
+                    {
+                        id = payable.Id,
+                        cell = new object[] {
+                            payable.Id,
+                            payable.Code,
+                            payable.ContactId,
+                            payable.Contact,
+                            payable.PayableSource,
+                            payable.PayableSourceId,
+                            payable.Amount,
+                            payable.RemainingAmount,
+                            payable.PendingClearanceAmount,
+                            payable.DueDate,
+                            payable.CompletionDate,
+                            payable.CreatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListSalesDownPayment(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _payableService.GetQueryable().Include("Contact").Where(x => x.PayableSource == Constant.PayableSource.SalesDownPayment && !x.IsDeleted);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             model.PayableSource,
+                             model.PayableSourceId,
+                             model.Amount,
+                             model.RemainingAmount,
+                             model.PendingClearanceAmount,
+                             model.DueDate,
+                             model.CompletionDate,
+                             model.CreatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from payable in list
+                    select new
+                    {
+                        id = payable.Id,
+                        cell = new object[] {
+                            payable.Id,
+                            payable.Code,
+                            payable.ContactId,
+                            payable.Contact,
+                            payable.PayableSource,
+                            payable.PayableSourceId,
+                            payable.Amount,
+                            payable.RemainingAmount,
+                            payable.PendingClearanceAmount,
+                            payable.DueDate,
+                            payable.CompletionDate,
+                            payable.CreatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListPurchaseDownPayment(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _payableService.GetQueryable().Include("Contact").Where(x => x.PayableSource == Constant.PayableSource.PurchaseDownPayment && !x.IsDeleted);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.ContactId,
+                             Contact = model.Contact.Name,
+                             model.PayableSource,
+                             model.PayableSourceId,
+                             model.Amount,
+                             model.RemainingAmount,
+                             model.PendingClearanceAmount,
+                             model.DueDate,
+                             model.CompletionDate,
+                             model.CreatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from payable in list
+                    select new
+                    {
+                        id = payable.Id,
+                        cell = new object[] {
+                            payable.Id,
+                            payable.Code,
+                            payable.ContactId,
+                            payable.Contact,
+                            payable.PayableSource,
+                            payable.PayableSourceId,
+                            payable.Amount,
+                            payable.RemainingAmount,
+                            payable.PendingClearanceAmount,
+                            payable.DueDate,
+                            payable.CompletionDate,
+                            payable.CreatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListPurchaseInvoice(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _payableService.GetQueryable().Include("Contact").Where(x => x.PayableSource == Constant.PayableSource.PurchaseInvoice && !x.IsDeleted);
 
             var query = (from model in q
                          select new

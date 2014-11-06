@@ -271,16 +271,7 @@
                                                <li><a href="@Url.Action("Index", "MstUom")">UoM</a> </li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Accounting</a>
-                                                <ul>
-	    											<li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>
-                                                    <li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>
-                                                    <li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>
-                                                    <li><a href="@Url.Action("Index", "Closing")">Closing</a></li>
-                                                    <!--li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li-->
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Stock</a>
+                                            <li><a href="#">Logistic</a>
                                                 <ul>
                                                     <li><a href="@Url.Action("Index", "MstBlanket")">Blanket</a> </li>
                                                     <li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>
@@ -293,15 +284,6 @@
                                                     <li><a href="@Url.Action("Index", "WarehouseMutation")">Warehouse Mutation</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Down Payment (DP)</a>
-                                                <ul>
-                                                    <li><a href="@Url.Action("Index", "PurchaseDownPayment")">Purchase DP</a></li>
-                                                    <li><a href="@Url.Action("Index", "PurchaseDownPaymentAllocation")">Purchase DP Allocation</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesDownPayment")">Sales DP</a></li>
-                                                    <li><a href="@Url.Action("Index", "SalesDownPaymentAllocation")">Sales DP Allocation</a></li>
-                                                </ul>
-                                            </li>
-
                                         </ul>                 
                                     </li>
                                     <li><a href="#">Manufacturing</a>
@@ -325,14 +307,40 @@
                                     </li>
                                     <li><a href="#">Transaction</a>
                                         <ul>
-                                             <li><a href="#">Purchase</a>
+                                            <li><a href="#">Accounting</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Index", "PurchaseDownPaymentAllocation")">Purchase DP Allocation</a></li>
+                                                    <li><a href="@Url.Action("Index", "SalesDownPaymentAllocation")">Sales DP Allocation</a></li>
+	    											<li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>
+                                                    <li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>
+                                                    <li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>
+                                                    <li><a href="@Url.Action("Index", "Closing")">Closing</a></li>
+                                                    <!--li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li-->
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Finance</a>
+                                                <ul>
+                                                    <li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
+                                                    <li><a href="@Url.Action("Index", "MstCashBank")">Cash Bank</a> </li>
+                                                    <li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a> </li>
+                                                    <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
+                                                    <li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
+                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
+                                                    <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "PurchaseDownPayment")">Purchase DP</a></li>
+                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
+                                                    <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
+                                                    <li><a href="@Url.Action("Index", "SalesDownPayment")">Sales DP</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Purchase</a>
                                                 <ul>
                                                     <li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>
                                                     <li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>
                                                     <li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>
                                                 </ul>
                                             </li>
-                                               <li><a href="#">Sales</a>
+                                            <li><a href="#">Sales</a>
                                                 <ul>
                                                     <li><a href="@Url.Action("Index", "SalesQuotation")">Sales Quotation</a></li>
                                                     <li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>
@@ -340,19 +348,6 @@
                                                     <li><a href="@Url.Action("Index", "VirtualOrder")">Virtual Order</a></li>
                                                     <li><a href="@Url.Action("Index", "TemporaryDeliveryOrder")">Temporary Delivery Order</a></li>
                                                     <li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Finance</a>
-                                                <ul>
-                                                    <li><a href="@Url.Action("Index", "MstCashBank")">Cash Bank</a> </li>
-                                                    <li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a> </li>
-                                                    <li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>
-                                                    <li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>
-                                                    <li><a href="@Url.Action("Index", "Payable")">Payable</a></li>
-                                                    <li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>
-                                                    <li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>
-                                                    <li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>
-                                                    <li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>
                                                 </ul>
                                             </li>
                                         </ul>

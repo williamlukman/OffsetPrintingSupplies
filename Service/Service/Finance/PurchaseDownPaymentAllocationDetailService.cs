@@ -1,3 +1,4 @@
+using Core.Constants;
 using Core.DomainModel;
 using Core.Interface.Repository;
 using Core.Interface.Service;
@@ -51,32 +52,30 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public PurchaseDownPaymentAllocationDetail CreateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                                IPurchaseDownPaymentService _purchaseDownPaymentService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                                                IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService)
+        public PurchaseDownPaymentAllocationDetail CreateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
+                                                             IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
+                                                             IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService,
+                                                             IReceivableService _receivableService)
         {
             purchaseDownPaymentAllocationDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _paymentVoucherDetailService, _payableService))
+            if (_validator.ValidCreateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _payableService, _receivableService))
             {
-                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
-                PurchaseDownPayment purchaseDownPayment = _purchaseDownPaymentService.GetObjectById(purchaseDownPaymentAllocation.PurchaseDownPaymentId);
                 _repository.CreateObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;
         }
 
         public PurchaseDownPaymentAllocationDetail UpdateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                                IPurchaseDownPaymentService _purchaseDownPaymentService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                                                IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService)
+                                                             IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IReceivableService _receivableService)
         {
-            if (_validator.ValidUpdateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _paymentVoucherDetailService, _payableService))
+            if (_validator.ValidUpdateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _payableService, _receivableService))
             {
                 _repository.UpdateObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;
         }
 
-        public PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        public PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail)
         {
             if (_validator.ValidDeleteObject(purchaseDownPaymentAllocationDetail))
             {
@@ -91,23 +90,43 @@ namespace Service.Service
         }
 
         public PurchaseDownPaymentAllocationDetail ConfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, DateTime ConfirmationDate,
-                                                                 IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                                 IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+                                                IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentService _purchaseDownPaymentService,
+                                                IPayableService _payableService, IReceivableService _receivableService)
         {
             purchaseDownPaymentAllocationDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseDownPaymentAllocationDetail, _paymentVoucherDetailService, _payableService))
+            if (_validator.ValidConfirmObject(purchaseDownPaymentAllocationDetail, _payableService, _receivableService))
             {
+                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
+
+                Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
+                receivable.RemainingAmount -= purchaseDownPaymentAllocationDetail.Amount;
+                _receivableService.UpdateObject(receivable);
+
+                Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);
+                payable.RemainingAmount -= purchaseDownPaymentAllocationDetail.Amount;
+                _payableService.UpdateObject(payable);
+
                 purchaseDownPaymentAllocationDetail = _repository.ConfirmObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;
         }
 
         public PurchaseDownPaymentAllocationDetail UnconfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                                                   IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                                   IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+                                                IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentService _purchaseDownPaymentService,
+                                                IPayableService _payableService, IReceivableService _receivableService)
         {
-            if (_validator.ValidUnconfirmObject(purchaseDownPaymentAllocationDetail, _paymentVoucherDetailService, _payableService))
+            if (_validator.ValidUnconfirmObject(purchaseDownPaymentAllocationDetail, _payableService, _receivableService))
             {
+                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
+
+                Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
+                receivable.RemainingAmount += purchaseDownPaymentAllocationDetail.Amount;
+                _receivableService.UpdateObject(receivable);
+
+                Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);
+                payable.RemainingAmount += purchaseDownPaymentAllocationDetail.Amount;
+                _payableService.UpdateObject(payable);
+
                 purchaseDownPaymentAllocationDetail = _repository.UnconfirmObject(purchaseDownPaymentAllocationDetail);
             }
             return purchaseDownPaymentAllocationDetail;

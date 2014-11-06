@@ -21,6 +21,19 @@ namespace Validation.Validation
             return salesDownPayment;
         }
 
+        public SalesDownPayment VHasPayable(SalesDownPayment salesDownPayment, IPayableService _payableService)
+        {
+            if (salesDownPayment.PayableId == null)
+            {
+                salesDownPayment.Errors.Add("PayableId", "Tidak boleh tidak ada");
+            }
+            else if (_payableService.GetObjectById((int)salesDownPayment.PayableId) == null)
+            {
+                salesDownPayment.Errors.Add("PayableId", "Tidak boleh tidak ada");
+            }
+            return salesDownPayment;
+        }
+
         public SalesDownPayment VHasReceivable(SalesDownPayment salesDownPayment, IReceivableService _receivableService)
         {
             if (salesDownPayment.ReceivableId == null)
@@ -43,11 +56,11 @@ namespace Validation.Validation
             return salesDownPayment;
         }
 
-        public SalesDownPayment VReceivableHasNotBeenPaidAndHasNoSalesDownPaymentAllocation(SalesDownPayment salesDownPayment, IReceivableService _receivable,
+        public SalesDownPayment VReceivableHasNotBeenPaidAndHasNoSalesDownPaymentAllocation(SalesDownPayment salesDownPayment, IReceivableService _receivableService,
                                 ISalesDownPaymentAllocationService _salesDownPaymentAllocationService)
         {
-            Receivable receivable = _receivable.GetObjectById((int) salesDownPayment.ReceivableId);
-            SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectBySalesDownPaymentId(salesDownPayment.Id);
+            Receivable receivable = _receivableService.GetObjectById((int) salesDownPayment.ReceivableId);
+            SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectByPayableId((int) salesDownPayment.PayableId);
             if (receivable.RemainingAmount < receivable.Amount)
             {
                 salesDownPayment.Errors.Add("Generic", "Receivable tidak boleh sudah diuangkan");
@@ -156,7 +169,7 @@ namespace Validation.Validation
             return obj;
         }
 
-        public SalesDownPayment VConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService,
+        public SalesDownPayment VConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService,
                                                ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService,
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
@@ -172,10 +185,12 @@ namespace Validation.Validation
             return salesDownPayment;
         }
 
-        public SalesDownPayment VUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService,
+        public SalesDownPayment VUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService,
                                 ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
+            VHasPayable(salesDownPayment, _payableService);
+            if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasReceivable(salesDownPayment, _receivableService);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasBeenConfirmed(salesDownPayment);
@@ -206,22 +221,22 @@ namespace Validation.Validation
             return isValid(salesDownPayment);
         }
 
-        public bool ValidConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService,
+        public bool ValidConfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService,
                                        ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService, IAccountService _accountService,
                                        IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             salesDownPayment.Errors.Clear();
-            VConfirmObject(salesDownPayment, _receivableService, _salesDownPaymentService, _contactService,
+            VConfirmObject(salesDownPayment, _receivableService, _payableService, _salesDownPaymentService, _contactService,
                            _accountService, _generalLedgerJournalService, _closingService);
             return isValid(salesDownPayment);
         }
 
-        public bool ValidUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService,
+        public bool ValidUnconfirmObject(SalesDownPayment salesDownPayment, IReceivableService _receivableService, IPayableService _payableService,
                                          ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             salesDownPayment.Errors.Clear();
-            VUnconfirmObject(salesDownPayment, _receivableService, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService,
+            VUnconfirmObject(salesDownPayment, _receivableService, _payableService, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService,
                              _accountService, _generalLedgerJournalService, _closingService);
             return isValid(salesDownPayment);
         }

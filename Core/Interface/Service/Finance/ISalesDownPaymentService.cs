@@ -18,11 +18,12 @@ namespace Core.Interface.Service
         SalesDownPayment UpdateObject(SalesDownPayment salesDownPayment, IContactService _contactService);
         SalesDownPayment SoftDeleteObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService);
         bool DeleteObject(int Id);
-        SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService, IContactService _contactService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService,
+                                       IPayableService _payableService, IContactService _contactService, IAccountService _accountService,
+                                       IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         SalesDownPayment UnconfirmObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                          ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
-                                         IReceivableService _receivableService, IContactService _contactService,
+                                         IReceivableService _receivableService, IPayableService _payableService, IContactService _contactService,
                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
     }
 }

@@ -460,6 +460,7 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'code', index: 'code', width: 80 },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_machine'),

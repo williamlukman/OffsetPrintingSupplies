@@ -462,19 +462,19 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, IAccountService _accountService)
         {
-            // Credit AccountPayable, Debit PrepaidExpense (Asset)
-            #region Credit AccountPayable, Debit PrepaidExpense (Asset)
+            // Credit AccountPayable, Debit PiutangLainLain
+            #region Credit AccountPayable, Debit PiutangLainLain
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            GeneralLedgerJournal debitprepaidexpense = new GeneralLedgerJournal()
+            GeneralLedgerJournal debitpiutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PrepaidExpense).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PiutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPayment,
                 SourceDocumentId = purchaseDownPayment.Id,
                 TransactionDate = (DateTime)purchaseDownPayment.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = purchaseDownPayment.TotalAmount
             };
-            debitprepaidexpense = CreateObject(debitprepaidexpense, _accountService);
+            debitpiutanglainlain = CreateObject(debitpiutanglainlain, _accountService);
 
             GeneralLedgerJournal creditpayable = new GeneralLedgerJournal()
             {
@@ -487,7 +487,7 @@ namespace Service.Service
             };
             creditpayable = CreateObject(creditpayable, _accountService);
 
-            journals.Add(debitprepaidexpense);
+            journals.Add(debitpiutanglainlain);
             journals.Add(creditpayable);
 
             return journals;
@@ -496,21 +496,21 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, IAccountService _accountService)
         {
-            // Debit AccountPayable, Credit PrepaidExpense (Asset)
-            #region Debit AccountPayable, Credit PrepaidExpense
+            // Debit AccountPayable, Credit PiutangLainLain
+            #region Debit AccountPayable, Credit PiutangLainLain
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
 
-            GeneralLedgerJournal creditprepaidexpense = new GeneralLedgerJournal()
+            GeneralLedgerJournal creditpiutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PrepaidExpense).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PiutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPayment,
                 SourceDocumentId = purchaseDownPayment.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = purchaseDownPayment.TotalAmount
             };
-            creditprepaidexpense = CreateObject(creditprepaidexpense, _accountService);
+            creditpiutanglainlain = CreateObject(creditpiutanglainlain, _accountService);
 
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
@@ -523,7 +523,7 @@ namespace Service.Service
             };
             debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
 
-            journals.Add(creditprepaidexpense);
+            journals.Add(creditpiutanglainlain);
             journals.Add(debitaccountpayable);
 
             return journals;
@@ -532,19 +532,19 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseDownPaymentAllocation(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IAccountService _accountService)
         {
-            // Debit GoodsPendingClearance, Credit PrepaidExpense (Asset)
-            #region Debit GoodsPendingClearance, Credit PrepaidExpense (Asset)
+            // Debit GoodsPendingClearance, Credit PiutangLainLain
+            #region Debit GoodsPendingClearance, Credit PiutangLainLain
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            GeneralLedgerJournal creditprepaidexpense = new GeneralLedgerJournal()
+            GeneralLedgerJournal creditpiutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PrepaidExpense).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PiutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPaymentAllocation,
                 SourceDocumentId = purchaseDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)purchaseDownPaymentAllocation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = purchaseDownPaymentAllocation.TotalAmount
             };
-            creditprepaidexpense = CreateObject(creditprepaidexpense, _accountService);
+            creditpiutanglainlain = CreateObject(creditpiutanglainlain, _accountService);
 
             GeneralLedgerJournal debitgoodspendingclearance = new GeneralLedgerJournal()
             {
@@ -557,7 +557,7 @@ namespace Service.Service
             };
             debitgoodspendingclearance = CreateObject(debitgoodspendingclearance, _accountService);
 
-            journals.Add(creditprepaidexpense);
+            journals.Add(creditpiutanglainlain);
             journals.Add(debitgoodspendingclearance);
 
             return journals;
@@ -566,19 +566,19 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseDownPaymentAllocation(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IAccountService _accountService)
         {
-            // Credit GoodsPendingClearance, Debit PrepaidExpense (Asset)
-            #region Credit GoodsPendingClearance, Debit PrepaidExpense (Asset)
+            // Credit GoodsPendingClearance, Debit PiutangLainLain
+            #region Credit GoodsPendingClearance, Debit PiutangLainLain
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            GeneralLedgerJournal debitprepaidexpense = new GeneralLedgerJournal()
+            GeneralLedgerJournal debitpiutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PrepaidExpense).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PiutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseDownPaymentAllocation,
                 SourceDocumentId = purchaseDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)purchaseDownPaymentAllocation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = purchaseDownPaymentAllocation.TotalAmount
             };
-            debitprepaidexpense = CreateObject(debitprepaidexpense, _accountService);
+            debitpiutanglainlain = CreateObject(debitpiutanglainlain, _accountService);
 
             GeneralLedgerJournal creditgoodspendingclearance = new GeneralLedgerJournal()
             {
@@ -591,7 +591,7 @@ namespace Service.Service
             };
             creditgoodspendingclearance = CreateObject(creditgoodspendingclearance, _accountService);
 
-            journals.Add(debitprepaidexpense);
+            journals.Add(debitpiutanglainlain);
             journals.Add(creditgoodspendingclearance);
 
             return journals;
@@ -741,8 +741,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, IAccountService _accountService)
         {
-            // Debit AccountReceivable, Credit UnearnedRevenue
-            #region Debit AccountReceivable, Credit UnearnedRevenue
+            // Debit AccountReceivable, Credit HutangLainLain
+            #region Debit AccountReceivable, Credit HutangLainLain
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
             GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
@@ -756,19 +756,19 @@ namespace Service.Service
             };
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
-            GeneralLedgerJournal creditunearnedrevenue = new GeneralLedgerJournal()
+            GeneralLedgerJournal credithutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.UnearnedRevenue).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.HutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
                 SourceDocumentId = salesDownPayment.Id,
                 TransactionDate = (DateTime)salesDownPayment.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = salesDownPayment.TotalAmount
             };
-            creditunearnedrevenue = CreateObject(creditunearnedrevenue, _accountService);
+            credithutanglainlain = CreateObject(credithutanglainlain, _accountService);
 
             journals.Add(debitaccountreceivable);
-            journals.Add(creditunearnedrevenue);
+            journals.Add(credithutanglainlain);
 
             return journals;
             #endregion
@@ -776,8 +776,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, IAccountService _accountService)
         {
-            // Credit AccountReceivable, Debit UnearnedRevenue
-            #region Credit AccountReceivable, Debit UnearnedRevenue
+            // Credit AccountReceivable, Debit HutangLainLain
+            #region Credit AccountReceivable, Debit HutangLainLain
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
 
@@ -792,19 +792,19 @@ namespace Service.Service
             };
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
 
-            GeneralLedgerJournal debitunearnedrevenue = new GeneralLedgerJournal()
+            GeneralLedgerJournal debithutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.UnearnedRevenue).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.HutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
                 SourceDocumentId = salesDownPayment.Id,
                 TransactionDate = UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = salesDownPayment.TotalAmount
             };
-            debitunearnedrevenue = CreateObject(debitunearnedrevenue, _accountService);
+            debithutanglainlain = CreateObject(debithutanglainlain, _accountService);
 
             journals.Add(creditaccountreceivable);
-            journals.Add(debitunearnedrevenue);
+            journals.Add(debithutanglainlain);
 
             return journals;
             #endregion
@@ -812,20 +812,20 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPaymentAllocation(SalesDownPaymentAllocation salesDownPaymentAllocation, IAccountService _accountService)
         {
-            // Debit UnearnedRevenue, Credit Revenue
-            #region Debit UnearnedRevenue, Credit Revenue
+            // Debit HutangLainLain, Credit Revenue
+            #region Debit HutangLainLain, Credit Revenue
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            GeneralLedgerJournal debitunearnedrevenue = new GeneralLedgerJournal()
+            GeneralLedgerJournal debithutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.UnearnedRevenue).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.HutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = salesDownPaymentAllocation.TotalAmount
             };
-            debitunearnedrevenue = CreateObject(debitunearnedrevenue, _accountService);
+            debithutanglainlain = CreateObject(debithutanglainlain, _accountService);
 
             GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
             {
@@ -838,7 +838,7 @@ namespace Service.Service
             };
             creditrevenue = CreateObject(creditrevenue, _accountService);
 
-            journals.Add(debitunearnedrevenue);
+            journals.Add(debithutanglainlain);
             journals.Add(creditrevenue);
 
             return journals;
@@ -847,20 +847,20 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPaymentAllocation(SalesDownPaymentAllocation salesDownPaymentAllocation, IAccountService _accountService)
         {
-            // Credit UnearnedRevenue, Debit Revenue
-            #region Credit UnearnedRevenue, Debit Revenue
+            // Credit HutangLainLain, Debit Revenue
+            #region Credit HutangLainLain, Debit Revenue
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            GeneralLedgerJournal creditunearnedrevenue = new GeneralLedgerJournal()
+            GeneralLedgerJournal credithutanglainlain = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.UnearnedRevenue).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.HutangLainLain).Id,
                 SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = salesDownPaymentAllocation.TotalAmount
             };
-            creditunearnedrevenue = CreateObject(creditunearnedrevenue, _accountService);
+            credithutanglainlain = CreateObject(credithutanglainlain, _accountService);
 
             GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()
             {
@@ -873,7 +873,7 @@ namespace Service.Service
             };
             debitrevenue = CreateObject(debitrevenue, _accountService);
 
-            journals.Add(creditunearnedrevenue);
+            journals.Add(credithutanglainlain);
             journals.Add(debitrevenue);
 
             return journals;
@@ -1163,6 +1163,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, IAccountService _accountService)
         {
+            // TODO: Tax Calculation
             // Debit GoodsPendingClearance, Credit AccountPayable
             #region Debit GoodsPendingClearance, Credit AccountPayable
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
@@ -1377,13 +1378,19 @@ namespace Service.Service
         
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, IAccountService _accountService)
         {
+            // TODO: Account Calculation
             // Debit AccountReceivable, Debit Discount, Debit TaxExpense, Credit Revenue
             // Debit COS, Credit FinishedGoods
             #region Debit AccountReceivable, Debit Discount, Debit TaxExpense, Credit Revenue
 
+            /*
             decimal Tax = salesInvoice.AmountReceivable * salesInvoice.Tax / (100 - salesInvoice.Tax);
             decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 - salesInvoice.Tax);
             decimal Discount = PreTax * salesInvoice.Discount / (100 - salesInvoice.Discount);
+            */
+            decimal Tax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
+            decimal PreTax = salesInvoice.AmountReceivable - Tax;
+            decimal Discount = PreTax * salesInvoice.Discount / 100;
 
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -1479,13 +1486,18 @@ namespace Service.Service
             // Credit AccountReceivable, Credit Discount, Credit TaxExpense, Debit Revenue
             // Credit COS, Debit FinishedGoods
             #region Credit AccountReceivable, Credit Discount, Credit TaxExpense, Debit Revenue
-            DateTime UnconfirmationDate = DateTime.Now;
 
+            /*
             decimal Tax = salesInvoice.AmountReceivable * salesInvoice.Tax / (100 - salesInvoice.Tax);
             decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 - salesInvoice.Tax);
             decimal Discount = PreTax * salesInvoice.Discount / (100 - salesInvoice.Discount);
+            */
+            decimal Tax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
+            decimal PreTax = salesInvoice.AmountReceivable - Tax;
+            decimal Discount = PreTax * salesInvoice.Discount / 100;
 
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
 
             GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
             {

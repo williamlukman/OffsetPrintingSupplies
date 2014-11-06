@@ -16,19 +16,15 @@ namespace Core.Interface.Service
         IList<PurchaseDownPaymentAllocationDetail> GetObjectsByPayableId(int payableId);
         PurchaseDownPaymentAllocationDetail GetObjectById(int Id);
         PurchaseDownPaymentAllocationDetail CreateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                         IPurchaseDownPaymentService _purchaseDownPaymentService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                                         IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService);
+                                                         IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IReceivableService _receivableService);
         PurchaseDownPaymentAllocationDetail UpdateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                         IPurchaseDownPaymentService _purchaseDownPaymentService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                                         IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService);
-        PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                                             IPaymentVoucherDetailService _paymentVoucherDetailService);
+                                                         IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IReceivableService _receivableService);
+        PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail);
         bool DeleteObject(int Id);
         PurchaseDownPaymentAllocationDetail ConfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, DateTime ConfirmationDate,
                                                           IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                          IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
-        PurchaseDownPaymentAllocationDetail UnconfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                                            IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                            IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                                          IPayableService _payableService, IReceivableService _receivableService);
+        PurchaseDownPaymentAllocationDetail UnconfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
+                                                            IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IReceivableService _receivableService);
     }
 }

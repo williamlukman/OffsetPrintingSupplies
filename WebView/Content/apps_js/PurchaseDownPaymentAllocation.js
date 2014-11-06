@@ -40,30 +40,31 @@
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
-    $("#lookup_div_purchasedownpayment").dialog('close');
+    $("#lookup_div_salesdownpayment").dialog('close');
     $("#lookup_div_payable").dialog('close');
+    $("#lookup_div_receivable").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ContactId").hide();
     $("#PurchaseDownPaymentId").hide();
     $("#PayableId").hide();
-    $('#PaymentVoucherDetailId').hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'PurchaseDownPaymentAllocation/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Purchase DP Id', 'Allocation Date',
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Receivable Id', 'Receivable Code', 'Allocation Date',
                    'Total Amount', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150 },
-                  { name: 'purchasedownpaymentid', index: 'purchasedownpaymentid', width: 100 },
+                  { name: 'receivableid', index: 'receivableid', width: 40 },
+                  { name: 'receivable', index: 'receivable', width: 80 },
                   { name: 'allocationdate', index: 'allocationdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden :true },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -160,7 +161,8 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#PurchaseDownPaymentId').val(result.PurchaseDownPaymentId);
-                            $('#PurchaseDownPayment').val(result.PurchaseDownPayment);
+                            $('#ReceivableId').val(result.ReceivableId);
+                            $('#Receivable').val(result.Receivable);
                             $('#TotalAmount').val(result.TotalAmount);
                             $('#AllocationDate').datebox('setValue', dateEnt(result.AllocationDate));
                             $('#AllocationDate2').val(dateEnt(result.AllocationDate));
@@ -168,7 +170,7 @@
                             $('#AllocationDateDiv').hide();
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
-                            $('#btnPurchaseDownPayment').attr('disabled', true);
+                            $('#btnReceivable').attr('disabled', true);
                             $('#TotalAmount').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
@@ -208,8 +210,8 @@
                             $('#Code').val(result.Code);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#PurchaseDownPaymentId').val(result.PurchaseDownPaymentId);
-                            $('#PurchaseDownPayment').val(result.PurchaseDownPayment);
+                            $('#ReceivableId').val(result.ReceivableId);
+                            $('#Receivable').val(result.Receivable);
                             $('#TotalAmount').val(result.TotalAmount);
                             var e = document.getElementById("IsGBCH");
                             if (result.IsGBCH == true) {
@@ -223,7 +225,7 @@
                             $('#AllocationDateDiv2').show();
                             $('#AllocationDateDiv').hide();
                             $('#btnContact').removeAttr('disabled');
-                            $('#btnPurchaseDownPayment').removeAttr('disabled');
+                            $('#btnReceivable').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
@@ -397,7 +399,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), PurchaseDownPaymentId: $("#PurchaseDownPaymentId").val(),
-                TotalAmount : $("#TotalAmount").numberbox('getValue'), AllocationDate: $('#AllocationDate').datebox('getValue'),
+                TotalAmount: $("#TotalAmount").numberbox('getValue'), AllocationDate: $('#AllocationDate').datebox('getValue'),
+                ReceivableId: $("#ReceivableId").val()
             }),
             async: false,
             cache: false,
@@ -429,14 +432,12 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Payable Id', 'Payable Code', 'Payment Voucher Detail Id', 'PV Detail Code', 'Amount', 'Description'
+        colNames: ['Code', 'Payable Id', 'Payable Code', 'Amount', 'Description'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'payableid', index: 'payableid', width: 130, sortable: false, hidden: true },
                   { name: 'payable', index: 'payable', width: 90, sortable: false },
-                  { name: 'paymentvoucherdetailid', index: 'paymentvoucherdetailid', width: 130, sortable: false, hidden: true },
-                  { name: 'paymentvoucher', index: 'paymentvoucher', width: 90, sortable: false },
                   { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
@@ -488,8 +489,6 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#PayableId').val(result.PayableId);
                             $('#Payable').val(result.Payable);
-                            $('#PaymentVoucherDetailId').val(result.PaymentVoucherDetailId);
-                            $('#PaymentVoucherDetail').val(result.PaymentVoucherDetail);
                             $('#Amount').val(result.Amount);
                             $('#Description').val(result.Description);
                             $('#PurchaseDownPaymentAllocationDetailId').val(result.PurchaseDownPaymentAllocationDetailId);
@@ -658,41 +657,37 @@
 
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up purchasedownpayment-------------------------------------------------------
-    $('#btnPurchaseDownPayment').click(function () {
-        var lookUpURL = base_url + 'PurchaseDownPayment/GetList';
-        var lookupGrid = $('#lookup_table_purchasedownpayment');
+    // -------------------------------------------------------Look Up receivable-------------------------------------------------------
+    $('#btnReceivable').click(function () {
+        var lookUpURL = base_url + 'Receivable/GetListPurchaseDownPayment';
+        var lookupGrid = $('#lookup_table_receivable');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_purchasedownpayment').dialog('open');
+        $('#lookup_div_receivable').dialog('open');
     });
 
-    jQuery("#lookup_table_purchasedownpayment").jqGrid({
+    jQuery("#lookup_table_receivable").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Payment Date',
-                   'Is GBCH', 'Due Date', 'Total Amount', 
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Receivable Source', 'Receivable Id', 'Amount',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150 },
-                  { name: 'cashbankid', index: 'cashbankid', width: 100, hidden: true },
-                  { name: 'cashbankname', index: 'cashbankname', width: 100 },
-                  { name: 'paymentdate', index: 'paymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isgbch', index: 'isgbch', width: 45 },
-                  { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'receivablesource', index: 'receivablesource', width: 100 },
+                  { name: 'receivableid', index: 'receivableid', width: 50 },
+                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
-        pager: $('#lookup_pager_purchasedownpayment'),
+        pager: $('#lookup_pager_receivable'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -700,37 +695,37 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_purchasedownpayment").width() - 10,
-        height: $("#lookup_div_purchasedownpayment").height() - 110,
+        width: $("#lookup_div_receivable").width() - 10,
+        height: $("#lookup_div_receivable").height() - 110,
     });
-    $("#lookup_table_purchasedownpayment").jqGrid('navGrid', '#lookup_toolbar_purchasedownpayment', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_receivable").jqGrid('navGrid', '#lookup_toolbar_receivable', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_purchasedownpayment').click(function () {
-        $('#lookup_div_purchasedownpayment').dialog('close');
+    $('#lookup_btn_cancel_receivable').click(function () {
+        $('#lookup_div_receivable').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_purchasedownpayment').click(function () {
-        var id = jQuery("#lookup_table_purchasedownpayment").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_receivable').click(function () {
+        var id = jQuery("#lookup_table_receivable").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_purchasedownpayment").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_receivable").jqGrid('getRowData', id);
 
-            $('#PurchaseDownPaymentId').val(ret.id).data("kode", id);
-            $('#PurchaseDownPayment').val(ret.code);
-            $('#lookup_div_purchasedownpayment').dialog('close');
+            $('#ReceivableId').val(ret.id).data("kode", id);
+            $('#Receivable').val(ret.code);
+            $('#lookup_div_receivable').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup purchasedownpayment----------------------------------------------------------------
+    // ---------------------------------------------End Lookup receivable----------------------------------------------------------------
 
     // -------------------------------------------------------Look Up payable-------------------------------------------------------
     $('#btnPayable').click(function () {
-        var lookUpURL = base_url + 'PurchaseDownPaymentAllocation/GetListPayable';
+        var lookUpURL = base_url + 'Payable/GetListPurchaseInvoice';
         var lookupGrid = $('#lookup_table_payable');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -744,10 +739,10 @@
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id',
                     'Due Date', 'Total', 'Remaining', 'PendClearance'
-                  ],
+        ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
-                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true},
+                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150, sortable: false, hidden: true },
                   { name: 'payablesource', index: 'payablesource', width: 100, sortable: false },
                   { name: 'payablesourceid', index: 'payablesourceid', width: 40, align: 'right', sortable: false },

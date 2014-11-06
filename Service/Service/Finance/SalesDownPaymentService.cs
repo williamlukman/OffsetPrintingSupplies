@@ -79,23 +79,40 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService, IContactService _contactService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+        public SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService, IPayableService _payableService,
+                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             salesDownPayment.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(salesDownPayment, _receivableService, this, _contactService, _accountService, _generalLedgerJournalService, _closingService))
+            if (_validator.ValidConfirmObject(salesDownPayment, _receivableService, _payableService, this, _contactService, _accountService,
+                                              _generalLedgerJournalService, _closingService))
             {
                 Receivable receivable = new Receivable()
                 {
                     ContactId = salesDownPayment.ContactId,
                     Amount = salesDownPayment.TotalAmount,
+                    RemainingAmount = salesDownPayment.TotalAmount,
                     DueDate = salesDownPayment.DueDate == null ? salesDownPayment.DownPaymentDate : salesDownPayment.DueDate.Value,
                     CompletionDate = null,
                     ReceivableSource = Constant.SourceDocumentType.SalesDownPayment,
                     ReceivableSourceId = salesDownPayment.Id
                 };
                 _receivableService.CreateObject(receivable);
+
+                Payable payable = new Payable()
+                {
+                    ContactId = salesDownPayment.ContactId,
+                    Amount = salesDownPayment.TotalAmount,
+                    RemainingAmount = salesDownPayment.TotalAmount,
+                    DueDate = salesDownPayment.DueDate == null ? salesDownPayment.DownPaymentDate : salesDownPayment.DueDate.Value,
+                    CompletionDate = null,
+                    PayableSource = Constant.SourceDocumentType.SalesDownPayment,
+                    PayableSourceId = salesDownPayment.Id
+                };
+                _payableService.CreateObject(payable);
+
                 salesDownPayment.ReceivableId = receivable.Id;
+                salesDownPayment.PayableId = payable.Id;
+
                 _repository.ConfirmObject(salesDownPayment);
                 _generalLedgerJournalService.CreateConfirmationJournalForSalesDownPayment(salesDownPayment, _accountService);
             }
@@ -103,14 +120,18 @@ namespace Service.Service
         }
 
         public SalesDownPayment UnconfirmObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                                ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IReceivableService _receivableService, IContactService _contactService,
-                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IReceivableService _receivableService,
+                                                IPayableService _payableService, IContactService _contactService, IAccountService _accountService,
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
-            if (_validator.ValidUnconfirmObject(salesDownPayment, _receivableService, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService,
+            if (_validator.ValidUnconfirmObject(salesDownPayment, _receivableService, _payableService, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService,
                                                 _accountService, _generalLedgerJournalService, _closingService))
             {
                 _receivableService.DeleteObject((int) salesDownPayment.ReceivableId);
                 salesDownPayment.ReceivableId = null;
+                _payableService.DeleteObject((int)salesDownPayment.PayableId);
+                salesDownPayment.PayableId = null;
+
                 _repository.UnconfirmObject(salesDownPayment);
                 _generalLedgerJournalService.CreateUnconfirmationJournalForSalesDownPayment(salesDownPayment, _accountService);
             }

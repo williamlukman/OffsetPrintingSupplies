@@ -10,6 +10,7 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public int ContactId { get; set; }
         public Nullable<int> ReceivableId { get; set; }
+        public Nullable<int> PayableId { get; set; }
         public string Code { get; set; }
         public DateTime DownPaymentDate { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
@@ -25,6 +26,7 @@ namespace Core.DomainModel
 
         public virtual Contact Contact { get; set; }
         public virtual Receivable Receivable { get; set; }
+        public virtual Payable Payable { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
     }

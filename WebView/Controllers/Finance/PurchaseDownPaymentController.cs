@@ -24,9 +24,10 @@ namespace WebView.Controllers
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         private IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService;
         private IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService;
-        private IPaymentVoucherService _paymentVoucherService;
-        private IPaymentVoucherDetailService _paymentVoucherDetailService;
+        private IReceiptVoucherService _receiptVoucherService;
+        private IReceiptVoucherDetailService _receiptVoucherDetailService;
         private IPayableService _payableService;
+        private IReceivableService _receivableService;
         private IItemService _itemService;
         private IPurchaseDownPaymentService _purchaseDownPaymentService;
         private ICashBankService _cashBankService;
@@ -40,7 +41,7 @@ namespace WebView.Controllers
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
-            _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
+            _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
             _purchaseOrderDetailService = new PurchaseOrderDetailService(new PurchaseOrderDetailRepository(), new PurchaseOrderDetailValidator());
@@ -50,9 +51,10 @@ namespace WebView.Controllers
             _purchaseReceivalDetailService = new PurchaseReceivalDetailService(new PurchaseReceivalDetailRepository(), new PurchaseReceivalDetailValidator());
             _purchaseDownPaymentAllocationService = new PurchaseDownPaymentAllocationService(new PurchaseDownPaymentAllocationRepository(), new PurchaseDownPaymentAllocationValidator());
             _purchaseDownPaymentAllocationDetailService = new PurchaseDownPaymentAllocationDetailService(new PurchaseDownPaymentAllocationDetailRepository(), new PurchaseDownPaymentAllocationDetailValidator());
-            _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
-            _paymentVoucherDetailService = new PaymentVoucherDetailService(new PaymentVoucherDetailRepository(), new PaymentVoucherDetailValidator());
+            _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
+            _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
+            _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _purchaseDownPaymentService = new PurchaseDownPaymentService(new PurchaseDownPaymentRepository(), new PurchaseDownPaymentValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -74,7 +76,8 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseDownPaymentService.GetQueryable().Include("CashBank").Include("Contact").Where(x => !x.IsDeleted);
+            var q = _purchaseDownPaymentService.GetQueryable().Include("Payable").Include("Receivable")
+                                               .Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -83,14 +86,13 @@ namespace WebView.Controllers
                              model.Code,
                              model.ContactId,
                              Contact = model.Contact.Name,
-                             model.CashBankId,
-                             CashBank = model.CashBank.Name,
                              model.DownPaymentDate,
-                             model.IsGBCH,
                              model.DueDate,
                              model.TotalAmount,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.PayableId,
+                             model.ReceivableId,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -128,14 +130,13 @@ namespace WebView.Controllers
                             model.Code,
                             model.ContactId,
                             model.Contact,
-                            model.CashBankId,
-                            model.CashBank,
                             model.DownPaymentDate,
-                            model.IsGBCH,
                             model.DueDate,
                             model.TotalAmount,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.PayableId,
+                            model.ReceivableId,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -235,12 +236,12 @@ namespace WebView.Controllers
                 model.Code,
                 model.ContactId,
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
-                model.CashBankId,
-                CashBank = _cashBankService.GetObjectById(model.CashBankId).Name,
                 model.DownPaymentDate,
-                model.IsGBCH,
                 model.DueDate,
                 model.TotalAmount,
+                ConfirmationDate = model.ConfirmationDate,
+                model.PayableId,
+                model.ReceivableId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -250,9 +251,7 @@ namespace WebView.Controllers
         {
             try
             {
-             
-                model = _purchaseDownPaymentService.CreateObject(model, _contactService, _paymentVoucherDetailService,_payableService,
-                                                                 _cashBankService,_paymentVoucherService);
+                model = _purchaseDownPaymentService.CreateObject(model, _contactService);
             }
             catch (Exception ex)
             {
@@ -273,12 +272,10 @@ namespace WebView.Controllers
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
-                data.CashBankId = model.CashBankId;
                 data.DownPaymentDate = model.DownPaymentDate;
-                data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
                 data.TotalAmount = model.TotalAmount;
-                model = _purchaseDownPaymentService.UpdateObject(data, _contactService, _paymentVoucherDetailService, _payableService, _cashBankService, _paymentVoucherService);
+                model = _purchaseDownPaymentService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
             {
@@ -298,7 +295,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentService.SoftDeleteObject(data, _purchaseDownPaymentAllocationService, _paymentVoucherDetailService, _paymentVoucherService, _payableService);
+                model = _purchaseDownPaymentService.SoftDeleteObject(data, _purchaseDownPaymentAllocationService);
             }
             catch (Exception ex)
             {
@@ -318,9 +315,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentService.ConfirmObject(data,model.ConfirmationDate.Value,
-                    _cashBankService, _paymentVoucherService, _paymentVoucherDetailService, _payableService, _contactService,
-                    _accountService,_generalLedgerJournalService, _closingService);
+                model = _purchaseDownPaymentService.ConfirmObject(data, model.ConfirmationDate.Value, _payableService, _receivableService,
+                        _contactService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -339,11 +335,9 @@ namespace WebView.Controllers
         {
             try
             {
-
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentService.UnconfirmObject(data, _cashBankService,
-                    _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _paymentVoucherService,
-                    _paymentVoucherDetailService, _payableService, _contactService,_accountService, _generalLedgerJournalService, _closingService);
+                model = _purchaseDownPaymentService.UnconfirmObject(data, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService,
+                    _payableService, _receivableService, _contactService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

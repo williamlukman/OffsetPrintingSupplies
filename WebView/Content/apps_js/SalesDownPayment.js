@@ -43,7 +43,7 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Down Payment Date',
                    'Due Date', 'Total Amount',
-                   'Is Confirmed', 'Confirmation Date', 'Receivable Id', 'Created At', 'Updated At'],
+                   'Is Confirmed', 'Confirmation Date', 'Receivable Id', 'Payable Id', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
@@ -55,6 +55,7 @@
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
     			  { name: 'receivableid', index: 'receivableid', width: 50 },
+    			  { name: 'payableid', index: 'payableid', width: 50 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -142,6 +143,7 @@
                             $('#Contact').val(result.Contact);
                             $('#TotalAmount').val(result.TotalAmount);
                             $('#ReceivableId').val(result.ReceivableId);
+                            $('#PayableId').val(result.PayableId);
                             $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
                             $('#DownPaymentDate2').val(dateEnt(result.DownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -370,7 +372,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 150 },
+                  { name: 'name', index: 'name', width: 150 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),

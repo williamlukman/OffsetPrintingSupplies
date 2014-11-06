@@ -27,16 +27,16 @@ namespace Core.Constants
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string PurchaseDownPaymentAllocation = "PurchaseDownPaymentAllocation";
             public static string PurchaseAllowance = "PurchaseAllowance";
+            public static string PurchaseReceival = "PurchaseReceival";
+            public static string PurchaseInvoice = "PurchaseInvoice";
+            public static string StockAdjustment = "StockAdjustment";
             public static string ReceiptVoucher = "ReceiptVoucher";
             //public static string RetailSalesInvoice = "RetailSalesInvoice";
-            public static string StockAdjustment = "StockAdjustment";
             public static string DeliveryOrder = "DeliveryOrder";
             public static string SalesDownPayment = "SalesDownPayment";
             public static string SalesDownPaymentAllocation = "SalesDownPaymentAllocation";
             public static string SalesAllowance = "SalesAllowance";
             public static string SalesInvoice = "SalesInvoice";
-            public static string PurchaseReceival = "PurchaseReceival";
-            public static string PurchaseInvoice = "PurchaseInvoice";
             public static string RecoveryOrderDetail = "RecoveryOrderDetail";
             public static string RecoveryAccessoryDetail = "RecoveryAccessoryDetail";
             public static string BlanketOrderDetail = "BlanketOrderDetail";
@@ -64,6 +64,7 @@ namespace Core.Constants
             public static string Raw = "1104001";
             public static string FinishedGoods = "1104002";
             public static string PrepaidExpense = "1105";
+            public static string PiutangLainLain = "1106";
             public static string NonCurrentAsset = "12";
 
             public static string Expense = "2";
@@ -94,6 +95,7 @@ namespace Core.Constants
             public static string UnearnedRevenue = "3104";
             public static string PurchaseAllowance = "3105";
             public static string AccountPayableNonTrading = "3106";
+            public static string HutangLainLain = "3107";
             public static string NonCurrentLiability = "32";
 
             public static string Equity = "4";
@@ -114,6 +116,7 @@ namespace Core.Constants
             public static string Raw = "A1104001";
             public static string FinishedGoods = "A1104002";
             public static string PrepaidExpense = "A1105";
+            public static string PiutangLainLain = "A1106";
             public static string NonCurrentAsset = "A12";
 
             public static string Expense = "X2";
@@ -143,7 +146,8 @@ namespace Core.Constants
             public static string GoodsPendingClearance = "L3103";
             public static string UnearnedRevenue = "L3104";
             public static string PurchaseAllowance = "L3105";
-            public static string AccountPayableNonTrading = "3106";
+            public static string AccountPayableNonTrading = "L3106";
+            public static string HutangLainLain = "L3107";
             public static string NonCurrentLiability = "L32";
 
             public static string Equity = "E4";

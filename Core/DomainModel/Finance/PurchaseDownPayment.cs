@@ -9,11 +9,10 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int ContactId { get; set; }
-        public int CashBankId { get; set; }
-        public int PayableId { get; set; }
+        public Nullable<int> ReceivableId { get; set; }
+        public Nullable<int> PayableId { get; set; }
         public string Code { get; set; }
         public DateTime DownPaymentDate { get; set; }
-        public bool IsGBCH { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
 
         public decimal TotalAmount { get; set; }
@@ -26,7 +25,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
 
         public virtual Contact Contact { get; set; }
-        public virtual CashBank CashBank { get; set; }
+        public virtual Receivable Receivable { get; set; }
         public virtual Payable Payable { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }

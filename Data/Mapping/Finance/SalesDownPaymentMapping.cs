@@ -12,9 +12,13 @@ namespace Data.Mapping
         public SalesDownPaymentMapping()
         {
             HasKey(sdp => sdp.Id);
-            HasRequired(sdp => sdp.Receivable)
+            HasOptional(sdp => sdp.Receivable)
                 .WithMany()
                 .HasForeignKey(sdp => sdp.ReceivableId)
+                .WillCascadeOnDelete(false);
+            HasOptional(sdp => sdp.Payable)
+                .WithMany()
+                .HasForeignKey(sdp => sdp.PayableId)
                 .WillCascadeOnDelete(false);
             HasRequired(sdp => sdp.Contact)
                 .WithMany()

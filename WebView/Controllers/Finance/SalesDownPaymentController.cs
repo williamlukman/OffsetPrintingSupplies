@@ -27,6 +27,7 @@ namespace WebView.Controllers
         private IReceiptVoucherService _receiptVoucherService;
         private IReceiptVoucherDetailService _receiptVoucherDetailService;
         private IReceivableService _receivableService;
+        private IPayableService _payableService;
         private IItemService _itemService;
         private ISalesDownPaymentService _salesDownPaymentService;
         private ICashBankService _cashBankService;
@@ -53,6 +54,7 @@ namespace WebView.Controllers
             _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
             _receiptVoucherDetailService = new ReceiptVoucherDetailService(new ReceiptVoucherDetailRepository(), new ReceiptVoucherDetailValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
+            _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _salesDownPaymentService = new SalesDownPaymentService(new SalesDownPaymentRepository(), new SalesDownPaymentValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
@@ -89,6 +91,7 @@ namespace WebView.Controllers
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.ReceivableId,
+                             model.PayableId,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -132,6 +135,7 @@ namespace WebView.Controllers
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.ReceivableId,
+                            model.PayableId,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -236,6 +240,7 @@ namespace WebView.Controllers
                 model.TotalAmount,
                 ConfirmationDate = model.ConfirmationDate,
                 model.ReceivableId,
+                model.PayableId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -309,8 +314,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _salesDownPaymentService.GetObjectById(model.Id);
-                model = _salesDownPaymentService.ConfirmObject(data,model.ConfirmationDate.Value,
-                     _receivableService, _contactService, _accountService,_generalLedgerJournalService, _closingService);
+                model = _salesDownPaymentService.ConfirmObject(data,model.ConfirmationDate.Value, _receivableService, _payableService,
+                        _contactService, _accountService,_generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -330,9 +335,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _salesDownPaymentService.GetObjectById(model.Id);
-                model = _salesDownPaymentService.UnconfirmObject(data, 
-                    _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService, 
-                    _receivableService, _contactService,_accountService, _generalLedgerJournalService, _closingService);
+                model = _salesDownPaymentService.UnconfirmObject(data, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService, 
+                    _receivableService, _payableService, _contactService,_accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

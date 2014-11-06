@@ -226,8 +226,8 @@
                             $('#btnWarehouse').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#ReceivalDateDiv2').show();
-                            $('#ReceivalDateDiv').hide();
+                            $('#ReceivalDateDiv2').hide();
+                            $('#ReceivalDateDiv').show();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }

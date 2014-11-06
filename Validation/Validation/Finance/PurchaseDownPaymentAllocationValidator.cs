@@ -11,22 +11,22 @@ namespace Validation.Validation
 {
     public class PurchaseDownPaymentAllocationValidator : IPurchaseDownPaymentAllocationValidator
     {
+        public PurchaseDownPaymentAllocation VHasReceivable(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IReceivableService _receivableService)
+        {
+            Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
+            if (receivable == null)
+            {
+                purchaseDownPaymentAllocation.Errors.Add("ReceivableId", "Tidak boleh tidak ada");
+            }
+            return purchaseDownPaymentAllocation;
+        }
+
         public PurchaseDownPaymentAllocation VHasContact(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IContactService _contactService)
         {
             Contact contact = _contactService.GetObjectById(purchaseDownPaymentAllocation.ContactId);
             if (contact == null)
             {
                 purchaseDownPaymentAllocation.Errors.Add("ContactId", "Tidak boleh tidak ada");
-            }
-            return purchaseDownPaymentAllocation;
-        }
-
-        public PurchaseDownPaymentAllocation VHasPurchaseDownPayment(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentService _purchaseDownPaymentService)
-        {
-            PurchaseDownPayment purchaseDownPayment = _purchaseDownPaymentService.GetObjectById(purchaseDownPaymentAllocation.PurchaseDownPaymentId);
-            if (purchaseDownPayment == null)
-            {
-                purchaseDownPaymentAllocation.Errors.Add("PurchaseDownPaymentId", "Tidak boleh tidak ada");
             }
             return purchaseDownPaymentAllocation;
         }
@@ -77,7 +77,7 @@ namespace Validation.Validation
             }
             return purchaseDownPaymentAllocation;
         }
-        
+
         public PurchaseDownPaymentAllocation VHasNotBeenConfirmed(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation)
         {
             if (purchaseDownPaymentAllocation.IsConfirmed)
@@ -112,7 +112,7 @@ namespace Validation.Validation
         }
 
         public PurchaseDownPaymentAllocation VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
-                                             IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
+                                          IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPayableService _payableService, IReceivableService _receivableService)
         {
             IList<PurchaseDownPaymentAllocationDetail> details = _purchaseDownPaymentAllocationDetailService.GetObjectsByPurchaseDownPaymentAllocationId(purchaseDownPaymentAllocation.Id);
             foreach (var detail in details)
@@ -120,7 +120,7 @@ namespace Validation.Validation
                 detail.Errors = new Dictionary<string, string>();
                 detail.ConfirmationDate = purchaseDownPaymentAllocation.ConfirmationDate;
                 detail.Errors = new Dictionary<string, string>();
-                if (!_purchaseDownPaymentAllocationDetailService.GetValidator().ValidConfirmObject(detail, _paymentVoucherDetailService, _payableService))
+                if (!_purchaseDownPaymentAllocationDetailService.GetValidator().ValidConfirmObject(detail, _payableService, _receivableService))
                 {
                     foreach (var error in detail.Errors)
                     {
@@ -132,71 +132,51 @@ namespace Validation.Validation
             return purchaseDownPaymentAllocation;
         }
 
-        public PurchaseDownPaymentAllocation VCashBankIsGreaterThanOrEqualPurchaseDownPaymentAllocationDetails(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, 
-                                             IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                             ICashBankService _cashBankService)
-        {
-            decimal totalamount = 0;
-            IList<PurchaseDownPaymentAllocationDetail> details = _purchaseDownPaymentAllocationDetailService.GetObjectsByPurchaseDownPaymentAllocationId(purchaseDownPaymentAllocation.Id);
-            foreach (var detail in details)
-            {
-                totalamount += detail.Amount;
-            }
-
-            PurchaseDownPayment purchaseDownPayment = _purchaseDownPaymentService.GetObjectById(purchaseDownPaymentAllocation.PurchaseDownPaymentId);
-            CashBank cashBank = _cashBankService.GetObjectById(purchaseDownPayment.CashBankId);
-            if (cashBank.Amount < totalamount)
-            {
-                purchaseDownPaymentAllocation.Errors.Add("Generic", "Cash bank tidak boleh kurang dari total amount");
-            }
-            return purchaseDownPaymentAllocation;
-        }
-
         public PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IClosingService _closingService, int CaseConfirmUnconfirmReconcileUnreconcile)
         {
-            switch(CaseConfirmUnconfirmReconcileUnreconcile)
+            switch (CaseConfirmUnconfirmReconcileUnreconcile)
             {
-                case(1): // Confirm
-                {
-                    if (_closingService.IsDateClosed(purchaseDownPaymentAllocation.ConfirmationDate.GetValueOrDefault()))
+                case (1): // Confirm
                     {
-                        purchaseDownPaymentAllocation.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        if (_closingService.IsDateClosed(purchaseDownPaymentAllocation.ConfirmationDate.GetValueOrDefault()))
+                        {
+                            purchaseDownPaymentAllocation.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
                     }
-                    break;
-                }
-                case(2): // Unconfirm
-                {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                case (2): // Unconfirm
                     {
-                        purchaseDownPaymentAllocation.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        if (_closingService.IsDateClosed(DateTime.Now))
+                        {
+                            purchaseDownPaymentAllocation.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
                     }
-                    break;
-                }
             }
             return purchaseDownPaymentAllocation;
         }
 
         public PurchaseDownPaymentAllocation VCreateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                           IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                           IContactService _contactService)
+                                                        IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
+                                                        IContactService _contactService, IReceivableService _receivableService)
         {
-            VHasContact(purchaseDownPaymentAllocation, _contactService);
+            VHasReceivable(purchaseDownPaymentAllocation, _receivableService);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
-            VHasPurchaseDownPayment(purchaseDownPaymentAllocation, _purchaseDownPaymentService);
+            VHasContact(purchaseDownPaymentAllocation, _contactService);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
             VHasAllocationDate(purchaseDownPaymentAllocation);
             return purchaseDownPaymentAllocation;
         }
 
         public PurchaseDownPaymentAllocation VUpdateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                             IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                             IContactService _contactService)
+                                          IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
+                                          IContactService _contactService, IReceivableService _receivableService)
         {
             VHasNotBeenConfirmed(purchaseDownPaymentAllocation);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
             VHasNoPurchaseDownPaymentAllocationDetail(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
-            VCreateObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _contactService);
+            VCreateObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _contactService, _receivableService);
             return purchaseDownPaymentAllocation;
         }
 
@@ -219,9 +199,10 @@ namespace Validation.Validation
             return obj;
         }
 
-        public PurchaseDownPaymentAllocation VConfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                                             IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
-                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+        public PurchaseDownPaymentAllocation VConfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
+                                          IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
+                                          IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IReceivableService _receivableService,
+                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             VHasConfirmationDate(purchaseDownPaymentAllocation);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
@@ -235,18 +216,16 @@ namespace Validation.Validation
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
             VTotalAmountEqualDetailsAmount(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
-            VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService, 
-                                                                   _paymentVoucherDetailService, _payableService);
-            if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
-            VCashBankIsGreaterThanOrEqualPurchaseDownPaymentAllocationDetails(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _cashBankService);
+            VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService,
+                                                                _payableService, _receivableService);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
             VGeneralLedgerPostingHasNotBeenClosed(purchaseDownPaymentAllocation, _closingService, 1);
             return purchaseDownPaymentAllocation;
         }
 
         public PurchaseDownPaymentAllocation VUnconfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                                             IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                          IPayableService _payableService, IReceivableService _receivableService, IAccountService _accountService,
+                                          IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             VHasBeenConfirmed(purchaseDownPaymentAllocation);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
@@ -256,18 +235,20 @@ namespace Validation.Validation
 
         public bool ValidCreateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                       IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                      IContactService _contactService)
+                                      IContactService _contactService, IReceivableService _receivableService)
         {
-            VCreateObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _contactService);
+            VCreateObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _contactService,
+                          _receivableService);
             return isValid(purchaseDownPaymentAllocation);
         }
 
         public bool ValidUpdateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                       IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                      IContactService _contactService)
+                                      IContactService _contactService, IReceivableService _receivableService)
         {
             purchaseDownPaymentAllocation.Errors.Clear();
-            VUpdateObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _contactService );
+            VUpdateObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _contactService,
+                          _receivableService);
             return isValid(purchaseDownPaymentAllocation);
         }
 
@@ -279,21 +260,21 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                    IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService,
+                    IPurchaseDownPaymentService _purchaseDownPaymentService, IPayableService _payableService, IReceivableService _receivableService,
                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             purchaseDownPaymentAllocation.Errors.Clear();
             VConfirmObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService,
-                           _payableService, _paymentVoucherDetailService, _cashBankService, _accountService, _generalLedgerJournalService, _closingService);
+                           _payableService, _receivableService, _accountService, _generalLedgerJournalService, _closingService);
             return isValid(purchaseDownPaymentAllocation);
         }
 
         public bool ValidUnconfirmObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
-                    IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService,
-                    IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                    IPayableService _payableService, IReceivableService _receivableService, IAccountService _accountService,
+                    IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             purchaseDownPaymentAllocation.Errors.Clear();
-            VUnconfirmObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService, _payableService, _paymentVoucherDetailService,
+            VUnconfirmObject(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService, _payableService, _receivableService,
                              _accountService, _generalLedgerJournalService, _closingService);
             return isValid(purchaseDownPaymentAllocation);
         }

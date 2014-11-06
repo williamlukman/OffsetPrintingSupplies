@@ -15,6 +15,7 @@ namespace Data.Context
         public OffsetPrintingSuppliesEntities() : base("OffsetPrinting")
         {
             Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
+            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
         }
 
         public void DeleteAllTables()

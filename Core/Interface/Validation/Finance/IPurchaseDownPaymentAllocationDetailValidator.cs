@@ -24,28 +24,28 @@ namespace Core.Interface.Validation
                                             IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                             IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService);
         PurchaseDownPaymentAllocationDetail VCreateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                          IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                          IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                                       IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
+                                                       IPayableService _payableService, IReceivableService _receivableService);
         PurchaseDownPaymentAllocationDetail VUpdateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                          IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                                                          IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                                       IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
+                                                       IPayableService _payableService, IReceivableService _receivableService);
         PurchaseDownPaymentAllocationDetail VDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail);
         PurchaseDownPaymentAllocationDetail VHasConfirmationDate(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail);
         PurchaseDownPaymentAllocationDetail VConfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                                        IPayableService _payableService, IReceivableService _receivableService);
         PurchaseDownPaymentAllocationDetail VUnconfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                                             IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                                          IPayableService _payableService, IReceivableService _receivableService);
         bool ValidCreateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                               IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                               IPayableService _payableService, IReceivableService _receivableService);
         bool ValidUpdateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
-                               IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                               IPayableService _payableService, IReceivableService _receivableService);
         bool ValidDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail);
         bool ValidConfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                IPayableService _payableService, IReceivableService _receivableService);
         bool ValidUnconfirmObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                  IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
+                                  IPayableService _payableService, IReceivableService _receivableService);
         bool isValid(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail);
         string PrintError(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail);
     }

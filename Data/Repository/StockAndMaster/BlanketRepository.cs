@@ -112,6 +112,7 @@ namespace Data.Repository
         public Blanket CreateObject(Blanket blanket)
         {
             blanket.Quantity = 0;
+            blanket.IsTradeable = true;
             blanket.IsDeleted = false;
             blanket.CreatedAt = DateTime.Now;
             return Create(blanket);
