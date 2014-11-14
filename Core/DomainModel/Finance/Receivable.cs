@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public string ReceivableSource { get; set; }
         public int ReceivableSourceId { get; set; }
         public string Code { get; set; }
+        public int CurrencyId { get; set; }
 
         public DateTime DueDate { get; set; }
         public decimal Amount { get; set; }
@@ -30,6 +31,7 @@ namespace Core.DomainModel
         public virtual ICollection<SalesAllowanceDetail> SalesAllowanceDetails { get; set; }
         public virtual ICollection<PurchaseDownPaymentAllocation> PurchaseDownPaymentAllocations { get; set; }
         public virtual ICollection<SalesDownPaymentAllocationDetail> SalesDownPaymentAllocationDetails { get; set; }
+        public virtual Currency Currency { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
     }

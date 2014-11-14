@@ -10,6 +10,7 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public int CurrencyId { get; set; }
 
         public decimal Amount { get; set; }
         public bool IsBank { get; set; }
@@ -20,6 +21,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
+        public virtual Currency Currency { get; set; }
         public ICollection<CashMutation> CashMutations { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace Core.DomainModel
         public string Description { get; set; }
         public string Code { get; set; }
         public string NomorSurat { get; set; }
+        public int CurrencyId { get; set; }
+        public decimal ExchangeRateAmount { get; set; }
 
         public decimal TotalCOS { get; set; }
         public decimal AmountReceivable { get; set; }
@@ -32,5 +34,6 @@ namespace Core.DomainModel
         public virtual DeliveryOrder DeliveryOrder { get; set; }
         public virtual ICollection<SalesInvoiceDetail> SalesInvoiceDetails { get; set; }
         public Dictionary<String, String> Errors { get; set; }
+        public virtual Currency Currency { get; set; }
     }
 }

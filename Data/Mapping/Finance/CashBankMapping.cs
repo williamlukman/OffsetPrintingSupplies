@@ -13,6 +13,10 @@ namespace Data.Mapping
         public CashBankMapping()
         {
             HasKey(cb => cb.Id);
+            HasRequired(ex => ex.Currency)
+                 .WithMany()
+                 .HasForeignKey(ex => ex.CurrencyId)
+                 .WillCascadeOnDelete(false);
             HasMany(cb => cb.CashMutations)
                 .WithRequired(cm => cm.CashBank)
                 .HasForeignKey(cm => cm.CashBankId);

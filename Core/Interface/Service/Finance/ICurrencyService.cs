@@ -15,10 +15,15 @@ namespace Core.Interface.Service
         Currency GetObjectById(int Id);
         Currency GetObjectByName(string Name);
         Currency CreateObject(Currency currency);
-        Currency UpdateObject(Currency currency);
-        Currency SoftDeleteObject(Currency currency);
+        Currency UpdateObject(Currency currency, ICashBankService _cashBankService, IPaymentRequestService _paymentRequestService
+            , IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, ISalesInvoiceService _salesInvoiceService
+            , IPurchaseInvoiceService _purchaseInvoiceService, IPayableService _payableService, IReceivableService _receivableService
+            , IPaymentVoucherService _paymentVoucherService, IReceiptVoucherService _receiptVoucherService);
+        Currency SoftDeleteObject(Currency currency, ICashBankService _cashBankService, IPaymentRequestService _paymentRequestService
+            , IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, ISalesInvoiceService _salesInvoiceService
+            , IPurchaseInvoiceService _purchaseInvoiceService, IPayableService _payableService, IReceivableService _receivableService
+            , IPaymentVoucherService _paymentVoucherService, IReceiptVoucherService _receiptVoucherService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(Currency currency);
-        decimal GetTotalCurrency();
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="Mapping\Finance\CashMutationMapping.cs" />
     <Compile Include="Mapping\Finance\CashBankAdjustmentMapping.cs" />
     <Compile Include="Mapping\Finance\CashBankMutationMapping.cs" />
+    <Compile Include="Mapping\Finance\CurrencyMapping.cs" />
     <Compile Include="Mapping\Finance\ExchangeRateMapping.cs" />
     <Compile Include="Mapping\Finance\SalesDownPaymentAllocationDetailMapping.cs" />
     <Compile Include="Mapping\Finance\SalesDownPaymentAllocationMapping.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Repository\Accounting\GeneralLedgerJournalRepository.cs" />
     <Compile Include="Repository\Accounting\ValidCombRepository.cs" />
     <Compile Include="Repository\Finance\CashBankRepository.cs" />
+    <Compile Include="Repository\Finance\CashMutationRepository.cs" />
     <Compile Include="Repository\Finance\ExchangeRateRepository.cs" />
     <Compile Include="Repository\Finance\CashBankAdjustmentRepository.cs" />
     <Compile Include="Repository\Finance\CashBankMutationRepository.cs" />

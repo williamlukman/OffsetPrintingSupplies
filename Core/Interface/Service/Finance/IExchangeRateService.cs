@@ -13,12 +13,10 @@ namespace Core.Interface.Service
         IExchangeRateValidator GetValidator();
         IList<ExchangeRate> GetAll();
         ExchangeRate GetObjectById(int Id);
-        ExchangeRate GetObjectByName(string Name);
         ExchangeRate CreateObject(ExchangeRate exchangeRate);
         ExchangeRate UpdateObject(ExchangeRate exchangeRate);
         ExchangeRate SoftDeleteObject(ExchangeRate exchangeRate);
+        bool IsExchangeRateDateDuplicated(ExchangeRate exchangeRate);
         bool DeleteObject(int Id);
-        bool IsNameDuplicated(ExchangeRate exchangeRate);
-        decimal GetTotalExchangeRate();
     }
 }

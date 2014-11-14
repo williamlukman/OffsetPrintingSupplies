@@ -11,9 +11,10 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
         public string Description { get; set; }
         public string Code { get; set; }
+        public int CurrencyId { get; set; }
 
         public decimal Amount { get; set; }
-        
+        public decimal ExchangeRateAmount { get; set; }
         public DateTime RequestedDate { get; set; }
         public DateTime DueDate { get; set; }
 
@@ -27,6 +28,7 @@ namespace Core.DomainModel
 
         public virtual Contact Contact { get; set; }
         public virtual ICollection<PaymentRequestDetail> PaymentRequestDetails { get; set; }
+        public virtual Currency Currency { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }

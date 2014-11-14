@@ -16,6 +16,10 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(r => r.ContactId)
                 .WillCascadeOnDelete(false);
+            HasRequired(ex => ex.Currency)
+                 .WithMany()
+                 .HasForeignKey(ex => ex.CurrencyId)
+                 .WillCascadeOnDelete(false);
             HasMany(r => r.ReceiptVoucherDetails)
                 .WithRequired(rvd => rvd.Receivable)
                 .HasForeignKey(rvd => rvd.ReceivableId);
