@@ -55,6 +55,8 @@
     <Compile Include="DomainModel\Finance\CashBankMutation.cs" />
     <Compile Include="DomainModel\Accounting\Memorial.cs" />
     <Compile Include="DomainModel\Accounting\MemorialDetail.cs" />
+    <Compile Include="DomainModel\Finance\ExchangeRate.cs" />
+    <Compile Include="DomainModel\Finance\Currency.cs" />
     <Compile Include="DomainModel\Finance\SalesDownPayment.cs" />
     <Compile Include="DomainModel\Finance\SalesDownPaymentAllocation.cs" />
     <Compile Include="DomainModel\Finance\SalesDownPaymentAllocationDetail.cs" />
@@ -132,6 +134,8 @@
     <Compile Include="Interface\Repository\Accounting\IClosingRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IGeneralLedgerJournalRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IValidCombRepository.cs" />
+    <Compile Include="Interface\Repository\Finance\IExchangeRateRepository.cs" />
+    <Compile Include="Interface\Repository\Finance\ICurrencyRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ISalesDownPaymentAllocationDetailRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ISalesDownPaymentAllocationRepository.cs" />
     <Compile Include="Interface\Repository\Finance\ISalesDownPaymentRepository.cs" />
@@ -216,6 +220,8 @@
     <Compile Include="Interface\Service\Accounting\IClosingService.cs" />
     <Compile Include="Interface\Service\Accounting\IGeneralLedgerJournalService.cs" />
     <Compile Include="Interface\Service\Accounting\IValidCombService.cs" />
+    <Compile Include="Interface\Service\Finance\IExchangeRateService.cs" />
+    <Compile Include="Interface\Service\Finance\ICurrencyService.cs" />
     <Compile Include="Interface\Service\Finance\ISalesDownPaymentAllocationDetailService.cs" />
     <Compile Include="Interface\Service\Finance\ISalesDownPaymentAllocationService.cs" />
     <Compile Include="Interface\Service\Finance\ISalesDownPaymentService.cs" />
@@ -299,6 +305,8 @@
     <Compile Include="Interface\Validation\Accounting\IClosingValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IGeneralLedgerJournalValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IValidCombValidator.cs" />
+    <Compile Include="Interface\Validation\Finance\IExchangeRateValidator.cs" />
+    <Compile Include="Interface\Validation\Finance\ICurrencyValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ISalesDownPaymentAllocationDetailValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ISalesDownPaymentAllocationValidator.cs" />
     <Compile Include="Interface\Validation\Finance\ISalesDownPaymentValidator.cs" />
