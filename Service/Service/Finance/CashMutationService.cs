@@ -14,7 +14,6 @@ namespace Service.Service
     {
         private ICashMutationRepository _repository;
         private ICashMutationValidator _validator;
-
         public CashMutationService(ICashMutationRepository _cashMutationRepository, ICashMutationValidator _cashMutationValidator)
         {
             _repository = _cashMutationRepository;
@@ -244,20 +243,20 @@ namespace Service.Service
         }
         #endregion
 
-        public void CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService)
+        public void CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService, ICurrencyService _currencyService)
         {
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Addition) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
             cashBank.Amount += Amount;
-            _cashBankService.UpdateObject(cashBank);
+            _cashBankService.UpdateObject(cashBank,_currencyService);
         }
 
-        public void ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService)
+        public void ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService, ICurrencyService _currencyService)
         {
             decimal Amount = (cashMutation.Status == Constant.MutationStatus.Deduction) ? cashMutation.Amount : (-1) * cashMutation.Amount;
             CashBank cashBank = _cashBankService.GetObjectById(cashMutation.CashBankId);
             cashBank.Amount += Amount;
-            _cashBankService.UpdateObject(cashBank);
+            _cashBankService.UpdateObject(cashBank,_currencyService);
         }
     }
 }

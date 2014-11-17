@@ -81,7 +81,7 @@ namespace Service.Service
 
         public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, DateTime ConfirmationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             paymentVoucher.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(paymentVoucher, this, _paymentVoucherDetailService, _cashBankService, _payableService, _closingService))
@@ -99,7 +99,7 @@ namespace Service.Service
                 {
                     CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                     CashMutation cashMutation = _cashMutationService.CreateCashMutationForPaymentVoucher(paymentVoucher, cashBank);
-                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                     _generalLedgerJournalService.CreateConfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
                 }
             }
@@ -108,7 +108,7 @@ namespace Service.Service
 
         public PaymentVoucher UnconfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnconfirmObject(paymentVoucher, _closingService))
             {
@@ -126,7 +126,7 @@ namespace Service.Service
                     IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForPaymentVoucher(paymentVoucher, cashBank);
                     foreach (var cashMutation in cashMutations)
                     {
-                        _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
+                        _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                     }
                     _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
                 }
@@ -136,7 +136,7 @@ namespace Service.Service
 
         public PaymentVoucher ReconcileObject(PaymentVoucher paymentVoucher, DateTime ReconciliationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                               ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             paymentVoucher.ReconciliationDate = ReconciliationDate;
             if (_validator.ValidReconcileObject(paymentVoucher, _paymentVoucherDetailService, _cashBankService, _closingService))
@@ -146,7 +146,7 @@ namespace Service.Service
                 _generalLedgerJournalService.CreateConfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
                 _repository.ReconcileObject(paymentVoucher);
 
-                _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
 
                 IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
                 foreach(var paymentVoucherDetail in paymentVoucherDetails)
@@ -166,7 +166,7 @@ namespace Service.Service
 
         public PaymentVoucher UnreconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                                 ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnreconcileObject(paymentVoucher, _closingService))
             {
@@ -177,7 +177,7 @@ namespace Service.Service
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForPaymentVoucher(paymentVoucher, cashBank);
                 foreach (var cashMutation in cashMutations)
                 {
-                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
 
                 IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);

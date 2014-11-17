@@ -47,10 +47,10 @@ namespace Service.Service
             return _repository.GetObjectByName(Name);
         }
 
-        public CashBank CreateObject(CashBank cashBank, IAccountService _accountService)
+        public CashBank CreateObject(CashBank cashBank, IAccountService _accountService, ICurrencyService _currencyService)
         {
             cashBank.Errors = new Dictionary<string, string>();
-            if (_validator.ValidCreateObject(cashBank, this))
+            if (_validator.ValidCreateObject(cashBank, this,_currencyService))
             {
                 // Create Leaf Cash Bank Account
                 string Code = GenerateAccountCode(_accountService);
@@ -73,10 +73,16 @@ namespace Service.Service
             return cashBank;
         }
 
-        public CashBank UpdateObject(CashBank cashBank)
+        public CashBank UpdateObject(CashBank cashBank, ICurrencyService _currencyService)
         {
-            return (cashBank = _validator.ValidUpdateObject(cashBank, this) ? _repository.UpdateObject(cashBank) : cashBank);
+            return (cashBank = _validator.ValidUpdateObject(cashBank, this,_currencyService) ? _repository.UpdateObject(cashBank) : cashBank);
         }
+
+        public CashBank UpdateCashBankObject(CashBank cashBank, ICurrencyService _currencyService,ICashMutationService _cashMutationService)
+        {  
+            return (cashBank = _validator.ValidUpdateCashBankObject(cashBank, this, _currencyService,_cashMutationService) ? _repository.UpdateObject(cashBank) : cashBank);
+        }
+
 
         public CashBank SoftDeleteObject(CashBank cashBank, ICashMutationService _cashMutationService)
         {

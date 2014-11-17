@@ -81,7 +81,7 @@ namespace Service.Service
 
         public SalesAllowance ConfirmObject(SalesAllowance salesAllowance, DateTime ConfirmationDate, ISalesAllowanceDetailService _salesAllowanceDetailService,
                                             ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
-                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             salesAllowance.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesAllowance, this, _salesAllowanceDetailService, _cashBankService, _receivableService, _closingService))
@@ -98,7 +98,7 @@ namespace Service.Service
                 {
                     CashBank cashBank = _cashBankService.GetObjectById(salesAllowance.CashBankId);
                     CashMutation cashMutation = _cashMutationService.CreateCashMutationForSalesAllowance(salesAllowance, cashBank);
-                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                     _generalLedgerJournalService.CreateConfirmationJournalForSalesAllowance(salesAllowance, cashBank, _accountService);
                 }
             }
@@ -107,7 +107,7 @@ namespace Service.Service
 
         public SalesAllowance UnconfirmObject(SalesAllowance salesAllowance, ISalesAllowanceDetailService _salesAllowanceDetailService,
                                             ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
-                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnconfirmObject(salesAllowance, _salesAllowanceDetailService, _cashBankService, _closingService))
             {
@@ -125,7 +125,7 @@ namespace Service.Service
                     IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForSalesAllowance(salesAllowance, cashBank);
                     foreach (var cashMutation in cashMutations)
                     {
-                        _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
+                        _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                     }
                     _generalLedgerJournalService.CreateUnconfirmationJournalForSalesAllowance(salesAllowance, cashBank, _accountService);
                 }
@@ -135,7 +135,7 @@ namespace Service.Service
 
         public SalesAllowance ReconcileObject(SalesAllowance salesAllowance, DateTime ReconciliationDate, ISalesAllowanceDetailService _salesAllowanceDetailService,
                                               ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             salesAllowance.ReconciliationDate = ReconciliationDate;
             if (_validator.ValidReconcileObject(salesAllowance, _closingService))
@@ -145,7 +145,7 @@ namespace Service.Service
 
                 _generalLedgerJournalService.CreateConfirmationJournalForSalesAllowance(salesAllowance, cashBank, _accountService);
                 _repository.ReconcileObject(salesAllowance);
-                _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
 
                 IList<SalesAllowanceDetail> salesAllowanceDetails = _salesAllowanceDetailService.GetObjectsBySalesAllowanceId(salesAllowance.Id);
                 foreach(var salesAllowanceDetail in salesAllowanceDetails)
@@ -165,7 +165,7 @@ namespace Service.Service
 
         public SalesAllowance UnreconcileObject(SalesAllowance salesAllowance, ISalesAllowanceDetailService _salesAllowanceDetailService,
                                                 ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
-                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnreconcileObject(salesAllowance, _salesAllowanceDetailService, _cashBankService, _closingService))
             {
@@ -176,7 +176,7 @@ namespace Service.Service
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForSalesAllowance(salesAllowance, cashBank);
                 foreach (var cashMutation in cashMutations)
                 {
-                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
 
                 IList<SalesAllowanceDetail> salesAllowanceDetails = _salesAllowanceDetailService.GetObjectsBySalesAllowanceId(salesAllowance.Id);

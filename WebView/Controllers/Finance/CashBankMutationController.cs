@@ -23,6 +23,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private ICurrencyService _currencyService;
 
         public CashBankMutationController()
         {
@@ -33,6 +34,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
@@ -202,7 +204,7 @@ namespace WebView.Controllers
                 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService,
-                                                               _accountService,_generalLedgerJournalService, _closingService);
+                                                               _accountService,_generalLedgerJournalService, _closingService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -222,7 +224,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _cashBankMutationService.GetObjectById(model.Id);
-                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService,_generalLedgerJournalService, _closingService);
+                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService,_generalLedgerJournalService, _closingService,_currencyService);
             }
             catch (Exception ex)
             {

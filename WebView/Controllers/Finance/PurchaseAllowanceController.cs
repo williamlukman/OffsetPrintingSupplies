@@ -32,6 +32,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private ICurrencyService _currencyService;
 
         public PurchaseAllowanceController()
         {
@@ -51,6 +52,7 @@ namespace WebView.Controllers
             _purchaseAllowanceService = new PurchaseAllowanceService(new PurchaseAllowanceRepository(), new PurchaseAllowanceValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(),new CurrencyValidator());
         }
 
 
@@ -473,7 +475,7 @@ namespace WebView.Controllers
                 var data = _purchaseAllowanceService.GetObjectById(model.Id);
                 model = _purchaseAllowanceService.ConfirmObject(data,model.ConfirmationDate.Value,
                     _purchaseAllowanceDetailService,_cashBankService,_payableService,_cashMutationService,
-                    _accountService,_generalLedgerJournalService, _closingService);
+                    _accountService,_generalLedgerJournalService, _closingService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -495,7 +497,7 @@ namespace WebView.Controllers
 
                 var data = _purchaseAllowanceService.GetObjectById(model.Id);
                 model = _purchaseAllowanceService.UnconfirmObject(data,_purchaseAllowanceDetailService,_cashBankService,
-                    _payableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService);
+                    _payableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -516,7 +518,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseAllowanceService.GetObjectById(model.Id);
                 model = _purchaseAllowanceService.ReconcileObject(data,model.ReconciliationDate.Value,_purchaseAllowanceDetailService,
-                    _cashMutationService,_cashBankService,_payableService,_accountService, _generalLedgerJournalService, _closingService);
+                    _cashMutationService,_cashBankService,_payableService,_accountService, _generalLedgerJournalService, _closingService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -537,7 +539,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseAllowanceService.GetObjectById(model.Id);
                 model = _purchaseAllowanceService.UnreconcileObject(data,_purchaseAllowanceDetailService,_cashMutationService,
-                    _cashBankService,_payableService, _accountService, _generalLedgerJournalService, _closingService
+                    _cashBankService,_payableService, _accountService, _generalLedgerJournalService, _closingService,_currencyService
                     );
             }
             catch (Exception ex)

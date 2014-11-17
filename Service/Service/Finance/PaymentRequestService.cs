@@ -110,6 +110,7 @@ namespace Service.Service
                     PayableSourceId = paymentRequest.Id,
                     Code = paymentRequest.Code,
                     Amount = paymentRequest.Amount,
+                    CurrencyId = paymentRequest.CurrencyId,
                     RemainingAmount = paymentRequest.Amount,
                     DueDate = paymentRequest.DueDate
                 };

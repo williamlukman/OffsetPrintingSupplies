@@ -38,43 +38,43 @@ namespace Validation.Validation
             ,IPurchaseInvoiceService _purchaseInvoiceService,IPayableService _payableService,IReceivableService _receivableService
             ,IPaymentVoucherService _paymentVoucherService,IReceiptVoucherService _receiptVoucherService)
         {
-            if (_cashBankService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_cashBankService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di CashBank");
             }
-            if (_paymentRequestService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_paymentRequestService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di PaymentRequest");
             }
-            if (_purchaseOrderService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_purchaseOrderService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di PurchaseOrder");
             }
-            if (_salesOrderService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_salesOrderService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di SalesOrder");
             }
-            if (_salesInvoiceService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_salesInvoiceService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di SalesInvoice");
             }
-            if (_purchaseInvoiceService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_purchaseInvoiceService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di PurchaseInvoice");
             }
-            if (_payableService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_payableService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di Payable");
             } 
-            if (_receivableService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_receivableService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di Receivable");
             }
-            if (_paymentVoucherService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_paymentVoucherService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di PaymentVoucher");
             }
-            if (_receiptVoucherService.GetQueryable().Where(x => x.CurrencyId == currency.Id).ToList().Any())
+            if (_receiptVoucherService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di ReceiptVoucher");
             }

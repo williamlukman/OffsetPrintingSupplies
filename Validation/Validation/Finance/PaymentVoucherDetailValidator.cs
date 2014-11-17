@@ -120,6 +120,17 @@ namespace Validation.Validation
             }
             return paymentVoucherDetail;
         }
+         
+        public PaymentVoucherDetail VPaymentVoucherCurrencyIsSameWithPayableCurrency(PaymentVoucherDetail paymentVoucherDetail,IPaymentVoucherService _paymentVoucherService,IPayableService _payableService)
+        {
+            PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
+            Payable payable = _payableService.GetObjectById(paymentVoucherDetail.PayableId);
+            if (paymentVoucher.CurrencyId != payable.CurrencyId)
+            {
+                paymentVoucherDetail.Errors.Add("Generic", "Currency harus sama");
+            }
+            return paymentVoucherDetail;
+        }
 
         public PaymentVoucherDetail VCreateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService,
                                                   IPaymentVoucherDetailService _paymentVoucherDetailService, ICashBankService _cashBankService, IPayableService _payableService)
@@ -139,6 +150,8 @@ namespace Validation.Validation
             VUniquePayableId(paymentVoucherDetail, _paymentVoucherDetailService, _payableService);
             if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
             VDetailsAmountLessOrEqualPaymentVoucherTotal(paymentVoucherDetail, _paymentVoucherService, _paymentVoucherDetailService);
+            if (!isValid(paymentVoucherDetail)) { return paymentVoucherDetail; }
+            VPaymentVoucherCurrencyIsSameWithPayableCurrency(paymentVoucherDetail, _paymentVoucherService, _payableService);
             return paymentVoucherDetail;
         }
 

@@ -30,7 +30,7 @@ namespace Core.Interface.Service
         IList<CashMutation> SoftDeleteCashMutationForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank);
         IList<CashMutation> CreateCashMutationForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
         IList<CashMutation> SoftDeleteCashMutationForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank);
-        void CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService);
-        void ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService);
+        void CashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService, ICurrencyService _currencyService);
+        void ReverseCashMutateObject(CashMutation cashMutation, ICashBankService _cashBankService, ICurrencyService _currencyService);
     }
 }

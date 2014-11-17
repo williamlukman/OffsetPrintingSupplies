@@ -81,7 +81,7 @@ namespace Service.Service
         }
 
         public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             cashBankMutation.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(cashBankMutation, _cashBankService, _closingService))
@@ -91,7 +91,7 @@ namespace Service.Service
                 IList<CashMutation> cashMutations = _cashMutationService.CreateCashMutationForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank);
                 foreach (var cashMutation in cashMutations)
                 {
-                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
                 _generalLedgerJournalService.CreateConfirmationJournalForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank, _accountService);
                 _repository.ConfirmObject(cashBankMutation);
@@ -100,7 +100,7 @@ namespace Service.Service
         }
 
         public CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnconfirmObject(cashBankMutation, _cashBankService, _closingService))
             {
@@ -109,7 +109,7 @@ namespace Service.Service
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank);
                 foreach (var cashMutation in cashMutations)
                 {
-                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank, _accountService);
                 _repository.UnconfirmObject(cashBankMutation);

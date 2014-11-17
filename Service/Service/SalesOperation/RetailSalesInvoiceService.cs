@@ -78,7 +78,7 @@ namespace Service.Service
                     retailSalesInvoice.CoGS += retailSalesInvoiceDetail.CoGS;
                 }
                 retailSalesInvoice.Total = retailSalesInvoice.Total - (retailSalesInvoice.Total * retailSalesInvoice.Discount) + (retailSalesInvoice.Total * retailSalesInvoice.Tax);
-                Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate);
+                Receivable receivable = _receivableService.CreateObject(retailSalesInvoice.ContactId, Core.Constants.Constant.ReceivableSource.RetailSalesInvoice, retailSalesInvoice.Id,retailSalesInvoice.CurrencyId, retailSalesInvoice.Total, (DateTime)retailSalesInvoice.DueDate);
                 foreach (var retailSalesInvoiceDetail in retailSalesInvoiceDetails)
                 {
                     retailSalesInvoiceDetail.Errors = new Dictionary<string,string>();

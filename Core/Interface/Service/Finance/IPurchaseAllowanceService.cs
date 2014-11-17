@@ -24,15 +24,15 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         PurchaseAllowance ConfirmObject(PurchaseAllowance purchaseAllowance, DateTime ConfirmationDate, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                      ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
         PurchaseAllowance UnconfirmObject(PurchaseAllowance purchaseAllowance, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                        ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
         PurchaseAllowance ReconcileObject(PurchaseAllowance purchaseAllowance, DateTime ReconciliationDate, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                        ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
         PurchaseAllowance UnreconcileObject(PurchaseAllowance purchaseAllowance, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                          ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
     }
 }

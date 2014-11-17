@@ -78,7 +78,7 @@ namespace Service.Service
                     retailPurchaseInvoice.CoGS += retailPurchaseInvoiceDetail.CoGS;
                 }
                 retailPurchaseInvoice.Total = retailPurchaseInvoice.Total - (retailPurchaseInvoice.Total * retailPurchaseInvoice.Discount) + (retailPurchaseInvoice.Total * retailPurchaseInvoice.Tax);
-                Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate);
+                Payable payable = _payableService.CreateObject(retailPurchaseInvoice.ContactId, Core.Constants.Constant.PayableSource.RetailPurchaseInvoice, retailPurchaseInvoice.Id,retailPurchaseInvoice.CurrencyId, retailPurchaseInvoice.Total, (DateTime)retailPurchaseInvoice.DueDate);
                 foreach (var retailPurchaseInvoiceDetail in retailPurchaseInvoiceDetails)
                 {
                     retailPurchaseInvoiceDetail.Errors = new Dictionary<string,string>();

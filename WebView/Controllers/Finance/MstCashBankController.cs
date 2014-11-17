@@ -19,12 +19,14 @@ namespace WebView.Controllers
         private ICashBankService _cashBankService;
         private ICashMutationService _cashMutationService;
         private IAccountService _accountService;
+        private ICurrencyService _currencyService;
 
         public MstCashBankController()
         {
             _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
@@ -125,7 +127,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _cashBankService.CreateObject(model, _accountService);
+                model = _cashBankService.CreateObject(model, _accountService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -140,14 +142,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(CashBank model)
+        public dynamic Update(CashBank model, ICurrencyService _currencyService)
         {
             try
             {
                 var data = _cashBankService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                model = _cashBankService.UpdateObject(data);
+                data.CurrencyId = model.CurrencyId;
+                model = _cashBankService.UpdateObject(data,_currencyService);
             }
             catch (Exception ex)
             {

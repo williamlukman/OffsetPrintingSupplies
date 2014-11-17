@@ -81,7 +81,7 @@ namespace Service.Service
 
         public PurchaseAllowance ConfirmObject(PurchaseAllowance purchaseAllowance, DateTime ConfirmationDate, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             purchaseAllowance.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseAllowance, this, _purchaseAllowanceDetailService, _cashBankService, _payableService, _closingService))
@@ -99,7 +99,7 @@ namespace Service.Service
                 {
                     CashBank cashBank = _cashBankService.GetObjectById(purchaseAllowance.CashBankId);
                     CashMutation cashMutation = _cashMutationService.CreateCashMutationForPurchaseAllowance(purchaseAllowance, cashBank);
-                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                     _generalLedgerJournalService.CreateConfirmationJournalForPurchaseAllowance(purchaseAllowance, cashBank, _accountService);
                 }
             }
@@ -108,7 +108,7 @@ namespace Service.Service
 
         public PurchaseAllowance UnconfirmObject(PurchaseAllowance purchaseAllowance, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnconfirmObject(purchaseAllowance, _closingService))
             {
@@ -126,7 +126,7 @@ namespace Service.Service
                     IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForPurchaseAllowance(purchaseAllowance, cashBank);
                     foreach (var cashMutation in cashMutations)
                     {
-                        _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
+                        _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                     }
                     _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseAllowance(purchaseAllowance, cashBank, _accountService);
                 }
@@ -136,7 +136,7 @@ namespace Service.Service
 
         public PurchaseAllowance ReconcileObject(PurchaseAllowance purchaseAllowance, DateTime ReconciliationDate, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                               ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             purchaseAllowance.ReconciliationDate = ReconciliationDate;
             if (_validator.ValidReconcileObject(purchaseAllowance, _purchaseAllowanceDetailService, _cashBankService, _closingService))
@@ -146,7 +146,7 @@ namespace Service.Service
                 _generalLedgerJournalService.CreateConfirmationJournalForPurchaseAllowance(purchaseAllowance, cashBank, _accountService);
                 _repository.ReconcileObject(purchaseAllowance);
 
-                _cashMutationService.CashMutateObject(cashMutation, _cashBankService);
+                _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
 
                 IList<PurchaseAllowanceDetail> purchaseAllowanceDetails = _purchaseAllowanceDetailService.GetObjectsByPurchaseAllowanceId(purchaseAllowance.Id);
                 foreach(var purchaseAllowanceDetail in purchaseAllowanceDetails)
@@ -166,7 +166,7 @@ namespace Service.Service
 
         public PurchaseAllowance UnreconcileObject(PurchaseAllowance purchaseAllowance, IPurchaseAllowanceDetailService _purchaseAllowanceDetailService,
                                                 ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnreconcileObject(purchaseAllowance, _closingService))
             {
@@ -177,7 +177,7 @@ namespace Service.Service
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForPurchaseAllowance(purchaseAllowance, cashBank);
                 foreach (var cashMutation in cashMutations)
                 {
-                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService);
+                    _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
 
                 IList<PurchaseAllowanceDetail> purchaseAllowanceDetails = _purchaseAllowanceDetailService.GetObjectsByPurchaseAllowanceId(purchaseAllowance.Id);

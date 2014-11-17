@@ -18,6 +18,17 @@ namespace Validation.Validation
             }
             return cashBankMutation;
         }
+         
+        public CashBankMutation VHasDifferentCurrency(CashBankMutation cashBankMutation,ICashBankService _cashBankService)
+        {
+            CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
+            CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
+            if (sourceCashBank.CurrencyId != targetCashBank.CurrencyId)
+            {
+                cashBankMutation.Errors.Add("Generic", "Source CashBank Currency dan Target CashBank Currency tidak boleh berbeda");
+            }
+            return cashBankMutation;
+        }
 
         public CashBankMutation VHasSourceCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService)
         {
@@ -130,6 +141,8 @@ namespace Validation.Validation
             VNonNegativeNorZeroAmount(cashBankMutation);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VNonNegativeNorZeroSourceCashBank(cashBankMutation, _cashBankService);
+            if (!isValid(cashBankMutation)) { return cashBankMutation; }
+            VHasDifferentCurrency(cashBankMutation, _cashBankService);
             return cashBankMutation;
         }
 

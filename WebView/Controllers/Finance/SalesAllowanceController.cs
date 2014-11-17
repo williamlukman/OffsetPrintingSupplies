@@ -34,6 +34,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private ICurrencyService _currencyService;
 
         public SalesAllowanceController()
         {
@@ -55,6 +56,7 @@ namespace WebView.Controllers
             _salesAllowanceService = new SalesAllowanceService(new SalesAllowanceRepository(), new SalesAllowanceValidator());
             _salesAllowanceDetailService = new SalesAllowanceDetailService(new SalesAllowanceDetailRepository(), new SalesAllowanceDetailValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
 
@@ -477,7 +479,7 @@ namespace WebView.Controllers
                 var data = _salesAllowanceService.GetObjectById(model.Id);
                 model = _salesAllowanceService.ConfirmObject(data,model.ConfirmationDate.Value,
                     _salesAllowanceDetailService,_cashBankService,_receivableService,_cashMutationService,
-                    _accountService, _generalLedgerJournalService, _closingService);
+                    _accountService, _generalLedgerJournalService, _closingService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -499,7 +501,7 @@ namespace WebView.Controllers
 
                 var data = _salesAllowanceService.GetObjectById(model.Id);
                 model = _salesAllowanceService.UnconfirmObject(data,_salesAllowanceDetailService,_cashBankService,
-                    _receivableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService);
+                    _receivableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService,_currencyService);
             }
             catch (Exception ex)
             {
@@ -520,7 +522,8 @@ namespace WebView.Controllers
             {
                 var data = _salesAllowanceService.GetObjectById(model.Id);
                 model = _salesAllowanceService.ReconcileObject(data,model.ReconciliationDate.Value,_salesAllowanceDetailService,
-                    _cashMutationService, _cashBankService, _receivableService,_accountService, _generalLedgerJournalService, _closingService);
+                    _cashMutationService, _cashBankService, _receivableService,_accountService, _generalLedgerJournalService, _closingService,
+                    _currencyService);
             }
             catch (Exception ex)
             {
@@ -541,7 +544,8 @@ namespace WebView.Controllers
             {
                 var data = _salesAllowanceService.GetObjectById(model.Id);
                 model = _salesAllowanceService.UnreconcileObject(data,_salesAllowanceDetailService,_cashMutationService,
-                                                                 _cashBankService, _receivableService, _accountService, _generalLedgerJournalService, _closingService
+                                                                 _cashBankService, _receivableService, _accountService, _generalLedgerJournalService,
+                                                                 _closingService,_currencyService
                     );
             }
             catch (Exception ex)

@@ -43,17 +43,37 @@ namespace Validation.Validation
             return cashBank;
         }
 
-        public CashBank VCreateObject(CashBank cashBank, ICashBankService _cashBankService)
+        public CashBank VCurrency(CashBank cashBank,ICurrencyService _currencyService)
+        { 
+            if (_currencyService.GetObjectById(cashBank.CurrencyId) == null)
+            {
+                cashBank.Errors.Add("CurrencyId", "Invalid Currency");
+            }
+            return cashBank;
+        }
+ 
+        public CashBank VCreateObject(CashBank cashBank, ICashBankService _cashBankService,ICurrencyService _currencyService)
         {
             VName(cashBank, _cashBankService);
             if (!isValid(cashBank)) { return cashBank; }
             VNonNegativeAmount(cashBank);
+            if (!isValid(cashBank)) { return cashBank; }
+            VCurrency(cashBank, _currencyService);
             return cashBank;
         }
 
-        public CashBank VUpdateObject(CashBank cashBank, ICashBankService _cashBankService)
+        public CashBank VUpdateObject(CashBank cashBank, ICashBankService _cashBankService, ICurrencyService _currencyService)
         {
-            VCreateObject(cashBank, _cashBankService);
+            VCreateObject(cashBank, _cashBankService,_currencyService);
+            return cashBank;
+        }
+         
+        public CashBank VUpdateCashBankObject(CashBank cashBank, ICashBankService _cashBankService, ICurrencyService _currencyService,
+            ICashMutationService _cashMutationService)
+        {
+            VCreateObject(cashBank, _cashBankService, _currencyService);
+            if (!isValid(cashBank)) { return cashBank; }
+            VHasNoCashMutation(cashBank, _cashMutationService);
             return cashBank;
         }
 
@@ -69,16 +89,24 @@ namespace Validation.Validation
             return cashBank;
         }
 
-        public bool ValidCreateObject(CashBank cashBank, ICashBankService _cashBankService)
+        public bool ValidCreateObject(CashBank cashBank, ICashBankService _cashBankService, ICurrencyService _currencyService)
         {
-            VCreateObject(cashBank, _cashBankService);
+            VCreateObject(cashBank, _cashBankService,_currencyService);
             return isValid(cashBank);
         }
 
-        public bool ValidUpdateObject(CashBank cashBank, ICashBankService _cashBankService)
+        public bool ValidUpdateObject(CashBank cashBank, ICashBankService _cashBankService, ICurrencyService _currencyService)
         {
             cashBank.Errors.Clear();
-            VUpdateObject(cashBank, _cashBankService);
+            VUpdateObject(cashBank, _cashBankService,_currencyService);
+            return isValid(cashBank);
+        }
+         
+        public bool ValidUpdateCashBankObject(CashBank cashBank, ICashBankService _cashBankService, ICurrencyService _currencyService
+            ,ICashMutationService _cashMutationService)
+        {
+            cashBank.Errors.Clear(); 
+            VUpdateCashBankObject(cashBank, _cashBankService, _currencyService,_cashMutationService);
             return isValid(cashBank);
         }
 
