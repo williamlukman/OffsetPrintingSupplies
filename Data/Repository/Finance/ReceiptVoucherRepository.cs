@@ -4,6 +4,8 @@ using Data.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 using System.Text;
 
 namespace Data.Repository
@@ -33,7 +35,7 @@ namespace Data.Repository
 
         public ReceiptVoucher GetObjectById(int Id)
         {
-            ReceiptVoucher receiptVoucher = Find(pv => pv.Id == Id && !pv.IsDeleted);
+            ReceiptVoucher receiptVoucher = FindAll(pv => pv.Id == Id && !pv.IsDeleted).Include("ReceiptVoucherDetails").Include("Currency").Include("ExchangeRate").FirstOrDefault();
             if (receiptVoucher != null) { receiptVoucher.Errors = new Dictionary<string, string>(); }
             return receiptVoucher;
         }

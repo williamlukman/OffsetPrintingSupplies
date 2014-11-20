@@ -11,11 +11,11 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 namespace Data.Context
 {
     public class OffsetPrintingSuppliesEntities : DbContext
-    {
-        public OffsetPrintingSuppliesEntities() : base("OffsetPrinting")
+    { 
+        public OffsetPrintingSuppliesEntities() : base("OffsetPrintingExRate")
         {
-            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
-            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
+           Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
+           //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
         }
 
         public void DeleteAllTables()
@@ -45,7 +45,7 @@ namespace Data.Context
                                           "SalesOrderDetail", "SalesOrder", "SalesQuotationDetail", "SalesQuotation", 
                                           "VirtualOrderDetail", "VirtualOrder"};
             IList<String> financeNames = new List<String>() {
-                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" };
+                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate","Currency"};
             IList<String> stockAndMasterNames = new List<String>()
                                         { "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
                                           "ServiceCost", "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment",
@@ -155,6 +155,9 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new WarehouseItemMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationMapping());
             modelBuilder.Configurations.Add(new WarehouseMutationDetailMapping());
+            modelBuilder.Configurations.Add(new CurrencyMapping());
+            modelBuilder.Configurations.Add(new ExchangeRateMapping());
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -239,5 +242,8 @@ namespace Data.Context
         public DbSet<RetailPurchaseInvoiceDetail> RetailPurchaseInvoiceDetails { get; set; }
         public DbSet<RetailSalesInvoice> RetailSalesInvoices { get; set; }
         public DbSet<RetailSalesInvoiceDetail> RetailSalesInvoiceDetails { get; set; }
+        public DbSet<Currency> Currencys { get; set; } 
+        public DbSet<ExchangeRate> ExchangeRates { get; set; }
+
     }
 }

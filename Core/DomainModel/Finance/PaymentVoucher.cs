@@ -18,6 +18,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> ReconciliationDate { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRateAmount { get; set; }
+        public Nullable<int> ExchangeRateId { get; set; }
 
         public decimal TotalAmount { get; set; }
 
@@ -32,6 +33,7 @@ namespace Core.DomainModel
         public virtual CashBank CashBank { get; set; }
         public virtual ICollection<PaymentVoucherDetail> PaymentVoucherDetails { get; set; }
         public virtual Currency Currency { get; set; }
+        public virtual ExchangeRate ExchangeRate { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
     }

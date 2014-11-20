@@ -28,7 +28,7 @@
         url: base_url + 'Receivable/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact',
-                   'Source', 'Id', 'Amount', 'Remaining', 'PendingClearance',
+                   'Source', 'Id', 'Amount', 'Currency' , 'Remaining', 'PendingClearance',
                    'Due Date', 'Completion Date', 'Created At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center", hidden: true },
@@ -38,6 +38,7 @@
 				  { name: 'source', index: 'source', width: 120, align: 'right' },
 				  { name: 'sourceid', index: 'sourceid', width: 55 },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

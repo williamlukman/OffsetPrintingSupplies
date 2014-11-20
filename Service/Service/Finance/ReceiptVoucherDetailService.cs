@@ -52,16 +52,16 @@ namespace Service.Service
         }
 
         public ReceiptVoucherDetail CreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
-                                                ICashBankService _cashBankService, IReceivableService _receivableService)
+                                                ICashBankService _cashBankService, IReceivableService _receivableService,ICurrencyService _currencyService)
         {
             receiptVoucherDetail.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService) ?
+            return (_validator.ValidCreateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService,_currencyService) ?
                     _repository.CreateObject(receiptVoucherDetail) : receiptVoucherDetail);
         }
 
         public ReceiptVoucherDetail CreateObject(int receiptVoucherId, int receivableId, decimal amount, string description, 
                                          IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService,
-                                         IReceivableService _receivableService)
+                                         IReceivableService _receivableService,ICurrencyService _currencyService)
         {
             ReceiptVoucherDetail receiptVoucherDetail = new ReceiptVoucherDetail
             {
@@ -70,12 +70,12 @@ namespace Service.Service
                 Amount = amount,
                 Description = description,
             };
-            return this.CreateObject(receiptVoucherDetail, _receiptVoucherService, _cashBankService, _receivableService);
+            return this.CreateObject(receiptVoucherDetail, _receiptVoucherService, _cashBankService, _receivableService,_currencyService);
         }
 
-        public ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService)
+        public ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService,ICurrencyService _currencyService)
         {
-            return (_validator.ValidUpdateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService) ?
+            return (_validator.ValidUpdateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService,_currencyService) ?
                      _repository.UpdateObject(receiptVoucherDetail) : receiptVoucherDetail);
         }
 
@@ -103,10 +103,12 @@ namespace Service.Service
                 {
                     receivable.IsCompleted = true;
                     receivable.CompletionDate = DateTime.Now;
-                }
-                _receivableService.UpdateObject(receivable);
 
+                }
+                receivable = _receivableService.UpdateObject(receivable);
                 receiptVoucherDetail = _repository.ConfirmObject(receiptVoucherDetail);
+                receiptVoucherDetail.Receivable = new Receivable();
+                receiptVoucherDetail.Receivable = receivable;
             }
             return receiptVoucherDetail;
         }

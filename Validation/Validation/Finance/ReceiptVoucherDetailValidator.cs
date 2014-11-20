@@ -122,7 +122,8 @@ namespace Validation.Validation
         }
 
         public ReceiptVoucherDetail VCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
-                                                  IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService)
+                                                  IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService
+            ,ICurrencyService _currencyService)
         {
             VHasReceiptVoucher(receiptVoucherDetail, _receiptVoucherService);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
@@ -137,15 +138,54 @@ namespace Validation.Validation
             VAmountLessOrEqualReceivable(receiptVoucherDetail, _receivableService);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VUniqueReceivableId(receiptVoucherDetail, _receiptVoucherDetailService, _receivableService);
+            if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
+            VReceiptVoucherCurrencyIsSameWithPayableCurrency(receiptVoucherDetail, _receiptVoucherService, _receivableService);
+            if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
+            VCashBankCurrency(receiptVoucherDetail, _cashBankService, _currencyService, _receiptVoucherService, _receivableService);
+            return receiptVoucherDetail;
+        }
+
+        public ReceiptVoucherDetail VReceiptVoucherCurrencyIsSameWithPayableCurrency(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
+        {
+            ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
+            Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
+            if (receiptVoucher.CurrencyId != receivable.CurrencyId)
+            {
+                receiptVoucherDetail.Errors.Add("Generic", "Currency harus sama");
+            }
+            return receiptVoucherDetail;
+        }
+
+        public ReceiptVoucherDetail VCashBankCurrency(ReceiptVoucherDetail receiptVoucherDetail,ICashBankService _cashBankService,ICurrencyService _currencyService, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
+        { 
+            ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
+            CashBank cashbank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
+            Currency currency = _currencyService.GetObjectById(cashbank.CurrencyId);
+            Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
+            if (receiptVoucherDetail.AmountBaseCurrency > 0)
+            {
+                if (currency.IsBase != true)
+                {
+                    receiptVoucherDetail.Errors.Add("Generic", "Currency CashBank harus IDR");
+                }
+            }
+            else
+            {
+                if (cashbank.CurrencyId != receivable.CurrencyId)
+                {
+                    receiptVoucherDetail.Errors.Add("Generic", "Currency tidak sama dengan CashBank");
+                }
+            }
             return receiptVoucherDetail;
         }
 
         public ReceiptVoucherDetail VUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
-                                                  IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService)
+                                                  IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService,
+                                                  ICurrencyService _currencyService)
         {
             VHasNotBeenConfirmed(receiptVoucherDetail);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
-            VCreateObject(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService);
+            VCreateObject(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService,_currencyService);
             return receiptVoucherDetail;    
         }
 
@@ -180,15 +220,15 @@ namespace Validation.Validation
             return receiptVoucherDetail;
         }
 
-        public bool ValidCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService)
+        public bool ValidCreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService,ICurrencyService _currencyService)
         {
-            VCreateObject(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService);
+            VCreateObject(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService,_currencyService);
             return isValid(receiptVoucherDetail);
         }
 
-        public bool ValidUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService)
+        public bool ValidUpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, ICashBankService _cashBankService, IReceivableService _receivableService,ICurrencyService _currencyService)
         {
-            VUpdateObject(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService);
+            VUpdateObject(receiptVoucherDetail, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService,_currencyService);
             return isValid(receiptVoucherDetail);
         }
 

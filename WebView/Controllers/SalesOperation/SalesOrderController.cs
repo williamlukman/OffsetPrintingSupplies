@@ -25,6 +25,7 @@ namespace WebView.Controllers
         private IContactService _contactService;
         private IDeliveryOrderDetailService _deliveryOrderDetailService;
         private IDeliveryOrderService _deliveryOrderService;
+        public ICurrencyService _currencyService;
 
         public SalesOrderController()
         {
@@ -37,12 +38,12 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
             _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
-
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
         {
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -54,7 +55,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _salesOrderService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted);
+            var q = _salesOrderService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -64,6 +65,7 @@ namespace WebView.Controllers
                              model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
+                             currency = model.Currency.Name,
                              model.SalesDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
@@ -105,6 +107,7 @@ namespace WebView.Controllers
                             model.NomorSurat,
                             model.ContactId,
                             model.Contact,
+                            model.currency,
                             model.SalesDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
@@ -278,6 +281,8 @@ namespace WebView.Controllers
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.SalesDate,
                 ConfirmationDate = model.ConfirmationDate,
+                Currency = _currencyService.GetObjectById(model.CurrencyId).Name,
+                model.CurrencyId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -355,6 +360,7 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.SalesDate = model.SalesDate;
                 data.NomorSurat = model.NomorSurat;
+                data.CurrencyId = model.CurrencyId;
                 model = _salesOrderService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)

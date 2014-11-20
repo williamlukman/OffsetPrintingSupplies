@@ -77,7 +77,7 @@ namespace TestValidation
         public IWarehouseService _warehouseService;
         public IWarehouseMutationService _warehouseMutationService;
         public IWarehouseMutationDetailService _warehouseMutationDetailService;
-
+        public ICurrencyService _currencyService;
         public IPriceMutationService _priceMutationService;
        
         public CashBank cashBank, pettyCash, cashBank1, cashBank2;
@@ -168,6 +168,9 @@ namespace TestValidation
         public ReceiptVoucher rv;
         public ReceiptVoucherDetail rvd1, rvd2, rvd3;
 
+        // currency
+        public Currency currency1, currency2;
+
         private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods, PrepaidExpense, NonCurrentAsset;
         private Account Expense, COGS, COS, OperationalExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense;
         private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense, SampleAndTrialExpense;
@@ -241,7 +244,7 @@ namespace TestValidation
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _warehouseMutationService = new WarehouseMutationService(new WarehouseMutationRepository(), new WarehouseMutationValidator());
             _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
-
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
    
             typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket");
@@ -617,37 +620,60 @@ namespace TestValidation
             };
             machine = _machineService.CreateObject(machine);
 
+            currency1 = new Currency()
+            {
+                Name = "IDR",
+                IsBase = true,
+                IsDeleted = false,
+                CreatedAt = DateTime.Now,
+            };
+            currency1 = _currencyService.CreateObject(currency1);
+
+            currency2 = new Currency()
+            {
+                Name = "USD",
+                IsBase = false,
+                IsDeleted = false,
+                CreatedAt = DateTime.Now
+            };
+            currency2 = _currencyService.CreateObject(currency2);
+
             cashBank = new CashBank()
             {
                 Name = "Rekening BRI",
                 Description = "Untuk cashflow",
-                IsBank = true
+                IsBank = true,
+                CurrencyId = currency1.Id
+
             };
-            _cashBankService.CreateObject(cashBank, _accountService);
+            _cashBankService.CreateObject(cashBank, _accountService,_currencyService);
 
             pettyCash = new CashBank()
             {
                 Name = "Petty Cash",
                 Description = "Uang kas sementara",
-                IsBank = false
+                IsBank = false,
+                CurrencyId = currency1.Id
             };
-            _cashBankService.CreateObject(pettyCash, _accountService);
+            _cashBankService.CreateObject(pettyCash, _accountService, _currencyService);
 
             cashBank1 = new CashBank()
             {
                 Name = "Kontan",
                 IsBank = false,
-                Description = "Kontan"
+                Description = "Kontan",
+                CurrencyId = currency1.Id
             };
-            _cashBankService.CreateObject(cashBank1, _accountService);
+            _cashBankService.CreateObject(cashBank1, _accountService, _currencyService);
 
             cashBank2 = new CashBank()
             {
                 Name = "Bank BCA",
                 IsBank = true,
-                Description = "Bank BCA"
+                Description = "Bank BCA",
+                CurrencyId = currency1.Id
             };
-            _cashBankService.CreateObject(cashBank2, _accountService);
+            _cashBankService.CreateObject(cashBank2, _accountService, _currencyService);
 
             cashBankAdjustment3 = new CashBankAdjustment()
             {
@@ -657,7 +683,7 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment3, _cashBankService);
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment3, DateTime.Now, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService);
+                                                     _accountService, _generalLedgerJournalService, _closingService, _currencyService);
         }
 
         public void PopulateBuilders()
@@ -1818,7 +1844,7 @@ namespace TestValidation
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
 
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Today, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService);
 
             cashBankAdjustment2 = new CashBankAdjustment()
             {
@@ -1829,7 +1855,7 @@ namespace TestValidation
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
 
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Today, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService);
 
             cashBankMutation = new CashBankMutation()
             {
@@ -1841,7 +1867,7 @@ namespace TestValidation
             _cashBankMutationService.CreateObject(cashBankMutation, _cashBankService);
 
             _cashBankMutationService.ConfirmObject(cashBankMutation, DateTime.Today, _cashMutationService, _cashBankService,
-                                                   _accountService, _generalLedgerJournalService, _closingService);
+                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService);
 
         }
 
@@ -1854,14 +1880,16 @@ namespace TestValidation
             so1 = new SalesOrder()
             {
                 SalesDate = DateTime.Today.Subtract(purchaseDate),
-                ContactId = contact.Id
+                ContactId = contact.Id,
+                CurrencyId = currency1.Id
             };
             _salesOrderService.CreateObject(so1, _contactService);
 
             so2 = new SalesOrder()
             {
                 SalesDate = DateTime.Today.Subtract(purchaseDate),
-                ContactId = contact.Id
+                ContactId = contact.Id,
+                CurrencyId = currency1.Id
             };
             _salesOrderService.CreateObject(so2, _contactService);
 
@@ -2014,7 +2042,8 @@ namespace TestValidation
                 DeliveryOrderId = do1.Id,
                 Tax = 10,
                 Discount = 0,
-                DueDate = DateTime.Today.AddDays(14)
+                DueDate = DateTime.Today.AddDays(14),
+                CurrencyId = currency1.Id
             };
             si1 = _salesInvoiceService.CreateObject(si1, _deliveryOrderService);
 
@@ -2068,7 +2097,8 @@ namespace TestValidation
                 DeliveryOrderId = do3.Id,
                 Tax = 10,
                 Discount = 0,
-                DueDate = DateTime.Today.AddDays(14)
+                DueDate = DateTime.Today.AddDays(14),
+                CurrencyId = currency1.Id
             };
             si3 = _salesInvoiceService.CreateObject(si3, _deliveryOrderService);
 
@@ -2109,7 +2139,8 @@ namespace TestValidation
                 ReceiptDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
                 DueDate = DateTime.Today.AddDays(14),
-                TotalAmount = si1.AmountReceivable + si2.AmountReceivable + si3.AmountReceivable
+                TotalAmount = si1.AmountReceivable + si2.AmountReceivable + si3.AmountReceivable,
+                CurrencyId = currency1.Id
             };
             _receiptVoucherService.CreateObject(rv, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
 
@@ -2141,10 +2172,10 @@ namespace TestValidation
             _receiptVoucherDetailService.CreateObject(rvd3, _receiptVoucherService, _cashBankService, _receivableService);
 
             _receiptVoucherService.ConfirmObject(rv, DateTime.Today, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService,
-                                                 _accountService, _generalLedgerJournalService, _closingService);
+                                                 _accountService, _generalLedgerJournalService, _closingService,_currencyService);
 
             _receiptVoucherService.ReconcileObject(rv, DateTime.Today.AddDays(10), _receiptVoucherDetailService, _cashMutationService, _cashBankService, _receivableService,
-                                                   _accountService, _generalLedgerJournalService, _closingService);
+                                                   _accountService, _generalLedgerJournalService, _closingService, _currencyService);
         }
 
         // @PurchaseBuilder
@@ -2156,14 +2187,16 @@ namespace TestValidation
             po1 = new PurchaseOrder()
             {
                 PurchaseDate = DateTime.Today.Subtract(purchaseDate),
-                ContactId = contact.Id
+                ContactId = contact.Id,
+                CurrencyId = currency1.Id
             };
             _purchaseOrderService.CreateObject(po1, _contactService);
 
             po2 = new PurchaseOrder()
             {
                 PurchaseDate = DateTime.Today.Subtract(purchaseDate),
-                ContactId = contact.Id
+                ContactId = contact.Id,
+                CurrencyId = currency1.Id
             };
             _purchaseOrderService.CreateObject(po2, _contactService);
 
@@ -2313,7 +2346,8 @@ namespace TestValidation
                 PurchaseReceivalId = pr1.Id,
                 Tax = 10,
                 Discount = 0,
-                DueDate = DateTime.Today.AddDays(14)
+                DueDate = DateTime.Today.AddDays(14),
+                CurrencyId = currency1.Id
             };
             pi1 = _purchaseInvoiceService.CreateObject(pi1, _purchaseReceivalService);
 
@@ -2340,7 +2374,8 @@ namespace TestValidation
                 PurchaseReceivalId = pr2.Id,
                 Tax = 10,
                 Discount = 5,
-                DueDate = DateTime.Today.AddDays(14)
+                DueDate = DateTime.Today.AddDays(14),
+                CurrencyId = currency1.Id
             };
             pi2 = _purchaseInvoiceService.CreateObject(pi2, _purchaseReceivalService);
 
@@ -2367,7 +2402,8 @@ namespace TestValidation
                 PurchaseReceivalId = pr3.Id,
                 Tax = 10,
                 Discount = 0,
-                DueDate = DateTime.Today.AddDays(14)
+                DueDate = DateTime.Today.AddDays(14),
+                CurrencyId = currency1.Id
             };
             pi3 = _purchaseInvoiceService.CreateObject(pi3, _purchaseReceivalService);
 
@@ -2405,7 +2441,8 @@ namespace TestValidation
                 PaymentDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
                 DueDate = DateTime.Today.AddDays(14),
-                TotalAmount = pi1.AmountPayable + pi2.AmountPayable + pi3.AmountPayable
+                TotalAmount = pi1.AmountPayable + pi2.AmountPayable + pi3.AmountPayable,
+                CurrencyId = currency1.Id
             };
             _paymentVoucherService.CreateObject(pv, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService);
 
@@ -2437,10 +2474,10 @@ namespace TestValidation
             _paymentVoucherDetailService.CreateObject(pvd3, _paymentVoucherService, _cashBankService, _payableService);
 
             _paymentVoucherService.ConfirmObject(pv, DateTime.Today, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService,
-                                                 _accountService, _generalLedgerJournalService, _closingService);
+                                                 _accountService, _generalLedgerJournalService, _closingService,_currencyService);
 
             _paymentVoucherService.ReconcileObject(pv, DateTime.Today.AddDays(10), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService,
-                                                   _accountService, _generalLedgerJournalService, _closingService);
+                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService);
         }
 
 
@@ -2449,21 +2486,26 @@ namespace TestValidation
             salesOrder1 = new SalesOrder()
             {
                 SalesDate = DateTime.Today,
-                ContactId = contact.Id
+                ContactId = contact.Id,
+                CurrencyId = currency1.Id
             };
             _salesOrderService.CreateObject(salesOrder1, _contactService);
 
             salesOrder2 = new SalesOrder()
             {
                 SalesDate = DateTime.Today,
-                ContactId = contact.Id
+                ContactId = contact.Id,
+                CurrencyId = currency1.Id
+
             };
             _salesOrderService.CreateObject(salesOrder2, _contactService);
 
             salesOrder3 = new SalesOrder()
             {
                 SalesDate = DateTime.Today,
-                ContactId = contact.Id
+                ContactId = contact.Id,
+                CurrencyId = currency1.Id
+
             };
             _salesOrderService.CreateObject(salesOrder3, _contactService);
 
@@ -2529,7 +2571,7 @@ namespace TestValidation
             {
                 DeliveryDate = DateTime.Today,
                 SalesOrderId = salesOrder1.Id,
-                WarehouseId = localWarehouse.Id
+                WarehouseId = localWarehouse.Id,
             };
             _deliveryOrderService.CreateObject(deliveryOrder1, _salesOrderService, _warehouseService);
 
@@ -2620,6 +2662,8 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(7),
                 Tax = 0,
                 Discount = 0,
+                CurrencyId = currency1.Id
+
             };
             _salesInvoiceService.CreateObject(salesInvoice1, _deliveryOrderService);
 
@@ -2630,6 +2674,8 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(7),
                 Tax = 0,
                 Discount = 0,
+                CurrencyId = currency1.Id
+
             };
             _salesInvoiceService.CreateObject(salesInvoice2, _deliveryOrderService);
 
@@ -2640,6 +2686,8 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(7),
                 Tax = 0,
                 Discount = 0,
+                CurrencyId = currency1.Id
+
             };
             _salesInvoiceService.CreateObject(salesInvoice3, _deliveryOrderService);
 
@@ -2708,7 +2756,9 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(6),
                 IsGBCH = false,
                 ReceiptDate = DateTime.Today,
-                TotalAmount = salesInvoice1.AmountReceivable
+                TotalAmount = salesInvoice1.AmountReceivable,
+                CurrencyId = currency1.Id
+
             };
             _receiptVoucherService.CreateObject(receiptVoucher1, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
 
@@ -2719,7 +2769,9 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(6),
                 IsGBCH = false,
                 ReceiptDate = DateTime.Today,
-                TotalAmount = salesInvoice2.AmountReceivable
+                TotalAmount = salesInvoice2.AmountReceivable,
+                CurrencyId = currency1.Id
+
             };
             _receiptVoucherService.CreateObject(receiptVoucher2, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
 
@@ -2730,7 +2782,9 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(6),
                 IsGBCH = false,
                 ReceiptDate = DateTime.Today,
-                TotalAmount = salesInvoice3.AmountReceivable
+                TotalAmount = salesInvoice3.AmountReceivable,
+                CurrencyId = currency1.Id
+
             };
             _receiptVoucherService.CreateObject(receiptVoucher3, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
 
@@ -2759,11 +2813,11 @@ namespace TestValidation
             _receiptVoucherDetailService.CreateObject(receiptVD3a, _receiptVoucherService, _cashBankService, _receivableService);
 
             _receiptVoucherService.ConfirmObject(receiptVoucher1, DateTime.Now, _receiptVoucherDetailService, _cashBankService, _receivableService,
-                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService);
+                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService,_currencyService);
             _receiptVoucherService.ConfirmObject(receiptVoucher2, DateTime.Now, _receiptVoucherDetailService, _cashBankService, _receivableService,
-                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService);
+                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService,_currencyService);
             _receiptVoucherService.ConfirmObject(receiptVoucher3, DateTime.Now, _receiptVoucherDetailService, _cashBankService, _receivableService,
-                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService);
+                                                 _cashMutationService, _accountService, _generalLedgerJournalService, _closingService,_currencyService);
         }
 
         public void PopulateValidComb()

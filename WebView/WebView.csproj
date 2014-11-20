@@ -250,6 +250,8 @@
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
+    <Compile Include="Controllers\Finance\ExchangeRateController.cs" />
+    <Compile Include="Controllers\Finance\CurrencyController.cs" />
     <Compile Include="Controllers\Finance\SalesDownPaymentAllocationController.cs" />
     <Compile Include="Controllers\Finance\SalesDownPaymentController.cs" />
     <Compile Include="Controllers\Finance\PurchaseDownPaymentAllocationController.cs" />
@@ -320,6 +322,8 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\MasterExchangeRate.js" />
+    <Content Include="Content\apps_js\MasterCurrency.js" />
     <Content Include="Content\apps_js\PriceList.js" />
     <Content Include="Content\apps_js\SalesQuotation.js" />
     <Content Include="Content\apps_js\SalesDownPaymentAllocation.js" />
@@ -1325,6 +1329,8 @@
     <Content Include="Views\Report\ProfitLoss.cshtml" />
     <Content Include="Views\Report\Sales.cshtml" />
     <Content Include="Views\Report\TopSales.cshtml" />
+    <Content Include="Views\Currency\Index.cshtml" />
+    <Content Include="Views\ExchangeRate\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

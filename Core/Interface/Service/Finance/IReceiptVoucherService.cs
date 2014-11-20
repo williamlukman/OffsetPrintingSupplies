@@ -28,18 +28,18 @@ namespace Core.Interface.Service
         ReceiptVoucher ConfirmObject(ReceiptVoucher receiptVoucher, DateTime ConfirmationDate, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                      ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
                                      IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                     ICurrencyService _currencyService);
+                                     ICurrencyService _currencyService, ISalesInvoiceService _salesInvoiceService, IExchangeRateService _exchangeRateService, IReceiptVoucherService _receiptVoucherService);
         ReceiptVoucher UnconfirmObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                        ICashBankService _cashBankService, IReceivableService _receivableService, ICashMutationService _cashMutationService,
                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                       ICurrencyService _currencyService);
+                                       ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
         ReceiptVoucher ReconcileObject(ReceiptVoucher receiptVoucher, DateTime ReconciliationDate, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                        ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                       ICurrencyService _currencyService);
+                                       ICurrencyService _currencyService, IExchangeRateService _exchangeRateService, ISalesInvoiceService _salesInvoiceService, IReceiptVoucherService _receiptVoucherService);
         ReceiptVoucher UnreconcileObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                          ICashMutationService _cashMutationService, ICashBankService _cashBankService, IReceivableService _receivableService,
                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                         ICurrencyService _currencyService);
+                                         ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
     }
 }

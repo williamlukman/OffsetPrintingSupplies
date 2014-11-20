@@ -16,11 +16,11 @@ namespace Core.Interface.Service
         IList<ReceiptVoucherDetail> GetObjectsByReceivableId(int receivableId);
         ReceiptVoucherDetail GetObjectById(int Id);        
         ReceiptVoucherDetail CreateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
-                                          ICashBankService _cashBankService, IReceivableService _receivableService);
+                                          ICashBankService _cashBankService, IReceivableService _receivableService, ICurrencyService _currencyService);
         ReceiptVoucherDetail CreateObject(int receiptVoucherId, int receivableId, decimal amount, string description,
-                                          IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService);
+                                          IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService, ICurrencyService _currencyService);
         ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService,
-                                          ICashBankService _cashBankService, IReceivableService _receivableService);
+                                          ICashBankService _cashBankService, IReceivableService _receivableService,ICurrencyService _currencyService);
         ReceiptVoucherDetail SoftDeleteObject(ReceiptVoucherDetail receiptVoucherDetail);
         bool DeleteObject(int Id);
         ReceiptVoucherDetail ConfirmObject(ReceiptVoucherDetail receiptVoucherDetail, DateTime ConfirmationDate, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService);

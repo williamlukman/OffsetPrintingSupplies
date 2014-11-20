@@ -13,25 +13,42 @@ using System.Data.Entity;
 
 namespace WebView.Controllers
 {
-    public class MstCashBankController : Controller
+    public class CurrencyController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CashBankController");
-        private ICashBankService _cashBankService;
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CurrencyController");
         private ICashMutationService _cashMutationService;
         private IAccountService _accountService;
         public ICurrencyService _currencyService;
-
-        public MstCashBankController()
+        private ICashBankService _cashBankService;
+        private IPaymentRequestService _paymentRequestService;
+        private IPurchaseOrderService  _purchaseOrderService;
+        private ISalesOrderService _salesOrderService;
+        private ISalesInvoiceService _salesInvoiceService;
+        private IPurchaseInvoiceService _purchaseInvoiceService;
+        private IPayableService  _payableService;
+        private IReceivableService _receivableService;
+        private IPaymentVoucherService _paymentVoucherService;
+        private IReceiptVoucherService _receiptVoucherService;
+        public CurrencyController()
         {
-            _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
+            _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
+            _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
+            _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
+            _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
+            _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
+            _payableService = new PayableService(new PayableRepository(), new PayableValidator());
+            _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
+            _paymentVoucherService = new PaymentVoucherService(new PaymentVoucherRepository(), new PaymentVoucherValidator());
+            _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
         }
 
         public ActionResult Index()
         {
-            return View(this);
+            return View();
         }
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
@@ -42,7 +59,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _cashBankService.GetQueryable().Include("Currency").Where(x => !x.IsDeleted);
+            var q = _currencyService.GetQueryable().Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -50,9 +67,6 @@ namespace WebView.Controllers
                              model.Id,
                              model.Name,
                              model.Description,
-                             model.Amount,
-                             currency = model.Currency.Name,
-                             model.IsBank,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -89,9 +103,6 @@ namespace WebView.Controllers
                             item.Id,
                             item.Name,
                             item.Description,
-                            item.Amount,
-                            item.currency,
-                            item.IsBank,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -101,10 +112,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            CashBank model = new CashBank();
+            Currency model = new Currency();
             try
             {
-                model = _cashBankService.GetObjectById(Id);
+                model = _currencyService.GetObjectById(Id);
 
             }
             catch (Exception ex)
@@ -118,19 +129,16 @@ namespace WebView.Controllers
                 model.Id,
                 model.Name,
                 model.Description,
-                model.Amount,
-                model.CurrencyId,
-                model.IsBank,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public dynamic Insert(CashBank model)
+        public dynamic Insert(Currency model)
         {
             try
             {
-                model = _cashBankService.CreateObject(model, _accountService,_currencyService);
+                model = _currencyService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -145,15 +153,16 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(CashBank model)
+        public dynamic Update(Currency model)
         {
             try
             {
-                var data = _cashBankService.GetObjectById(model.Id);
+                var data = _currencyService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                data.CurrencyId = model.CurrencyId;
-                model = _cashBankService.UpdateObject(data,_currencyService);
+                model = _currencyService.UpdateObject(data,_cashBankService,_paymentRequestService,_purchaseOrderService,
+                    _salesOrderService,_salesInvoiceService,_purchaseInvoiceService,_payableService,_receivableService,
+                    _paymentVoucherService,_receiptVoucherService);
             }
             catch (Exception ex)
             {
@@ -168,12 +177,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(CashBank model)
+        public dynamic Delete(Currency model)
         {
             try
             {
-                var data = _cashBankService.GetObjectById(model.Id);
-                model = _cashBankService.SoftDeleteObject(data,_cashMutationService);
+                var data = _currencyService.GetObjectById(model.Id);
+                model = _currencyService.SoftDeleteObject(data,_cashBankService, _paymentRequestService, _purchaseOrderService,
+                    _salesOrderService, _salesInvoiceService, _purchaseInvoiceService, _payableService, _receivableService,
+                    _paymentVoucherService, _receiptVoucherService);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,6 @@
-﻿@model WebView.Controllers.MstCashBankController
+﻿@model WebView.Controllers.ExchangeRateController
 @{
-    ViewBag.Title = "Master CashBank";
+    ViewBag.Title = "Master ExchangeRate";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,10 +9,10 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/mastercashbank.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/masterexchangerate.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Master CashBank :.">
+    title=".: Master ExchangeRate :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -27,7 +27,7 @@
 
 <!-- Dialog Box -->
     <div id="form_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px" data-options="modal:true" 
-        title=".: Master CashBank :.">
+        title=".: Master ExchangeRate :.">
 
         <div id="form_toolbar" class="form_toolbar">
             <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
@@ -46,39 +46,6 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Name</label></td>
-                            <td colspan="3">
-                                <input id="Name" name ="Name"type="text" size="60" maxlength="60" align="left" /></td>
-                        </tr>
-                        <tr>
-                            <td valign="top">
-                                <label>Description</label></td>
-                            <td colspan="3">
-                                <label>
-                                    <textarea name="Description" id ="Description" size="60" cols="60" rows="3"></textarea>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Amount</label></td>
-                            <td colspan="3">
-                                <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" disabled="disabled" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Bank</label>
-                            </td>
-                            <td>
-                                <select id="IsBank">
-                                  <option value="True">Yes</option>
-                                  <option value="False">No</option>
-                               </select>
-                            </td>
-                        </tr>
-                         <tr>
-                            <td>
                                 <label>Currency </label></td>
                             <td>
                                 <select id="CurrencyId">
@@ -89,6 +56,22 @@
                                 </select>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <label>Date</label></td>
+                            <td>
+                                <div id="ExchangeRateDateDiv"><input id="ExRateDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                @*<div id="ExchangeRateDateDiv2"><input id="ExchangeRateDate2" type="text" size="10" disabled="disabled"/></div>*@
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Rate</label></td>
+                            <td colspan="3">
+                                <input id="Rate" name="Rate" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0"" />
+                            </td>
+                        </tr>
+                       
                     </table>
                 @*</fieldset>*@
             </form>
@@ -110,5 +93,6 @@
         </div>
     </div>
 <!-- End Dialog Box Delete-->
+
   </div>
 

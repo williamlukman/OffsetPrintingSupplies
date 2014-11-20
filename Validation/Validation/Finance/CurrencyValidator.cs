@@ -113,7 +113,6 @@ namespace Validation.Validation
         {
             VIsBase(currency, _currencyService);
             if (!isValid(currency)) { return currency; }
-            if (!isValid(currency)) { return currency; }
             VAlreadyUsed(currency, _cashBankService, _paymentRequestService
             , _purchaseOrderService, _salesOrderService, _salesInvoiceService
             , _purchaseInvoiceService, _payableService, _receivableService

@@ -66,6 +66,7 @@ namespace Core.Constants
             public static string PrepaidExpense = "1105";
             public static string PiutangLainLain = "1106";
             public static string NonCurrentAsset = "12";
+            public static string UnrecognizedCapitalGain = "13";
 
             public static string Expense = "2";
             public static string COGS = "21";
@@ -96,11 +97,13 @@ namespace Core.Constants
             public static string PurchaseAllowance = "3105";
             public static string AccountPayableNonTrading = "3106";
             public static string HutangLainLain = "3107";
+            public static string TaxPayable = "3108";
             public static string NonCurrentLiability = "32";
 
             public static string Equity = "4";
             public static string OwnersEquity = "41";
             public static string EquityAdjustment = "4101";
+            public static string CapitalGain = "42";
 
             public static string Revenue = "5";
         }
@@ -118,6 +121,7 @@ namespace Core.Constants
             public static string PrepaidExpense = "A1105";
             public static string PiutangLainLain = "A1106";
             public static string NonCurrentAsset = "A12";
+            public static string UnrecognizedCapitalGain = "A13";
 
             public static string Expense = "X2";
             public static string COGS = "X21";
@@ -148,12 +152,14 @@ namespace Core.Constants
             public static string PurchaseAllowance = "L3105";
             public static string AccountPayableNonTrading = "L3106";
             public static string HutangLainLain = "L3107";
+            public static string TaxPayable = "L3108";
+
             public static string NonCurrentLiability = "L32";
 
             public static string Equity = "E4";
             public static string OwnersEquity = "E41";
             public static string EquityAdjustment = "E4101";
-
+            public static string CapitalGain = "E42";
             public static string Revenue = "R5";
         }
         #endregion

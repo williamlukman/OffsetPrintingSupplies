@@ -30,6 +30,8 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private IServiceCostService _serviceCostService;
         private IRollerBuilderService _rollerBuilderService;
+        public ICurrencyService _currencyService;
+        public IExchangeRateService _exchangeRateService;
 
         public SalesInvoiceController()
         {
@@ -47,11 +49,13 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
         public ActionResult Index()
         {
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -63,7 +67,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _salesInvoiceService.GetQueryable().Include("DeliveryOrder").Where(x => !x.IsDeleted);
+            var q = _salesInvoiceService.GetQueryable().Include("DeliveryOrder").Include("Currency").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -73,9 +77,12 @@ namespace WebView.Controllers
                              model.NomorSurat,
                              model.DeliveryOrderId,
                              DeliveryOrderCode = model.DeliveryOrder.Code,
+                             model.DeliveryOrder.SalesOrder.CurrencyId,
                              model.Description,
                              model.Discount,
                              model.Tax,
+                             currency = model.Currency.Name,
+                             model.ExchangeRateAmount,
                              model.InvoiceDate,
                              model.DueDate,
                              model.AmountReceivable,
@@ -122,6 +129,8 @@ namespace WebView.Controllers
                             model.Description,
                             model.Discount,
                             model.Tax,
+                            model.currency,
+                            model.ExchangeRateAmount,
                             model.InvoiceDate,
                             model.DueDate,
                             model.AmountReceivable,
@@ -230,6 +239,9 @@ namespace WebView.Controllers
                 model.DueDate,
                 model.AmountReceivable,
                 ConfirmationDate = model.ConfirmationDate,
+                currency = _currencyService.GetObjectById(model.CurrencyId).Name,
+                model.CurrencyId,
+                model.ExchangeRateAmount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -266,7 +278,10 @@ namespace WebView.Controllers
         {
             try
             {
-
+                if (_currencyService.GetObjectById(model.CurrencyId).IsBase == true)
+                {
+                    model.ExchangeRateAmount = 1;
+                }
                 model = _salesInvoiceService.CreateObject(model, _deliveryOrderService);
             }
             catch (Exception ex)
@@ -309,6 +324,10 @@ namespace WebView.Controllers
         {
             try
             {
+                if (_currencyService.GetObjectById(model.CurrencyId).IsBase == true)
+                {
+                    model.ExchangeRateAmount = 1;
+                }
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 data.DeliveryOrderId = model.DeliveryOrderId;
                 data.Description = model.Description;
@@ -317,6 +336,8 @@ namespace WebView.Controllers
                 data.InvoiceDate = model.InvoiceDate;
                 data.DueDate = model.DueDate;
                 data.NomorSurat = model.NomorSurat;
+                data.ExchangeRateAmount = model.ExchangeRateAmount;
+                data.CurrencyId = model.CurrencyId;
                 model = _salesInvoiceService.UpdateObject(data, _deliveryOrderService, _salesInvoiceDetailService);
             }
             catch (Exception ex)
@@ -409,7 +430,7 @@ namespace WebView.Controllers
             var data = _salesInvoiceService.GetObjectById(model.Id);
             model = _salesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _salesInvoiceDetailService, _salesOrderService,
                     _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _receivableService, _accountService,
-                    _generalLedgerJournalService, _closingService, _serviceCostService, _rollerBuilderService, _itemService);
+                    _generalLedgerJournalService, _closingService, _serviceCostService, _rollerBuilderService, _itemService,_exchangeRateService,_currencyService);
             //}
             //catch (Exception ex)
             //{
@@ -432,7 +453,7 @@ namespace WebView.Controllers
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService, _deliveryOrderService,
                         _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _accountService,
-                        _generalLedgerJournalService, _closingService);
+                        _generalLedgerJournalService, _closingService,_exchangeRateService,_currencyService);
             }
             catch (Exception ex)
             {

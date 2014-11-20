@@ -8,7 +8,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstCashBank/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'Currency/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -25,16 +25,13 @@
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstCashBank/GetList',
+        url: base_url + 'Currency/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Amount', 'Currency','Bank', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 120 },
                   { name: 'description', index: 'description', width: 200 },
-                  { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-				  { name: 'currency', index: 'currency', width: 100 },
-                  { name: 'isbank', index: 'isbank', width: 40 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -54,13 +51,13 @@
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsBank = $(this).getRowData(cl).isbank;
-		          if (rowIsBank == 'true') {
-		              rowIsBank = "YES";
-		          } else {
-		              rowIsBank = "NO";
-		          }
-		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
+		          //rowIsBank = $(this).getRowData(cl).isbank;
+		          //if (rowIsBank == 'true') {
+		          //    rowIsBank = "YES";
+		          //} else {
+		          //    rowIsBank = "NO";
+		          //}
+		          //$(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
 		      }
 		  }
 
@@ -82,7 +79,6 @@
         clearForm('#frm');
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
-        $('#IsBank').removeAttr('disabled');
     });
 
     $('#btn_edit').click(function () {
@@ -92,12 +88,9 @@
         if (id) {
             vStatusSaving = 1;//edit data mode
 
-            var f = document.getElementById("IsBank");
-            var bank = f.options[f.selectedIndex].value;
-
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstCashBank/GetInfo?Id=" + id,
+                url: base_url + "Currency/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -115,18 +108,7 @@
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
                             $('#Description').val(result.Description);
-                            $('#Amount').numberbox('setValue', (result.Amount));
-                            var f = document.getElementById("IsBank");
-                            if (result.IsBank == true) {
-                                f.selectedIndex = 0;
-                            }
-                            else {
-                                f.selectedIndex = 1;
-                            }
-                            $('#CurrencyId').val(result.CurrencyId);
                             $('#form_div').dialog('open');
-                            $('#IsBank').attr('disabled', true);
-
                         }
                     }
                 }
@@ -157,7 +139,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstCashBank/Delete",
+            url: base_url + "Currency/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -201,24 +183,20 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstCashBank/Update';
+            submitURL = base_url + 'Currency/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstCashBank/Insert';
+            submitURL = base_url + 'Currency/Insert';
         }
 
-        var f = document.getElementById("IsBank");
-        var bank = f.options[f.selectedIndex].value;
 
-        var g = document.getElementById("CurrencyId");
-        var currency = g.options[g.selectedIndex].value;
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Description: $("#Description").val(), IsBank: bank,CurrencyId : currency
+                Id: id, Name: $("#Name").val(), Description: $("#Description").val()
             }),
             async: false,
             cache: false,

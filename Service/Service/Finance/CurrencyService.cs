@@ -51,12 +51,6 @@ namespace Service.Service
             currency.Errors = new Dictionary<string, string>();
             if (_validator.ValidCreateObject(currency, this))
             {
-                Currency newcurrency = new Currency()
-                {
-                    Name = currency.Name,
-                    Description = currency.Description,
-                    IsBase = false,
-                };
                 _repository.CreateObject(currency);
             }
             return currency;

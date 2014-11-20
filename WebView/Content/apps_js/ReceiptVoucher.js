@@ -54,7 +54,7 @@
         url: base_url + 'ReceiptVoucher/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Receipt Date',
-                   'Is GBCH', 'Due Date', 'Total Amount', 'Is Reconciled', 'ReconciliationDate',
+                   'Is GBCH', 'Due Date', 'Total Amount','Currency', 'Rate','Is Reconciled', 'ReconciliationDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -67,6 +67,8 @@
                   { name: 'isgbch', index: 'isgbch', width: 45 },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'exchangerateamount', index: 'exchangerateamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isreconciled', index: 'isreconciled', width: 100, hidden: true },
                   { name: 'reconciliationdate', index: 'reconciliationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
@@ -134,13 +136,16 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-
+        $('#TotalAmount').numberbox('clear');
         $('#ReceiptDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
+        $('#ExchangeRateAmount').removeAttr('disabled');
+        $('#CurrencyId').removeAttr('disabled');
+        $('#ExchangeRateAmount').val(0);
         $('#tabledetail_div').hide();
         $('#ReceiptDateDiv').show();
         $('#ReceiptDateDiv2').hide();
@@ -187,6 +192,10 @@
                             else {
                                 e.selectedIndex = 1;
                             }
+                            $('#CurrencyId').val(result.CurrencyId);
+                            $('#CurrencyId').attr('disabled', true);
+                            $('#ExchangeRateAmount').attr('disabled', true);
+                            $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
                             $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
                             $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -259,6 +268,10 @@
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
                             $('#form_btn_save').hide();
+                            $('#CurrencyId').val(result.CurrencyId);
+                            $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
+                            $('#CurrencyId').removeAttr('disabled');
+                            $('#ExchangeRateAmount').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
                             $('#btnCashBank').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
@@ -517,6 +530,8 @@
         var e = document.getElementById("IsGBCH");
         var gbch = e.options[e.selectedIndex].value;
 
+        var f = document.getElementById("CurrencyId");
+        var bank = f.options[f.selectedIndex].value;
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -524,7 +539,8 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
                 IsGBCH: gbch, TotalAmount: $("#TotalAmount").numberbox('getValue'),
-                ReceiptDate: $('#ReceiptDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                ReceiptDate: $('#ReceiptDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'), CurrencyId: bank,
+                ExchangeRateAmount: $("#ExchangeRateAmount").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -556,14 +572,15 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Receivable Id', 'Receivable Code', 'Amount', 'Description'
+        colNames: ['Id', 'Code', 'Receivable Id', 'Receivable Code', 'Amount','Amount Base Currency', 'Description'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'receivableid', index: 'receivableid', width: 130, sortable: false, hidden: true },
-                  { name: 'receivable', index: 'receivable', width: 90, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'receivable', index: 'receivable', width: 110, sortable: false },
+                  { name: 'amount', index: 'amount', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'amountbasecurrency', index: 'amountbasecurrency', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
         //page: '1',
@@ -587,6 +604,8 @@
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
+        $('#Amount').numberbox('clear');
+        $('#AmountBaseCurrency').numberbox('clear');
         $('#item_div').dialog('open');
     });
 
@@ -689,7 +708,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ReceiptVoucherId: $("#id").val(), ReceivableId: $("#ReceivableId").val(), Description: $("#Description").val(),
-                Amount: $("#Amount").numberbox('getValue'),
+                Amount: $("#Amount").numberbox('getValue'), AmountBaseCurrency: $("#AmountBaseCurrency").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -854,7 +873,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Receivable Source', 'Id',
-                    'Due Date', 'Total', 'Remaining', 'PendClearance'
+                    'Due Date', 'Total', 'Currency','Remaining', 'PendClearance'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
@@ -864,6 +883,7 @@
                   { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
@@ -894,7 +914,7 @@
             var ret = jQuery("#lookup_table_receivable").jqGrid('getRowData', id);
             $('#ReceivableId').val(id);
             $('#Receivable').val(ret.code);
-
+            $('#Currency').val(ret.currency);
             $('#lookup_div_receivable').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

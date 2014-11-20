@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebView.Controllers.SalesOrderController
+@{
     ViewBag.Title = "Sales Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -76,6 +77,18 @@
                              <div id="SalesDateDiv2"><input id="SalesDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                          </tr>
+                        <tr>
+                            <td>
+                                <label>Currency </label></td>
+                            <td>
+                                <select id="CurrencyId">
+                                    @foreach (var item in Model._currencyService.GetAll())
+                                    {
+                                        <option value ="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">

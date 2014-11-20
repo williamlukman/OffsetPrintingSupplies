@@ -42,7 +42,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _receivableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted);
+            var q = _receivableService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -54,6 +54,7 @@ namespace WebView.Controllers
                              model.ReceivableSource,
                              model.ReceivableSourceId,
                              model.Amount,
+                             currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.DueDate,
@@ -97,6 +98,7 @@ namespace WebView.Controllers
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,
+                            receivable.currency,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,
                             receivable.DueDate,

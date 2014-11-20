@@ -1,4 +1,6 @@
-﻿@{
+﻿@model WebView.Controllers.ReceiptVoucherController
+
+@{
     ViewBag.Title = "Receipt Voucher";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -104,8 +106,22 @@
                                 <label>Total Amount</label></td>
                              <td colspan="5">
                                <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                                </td>     
-                         </tr>                      
+                               </td>
+                           <tr>
+                               <td>
+                                <label>Currency </label></td>
+                               <td>
+                                <select id="CurrencyId">
+                                    @foreach (var item in Model._currencyService.GetAll())
+                                    {
+                                        <option value ="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                                <label>Rate</label>
+                               <input id="ExchangeRateAmount" name="ExchangeRateAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                           </td>     
+                         </tr>     
+                                         
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -149,6 +165,16 @@
                         </td>
                         <td>
                                <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <label>Currency</label>
+                               <input id="Currency" name="Currency" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled ="disabled" />
+                        </td>
+                    </tr>
+                  <tr>
+                        <td>
+                            Amount Base Currency
+                        </td>
+                        <td>
+                               <input id="AmountBaseCurrency" name="AmountBaseCurrency" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
                         </td>
                     </tr>
                    <tr>

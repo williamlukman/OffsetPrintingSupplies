@@ -46,12 +46,6 @@ namespace Service.Service
             exchangeRate.Errors = new Dictionary<string, string>();
             if (_validator.ValidCreateObject(exchangeRate, this))
             {
-                ExchangeRate newExchangeRate = new ExchangeRate()
-                {
-                    ExRateDate = exchangeRate.ExRateDate,
-                    CurrencyId = exchangeRate.CurrencyId,
-                    Rate = exchangeRate.Rate,
-                };
                 _repository.CreateObject(exchangeRate);
             }
             return exchangeRate;
@@ -71,10 +65,15 @@ namespace Service.Service
         {
             return _repository.DeleteObject(Id);
         }
-         
+
+        public ExchangeRate GetLatestRate(DateTime date,int currencyId)
+        {
+            return GetQueryable().Where(x => x.ExRateDate <= date && x.CurrencyId == currencyId).OrderByDescending(x => x.ExRateDate).FirstOrDefault();
+        }
+
         public bool IsExchangeRateDateDuplicated(ExchangeRate exchangeRate)
         {
-            IQueryable<ExchangeRate> exchangeRates = _repository.FindAll(cb => cb.ExRateDate.Date == exchangeRate.ExRateDate.Date && !cb.IsDeleted && cb.CurrencyId != exchangeRate.CurrencyId);
+            IQueryable<ExchangeRate> exchangeRates = _repository.FindAll(cb => cb.ExRateDate == exchangeRate.ExRateDate && !cb.IsDeleted && cb.CurrencyId == exchangeRate.CurrencyId);
             return (exchangeRates.Count() > 0 ? true : false);
         }
 

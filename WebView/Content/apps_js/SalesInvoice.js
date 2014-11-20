@@ -50,8 +50,8 @@
     $("#list").jqGrid({
         url: base_url + 'SalesInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Delivery Order Id', 'DO', 'Description', 'Disc(%)', 'Tax(%)',
-                   'Invoice Date', 'Due Date', 'Amount',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Delivery Order Id', 'DO', 'Description', 'Disc(%)', 'Tax(%)','Currency',
+                   'Rate','Invoice Date', 'Due Date', 'Amount',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -62,6 +62,8 @@
                   { name: 'description', index: 'description', width: 100 },
                   { name: 'discount', index: 'discount', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
                   { name: 'tax', index: 'tax', width: 50, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'ExchangeRateAmount', index: 'ExchangeRateAmount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'invoicedate', index: 'invoicedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'amountreceivable', index: 'amountreceivable', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
@@ -137,6 +139,8 @@
         $('#NomorSurat').removeAttr('disabled');
         $('#Discount').removeAttr('disabled');
         $('#Description').removeAttr('disabled');
+        $('#ExchangeRateAmount').removeAttr('disabled');
+        $('#ExchangeRateAmount').val(0);
         $('#tabledetail_div').hide();
         $('#InvoiceDateDiv').show();
         $('#InvoiceDateDiv2').hide();
@@ -177,10 +181,13 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $('#Currency').val(result.currency).data("kode", result.CurrencyId);
                             $('#Discount').attr('disabled', true);
                             $('#Description').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
                             $('#AmountReceivable').val(result.AmountReceivable);
+                            $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
+                            $('#ExchangeRateAmount').attr('disabled', true);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
                             $('#InvoiceDate2').val(dateEnt(result.InvoiceDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -233,6 +240,9 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
+                            $('#ExchangeRateAmount').removeAttr('disabled');
+                            $('#Currency').val(result.currency).data("kode",result.CurrencyId);
                             $('#Discount').removeAttr('disabled');
                             $('#Description').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
@@ -424,7 +434,7 @@
                 Id: id, DeliveryOrderId: $("#DeliveryOrderId").val(), Description: $("#Description").val(),
                 Discount: $("#Discount").numberbox('getValue'), Tax: $("#Tax").val(),
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                NomorSurat: $('#NomorSurat').val()
+                NomorSurat: $('#NomorSurat').val(), CurrencyId: $("#Currency").data('kode'), ExchangeRateAmount: $("#ExchangeRateAmount").numberbox('getValue'),
             }),
             async: false,
             cache: false,
@@ -646,7 +656,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['ID', 'Code', 'Nomor Surat DO', 'SalesOrder Id', 'SalesOrder Code', 'Nomor Surat SO', 'Delivery Date', 'Warehouse Id', 'Warehouse Name',
-                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
+                   'CurrencyId','Currency','Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
                   { name: 'code', index: 'code', width: 50, hidden: true },
@@ -657,6 +667,8 @@
                   { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 100 },
+                  { name: 'CurrencyId', index: 'CurrencyId', width: 100, hidden: true },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
@@ -693,6 +705,7 @@
             $('#DeliveryOrder').val(ret.code);
             $('#Discount').val(0);
             $('#Tax').val(ret.tax);
+            $('#Currency').val(ret.currency).data("kode", ret.CurrencyId);
             $('#lookup_div_deliveryorder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

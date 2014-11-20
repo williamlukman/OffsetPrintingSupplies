@@ -173,7 +173,9 @@ namespace WebView.Controllers
                                    (model.SalesOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
                                    (model.SalesOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
                                    (model.SalesOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
-                                   (model.SalesOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0                                 
+                                   (model.SalesOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,   
+                              currency = model.SalesOrder.Currency.Name,
+                              model.SalesOrder.CurrencyId
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -214,6 +216,8 @@ namespace WebView.Controllers
                             model.DeliveryDate,
                             model.WarehouseId,
                             model.Warehouse,
+                            model.CurrencyId,
+                            model.currency,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,

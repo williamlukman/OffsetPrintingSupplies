@@ -14,6 +14,7 @@ namespace Core.DomainModel
         public string NomorSurat { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRateAmount { get; set; }
+        public Nullable<int> ExchangeRateId { get; set; }
 
         public decimal AmountPayable { get; set; }
         public decimal Discount { get; set; } // 0 - 100 %
@@ -35,5 +36,7 @@ namespace Core.DomainModel
         public virtual ICollection<PurchaseInvoiceDetail> PurchaseInvoiceDetails { get; set; }
         public virtual Currency Currency { get; set; }
         public Dictionary<String, String> Errors { get; set; }
+        public virtual ExchangeRate ExchangeRate { get; set; }
+
     }
 }

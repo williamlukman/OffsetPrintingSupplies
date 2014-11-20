@@ -19,6 +19,7 @@ namespace Core.DomainModel
         public decimal AmountReceivable { get; set; }
         public decimal Discount { get; set; } // 0 - 100
         public decimal Tax { get; set; } // 0 - 100
+        public Nullable<int> ExchangeRateId { get; set; }
 
         public DateTime InvoiceDate { get; set; }
         public DateTime DueDate { get; set; }
@@ -34,6 +35,7 @@ namespace Core.DomainModel
         public virtual DeliveryOrder DeliveryOrder { get; set; }
         public virtual ICollection<SalesInvoiceDetail> SalesInvoiceDetails { get; set; }
         public Dictionary<String, String> Errors { get; set; }
-        public virtual Currency Currency { get; set; }
+        public virtual Currency Currency { get; set; } 
+        public virtual ExchangeRate ExchangeRate { get; set; }
     }
 }

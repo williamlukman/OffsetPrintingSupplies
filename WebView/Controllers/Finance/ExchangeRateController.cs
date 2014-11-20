@@ -13,19 +13,19 @@ using System.Data.Entity;
 
 namespace WebView.Controllers
 {
-    public class MstCashBankController : Controller
+    public class ExchangeRateController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CashBankController");
-        private ICashBankService _cashBankService;
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ExchangeRateController");
         private ICashMutationService _cashMutationService;
         private IAccountService _accountService;
+        private IExchangeRateService _exchangeRateService;
         public ICurrencyService _currencyService;
 
-        public MstCashBankController()
+        public ExchangeRateController()
         {
-            _cashBankService = new CashBankService(new CashBankRepository(),new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
@@ -33,6 +33,7 @@ namespace WebView.Controllers
         {
             return View(this);
         }
+
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
@@ -42,17 +43,15 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _cashBankService.GetQueryable().Include("Currency").Where(x => !x.IsDeleted);
+            var q = _exchangeRateService.GetQueryable().Include("Currency").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
-                             model.Name,
-                             model.Description,
-                             model.Amount,
-                             currency = model.Currency.Name,
-                             model.IsBank,
+                             Currency = model.Currency.Name,
+                             model.ExRateDate,
+                             model.Rate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -87,11 +86,9 @@ namespace WebView.Controllers
                         id = item.Id,
                         cell = new object[] {
                             item.Id,
-                            item.Name,
-                            item.Description,
-                            item.Amount,
-                            item.currency,
-                            item.IsBank,
+                            item.Currency,
+                            item.ExRateDate,
+                            item.Rate,
                             item.CreatedAt,
                             item.UpdatedAt,
                       }
@@ -101,10 +98,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            CashBank model = new CashBank();
+            ExchangeRate model = new ExchangeRate();
             try
             {
-                model = _cashBankService.GetObjectById(Id);
+                model = _exchangeRateService.GetObjectById(Id);
 
             }
             catch (Exception ex)
@@ -116,21 +113,20 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
-                model.Name,
-                model.Description,
-                model.Amount,
                 model.CurrencyId,
-                model.IsBank,
+                Currency = _currencyService.GetObjectById(model.CurrencyId).Name,
+                model.ExRateDate,
+                model.Rate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public dynamic Insert(CashBank model)
+        public dynamic Insert(ExchangeRate model)
         {
             try
             {
-                model = _cashBankService.CreateObject(model, _accountService,_currencyService);
+                model = _exchangeRateService.CreateObject(model);
             }
             catch (Exception ex)
             {
@@ -145,15 +141,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(CashBank model)
+        public dynamic Update(ExchangeRate model)
         {
             try
             {
-                var data = _cashBankService.GetObjectById(model.Id);
-                data.Name = model.Name;
-                data.Description = model.Description;
+                var data = _exchangeRateService.GetObjectById(model.Id);
+                data.ExRateDate = model.ExRateDate;
+                data.Rate = model.Rate;
                 data.CurrencyId = model.CurrencyId;
-                model = _cashBankService.UpdateObject(data,_currencyService);
+                model = _exchangeRateService.UpdateObject(data);
             }
             catch (Exception ex)
             {
@@ -168,12 +164,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(CashBank model)
+        public dynamic Delete(ExchangeRate model)
         {
             try
             {
-                var data = _cashBankService.GetObjectById(model.Id);
-                model = _cashBankService.SoftDeleteObject(data,_cashMutationService);
+                var data = _exchangeRateService.GetObjectById(model.Id);
+                model = _exchangeRateService.SoftDeleteObject(data);
             }
             catch (Exception ex)
             {
