@@ -22,6 +22,7 @@ namespace Core.Interface.Service
         WarehouseItem CreateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         WarehouseItem UpdateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         WarehouseItem SoftDeleteObject(WarehouseItem warehouseItem);
+        WarehouseItem AdjustCustomerQuantity(WarehouseItem warehouseItem, int quantity);
         WarehouseItem AdjustQuantity(WarehouseItem warehouseItem, int quantity);
         WarehouseItem AdjustPendingDelivery(WarehouseItem warehouseItem, int quantity);
         WarehouseItem AdjustPendingReceival(WarehouseItem warehouseItem, int quantity);

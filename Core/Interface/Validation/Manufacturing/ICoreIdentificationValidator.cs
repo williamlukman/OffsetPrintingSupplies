@@ -26,15 +26,17 @@ namespace Core.Interface.Validation
         CoreIdentification VDeleteObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);
         CoreIdentification VHasConfirmationDate(CoreIdentification coreIdentification);
         CoreIdentification VConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                          ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
-        CoreIdentification VUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);
+                                       ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService);
+        CoreIdentification VUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                 ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, ICustomerItemService _customerItemService);
         CoreIdentification VCompleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool ValidCreateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService);
         bool ValidUpdateObject(CoreIdentification coreIdentification, ICoreIdentificationService _coreIdentificationService, IContactService _contactService);
         bool ValidDeleteObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);
         bool ValidConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
-        bool ValidUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService);
+                                       ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService);
+        bool ValidUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                 ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, ICustomerItemService _customerItemService);
         bool ValidCompleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool isValid(CoreIdentification coreIdentification);
         string PrintError(CoreIdentification coreIdentification);

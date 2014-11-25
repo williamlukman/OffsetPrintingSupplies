@@ -28,6 +28,8 @@ namespace Core.Interface.Service
                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
         RecoveryOrder CompleteObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                      IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrder UncompleteObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                          IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrder AdjustQuantity(RecoveryOrder recoveryOrder);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(RecoveryOrder recoveryOrder);

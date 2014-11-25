@@ -20,6 +20,7 @@ namespace Core.Interface.Validation
         bool ValidCreateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         bool ValidUpdateObject(WarehouseItem warehouseItem, IWarehouseService _warehouseService, IItemService _itemService);
         bool ValidDeleteObject(WarehouseItem warehouseItem);
+        bool ValidAdjustCustomerQuantity(WarehouseItem warehouseItem);
         bool ValidAdjustQuantity(WarehouseItem warehouseItem);
         bool ValidAdjustPendingReceival(WarehouseItem warehouseItem);
         bool ValidAdjustPendingDelivery(WarehouseItem warehouseItem);

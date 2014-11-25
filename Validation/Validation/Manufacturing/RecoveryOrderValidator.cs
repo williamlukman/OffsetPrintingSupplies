@@ -181,28 +181,28 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VAllDetailsHaveBeenDisassembledOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
-        {
-            IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
-            foreach (var detail in details)
-            {
-                if (!detail.IsDisassembled && !detail.IsRejected)
-                {
-                    recoveryOrder.Errors.Add("Generic", "Semua recovery order detail harus telah di disassemble atau di reject");
-                    return recoveryOrder;
-                }
-            }
-            return recoveryOrder;
-        }
+        //public RecoveryOrder VAllDetailsHaveBeenDisassembledOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        //{
+        //    IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
+        //    foreach (var detail in details)
+        //    {
+        //        if (!detail.IsDisassembled && !detail.IsRejected)
+        //        {
+        //            recoveryOrder.Errors.Add("Generic", "Semua recovery order detail harus telah di disassemble atau di reject");
+        //            return recoveryOrder;
+        //        }
+        //    }
+        //    return recoveryOrder;
+        //}
 
-        public RecoveryOrder VAllDetailsHaveNotBeenDisassembledNorRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
+        public RecoveryOrder VAllDetailsHaveNotBeenFinishedNorRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService)
         {
             IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
             foreach (var detail in details)
             {
-                if (detail.IsDisassembled || detail.IsRejected)
+                if (detail.IsRejected || detail.IsFinished)
                 {
-                    recoveryOrder.Errors.Add("Generic", "Semua recovery order detail harus belum di disassemble atau di reject");
+                    recoveryOrder.Errors.Add("Generic", "Semua recovery order detail harus belum di finish atau di reject");
                     return recoveryOrder;
                 }
             }
@@ -267,7 +267,7 @@ namespace Validation.Validation
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VHasNotBeenCompleted(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VAllDetailsHaveNotBeenDisassembledNorRejected(recoveryOrder, _recoveryOrderDetailService);
+            VAllDetailsHaveNotBeenFinishedNorRejected(recoveryOrder, _recoveryOrderDetailService);
             return recoveryOrder;
         }
 
@@ -284,6 +284,12 @@ namespace Validation.Validation
             VHasNotBeenCompleted(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VAllDetailsHaveBeenFinishedOrRejected(recoveryOrder, _recoveryOrderDetailService);
+            return recoveryOrder;
+        }
+
+        public RecoveryOrder VUncompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            VHasBeenConfirmed(recoveryOrder);
             return recoveryOrder;
         }
 
@@ -326,6 +332,13 @@ namespace Validation.Validation
         {
             recoveryOrder.Errors.Clear();
             VCompleteObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
+            return isValid(recoveryOrder);
+        }
+
+        public bool ValidUncompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            recoveryOrder.Errors.Clear();
+            VUncompleteObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService);
             return isValid(recoveryOrder);
         }
 

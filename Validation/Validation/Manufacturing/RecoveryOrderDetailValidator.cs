@@ -340,6 +340,24 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
+        public RecoveryOrderDetail VCustomerQuantityIsInStockForUnfinish(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService, ICustomerItemService _customerItemService)
+        {
+            CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+            if (!coreIdentification.IsInHouse)
+            {
+                int MaterialCase = coreIdentificationDetail.MaterialCase;
+                Item item = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
+                            _rollerBuilderService.GetRollerNewCore(recoveryOrderDetail.RollerBuilderId) : _rollerBuilderService.GetRollerUsedCore(recoveryOrderDetail.RollerBuilderId);
+                CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), item.Id);
+                if (customerItem.Quantity < 1)
+                {
+                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang customer tidak mencukupi");
+                }
+            }
+            return recoveryOrderDetail;
+        }
+
         public RecoveryOrderDetail VCreateObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService)
         {
@@ -501,11 +519,14 @@ namespace Validation.Validation
             return recoveryOrderDetail;
         }
 
-        public RecoveryOrderDetail VUnfinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService) 
+        public RecoveryOrderDetail VUnfinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
+                                                   ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService, ICustomerItemService _customerItemService) 
         {
             VHasBeenFinished(recoveryOrderDetail);
+            //if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            //VRecoveryOrderHasNotBeenCompleted(recoveryOrderDetail, _recoveryOrderService);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VRecoveryOrderHasNotBeenCompleted(recoveryOrderDetail, _recoveryOrderService);
+            VCustomerQuantityIsInStockForUnfinish(recoveryOrderDetail, _coreIdentificationService, _coreIdentificationDetailService, _rollerBuilderService, _customerItemService);
             return recoveryOrderDetail;
         }
 
@@ -618,10 +639,11 @@ namespace Validation.Validation
             return isValid(recoveryOrderDetail);
         }
 
-        public bool ValidUnfinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        public bool ValidUnfinishObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService,
+                                        ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService, IRollerBuilderService _rollerBuilderService, ICustomerItemService _customerItemService)
         {
             recoveryOrderDetail.Errors.Clear();
-            VUnfinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService);
+            VUnfinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService, _coreIdentificationService, _coreIdentificationDetailService, _rollerBuilderService, _customerItemService);
             return isValid(recoveryOrderDetail);
         }
 

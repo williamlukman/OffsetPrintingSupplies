@@ -44,6 +44,10 @@ namespace Validation.Validation
             {
                 warehouseItem.Errors.Add("Generic", "Pending receival tidak boleh negatif");
             }
+            else if (warehouseItem.CustomerQuantity < 0)
+            {
+                warehouseItem.Errors.Add("Generic", "Customer Item Quantity tidak boleh negatif");
+            }
             return warehouseItem;
         }
 
@@ -75,6 +79,12 @@ namespace Validation.Validation
         public WarehouseItem VDeleteObject(WarehouseItem warehouseItem)
         {
             VQuantityMustBeZero(warehouseItem);
+            return warehouseItem;
+        }
+
+        public WarehouseItem VAdjustCustomerQuantity(WarehouseItem warehouseItem)
+        {
+            VNonNegativeQuantity(warehouseItem);
             return warehouseItem;
         }
 
@@ -113,6 +123,13 @@ namespace Validation.Validation
         {
             warehouseItem.Errors.Clear();
             VDeleteObject(warehouseItem);
+            return isValid(warehouseItem);
+        }
+
+        public bool ValidAdjustCustomerQuantity(WarehouseItem warehouseItem)
+        {
+            warehouseItem.Errors.Clear();
+            VAdjustCustomerQuantity(warehouseItem);
             return isValid(warehouseItem);
         }
 

@@ -84,6 +84,8 @@
     <Compile Include="Validation\SalesOperation\RetailSalesInvoiceValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CompanyValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CompoundValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\CustomerStockMutationValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\CustomerItemValidator.cs" />
     <Compile Include="Validation\StockAndMaster\ServiceCostValidator.cs" />
     <Compile Include="Validation\StockAndMaster\PriceMutationValidator.cs" />
     <Compile Include="Validation\Finance\ReceivableValidator.cs" />

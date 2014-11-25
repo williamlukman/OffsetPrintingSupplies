@@ -33,10 +33,12 @@ namespace Core.Interface.Service
         CoreIdentificationDetail UnsetJobScheduled(CoreIdentificationDetail coreIdentificationDetail, IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService);
         CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService,
                                               ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, 
+                                              ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService);
         CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                 ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                                ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService);
         CoreIdentificationDetail DeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail UndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService);
         CoreIdentificationDetail BuildRoller(CoreIdentificationDetail coreIdentificationDetail);

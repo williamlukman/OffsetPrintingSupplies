@@ -88,6 +88,8 @@
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceService.cs" />
     <Compile Include="Service\StockAndMaster\CompanyService.cs" />
     <Compile Include="Service\StockAndMaster\CompoundService.cs" />
+    <Compile Include="Service\StockAndMaster\CustomerStockMutationService.cs" />
+    <Compile Include="Service\StockAndMaster\CustomerItemService.cs" />
     <Compile Include="Service\StockAndMaster\ServiceCostService.cs" />
     <Compile Include="Service\StockAndMaster\PriceMutationService.cs" />
     <Compile Include="Service\Finance\ReceivableService.cs" />

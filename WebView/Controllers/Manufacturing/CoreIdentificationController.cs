@@ -30,6 +30,8 @@ namespace WebView.Controllers
         private IRollerTypeService _rollerTypeService;
         private IMachineService _machineService;
         private IWarehouseService _warehouseService;
+        private ICustomerItemService _customerItemService;
+        private ICustomerStockMutationService _customerStockMutationService;
 
         public CoreIdentificationController()
         {
@@ -47,6 +49,8 @@ namespace WebView.Controllers
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
             _machineService = new MachineService(new MachineRepository(), new MachineValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
+            _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
+            _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
         }
 
         public ActionResult Index()
@@ -442,7 +446,9 @@ namespace WebView.Controllers
                 model = _coreIdentificationService.ConfirmObject(data, model.ConfirmationDate.Value
                     ,_coreIdentificationDetailService,_stockMutationService,_recoveryOrderService
                     ,_recoveryOrderDetailService,_coreBuilderService,_itemService
-                    ,_warehouseItemService,_blanketService);
+                    ,_warehouseItemService,_blanketService, 
+                    _customerStockMutationService, 
+                    _customerItemService);
             }
             catch (Exception ex)
             {
@@ -465,7 +471,8 @@ namespace WebView.Controllers
                 var data = _coreIdentificationService.GetObjectById(model.Id);
                 model = _coreIdentificationService.UnconfirmObject(data, _coreIdentificationDetailService
                     ,_stockMutationService,_recoveryOrderService,_coreBuilderService
-                    ,_itemService,_warehouseItemService,_blanketService);
+                    ,_itemService,_warehouseItemService,_blanketService,
+                    _customerStockMutationService, _customerItemService);
             }
             catch (Exception ex)
             {

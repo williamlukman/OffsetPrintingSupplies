@@ -85,6 +85,8 @@
     <Compile Include="DomainModel\SalesOperation\VirtualOrder.cs" />
     <Compile Include="DomainModel\StockAndMaster\Company.cs" />
     <Compile Include="DomainModel\StockAndMaster\Compound.cs" />
+    <Compile Include="DomainModel\StockAndMaster\CustomerStockMutation.cs" />
+    <Compile Include="DomainModel\StockAndMaster\CustomerItem.cs" />
     <Compile Include="DomainModel\StockAndMaster\ServiceCost.cs" />
     <Compile Include="DomainModel\StockAndMaster\PriceMutation.cs" />
     <Compile Include="DomainModel\SalesOperation\RetailSalesInvoice.cs" />
@@ -167,6 +169,8 @@
     <Compile Include="Interface\Repository\SalesOperation\ITemporaryDeliveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\ICustomerStockMutationRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\ICustomerItemRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\ICompoundRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IServiceCostRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\ICompanyRepository.cs" />
@@ -254,6 +258,8 @@
     <Compile Include="Interface\Service\SalesOperation\ITemporaryDeliveryOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderDetailService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\ICustomerStockMutationService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\ICustomerItemService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\ICompoundService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IServiceCostService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\ICompanyService.cs" />
@@ -339,6 +345,8 @@
     <Compile Include="Interface\Validation\SalesOperation\ITemporaryDeliveryOrderValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\ICustomerStockMutationValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\ICustomerItemValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\ICompoundValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IServiceCostValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\ICompanyValidator.cs" />

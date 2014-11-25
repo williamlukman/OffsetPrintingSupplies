@@ -458,7 +458,7 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idrejected').val(), RejectedDate: $('#RejectedDate').datebox('getValue'),
+                Id: $('#idrejected').val(), RejectedDate: $('#rejectedDate').datebox('getValue'),
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {

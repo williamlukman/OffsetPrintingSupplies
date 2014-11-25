@@ -47,7 +47,7 @@ namespace Data.Context
             IList<String> financeNames = new List<String>() {
                                           "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate","Currency"};
             IList<String> stockAndMasterNames = new List<String>()
-                                        { "PriceMutation", "StockMutation", "WarehouseMutationDetail", "WarehouseMutation",
+                                        { "PriceMutation", "CustomerStockMutation", "StockMutation", "CustomerItem", "WarehouseMutationDetail", "WarehouseMutation",
                                           "ServiceCost", "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment",
                                           "WarehouseItem", "Warehouse", "Compound", "Blanket", "CoreBuilder",
                                           "Item", "ItemType", "UoM", "Contact",
@@ -83,13 +83,15 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new ClosingMapping());
             modelBuilder.Configurations.Add(new CompanyMapping());
             modelBuilder.Configurations.Add(new CompoundMapping());
+            modelBuilder.Configurations.Add(new ContactMapping());
             modelBuilder.Configurations.Add(new CoreBuilderMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationMapping());
             modelBuilder.Configurations.Add(new CoreAccessoryDetailMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationDetailMapping());
+            modelBuilder.Configurations.Add(new CustomerItemMapping());
+            modelBuilder.Configurations.Add(new CustomerStockMutationMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
-            modelBuilder.Configurations.Add(new ContactMapping());
             modelBuilder.Configurations.Add(new GeneralLedgerJournalMapping());
             modelBuilder.Configurations.Add(new ItemMapping());
             modelBuilder.Configurations.Add(new ItemTypeMapping());
@@ -171,11 +173,13 @@ namespace Data.Context
         public DbSet<CashMutation> CashMutations { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Compound> Compounds { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
         public DbSet<CoreBuilder> CoreBuilders { get; set; }
         public DbSet<CoreIdentification> CoreIdentifications { get; set; }
         public DbSet<CoreAccessoryDetail> CoreAccessoryDetails { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<CustomerItem> CustomerItems { get; set; }
+        public DbSet<CustomerStockMutation> CustomerStockMutations { get; set; }
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }
         public DbSet<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }

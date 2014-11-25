@@ -84,6 +84,10 @@ namespace Validation.Validation
             {
                 item.Errors.Add("Generic", "Minimum quantity tidak boleh negatif");
             }
+            else if (item.CustomerQuantity < 0)
+            {
+                item.Errors.Add("Generic", "Customer Item Quantity tidak boleh negatif");
+            }
             return item;
         }
 
@@ -254,6 +258,12 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VAdjustCustomerQuantity(Item item)
+        {
+            VNonNegativeQuantity(item);
+            return item;
+        }
+
         public Item VAdjustQuantity(Item item)
         {
             VNonNegativeQuantity(item);
@@ -313,6 +323,13 @@ namespace Validation.Validation
         {
             item.Errors.Clear();
             VDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService);
+            return isValid(item);
+        }
+
+        public bool ValidAdjustCustomerQuantity(Item item)
+        {
+            item.Errors.Clear();
+            VAdjustCustomerQuantity(item);
             return isValid(item);
         }
 

@@ -219,6 +219,12 @@ namespace Service.Service
             return item;
         }
 
+        public Item AdjustCustomerQuantity(Item item, int quantity)
+        {
+            item.CustomerQuantity += quantity;
+            return (item = _validator.ValidAdjustCustomerQuantity(item) ? _repository.UpdateObject(item) : item);
+        }
+
         public Item AdjustQuantity(Item item, int quantity)
         {
             item.Quantity += quantity;
@@ -252,6 +258,23 @@ namespace Service.Service
             item.AvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgPrice);
             _repository.Update(item);
             return item.AvgPrice;
+        }
+
+        public decimal CalculateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        {
+            // Use this function to calculate averagePrice
+            int originalQuantity = item.CustomerQuantity + item.CustomerVirtual;
+            decimal originalAvgPrice = item.CustomerAvgPrice;
+            decimal avgPrice = (originalQuantity + addedQuantity == 0) ? 0 :
+                ((originalQuantity * originalAvgPrice) + (addedQuantity * addedAvgPrice)) / (originalQuantity + addedQuantity);
+            return avgPrice;
+        }
+
+        public decimal CalculateAndUpdateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        {
+            item.CustomerAvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgPrice);
+            _repository.Update(item);
+            return item.CustomerAvgPrice;
         }
 
         public bool DeleteObject(int Id)

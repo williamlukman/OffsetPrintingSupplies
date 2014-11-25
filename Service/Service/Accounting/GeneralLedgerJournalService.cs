@@ -2118,7 +2118,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateFinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
         {
-            // Credit Raw (Core, Compound, Accessories), Debit FinishedGoods (Roller)
+            // Credit Raw/Stock (Core, Compound, Accessories), Debit FinishedGoods/ManufacturedGoods (Roller)
             #region Credit Raw (Core, Compound, Accessories), Debit FinishedGoods (Roller)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 

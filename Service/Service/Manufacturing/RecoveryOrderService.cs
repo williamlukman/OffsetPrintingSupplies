@@ -148,6 +148,16 @@ namespace Service.Service
             return recoveryOrder;
         }
 
+        public RecoveryOrder UncompleteObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                          IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
+        {
+            if (_validator.ValidUncompleteObject(recoveryOrder, _recoveryOrderDetailService, _recoveryAccessoryDetailService))
+            {
+                _repository.CompleteObject(recoveryOrder, false);
+            }
+            return recoveryOrder;
+        }
+
         public RecoveryOrder AdjustQuantity(RecoveryOrder recoveryOrder)
         {
             return (recoveryOrder = _validator.ValidAdjustQuantity(recoveryOrder) ? _repository.AdjustQuantity(recoveryOrder) : recoveryOrder);

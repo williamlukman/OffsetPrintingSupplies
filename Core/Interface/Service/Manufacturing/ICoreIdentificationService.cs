@@ -26,10 +26,12 @@ namespace Core.Interface.Service
                                             IRecoveryOrderService _recoveryOrderService);
         CoreIdentification ConfirmObject(CoreIdentification coreIdentification, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
                                          IRecoveryOrderService _recoveryOrderService, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService,
-                                         IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
+                                         IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService,
+                                         ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService);
         CoreIdentification UnconfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, IStockMutationService _stockMutationService,
                                            IRecoveryOrderService _recoveryOrderService, ICoreBuilderService _coreBuilderService, IItemService _itemService,
-                                           IWarehouseItemService _warehouseItemService, IBlanketService _blanketService);
+                                           IWarehouseItemService _warehouseItemService, IBlanketService _blanketService,
+                                           ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService);
         CoreIdentification CompleteObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(CoreIdentification coreIdentification);

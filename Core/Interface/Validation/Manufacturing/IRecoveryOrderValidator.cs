@@ -24,7 +24,7 @@ namespace Core.Interface.Validation
         RecoveryOrder VHasBeenCompleted(RecoveryOrder recoveryOrder);
         RecoveryOrder VHasNotBeenCompleted(RecoveryOrder recoveryOrder);
         RecoveryOrder VAllDetailsHaveBeenFinishedOrRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
-        RecoveryOrder VAllDetailsHaveNotBeenDisassembledNorRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
+        RecoveryOrder VAllDetailsHaveNotBeenFinishedNorRejected(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         RecoveryOrder VHasNoRecoveryOrderDetail(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService);
         
         RecoveryOrder VCreateObject(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService, IRecoveryOrderService _recoveryOrderService);
@@ -35,6 +35,7 @@ namespace Core.Interface.Validation
                                      ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         RecoveryOrder VUnconfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrder VCompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        RecoveryOrder VUncompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         RecoveryOrder VAdjustQuantity(RecoveryOrder recoveryOrder);
 
         bool ValidCreateObject(RecoveryOrder recoveryOrder, ICoreIdentificationService _coreIdentificationService, IRecoveryOrderService _recoveryOrderService);
@@ -44,6 +45,7 @@ namespace Core.Interface.Validation
                                 ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         bool ValidCompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
+        bool ValidUncompleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
         bool ValidAdjustQuantity(RecoveryOrder recoveryOrder);
         bool isValid(RecoveryOrder recoveryOrder);
         string PrintError(RecoveryOrder recoveryOrder);
