@@ -74,10 +74,6 @@ namespace Validation.Validation
             {
                 currency.Errors.Add("Generic", "Currency telah terpakai di PaymentVoucher");
             }
-            if (_receiptVoucherService.GetQueryable().Where(x => x.CurrencyId == currency.Id).Any())
-            {
-                currency.Errors.Add("Generic", "Currency telah terpakai di ReceiptVoucher");
-            }
             return currency;
         }
 

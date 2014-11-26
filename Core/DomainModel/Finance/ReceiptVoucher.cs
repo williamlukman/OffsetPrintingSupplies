@@ -12,13 +12,11 @@ namespace Core.DomainModel
         public int CashBankId { get; set; }
         public string Code { get; set; }
         public DateTime ReceiptDate { get; set; }
+        public decimal RateToIDR { get; set; }
         public bool IsGBCH { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
         public bool IsReconciled { get; set; }
         public Nullable<DateTime> ReconciliationDate { get; set; }
-        public int CurrencyId { get; set; }
-        public decimal ExchangeRateAmount { get; set; }
-        public Nullable<int> ExchangeRateId { get; set; }
 
         public decimal TotalAmount { get; set; }
 
@@ -32,10 +30,8 @@ namespace Core.DomainModel
         public virtual CashBank CashBank { get; set; }
         public virtual Contact Contact { get; set; }
         public virtual ICollection<ReceiptVoucherDetail> ReceiptVoucherDetails { get; set; }
-        public virtual Currency Currency { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }
-        public virtual ExchangeRate ExchangeRate { get; set; }
 
     }
 }

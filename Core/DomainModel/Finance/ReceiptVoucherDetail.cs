@@ -11,9 +11,9 @@ namespace Core.DomainModel
         public int ReceiptVoucherId { get; set; }
         public int ReceivableId { get; set; }
         public string Code { get; set; }
-
-        public decimal Amount { get; set; }
-        public decimal AmountBaseCurrency { get; set; }
+        public decimal Rate { get; set; }
+        public decimal Amount { get; set; } 
+        public decimal AmountPaid { get; set; }
         public string Description { get; set; }
 
         public bool IsConfirmed { get; set; }

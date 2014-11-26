@@ -5,7 +5,9 @@ using Core.Interface.Validation;
 using Data.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Text;
 
 namespace Service.Service
@@ -55,8 +57,23 @@ namespace Service.Service
                                                 ICashBankService _cashBankService, IReceivableService _receivableService,ICurrencyService _currencyService)
         {
             receiptVoucherDetail.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService,_currencyService) ?
-                    _repository.CreateObject(receiptVoucherDetail) : receiptVoucherDetail);
+            if (_validator.ValidCreateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService,_currencyService))
+            {
+                ReceiptVoucher rv = _receiptVoucherService.GetQueryable().Include("CashBank").Include("Currency")
+                                      .Where(x => x.Id == receiptVoucherDetail.ReceiptVoucherId).FirstOrDefault();
+                Receivable r = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
+                if (rv.CashBank.CurrencyId == r.CurrencyId)
+                {
+                    receiptVoucherDetail.Amount = receiptVoucherDetail.AmountPaid;
+                }
+                else
+                {
+                    receiptVoucherDetail.Amount = receiptVoucherDetail.AmountPaid / receiptVoucherDetail.Rate;
+                }
+                rv.TotalAmount = rv.TotalAmount + receiptVoucherDetail.AmountPaid;
+                _receiptVoucherService.UpdateAmount(rv);
+            }
+            return receiptVoucherDetail;
         }
 
         public ReceiptVoucherDetail CreateObject(int receiptVoucherId, int receivableId, decimal amount, string description, 
@@ -75,9 +92,26 @@ namespace Service.Service
 
         public ReceiptVoucherDetail UpdateObject(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, ICashBankService _cashBankService, IReceivableService _receivableService,ICurrencyService _currencyService)
         {
-            return (_validator.ValidUpdateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService,_currencyService) ?
-                     _repository.UpdateObject(receiptVoucherDetail) : receiptVoucherDetail);
+            if (_validator.ValidUpdateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService,_currencyService))
+            {
+                ReceiptVoucher rv = _receiptVoucherService.GetQueryable().Include("CashBank").Include("Currency")
+                                .Where(x => x.Id == receiptVoucherDetail.ReceiptVoucherId).FirstOrDefault();
+                Receivable r = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
+                if (rv.CashBank.CurrencyId == r.CurrencyId)
+                {
+                    receiptVoucherDetail.Amount = receiptVoucherDetail.AmountPaid;
+                }
+                else
+                {
+                    receiptVoucherDetail.Amount = receiptVoucherDetail.AmountPaid / receiptVoucherDetail.Rate;
+                }
+                receiptVoucherDetail = _repository.UpdateObject(receiptVoucherDetail) ;
+                _receiptVoucherService.CalculateTotalAmount(rv,this);
+            }
+            return receiptVoucherDetail;
         }
+
+
 
         public ReceiptVoucherDetail SoftDeleteObject(ReceiptVoucherDetail receiptVoucherDetail)
         {

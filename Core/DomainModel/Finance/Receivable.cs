@@ -13,6 +13,7 @@ namespace Core.DomainModel
         public int ReceivableSourceId { get; set; }
         public string Code { get; set; }
         public int CurrencyId { get; set; }
+        public decimal Rate { get; set; }
 
         public DateTime DueDate { get; set; }
         public decimal Amount { get; set; }

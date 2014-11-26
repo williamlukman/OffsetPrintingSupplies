@@ -35,7 +35,8 @@ namespace Data.Repository
 
         public ReceiptVoucher GetObjectById(int Id)
         {
-            ReceiptVoucher receiptVoucher = FindAll(pv => pv.Id == Id && !pv.IsDeleted).Include("ReceiptVoucherDetails").Include("Currency").Include("ExchangeRate").FirstOrDefault();
+            //ReceiptVoucher receiptVoucher = FindAll(pv => pv.Id == Id && !pv.IsDeleted).Include(x=>x.ReceiptVoucherDetails).Include(x=>x.CashBank).Include(x=>x.Contact).FirstOrDefault();
+            ReceiptVoucher receiptVoucher = FindAll(pv => pv.Id == Id && !pv.IsDeleted).FirstOrDefault();            
             if (receiptVoucher != null) { receiptVoucher.Errors = new Dictionary<string, string>(); }
             return receiptVoucher;
         }

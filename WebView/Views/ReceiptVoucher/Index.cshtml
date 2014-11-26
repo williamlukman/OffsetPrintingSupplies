@@ -76,7 +76,8 @@
                             <td colspan="5">
                                 <input id="CashBankId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnCashBank" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="CashBank" name="CashBankId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="CashBank" name="CashBankId" type="text" size="39" maxlength="50" class="editable upper" disabled="disabled" />
+                                <input id="CurrencyCashBank" name="CurrencyCashBank" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
                         </td>
                             </tr>
                         <tr>
@@ -101,27 +102,20 @@
                                 <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                        </tr>
+                        <tr>
+                             <td >
+                                <label>Rate to IDR</label></td>
+                             <td colspan="5">
+                               <input id="RateToIDR" name="RateToIDR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','"  value="0" />
+                             </td>
+                       </tr>
                        <tr>
                              <td >
                                 <label>Total Amount</label></td>
                              <td colspan="5">
-                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                               </td>
-                           <tr>
-                               <td>
-                                <label>Currency </label></td>
-                               <td>
-                                <select id="CurrencyId">
-                                    @foreach (var item in Model._currencyService.GetAll())
-                                    {
-                                        <option value ="@item.Id">@item.Name</option>
-                                    }
-                                </select>
-                                <label>Rate</label>
-                               <input id="ExchangeRateAmount" name="ExchangeRateAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
-                           </td>     
-                         </tr>     
-                                         
+                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" disabled="disabled" value="0" />
+                             </td>
+                           </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -152,7 +146,7 @@
                       <td width="139" nowrap style="width: 100px">
                           Receivable
                       </td>
-                      <td>
+                      <td colspan="4">
                          <input id="ReceivableId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnReceivable" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Receivable" name="ReceivableId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
@@ -161,20 +155,30 @@
                   </tr>
                     <tr>
                         <td>
-                            Amount
+                            Rate
                         </td>
                         <td>
-                               <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                               <label>Currency</label>
+                               <input id="Rate" name="Rate" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </td>
+                        <td>
+                             <label>Currency</label>
+                        </td>
+                        <td>
                                <input id="Currency" name="Currency" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled ="disabled" />
                         </td>
                     </tr>
                   <tr>
                         <td>
-                            Amount Base Currency
+                            Amount Paid
                         </td>
                         <td>
-                               <input id="AmountBaseCurrency" name="AmountBaseCurrency" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <input id="AmountPaid" name="AmountPaid" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                        </td>
+                      <td>
+                           <label> Actual Amount</label>    
+                      </td>
+                        <td>
+                               <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" disabled="disabled" value="0" />
                         </td>
                     </tr>
                    <tr>

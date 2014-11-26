@@ -46,12 +46,42 @@ namespace Service.Service
             return _repository.GetObjectByName(Name);
         }
 
-        public Currency CreateObject(Currency currency)
+        public string GenerateAccountCode(IAccountService _accountService)
+        {
+            int ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id;
+            string parentCode = _accountService.GetObjectById(ParentId).Code;
+            int newId = _accountService.GetQueryable().Where(x => x.ParentId == ParentId && !x.IsDeleted).Count() + 1;
+            while (true)
+            {
+                if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString()) == null)
+                {
+                    return parentCode + newId.ToString();
+                }
+                newId += 1;
+            }
+        }
+        //Tambah Account Currency Di COA
+        public Currency CreateObject(Currency currency,IAccountService _accountService)
         {
             currency.Errors = new Dictionary<string, string>();
             if (_validator.ValidCreateObject(currency, this))
             {
+                string Code = GenerateAccountCode(_accountService);
+                Account arAccount = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable);
+                Account account = new Account()
+                {
+                    Name = "Account Receivable " + currency.Name,
+                    Level = arAccount.Level + 1,
+                    Group = Constant.AccountGroup.Asset,
+                    Code = Code,
+                    IsCashBankAccount = false,
+                    IsLeaf = true,
+                    ParentId = arAccount.Id
+                };
+                _accountService.CreateCashBankAccount(account, _accountService);
                 _repository.CreateObject(currency);
+                account.LegacyCode = Constant.AccountLegacyCode.AccountReceivable + currency.Id;
+                _accountService.UpdateObject(account, _accountService);
             }
             return currency;
         }

@@ -93,8 +93,8 @@ namespace WebView.Controllers
                              model.IsGBCH,
                              model.DueDate,
                              model.TotalAmount,
-                             currency = model.Currency.Name,
-                             model.ExchangeRateAmount,
+                             currency = model.CashBank.Currency.Name,
+                             model.RateToIDR,
                              model.IsReconciled,
                              model.ReconciliationDate,
                              model.IsConfirmed,
@@ -143,7 +143,7 @@ namespace WebView.Controllers
                             model.DueDate,
                             model.TotalAmount,
                             model.currency,
-                            model.ExchangeRateAmount,
+                            model.RateToIDR,
                             model.IsReconciled,
                             model.ReconciliationDate,
                             model.IsConfirmed,
@@ -237,7 +237,9 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _receivableService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted && x.RemainingAmount > 0 &&
+            //var q = _receivableService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted && x.RemainingAmount > 0 &&
+            //                           x.ReceivableSource != Constant.ReceivableSource.PurchaseDownPayment);
+            var q = _receivableService.GetQueryable().Where(x => !x.IsDeleted && x.RemainingAmount > 0 &&
                                        x.ReceivableSource != Constant.ReceivableSource.PurchaseDownPayment);
 
             var query = (from model in q
@@ -324,7 +326,6 @@ namespace WebView.Controllers
                              model.ReceivableId,
                              ReceivableCode = model.Receivable.Code,
                              model.Amount,
-                             model.AmountBaseCurrency,
                              model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -362,7 +363,6 @@ namespace WebView.Controllers
                             model.ReceivableId,
                             model.ReceivableCode,
                             model.Amount,
-                            model.AmountBaseCurrency,
                             model.Description,
                       }
                     }).ToArray()
@@ -388,15 +388,15 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.ContactId,
-                Contact = _contactService.GetObjectById(model.ContactId).Name,
+                Contact = model.Contact.Name,
                 model.CashBankId,
-                CashBank = _cashBankService.GetObjectById(model.CashBankId).Name,
+                CashBank = model.CashBank.Name,
+                currency = model.CashBank.Currency.Name,
                 model.ReceiptDate,
+                model.RateToIDR,
                 model.IsGBCH,
                 model.DueDate,
                 model.TotalAmount,
-                model.CurrencyId,
-                model.ExchangeRateAmount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -431,10 +431,6 @@ namespace WebView.Controllers
         {
             try
             {
-                if (_currencyService.GetObjectById(model.CurrencyId).IsBase == true)
-                {
-                    model.ExchangeRateAmount = 1;
-                }
                 model = _receiptVoucherService.CreateObject(model,_receiptVoucherDetailService,_receivableService
                     ,_contactService,_cashBankService);
             }
@@ -483,8 +479,6 @@ namespace WebView.Controllers
                 data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
                 data.TotalAmount = model.TotalAmount;
-                data.CurrencyId = model.CurrencyId;
-                data.ExchangeRateAmount = model.ExchangeRateAmount;
                 model = _receiptVoucherService.UpdateObject(data,_receiptVoucherDetailService,_receivableService,
                     _contactService,_cashBankService);
             }
@@ -548,7 +542,6 @@ namespace WebView.Controllers
                 var data = _receiptVoucherDetailService.GetObjectById(model.Id);
                 data.ReceivableId = model.ReceivableId;
                 data.Amount = model.Amount;
-                data.AmountBaseCurrency = model.AmountBaseCurrency;
                 data.Description = model.Description;
                 model = _receiptVoucherDetailService.UpdateObject(data,_receiptVoucherService,_cashBankService,_receivableService,_currencyService);
             }
@@ -596,7 +589,7 @@ namespace WebView.Controllers
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnconfirmObject(data,_receiptVoucherDetailService,_cashBankService,
                     _receivableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService,
-                    _currencyService,_exchangeRateService);
+                    _currencyService,_exchangeRateService,_receiptVoucherService);
             }
             catch (Exception ex)
             {
@@ -640,7 +633,7 @@ namespace WebView.Controllers
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnreconcileObject(data,_receiptVoucherDetailService,_cashMutationService,
                                                                  _cashBankService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                                                 _currencyService,_exchangeRateService
+                                                                 _currencyService,_exchangeRateService,_receiptVoucherService
                     );
             }
             catch (Exception ex)

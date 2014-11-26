@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         Receivable GetObjectBySource(string ReceivableSource, int ReceivableSourceId); 
         Receivable GetObjectById(int Id);
         Receivable CreateObject(Receivable receivable); 
-        Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, int currencyId, decimal amount, DateTime dueDate);
+        Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, int currencyId, decimal amount, decimal Rate,DateTime dueDate);
         Receivable UpdateObject(Receivable receivable);
         Receivable SoftDeleteObject(Receivable receivable);
         bool DeleteObject(int Id);

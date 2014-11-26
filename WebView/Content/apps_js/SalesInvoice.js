@@ -404,7 +404,7 @@
     $('#form_btn_cancel').click(function () {
         clearForm('#frm');
         $("#form_div").dialog('close');
-        ReloadGrid();
+        //ReloadGrid();
     });
 
     $("#form_btn_save").click(function () {

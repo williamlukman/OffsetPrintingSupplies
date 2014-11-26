@@ -5,6 +5,8 @@ using System.Text;
 using Data.Context;
 using System.Data;
 using System.Data.Entity.Migrations;
+using Core.DomainModel;
+using Core.Interface.Service;
 
 namespace Data.Migrations
 {
@@ -15,6 +17,7 @@ namespace Data.Migrations
 
     internal sealed class Configuration : DbMigrationsConfiguration<OffsetPrintingSuppliesEntities>
     {
+        private IExchangeRateService _exchangeRateService;
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
@@ -34,6 +37,13 @@ namespace Data.Migrations
             //      new Person { FullName = "Brice Lambson" },
             //      new Person { FullName = "Rowan Miller" }
             //    );
+            int? exrate = null; 
+            ExchangeRate exrates = context.ExchangeRates.FirstOrDefault();
+            exrate = exrates.Id;
+            foreach (var x in context.SalesInvoices.Where(x => x.ExchangeRateId == null))
+            {
+                x.ExchangeRateId = exrate;
+            }
         }
     }
 }

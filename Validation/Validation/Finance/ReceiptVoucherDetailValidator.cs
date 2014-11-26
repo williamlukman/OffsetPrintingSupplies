@@ -139,43 +139,6 @@ namespace Validation.Validation
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
             VUniqueReceivableId(receiptVoucherDetail, _receiptVoucherDetailService, _receivableService);
             if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
-            VReceiptVoucherCurrencyIsSameWithPayableCurrency(receiptVoucherDetail, _receiptVoucherService, _receivableService);
-            if (!isValid(receiptVoucherDetail)) { return receiptVoucherDetail; }
-            VCashBankCurrency(receiptVoucherDetail, _cashBankService, _currencyService, _receiptVoucherService, _receivableService);
-            return receiptVoucherDetail;
-        }
-
-        public ReceiptVoucherDetail VReceiptVoucherCurrencyIsSameWithPayableCurrency(ReceiptVoucherDetail receiptVoucherDetail, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
-        {
-            ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
-            Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
-            if (receiptVoucher.CurrencyId != receivable.CurrencyId)
-            {
-                receiptVoucherDetail.Errors.Add("Generic", "Currency harus sama");
-            }
-            return receiptVoucherDetail;
-        }
-
-        public ReceiptVoucherDetail VCashBankCurrency(ReceiptVoucherDetail receiptVoucherDetail,ICashBankService _cashBankService,ICurrencyService _currencyService, IReceiptVoucherService _receiptVoucherService, IReceivableService _receivableService)
-        { 
-            ReceiptVoucher receiptVoucher = _receiptVoucherService.GetObjectById(receiptVoucherDetail.ReceiptVoucherId);
-            CashBank cashbank = _cashBankService.GetObjectById(receiptVoucher.CashBankId);
-            Currency currency = _currencyService.GetObjectById(cashbank.CurrencyId);
-            Receivable receivable = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
-            if (receiptVoucherDetail.AmountBaseCurrency > 0)
-            {
-                if (currency.IsBase != true)
-                {
-                    receiptVoucherDetail.Errors.Add("Generic", "Currency CashBank harus IDR");
-                }
-            }
-            else
-            {
-                if (cashbank.CurrencyId != receivable.CurrencyId)
-                {
-                    receiptVoucherDetail.Errors.Add("Generic", "Currency tidak sama dengan CashBank");
-                }
-            }
             return receiptVoucherDetail;
         }
 
