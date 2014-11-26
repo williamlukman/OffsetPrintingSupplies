@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Core.DomainModel;
+using Core.Interface.Service;
+using Data.Repository;
+using Service.Service;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Web;
 using System.Web.Mvc;
-using Service.Service;
-using Core.Interface.Service;
-using Core.DomainModel;
-using Data.Repository;
 using Validation.Validation;
-using System.Linq.Dynamic;
-using System.Data.Entity;
 
 namespace WebView.Controllers
 {
@@ -138,7 +138,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _currencyService.CreateObject(model);
+                model = _currencyService.CreateObject(model,_accountService);
             }
             catch (Exception ex)
             {

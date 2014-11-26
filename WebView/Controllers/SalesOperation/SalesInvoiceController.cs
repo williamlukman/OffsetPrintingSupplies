@@ -67,7 +67,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _salesInvoiceService.GetQueryable().Include("DeliveryOrder").Include("Currency").Where(x => !x.IsDeleted);
+            var q = _salesInvoiceService.GetQueryable().Include("DeliveryOrder").Include("Currency").Include("ExchangeRate").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -82,7 +82,7 @@ namespace WebView.Controllers
                              model.Discount,
                              model.Tax,
                              currency = model.Currency.Name,
-                             model.ExchangeRateAmount,
+                             model.ExchangeRate.Rate,
                              model.InvoiceDate,
                              model.DueDate,
                              model.AmountReceivable,
@@ -130,7 +130,7 @@ namespace WebView.Controllers
                             model.Discount,
                             model.Tax,
                             model.currency,
-                            model.ExchangeRateAmount,
+                            model.Rate,
                             model.InvoiceDate,
                             model.DueDate,
                             model.AmountReceivable,

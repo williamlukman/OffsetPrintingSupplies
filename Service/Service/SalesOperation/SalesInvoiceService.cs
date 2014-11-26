@@ -94,6 +94,7 @@ namespace Service.Service
                 if (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == false)
                 {
                     salesInvoice.ExchangeRateId = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value, salesInvoice.CurrencyId).Id;
+                    salesInvoice.ExchangeRateAmount = _exchangeRateService.GetObjectById(salesInvoice.ExchangeRateId.Value).Rate;
                 }
                 salesInvoice = _repository.UpdateObject(salesInvoice);
                 _generalLedgerJournalService.CreateConfirmationJournalForSalesInvoice(salesInvoice, _accountService,_exchangeRateService,_currencyService);
@@ -101,8 +102,7 @@ namespace Service.Service
                 _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
                 // create receivable
-                Receivable receivable = _receivableService.CreateObject(salesOrder.ContactId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.CurrencyId, salesInvoice.AmountReceivable, salesInvoice.DueDate);
-               
+                Receivable receivable = _receivableService.CreateObject(salesOrder.ContactId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.CurrencyId, salesInvoice.AmountReceivable,salesInvoice.ExchangeRateAmount, salesInvoice.DueDate);
             }
             return salesInvoice;
         }

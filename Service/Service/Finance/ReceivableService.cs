@@ -57,7 +57,7 @@ namespace Service.Service
             return (_validator.ValidCreateObject(receivable, this) ? _repository.CreateObject(receivable) : receivable);
         }
 
-        public Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, int currencyId, decimal amount, DateTime dueDate)
+        public Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, int currencyId, decimal amount, decimal Rate,DateTime dueDate)
         {
             Receivable receivable = new Receivable
             {
@@ -67,7 +67,8 @@ namespace Service.Service
                 CurrencyId = currencyId,
                 Amount = amount,
                 RemainingAmount = amount,
-                DueDate = dueDate
+                DueDate = dueDate,
+                Rate = Rate
             };
             return this.CreateObject(receivable);
         }

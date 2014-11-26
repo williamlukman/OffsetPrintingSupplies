@@ -14,7 +14,7 @@ namespace Core.Interface.Service
         IList<Currency> GetAll();
         Currency GetObjectById(int Id);
         Currency GetObjectByName(string Name);
-        Currency CreateObject(Currency currency);
+        Currency CreateObject(Currency currency, IAccountService _accountService);
         Currency UpdateObject(Currency currency, ICashBankService _cashBankService, IPaymentRequestService _paymentRequestService
             , IPurchaseOrderService _purchaseOrderService, ISalesOrderService _salesOrderService, ISalesInvoiceService _salesInvoiceService
             , IPurchaseInvoiceService _purchaseInvoiceService, IPayableService _payableService, IReceivableService _receivableService
@@ -25,5 +25,6 @@ namespace Core.Interface.Service
             , IPaymentVoucherService _paymentVoucherService, IReceiptVoucherService _receiptVoucherService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(Currency currency);
+        string GenerateAccountCode(IAccountService _accountService);
     }
 }

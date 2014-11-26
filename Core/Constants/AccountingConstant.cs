@@ -87,6 +87,7 @@ namespace Core.Constants
             public static string InterestExpense = "2403";
             public static string TaxExpense = "2404";
             public static string DividentExpense = "2405";
+            public static string ExchangeLoss = "25";
 
             public static string Liability = "3";
             public static string CurrentLiability = "31";
@@ -103,7 +104,7 @@ namespace Core.Constants
             public static string Equity = "4";
             public static string OwnersEquity = "41";
             public static string EquityAdjustment = "4101";
-            public static string CapitalGain = "42";
+            public static string ExchangeGain = "42";
 
             public static string Revenue = "5";
         }
@@ -142,6 +143,7 @@ namespace Core.Constants
             public static string InterestExpense = "X2403";
             public static string TaxExpense = "X2404";
             public static string DividentExpense = "X2405";
+            public static string ExchangeLoss = "X25";
 
             public static string Liability = "L3";
             public static string CurrentLiability = "L31";
@@ -155,11 +157,11 @@ namespace Core.Constants
             public static string TaxPayable = "L3108";
 
             public static string NonCurrentLiability = "L32";
-
+             
             public static string Equity = "E4";
             public static string OwnersEquity = "E41";
             public static string EquityAdjustment = "E4101";
-            public static string CapitalGain = "E42";
+            public static string ExchangeGain = "E42";
             public static string Revenue = "R5";
         }
         #endregion
