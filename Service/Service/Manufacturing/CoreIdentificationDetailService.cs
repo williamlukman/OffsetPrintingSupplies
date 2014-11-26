@@ -128,9 +128,10 @@ namespace Service.Service
                     Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                     _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
-                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), item.Id);
-                    CustomerStockMutation customerStockMutation = _customerStockMutationService.CreateCustomerStockMutationForCoreIdentification(coreIdentificationDetail, customerItem);
-                    _customerStockMutationService.StockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService);
+                    WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
+                    CustomerStockMutation customerStockMutation = _customerStockMutationService.CreateCustomerStockMutationForCoreIdentification(coreIdentificationDetail, customerItem, item.Id);
+                    _customerStockMutationService.StockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(coreIdentificationDetail);
             }
@@ -152,11 +153,12 @@ namespace Service.Service
                     Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                     _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
-                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), item.Id);
+                    WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
                     IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.GetObjectsByCustomerItemId(customerItem.Id);
                     foreach (var customerStockMutation in customerStockMutations)
                     {
-                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService);
+                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
                     _customerStockMutationService.DeleteCustomerStockMutationForCoreIdentification(coreIdentificationDetail, customerItem);
                 }

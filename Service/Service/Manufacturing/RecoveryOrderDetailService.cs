@@ -298,26 +298,26 @@ namespace Service.Service
                 CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
                 Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
+                WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
                 if (coreIdentification.IsInHouse)
                 {
-                    WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
                     StockMutation stockMutationCore = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, warehouseCore, CaseAdditionCore);
                     _stockMutationService.StockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
                 } 
                 else // if (!coreIdentification.IsInHouse)
                 {
-                    CustomerItem customerCore = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), core.Id);
-                    CustomerStockMutation customerStockMutationCore = _customerStockMutationService.CreateCustomerStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, customerCore, CaseAdditionCore);
+                    CustomerItem customerCore = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseCore.Id);
+                    CustomerStockMutation customerStockMutationCore = _customerStockMutationService.CreateCustomerStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, customerCore, core.Id, CaseAdditionCore);
                     _customerStockMutationService.CreateObject(customerStockMutationCore, _customerItemService, _itemService);
-                    _customerStockMutationService.StockMutateObject(customerStockMutationCore, coreIdentification.IsInHouse, _itemService, _customerItemService);
+                    _customerStockMutationService.StockMutateObject(customerStockMutationCore, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                 }
 
                 // add roller
                 Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _rollerBuilderService.GetRollerNewCore(rollerBuilder.Id) : _rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id);
+                WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, roller.Id);
                 if (coreIdentification.IsInHouse)
                 {
-                    WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, roller.Id);
                     StockMutation stockMutationRoller = _stockMutationService.CreateStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, warehouseRoller, CaseAdditionRoller);
                     // update avg cost for roller before mutated
                     _itemService.CalculateAndUpdateAvgPrice(roller, stockMutationRoller.Quantity, recoveryOrderDetail.TotalCost);
@@ -325,12 +325,12 @@ namespace Service.Service
                 } 
                 else // if (!coreIdentification.IsInHouse)
                 {
-                    CustomerItem customerRoller = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), roller.Id);
-                    CustomerStockMutation customerStockMutationRoller = _customerStockMutationService.CreateCustomerStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, customerRoller, CaseAdditionRoller);
+                    CustomerItem customerRoller = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseRoller.Id);
+                    CustomerStockMutation customerStockMutationRoller = _customerStockMutationService.CreateCustomerStockMutationForRecoveryOrder(recoveryOrderDetail, FinishedDate, customerRoller, roller.Id, CaseAdditionRoller);
                     _customerStockMutationService.CreateObject(customerStockMutationRoller, _customerItemService, _itemService);
                     // update customer avg cost for roller before mutated
                     _itemService.CalculateAndUpdateCustomerAvgPrice(roller, customerStockMutationRoller.Quantity, recoveryOrderDetail.TotalCost);
-                    _customerStockMutationService.StockMutateObject(customerStockMutationRoller, coreIdentification.IsInHouse, _itemService, _customerItemService);
+                    _customerStockMutationService.StockMutateObject(customerStockMutationRoller, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                 }
 
                 // deduce accessories
@@ -355,7 +355,7 @@ namespace Service.Service
                                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IServiceCostService _serviceCostService,
                                                   ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
-            if (_validator.ValidUnfinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService, _coreIdentificationService, _coreIdentificationDetailService, _rollerBuilderService, _customerItemService))
+            if (_validator.ValidUnfinishObject(recoveryOrderDetail, _recoveryOrderService, _recoveryAccessoryDetailService, _coreIdentificationService, _coreIdentificationDetailService, _rollerBuilderService, _customerItemService, _warehouseItemService))
             {
                 CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
                 RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
@@ -398,9 +398,9 @@ namespace Service.Service
                 CoreBuilder coreBuilder = _coreBuilderService.GetObjectById(coreIdentificationDetail.CoreBuilderId);
                 Item core = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _coreBuilderService.GetNewCore(coreBuilder.Id) : _coreBuilderService.GetUsedCore(coreBuilder.Id);
+                WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
                 if (coreIdentification.IsInHouse)
                 {
-                    WarehouseItem warehouseCore = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, core.Id);
                     IList<StockMutation> stockMutationCores = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseCore.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
                     foreach (var stockMutationCore in stockMutationCores)
                     {
@@ -410,11 +410,11 @@ namespace Service.Service
                 }
                 else
                 {
-                    CustomerItem customerCore = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), core.Id);
+                    CustomerItem customerCore = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseCore.Id);
                     IList<CustomerStockMutation> customerStockMutationCores = _customerStockMutationService.GetObjectsBySourceDocumentDetailForCustomerItem(customerCore.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
                     foreach (var customerStockMutationCore in customerStockMutationCores)
                     {
-                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutationCore, coreIdentification.IsInHouse, _itemService, _customerItemService);
+                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutationCore, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
                     _customerStockMutationService.DeleteCustomerStockMutationForRecoveryOrder(recoveryOrderDetail, customerCore);
                 }
@@ -422,9 +422,9 @@ namespace Service.Service
                 // reverse stock mutate roller
                 Item roller = (coreIdentificationDetail.MaterialCase == Core.Constants.Constant.MaterialCase.New) ?
                             _rollerBuilderService.GetRollerNewCore(rollerBuilder.Id) : _rollerBuilderService.GetRollerUsedCore(rollerBuilder.Id);
+                WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, roller.Id);
                 if (coreIdentification.IsInHouse)
                 {
-                    WarehouseItem warehouseRoller = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, roller.Id);
                     IList<StockMutation> stockMutationRollers = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseRoller.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
                     foreach (var stockMutationRoller in stockMutationRollers)
                     {
@@ -436,13 +436,13 @@ namespace Service.Service
                 }
                 else
                 {
-                    CustomerItem customerRoller = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), roller.Id);
+                    CustomerItem customerRoller = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseRoller.Id);
                     IList<CustomerStockMutation> customerStockMutationRollers = _customerStockMutationService.GetObjectsBySourceDocumentDetailForCustomerItem(customerRoller.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
                     foreach (var customerStockMutationRoller in customerStockMutationRollers)
                     {
                         // update customer avg cost for roller before mutated
                         _itemService.CalculateAndUpdateCustomerAvgPrice(roller, (-1) * customerStockMutationRoller.Quantity, totalcost);
-                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutationRoller, coreIdentification.IsInHouse, _itemService, _customerItemService);
+                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutationRoller, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
                     _customerStockMutationService.DeleteCustomerStockMutationForRecoveryOrder(recoveryOrderDetail, customerRoller);
                 }

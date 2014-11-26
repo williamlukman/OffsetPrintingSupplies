@@ -11,9 +11,11 @@ namespace Core.Interface.Repository
         IQueryable<CustomerItem> GetQueryable();
         IList<CustomerItem> GetAll();
         IList<CustomerItem> GetObjectsByContactId(int ContactId);
+        IList<CustomerItem> GetObjectsByWarehouseItemId(int warehouseItemId);
         IList<CustomerItem> GetObjectsByItemId(int itemId);
+        IList<CustomerItem> GetObjectsByWarehouseId(int warehouseId);
         CustomerItem GetObjectById(int Id);
-        CustomerItem FindOrCreateObject(int ContactId, int ItemId);
+        CustomerItem FindOrCreateObject(int ContactId, int WarehouseItemId);
         CustomerItem CreateObject(CustomerItem customerItem);
         CustomerItem UpdateObject(CustomerItem customerItem);
         CustomerItem SoftDeleteObject(CustomerItem customerItem);

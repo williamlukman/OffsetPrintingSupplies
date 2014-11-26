@@ -27,7 +27,7 @@ namespace Data.Repository
 
         public IList<CustomerItem> GetAll()
         {
-            return FindAll().ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public IList<CustomerItem> GetObjectsByContactId(int contactId)
@@ -35,29 +35,40 @@ namespace Data.Repository
             return FindAll(x => x.ContactId == contactId && !x.IsDeleted).ToList();
         }
 
+        public IList<CustomerItem> GetObjectsByWarehouseItemId(int warehouseItemId)
+        {
+            return FindAll(x => x.WarehouseItemId == warehouseItemId && !x.IsDeleted).ToList();
+        }
+
         public IList<CustomerItem> GetObjectsByItemId(int itemId)
         {
-            return FindAll(x => x.ItemId == itemId).ToList();
+            return FindAll(x => !x.IsDeleted).Include(x => x.WarehouseItem).Where(x => x.WarehouseItem.ItemId == itemId).ToList();
+        }
+
+        public IList<CustomerItem> GetObjectsByWarehouseId(int warehouseId)
+        {
+            return FindAll(x => !x.IsDeleted).Include(x => x.WarehouseItem).Where(x => x.WarehouseItem.WarehouseId == warehouseId).ToList();
         }
 
         public CustomerItem GetObjectById(int Id)
         {
-            CustomerItem customerItem = FindAll(x => x.Id == Id && !x.IsDeleted).Include(x => x.Contact).Include(x => x.Item).FirstOrDefault();
+            CustomerItem customerItem = FindAll(x => x.Id == Id && !x.IsDeleted).Include(x => x.Contact).Include(x => x.WarehouseItem).FirstOrDefault();
             if (customerItem != null) { customerItem.Errors = new Dictionary<string, string>(); }
             return customerItem;
         }
 
-        public CustomerItem FindOrCreateObject(int ContactId, int ItemId)
+        public CustomerItem FindOrCreateObject(int ContactId, int WarehouseItemId)
         {
-            CustomerItem customerItem = Find(x => x.ContactId == ContactId && x.ItemId == ItemId && !x.IsDeleted);
+            CustomerItem customerItem = FindAll(x => x.ContactId == ContactId && x.WarehouseItemId == WarehouseItemId && !x.IsDeleted).Include(x => x.WarehouseItem).Include(x => x.Contact).FirstOrDefault();
             if (customerItem == null)
             {
                 customerItem = new CustomerItem()
                 {
                     ContactId = ContactId,
-                    ItemId = ItemId,
+                    WarehouseItemId = WarehouseItemId,
                 };
                 customerItem = CreateObject(customerItem);
+                
             }
             customerItem.Errors = new Dictionary<string, string>();
             return customerItem;

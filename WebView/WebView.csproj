@@ -274,6 +274,7 @@
     <Compile Include="Controllers\Finance\ReceivableController.cs" />
     <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
+    <Compile Include="Controllers\StockAndMaster\CustomerItemController.cs" />
     <Compile Include="Controllers\StockAndMaster\StockMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkProcessController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkOrderController.cs" />
@@ -322,6 +323,7 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\CustomerItem.js" />
     <Content Include="Content\apps_js\MasterExchangeRate.js" />
     <Content Include="Content\apps_js\MasterCurrency.js" />
     <Content Include="Content\apps_js\PriceList.js" />
@@ -1331,6 +1333,7 @@
     <Content Include="Views\Report\TopSales.cshtml" />
     <Content Include="Views\Currency\Index.cshtml" />
     <Content Include="Views\ExchangeRate\Index.cshtml" />
+    <Content Include="Views\CustomerItem\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

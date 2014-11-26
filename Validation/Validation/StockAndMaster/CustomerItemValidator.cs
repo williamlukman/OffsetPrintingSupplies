@@ -10,12 +10,12 @@ namespace Validation.Validation
 {
     public class CustomerItemValidator : ICustomerItemValidator
     {
-        public CustomerItem VHasItem(CustomerItem customerItem, IItemService _itemService)
+        public CustomerItem VHasWarehouseItem(CustomerItem customerItem, IWarehouseItemService _warehouseItemService)
         {
-            Item item = _itemService.GetObjectById(customerItem.ItemId);
-            if (item == null)
+            WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(customerItem.WarehouseItemId.GetValueOrDefault());
+            if (warehouseItem == null)
             {
-                customerItem.Errors.Add("ItemId", "Tidak terasosiasi dengan item");
+                customerItem.Errors.Add("Generic", "Tidak terasosiasi dengan WarehouseItem");
             }
             return customerItem;
         }
@@ -25,7 +25,7 @@ namespace Validation.Validation
             Contact contact = _contactService.GetObjectById(customerItem.ContactId);
             if (contact == null)
             {
-                customerItem.Errors.Add("ContactId", "Tidak terasosiasi dengan contact");
+                customerItem.Errors.Add("Generic", "Tidak terasosiasi dengan Contact");
             }
             return customerItem;
         }
@@ -34,7 +34,11 @@ namespace Validation.Validation
         {
             if (customerItem.Quantity < 0)
             {
-                customerItem.Errors.Add("Quantity", "Tidak boleh negatif");
+                customerItem.Errors.Add("Generic", "Quantity Tidak boleh negatif");
+            }
+            else if (customerItem.Virtual < 0)
+            {
+                customerItem.Errors.Add("Generic", "Virtual quantity Tidak boleh negatif");
             }
             //else if (customerItem.PendingDelivery < 0)
             //{
@@ -56,10 +60,9 @@ namespace Validation.Validation
             return customerItem;
         }
 
-        public CustomerItem VCreateObject(CustomerItem customerItem, IContactService _contactService, IItemService _itemService)
+        public CustomerItem VCreateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService)
         {
-            // Item Validation
-            VHasItem(customerItem, _itemService);
+            VHasWarehouseItem(customerItem, _warehouseItemService);
             if (!isValid(customerItem)) { return customerItem; }
             VHasContact(customerItem, _contactService);
             if (!isValid(customerItem)) { return customerItem; }
@@ -67,9 +70,9 @@ namespace Validation.Validation
             return customerItem;
         }
 
-        public CustomerItem VUpdateObject(CustomerItem customerItem, IContactService _contactService, IItemService _itemService)
+        public CustomerItem VUpdateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService)
         {
-            return VCreateObject(customerItem, _contactService, _itemService);
+            return VCreateObject(customerItem, _contactService, _warehouseItemService);
         }
 
         public CustomerItem VDeleteObject(CustomerItem customerItem)
@@ -96,16 +99,16 @@ namespace Validation.Validation
         //    return customerItem;
         //}
 
-        public bool ValidCreateObject(CustomerItem customerItem, IContactService _contactService, IItemService _itemService)
+        public bool ValidCreateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService)
         {
-            VCreateObject(customerItem, _contactService, _itemService);
+            VCreateObject(customerItem, _contactService, _warehouseItemService);
             return isValid(customerItem);
         }
 
-        public bool ValidUpdateObject(CustomerItem customerItem, IContactService _contactService, IItemService _itemService)
+        public bool ValidUpdateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService)
         {
             customerItem.Errors.Clear();
-            VUpdateObject(customerItem, _contactService, _itemService);
+            VUpdateObject(customerItem, _contactService, _warehouseItemService);
             return isValid(customerItem);
         }
 

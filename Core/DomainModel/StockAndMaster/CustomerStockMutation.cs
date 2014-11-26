@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int ItemId { get; set; }
         public Nullable<int> ContactId { get; set; }
         public Nullable<int> CustomerItemId { get; set; }
+        public Nullable<int> WarehouseItemId { get; set; }
         public int ItemCase { get; set; }
         public int Status { get; set; }
 
@@ -28,6 +29,7 @@ namespace Core.DomainModel
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
 
+        public virtual WarehouseItem WarehouseItem { get; set; }
         public virtual CustomerItem CustomerItem { get; set; }
         public virtual Contact Contact { get; set; }
         public virtual Item Item { get; set; }

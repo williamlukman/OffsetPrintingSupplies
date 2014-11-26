@@ -12,6 +12,7 @@ namespace Data.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using Core.DomainModel;
 
     internal sealed class Configuration : DbMigrationsConfiguration<OffsetPrintingSuppliesEntities>
     {
@@ -34,6 +35,12 @@ namespace Data.Migrations
             //      new Person { FullName = "Brice Lambson" },
             //      new Person { FullName = "Rowan Miller" }
             //    );
+
+            WarehouseItem warehouseItem = context.WarehouseItems.FirstOrDefault();
+            foreach (var customerItem in context.CustomerItems.Where(x => x.WarehouseItemId == null))
+            {
+                customerItem.WarehouseItemId = warehouseItem.Id;
+            }
         }
     }
 }

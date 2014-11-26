@@ -40,9 +40,9 @@ namespace Core.Interface.Service
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForTemporaryDeliveryOrderRestock(TemporaryDeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
          //CustomerStockMutation CreateCustomerStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, CustomerItem customerItem);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, CustomerItem customerItem);
-         CustomerStockMutation CreateCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem);
+         CustomerStockMutation CreateCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem, int ItemId);
          IList<CustomerStockMutation> DeleteCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem);
-         CustomerStockMutation CreateCustomerStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, CustomerItem customerItem, bool CaseAddition);
+         CustomerStockMutation CreateCustomerStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, CustomerItem customerItem, int ItemId, bool CaseAddition);
          //CustomerStockMutation CreateCustomerStockMutationForRecoveryOrderCompound(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, CustomerItem customerItem, bool CaseAddition);
          IList<CustomerStockMutation> DeleteCustomerStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, CustomerItem customerItem);
          //CustomerStockMutation CreateCustomerStockMutationForRecoveryAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, DateTime FinishedDate, CustomerItem customerItem);
@@ -54,7 +54,7 @@ namespace Core.Interface.Service
          //IList<CustomerStockMutation> CreateCustomerStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo);
 
-         void StockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService);
-         void ReverseStockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService);
+         void StockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService);
+         void ReverseStockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService);
     }
 }

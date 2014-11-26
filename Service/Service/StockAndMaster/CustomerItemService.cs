@@ -44,9 +44,19 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
+        public IList<CustomerItem> GetObjectsByWarehouseItemId(int WarehouseItemId)
+        {
+            return _repository.GetObjectsByWarehouseItemId(WarehouseItemId);
+        }
+
         public IList<CustomerItem> GetObjectsByItemId(int ItemId)
         {
             return _repository.GetObjectsByItemId(ItemId);
+        }
+
+        public IList<CustomerItem> GetObjectsByWarehouseId(int WarehouseId)
+        {
+            return _repository.GetObjectsByWarehouseId(WarehouseId);
         }
 
         public CustomerItem GetObjectById(int Id)
@@ -54,33 +64,33 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public CustomerItem FindOrCreateObject(int contactId, int itemId)
+        public CustomerItem FindOrCreateObject(int contactId, int warehouseItemId)
         {
-            return _repository.FindOrCreateObject(contactId, itemId);
+            return _repository.FindOrCreateObject(contactId, warehouseItemId);
         }
 
-        public CustomerItem AddObject(Contact contact, Item item, IContactService _contactService, IItemService _itemService)
+        public CustomerItem AddObject(Contact contact, WarehouseItem warehouseItem, IContactService _contactService, IWarehouseItemService _warehouseItemService)
         {
             CustomerItem customerItem = new CustomerItem()
             {
                 ContactId = contact.Id,
-                ItemId = item.Id,
+                WarehouseItemId = warehouseItem.Id,
                 Quantity = 0,
                 Contact = contact,
-                Item = item
+                WarehouseItem = warehouseItem
             };
-            return CreateObject(customerItem, _contactService, _itemService);
+            return CreateObject(customerItem, _contactService, _warehouseItemService);
         }
 
-        public CustomerItem CreateObject(CustomerItem customerItem, IContactService _contactService, IItemService _itemService)
+        public CustomerItem CreateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService)
         {
             customerItem.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(customerItem, _contactService, _itemService) ? _repository.CreateObject(customerItem) : customerItem);
+            return (_validator.ValidCreateObject(customerItem, _contactService, _warehouseItemService) ? _repository.CreateObject(customerItem) : customerItem);
         }
 
-        public CustomerItem UpdateObject(CustomerItem customerItem, IContactService _contactService, IItemService _itemService)
+        public CustomerItem UpdateObject(CustomerItem customerItem, IContactService _contactService, IWarehouseItemService _warehouseItemService)
         {
-            return (customerItem = _validator.ValidUpdateObject(customerItem, _contactService, _itemService) ? _repository.UpdateObject(customerItem) : customerItem);
+            return (customerItem = _validator.ValidUpdateObject(customerItem, _contactService, _warehouseItemService) ? _repository.UpdateObject(customerItem) : customerItem);
         }
 
         public CustomerItem SoftDeleteObject(CustomerItem customerItem)

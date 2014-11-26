@@ -258,7 +258,7 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
-        public CoreIdentificationDetail VCustomerQuantityIsInStockForUnconfirm(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, ICustomerItemService _customerItemService)
+        public CoreIdentificationDetail VCustomerQuantityIsInStockForUnconfirm(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService)
         {
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
             if (!coreIdentification.IsInHouse)
@@ -267,7 +267,8 @@ namespace Validation.Validation
                 Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
                                 _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
                                 _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
-                CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), item.Id);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
                 if (customerItem.Quantity < 1)
                 {
                     coreIdentificationDetail.Errors.Add("Generic", "Stock barang customer tidak boleh kurang dari stock yang mau dimutasikan");
@@ -351,7 +352,7 @@ namespace Validation.Validation
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VQuantityIsInStockForContact(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
-            VCustomerQuantityIsInStockForUnconfirm(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _customerItemService);
+            VCustomerQuantityIsInStockForUnconfirm(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _customerItemService, _warehouseItemService);
             return coreIdentificationDetail;
         }
 

@@ -395,12 +395,13 @@ namespace Service.Service
         //    return customerStockMutations;
         //}
 
-        public CustomerStockMutation CreateCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem)
+        public CustomerStockMutation CreateCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem, int ItemId)
         {
             CustomerStockMutation customerStockMutation = new CustomerStockMutation();
-            customerStockMutation.ItemId = customerItem.ItemId;
+            customerStockMutation.ItemId = ItemId; // customerItem.WarehouseItem.ItemId;
             customerStockMutation.ContactId = customerItem.ContactId;
             customerStockMutation.CustomerItemId = customerItem.Id;
+            customerStockMutation.WarehouseItemId = customerItem.WarehouseItemId;
             customerStockMutation.Quantity = 1;
             customerStockMutation.SourceDocumentType = Constant.SourceDocumentType.CoreIdentification;
             customerStockMutation.SourceDocumentId = coreIdentificationDetail.CoreIdentificationId;
@@ -422,12 +423,13 @@ namespace Service.Service
             return customerStockMutations;
         }
 
-        public CustomerStockMutation CreateCustomerStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, CustomerItem customerItem, bool CaseAddition)
+        public CustomerStockMutation CreateCustomerStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, CustomerItem customerItem, int ItemId, bool CaseAddition)
         {
             CustomerStockMutation customerStockMutation = new CustomerStockMutation();
-            customerStockMutation.ItemId = customerItem.ItemId;
+            customerStockMutation.ItemId = ItemId; // customerItem.WarehouseItem.ItemId;
             customerStockMutation.ContactId = customerItem.ContactId;
             customerStockMutation.CustomerItemId = customerItem.Id;
+            customerStockMutation.WarehouseItemId = customerItem.WarehouseItemId;
             customerStockMutation.Quantity = 1;
             customerStockMutation.SourceDocumentType = Constant.SourceDocumentType.RecoveryOrder;
             customerStockMutation.SourceDocumentId = recoveryOrderDetail.RecoveryOrderId;
@@ -634,41 +636,43 @@ namespace Service.Service
         //    return customerStockMutations;
         //}
 
-        public void StockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService)
+        public void StockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService)
         {
-            // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-            // item.AvgCost = _blanketService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-            // blanket.AvgCost = _blanketService.CalculateAvgCost(blanket, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-
-            int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Addition) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
-            CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
-            Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
-
-            // itemService in action
             if (customerStockMutation.ItemCase == Constant.ItemCase.Ready)
             {
                 if (!IsInHouse) 
-                { 
+                {
+                    // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+                    // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+
+                    int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Addition) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
+                    Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
+                    CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
+                    WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
+
                     _itemService.AdjustCustomerQuantity(item, Quantity);
+                    if (warehouseItem != null) { _warehouseItemService.AdjustCustomerQuantity(warehouseItem, Quantity); }
                     if (customerItem != null) { _customerItemService.AdjustQuantity(customerItem, Quantity); }
                 }
             }
         }
 
-        public void ReverseStockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService)
+        public void ReverseStockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService)
         {
-            // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-
-            int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Deduction) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
-            CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
-            Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
-
-            // itemService in action
             if (customerStockMutation.ItemCase == Constant.ItemCase.Ready)
             {
                 if (!IsInHouse)
                 {
+                    // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+                    // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+
+                    int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Deduction) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
+                    Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
+                    CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
+                    WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
+
                     _itemService.AdjustCustomerQuantity(item, Quantity);
+                    if (warehouseItem != null) { _warehouseItemService.AdjustCustomerQuantity(warehouseItem, Quantity); }
                     if (customerItem != null) { _customerItemService.AdjustQuantity(customerItem, Quantity); }
                 }
             }

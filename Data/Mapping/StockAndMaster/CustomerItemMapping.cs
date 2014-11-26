@@ -12,13 +12,13 @@ namespace Data.Mapping
         public CustomerItemMapping()
         {
             HasKey(ci => ci.Id);
-            HasRequired(ci => ci.Item)
-                .WithMany()
-                .HasForeignKey(ci => ci.ItemId)
-                .WillCascadeOnDelete(false);
             HasRequired(ci => ci.Contact)
                 .WithMany()
                 .HasForeignKey(ci => ci.ContactId)
+                .WillCascadeOnDelete(false);
+            HasOptional(ci => ci.WarehouseItem)
+                .WithMany()
+                .HasForeignKey(ci => ci.WarehouseItemId)
                 .WillCascadeOnDelete(false);
             Ignore(ci => ci.Errors);
         }
