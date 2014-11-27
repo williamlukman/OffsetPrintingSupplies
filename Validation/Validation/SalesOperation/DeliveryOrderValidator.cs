@@ -118,6 +118,23 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
+        public DeliveryOrder VAllDetailsAreConfirmable(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService)
+        {
+            IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+            foreach (var detail in details)
+            {
+                detail.Errors = new Dictionary<string, string>();
+                detail.ConfirmationDate = deliveryOrder.ConfirmationDate;
+                if (!_deliveryOrderDetailService.GetValidator().ValidConfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService, _salesOrderDetailService, _itemService, _warehouseItemService, _serviceCostService, _customerItemService))
+                {
+                    deliveryOrder.Errors.Add("Generic", detail.Errors.FirstOrDefault().Key + " " + detail.Errors.FirstOrDefault().Value);
+                    return deliveryOrder;
+                }
+            }
+            return deliveryOrder;
+        }
+
         public DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
             VHasUniqueNomorSurat(deliveryOrder, _deliveryOrderService);
@@ -148,13 +165,16 @@ namespace Validation.Validation
             return deliveryOrder;
         }
 
-        public DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService)
         {
             VHasConfirmationDate(deliveryOrder);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasNotBeenConfirmed(deliveryOrder);
             if (!isValid(deliveryOrder)) { return deliveryOrder; }
             VHasDeliveryOrderDetails(deliveryOrder, _deliveryOrderDetailService);
+            if (!isValid(deliveryOrder)) { return deliveryOrder; }
+            VAllDetailsAreConfirmable(deliveryOrder, _deliveryOrderDetailService, _deliveryOrderService ,_itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService);
             return deliveryOrder;
         }
 
@@ -186,10 +206,11 @@ namespace Validation.Validation
             return isValid(deliveryOrder);
         }
 
-        public bool ValidConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService)
+        public bool ValidConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService)
         {
             deliveryOrder.Errors.Clear();
-            VConfirmObject(deliveryOrder, _deliveryOrderDetailService);
+            VConfirmObject(deliveryOrder, _deliveryOrderDetailService, _deliveryOrderService, _itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService);
             return isValid(deliveryOrder);
         }
 

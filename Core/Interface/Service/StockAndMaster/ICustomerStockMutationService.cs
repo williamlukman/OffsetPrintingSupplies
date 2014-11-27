@@ -30,8 +30,8 @@ namespace Core.Interface.Service
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForSalesOrder(SalesOrderDetail salesOrderDetail, Item item);
          //CustomerStockMutation CreateCustomerStockMutationForVirtualOrder(VirtualOrderDetail virtualOrderDetail, Item item);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForVirtualOrder(VirtualOrderDetail virtualOrderDetail, Item item);
-         //IList<CustomerStockMutation> CreateCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
-         //IList<CustomerStockMutation> DeleteCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
+         IList<CustomerStockMutation> CreateCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
+         IList<CustomerStockMutation> DeleteCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
          //IList<CustomerStockMutation> CreateCustomerStockMutationForTemporaryDeliveryOrder(TemporaryDeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForTemporaryDeliveryOrder(TemporaryDeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
          //IList<CustomerStockMutation> CreateCustomerStockMutationForTemporaryDeliveryOrderWaste(TemporaryDeliveryOrderDetail deliveryOrderDetail, DateTime PushDate, CustomerItem customerItem);

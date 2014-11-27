@@ -82,15 +82,16 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
+        public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService,
                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
                                            IServiceCostService _serviceCostService,
-                                           ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService)
+                                           ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
+                                           ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             deliveryOrder.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService))
+            if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService, _deliveryOrderService, _itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService))
             {
                 decimal TotalCOGS = 0;
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
@@ -99,7 +100,7 @@ namespace Service.Service
                     SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(detail.SalesOrderDetailId);
                     detail.Errors = new Dictionary<string, string>();
                     _deliveryOrderDetailService.ConfirmObject(detail, ConfirmationDate, this, _salesOrderDetailService, _stockMutationService, _itemService,
-                                                              _blanketService, _warehouseItemService, _serviceCostService);
+                                                              _blanketService, _warehouseItemService, _serviceCostService, _customerStockMutationService, _customerItemService);
                     if (detail.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
                         detail.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
                         detail.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder)
@@ -130,7 +131,7 @@ namespace Service.Service
                                              ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                              IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                              IWarehouseItemService _warehouseItemService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
-                                             IClosingService _closingService)
+                                             IClosingService _closingService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             if (_validator.ValidUnconfirmObject(deliveryOrder, _salesInvoiceService))
             {
@@ -141,7 +142,7 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesOrderService, _salesOrderDetailService,
                                                                 _salesInvoiceDetailService, _stockMutationService,
-                                                                _itemService, _blanketService, _warehouseItemService);
+                                                                _itemService, _blanketService, _warehouseItemService, _customerStockMutationService, _customerItemService);
                 }
                 deliveryOrder.TotalCOGS = 0;
                 _repository.UnconfirmObject(deliveryOrder);

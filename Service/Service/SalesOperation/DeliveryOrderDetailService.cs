@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Constants;
 
 namespace Service.Service
 {
@@ -95,11 +96,11 @@ namespace Service.Service
 
         public DeliveryOrderDetail ConfirmObject(DeliveryOrderDetail deliveryOrderDetail, DateTime ConfirmationDate, IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                  IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
-                                                 IServiceCostService _serviceCostService)
+                                                 IServiceCostService _serviceCostService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             deliveryOrderDetail.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrderDetail, _deliveryOrderService, this, _salesOrderDetailService,
-                                              _itemService, _warehouseItemService, _serviceCostService))
+                                              _itemService, _warehouseItemService, _serviceCostService, _customerItemService))
             {
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
                 SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
@@ -114,16 +115,25 @@ namespace Service.Service
                     }
                     deliveryOrderDetail.COGS = deliveryOrderDetail.Quantity * item.AvgPrice;
                 }
+                else
+                {
+                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(deliveryOrder.SalesOrder.ContactId, warehouseItem.Id);
+                    IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.CreateCustomerStockMutationForDeliveryOrder(deliveryOrderDetail, customerItem);
+                    foreach (var customerStockMutation in customerStockMutations)
+                    {
+                        _customerStockMutationService.StockMutateObject(customerStockMutation, false, _itemService, _customerItemService, _warehouseItemService);
+                    }
+                    deliveryOrderDetail.COGS = deliveryOrderDetail.Quantity * item.CustomerAvgPrice;
+                }
                 deliveryOrderDetail = _repository.ConfirmObject(deliveryOrderDetail);
                 _salesOrderDetailService.SetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity);
             }
             return deliveryOrderDetail;
-            ;
         }
 
         public DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService,
                                                    ISalesOrderDetailService _salesOrderDetailService, ISalesInvoiceDetailService _salesInvoiceDetailService, IStockMutationService _stockMutationService,
-                                                   IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                   IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             if (_validator.ValidUnconfirmObject(deliveryOrderDetail, _salesInvoiceDetailService))
             {
@@ -133,13 +143,23 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
                 if (!salesOrderDetail.IsService)
                 {
-                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
+                    IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.DeliveryOrderDetail, deliveryOrderDetail.Id);
                     foreach (var stockMutation in stockMutations)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                     }
+                    _stockMutationService.DeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
                 }
-                deliveryOrderDetail.COGS = 0;
+                else
+                {
+                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(deliveryOrder.SalesOrder.ContactId, warehouseItem.Id);
+                    IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.DeliveryOrderDetail, deliveryOrderDetail.Id);
+                    foreach (var customerStockMutation in customerStockMutations)
+                    {
+                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, false, _itemService, _customerItemService, _warehouseItemService);
+                    }
+                    _customerStockMutationService.DeleteCustomerStockMutationForDeliveryOrder(deliveryOrderDetail, customerItem);
+                }
                 deliveryOrderDetail.COGS = 0;
                 deliveryOrderDetail = _repository.UnconfirmObject(deliveryOrderDetail);
                 _salesOrderDetailService.UnsetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity, _salesOrderService);

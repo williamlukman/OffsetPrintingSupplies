@@ -42,7 +42,7 @@ namespace Data.Context
                                         { "SalesDownPaymentAllocationDetail", "SalesDownPaymentAllocation", "ReceiptVoucherDetail",
                                           "SalesDownPayment", "ReceiptVoucher", "SalesAllowanceDetail", "SalesAllowance", "Receivable",
                                           "RetailSalesInvoiceDetail", "RetailSalesInvoice", "SalesInvoiceDetail", "SalesInvoice",
-                                          "DeliveryOrderDetail", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
+                                          "DeliveryOrderDetail", "TemporaryDeliveryOrderClearanceDetail", "TemporaryDeliveryOrderClearance", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
                                           "SalesOrderDetail", "SalesOrder", "SalesQuotationDetail", "SalesQuotation", 
                                           "VirtualOrderDetail", "VirtualOrder"};
             IList<String> financeNames = new List<String>() {
@@ -147,6 +147,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new StockMutationMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderDetailMapping());
+            modelBuilder.Configurations.Add(new TemporaryDeliveryOrderClearanceMapping());
+            modelBuilder.Configurations.Add(new TemporaryDeliveryOrderClearanceDetailMapping());
             modelBuilder.Configurations.Add(new UoMMapping());
             modelBuilder.Configurations.Add(new UserAccountMapping());
             modelBuilder.Configurations.Add(new UserMenuMapping());
@@ -231,6 +233,8 @@ namespace Data.Context
         public DbSet<StockMutation> StockMutations { get; set; }
         public DbSet<TemporaryDeliveryOrder> TemporaryDeliveryOrders { get; set; }
         public DbSet<TemporaryDeliveryOrderDetail> TemporaryDeliveryOrderDetails { get; set; }
+        public DbSet<TemporaryDeliveryOrderClearance> TemporaryDeliveryOrderClearances { get; set; }
+        public DbSet<TemporaryDeliveryOrderClearanceDetail> TemporaryDeliveryOrderClearanceDetails { get; set; }
         public DbSet<UoM> UoMs { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<UserMenu> UserMenus { get; set; }

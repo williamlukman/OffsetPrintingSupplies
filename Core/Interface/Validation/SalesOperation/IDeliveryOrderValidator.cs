@@ -20,15 +20,19 @@ namespace Core.Interface.Validation
         DeliveryOrder VSalesOrderHasBeenConfirmed(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService);
         DeliveryOrder VHasConfirmationDate(DeliveryOrder deliveryOrder);
         DeliveryOrder VHasNoSalesInvoice(DeliveryOrder deliveryOrder, ISalesInvoiceService _salesInvoiceService);
+        DeliveryOrder VAllDetailsAreConfirmable(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService);
         DeliveryOrder VCreateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService);
         DeliveryOrder VUpdateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService);
         DeliveryOrder VDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        DeliveryOrder VConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService);
         DeliveryOrder VUnconfirmObject(DeliveryOrder deliveryOrder, ISalesInvoiceService _salesInvoiceService);
         bool ValidCreateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService);
         bool ValidUpdateObject(DeliveryOrder deliveryOrder, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService);
         bool ValidDeleteObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        bool ValidConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        bool ValidConfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                       ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService);
         bool ValidUnconfirmObject(DeliveryOrder deliveryOrder, ISalesInvoiceService _salesInvoiceService);
         bool isValid(DeliveryOrder deliveryOrder);
         string PrintError(DeliveryOrder deliveryOrder);

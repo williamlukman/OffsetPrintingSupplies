@@ -80,6 +80,8 @@
     <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\TemporaryDeliveryOrderClearanceDetailMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\TemporaryDeliveryOrderClearanceMapping.cs" />
     <Compile Include="Mapping\SalesOperation\SalesQuotationDetailMapping.cs" />
     <Compile Include="Mapping\SalesOperation\SalesQuotationMapping.cs" />
     <Compile Include="Mapping\SalesOperation\TemporaryDeliveryOrderDetailMapping.cs" />
@@ -171,6 +173,8 @@
     <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceRepository.cs" />
+    <Compile Include="Repository\SalesOperation\TemporaryDeliveryOrderClearanceDetailRepository.cs" />
+    <Compile Include="Repository\SalesOperation\TemporaryDeliveryOrderClearanceRepository.cs" />
     <Compile Include="Repository\SalesOperation\SalesQuotationDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\SalesQuotationRepository.cs" />
     <Compile Include="Repository\SalesOperation\TemporaryDeliveryOrderDetailRepository.cs" />

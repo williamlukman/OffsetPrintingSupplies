@@ -179,54 +179,54 @@ namespace Service.Service
         //    return customerStockMutations;
         //}
 
-        //public IList<CustomerStockMutation> CreateCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem)
-        //{
-        //    IList<CustomerStockMutation> result = new List<CustomerStockMutation>();
+        public IList<CustomerStockMutation> CreateCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem)
+        {
+            IList<CustomerStockMutation> result = new List<CustomerStockMutation>();
 
-        //    CustomerStockMutation customerStockMutationPendingDelivery = new CustomerStockMutation();
-        //    customerStockMutationPendingDelivery.ItemId = customerItem.ItemId;
-        //    customerStockMutationPendingDelivery.StockMutationId = customerItem.StockMutationId;
-        //    customerStockMutationPendingDelivery.CustomerItemId = customerItem.Id;
-        //    customerStockMutationPendingDelivery.ItemId = deliveryOrderDetail.ItemId;
-        //    customerStockMutationPendingDelivery.Quantity = deliveryOrderDetail.Quantity;
-        //    customerStockMutationPendingDelivery.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
-        //    customerStockMutationPendingDelivery.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
-        //    customerStockMutationPendingDelivery.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
-        //    customerStockMutationPendingDelivery.SourceDocumentDetailId = deliveryOrderDetail.Id;
-        //    customerStockMutationPendingDelivery.ItemCase = Constant.ItemCase.PendingDelivery;
-        //    customerStockMutationPendingDelivery.Status = Constant.MutationStatus.Deduction;
-        //    customerStockMutationPendingDelivery.MutationDate = (DateTime) deliveryOrderDetail.ConfirmationDate;
-        //    customerStockMutationPendingDelivery = _repository.CreateObject(customerStockMutationPendingDelivery);
+            CustomerStockMutation customerStockMutationPendingDelivery = new CustomerStockMutation();
+            customerStockMutationPendingDelivery.ContactId = customerItem.ContactId;
+            customerStockMutationPendingDelivery.CustomerItemId = customerItem.Id;
+            customerStockMutationPendingDelivery.WarehouseItemId = customerItem.WarehouseItemId;
+            customerStockMutationPendingDelivery.ItemId = deliveryOrderDetail.ItemId;
+            customerStockMutationPendingDelivery.Quantity = deliveryOrderDetail.Quantity;
+            customerStockMutationPendingDelivery.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
+            customerStockMutationPendingDelivery.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
+            customerStockMutationPendingDelivery.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
+            customerStockMutationPendingDelivery.SourceDocumentDetailId = deliveryOrderDetail.Id;
+            customerStockMutationPendingDelivery.ItemCase = Constant.ItemCase.PendingDelivery;
+            customerStockMutationPendingDelivery.Status = Constant.MutationStatus.Deduction;
+            customerStockMutationPendingDelivery.MutationDate = (DateTime)deliveryOrderDetail.ConfirmationDate;
+            customerStockMutationPendingDelivery = _repository.CreateObject(customerStockMutationPendingDelivery);
 
-        //    CustomerStockMutation customerStockMutationReady = new CustomerStockMutation();
-        //    customerStockMutationReady.ItemId = customerItem.ItemId;
-        //    customerStockMutationReady.StockMutationId = customerItem.StockMutationId;
-        //    customerStockMutationReady.CustomerItemId = customerItem.Id;
-        //    customerStockMutationReady.ItemId = deliveryOrderDetail.ItemId;
-        //    customerStockMutationReady.Quantity = deliveryOrderDetail.Quantity;
-        //    customerStockMutationReady.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
-        //    customerStockMutationReady.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
-        //    customerStockMutationReady.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
-        //    customerStockMutationReady.SourceDocumentDetailId = deliveryOrderDetail.Id;
-        //    customerStockMutationReady.ItemCase = Constant.ItemCase.Ready;
-        //    customerStockMutationReady.Status = Constant.MutationStatus.Deduction;
-        //    customerStockMutationReady.MutationDate = (DateTime) deliveryOrderDetail.ConfirmationDate;
-        //    customerStockMutationReady = _repository.CreateObject(customerStockMutationReady);
+            CustomerStockMutation customerStockMutationReady = new CustomerStockMutation();
+            customerStockMutationReady.ContactId = customerItem.ContactId;
+            customerStockMutationReady.CustomerItemId = customerItem.Id;
+            customerStockMutationReady.WarehouseItemId = customerItem.WarehouseItemId;
+            customerStockMutationReady.ItemId = deliveryOrderDetail.ItemId;
+            customerStockMutationReady.Quantity = deliveryOrderDetail.Quantity;
+            customerStockMutationReady.SourceDocumentType = Constant.SourceDocumentType.DeliveryOrder;
+            customerStockMutationReady.SourceDocumentId = deliveryOrderDetail.DeliveryOrderId;
+            customerStockMutationReady.SourceDocumentDetailType = Constant.SourceDocumentDetailType.DeliveryOrderDetail;
+            customerStockMutationReady.SourceDocumentDetailId = deliveryOrderDetail.Id;
+            customerStockMutationReady.ItemCase = Constant.ItemCase.Ready;
+            customerStockMutationReady.Status = Constant.MutationStatus.Deduction;
+            customerStockMutationReady.MutationDate = (DateTime)deliveryOrderDetail.ConfirmationDate;
+            customerStockMutationReady = _repository.CreateObject(customerStockMutationReady);
 
-        //    result.Add(customerStockMutationPendingDelivery);
-        //    result.Add(customerStockMutationReady);
-        //    return result;
-        //}
+            result.Add(customerStockMutationPendingDelivery);
+            result.Add(customerStockMutationReady);
+            return result;
+        }
 
-        //public IList<CustomerStockMutation> DeleteCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem)
-        //{
-        //    IList<CustomerStockMutation> customerStockMutations = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.DeliveryOrderDetail, deliveryOrderDetail.Id);
-        //    foreach (var customerStockMutation in customerStockMutations)
-        //    {
-        //        _repository.Delete(customerStockMutation);
-        //    }
-        //    return customerStockMutations;
-        //}
+        public IList<CustomerStockMutation> DeleteCustomerStockMutationForDeliveryOrder(DeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem)
+        {
+            IList<CustomerStockMutation> customerStockMutations = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.DeliveryOrderDetail, deliveryOrderDetail.Id);
+            foreach (var customerStockMutation in customerStockMutations)
+            {
+                _repository.Delete(customerStockMutation);
+            }
+            return customerStockMutations;
+        }
 
         //public CustomerStockMutation CreateCustomerStockMutationForVirtualOrder(VirtualOrderDetail virtualOrderDetail, Item item)
         //{
@@ -640,44 +640,61 @@ namespace Service.Service
 
         public void StockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService)
         {
-            if (customerStockMutation.ItemCase == Constant.ItemCase.Ready)
+            if (!IsInHouse)
             {
-                if (!IsInHouse) 
+                // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+                // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+
+                int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Addition) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
+                Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
+                CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
+                WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
+
+                if (customerStockMutation.ItemCase == Constant.ItemCase.Ready)
                 {
-                    // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-                    // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-
-                    int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Addition) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
-                    Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
-                    CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
-                    WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
-
                     _itemService.AdjustCustomerQuantity(item, Quantity);
                     if (warehouseItem != null) { _warehouseItemService.AdjustCustomerQuantity(warehouseItem, Quantity); }
                     if (customerItem != null) { _customerItemService.AdjustQuantity(customerItem, Quantity); }
+                }
+                else if (customerStockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
+                {
+                    _itemService.AdjustPendingDelivery(item, Quantity);
+                }
+                else if (customerStockMutation.ItemCase == Constant.ItemCase.PendingReceival)
+                {
+                    _itemService.AdjustPendingReceival(item, Quantity);
                 }
             }
         }
 
         public void ReverseStockMutateObject(CustomerStockMutation customerStockMutation, bool IsInHouse, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService)
         {
-            if (customerStockMutation.ItemCase == Constant.ItemCase.Ready)
+            if (!IsInHouse)
             {
-                if (!IsInHouse)
+                // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
+                // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
+
+                int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Deduction) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
+                Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
+                CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
+                WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
+
+                if (customerStockMutation.ItemCase == Constant.ItemCase.Ready)
                 {
-                    // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
-                    // item.CustomerAvgCost = _itemService.CalculateCustomerAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
-
-                    int Quantity = (customerStockMutation.Status == Constant.MutationStatus.Deduction) ? customerStockMutation.Quantity : (-1) * customerStockMutation.Quantity;
-                    Item item = _itemService.GetObjectById(customerStockMutation.ItemId);
-                    CustomerItem customerItem = customerStockMutation.CustomerItemId == null ? null : _customerItemService.GetObjectById((int)customerStockMutation.CustomerItemId);
-                    WarehouseItem warehouseItem = customerStockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)customerStockMutation.WarehouseItemId);
-
                     _itemService.AdjustCustomerQuantity(item, Quantity);
                     if (warehouseItem != null) { _warehouseItemService.AdjustCustomerQuantity(warehouseItem, Quantity); }
                     if (customerItem != null) { _customerItemService.AdjustQuantity(customerItem, Quantity); }
                 }
+                else if (customerStockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
+                { 
+                    _itemService.AdjustPendingDelivery(item, Quantity); 
+                }
+                else if (customerStockMutation.ItemCase == Constant.ItemCase.PendingReceival)
+                { 
+                    _itemService.AdjustPendingReceival(item, Quantity); 
+                }
             }
         }
+
     }
 }
