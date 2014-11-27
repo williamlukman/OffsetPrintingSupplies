@@ -207,7 +207,7 @@ namespace Service.Service
                 recoveryOrderDetail.TotalCost = 0;
                 _repository.UndoRejectObject(recoveryOrderDetail);
 
-                // add recovery order quantity reject
+                // deduce recovery order quantity reject
                 // if valid, complete recovery order = true 
                 RecoveryOrder recoveryOrder = _recoveryOrderService.GetObjectById(recoveryOrderDetail.RecoveryOrderId);
                 recoveryOrder.QuantityRejected -= 1;
@@ -375,8 +375,8 @@ namespace Service.Service
                 // unfinish object
                 _repository.UnfinishObject(recoveryOrderDetail);
 
-                // add recovery order quantity final
-                recoveryOrder.QuantityFinal += 1;
+                // deduce recovery order quantity final
+                recoveryOrder.QuantityFinal -= 1;
                 _recoveryOrderService.AdjustQuantity(recoveryOrder);
                 // no longer Completed
                 _recoveryOrderService.UncompleteObject(recoveryOrder, _coreIdentificationDetailService, this, _recoveryAccessoryDetailService);

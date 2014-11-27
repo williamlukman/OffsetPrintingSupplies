@@ -25,7 +25,7 @@ namespace Validation.Validation
 
         public CoreIdentification VInHouseOrHasContact(CoreIdentification coreIdentification, IContactService _contactService)
         {
-            if ((coreIdentification.IsInHouse && coreIdentification.ContactId != null) ||
+            if (/*(coreIdentification.IsInHouse && coreIdentification.ContactId != null) ||*/
                 (!coreIdentification.IsInHouse && coreIdentification.ContactId == null))
             {
                 coreIdentification.Errors.Add("Generic", "Core Identification harus memilih InHouse atau menyertakan informasi Contact");

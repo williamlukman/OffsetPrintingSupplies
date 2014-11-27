@@ -57,6 +57,7 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
+                             model.CustomerQuantity,
                              UoM = model.Item.UoM.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -93,6 +94,7 @@ namespace WebView.Controllers
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
+                            model.CustomerQuantity,
                             model.UoM
                       }
                     }).ToArray()
@@ -119,6 +121,7 @@ namespace WebView.Controllers
                              WarehouseCode = model.Warehouse.Code,
                              Warehouse = model.Warehouse.Name,
                              model.Quantity,
+                             model.CustomerQuantity,
                              UoM = model.Item.UoM.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -155,6 +158,7 @@ namespace WebView.Controllers
                            model.WarehouseCode,
                            model.Warehouse,
                            model.Quantity,
+                           model.CustomerQuantity,
                            model.UoM,
                       }
                     }).ToArray()

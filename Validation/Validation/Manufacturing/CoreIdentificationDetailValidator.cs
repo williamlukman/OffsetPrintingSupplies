@@ -388,9 +388,10 @@ namespace Validation.Validation
             bool IsFinished = false;
             foreach (var detail in details)
             {
-                if (detail.IsFinished)
+                if (detail.IsFinished || detail.IsRejected)
                 {
                     IsFinished = true;
+                    break;
                 }
             }
             if (!IsFinished)

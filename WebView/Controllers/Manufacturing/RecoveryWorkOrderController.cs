@@ -84,6 +84,7 @@ namespace WebView.Controllers
                              model.DueDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.IsCompleted,
                              model.CreatedAt,
                              model.UpdatedAt,
 
@@ -131,6 +132,7 @@ namespace WebView.Controllers
                             model.DueDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.IsCompleted,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

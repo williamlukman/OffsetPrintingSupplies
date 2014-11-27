@@ -554,8 +554,8 @@ namespace Validation.Validation
         public RecoveryOrderDetail VUndoRejectObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService)
         {
             VHasBeenRejected(recoveryOrderDetail);
-            if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
-            VRecoveryOrderHasNotBeenCompleted(recoveryOrderDetail, _recoveryOrderService);
+            //if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
+            //VRecoveryOrderHasNotBeenCompleted(recoveryOrderDetail, _recoveryOrderService);
             return recoveryOrderDetail;
         }
 

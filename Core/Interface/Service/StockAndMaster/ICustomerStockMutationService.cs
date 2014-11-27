@@ -49,8 +49,8 @@ namespace Core.Interface.Service
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForRecoveryAccessory(RecoveryAccessoryDetail recoveryAccessoryDetail, CustomerItem customerItem);
          //CustomerStockMutation CreateCustomerStockMutationForBlanketOrder(BlanketOrderDetail blanketOrderDetail, DateTime FinishedOrRejectedDate, CustomerItem customerItem, bool CaseAddition);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForBlanketOrder(BlanketOrderDetail blanketOrderDetail, CustomerItem customerItem);
-         //IList<CustomerStockMutation> CreateCustomerStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo);
-         //IList<CustomerStockMutation> DeleteCustomerStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo);
+         IList<CustomerStockMutation> CreateCustomerStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo, int ItemId);
+         IList<CustomerStockMutation> DeleteCustomerStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo);
          //IList<CustomerStockMutation> CreateCustomerStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo);
 

@@ -32,7 +32,7 @@
         url: base_url + 'MstItem/GetList',
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 
-                    'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual', "Customer's Quantity",
+                    'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual', "Customer's QTY",
                     'UoM', 'Selling Price', 'AvgPrice', "Customer's AvgPrice",
                     'Description', 'Item Type', 'Tradeable', 'Created At', 'Updated At'],
         colModel: [
@@ -44,7 +44,7 @@
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'minimumquantity', index: 'minimumquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'customerquantity', index: 'customerquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'customerquantity', index: 'customerquantity', width: 95, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 40 },
                   { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },

@@ -122,10 +122,21 @@ namespace Validation.Validation
             foreach (var ValuePair in ValuePairItemIdQuantity)
             {
                 WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePair.Key);
-                if (warehouseItem.Quantity < ValuePair.Value)
+                if (recoveryOrder.CoreIdentification.IsInHouse)
                 {
-                    recoveryOrder.Errors.Add("Generic", "Stock quantity core item tidak boleh kurang dari jumlah di dalam recovery order");
-                    return recoveryOrder;
+                    if (warehouseItem.Quantity < ValuePair.Value)
+                    {
+                        recoveryOrder.Errors.Add("Generic", "Stock Core item tidak boleh kurang dari jumlah di dalam Recovery order");
+                        return recoveryOrder;
+                    }
+                }
+                else
+                {
+                    if (warehouseItem.CustomerQuantity < ValuePair.Value)
+                    {
+                        recoveryOrder.Errors.Add("Generic", "Stock Core item Customer tidak boleh kurang dari jumlah di dalam Recovery order");
+                        return recoveryOrder;
+                    }
                 }
             }
             return recoveryOrder;

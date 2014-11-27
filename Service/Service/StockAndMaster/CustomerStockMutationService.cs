@@ -522,62 +522,64 @@ namespace Service.Service
         //    return customerStockMutations;
         //}
 
-        //public IList<CustomerStockMutation> CreateCustomerStockMutationForRollerStockMutationMutation(RollerStockMutationMutationDetail rollerStockMutationMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo)
-        //{
-        //    IList<CustomerStockMutation> customerStockMutations = new List<CustomerStockMutation>();
+        public IList<CustomerStockMutation> CreateCustomerStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo, int ItemId)
+        {
+            IList<CustomerStockMutation> customerStockMutations = new List<CustomerStockMutation>();
 
-        //    CustomerStockMutation customerStockMutationFrom = new CustomerStockMutation();
-        //    customerStockMutationFrom.ItemId = customerItemFrom.ItemId;
-        //    customerStockMutationFrom.StockMutationId = customerItemFrom.StockMutationId;
-        //    customerStockMutationFrom.CustomerItemId = customerItemFrom.Id;
-        //    customerStockMutationFrom.Quantity = 1;
-        //    customerStockMutationFrom.SourceDocumentType = Constant.SourceDocumentType.RollerStockMutationMutation;
-        //    customerStockMutationFrom.SourceDocumentId = rollerStockMutationMutationDetail.RollerStockMutationMutationId;
-        //    customerStockMutationFrom.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RollerStockMutationMutationDetail;
-        //    customerStockMutationFrom.SourceDocumentDetailId = rollerStockMutationMutationDetail.Id;
-        //    customerStockMutationFrom.ItemCase = Constant.ItemCase.Ready;
-        //    customerStockMutationFrom.Status = Constant.MutationStatus.Deduction;
-        //    customerStockMutationFrom.MutationDate = (DateTime) rollerStockMutationMutationDetail.ConfirmationDate;
-        //    customerStockMutationFrom = _repository.CreateObject(customerStockMutationFrom);
+            CustomerStockMutation customerStockMutationFrom = new CustomerStockMutation();
+            customerStockMutationFrom.ItemId = ItemId;
+            customerStockMutationFrom.ContactId = customerItemFrom.ContactId;
+            customerStockMutationFrom.CustomerItemId = customerItemFrom.Id;
+            customerStockMutationFrom.WarehouseItemId = customerItemFrom.WarehouseItemId;
+            customerStockMutationFrom.Quantity = 1;
+            customerStockMutationFrom.SourceDocumentType = Constant.SourceDocumentType.RollerWarehouseMutation;
+            customerStockMutationFrom.SourceDocumentId = rollerWarehouseMutationDetail.RollerWarehouseMutationId;
+            customerStockMutationFrom.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail;
+            customerStockMutationFrom.SourceDocumentDetailId = rollerWarehouseMutationDetail.Id;
+            customerStockMutationFrom.ItemCase = Constant.ItemCase.Ready;
+            customerStockMutationFrom.Status = Constant.MutationStatus.Deduction;
+            customerStockMutationFrom.MutationDate = (DateTime)rollerWarehouseMutationDetail.ConfirmationDate;
+            customerStockMutationFrom = _repository.CreateObject(customerStockMutationFrom);
 
-        //    CustomerStockMutation customerStockMutationTo = new CustomerStockMutation();
-        //    customerStockMutationTo.ItemId = customerItemTo.ItemId;
-        //    customerStockMutationTo.StockMutationId = customerItemTo.StockMutationId;
-        //    customerStockMutationTo.CustomerItemId = customerItemTo.Id;
-        //    customerStockMutationTo.Quantity = 1;
-        //    customerStockMutationTo.SourceDocumentType = Constant.SourceDocumentType.RollerStockMutationMutation;
-        //    customerStockMutationTo.SourceDocumentId = rollerStockMutationMutationDetail.RollerStockMutationMutationId;
-        //    customerStockMutationTo.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RollerStockMutationMutationDetail;
-        //    customerStockMutationTo.SourceDocumentDetailId = rollerStockMutationMutationDetail.Id;
-        //    customerStockMutationTo.ItemCase = Constant.ItemCase.Ready;
-        //    customerStockMutationTo.Status = Constant.MutationStatus.Addition;
-        //    customerStockMutationTo.MutationDate = (DateTime)rollerStockMutationMutationDetail.ConfirmationDate;
-        //    customerStockMutationTo = _repository.CreateObject(customerStockMutationTo);
+            CustomerStockMutation customerStockMutationTo = new CustomerStockMutation();
+            customerStockMutationTo.ItemId = ItemId;
+            customerStockMutationTo.ContactId = customerItemTo.ContactId;
+            customerStockMutationTo.CustomerItemId = customerItemTo.Id;
+            customerStockMutationTo.WarehouseItemId = customerItemTo.WarehouseItemId;
+            customerStockMutationTo.Quantity = 1;
+            customerStockMutationTo.SourceDocumentType = Constant.SourceDocumentType.RollerWarehouseMutation;
+            customerStockMutationTo.SourceDocumentId = rollerWarehouseMutationDetail.RollerWarehouseMutationId;
+            customerStockMutationTo.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail;
+            customerStockMutationTo.SourceDocumentDetailId = rollerWarehouseMutationDetail.Id;
+            customerStockMutationTo.ItemCase = Constant.ItemCase.Ready;
+            customerStockMutationTo.Status = Constant.MutationStatus.Addition;
+            customerStockMutationTo.MutationDate = (DateTime)rollerWarehouseMutationDetail.ConfirmationDate;
+            customerStockMutationTo = _repository.CreateObject(customerStockMutationTo);
 
-        //    customerStockMutations.Add(customerStockMutationFrom);
-        //    customerStockMutations.Add(customerStockMutationTo);
-        //    return customerStockMutations;
-        //}
+            customerStockMutations.Add(customerStockMutationFrom);
+            customerStockMutations.Add(customerStockMutationTo);
+            return customerStockMutations;
+        }
 
-        //public IList<CustomerStockMutation> DeleteCustomerStockMutationForRollerStockMutationMutation(RollerStockMutationMutationDetail rollerStockMutationMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo)
-        //{
-        //    IList<CustomerStockMutation> customerStockMutations = new List<CustomerStockMutation>();
+        public IList<CustomerStockMutation> DeleteCustomerStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo)
+        {
+            IList<CustomerStockMutation> customerStockMutations = new List<CustomerStockMutation>();
 
-        //    IList<CustomerStockMutation> customerStockMutationFrom = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItemFrom.Id, Constant.SourceDocumentDetailType.RollerStockMutationMutationDetail, rollerStockMutationMutationDetail.Id);
-        //    customerStockMutationFrom.ToList().ForEach(x => customerStockMutations.Add(x));
-        //    foreach (var customerStockMutation in customerStockMutationFrom)
-        //    {
-        //        _repository.Delete(customerStockMutation);
-        //    }
+            IList<CustomerStockMutation> customerStockMutationFrom = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItemFrom.Id, Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail, rollerWarehouseMutationDetail.Id);
+            customerStockMutationFrom.ToList().ForEach(x => customerStockMutations.Add(x));
+            foreach (var customerStockMutation in customerStockMutationFrom)
+            {
+                _repository.Delete(customerStockMutation);
+            }
 
-        //    IList<CustomerStockMutation> customerStockMutationTo = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItemTo.Id, Constant.SourceDocumentDetailType.RollerStockMutationMutationDetail, rollerStockMutationMutationDetail.Id);
-        //    customerStockMutationTo.ToList().ForEach(x => customerStockMutations.Add(x));
-        //    foreach (var customerStockMutation in customerStockMutationTo)
-        //    {
-        //        _repository.Delete(customerStockMutation);
-        //    }
-        //    return customerStockMutations;
-        //}
+            IList<CustomerStockMutation> customerStockMutationTo = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItemTo.Id, Constant.SourceDocumentDetailType.RollerWarehouseMutationDetail, rollerWarehouseMutationDetail.Id);
+            customerStockMutationTo.ToList().ForEach(x => customerStockMutations.Add(x));
+            foreach (var customerStockMutation in customerStockMutationTo)
+            {
+                _repository.Delete(customerStockMutation);
+            }
+            return customerStockMutations;
+        }
 
         //public IList<CustomerStockMutation> CreateCustomerStockMutationForStockMutationMutation(StockMutationMutationDetail StockMutationMutationDetail, CustomerItem customerItemFrom, CustomerItem customerItemTo)
         //{

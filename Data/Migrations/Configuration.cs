@@ -40,7 +40,7 @@ namespace Data.Migrations
             //    );
             int? exrate = null; 
             ExchangeRate exrates = context.ExchangeRates.FirstOrDefault();
-            exrate = exrates.Id;
+            if (exrates != null) { exrate = exrates.Id; }
             foreach (var x in context.SalesInvoices.Where(x => x.ExchangeRateId == null))
             {
                 x.ExchangeRateId = exrate;
