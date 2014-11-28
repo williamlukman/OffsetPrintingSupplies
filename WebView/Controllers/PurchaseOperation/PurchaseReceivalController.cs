@@ -31,6 +31,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IExchangeRateService _exchangeRateService;
 
         public PurchaseReceivalController()
         {
@@ -48,6 +49,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
         public ActionResult Index()
@@ -138,8 +140,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseReceivalService.GetQueryable().Include("PurchaseOrder").Include("Warehouse").Include("Contact")
-                                            .Where(x => x.IsConfirmed && !x.IsDeleted);
+            var q = _purchaseReceivalService.GetQueryable().Where(x => x.IsConfirmed && !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -152,6 +153,8 @@ namespace WebView.Controllers
                              NomorSuratPO = model.PurchaseOrder.NomorSurat,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
+                             CurrencyId = model.PurchaseOrder.CurrencyId,
+                             Currency = model.PurchaseOrder.Currency.Name,
                              model.ReceivalDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
@@ -206,6 +209,8 @@ namespace WebView.Controllers
                             model.WarehouseId,
                             model.Warehouse,
                             model.ReceivalDate,
+                            model.CurrencyId,
+                            model.Currency,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -475,7 +480,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,
-                        _purchaseOrderDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService);
+                        _purchaseOrderDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService,_exchangeRateService);
             }
             catch (Exception ex)
             {

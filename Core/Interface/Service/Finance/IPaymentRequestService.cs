@@ -22,8 +22,9 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         PaymentRequest ConfirmObject(PaymentRequest paymentRequest, DateTime ConfirmationDate, IPayableService _payableService,
                                      IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,
-                                     IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+                                     IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IExchangeRateService _exchangeRateService);
         PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService,
                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        PaymentRequest CalculateTotalAmount(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService);
     }
 }

@@ -86,6 +86,8 @@ namespace WebView.Controllers
                              model.IsGBCH,
                              model.DueDate,
                              model.TotalAmount,
+                             currency = model.CashBank.Currency.Name,
+                             model.RateToIDR,
                              model.IsReconciled,
                              model.ReconciliationDate,
                              model.IsConfirmed,
@@ -133,6 +135,8 @@ namespace WebView.Controllers
                             model.IsGBCH,
                             model.DueDate,
                             model.TotalAmount,
+                            model.currency,
+                            model.RateToIDR,
                             model.IsReconciled,
                             model.ReconciliationDate,
                             model.IsConfirmed,
@@ -240,6 +244,7 @@ namespace WebView.Controllers
                              model.PayableSourceId,
                              model.DueDate,
                              model.Amount,
+                             model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.CreatedAt,
@@ -433,10 +438,11 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic InsertDetail(PaymentVoucherDetail model)
         {
+            decimal totalamount = 0;
             try
             {
-                model = _paymentVoucherDetailService.CreateObject(model,_paymentVoucherService,_cashBankService,_payableService
-                   );
+                model = _paymentVoucherDetailService.CreateObject(model,_paymentVoucherService,_cashBankService,_payableService);
+                totalamount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -448,6 +454,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalamount
             });
         }
 
@@ -501,10 +508,12 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic DeleteDetail(PaymentVoucherDetail model)
         {
+            decimal totalamount = 0;
             try
             {
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
-                model = _paymentVoucherDetailService.SoftDeleteObject(data);
+                model = _paymentVoucherDetailService.SoftDeleteObject(data,_paymentVoucherService);
+                totalamount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -515,12 +524,14 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalamount
             });
         }
 
         [HttpPost]
         public dynamic UpdateDetail(PaymentVoucherDetail model)
         {
+            decimal totalamount = 0;
             try
             {
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
@@ -528,6 +539,7 @@ namespace WebView.Controllers
                 data.Amount = model.Amount;
                 data.Description = model.Description;
                 model = _paymentVoucherDetailService.UpdateObject(data,_paymentVoucherService,_cashBankService,_payableService);
+                totalamount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -538,6 +550,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalamount
             });
         }
 

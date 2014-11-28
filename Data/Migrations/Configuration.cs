@@ -37,13 +37,40 @@ namespace Data.Migrations
             //      new Person { FullName = "Brice Lambson" },
             //      new Person { FullName = "Rowan Miller" }
             //    );
-            int? exrate = null; 
-            ExchangeRate exrates = context.ExchangeRates.FirstOrDefault();
-            exrate = exrates.Id;
-            foreach (var x in context.SalesInvoices.Where(x => x.ExchangeRateId == null))
-            {
-                x.ExchangeRateId = exrate;
-            }
+            //if (context.Currencys.FirstOrDefault() == null)
+            //{
+            //    context.Currencys.Add(
+            //     new Currency
+            //     {
+            //         CreatedAt = DateTime.Now,
+            //         IsBase = true,
+            //         Name = "IDR",
+            //     }
+            //     );
+            //    context.SaveChanges();
+            //}
+           
+            //Currency cr = context.Currencys.FirstOrDefault();
+            //if (context.ExchangeRates.FirstOrDefault() == null)
+            //{
+            //  context.ExchangeRates.Add(
+            //   new ExchangeRate
+            //   {
+            //       CreatedAt = DateTime.Now,
+            //       ExRateDate = DateTime.Now,
+            //       CurrencyId = cr.Id,
+            //       Rate = 1
+            //   }
+            //   );
+            //}
+           
+            //context.SaveChanges();
+
+            //ExchangeRate exrates = context.ExchangeRates.FirstOrDefault();
+            //foreach (var x in context.SalesInvoices.Where(x => x.ExchangeRateId == null))
+            //{
+            //    x.ExchangeRateId = exrates.Id;
+            //}
         }
     }
 }

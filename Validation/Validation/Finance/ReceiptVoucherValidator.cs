@@ -319,8 +319,6 @@ namespace Validation.Validation
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VHasNotBeenDeleted(receiptVoucher);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
-            VTotalAmountEqualDetailsAmount(receiptVoucher, _receiptVoucherDetailService);
-            if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VAllReceiptVoucherDetailsAreConfirmable(receiptVoucher, _receiptVoucherService, _receiptVoucherDetailService, _cashBankService, _receivableService);
             if (!isValid(receiptVoucher)) { return receiptVoucher; }
             VGeneralLedgerPostingHasNotBeenClosed(receiptVoucher, _closingService, 1);

@@ -15,6 +15,10 @@ namespace Data.Mapping
             HasMany(pr => pr.PurchaseReceivalDetails)
                 .WithRequired(prd => prd.PurchaseReceival)
                 .HasForeignKey(prd => prd.PurchaseReceivalId);
+            HasOptional(ex => ex.ExchangeRate)
+                .WithMany()
+                .HasForeignKey(ex => ex.ExchangeRateId)
+                .WillCascadeOnDelete(false);
             HasRequired(pr => pr.PurchaseOrder)
                 .WithMany()
                 .HasForeignKey(pr => pr.PurchaseOrderId)

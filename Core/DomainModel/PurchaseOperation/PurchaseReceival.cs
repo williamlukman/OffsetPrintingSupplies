@@ -13,6 +13,8 @@ namespace Core.DomainModel
         public DateTime ReceivalDate { get; set; }
         public int WarehouseId { get; set; }
         public string NomorSurat { get; set; }
+        public decimal ExchangeRateAmount { get; set; }
+        public Nullable<int> ExchangeRateId { get; set; }
 
         public decimal TotalCOGS { get; set; }
         public decimal TotalAmount { get; set; }
@@ -29,5 +31,7 @@ namespace Core.DomainModel
         public virtual ICollection<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public Dictionary<String, String> Errors { get; set; }
+        public virtual ExchangeRate ExchangeRate { get; set; }
+
     }
 }

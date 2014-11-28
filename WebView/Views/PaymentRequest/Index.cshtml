@@ -89,11 +89,22 @@
                                 <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
                              </td>
                         </tr>
+                        <tr>
+                            <td>
+                                Account Payable
+                            </td>
+                            <td>
+                               <input id="AccountPayableId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" hidden/>
+                               <input id="btnAccountPayable" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                               <input id="AccountPayable" name="AccountPayableId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
                          <tr>
                              <td >
                                 <label>Amount</label></td>
                              <td colspan="3">
-                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
+                               <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
+                               <span id="Currency"></span>
                              </td>     
                          </tr>
                     </table>
@@ -217,6 +228,20 @@
         <div id="lookup_pager_account" class="scroll" style="text-align: center;"></div>
     </div>
     <!-- END Look Up account -->
+
+     <!-- Look Up accountPayable -->
+    <div id="lookup_div_accountPayable" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_accountPayable" class="grid_toolbar">
+            <a id="lookup_btn_add_accountPayable" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_accountPayable" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_accountPayable" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_accountPayable" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up accountPayable -->
 
     <!-- Look Up Contact -->
     <div id="lookup_div_contact" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"

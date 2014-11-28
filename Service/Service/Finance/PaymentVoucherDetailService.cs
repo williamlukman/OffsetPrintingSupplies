@@ -55,8 +55,13 @@ namespace Service.Service
                                                 ICashBankService _cashBankService, IPayableService _payableService)
         {
             paymentVoucherDetail.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService) ?
-                    _repository.CreateObject(paymentVoucherDetail) : paymentVoucherDetail);
+            if (_validator.ValidCreateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService))
+            {
+                paymentVoucherDetail = _repository.CreateObject(paymentVoucherDetail);
+                PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
+                _paymentVoucherService.CalculateTotalAmount(paymentVoucher, this);
+            }
+            return paymentVoucherDetail;
         }
 
         public PaymentVoucherDetail CreateObject(int paymentVoucherId, int payableId, decimal amount, string description, 
@@ -75,13 +80,24 @@ namespace Service.Service
 
         public PaymentVoucherDetail UpdateObject(PaymentVoucherDetail paymentVoucherDetail, IPaymentVoucherService _paymentVoucherService, ICashBankService _cashBankService, IPayableService _payableService)
         {
-            return (_validator.ValidUpdateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService) ?
-                     _repository.UpdateObject(paymentVoucherDetail) : paymentVoucherDetail);
+            if (_validator.ValidUpdateObject(paymentVoucherDetail, _paymentVoucherService, this, _cashBankService, _payableService))
+            {
+                paymentVoucherDetail = _repository.UpdateObject(paymentVoucherDetail);
+                PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
+                _paymentVoucherService.CalculateTotalAmount(paymentVoucher, this);
+            }
+            return paymentVoucherDetail;
         }
 
-        public PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail)
+        public PaymentVoucherDetail SoftDeleteObject(PaymentVoucherDetail paymentVoucherDetail,IPaymentVoucherService _paymentVoucherService)
         {
-            return (_validator.ValidDeleteObject(paymentVoucherDetail) ? _repository.SoftDeleteObject(paymentVoucherDetail) : paymentVoucherDetail);
+            if (_validator.ValidDeleteObject(paymentVoucherDetail))
+            {
+                paymentVoucherDetail = _repository.SoftDeleteObject(paymentVoucherDetail);
+                PaymentVoucher paymentVoucher = _paymentVoucherService.GetObjectById(paymentVoucherDetail.PaymentVoucherId);
+                _paymentVoucherService.CalculateTotalAmount(paymentVoucher, this);
+            }
+            return paymentVoucherDetail;
         }
 
         public bool DeleteObject(int Id)

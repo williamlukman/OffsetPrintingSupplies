@@ -23,7 +23,6 @@
     }
 
     function clearForm(form) {
-        $('#TotalAmount').numberbox('setValue', '');
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case
@@ -41,6 +40,7 @@
     $("#form_div").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $('#lookup_div_account').dialog('close');
+    $('#lookup_div_accountPayable').dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#AccountId").hide();
     $("#Contact").attr('disabled', true);
@@ -113,12 +113,13 @@
         $('#RequestedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
+        $('#btnAccountPayable').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#RequestedDateDiv').show();
         $('#RequestedDateDiv2').hide();
+        $('#Currency').text('').data("kode", '');
         $('#DueDateDiv').show();
         $('#DueDateDiv2').hide();
-        $("#TotalAmount").removeAttr('disabled');
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -150,6 +151,9 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
+                            $('#AccountPayableId').val(result.AccountPayableId);
+                            $('#AccountPayable').val(result.AccountPayable);
+                            $('#Currency').text(result.currency).data("kode",result.currencyId);
                             $('#TotalAmount').numberbox('setValue', result.Amount);
                             $('#RequestedDate').datebox('setValue', dateEnt(result.RequestedDate));
                             $('#RequestedDate2').val(dateEnt(result.RequestedDate));
@@ -160,8 +164,9 @@
                             $('#DueDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#form_btn_save').hide();
-                            $("#TotalAmount").attr('disabled', true);
-                            $('#btnAccount').removeAttr('disabled');
+                            $('#btnAccountPayable').attr('disabled', true);;
+                            $('#btnContact').attr('disabled', true);;
+
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -206,13 +211,17 @@
                             $('#RequestedDate2').val(dateEnt(result.RequestedDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#AccountPayableId').val(result.AccountPayableId);
+                            $('#AccountPayable').val(result.AccountPayable);
+                            $('#Currency').text(result.currency).data("kode", result.currencyId);
+                            $('#TotalAmount').numberbox('setValue', result.Amount);
                             $('#RequestedDateDiv').show();
                             $('#RequestedDateDiv2').hide();
                             $('#DueDateDiv').show();
                             $('#DueDateDiv2').hide();
                             $('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
-                            $("#TotalAmount").removeAttr('disabled');
+                            $('#btnAccountPayable').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -394,7 +403,7 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), Description: $("#Description").val(),
                 RequestedDate: $('#RequestedDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                Amount: $("#TotalAmount").numberbox('getValue'),
+                CurrencyId: $('#Currency').data("kode"), AccountPayableId: $("#AccountPayableId").val()
             }),
             async: false,
             cache: false,
@@ -470,6 +479,9 @@
         ClearData();
         clearForm('#item_div');
         $('#item_div').dialog('open');
+        $('#Amount').numberbox('clear');
+
+
     });
 
     $('#btn_edit_detail').click(function () {
@@ -494,10 +506,9 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#btnAccount').removeAttr('disabled');
                             $('#AccountId').val(result.AccountId);
                             $('#Account').val(result.Account);
-                            $('#Amount').val(result.Amount);
+                            $('#Amount').numberbox('setValue',result.Amount);
                             var e = document.getElementById("Status");
                             if (result.Status == 1) {
                                 e.selectedIndex = 0;
@@ -544,6 +555,7 @@
                             }
                             else {
                                 ReloadGridDetail();
+                                $('#TotalAmount').numberbox('setValue', result.totalAmount);
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -604,6 +616,7 @@
                 }
                 else {
                     ReloadGridDetail();
+                    $('#TotalAmount').numberbox('setValue',result.totalAmount);
                     $("#item_div").dialog('close')
                 }
             }
@@ -616,6 +629,71 @@
         $("#item_div").dialog('close');
     });
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up accountPayable-------------------------------------------------------
+    $('#btnAccountPayable').click(function () {
+        var lookUpURL = base_url + 'ChartOfAccount/GetAccountPayable';
+        var lookupGrid = $('#lookup_table_accountPayable');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_accountPayable').dialog('open');
+    });
+
+    jQuery("#lookup_table_accountPayable").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'AccountPayable Code', 'AccountPayable Name', 'Currency','CurrencyId'],
+        colModel: [
+				  { name: 'Id', index: 'Id', width: 40, hidden: true },
+				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+				  { name: 'name', index: 'name', width: 250 },
+                  { name: 'currency', index: 'currency', width: 80 },
+                  { name: 'currencyId', index: 'currencyId', width: 80 },
+
+        ],
+        page: '1',
+        pager: $('#lookup_pager_accountPayable'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_accountPayable").width() - 10,
+        height: $("#lookup_div_accountPayable").height() - 110,
+    });
+    $("#lookup_table_accountPayable").jqGrid('navGrid', '#lookup_toolbar_accountPayable', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_accountPayable').click(function () {
+        $('#lookup_div_accountPayable').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_accountPayable').click(function () {
+        var id = jQuery("#lookup_table_accountPayable").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_accountPayable").jqGrid('getRowData', id);
+
+            $('#AccountPayableId').val(ret.Id).data("kode", id);
+            $('#AccountPayable').val(ret.name);
+            $('#lookup_div_accountPayable').dialog('close');
+            $('#Currency').text(ret.currency).data("kode", ret.currencyId);
+
+
+
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup accountPayable----------------------------------------------------------------
+
 
     // -------------------------------------------------------Look Up account-------------------------------------------------------
     $('#btnAccount').click(function () {

@@ -57,7 +57,7 @@ namespace Service.Service
             return (_validator.ValidCreateObject(payable, this) ? _repository.CreateObject(payable) : payable);
         }
 
-        public Payable CreateObject(int contactId, string payableSource, int payableSourceId,int currencyId, decimal amount, DateTime dueDate)
+        public Payable CreateObject(int contactId, string payableSource, int payableSourceId,int currencyId, decimal amount,decimal rate, DateTime dueDate)
         {
             Payable payable = new Payable
             {
@@ -67,6 +67,7 @@ namespace Service.Service
                 CurrencyId = currencyId,
                 Amount = amount,
                 RemainingAmount = amount,
+                Rate = rate,
                 DueDate = dueDate
             };
             return this.CreateObject(payable);

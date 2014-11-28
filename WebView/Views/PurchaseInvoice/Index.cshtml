@@ -112,7 +112,11 @@
                                 <label>Amount</label></td>
                              <td colspan="3">
                                <input id="AmountPayable" name="AmountPayable" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled ="disabled" />
-                                </td>     
+                              <label>Currency</label>
+                               <input id="Currency" name="Currency" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled ="disabled" />
+                               <label hidden>Rate</label>
+                               <input hidden id="ExchangeRateAmount" name="ExchangeRateAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"" />
+                             </td>     
                          </tr>
                     </table>
                     <div id="tabledetail_div">

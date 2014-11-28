@@ -46,19 +46,11 @@ namespace Service.Service
             return _repository.GetObjectByName(Name);
         }
 
-        public string GenerateAccountCode(IAccountService _accountService)
+        public string GenerateAccountCode(IAccountService _accountService,string accountLegacyCode,int id)
         {
-            int ParentId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id;
+            int ParentId = _accountService.GetObjectByLegacyCode(accountLegacyCode).Id;
             string parentCode = _accountService.GetObjectById(ParentId).Code;
-            int newId = _accountService.GetQueryable().Where(x => x.ParentId == ParentId && !x.IsDeleted).Count() + 1;
-            while (true)
-            {
-                if (_accountService.GetObjectByLegacyCode(parentCode + newId.ToString()) == null)
-                {
-                    return parentCode + newId.ToString();
-                }
-                newId += 1;
-            }
+            return parentCode + id.ToString();
         }
         //Tambah Account Currency Di COA
         public Currency CreateObject(Currency currency,IAccountService _accountService)
@@ -66,22 +58,67 @@ namespace Service.Service
             currency.Errors = new Dictionary<string, string>();
             if (_validator.ValidCreateObject(currency, this))
             {
-                string Code = GenerateAccountCode(_accountService);
+                _repository.CreateObject(currency);
+                string CodeAr = GenerateAccountCode(_accountService, Constant.AccountLegacyCode.AccountReceivable,currency.Id);
                 Account arAccount = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable);
-                Account account = new Account()
+                Account accountar = new Account()
                 {
                     Name = "Account Receivable " + currency.Name,
                     Level = arAccount.Level + 1,
                     Group = Constant.AccountGroup.Asset,
-                    Code = Code,
+                    LegacyCode = Constant.AccountLegacyCode.AccountReceivable + currency.Id,
+                    Code = CodeAr,
                     IsCashBankAccount = false,
                     IsLeaf = true,
                     ParentId = arAccount.Id
                 };
-                _accountService.CreateCashBankAccount(account, _accountService);
-                _repository.CreateObject(currency);
-                account.LegacyCode = Constant.AccountLegacyCode.AccountReceivable + currency.Id;
-                _accountService.UpdateObject(account, _accountService);
+                _accountService.CreateCashBankAccount(accountar, _accountService);
+
+                string CodearGBCH = GenerateAccountCode(_accountService, Constant.AccountLegacyCode.GBCHReceivable, currency.Id);
+                Account arGBCHAccount = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable);
+                Account accountarGBCH = new Account()
+                {
+                    Name = "GBCH Receivable " + currency.Name,
+                    Level = arGBCHAccount.Level + 1,
+                    Group = Constant.AccountGroup.Asset,
+                    LegacyCode = Constant.AccountLegacyCode.GBCHReceivable + currency.Id,
+                    Code = CodearGBCH,
+                    IsCashBankAccount = false,
+                    IsLeaf = true,
+                    ParentId = arGBCHAccount.Id
+                };
+                _accountService.CreateCashBankAccount(accountarGBCH, _accountService);
+
+                string CodeAp = GenerateAccountCode(_accountService, Constant.AccountLegacyCode.AccountPayable, currency.Id);
+                Account apAccount = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable);
+                Account accountap = new Account()
+                {
+                    Name = "Account Payable " + currency.Name,
+                    Level = apAccount.Level + 1,
+                    Group = Constant.AccountGroup.Liability,
+                    LegacyCode = Constant.AccountLegacyCode.AccountPayable + currency.Id,
+                    Code = CodeAp,
+                    IsCashBankAccount = false,
+                    IsLeaf = true,
+                    ParentId = apAccount.Id
+                };
+                _accountService.CreateCashBankAccount(accountap, _accountService);
+
+                string CodeApGBCH = GenerateAccountCode(_accountService, Constant.AccountLegacyCode.GBCHPayable, currency.Id);
+                Account apGBCHAccount = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable);
+                Account accountapGBCH = new Account()
+                {
+                    Name = "GBCH Payable " + currency.Name,
+                    Level = apGBCHAccount.Level + 1,
+                    Group = Constant.AccountGroup.Liability,
+                    LegacyCode = Constant.AccountLegacyCode.GBCHPayable + currency.Id,
+                    Code = CodeApGBCH,
+                    IsCashBankAccount = false,
+                    IsLeaf = true,
+                    ParentId = apGBCHAccount.Id
+                };
+                _accountService.CreateCashBankAccount(accountapGBCH, _accountService);
+
             }
             return currency;
         }

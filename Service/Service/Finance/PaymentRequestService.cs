@@ -95,13 +95,23 @@ namespace Service.Service
 
         public PaymentRequest ConfirmObject(PaymentRequest paymentRequest, DateTime ConfirmationDate, IPayableService _payableService,
                                             IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,
-                                            IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                            IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,IExchangeRateService _exchangeRateService)
         {
             paymentRequest.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
             {
                 // confirm object
                 // create payable
+                if (paymentRequest.Currency.IsBase == false)
+                {
+                    paymentRequest.ExchangeRateId = _exchangeRateService.GetLatestRate(paymentRequest.ConfirmationDate.Value, paymentRequest.CurrencyId).Id;
+                    paymentRequest.ExchangeRateAmount = _exchangeRateService.GetObjectById(paymentRequest.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    paymentRequest.ExchangeRateAmount = 1;
+                }
+
                 paymentRequest = _repository.ConfirmObject(paymentRequest);
                 Payable payable = new Payable()
                 {
@@ -130,6 +140,19 @@ namespace Service.Service
                 _payableService.DeleteObject(payable.Id);
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
             }
+            return paymentRequest;
+        }
+
+        public PaymentRequest CalculateTotalAmount(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService)
+        {
+            IList<PaymentRequestDetail> paymenRequestDetails = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
+            decimal total = 0;
+            foreach (PaymentRequestDetail detail in paymenRequestDetails)
+            {
+                total += detail.Amount;
+            }
+            paymentRequest.Amount = total;
+            paymentRequest = _repository.UpdateObject(paymentRequest);
             return paymentRequest;
         }
     }

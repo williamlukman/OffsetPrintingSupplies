@@ -69,7 +69,7 @@ namespace Service.Service
 
         public PurchaseInvoice ConfirmObject(PurchaseInvoice purchaseInvoice, DateTime ConfirmationDate, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseOrderService _purchaseOrderService,
                                              IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPayableService _payableService,
-                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,IExchangeRateService _exchangeRateService)
         {
             purchaseInvoice.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService))
@@ -83,15 +83,25 @@ namespace Service.Service
                     _purchaseInvoiceDetailService.ConfirmObject(detail, ConfirmationDate, _purchaseReceivalDetailService);
                 }
                 purchaseInvoice = CalculateAmountPayable(purchaseInvoice, _purchaseInvoiceDetailService);
+                purchaseInvoice = _repository.ConfirmObject(purchaseInvoice);
 
+                if (purchaseInvoice.Currency.IsBase == false)
+                {
+                    purchaseInvoice.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseInvoice.ConfirmationDate.Value, purchaseInvoice.CurrencyId).Id;
+                    purchaseInvoice.ExchangeRateAmount = _exchangeRateService.GetObjectById(purchaseInvoice.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    purchaseInvoice.ExchangeRateAmount = 1;
+                }
                 // confirm object
                 // create payable
+                purchaseInvoice = _repository.UpdateObject(purchaseInvoice);
                 _generalLedgerJournalService.CreateConfirmationJournalForPurchaseInvoice(purchaseInvoice, _accountService);
-                purchaseInvoice = _repository.ConfirmObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
-                Payable payable = _payableService.CreateObject(purchaseOrder.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id,purchaseInvoice.CurrencyId, purchaseInvoice.AmountPayable, purchaseInvoice.DueDate);
+                Payable payable = _payableService.CreateObject(purchaseOrder.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id,purchaseInvoice.CurrencyId, purchaseInvoice.AmountPayable,purchaseInvoice.ExchangeRateAmount, purchaseInvoice.DueDate);
             }
             return purchaseInvoice;
         }

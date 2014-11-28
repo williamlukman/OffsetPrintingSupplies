@@ -55,6 +55,10 @@ namespace Service.Service
                                             IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
             paymentVoucher.Errors = new Dictionary<String, String>();
+            if (_cashBankService.GetQueryable().Where(x => x.Id == paymentVoucher.CashBankId).FirstOrDefault().Currency.IsBase == true)
+            {
+                paymentVoucher.RateToIDR = 1;
+            }
             return (_validator.ValidCreateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService) ?
                     _repository.CreateObject(paymentVoucher) : paymentVoucher);
         }
@@ -79,6 +83,19 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
+        public PaymentVoucher CalculateTotalAmount(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        {
+            IList<PaymentVoucherDetail> paymentVoucherDetails = _paymentVoucherDetailService.GetObjectsByPaymentVoucherId(paymentVoucher.Id);
+            decimal total = 0;
+            foreach (PaymentVoucherDetail detail in paymentVoucherDetails)
+            {
+                total += detail.AmountPaid;
+            }
+            paymentVoucher.TotalAmount = total;
+            paymentVoucher = _repository.UpdateObject(paymentVoucher);
+            return paymentVoucher;
+        }
+
         public PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, DateTime ConfirmationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                             ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
@@ -94,14 +111,15 @@ namespace Service.Service
                 }
                 
                 _repository.ConfirmObject(paymentVoucher);
+                CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
 
                 if (!paymentVoucher.IsGBCH)
                 {
-                    CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                     CashMutation cashMutation = _cashMutationService.CreateCashMutationForPaymentVoucher(paymentVoucher, cashBank);
                     _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
-                    _generalLedgerJournalService.CreateConfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
                 }
+                _generalLedgerJournalService.CreateConfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService,_paymentVoucherDetailService);
+
             }
             return paymentVoucher;
         }
@@ -118,18 +136,18 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _paymentVoucherDetailService.UnconfirmObject(detail, this, _payableService);
                 }
-                _repository.UnconfirmObject(paymentVoucher);
-
+                CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                 if (!paymentVoucher.IsGBCH)
                 {
-                    CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                     IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForPaymentVoucher(paymentVoucher, cashBank);
                     foreach (var cashMutation in cashMutations)
                     {
                         _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                     }
-                    _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
                 }
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService,_paymentVoucherDetailService);
+                _repository.UnconfirmObject(paymentVoucher);
+
             }
             return paymentVoucher;
         }
@@ -143,7 +161,7 @@ namespace Service.Service
             {
                 CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForPaymentVoucher(paymentVoucher, cashBank);
-                _generalLedgerJournalService.CreateConfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
+                _generalLedgerJournalService.CreateReconcileJournalForPaymentVoucher(paymentVoucher, _accountService);
                 _repository.ReconcileObject(paymentVoucher);
 
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
@@ -171,7 +189,7 @@ namespace Service.Service
             if (_validator.ValidUnreconcileObject(paymentVoucher, _closingService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentVoucher(paymentVoucher, cashBank, _accountService);
+                _generalLedgerJournalService.CreateUnReconcileJournalForPaymentVoucher(paymentVoucher, _accountService);
                 _repository.UnreconcileObject(paymentVoucher);
 
                 IList<CashMutation> cashMutations = _cashMutationService.SoftDeleteCashMutationForPaymentVoucher(paymentVoucher, cashBank);

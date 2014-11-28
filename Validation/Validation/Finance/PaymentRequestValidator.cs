@@ -141,8 +141,6 @@ namespace Validation.Validation
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VHasNotBeenConfirmed(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
-            VDebitEqualCreditEqualAmount(paymentRequest, _paymentRequestDetailService);
-            if (!isValid(paymentRequest)) { return paymentRequest; }
             VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService, 1);
             return paymentRequest;
         }

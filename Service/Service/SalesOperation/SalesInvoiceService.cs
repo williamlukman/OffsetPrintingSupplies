@@ -96,6 +96,10 @@ namespace Service.Service
                     salesInvoice.ExchangeRateId = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value, salesInvoice.CurrencyId).Id;
                     salesInvoice.ExchangeRateAmount = _exchangeRateService.GetObjectById(salesInvoice.ExchangeRateId.Value).Rate;
                 }
+                else
+                {
+                    salesInvoice.ExchangeRateAmount = 1;
+                }
                 salesInvoice = _repository.UpdateObject(salesInvoice);
                 _generalLedgerJournalService.CreateConfirmationJournalForSalesInvoice(salesInvoice, _accountService,_exchangeRateService,_currencyService);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);

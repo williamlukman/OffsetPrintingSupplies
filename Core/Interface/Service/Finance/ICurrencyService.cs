@@ -25,6 +25,5 @@ namespace Core.Interface.Service
             , IPaymentVoucherService _paymentVoucherService, IReceiptVoucherService _receiptVoucherService);
         bool DeleteObject(int Id);
         bool IsNameDuplicated(Currency currency);
-        string GenerateAccountCode(IAccountService _accountService);
     }
 }

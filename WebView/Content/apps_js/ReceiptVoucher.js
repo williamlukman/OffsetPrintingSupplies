@@ -145,7 +145,7 @@
         $('#RateToIDR').removeAttr('disabled');
         $('#ExchangeRateAmount').removeAttr('disabled');
         $('#CurrencyId').removeAttr('disabled');
-        $('#ExchangeRateAmount').val(0);
+        $('#ExchangeRateAmount').numberbox('setValue', 0);
         $('#tabledetail_div').hide();
         $('#ReceiptDateDiv').show();
         $('#ReceiptDateDiv2').hide();
@@ -258,7 +258,7 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#CurrencyCashBank').val(result.currency);
+                            $('#CurrencyCashBank').val(result.currency);    
                             $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
                             $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -267,7 +267,6 @@
                             $('#ReceiptDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
-                            $('#form_btn_save').hide();
                             $('#CurrencyId').val(result.CurrencyId);
                             $('#RateToIDR').numberbox('setValue',result.RateToIDR);
                             $('#CurrencyId').removeAttr('disabled');
@@ -453,7 +452,11 @@
         $('#reconcile_div').dialog('close');
     });
 
-
+    $("#AmountPaid, #Rate").blur(function () {
+        var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
+        //total = Math.round(total * 100) / 100;
+        $('#Amount').numberbox('setValue', total);
+    });
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -569,15 +572,16 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Receivable Id', 'Receivable Code', 'Amount','Amount Base Currency', 'Description'
+        colNames: ['Id', 'Code', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'Description'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'receivableid', index: 'receivableid', width: 130, sortable: false, hidden: true },
                   { name: 'receivable', index: 'receivable', width: 110, sortable: false },
+                  { name: 'amountpaid', index: 'amountpaid', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'rate', index: 'rate', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'amountbasecurrency', index: 'amountbasecurrency', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
         //page: '1',
@@ -595,6 +599,7 @@
 		  function () {
 		  }
     });//END GRID Detail
+
     $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
@@ -602,7 +607,10 @@
         ClearData();
         clearForm('#item_div');
         $('#Amount').numberbox('clear');
-        $('#AmountBaseCurrency').numberbox('clear');
+        $('#AmountPaid').numberbox('clear');
+        $('#Rate').numberbox('clear');
+        $('#Remaining').numberbox('clear');
+        $('#Currency').text("");
         $('#item_div').dialog('open');
     });
 
@@ -631,8 +639,20 @@
                             $('#ReceivableId').val(result.ReceivableId);
                             $('#Receivable').val(result.Receivable);
                             $('#Amount').val(result.Amount);
+                            $('#Rate').numberbox('setValue', result.Rate);
+                            $('#AmountPaid').numberbox('setValue', result.AmountPaid);
+                            $('#Currency').text(result.currency);
+                            $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#ReceiptVoucherDetailId').val(result.ReceiptVoucherDetailId);
+                            if (result.currency == $('#CurrencyCashBank').val()) {
+                                $('#Rate').attr('disabled', true);
+                                $('#Rate').numberbox('setValue', result.Rate);
+                            }
+                            else {
+                                $('#Rate').removeAttr('disabled');
+                                $('#Rate').numberbox('setValue', result.Rate);
+                            }
                             $('#item_div').dialog('open');
                         }
                     }
@@ -670,6 +690,7 @@
                             }
                             else {
                                 ReloadGridDetail();
+                                $("#TotalAmount").numberbox('setValue', result.totalamount);
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -694,7 +715,7 @@
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
             submitURL = base_url + 'ReceiptVoucher/UpdateDetail';
         }
-            // Insert
+            // Insert 
         else {
             submitURL = base_url + 'ReceiptVoucher/InsertDetail';
         }
@@ -705,7 +726,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ReceiptVoucherId: $("#id").val(), ReceivableId: $("#ReceivableId").val(), Description: $("#Description").val(),
-                Amount: $("#Amount").numberbox('getValue'), AmountBaseCurrency: $("#AmountBaseCurrency").numberbox('getValue')
+                AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -727,6 +748,7 @@
                 }
                 else {
                     ReloadGridDetail();
+                    $("#TotalAmount").numberbox('setValue',result.totalamount);
                     $("#item_div").dialog('close')
                 }
             }
@@ -914,7 +936,16 @@
             var ret = jQuery("#lookup_table_receivable").jqGrid('getRowData', id);
             $('#ReceivableId').val(id);
             $('#Receivable').val(ret.code);
-            $('#Currency').val(ret.currency);
+            $('#Currency').text(ret.currency);
+            if (ret.currency == $('#CurrencyCashBank').val()) {
+                $('#Rate').attr('disabled', true);
+                $('#Rate').numberbox('setValue', 1);
+            }
+            else {
+                $('#Rate').removeAttr('disabled');
+                $('#Rate').numberbox('setValue', 1);
+            }
+            $('#Remaining').numberbox('setValue',ret.remainingamount);
             $('#lookup_div_receivable').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
