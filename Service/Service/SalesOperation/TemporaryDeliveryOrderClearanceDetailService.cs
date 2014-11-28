@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Constants;
 
 namespace Service.Service
 {
@@ -57,12 +58,10 @@ namespace Service.Service
         }
 
         public TemporaryDeliveryOrderClearanceDetail CreateObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                         IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                                         IDeliveryOrderService _deliveryOrderService, IItemService _itemService)
+                                                         ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
             temporaryDeliveryOrderClearanceDetail.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(temporaryDeliveryOrderClearanceDetail, this, _temporaryDeliveryOrderClearanceService, _virtualOrderDetailService,
-                                             _salesOrderDetailService, _deliveryOrderService,_itemService))
+            if (_validator.ValidCreateObject(temporaryDeliveryOrderClearanceDetail, this, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService))
             { 
                 _repository.CreateObject(temporaryDeliveryOrderClearanceDetail);
             }
@@ -70,11 +69,9 @@ namespace Service.Service
         }
 
         public TemporaryDeliveryOrderClearanceDetail UpdateObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                         IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                                         IDeliveryOrderService _deliveryOrderService, IItemService _itemService)
+                                                         ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
-            return (_validator.ValidUpdateObject(temporaryDeliveryOrderClearanceDetail, this, _temporaryDeliveryOrderClearanceService, _virtualOrderDetailService,
-                                                 _salesOrderDetailService, _deliveryOrderService, _itemService) ?
+            return (_validator.ValidUpdateObject(temporaryDeliveryOrderClearanceDetail, this, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService) ?
                     _repository.UpdateObject(temporaryDeliveryOrderClearanceDetail) : temporaryDeliveryOrderClearanceDetail);
         }
 
@@ -89,60 +86,81 @@ namespace Service.Service
         }
 
         public TemporaryDeliveryOrderClearanceDetail ConfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, DateTime ConfirmationDate, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                          IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                                          IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                          IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
             temporaryDeliveryOrderClearanceDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, this, _virtualOrderDetailService,
-                                              _salesOrderDetailService, _itemService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, this, _itemService, _warehouseItemService))
             {
-                temporaryDeliveryOrderClearanceDetail = _repository.ConfirmObject(temporaryDeliveryOrderClearanceDetail);
-
-                TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance = _temporaryDeliveryOrderClearanceService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId);    
-                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrderClearance.WarehouseId, temporaryDeliveryOrderClearanceDetail.ItemId);
-                Item item = _itemService.GetObjectById(temporaryDeliveryOrderClearanceDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderClearance(temporaryDeliveryOrderClearanceDetail, warehouseItem);
+                TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance = _temporaryDeliveryOrderClearanceService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId);
+                TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrderClearance.TemporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
+                Item item = _itemService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
+                IList<StockMutation> stockMutations = null;
+                if (temporaryDeliveryOrderClearance.IsWasted)
+                {
+                    // ready berkurang sejumlah waste
+                    // virtual berkurang sejumlah yang dikembalikan
+                    stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderClearanceWaste(temporaryDeliveryOrderClearanceDetail, ConfirmationDate, warehouseItem);
+                    temporaryDeliveryOrderClearanceDetail.WastedCoGS = temporaryDeliveryOrderClearanceDetail.Quantity * item.AvgPrice;
+                    temporaryDeliveryOrderDetail.WasteQuantity += temporaryDeliveryOrderClearanceDetail.Quantity;
+                }
+                else
+                {
+                    // virtual berkurang sejumlah yang dikembalikan
+                    stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderClearanceReturn(temporaryDeliveryOrderClearanceDetail, ConfirmationDate, warehouseItem);
+                    temporaryDeliveryOrderClearanceDetail.WastedCoGS = 0;
+                    temporaryDeliveryOrderDetail.RestockQuantity += temporaryDeliveryOrderClearanceDetail.Quantity;
+                }
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingDelivery -= temporaryDeliveryOrderClearanceDetail.Quantity;
                     //item.Quantity -= temporaryDeliveryOrderClearanceDetail.Quantity;
+                    //item.Virtual -= stockMutation.Quantity;
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
 
+                // update TDO Detail to keep track wasted/return quantity
+                _temporaryDeliveryOrderDetailService.GetRepository().UpdateObject(temporaryDeliveryOrderDetail);
+
+                temporaryDeliveryOrderClearanceDetail = _repository.ConfirmObject(temporaryDeliveryOrderClearanceDetail);
             }
             return temporaryDeliveryOrderClearanceDetail;
         }
 
         public TemporaryDeliveryOrderClearanceDetail UnconfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                            IVirtualOrderDetailService _virtualOrderDetailService, IVirtualOrderService _virtualOrderService,
-                                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                            IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
             if (_validator.ValidUnconfirmObject(temporaryDeliveryOrderClearanceDetail))
             {
+                temporaryDeliveryOrderClearanceDetail.WastedCoGS = 0;
                 temporaryDeliveryOrderClearanceDetail = _repository.UnconfirmObject(temporaryDeliveryOrderClearanceDetail);
                 TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance = _temporaryDeliveryOrderClearanceService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId);
-                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrderClearance.WarehouseId, temporaryDeliveryOrderClearanceDetail.ItemId);
-                Item item = _itemService.GetObjectById(temporaryDeliveryOrderClearanceDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrderClearance(temporaryDeliveryOrderClearanceDetail, warehouseItem);
+                TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrderClearance.TemporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
+                Item item = _itemService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
+                // jika waste, ready bertambah sejumlah waste & virtual bertambah sejumlah yang dikembalikan
+                // jika return, virtual bertambah sejumlah yang dikembalikan
+                IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, temporaryDeliveryOrderClearance.IsWasted ? Constant.SourceDocumentDetailType.TemporaryDeliveryOrderClearanceDetailWaste : Constant.SourceDocumentDetailType.TemporaryDeliveryOrderClearanceDetailReturn, temporaryDeliveryOrderClearanceDetail.Id);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingDelivery += temporaryDeliveryOrderClearanceDetail.Quantity;
                     //item.Quantity += temporaryDeliveryOrderClearanceDetail.Quantity;
+                    //item.Virtual += stockMutation.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
+                _stockMutationService.DeleteStockMutations(stockMutations);
 
-                if (temporaryDeliveryOrderClearance.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
-                    temporaryDeliveryOrderClearance.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder)
+                // update TDO Detail to keep track wasted/return quantity
+                if (temporaryDeliveryOrderClearance.IsWasted)
                 {
-                    VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderClearanceDetail.VirtualOrderDetailId);
-                    _virtualOrderDetailService.UnsetDeliveryComplete(virtualOrderDetail, temporaryDeliveryOrderClearanceDetail.Quantity, _virtualOrderService);
+                    temporaryDeliveryOrderDetail.WasteQuantity -= temporaryDeliveryOrderClearanceDetail.Quantity;
                 }
                 else
                 {
-                    SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById((int)temporaryDeliveryOrderClearanceDetail.SalesOrderDetailId);
-                    _salesOrderDetailService.UnsetDeliveryComplete(salesOrderDetail, temporaryDeliveryOrderClearanceDetail.Quantity, _salesOrderService);
+                    temporaryDeliveryOrderDetail.RestockQuantity -= temporaryDeliveryOrderClearanceDetail.Quantity;
                 }
+                _temporaryDeliveryOrderDetailService.GetRepository().UpdateObject(temporaryDeliveryOrderDetail);
+                
             }
             return temporaryDeliveryOrderClearanceDetail;
         }

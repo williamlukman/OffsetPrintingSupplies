@@ -17,21 +17,16 @@ namespace Core.Interface.Service
         TemporaryDeliveryOrderClearanceDetail GetObjectById(int Id);
         TemporaryDeliveryOrderClearanceDetail GetObjectByCode(string Code);
         IList<TemporaryDeliveryOrderClearanceDetail> GetObjectsByTemporaryDeliveryOrderDetailId(int temporaryDeliveryOrderDetailId);
-        TemporaryDeliveryOrderClearanceDetail CreateObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService, 
-                                                  IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                                  IDeliveryOrderService _deliveryOrderService, IItemService _itemService);
+        TemporaryDeliveryOrderClearanceDetail CreateObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
+                                                  ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrderClearanceDetail UpdateObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                  IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                                  IDeliveryOrderService _deliveryOrderService, IItemService _itemService);
+                                                  ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrderClearanceDetail SoftDeleteObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
         bool DeleteObject(int Id);
         TemporaryDeliveryOrderClearanceDetail ConfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, DateTime ConfirmationDate, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                  IVirtualOrderDetailService _virtualOrderDetailService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                                  IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                                  IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrderClearanceDetail UnconfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                  IVirtualOrderDetailService _virtualOrderDetailService, IVirtualOrderService _virtualOrderService,
-                                                  ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                                  IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                                  IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrderClearanceDetail ProcessObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
     }
 }

@@ -11,6 +11,7 @@ namespace Core.Interface.Service
     public interface ITemporaryDeliveryOrderDetailService
     {
         ITemporaryDeliveryOrderDetailValidator GetValidator();
+        ITemporaryDeliveryOrderDetailRepository GetRepository();
         IQueryable<TemporaryDeliveryOrderDetail> GetQueryable();
         IList<TemporaryDeliveryOrderDetail> GetAll();
         IList<TemporaryDeliveryOrderDetail> GetObjectsByTemporaryDeliveryOrderId(int temporaryDeliveryOrderId);

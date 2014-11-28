@@ -52,6 +52,7 @@ namespace Core.Interface.Validation
         bool ValidAdjustQuantity(Item item);
         bool ValidAdjustPendingDelivery(Item item);
         bool ValidAdjustPendingReceival(Item item);
+        bool ValidAdjustVirtual(Item item);
         //bool ValidOnTrial(Item item);
         //bool ValidReturnOnTrial(Item item);
         bool isValid(Item item);

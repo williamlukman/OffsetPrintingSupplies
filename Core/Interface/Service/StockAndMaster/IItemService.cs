@@ -36,9 +36,11 @@ namespace Core.Interface.Service
                                     IStockAdjustmentDetailService _stockAdjustmentDetailService, ISalesOrderDetailService _salesOrderDetailService,
                                     IPriceMutationService _priceMutationService, IBlanketOrderDetailService _blanketOrderDetailService);
         Item AdjustCustomerQuantity(Item item, int quantity);
+        //Item AdjustCustomerVirtual(Item item, int quantity);
         Item AdjustQuantity(Item item, int quantity);
         Item AdjustPendingReceival(Item item, int quantity);
         Item AdjustPendingDelivery(Item item, int quantity);
+        Item AdjustVirtual(Item item, int quantity);
         //Item OnTrial(Item item, int quantity);
         //Item ReturnTrial(Item item, int quantity);
         decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice);

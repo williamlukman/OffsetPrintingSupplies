@@ -60,7 +60,7 @@ namespace Data.Repository
             string ParentCode = ""; 
             using (var db = GetContext())
             {
-                ParentCode = (from obj in db.DeliveryOrders
+                ParentCode = (from obj in db.TemporaryDeliveryOrderClearances
                               where obj.Id == temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId
                               select obj.Code).FirstOrDefault();
             }

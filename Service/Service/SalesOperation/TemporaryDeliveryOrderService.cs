@@ -108,9 +108,9 @@ namespace Service.Service
                                                       IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                                       ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                       IStockMutationService _stockMutationService, IItemService _itemService,
-                                                      IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                      IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService)
         {
-            if (_validator.ValidUnconfirmObject(temporaryDeliveryOrder))
+            if (_validator.ValidUnconfirmObject(temporaryDeliveryOrder, _temporaryDeliveryOrderClearanceService))
             {
                 IList<TemporaryDeliveryOrderDetail> temporaryDeliveryOrderDetails = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
                 foreach (var detail in temporaryDeliveryOrderDetails)

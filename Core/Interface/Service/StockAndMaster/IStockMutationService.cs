@@ -24,6 +24,7 @@ namespace Core.Interface.Service
          StockMutation SoftDeleteObject(StockMutation stockMutation, IWarehouseService _warehouseService, IWarehouseItemService _warehouseItemService, IItemService _itemService, IBlanketService _blanketService);
          bool DeleteObject(int Id);
          StockMutation CreateStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item);
+         int DeleteStockMutations(IList<StockMutation> stockMutations); 
          IList<StockMutation> DeleteStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item);
          IList<StockMutation> CreateStockMutationForPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, WarehouseItem warehouseItem);
          IList<StockMutation> DeleteStockMutationForPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, WarehouseItem warehouseItem);
@@ -39,6 +40,10 @@ namespace Core.Interface.Service
          IList<StockMutation> DeleteStockMutationForTemporaryDeliveryOrderWaste(TemporaryDeliveryOrderDetail deliveryOrderDetail, WarehouseItem warehouseItem);
          IList<StockMutation> CreateStockMutationForTemporaryDeliveryOrderRestock(TemporaryDeliveryOrderDetail deliveryOrderDetail, DateTime PushDate, WarehouseItem warehouseItem);
          IList<StockMutation> DeleteStockMutationForTemporaryDeliveryOrderRestock(TemporaryDeliveryOrderDetail deliveryOrderDetail, WarehouseItem warehouseItem);
+         IList<StockMutation> CreateStockMutationForTemporaryDeliveryOrderClearanceWaste(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, DateTime PushDate, WarehouseItem warehouseItem);
+         IList<StockMutation> DeleteStockMutationForTemporaryDeliveryOrderClearanceWaste(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, WarehouseItem warehouseItem);
+         IList<StockMutation> CreateStockMutationForTemporaryDeliveryOrderClearanceReturn(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, DateTime PushDate, WarehouseItem warehouseItem);
+         IList<StockMutation> DeleteStockMutationForTemporaryDeliveryOrderClearanceReturn(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem);
          IList<StockMutation> DeleteStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, WarehouseItem warehouseItem);

@@ -225,6 +225,12 @@ namespace Service.Service
             return (item = _validator.ValidAdjustCustomerQuantity(item) ? _repository.UpdateObject(item) : item);
         }
 
+        //public Item AdjustCustomerVirtual(Item item, int quantity)
+        //{
+        //    item.CustomerVirtual += quantity;
+        //    return (item = _validator.ValidAdjustCustomerVirtual(item) ? _repository.UpdateObject(item) : item);
+        //}
+
         public Item AdjustQuantity(Item item, int quantity)
         {
             item.Quantity += quantity;
@@ -241,6 +247,12 @@ namespace Service.Service
         {
             item.PendingDelivery += quantity;
             return (item = _validator.ValidAdjustPendingDelivery(item) ? _repository.UpdateObject(item) : item);
+        }
+
+        public Item AdjustVirtual(Item item, int quantity)
+        {
+            item.Virtual += quantity;
+            return (item = _validator.ValidAdjustVirtual(item) ? _repository.UpdateObject(item) : item);
         }
 
         public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)

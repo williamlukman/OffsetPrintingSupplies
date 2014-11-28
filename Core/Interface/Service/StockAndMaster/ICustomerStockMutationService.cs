@@ -22,6 +22,7 @@ namespace Core.Interface.Service
          CustomerStockMutation UpdateObject(CustomerStockMutation customerStockMutation, ICustomerItemService _customerItemService, IItemService _itemService);
          CustomerStockMutation SoftDeleteObject(CustomerStockMutation customerStockMutation, ICustomerItemService _customerItemService);
          bool DeleteObject(int Id);
+         int DeleteCustomerStockMutations(IList<CustomerStockMutation> customerStockMutations);
          //CustomerStockMutation CreateCustomerStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item);
          //IList<CustomerStockMutation> CreateCustomerStockMutationForPurchaseReceival(PurchaseReceivalDetail purchaseReceivalDetail, CustomerItem customerItem);

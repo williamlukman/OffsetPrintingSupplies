@@ -14,7 +14,7 @@ namespace Core.DomainModel
         //public int WarehouseId { get; set; }
         //public string NomorSurat { get; set; }
 
-        public decimal TotalWasteCOGS { get; set; }
+        public decimal TotalWastedCoGS { get; set; }
 
         public bool IsWasted { get; set; } // ClearanceType
         public bool IsConfirmed { get; set; }

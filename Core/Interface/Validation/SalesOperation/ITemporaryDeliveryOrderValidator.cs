@@ -28,14 +28,14 @@ namespace Core.Interface.Validation
         TemporaryDeliveryOrder VUpdateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService);
         TemporaryDeliveryOrder VDeleteObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrder VConfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
-        TemporaryDeliveryOrder VUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        TemporaryDeliveryOrder VUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService);
         TemporaryDeliveryOrder VPushObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IClosingService _closingService,
                                            IDeliveryOrderService _deliveryOrderService);
         bool ValidCreateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService);
         bool ValidUpdateObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, IVirtualOrderService _virtualOrderService, IDeliveryOrderService _deliveryOrderService, IWarehouseService _warehouseService);
         bool ValidDeleteObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         bool ValidConfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
-        bool ValidUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder);
+        bool ValidUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService);
         bool ValidPushObject(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IClosingService _closingService,
                              IDeliveryOrderService _deliveryOrderService);
         bool isValid(TemporaryDeliveryOrder temporaryDeliveryOrder);

@@ -29,6 +29,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual ICollection<TemporaryDeliveryOrderDetail> TemporaryDeliveryOrderDetails { get; set; }
+        public virtual ICollection<TemporaryDeliveryOrderClearance> TemporaryDeliveryOrderClearances { get; set; }
         public virtual VirtualOrder VirtualOrder { get; set; }
         public virtual DeliveryOrder DeliveryOrder { get; set; }
         public Dictionary<String, String> Errors { get; set; }

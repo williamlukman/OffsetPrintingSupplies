@@ -13,9 +13,9 @@ using System.Data.Entity;
 
 namespace WebView.Controllers
 {
-    public class TemporaryDeliveryOrderController : Controller
+    public class TemporaryDeliveryOrderClearanceController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("TemporaryDeliveryOrderController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("TemporaryDeliveryOrderClearanceController");
         private IItemService _itemService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
@@ -26,8 +26,8 @@ namespace WebView.Controllers
         private IDeliveryOrderDetailService _deliveryOrderDetailService;
         private IVirtualOrderDetailService _virtualOrderDetailService;
         private IVirtualOrderService _virtualOrderService;
-        private ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
-        private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
+        private ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService;
+        private ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService;
         private ISalesInvoiceService _salesInvoiceService;
         private ISalesInvoiceDetailService _salesInvoiceDetailService;
         private IWarehouseService _warehouseService;
@@ -38,9 +38,10 @@ namespace WebView.Controllers
         private IContactService _contactService;
         private ISalesQuotationDetailService _salesQuotationDetailService;
         private ISalesQuotationService _salesQuotationService;
-        private ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService;
+        private ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
+        private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
 
-        public TemporaryDeliveryOrderController()
+        public TemporaryDeliveryOrderClearanceController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
@@ -52,8 +53,8 @@ namespace WebView.Controllers
             _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
             _virtualOrderDetailService = new VirtualOrderDetailService(new VirtualOrderDetailRepository(), new VirtualOrderDetailValidator());
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
-            _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
-            _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
+            _temporaryDeliveryOrderClearanceService = new TemporaryDeliveryOrderClearanceService(new TemporaryDeliveryOrderClearanceRepository(), new TemporaryDeliveryOrderClearanceValidator());
+            _temporaryDeliveryOrderClearanceDetailService = new TemporaryDeliveryOrderClearanceDetailService(new TemporaryDeliveryOrderClearanceDetailRepository(), new TemporaryDeliveryOrderClearanceDetailValidator());
             _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
             _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
@@ -64,7 +65,8 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
             _salesQuotationDetailService = new SalesQuotationDetailService(new SalesQuotationDetailRepository(), new SalesQuotationDetailValidator());
-            _temporaryDeliveryOrderClearanceService = new TemporaryDeliveryOrderClearanceService(new TemporaryDeliveryOrderClearanceRepository(), new TemporaryDeliveryOrderClearanceValidator());
+            _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
+            _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
         }
 
         public ActionResult Index()
@@ -81,28 +83,20 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _temporaryDeliveryOrderService.GetQueryable().Include("VirtualOrder").Include("Warehouse")
-                                                                 .Include("DeliveryOrder").Where(x => !x.IsDeleted);
+            var q = _temporaryDeliveryOrderClearanceService.GetQueryable().Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
-                             model.NomorSurat,
-                             model.OrderType,
-                             model.VirtualOrderId,
-                             VirtualOrderCode = model.VirtualOrder.Code,
-                             model.DeliveryOrderId,
-                             DeliveryOrderCode = model.DeliveryOrder.Code,
-                             OrderId = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrderId : model.VirtualOrderId,
-                             OrderCode = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrder.Code : model.VirtualOrder.Code,
-                             model.WarehouseId,
-                             Warehouse = model.Warehouse.Name,
-                             model.DeliveryDate,
+                             model.TemporaryDeliveryOrderId,
+                             TemporaryDeliveryOrder = model.TemporaryDeliveryOrder.Code,
+                             model.IsWasted,
+                             model.TotalWastedCoGS,
                              model.IsConfirmed,
                              model.ConfirmationDate,
-                             model.IsReconciled,
+                             model.ClearanceDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -138,16 +132,13 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.NomorSurat,
-                            model.OrderType,
-                            model.OrderId,
-                            model.OrderCode,
-                            model.WarehouseId,
-                            model.Warehouse,
-                            model.DeliveryDate,
+                            model.TemporaryDeliveryOrderId,
+                            model.TemporaryDeliveryOrder,
+                            model.IsWasted,
+                            model.TotalWastedCoGS,
                             model.IsConfirmed,
                             model.ConfirmationDate,
-                            model.IsReconciled,
+                            model.ClearanceDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -164,26 +155,20 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _temporaryDeliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse").Where(x => !x.IsDeleted && x.IsConfirmed);
+            var q = _temporaryDeliveryOrderClearanceService.GetQueryable().Where(x => !x.IsDeleted && x.IsConfirmed);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
-                             model.NomorSurat,
-                             model.OrderType,
-                             model.VirtualOrderId,
-                             VirtualOrderCode = model.VirtualOrder.Code,
-                             model.DeliveryOrderId,
-                             DeliveryOrderCode = model.DeliveryOrder.Code,
-                             OrderId = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrderId : model.VirtualOrderId,
-                             OrderCode = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrder.Code : model.VirtualOrder.Code,
-                             model.WarehouseId,
-                             Warehouse = model.Warehouse.Name,
-                             model.DeliveryDate,
+                             model.TemporaryDeliveryOrderId,
+                             TemporaryDeliveryOrder = model.TemporaryDeliveryOrder.Code,
+                             model.IsWasted,
+                             model.TotalWastedCoGS,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.ClearanceDate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -219,15 +204,13 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.NomorSurat,
-                            model.OrderType,
-                            model.OrderId,
-                            model.OrderCode,
-                            model.WarehouseId,
-                            model.Warehouse,
-                            model.DeliveryDate,
+                            model.TemporaryDeliveryOrderId,
+                            model.TemporaryDeliveryOrder,
+                            model.IsWasted,
+                            model.TotalWastedCoGS,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.ClearanceDate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -244,28 +227,22 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _temporaryDeliveryOrderDetailService.GetQueryable().Include("TemporaryDeliveryOrder").Include("VirtualOrderDetail")
-                                                                       .Include("SalesOrderDetail").Include("Item").Where(x => !x.IsDeleted && x.TemporaryDeliveryOrderId == id);
+            var q = _temporaryDeliveryOrderClearanceDetailService.GetQueryable().Where(x => !x.IsDeleted && x.TemporaryDeliveryOrderClearanceId == id);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
-                             model.TemporaryDeliveryOrder.OrderType,
-                             model.VirtualOrderDetailId,
-                             VirtualOrderDetailCode = model.VirtualOrderDetail.Code,
-                             model.SalesOrderDetailId,
-                             SalesOrderDetailCode = model.SalesOrderDetail.Code,
-                             OrderDetailId = (model.TemporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.SalesOrderDetailId : model.VirtualOrderDetailId,
-                             OrderDetailCode = (model.TemporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.SalesOrderDetail.Code : model.VirtualOrderDetail.Code,
-                             model.ItemId,
-                             ItemSku = model.Item.Sku,
-                             Item = model.Item.Name,
+                             model.TemporaryDeliveryOrderDetailId,
+                             TemporaryDeliveryOrderDetail = model.TemporaryDeliveryOrderDetail.Code,
+                             model.TemporaryDeliveryOrderDetail.ItemId,
+                             ItemSku = model.TemporaryDeliveryOrderDetail.Item.Sku,
+                             Item = model.TemporaryDeliveryOrderDetail.Item.Name,
                              model.Quantity,
-                             model.RestockQuantity,
-                             model.WasteQuantity,
-                             Price = (model.TemporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.SalesOrderDetail.Price : model.VirtualOrderDetail.Price,
+                             model.WastedCoGS,
+                             model.CreatedAt,
+                             model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -299,15 +276,13 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
-                            model.OrderDetailId,
-                            model.OrderDetailCode,
+                            model.TemporaryDeliveryOrderDetailId,
+                            model.TemporaryDeliveryOrderDetail,
                             model.ItemId,
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
-                            model.RestockQuantity,
-                            model.WasteQuantity,
-                            model.Price,
+                            model.WastedCoGS,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -316,10 +291,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            TemporaryDeliveryOrder model = new TemporaryDeliveryOrder();
+            TemporaryDeliveryOrderClearance model = new TemporaryDeliveryOrderClearance();
             try
             {
-                model = _temporaryDeliveryOrderService.GetObjectById(Id);
+                model = _temporaryDeliveryOrderClearanceService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -331,26 +306,23 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                model.NomorSurat,
-                model.OrderType,
-                OrderId = model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
-                          model.DeliveryOrderId : model.VirtualOrderId,
-                OrderCode = model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
-                          _deliveryOrderService.GetObjectById((int) model.DeliveryOrderId).Code : _virtualOrderService.GetObjectById((int) model.VirtualOrderId).Code,
-                model.DeliveryDate,
-                model.WarehouseId,
-                Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
-                ConfirmationDate = model.ConfirmationDate,
+                model.TemporaryDeliveryOrderId,
+                TemporaryDeliveryOrder = model.TemporaryDeliveryOrder.Code,
+                model.IsWasted,
+                model.TotalWastedCoGS,
+                model.IsConfirmed,
+                model.ConfirmationDate,
+                model.ClearanceDate,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         public dynamic GetInfoDetail(int Id)
         {
-            TemporaryDeliveryOrderDetail model = new TemporaryDeliveryOrderDetail();
+            TemporaryDeliveryOrderClearanceDetail model = new TemporaryDeliveryOrderClearanceDetail();
             try
             {
-                model = _temporaryDeliveryOrderDetailService.GetObjectById(Id);
+                model = _temporaryDeliveryOrderClearanceDetailService.GetObjectById(Id);
 
             }
             catch (Exception ex)
@@ -363,28 +335,23 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
-                OrderDetailId = _temporaryDeliveryOrderService.GetObjectById(model.TemporaryDeliveryOrderId).OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
-                                model.SalesOrderDetailId : model.VirtualOrderDetailId,
-                OrderDetailCode = _temporaryDeliveryOrderService.GetObjectById(model.TemporaryDeliveryOrderId).OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
-                                _salesOrderDetailService.GetObjectById((int) model.SalesOrderDetailId).Code : _virtualOrderDetailService.GetObjectById((int) model.VirtualOrderDetailId).Code,
-                model.ItemId,
-                ItemSku = _itemService.GetObjectById(model.ItemId).Sku,
-                Item = _itemService.GetObjectById(model.ItemId).Name,
+                model.TemporaryDeliveryOrderDetailId,
+                TemporaryDeliveryOrderDetail = model.TemporaryDeliveryOrderDetail.Code,
+                model.TemporaryDeliveryOrderDetail.ItemId,
+                ItemSku = model.TemporaryDeliveryOrderDetail.Item.Sku,
+                Item = model.TemporaryDeliveryOrderDetail.Item.Name,
                 model.Quantity,
-                model.RestockQuantity,
-                model.WasteQuantity,
-                Price = _temporaryDeliveryOrderService.GetObjectById(model.TemporaryDeliveryOrderId).OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
-                        _salesOrderDetailService.GetObjectById((int) model.SalesOrderDetailId).Price : _virtualOrderDetailService.GetObjectById((int) model.VirtualOrderDetailId).Price,
+                model.WastedCoGS,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public dynamic Insert(TemporaryDeliveryOrder model)
+        public dynamic Insert(TemporaryDeliveryOrderClearance model)
         {
             try
             {
-                model = _temporaryDeliveryOrderService.CreateObject(model, _virtualOrderService, _deliveryOrderService, _warehouseService);
+                model = _temporaryDeliveryOrderClearanceService.CreateObject(model, _temporaryDeliveryOrderService);
             }
             catch (Exception ex)
             {
@@ -399,11 +366,11 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic InsertDetail(TemporaryDeliveryOrderDetail model)
+        public dynamic InsertDetail(TemporaryDeliveryOrderClearanceDetail model)
         {
             try
             {
-                model = _temporaryDeliveryOrderDetailService.CreateObject(model, _temporaryDeliveryOrderService, _virtualOrderDetailService, _salesOrderDetailService, _deliveryOrderService, _itemService);
+                model = _temporaryDeliveryOrderClearanceDetailService.CreateObject(model, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
             }
             catch (Exception ex)
             {
@@ -418,17 +385,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(TemporaryDeliveryOrder model)
+        public dynamic Update(TemporaryDeliveryOrderClearance model)
         {
             try
             {
-                var data = _temporaryDeliveryOrderService.GetObjectById(model.Id);
-                data.VirtualOrderId = model.VirtualOrderId;
-                data.DeliveryOrderId = model.DeliveryOrderId;
-                data.DeliveryDate = model.DeliveryDate;
-                data.WarehouseId = model.WarehouseId;
-                data.NomorSurat = model.NomorSurat;
-                model = _temporaryDeliveryOrderService.UpdateObject(data, _virtualOrderService, _deliveryOrderService, _warehouseService);
+                var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
+                data.TemporaryDeliveryOrderId = model.TemporaryDeliveryOrderId;
+                data.ClearanceDate = model.ClearanceDate;
+                data.IsWasted = model.IsWasted;
+                model = _temporaryDeliveryOrderClearanceService.UpdateObject(data, _temporaryDeliveryOrderService);
             }
             catch (Exception ex)
             {
@@ -443,12 +408,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Delete(TemporaryDeliveryOrder model)
+        public dynamic Delete(TemporaryDeliveryOrderClearance model)
         {
             try
             {
-                var data = _temporaryDeliveryOrderService.GetObjectById(model.Id);
-                model = _temporaryDeliveryOrderService.SoftDeleteObject(data, _temporaryDeliveryOrderDetailService);
+                var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
+                model = _temporaryDeliveryOrderClearanceService.SoftDeleteObject(data, _temporaryDeliveryOrderClearanceDetailService);
             }
             catch (Exception ex)
             {
@@ -463,12 +428,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic DeleteDetail(TemporaryDeliveryOrderDetail model)
+        public dynamic DeleteDetail(TemporaryDeliveryOrderClearanceDetail model)
         {
             try
             {
-                var data = _temporaryDeliveryOrderDetailService.GetObjectById(model.Id);
-                model = _temporaryDeliveryOrderDetailService.SoftDeleteObject(data);
+                var data = _temporaryDeliveryOrderClearanceDetailService.GetObjectById(model.Id);
+                model = _temporaryDeliveryOrderClearanceDetailService.SoftDeleteObject(data);
             }
             catch (Exception ex)
             {
@@ -483,19 +448,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UpdateDetail(TemporaryDeliveryOrderDetail model)
+        public dynamic UpdateDetail(TemporaryDeliveryOrderClearanceDetail model)
         {
             try
             {
-                var data = _temporaryDeliveryOrderDetailService.GetObjectById(model.Id);
-                data.SalesOrderDetailId = model.SalesOrderDetailId;
-                data.VirtualOrderDetailId = model.VirtualOrderDetailId;
-                data.ItemId = model.ItemId;
+                var data = _temporaryDeliveryOrderClearanceDetailService.GetObjectById(model.Id);
+                data.TemporaryDeliveryOrderDetailId = model.TemporaryDeliveryOrderDetailId;
                 data.Quantity = model.Quantity;
-                data.WasteQuantity = model.WasteQuantity;
-                data.RestockQuantity = model.RestockQuantity;
-                model = _temporaryDeliveryOrderDetailService.UpdateObject(data, _temporaryDeliveryOrderService, _virtualOrderDetailService, 
-                                                                          _salesOrderDetailService, _deliveryOrderService, _itemService);
+                model = _temporaryDeliveryOrderClearanceDetailService.UpdateObject(data, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
             }
             catch (Exception ex)
             {
@@ -510,14 +470,13 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic ProcessDetail(TemporaryDeliveryOrderDetail model)
+        public dynamic ProcessDetail(TemporaryDeliveryOrderClearanceDetail model)
         {
             try
             {
-                var data = _temporaryDeliveryOrderDetailService.GetObjectById(model.Id);
-                data.WasteQuantity = model.WasteQuantity;
-                data.RestockQuantity = model.RestockQuantity;
-                model = _temporaryDeliveryOrderDetailService.ProcessObject(data);
+                var data = _temporaryDeliveryOrderClearanceDetailService.GetObjectById(model.Id);
+                data.Quantity = model.Quantity;
+                model = _temporaryDeliveryOrderClearanceDetailService.ProcessObject(data);
             }
             catch (Exception ex)
             {
@@ -532,14 +491,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Confirm(TemporaryDeliveryOrder model)
+        public dynamic Confirm(TemporaryDeliveryOrderClearance model)
         {
             try
             {
-                var data = _temporaryDeliveryOrderService.GetObjectById(model.Id);
-                model = _temporaryDeliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _temporaryDeliveryOrderDetailService,
-                        _virtualOrderService, _virtualOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _salesOrderDetailService,
-                        _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+                var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
+                model = _temporaryDeliveryOrderClearanceService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), _temporaryDeliveryOrderClearanceDetailService,
+                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService, 
+                        _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)
             {
@@ -554,15 +513,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UnConfirm(TemporaryDeliveryOrder model)
+        public dynamic UnConfirm(TemporaryDeliveryOrderClearance model)
         {
             try
             {
 
-                var data = _temporaryDeliveryOrderService.GetObjectById(model.Id);
-                model = _temporaryDeliveryOrderService.UnconfirmObject(data, _temporaryDeliveryOrderDetailService, _virtualOrderService, _virtualOrderDetailService,
-                        _deliveryOrderService, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
-                        _blanketService, _warehouseItemService, _temporaryDeliveryOrderClearanceService);
+                var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
+                model = _temporaryDeliveryOrderClearanceService.UnconfirmObject(data, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+                        _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)
             {
@@ -576,26 +534,6 @@ namespace WebView.Controllers
             });
         }
 
-        [HttpPost]
-        public dynamic Push(TemporaryDeliveryOrder model)
-        {
-            try
-            {
-                var data = _temporaryDeliveryOrderService.GetObjectById(model.Id);
-                model = _temporaryDeliveryOrderService.PushObject(data, model.ConfirmationDate.Value, _temporaryDeliveryOrderDetailService, _virtualOrderService, _virtualOrderDetailService,
-                        _salesOrderService, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _itemService, _stockMutationService, _contactService, _blanketService,
-                        _warehouseService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService, _salesQuotationService, _salesQuotationDetailService);
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Push to DO Failed", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Errors
-            });
-        }
+        
     }
 }

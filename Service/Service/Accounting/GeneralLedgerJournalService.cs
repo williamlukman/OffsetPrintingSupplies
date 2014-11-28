@@ -1443,6 +1443,76 @@ namespace Service.Service
             return journals;
             #endregion
         }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForTemporaryDeliveryOrderClearanceWaste(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, IAccountService _accountService)
+        {
+            // Credit Raw (Inventory), Debit SampleAndTrialExpense (SalesExpense)
+            #region Credit Raw , Debit SampleAndTrialExpense
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = temporaryDeliveryOrderClearance.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+            };
+            creditraw = CreateObject(creditraw, _accountService);
+
+            GeneralLedgerJournal debitsampleandtrialexpense = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SampleAndTrialExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = temporaryDeliveryOrderClearance.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+            };
+            debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
+
+            journals.Add(creditraw);
+            journals.Add(debitsampleandtrialexpense);
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForTemporaryDeliveryOrderClearanceWaste(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, IAccountService _accountService)
+        {
+            // Debit Raw (Inventory), Credit SampleAndTrialExpense (SalesExpense)
+            #region Debit Raw , Credit SampleAndTrialExpense
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            DateTime UnconfirmDate = DateTime.Now;
+
+            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = UnconfirmDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+            };
+            debitraw = CreateObject(debitraw, _accountService);
+
+            GeneralLedgerJournal creditsampleandtrialexpense = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SampleAndTrialExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = UnconfirmDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+            };
+            creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
+
+            journals.Add(debitraw);
+            journals.Add(creditsampleandtrialexpense);
+            return journals;
+            #endregion
+        }
         
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, IAccountService _accountService,IExchangeRateService _exchangeRateService,ICurrencyService _currencyService)
         {

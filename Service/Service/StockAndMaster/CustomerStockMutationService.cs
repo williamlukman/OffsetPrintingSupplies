@@ -82,6 +82,16 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
+        public int DeleteCustomerStockMutations(IList<CustomerStockMutation> customerStockMutations)
+        {
+            int count = 0;
+            foreach (var customerStockMutation in customerStockMutations)
+            {
+                count += _repository.Delete(customerStockMutation);
+            }
+            return count;
+        }
+
         //public CustomerStockMutation CreateCustomerStockMutationForPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, Item item)
         //{
         //    CustomerStockMutation customerStockMutation = new CustomerStockMutation();
@@ -664,6 +674,10 @@ namespace Service.Service
                 {
                     _itemService.AdjustPendingReceival(item, Quantity);
                 }
+                //else if (customerStockMutation.ItemCase == Constant.ItemCase.Virtual)
+                //{
+                //    _itemService.AdjustCustomerVirtual(item, Quantity);
+                //}
             }
         }
 
@@ -693,6 +707,10 @@ namespace Service.Service
                 { 
                     _itemService.AdjustPendingReceival(item, Quantity); 
                 }
+                //else if (customerStockMutation.ItemCase == Constant.ItemCase.Virtual)
+                //{
+                //    _itemService.AdjustCustomerVirtual(item, Quantity);
+                //}
             }
         }
 

@@ -155,12 +155,12 @@ namespace Service.Service
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
                     WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
                     CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
-                    IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.GetObjectsByCustomerItemId(customerItem.Id);
+                    IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.CoreIdentificationDetail, coreIdentificationDetail.Id);
                     foreach (var customerStockMutation in customerStockMutations)
                     {
                         _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
-                    _customerStockMutationService.DeleteCustomerStockMutationForCoreIdentification(coreIdentificationDetail, customerItem);
+                    _customerStockMutationService.DeleteCustomerStockMutations(customerStockMutations);
                 }
                 _repository.UnconfirmObject(coreIdentificationDetail);
             }

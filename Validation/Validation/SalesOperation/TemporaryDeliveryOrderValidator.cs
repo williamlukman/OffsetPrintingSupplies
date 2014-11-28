@@ -101,6 +101,16 @@ namespace Validation.Validation
             return temporaryDeliveryOrder;
         }
 
+        public TemporaryDeliveryOrder VHasNoTemporaryDeliveryOrderClearance(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService)
+        {
+            IList<TemporaryDeliveryOrderClearance> clearances = _temporaryDeliveryOrderClearanceService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
+            if (clearances.Any())
+            {
+                temporaryDeliveryOrder.Errors.Add("Generic", "Masih memiliki Temporary delivery order clearance");
+            }
+            return temporaryDeliveryOrder;
+        }
+
         public TemporaryDeliveryOrder VVirtualOrderHasBeenConfirmed(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService)
         {
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
@@ -223,9 +233,11 @@ namespace Validation.Validation
             return temporaryDeliveryOrder;
         }
 
-        public TemporaryDeliveryOrder VUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder)
+        public TemporaryDeliveryOrder VUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService)
         {
             VHasBeenConfirmed(temporaryDeliveryOrder);
+            if (!isValid(temporaryDeliveryOrder)) { return temporaryDeliveryOrder; }
+            VHasNoTemporaryDeliveryOrderClearance(temporaryDeliveryOrder, _temporaryDeliveryOrderClearanceService);
             return temporaryDeliveryOrder;
         }
 
@@ -269,10 +281,10 @@ namespace Validation.Validation
             return isValid(temporaryDeliveryOrder);
         }
 
-        public bool ValidUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder)
+        public bool ValidUnconfirmObject(TemporaryDeliveryOrder temporaryDeliveryOrder, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService)
         {
             temporaryDeliveryOrder.Errors.Clear();
-            VUnconfirmObject(temporaryDeliveryOrder);
+            VUnconfirmObject(temporaryDeliveryOrder, _temporaryDeliveryOrderClearanceService);
             return isValid(temporaryDeliveryOrder);
         }
 

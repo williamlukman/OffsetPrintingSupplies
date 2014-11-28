@@ -48,6 +48,7 @@ namespace Core.Constants
             public static string SalesAllowance = "SalesAllowance";
             public static string SalesOrder = "SalesOrder";
             public static string TemporaryDeliveryOrder = "TemporaryDeliveryOrder";
+            public static string TemporaryDeliveryOrderClearance = "TemporaryDeliveryOrderClearance";
             public static string StockAdjustment = "StockAdjustment";
             public static string VirtualOrder = "VirtualOrder";
             public static string WarehouseMutation = "WarehouseMutation";
@@ -68,8 +69,11 @@ namespace Core.Constants
             public static string SalesOrderDetail = "SalesOrderDetail";
             public static string VirtualOrderDetail = "VirtualOrderDetail";
             public static string TemporaryDeliveryOrderDetail = "TemporaryDeliveryOrderDetail";
+            public static string TemporaryDeliveryOrderDetailClearance = "TemporaryDeliveryOrderDetailClearance";
             public static string TemporaryDeliveryOrderDetailWaste = "TemporaryDeliveryOrderDetailWaste";
             public static string TemporaryDeliveryOrderDetailRestock = "TemporaryDeliveryOrderDetailRestock";
+            public static string TemporaryDeliveryOrderClearanceDetailWaste = "TemporaryDeliveryOrderClearanceDetailWaste";
+            public static string TemporaryDeliveryOrderClearanceDetailReturn = "TemporaryDeliveryOrderClearanceDetailReturn";
             public static string StockAdjustmentDetail = "StockAdjustmentDetail";
             public static string WarehouseMutationDetail = "WarehouseMutationDetail";
         }
