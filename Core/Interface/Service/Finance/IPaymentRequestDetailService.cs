@@ -18,7 +18,7 @@ namespace Core.Interface.Service
         PaymentRequestDetail GetObjectById(int Id);
         PaymentRequestDetail CreateObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IAccountService _accountService);
         PaymentRequestDetail UpdateObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IAccountService _accountService);
-        PaymentRequestDetail SoftDeleteObject(PaymentRequestDetail paymentRequestDetail);
+        PaymentRequestDetail SoftDeleteObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService);
         bool DeleteObject(int Id);
         PaymentRequestDetail CreateLegacyObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IAccountService _accountService);
         PaymentRequestDetail UpdateLegacyObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IAccountService _accountService);

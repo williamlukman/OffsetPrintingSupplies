@@ -144,6 +144,8 @@
         $('#Description').removeAttr('disabled');
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
+        $('#Currency').data("kode", "");
+
     });
 
 
@@ -177,6 +179,9 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $('#Currency').val(result.currency).data("kode", result.CurrencyId);
+                            $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
+                            $('#ExchangeRateAmount').attr('disabled', true);
                             $("#Discount").attr('disabled', true);
                             $('#AmountPayable').val(result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
@@ -233,6 +238,9 @@
                             $('#Description').val(result.Description);
                             $('#Discount').val(result.Discount);
                             $('#Tax').val(result.Tax);
+                            $('#Currency').val(result.currency).data("kode", result.CurrencyId);
+                            $('#ExchangeRateAmount').val(result.ExchangeRateAmount);
+                            $('#ExchangeRateAmount').removeAttr('disabled');
                             $("#Discount").removeAttr('disabled');
                             $('#AmountPayable').val(result.AmountPayable);
                             $('#InvoiceDate').datebox('setValue', dateEnt(result.InvoiceDate));
@@ -395,7 +403,6 @@
     $('#form_btn_cancel').click(function () {
         clearForm('#frm');
         $("#form_div").dialog('close');
-        ReloadGrid();
     });
 
     $("#form_btn_save").click(function () {
@@ -425,7 +432,7 @@
                 Id: id, PurchaseReceivalId: $("#PurchaseReceivalId").val(), Description: $("#Description").val(),
                 Discount: $("#Discount").numberbox('getValue'), Tax: $("#Tax").val(),
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                NomorSurat: $('#NomorSurat').val()
+                NomorSurat: $('#NomorSurat').val(),CurrencyId: $("#Currency").data('kode'), ExchangeRateAmount: $("#ExchangeRateAmount").numberbox('getValue'),
             }),
             async: false,
             cache: false,
@@ -645,7 +652,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseOrder Id', 'PO Code', 'Nomor Surat PO', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
-                   'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
+                   'CurrencyId','Currency','Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
                   { name: 'code', index: 'code', width: 80, hidden: true },
@@ -656,6 +663,8 @@
 				  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 100 },
                   { name: 'receivaldate', index: 'receivaldate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'CurrencyId', index: 'CurrencyId', width: 100, hidden: true },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
@@ -692,6 +701,7 @@
             $('#PurchaseReceival').val(ret.code);
             $('#Discount').val(0);
             $('#Tax').val(ret.tax);
+            $('#Currency').val(ret.currency).data("kode", ret.CurrencyId);
 
             $('#lookup_div_purchasereceival').dialog('close');
         } else {

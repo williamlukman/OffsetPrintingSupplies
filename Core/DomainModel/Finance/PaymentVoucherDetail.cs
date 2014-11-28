@@ -11,16 +11,14 @@ namespace Core.DomainModel
         public int PaymentVoucherId { get; set; }
         public int PayableId { get; set; }
         public string Code { get; set; }
-
+        public decimal Rate { get; set; }
         public decimal Amount { get; set; }
-        public decimal AmountBaseCurrency { get; set; }
-
+        public decimal AmountPaid { get; set; }
         public string Description { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeleted { get; set; }
-        
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

@@ -59,14 +59,24 @@ namespace Service.Service
         public PaymentRequestDetail CreateObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IAccountService _accountService)
         {
             paymentRequestDetail.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(paymentRequestDetail, _paymentRequestService, this, _accountService) ?
-                    _repository.CreateObject(paymentRequestDetail) : paymentRequestDetail);
+            if (_validator.ValidCreateObject(paymentRequestDetail, _paymentRequestService, this, _accountService))
+            {
+                paymentRequestDetail =  _repository.CreateObject(paymentRequestDetail);
+                PaymentRequest paymentRequest = _paymentRequestService.GetObjectById(paymentRequestDetail.PaymentRequestId);
+                _paymentRequestService.CalculateTotalAmount(paymentRequest, this);
+            }
+            return paymentRequestDetail;
         }
 
         public PaymentRequestDetail UpdateObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IAccountService _accountService)
         {
-            return (_validator.ValidUpdateObject(paymentRequestDetail, _paymentRequestService, this, _accountService) ?
-                     _repository.UpdateObject(paymentRequestDetail) : paymentRequestDetail);
+            if (_validator.ValidUpdateObject(paymentRequestDetail, _paymentRequestService, this, _accountService))
+            {
+                paymentRequestDetail = _repository.UpdateObject(paymentRequestDetail);
+                PaymentRequest paymentRequest = _paymentRequestService.GetObjectById(paymentRequestDetail.PaymentRequestId);
+                _paymentRequestService.CalculateTotalAmount(paymentRequest, this);
+            }
+            return paymentRequestDetail;
         }
 
         public PaymentRequestDetail CreateLegacyObject(PaymentRequestDetail paymentRequestDetail, IPaymentRequestService _paymentRequestService, IAccountService _accountService)
@@ -82,9 +92,16 @@ namespace Service.Service
                      _repository.UpdateObject(paymentRequestDetail) : paymentRequestDetail);
         }
 
-        public PaymentRequestDetail SoftDeleteObject(PaymentRequestDetail paymentRequestDetail)
+        public PaymentRequestDetail SoftDeleteObject(PaymentRequestDetail paymentRequestDetail,IPaymentRequestService _paymentRequestService)
         {
-            return (_validator.ValidDeleteObject(paymentRequestDetail) ? _repository.SoftDeleteObject(paymentRequestDetail) : paymentRequestDetail);
+            if (_validator.ValidDeleteObject(paymentRequestDetail))
+            {
+                paymentRequestDetail = _repository.SoftDeleteObject(paymentRequestDetail);
+                PaymentRequest paymentRequest = _paymentRequestService.GetObjectById(paymentRequestDetail.PaymentRequestId);
+                _paymentRequestService.CalculateTotalAmount(paymentRequest, this);
+            }
+
+            return paymentRequestDetail;
         }
 
         public bool DeleteObject(int Id)

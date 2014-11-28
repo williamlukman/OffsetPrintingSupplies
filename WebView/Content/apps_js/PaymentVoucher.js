@@ -54,7 +54,7 @@
         url: base_url + 'PaymentVoucher/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'CashBank Id', 'CashBank Name', 'Payment Date',
-                   'Is GBCH', 'Due Date', 'Total Amount','Is Reconciled','ReconciliationDate',
+                   'Is GBCH', 'Due Date', 'Total Amount','Currency', 'Rate','Is Reconciled','ReconciliationDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -67,6 +67,8 @@
                   { name: 'isgbch', index: 'isgbch', width: 45 },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'exchangerateamount', index: 'exchangerateamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isreconciled', index: 'isreconciled', width: 100, hidden: true },
                   { name: 'reconciliationdate', index: 'reconciliationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden :true },
@@ -134,13 +136,16 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-
+        $('#TotalAmount').numberbox('clear');
         $('#PaymentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnCashBank').removeAttr('disabled');
-        $('#TotalAmount').removeAttr('disabled');
         $('#IsGBCH').removeAttr('disabled');
+        $('#RateToIDR').removeAttr('disabled');
+        $('#ExchangeRateAmount').removeAttr('disabled');
+        $('#CurrencyId').removeAttr('disabled');
+        $('#ExchangeRateAmount').numberbox('setValue',0);
         $('#tabledetail_div').hide();
         $('#PaymentDateDiv').show();
         $('#PaymentDateDiv2').hide();
@@ -187,6 +192,9 @@
                             else {
                                 e.selectedIndex = 1;
                             }
+                            $('#CurrencyCashBank').val(result.currency);
+                            $('#RateToIDR').attr('disabled', true);
+                            $('#RateToIDR').val(result.RateToIDR);
                             $('#PaymentDate').datebox('setValue', dateEnt(result.PaymentDate));
                             $('#PaymentDate2').val(dateEnt(result.PaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -250,6 +258,7 @@
                             else {
                                 e.selectedIndex = 1;
                             }
+                            $('#CurrencyCashBank').val(result.currency);
                             $('#PaymentDate').datebox('setValue', dateEnt(result.PaymentDate));
                             $('#PaymentDate2').val(dateEnt(result.PaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -258,9 +267,12 @@
                             $('#PaymentDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#DueDateDiv').hide();
+                            $('#CurrencyId').val(result.CurrencyId);
+                            $('#RateToIDR').numberbox('setValue', result.RateToIDR);
+                            $('#CurrencyId').removeAttr('disabled');
+                            $('#RateToIDR').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
                             $('#btnCashBank').removeAttr('disabled');
-                            $('#TotalAmount').removeAttr('disabled');
                             $('#IsGBCH').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
@@ -440,7 +452,11 @@
         $('#reconcile_div').dialog('close');
     });
 
-
+    $("#AmountPaid, #Rate").blur(function () {
+        var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
+        //total = Math.round(total * 100) / 100;
+        $('#Amount').numberbox('setValue', total);
+    });
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -523,7 +539,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), CashBankId: $("#CashBankId").val(),
-                IsGBCH: gbch, TotalAmount : $("#TotalAmount").numberbox('getValue'),
+                IsGBCH: gbch, RateToIDR: $("#RateToIDR").numberbox('getValue'),
                 PaymentDate: $('#PaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
             }),
             async: false,
@@ -586,8 +602,14 @@
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
+        $('#Amount').numberbox('clear');
+        $('#AmountPaid').numberbox('clear');
+        $('#Rate').numberbox('clear');
+        $('#Remaining').numberbox('clear');
+        $('#Currency').text("");
         $('#item_div').dialog('open');
     });
+
 
     $('#btn_edit_detail').click(function () {
         ClearData();
@@ -614,8 +636,20 @@
                             $('#PayableId').val(result.PayableId);
                             $('#Payable').val(result.Payable);
                             $('#Amount').val(result.Amount);
+                            $('#Rate').numberbox('setValue', result.Rate);
+                            $('#AmountPaid').numberbox('setValue', result.AmountPaid);
+                            $('#Currency').text(result.currency);
+                            $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#PaymentVoucherDetailId').val(result.PaymentVoucherDetailId);
+                            if (result.currency == $('#CurrencyCashBank').val()) {
+                                $('#Rate').attr('disabled', true);
+                                $('#Rate').numberbox('setValue', result.Rate);
+                            }
+                            else {
+                                $('#Rate').removeAttr('disabled');
+                                $('#Rate').numberbox('setValue', result.Rate);
+                            }
                             $('#item_div').dialog('open');
                         }
                     }
@@ -653,6 +687,7 @@
                             }
                             else {
                                 ReloadGridDetail();
+                                $("#TotalAmount").numberbox('setValue', result.totalamount);
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -688,7 +723,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, PaymentVoucherId: $("#id").val(), PayableId: $("#PayableId").val(), Description: $("#Description").val(),
-                Amount: $("#Amount").numberbox('getValue'),
+                AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -710,6 +745,7 @@
                 }
                 else {
                     ReloadGridDetail();
+                    $("#TotalAmount").numberbox('setValue', result.totalamount);
                     $("#item_div").dialog('close')
                 }
             }
@@ -795,11 +831,14 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name'
+        colNames: ['ID', 'Name', 'Description', 'Amount', 'Currency',
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 100 },
+                  { name: 'name', index: 'name', width: 120 },
+                  { name: 'description', index: 'description', width: 200 },
+                  { name: 'amount', index: 'amount', width: 100, align: "right", formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
+				  { name: 'currency', index: 'currency', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_cashbank'),
@@ -828,7 +867,7 @@
             var ret = jQuery("#lookup_table_cashbank").jqGrid('getRowData', id);
 
             $('#CashBankId').val(ret.id).data("kode", id);
-            $('#CashBank').val(ret.code);
+            $('#CashBank').val(ret.name);
             $('#lookup_div_cashbank').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -853,7 +892,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id',
-                    'Due Date', 'Total', 'Remaining', 'PendClearance'
+                    'Due Date', 'Total', 'Currency','Remaining', 'PendClearance'
                   ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
@@ -863,6 +902,7 @@
                   { name: 'payablesourceid', index: 'payablesourceid', width: 40, align: 'right', sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
@@ -893,7 +933,16 @@
             var ret = jQuery("#lookup_table_payable").jqGrid('getRowData', id);
             $('#PayableId').val(id);
             $('#Payable').val(ret.code);
-
+            $('#Currency').text(ret.currency);
+            if (ret.currency == $('#CurrencyCashBank').val()) {
+                $('#Rate').attr('disabled', true);
+                $('#Rate').numberbox('setValue', 1);
+            }
+            else {
+                $('#Rate').removeAttr('disabled');
+                $('#Rate').numberbox('setValue', 1);
+            }
+            $('#Remaining').numberbox('setValue', ret.remainingamount);
             $('#lookup_div_payable').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

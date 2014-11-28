@@ -49,7 +49,7 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'PurchaseDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency', 'PurchaseDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
@@ -57,6 +57,7 @@
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150 },
+                  { name: 'currency', index: 'currency', width: 150 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -126,6 +127,7 @@
         ClearData();
         clearForm('#frm');
         $('#PurchaseDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#CurrencyId').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
@@ -162,11 +164,13 @@
                             $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#CurrencyId').val(result.CurrencyId);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
                             $('#PurchaseDate2').val(dateEnt(result.PurchaseDate));
                             $('#PurchaseDateDiv2').show();
                             $('#PurchaseDateDiv').hide();
                             $('#form_btn_save').hide();
+                            $('#CurrencyId').attr('disabled', true);
                             $('#btnContact').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
@@ -209,7 +213,10 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
+                            $('#CurrencyId').val(result.CurrencyId);
+                            $('#CurrencyId').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
+                            $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#PurchaseDateDiv2').hide();
                             $('#PurchaseDateDiv').show();
@@ -380,14 +387,15 @@
         else {
             submitURL = base_url + 'PurchaseOrder/Insert';
         }
-
+        var f = document.getElementById("CurrencyId");
+        var currency = f.options[f.selectedIndex].value;
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), PurchaseDate: $('#PurchaseDate').datebox('getValue'),
-                NomorSurat: $('#NomorSurat').val()
+                NomorSurat: $('#NomorSurat').val(), CurrencyId : currency
             }),
             async: false,
             cache: false,

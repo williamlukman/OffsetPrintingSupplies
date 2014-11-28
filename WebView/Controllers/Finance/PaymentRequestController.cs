@@ -28,6 +28,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IExchangeRateService _exchangeRateService;
 
         public PaymentRequestController()
         {
@@ -43,6 +44,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
         public ActionResult Index()
@@ -218,7 +220,11 @@ namespace WebView.Controllers
                 model.Id,
                 model.Code,
                 model.ContactId,
-                Contact = _contactService.GetObjectById(model.ContactId).Name,
+                Contact = model.Contact.Name,
+                currency = model.Currency.Name,
+                currencyId = model.CurrencyId,
+                model.AccountPayableId,
+                AccountPayable = model.AccountPayable.Name,
                 model.Description,
                 model.RequestedDate,
                 model.DueDate,
@@ -292,9 +298,11 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic InsertDetail(PaymentRequestDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
-                model = _paymentRequestDetailService.CreateObject(model, _paymentRequestService, _accountService);
+               model = _paymentRequestDetailService.CreateObject(model, _paymentRequestService, _accountService);
+               totalAmount = _paymentRequestService.GetObjectById(model.PaymentRequestId).Amount;
             }
             catch (Exception ex)
             {
@@ -306,6 +314,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
             });
         }
 
@@ -392,6 +401,7 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic UpdateDetail(PaymentRequestDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
                 var data = _paymentRequestDetailService.GetObjectById(model.Id);
@@ -399,6 +409,7 @@ namespace WebView.Controllers
                 data.Status = model.Status;
                 data.Amount = model.Amount;
                 model = _paymentRequestDetailService.UpdateObject(data, _paymentRequestService, _accountService);
+                totalAmount = _paymentRequestService.GetObjectById(model.PaymentRequestId).Amount;
             }
             catch (Exception ex)
             {
@@ -409,16 +420,19 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
             });
         }
 
         [HttpPost]
         public dynamic DeleteDetail(PaymentRequestDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
                 var data = _paymentRequestDetailService.GetObjectById(model.Id);
-                model = _paymentRequestDetailService.SoftDeleteObject(data);
+                model = _paymentRequestDetailService.SoftDeleteObject(data,_paymentRequestService);
+                totalAmount = _paymentRequestService.GetObjectById(data.PaymentRequestId).Amount;
             }
             catch (Exception ex)
             {
@@ -429,6 +443,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
             });
         }
 
@@ -450,7 +465,7 @@ namespace WebView.Controllers
 
                 var data = _paymentRequestService.GetObjectById(model.Id);
                 model = _paymentRequestService.ConfirmObject(data, model.ConfirmationDate.Value, _payableService, _paymentRequestDetailService,
-                                                             _accountService, _generalLedgerJournalService, _closingService);
+                                                             _accountService, _generalLedgerJournalService, _closingService,_exchangeRateService);
             }
             catch (Exception ex)
             {

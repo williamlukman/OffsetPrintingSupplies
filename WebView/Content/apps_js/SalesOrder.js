@@ -214,6 +214,7 @@
                             $('#Contact').val(result.Contact);
                             $('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
                             $('#CurrencyId').val(result.CurrencyId);
+                            $('#CurrencyId').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();

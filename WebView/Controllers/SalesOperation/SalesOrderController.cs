@@ -278,10 +278,10 @@ namespace WebView.Controllers
                 model.Code,
                 model.NomorSurat,
                 model.ContactId,
-                Contact = _contactService.GetObjectById(model.ContactId).Name,
+                Contact = model.Contact.Name,
                 model.SalesDate,
                 ConfirmationDate = model.ConfirmationDate,
-                Currency = _currencyService.GetObjectById(model.CurrencyId).Name,
+                Currency = model.Currency.Name,
                 model.CurrencyId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);

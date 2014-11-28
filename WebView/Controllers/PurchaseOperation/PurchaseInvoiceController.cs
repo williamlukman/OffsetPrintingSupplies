@@ -28,7 +28,7 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
-
+        private IExchangeRateService _exchangeRateService;
         public PurchaseInvoiceController()
         {
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
@@ -43,6 +43,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
         public ActionResult Index()
@@ -218,7 +219,7 @@ namespace WebView.Controllers
                 model.Code,
                 model.NomorSurat,
                 model.PurchaseReceivalId,
-                PurchaseReceival = _purchaseReceivalService.GetObjectById(model.PurchaseReceivalId).Code,
+                PurchaseReceival = model.PurchaseReceival.Code,
                 model.Discount,
                 model.Description,
                 model.Tax,
@@ -226,6 +227,9 @@ namespace WebView.Controllers
                 model.DueDate,
                 model.AmountPayable,
                 ConfirmationDate = model.ConfirmationDate,
+                currency = model.Currency.Name,
+                model.CurrencyId,
+                model.ExchangeRateAmount,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -404,7 +408,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
                 model = _purchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _purchaseInvoiceDetailService, _purchaseOrderService,
-                        _purchaseReceivalService, _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService);
+                        _purchaseReceivalService, _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService,_exchangeRateService);
             }
             catch (Exception ex)
             {

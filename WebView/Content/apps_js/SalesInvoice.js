@@ -148,6 +148,8 @@
         $('#DueDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
+        $('#Currency').data("kode","");
+
     });
 
 

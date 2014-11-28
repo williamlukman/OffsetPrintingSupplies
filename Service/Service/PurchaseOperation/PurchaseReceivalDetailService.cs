@@ -109,7 +109,7 @@ namespace Service.Service
                     //item.Quantity += purchaseReceivalDetail.Quantity;
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
-                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
+                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price * purchaseReceival.ExchangeRateAmount;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, purchaseReceivalDetail.Quantity, itemPrice);
                 purchaseReceivalDetail.COGS = item.AvgPrice * purchaseReceivalDetail.Quantity;
                 purchaseReceivalDetail = _repository.ConfirmObject(purchaseReceivalDetail);
@@ -136,7 +136,7 @@ namespace Service.Service
                     //item.Quantity -= purchaseReceivalDetail.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
-                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price;
+                decimal itemPrice = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId).Price * purchaseReceival.ExchangeRateAmount;
                 item.AvgPrice = _itemService.CalculateAndUpdateAvgPrice(item, purchaseReceivalDetail.Quantity * (-1), itemPrice);
                 purchaseReceivalDetail.COGS = 0;
                 purchaseReceivalDetail = _repository.UnconfirmObject(purchaseReceivalDetail);
