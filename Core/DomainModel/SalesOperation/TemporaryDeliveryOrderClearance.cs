@@ -14,9 +14,9 @@ namespace Core.DomainModel
         //public int WarehouseId { get; set; }
         //public string NomorSurat { get; set; }
 
-        public decimal TotalWastedCoGS { get; set; }
+        public decimal TotalWasteCoGS { get; set; }
 
-        public bool IsWasted { get; set; } // ClearanceType
+        public bool IsWaste { get; set; } // ClearanceType
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
         //public bool IsDeliveryCompleted { get; set; } // DeliveryOrder has been confirmed, Restock has been processed

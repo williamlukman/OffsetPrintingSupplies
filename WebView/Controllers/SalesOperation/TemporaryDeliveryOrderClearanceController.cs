@@ -92,8 +92,8 @@ namespace WebView.Controllers
                              model.Code,
                              model.TemporaryDeliveryOrderId,
                              TemporaryDeliveryOrder = model.TemporaryDeliveryOrder.Code,
-                             model.IsWasted,
-                             model.TotalWastedCoGS,
+                             IsWasted = model.IsWaste,
+                             TotalWastedCoGS = model.TotalWasteCoGS,
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.ClearanceDate,
@@ -164,8 +164,8 @@ namespace WebView.Controllers
                              model.Code,
                              model.TemporaryDeliveryOrderId,
                              TemporaryDeliveryOrder = model.TemporaryDeliveryOrder.Code,
-                             model.IsWasted,
-                             model.TotalWastedCoGS,
+                             IsWasted = model.IsWaste,
+                             TotalWastedCoGS = model.TotalWasteCoGS,
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.ClearanceDate,
@@ -238,9 +238,9 @@ namespace WebView.Controllers
                              TemporaryDeliveryOrderDetail = model.TemporaryDeliveryOrderDetail.Code,
                              model.TemporaryDeliveryOrderDetail.ItemId,
                              ItemSku = model.TemporaryDeliveryOrderDetail.Item.Sku,
-                             Item = model.TemporaryDeliveryOrderDetail.Item.Name,
+                             ItemName = model.TemporaryDeliveryOrderDetail.Item.Name,
                              model.Quantity,
-                             model.WastedCoGS,
+                             WasteCoGS = model.WasteCoGS,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -280,9 +280,9 @@ namespace WebView.Controllers
                             model.TemporaryDeliveryOrderDetail,
                             model.ItemId,
                             model.ItemSku,
-                            model.Item,
+                            model.ItemName,
                             model.Quantity,
-                            model.WastedCoGS,
+                            model.WasteCoGS,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -308,8 +308,8 @@ namespace WebView.Controllers
                 model.Code,
                 model.TemporaryDeliveryOrderId,
                 TemporaryDeliveryOrder = model.TemporaryDeliveryOrder.Code,
-                model.IsWasted,
-                model.TotalWastedCoGS,
+                model.IsWaste,
+                model.TotalWasteCoGS,
                 model.IsConfirmed,
                 model.ConfirmationDate,
                 model.ClearanceDate,
@@ -341,7 +341,7 @@ namespace WebView.Controllers
                 ItemSku = model.TemporaryDeliveryOrderDetail.Item.Sku,
                 Item = model.TemporaryDeliveryOrderDetail.Item.Name,
                 model.Quantity,
-                model.WastedCoGS,
+                model.WasteCoGS,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -392,7 +392,7 @@ namespace WebView.Controllers
                 var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
                 data.TemporaryDeliveryOrderId = model.TemporaryDeliveryOrderId;
                 data.ClearanceDate = model.ClearanceDate;
-                data.IsWasted = model.IsWasted;
+                data.IsWaste = model.IsWaste;
                 model = _temporaryDeliveryOrderClearanceService.UpdateObject(data, _temporaryDeliveryOrderService);
             }
             catch (Exception ex)

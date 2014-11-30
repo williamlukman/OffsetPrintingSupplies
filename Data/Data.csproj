@@ -71,6 +71,7 @@
     <Compile Include="Mapping\Finance\PurchaseAllowanceMapping.cs" />
     <Compile Include="Mapping\Finance\PurchaseDownPaymentAllocationDetailMapping.cs" />
     <Compile Include="Mapping\Finance\PurchaseDownPaymentMapping.cs" />
+    <Compile Include="Mapping\Manufacturing\BlendingWorkOrderMapping.cs" />
     <Compile Include="Mapping\Manufacturing\CoreAccessoryDetailMapping.cs" />
     <Compile Include="Mapping\Finance\PayableMapping.cs" />
     <Compile Include="Mapping\Finance\PaymentRequestMapping.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Mapping\SalesOperation\VirtualOrderMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CompanyMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CompoundMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\BlendingRecipeMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\BlendingRecipeDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CustomerStockMutationMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CustomerItemMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ServiceCostMapping.cs" />
@@ -164,6 +167,7 @@
     <Compile Include="Repository\Finance\PurchaseDownPaymentRepository.cs" />
     <Compile Include="Repository\Manufacturing\BlanketOrderDetailRepository.cs" />
     <Compile Include="Repository\Manufacturing\BlanketOrderRepository.cs" />
+    <Compile Include="Repository\Manufacturing\BlendingWorkOrderRepository.cs" />
     <Compile Include="Repository\Manufacturing\CoreAccessoryDetailRepository.cs" />
     <Compile Include="Repository\Finance\PayableRepository.cs" />
     <Compile Include="Repository\Finance\PaymentRequestRepository.cs" />
@@ -185,6 +189,8 @@
     <Compile Include="Repository\SalesOperation\RetailSalesInvoiceRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CompanyRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CompoundRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\BlendingRecipeRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\BlendingRecipeDetailRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CustomerStockMutationRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CustomerItemRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ServiceCostRepository.cs" />

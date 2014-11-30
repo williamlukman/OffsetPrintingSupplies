@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'TemporaryDeliveryOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'TemporaryDeliveryOrderClearance/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'TemporaryDeliveryOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'TemporaryDeliveryOrderClearance/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -50,23 +50,20 @@
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'TemporaryDeliveryOrder/GetList',
+        url: base_url + 'TemporaryDeliveryOrderClearance/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
-                    'Is Confirmed', 'Confirmation Date', 'Reconciled', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Order Id', 'Order Code', 'Is Waste', 'Total Waste CoGS',
+                   'Is Confirmed', 'Confirmation Date', 'Clearance Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
-                  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
-                  { name: 'ordertype', index: 'ordertype', width: 70 },
-				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
-                  { name: 'ordercode', index: 'ordercode', width: 70 },
-                  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
-                  { name: 'warehousename', index: 'warehousename', width: 130 },
-                  { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'temporarydeliveryorderid', index: 'temporarydeliveryorderid', width: 100, hidden: true },
+                  { name: 'temporarydeliveryorder', index: 'temporarydeliveryorder', width: 100 },
+                  { name: 'iswaste', index: 'iswaste', width: 70 },
+                  { name: 'totalwastecogs', index: 'totalwastecogs', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'isreconciled', index: 'isreconciled', width: 60 },
+                  { name: 'clearancedate', index: 'clearancedate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -102,15 +99,15 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isreconciled: rowIsReconciled });
 
-		          rowOrderType = $(this).getRowData(cl).ordertype;
-		          if (rowOrderType == '0') {
-		              rowOrderType = "Trial";
-		          } else if (rowOrderType == '1') {
-		              rowOrderType = "Sample";
+		          rowClearanceType = $(this).getRowData(cl).clearancetype;
+		          if (rowClearanceType == '0') {
+		              rowClearanceType = "Trial";
+		          } else if (rowClearanceType == '1') {
+		              rowClearanceType = "Sample";
 		          } else {
-		              rowOrderType = "Part Delivery";
+		              rowClearanceType = "Part Delivery";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });
+		          $(this).jqGrid('setRowData', ids[i], { clearancetype: rowClearanceType });
 		      }
 		  }
 
@@ -130,7 +127,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "TemporaryDeliveryOrder/GetInfo?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrderClearance/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -139,7 +136,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportTemporaryDeliveryOrder?Id=" + id);
+                        window.open(base_url + "Report/ReportTemporaryDeliveryOrderClearance?Id=" + id);
                     }
                 }
             });
@@ -149,14 +146,14 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-        $('#DeliveryDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#ClearanceDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnPreviousOrder').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
-        $('#OrderType').removeAttr('disabled');
+        $('#ClearanceType').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
-        $('#DeliveryDateDiv').show();
-        $('#DeliveryDateDiv2').hide();
+        $('#ClearanceDateDiv').show();
+        $('#ClearanceDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -169,7 +166,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "TemporaryDeliveryOrder/GetInfo?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrderClearance/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -186,21 +183,16 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#NomorSurat').val(result.NomorSurat);
-                            document.getElementById("OrderType").selectedIndex = result.OrderType;
-                            $('#PreviousOrderId').val(result.OrderId);
-                            $('#PreviousOrder').val(result.OrderCode);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
-                            $('#DeliveryDate').datebox('setValue', dateEnt(result.DeliveryDate));
-                            $('#DeliveryDate2').val(dateEnt(result.DeliveryDate));
-                            $('#DeliveryDateDiv2').show();
-                            $('#DeliveryDateDiv').hide();
+                            document.getElementById("ClearanceType").selectedIndex = result.IsWaste ? 1 : 0;
+                            $('#PreviousOrderId').val(result.TemporaryDeliveryOrderId);
+                            $('#PreviousOrder').val(result.TemporaryDeliveryOrder);
+                            $('#ClearanceDate').datebox('setValue', dateEnt(result.ClearanceDate));
+                            $('#ClearanceDate2').val(dateEnt(result.ClearanceDate));
+                            $('#ClearanceDateDiv2').show();
+                            $('#ClearanceDateDiv').hide();
                             $('#form_btn_save').hide();
-                            $('#OrderType').attr('disabled', true);
+                            $('#ClearanceType').attr('disabled', true);
                             $('#btnPreviousOrder').attr('disabled', true);
-                            $('#btnWarehouse').attr('disabled', true);
-                            $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -220,7 +212,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "TemporaryDeliveryOrder/GetInfo?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrderClearance/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -237,19 +229,15 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#NomorSurat').val(result.NomorSurat);
-                            $('#PreviousOrderId').val(result.OrderId);
-                            $('#PreviousOrder').val(result.OrderCode);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
-                            $('#DeliveryDate').datebox('setValue', dateEnt(result.DeliveryDate));
-                            $('#DeliveryDate2').val(dateEnt(result.DeliveryDate));
+                            $('#PreviousOrderId').val(result.TemporaryDeliveryOrderId);
+                            $('#PreviousOrder').val(result.TemporaryDeliveryOrder);
+                            document.getElementById("ClearanceType").selectedIndex = (result.IsWaste ? 1 : 0);
+                            $('#ClearanceDate').datebox('setValue', dateEnt(result.ClearanceDate));
+                            $('#ClearanceDate2').val(dateEnt(result.ClearanceDate));
                             $('#btnPreviousOrder').removeAttr('disabled');
-                            $('#btnWarehouse').removeAttr('disabled');
-                            $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#DeliveryDateDiv2').show();
-                            $('#DeliveryDateDiv').hide();
+                            $('#ClearanceDateDiv2').show();
+                            $('#ClearanceDateDiv').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -280,7 +268,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "TemporaryDeliveryOrder/Unconfirm",
+                        url: base_url + "TemporaryDeliveryOrderClearance/Unconfirm",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -314,7 +302,7 @@
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
         $.ajax({
-            url: base_url + "TemporaryDeliveryOrder/Confirm",
+            url: base_url + "TemporaryDeliveryOrderClearance/Confirm",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -363,7 +351,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to create delivery order?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "TemporaryDeliveryOrder/Push",
+                        url: base_url + "TemporaryDeliveryOrderClearance/Push",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -418,7 +406,7 @@
 
     $('#delete_confirm_btn_submit').click(function () {
         $.ajax({
-            url: base_url + "TemporaryDeliveryOrder/Delete",
+            url: base_url + "TemporaryDeliveryOrderClearance/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -455,42 +443,31 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#DeliveryDate').datebox('getValue') == "") {
-            return $($('#DeliveryDate').addClass('errormessage').before('<span class="errormessage">**' + "Adjustment Date Belum Terisi" + '</span>'));
+        if ($('#ClearanceDate').datebox('getValue') == "") {
+            return $($('#ClearanceDate').addClass('errormessage').before('<span class="errormessage">**' + "Adjustment Date Belum Terisi" + '</span>'));
 
         }
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'TemporaryDeliveryOrder/Update';
+            submitURL = base_url + 'TemporaryDeliveryOrderClearance/Update';
         }
-            // Insert
+        // Insert
         else {
-            submitURL = base_url + 'TemporaryDeliveryOrder/Insert';
+            submitURL = base_url + 'TemporaryDeliveryOrderClearance/Insert';
         }
 
-        var ordertype = document.getElementById("OrderType").selectedIndex;
+        var clearancetype = document.getElementById("ClearanceType").selectedIndex;
 
-        var virtualorderid;
-        var deliveryorderid;
-
-        if (ordertype == 0 || ordertype == 1) {
-            virtualorderid = $("#PreviousOrderId").val();
-            deliveryorderid = null;
-        }
-        else {
-            virtualorderid = null;
-            deliveryorderid = $("#PreviousOrderId").val();
-        }
+        var deliveryorderid = deliveryorderid = $("#PreviousOrderId").val();
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, WarehouseId: $("#WarehouseId").val(),
-                DeliveryDate: $('#DeliveryDate').datebox('getValue'), OrderType: ordertype,
-                VirtualOrderId: virtualorderid, DeliveryOrderId: deliveryorderid,
-                NomorSurat: $('#NomorSurat').val()
+                Id: id,
+                ClearanceDate: $('#ClearanceDate').datebox('getValue'), IsWaste: $("#ClearanceType").val(),
+                TemporaryDeliveryOrderId: deliveryorderid,
             }),
             async: false,
             cache: false,
@@ -522,7 +499,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Detail Id', 'Detail Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Restock', 'Waste', 'Price'
+        colNames: ['Id', 'Code', 'Detail Id', 'Detail Code', 'Item Id', 'Item Sku', 'Item Name', 'QTY', 'Waste CoGS'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
@@ -533,9 +510,7 @@
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'restockquantity', index: 'restockquantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'wastequantity', index: 'wastequantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
+                  { name: 'wastecogs', index: 'wastecogs', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -573,7 +548,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "TemporaryDeliveryOrder/GetInfoDetail?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrderClearance/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -594,7 +569,7 @@
                             $('#WasteQuantity').val(result.WasteQuantity);
                             $('#RestockQuantity').val(result.RestockQuantity);
                             $('#Price').val(result.Price);
-                            $('#PreviousOrderDetailId').val(result.OrderDetailId);
+                            $('#PreviousOrderDetailId').val(result.TemporaryDeliveryOrderDetailId);
                             $('#Price').removeAttr('disabled');
                             $('#Quantity').removeAttr('disabled');
                             $('#btnItem').removeAttr('disabled');
@@ -617,7 +592,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "TemporaryDeliveryOrder/GetInfoDetail?Id=" + id,
+                url: base_url + "TemporaryDeliveryOrderClearance/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -661,7 +636,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "TemporaryDeliveryOrder/DeleteDetail",
+                        url: base_url + "TemporaryDeliveryOrderClearance/DeleteDetail",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -703,37 +678,26 @@
         var process = $('#ItemId').data('process');
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
             if (process == '1') {
-                submitURL = base_url + 'TemporaryDeliveryOrder/ProcessDetail';
+                submitURL = base_url + 'TemporaryDeliveryOrderClearance/ProcessDetail';
             }
             else {
-                submitURL = base_url + 'TemporaryDeliveryOrder/UpdateDetail';
+                submitURL = base_url + 'TemporaryDeliveryOrderClearance/UpdateDetail';
             }
         }
         else {
-            submitURL = base_url + 'TemporaryDeliveryOrder/InsertDetail';
+            submitURL = base_url + 'TemporaryDeliveryOrderClearance/InsertDetail';
         }
-        var ordertype = document.getElementById("OrderType").selectedIndex;
+        var clearancetype = document.getElementById("ClearanceType").selectedIndex;
 
-        var virtualorderdetailid;
-        var salesorderdetailid;
-
-        if (ordertype == 0 || ordertype == 1) {
-            virtualorderdetailid = $("#PreviousOrderDetailId").val();
-            salesorderdetailid = null;
-        }
-        else {
-            virtualorderdetailid = null;
-            salesorderdetailid = $("#PreviousOrderDetailId").val();
-        }
+        var virtualorderdetailid = $("#PreviousOrderDetailId").val();
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, TemporaryDeliveryOrderId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").numberbox('getValue'), SalesOrderDetailId: salesorderdetailid, VirtualOrderDetailId: virtualorderdetailid,
-                WasteQuantity: $("#WasteQuantity").numberbox('getValue'), RestockQuantity: $("#RestockQuantity").numberbox('getValue')
+                Id: id, TemporaryDeliveryOrderClearanceId: $("#id").val(), 
+                Quantity: $("#Quantity").numberbox('getValue'), TemporaryDeliveryOrderDetailId: virtualorderdetailid,
             }),
             async: false,
             cache: false,
@@ -772,15 +736,8 @@
     // -------------------------------------------------------Look Up previousorder-------------------------------------------------------
     $('#btnPreviousOrder').click(function () {
         var lookUpURL;
-        if (document.getElementById("OrderType").selectedIndex == 0) {
-            lookUpURL = base_url + 'VirtualOrder/GetTrialListConfirmedNotCompleted';
-        }
-        else if (document.getElementById("OrderType").selectedIndex == 1) {
-            lookUpURL = base_url + 'VirtualOrder/GetSampleListConfirmedNotCompleted';
-        }
-        else if (document.getElementById("OrderType").selectedIndex == 2) {
-            lookUpURL = base_url + 'DeliveryOrder/GetListNotConfirmed';
-        }
+        lookUpURL = base_url + 'TemporaryDeliveryOrder/GetListConfirmed';
+        
         var lookupGrid = $('#lookup_table_previousorder');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -792,21 +749,23 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact', 'Order Date',
-                  'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Warehouse Id', 'Warehouse'],
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
+                    'Is Confirmed', 'Confirmation Date', 'Reconciled', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 40, align: "center" },
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
-				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contact', index: 'contact', width: 130 },
-                  { name: 'orderdate', index: 'orderdate', width: 90, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'clearancetype', index: 'clearancetype', width: 70 },
+				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
+                  { name: 'ordercode', index: 'ordercode', width: 70 },
+                  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
+                  { name: 'warehousename', index: 'warehousename', width: 130 },
+                  { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-				  { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
-                  { name: 'warehouse', index: 'warehouse', width: 130, hidden: true },
+                  { name: 'isreconciled', index: 'isreconciled', width: 60 },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#lookup_pager_previousorder'),
@@ -848,12 +807,8 @@
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
         var lookUpURL;
-        if (document.getElementById("OrderType").selectedIndex == 0 || document.getElementById("OrderType").selectedIndex == 1) {
-            lookUpURL = base_url + 'VirtualOrder/GetListDetail?Id=' + $("#PreviousOrderId").val();
-        }
-        else {
-            lookUpURL = base_url + 'SalesOrder/GetListDetail?Id=' + $("#PreviousOrderId").val();
-        }
+        lookUpURL = base_url + 'TemporaryDeliveryOrder/GetListDetail?Id=' + $("#PreviousOrderId").val();
+        
         var lookupGrid = $('#lookup_table_item');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -865,17 +820,20 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'PendDlv', 'Price',
+        colNames: ['Id', 'Code', 'Detail Id', 'Detail Code', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Restock', 'Waste', 'Price'
         ],
         colModel: [
-                  { name: 'id', index: 'id', width: 40, sortable: false, align: 'center' },
-                  { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
-				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
-                  { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
+                  { name: 'id', index: 'id', width: 40, sortable: false },
+                  { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'orderdetailid', index: 'orderdetailid', width: 100, sortable: false, hidden: true },
+                  { name: 'orderdetailcode', index: 'orderdetailcode', width: 70, sortable: false },
+                  { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
+                  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
-                  { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, hidden: true },
+                  { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'restockquantity', index: 'restockquantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'wastequantity', index: 'wastequantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
         ],
         page: '1',
         pager: $('#lookup_pager_item'),

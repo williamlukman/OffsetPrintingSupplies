@@ -26,7 +26,7 @@ namespace Validation.Validation
             TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderClearance.TemporaryDeliveryOrderId.GetValueOrDefault());
             if (temporaryDeliveryOrder == null)
             {
-                temporaryDeliveryOrderClearance.Errors.Add("Generic", "Tidak terasosiasi dengan temporary delivery order");
+                temporaryDeliveryOrderClearance.Errors.Add("PreviousOrderId", "Tidak terasosiasi dengan Temporary Delivery Order");
             }
             return temporaryDeliveryOrderClearance;
         }
@@ -78,9 +78,10 @@ namespace Validation.Validation
             return temporaryDeliveryOrderClearance;
         }
 
-        public TemporaryDeliveryOrderClearance VTemporaryDeliveryOrderHasBeenConfirmed(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance)
+        public TemporaryDeliveryOrderClearance VTemporaryDeliveryOrderHasBeenConfirmed(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService)
         {
-            if (!temporaryDeliveryOrderClearance.TemporaryDeliveryOrder.IsConfirmed)
+            TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderClearance.TemporaryDeliveryOrderId.GetValueOrDefault());
+            if (!temporaryDeliveryOrder.IsConfirmed)
             {
                 temporaryDeliveryOrderClearance.Errors.Add("Generic", "Temporary Delivery Order belum dikonfirmasi");
             }
@@ -141,7 +142,7 @@ namespace Validation.Validation
             if (!isValid(temporaryDeliveryOrderClearance)) { return temporaryDeliveryOrderClearance; }
             VHasTemporaryDeliveryOrder(temporaryDeliveryOrderClearance, _temporaryDeliveryOrderService);
             if (!isValid(temporaryDeliveryOrderClearance)) { return temporaryDeliveryOrderClearance; }
-            VTemporaryDeliveryOrderHasBeenConfirmed(temporaryDeliveryOrderClearance);
+            VTemporaryDeliveryOrderHasBeenConfirmed(temporaryDeliveryOrderClearance, _temporaryDeliveryOrderService);
             if (!isValid(temporaryDeliveryOrderClearance)) { return temporaryDeliveryOrderClearance; }
             VHasClearanceDate(temporaryDeliveryOrderClearance);
             return temporaryDeliveryOrderClearance;

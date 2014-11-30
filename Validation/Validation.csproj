@@ -65,6 +65,7 @@
     <Compile Include="Validation\Finance\SalesAllowanceValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderDetailValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BlendingWorkOrderValidator.cs" />
     <Compile Include="Validation\Manufacturing\CoreAccessoryDetailValidator.cs" />
     <Compile Include="Validation\Finance\PayableValidator.cs" />
     <Compile Include="Validation\Finance\PaymentRequestValidator.cs" />
@@ -86,6 +87,8 @@
     <Compile Include="Validation\SalesOperation\RetailSalesInvoiceValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CompanyValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CompoundValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\BlendingRecipeValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\BlendingRecipeDetailValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerStockMutationValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerItemValidator.cs" />
     <Compile Include="Validation\StockAndMaster\ServiceCostValidator.cs" />

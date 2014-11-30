@@ -110,7 +110,7 @@ namespace Data.Repository
         public string SetObjectCode(string ParentCode)
         {
             int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
-            string Code = ParentCode + totalnumberinthemonth;
+            string Code = ParentCode + "." + totalnumberinthemonth;
             return Code;
         } 
     }

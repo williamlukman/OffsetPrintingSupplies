@@ -26,7 +26,7 @@ namespace Validation.Validation
             TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance = _purchaseReceivalService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId);
             if (temporaryDeliveryOrderClearance.IsConfirmed)
             {
-                temporaryDeliveryOrderClearanceDetail.Errors.Add("Generic", "Sudah dikonfirmasi");
+                temporaryDeliveryOrderClearanceDetail.Errors.Add("Generic", "Tidak boleh sudah dikonfirmasi");
             }
             return temporaryDeliveryOrderClearanceDetail;
         }
@@ -65,9 +65,10 @@ namespace Validation.Validation
             return temporaryDeliveryOrderClearanceDetail;
         }
 
-        public TemporaryDeliveryOrderClearanceDetail VTemporaryDeliveryOrderDetailHasBeenConfirmed(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail)
+        public TemporaryDeliveryOrderClearanceDetail VTemporaryDeliveryOrderDetailHasBeenConfirmed(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
-            if (!temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.IsConfirmed)
+            TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
+            if (!temporaryDeliveryOrderDetail.IsConfirmed)
             {
                 temporaryDeliveryOrderClearanceDetail.Errors.Add("Generic", "Temporary Delivery Order Detail belum dikonfirmasi");
             }
@@ -75,21 +76,22 @@ namespace Validation.Validation
         }
 
         public TemporaryDeliveryOrderClearanceDetail VQuantityOfTemporaryDeliveryOrderClearanceDetailsIsLessThanOrEqualTemporaryDeliveryOrderDetail(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail,
-                                     ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, bool CaseCreate)
+                                     ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, bool CaseCreate)
         {
             IList<TemporaryDeliveryOrderClearanceDetail> details = _temporaryDeliveryOrderClearanceDetailService.GetObjectsByTemporaryDeliveryOrderDetailId(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
             int totalQuantity = 0;
             foreach (var detail in details)
             {
-                if (!detail.IsConfirmed)
+                //if (!detail.IsConfirmed)
                 {
                     totalQuantity += detail.Quantity;
                 }
             }
             if (CaseCreate) { totalQuantity += temporaryDeliveryOrderClearanceDetail.Quantity; }
-            if (totalQuantity > temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.Quantity)
+            TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
+            if (totalQuantity > temporaryDeliveryOrderDetail.Quantity)
             {
-                int maxquantity = temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.Quantity - totalQuantity + temporaryDeliveryOrderClearanceDetail.Quantity;
+                int maxquantity = temporaryDeliveryOrderDetail.Quantity - totalQuantity + temporaryDeliveryOrderClearanceDetail.Quantity;
                 temporaryDeliveryOrderClearanceDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
             }
             return temporaryDeliveryOrderClearanceDetail;
@@ -165,12 +167,12 @@ namespace Validation.Validation
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             VHasTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderDetailService);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
-            VTemporaryDeliveryOrderDetailHasBeenConfirmed(temporaryDeliveryOrderClearanceDetail);
+            VTemporaryDeliveryOrderDetailHasBeenConfirmed(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderDetailService);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             VNonNegativeQuantity(temporaryDeliveryOrderClearanceDetail);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             // specific parameter = true for create
-            VQuantityOfTemporaryDeliveryOrderClearanceDetailsIsLessThanOrEqualTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService, true);
+            VQuantityOfTemporaryDeliveryOrderClearanceDetailsIsLessThanOrEqualTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService, _temporaryDeliveryOrderDetailService, true);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             VUniqueTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService);
             return temporaryDeliveryOrderClearanceDetail;
@@ -185,12 +187,12 @@ namespace Validation.Validation
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             VHasTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderDetailService);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
-            VTemporaryDeliveryOrderDetailHasBeenConfirmed(temporaryDeliveryOrderClearanceDetail);
+            VTemporaryDeliveryOrderDetailHasBeenConfirmed(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderDetailService);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             VNonNegativeQuantity(temporaryDeliveryOrderClearanceDetail);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             // specific parameter = false for non create function
-            VQuantityOfTemporaryDeliveryOrderClearanceDetailsIsLessThanOrEqualTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService, false);
+            VQuantityOfTemporaryDeliveryOrderClearanceDetailsIsLessThanOrEqualTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService, _temporaryDeliveryOrderDetailService, false);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             VUniqueTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
@@ -205,7 +207,7 @@ namespace Validation.Validation
         }
 
         public TemporaryDeliveryOrderClearanceDetail VConfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                    ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                    ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(temporaryDeliveryOrderClearanceDetail);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
@@ -213,7 +215,7 @@ namespace Validation.Validation
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
             VHasItemQuantity(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, _itemService, _warehouseItemService);
             if (!isValid(temporaryDeliveryOrderClearanceDetail)) { return temporaryDeliveryOrderClearanceDetail; }
-            VQuantityOfTemporaryDeliveryOrderClearanceDetailsIsLessThanOrEqualTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService, false);
+            VQuantityOfTemporaryDeliveryOrderClearanceDetailsIsLessThanOrEqualTemporaryDeliveryOrderDetail(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceDetailService, _temporaryDeliveryOrderDetailService, false);
             return temporaryDeliveryOrderClearanceDetail;
         }
 
@@ -264,10 +266,10 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                       ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                       ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             temporaryDeliveryOrderClearanceDetail.Errors.Clear();
-            VConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderClearanceDetailService, _itemService, _warehouseItemService);
+            VConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderClearanceDetailService, _temporaryDeliveryOrderDetailService, _itemService, _warehouseItemService);
             return isValid(temporaryDeliveryOrderClearanceDetail);
         }
 

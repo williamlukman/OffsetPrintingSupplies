@@ -170,8 +170,9 @@ namespace Service.Service
         {
             if (_validator.ValidPushObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _closingService, _deliveryOrderService))
             {
-                ReconcileObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _stockMutationService, _accountService, _generalLedgerJournalService,
-                                _closingService, _warehouseItemService, _itemService, _blanketService);
+                // Replaced with confirmed Temp DO Clearance
+                //ReconcileObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _stockMutationService, _accountService, _generalLedgerJournalService,
+                //                _closingService, _warehouseItemService, _itemService, _blanketService);
 
                 IList<TemporaryDeliveryOrderDetail> temporaryDeliveryOrderDetails = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
                 #region Part Delivery Order
@@ -204,6 +205,7 @@ namespace Service.Service
                         SalesDate = PushDate,
                         OrderType = virtualOrder.OrderType,
                         OrderCode = virtualOrder.Code,
+                        CurrencyId = virtualOrder.CurrencyId,
                     };
                     _salesOrderService.CreateObject(salesOrder, _contactService);
 

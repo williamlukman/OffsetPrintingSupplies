@@ -84,17 +84,17 @@ namespace Service.Service
             temporaryDeliveryOrderClearance.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearance, _temporaryDeliveryOrderClearanceDetailService, _closingService))
             {
-                temporaryDeliveryOrderClearance.TotalWastedCoGS = 0;
+                temporaryDeliveryOrderClearance.TotalWasteCoGS = 0;
                 IList<TemporaryDeliveryOrderClearanceDetail> temporaryDeliveryOrderClearanceDetails = _temporaryDeliveryOrderClearanceDetailService.GetObjectsByTemporaryDeliveryOrderClearanceId(temporaryDeliveryOrderClearance.Id);
                 foreach (var detail in temporaryDeliveryOrderClearanceDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _temporaryDeliveryOrderClearanceDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService,
                                                                       _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService);
-                    temporaryDeliveryOrderClearance.TotalWastedCoGS += detail.WastedCoGS;
+                    temporaryDeliveryOrderClearance.TotalWasteCoGS += detail.WasteCoGS;
                 }
                 _repository.ConfirmObject(temporaryDeliveryOrderClearance);
-                if (temporaryDeliveryOrderClearance.IsWasted)
+                if (temporaryDeliveryOrderClearance.IsWaste)
                 {
                     // Posting GL (Inventory Credit, SalesExpense debit) senilai wasted cogs dari average cost
                     _generalLedgerJournalService.CreateConfirmationJournalForTemporaryDeliveryOrderClearanceWaste(temporaryDeliveryOrderClearance, _accountService);
@@ -111,7 +111,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(temporaryDeliveryOrderClearance, _closingService))
             {
-                if (temporaryDeliveryOrderClearance.IsWasted)
+                if (temporaryDeliveryOrderClearance.IsWaste)
                 {
                     // Posting GL (Inventory Debit, SalesExpense Credit) senilai wasted cogs dari average cost
                     _generalLedgerJournalService.CreateUnconfirmationJournalForTemporaryDeliveryOrderClearanceWaste(temporaryDeliveryOrderClearance, _accountService);
@@ -123,7 +123,7 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _temporaryDeliveryOrderClearanceDetailService.UnconfirmObject(detail, this, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService);
                 }
-                temporaryDeliveryOrderClearance.TotalWastedCoGS = 0;
+                temporaryDeliveryOrderClearance.TotalWasteCoGS = 0;
                 _repository.UnconfirmObject(temporaryDeliveryOrderClearance);
             }
             return temporaryDeliveryOrderClearance;

@@ -39,6 +39,7 @@ namespace WebView.Controllers
         private ISalesQuotationDetailService _salesQuotationDetailService;
         private ISalesQuotationService _salesQuotationService;
         private ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService;
+        public ICurrencyService _currencyService;
 
         public TemporaryDeliveryOrderController()
         {
@@ -65,11 +66,12 @@ namespace WebView.Controllers
             _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
             _salesQuotationDetailService = new SalesQuotationDetailService(new SalesQuotationDetailRepository(), new SalesQuotationDetailValidator());
             _temporaryDeliveryOrderClearanceService = new TemporaryDeliveryOrderClearanceService(new TemporaryDeliveryOrderClearanceRepository(), new TemporaryDeliveryOrderClearanceValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
         {
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -184,6 +186,7 @@ namespace WebView.Controllers
                              model.DeliveryDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.IsReconciled,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -228,6 +231,7 @@ namespace WebView.Controllers
                             model.DeliveryDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.IsReconciled,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

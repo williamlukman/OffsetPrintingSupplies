@@ -1,6 +1,5 @@
-﻿@model WebView.Controllers.TemporaryDeliveryOrderController
-@{
-    ViewBag.Title = "Temporary Delivery Order";
+﻿@{
+    ViewBag.Title = "Temporary Delivery Order Clearance";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +8,7 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/temporarydeliveryorder.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/temporarydeliveryorderclearance.js")"></script>
 
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
@@ -23,7 +22,7 @@
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
-        <a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push2DO</a>
+        <!--a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push2DO</!a-->
         <!--a id="btn_back" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'">Back</a-->
     </div>
 
@@ -57,21 +56,12 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>No. Surat:</label>
+                                <label>Clearance Type</label>
                             </td>
                             <td>
-                                <input id="NomorSurat" name="NomorSurat" type="text" size="25"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Order Type</label>
-                            </td>
-                            <td>
-                            <select id="OrderType">
-                                <option value="0">Trial Order</option>
-                                <option value="1">Sample Order</option>
-                                <option value="2">Part Delivery Order</option>
+                            <select id="ClearanceType">
+                                <option value="False">Return</option>
+                                <option value="True">Waste</option>
                             </select>
                             </td>
                         </tr>
@@ -81,32 +71,23 @@
                             <td>
                                 <input id="PreviousOrderId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnPreviousOrder" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="PreviousOrder" name="PreviousOrderId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />                        
+                                <input id="PreviousOrder" name="PreviousOrderId" type="text" size="30" maxlength="60" class="editable upper" disabled="disabled" />                        
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label>Delivery Date</label></td>
+                                <label>Clearance Date</label></td>
                             <td>
-                                 <div id="DeliveryDateDiv"><input id="DeliveryDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
-                                 <div id="DeliveryDateDiv2"><input id="DeliveryDate2" type="text" size="10" disabled="disabled"/></div>
+                                 <div id="ClearanceDateDiv"><input id="ClearanceDate" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                 <div id="ClearanceDateDiv2"><input id="ClearanceDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                          </tr>
-                          <tr>
-                            <td>
-                                <label>Warehouse</label></td>
-                            <td>
-                                <input id="WarehouseId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
-                                <input id="btnWarehouse" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
-                                <input id="Warehouse" name="WarehouseId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                            </td>
-                        </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
                             <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
-                            <a id="btn_process_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Process</a>
+                            <!--a id="btn_process_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Process</a-->
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
                         <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -130,13 +111,13 @@
               <table width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
                   <tr>
                       <td width="139" nowrap style="width: 100px">
-                          Item
+                          Order Detail Id
                       </td>
                       <td>
                          <input id="ItemId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnItem" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Item" name="ItemId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
-                         <input id="PreviousOrderDetailId" name="SalesOrderDetailId" type="text" size ="10" hidden="hidden" />
+                         <input id="PreviousOrderDetailId" name="PreviousOrderDetailId" type="text" size ="10" hidden="hidden" />
                       </td>
                   </tr>
                     <tr>
@@ -155,22 +136,6 @@
                             <input id="Price" name="Price" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" disabled="disabled"/>
                         </td>
                     </tr>
-                    <tr id="row-restock">
-                        <td>
-                            <label>Restock QTY</label>
-                        </td>
-                        <td>
-                            <input id="RestockQuantity" name="RestockQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                        </td>
-                    </tr>
-                    <tr id="row-waste">
-                        <td>
-                            <label>Waste QTY</label>
-                        </td>
-                        <td>
-                            <input id="WasteQuantity" name="WasteQuantity" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                        </td>
-                    </tr>
               </table>
         </div>
     </div>
@@ -178,7 +143,7 @@
 
     <!-- Dialog Box Confirm-->
     <div id="confirm_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px;width :500px"
-        data-options="modal:true" title=".: Confirm Temporary Delivery Order:.">
+        data-options="modal:true" title=".: Confirm Temporary Delivery Order Clearance :.">
 
         <div id="confirm_toolbar" class="form_toolbar">
             <a id="confirm_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Submit</a>
@@ -228,18 +193,6 @@
                       </td>
                   </tr>
                   <tr>
-                            <td>
-                                <label>Currency </label></td>
-                            <td>
-                                <select id="CurrencyId">
-                                    @foreach (var item in Model._currencyService.GetAll())
-                                    {
-                                        <option value ="@item.Id">@item.Name</option>
-                                    }
-                                </select>
-                            </td>
-                  </tr>
-                  <tr>
                       <td>
                           Delivery Date
                       </td>
@@ -270,7 +223,7 @@
     <!-- End Dialog Box Delete-->
 
     <!-- Look Up previousorder -->
-    <div id="lookup_div_previousorder" class="easyui-dialog" title="List Order" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <div id="lookup_div_previousorder" class="easyui-dialog" title="List Temporary Delivery Order" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
         <div id="lookup_toolbar_previousorder" class="grid_toolbar">
@@ -284,7 +237,7 @@
     <!-- END Look Up previousorder -->
 
     <!-- Look Up item -->
-    <div id="lookup_div_item" class="easyui-dialog" title="List Item" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <div id="lookup_div_item" class="easyui-dialog" title="List Temporary Delivery Order Detail" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
         <div id="lookup_toolbar_item" class="grid_toolbar">
@@ -297,18 +250,6 @@
     </div>
     <!-- END Look Up item -->
 
-    <!-- Look Up warehouse -->
-    <div id="lookup_div_warehouse" class="easyui-dialog" title="List Warehouse" style="padding: 0px 5px; height: 490px; width: 480px;"
-        data-options="iconCls:'icon-tip',modal:true">
-
-        <div id="lookup_toolbar_warehouse" class="grid_toolbar">
-            <a id="lookup_btn_add_warehouse" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_warehouse" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
-        </div>
-
-        <table id="lookup_table_warehouse" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_warehouse" class="scroll" style="text-align: center;"></div>
-    </div>
-    <!-- END Look Up warehouse -->
+    
   </div>
 

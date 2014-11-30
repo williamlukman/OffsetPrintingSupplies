@@ -12,6 +12,10 @@ namespace Data.Mapping
         public VirtualOrderMapping()
         {
             HasKey(vo => vo.Id);
+            HasRequired(ex => ex.Currency)
+                 .WithMany()
+                 .HasForeignKey(ex => ex.CurrencyId)
+                 .WillCascadeOnDelete(false);
             HasRequired(vo => vo.Contact)
                 .WithMany(v => v.VirtualOrders)
                 .HasForeignKey(vo => vo.ContactId);

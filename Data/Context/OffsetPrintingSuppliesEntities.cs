@@ -31,7 +31,7 @@ namespace Data.Context
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
                                           "CoreAccessoryDetail", "CoreIdentificationDetail", "CoreIdentification",
-                                          "BlanketOrderDetail", "BlanketOrder" };
+                                          "BlanketOrderDetail", "BlanketOrder", "BlendingWorkOrder" };
             IList<String> purchaseOperationNames = new List<String>()
                                         { "PurchaseDownPaymentAllocationDetail", "PurchaseDownPaymentAllocation", "PaymentVoucherDetail",
                                           "PurchaseDownPayment", "PaymentVoucher",
@@ -50,7 +50,7 @@ namespace Data.Context
             IList<String> stockAndMasterNames = new List<String>()
                                         { "PriceMutation", "CustomerStockMutation", "StockMutation", "CustomerItem", "WarehouseMutationDetail", "WarehouseMutation",
                                           "ServiceCost", "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment",
-                                          "WarehouseItem", "Warehouse", "Compound", "Blanket", "CoreBuilder",
+                                          "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
                                           "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "Company" };
 
@@ -77,6 +77,9 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new BlanketMapping());
             modelBuilder.Configurations.Add(new BlanketOrderMapping());
             modelBuilder.Configurations.Add(new BlanketOrderDetailMapping());
+            modelBuilder.Configurations.Add(new BlendingRecipeMapping());
+            modelBuilder.Configurations.Add(new BlendingRecipeDetailMapping());
+            modelBuilder.Configurations.Add(new BlendingWorkOrderMapping());
             modelBuilder.Configurations.Add(new CashBankMapping());
             modelBuilder.Configurations.Add(new CashBankAdjustmentMapping());
             modelBuilder.Configurations.Add(new CashBankMutationMapping());
@@ -170,6 +173,9 @@ namespace Data.Context
         public DbSet<Blanket> Blankets { get; set; }
         public DbSet<BlanketOrder> BlanketOrders { get; set; }
         public DbSet<BlanketOrderDetail> BlanketOrderDetails { get; set; }
+        public DbSet<BlendingRecipe> BlendingRecipes { get; set; }
+        public DbSet<BlendingRecipeDetail> BlendingRecipeDetails { get; set; }
+        public DbSet<BlendingWorkOrder> BlendingWorkOrders { get; set; }
         public DbSet<CashBank> CashBanks { get; set; }
         public DbSet<CashBankAdjustment> CashBankAdjustments { get; set; }
         public DbSet<CashBankMutation> CashBankMutations { get; set; }

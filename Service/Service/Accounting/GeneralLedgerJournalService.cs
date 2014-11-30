@@ -1781,7 +1781,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = temporaryDeliveryOrderClearance.ConfirmationDate.GetValueOrDefault(),
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -1792,7 +1792,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = temporaryDeliveryOrderClearance.ConfirmationDate.GetValueOrDefault(),
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
             };
             debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
 
@@ -1817,7 +1817,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = UnconfirmDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -1828,7 +1828,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = UnconfirmDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = temporaryDeliveryOrderClearance.TotalWastedCoGS
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
             };
             creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
 
@@ -2386,6 +2386,75 @@ namespace Service.Service
         }
 
         // MANUFACTURING CONVERSION
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
+        {
+            // Credit Raw (Source Items), Debit FinishedGoods (Chemical)
+            #region Credit Raw (Source Items), Debit FinishedGoods (Chemical)
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = blendingWorkOrder.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalCost,
+            };
+            creditraw = CreateObject(creditraw, _accountService);
+
+            GeneralLedgerJournal debitfinishedgoods = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = blendingWorkOrder.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = TotalCost,
+            };
+            debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
+
+            journals.Add(creditraw);
+            journals.Add(debitfinishedgoods);
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
+        {
+            // Debit Raw (Source Items), Credit FinishedGoods (Chemical)
+            #region Debit Raw (Source Items), Credit FinishedGoods (Chemical)
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnfinishedDate = DateTime.Now;
+
+            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = UnfinishedDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = TotalCost
+            };
+            debitraw = CreateObject(debitraw, _accountService);
+
+            GeneralLedgerJournal creditfinishedgoods = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = UnfinishedDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalCost
+            };
+            creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
+
+            journals.Add(debitraw);
+            journals.Add(creditfinishedgoods);
+            return journals;
+            #endregion
+        }
 
         public IList<GeneralLedgerJournal> CreateFinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
         {

@@ -89,26 +89,26 @@ namespace Service.Service
                                                           IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
             temporaryDeliveryOrderClearanceDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, this, _itemService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, this, _temporaryDeliveryOrderDetailService, _itemService, _warehouseItemService))
             {
                 TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance = _temporaryDeliveryOrderClearanceService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId);
                 TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrderClearance.TemporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
                 IList<StockMutation> stockMutations = null;
-                if (temporaryDeliveryOrderClearance.IsWasted)
+                if (temporaryDeliveryOrderClearance.IsWaste)
                 {
                     // ready berkurang sejumlah waste
                     // virtual berkurang sejumlah yang dikembalikan
                     stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderClearanceWaste(temporaryDeliveryOrderClearanceDetail, ConfirmationDate, warehouseItem);
-                    temporaryDeliveryOrderClearanceDetail.WastedCoGS = temporaryDeliveryOrderClearanceDetail.Quantity * item.AvgPrice;
+                    temporaryDeliveryOrderClearanceDetail.WasteCoGS = temporaryDeliveryOrderClearanceDetail.Quantity * item.AvgPrice;
                     temporaryDeliveryOrderDetail.WasteQuantity += temporaryDeliveryOrderClearanceDetail.Quantity;
                 }
                 else
                 {
                     // virtual berkurang sejumlah yang dikembalikan
                     stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderClearanceReturn(temporaryDeliveryOrderClearanceDetail, ConfirmationDate, warehouseItem);
-                    temporaryDeliveryOrderClearanceDetail.WastedCoGS = 0;
+                    temporaryDeliveryOrderClearanceDetail.WasteCoGS = 0;
                     temporaryDeliveryOrderDetail.RestockQuantity += temporaryDeliveryOrderClearanceDetail.Quantity;
                 }
                 foreach (var stockMutation in stockMutations)
@@ -132,7 +132,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(temporaryDeliveryOrderClearanceDetail))
             {
-                temporaryDeliveryOrderClearanceDetail.WastedCoGS = 0;
+                temporaryDeliveryOrderClearanceDetail.WasteCoGS = 0;
                 temporaryDeliveryOrderClearanceDetail = _repository.UnconfirmObject(temporaryDeliveryOrderClearanceDetail);
                 TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance = _temporaryDeliveryOrderClearanceService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId);
                 TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
@@ -140,7 +140,7 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
                 // jika waste, ready bertambah sejumlah waste & virtual bertambah sejumlah yang dikembalikan
                 // jika return, virtual bertambah sejumlah yang dikembalikan
-                IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, temporaryDeliveryOrderClearance.IsWasted ? Constant.SourceDocumentDetailType.TemporaryDeliveryOrderClearanceDetailWaste : Constant.SourceDocumentDetailType.TemporaryDeliveryOrderClearanceDetailReturn, temporaryDeliveryOrderClearanceDetail.Id);
+                IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, temporaryDeliveryOrderClearance.IsWaste ? Constant.SourceDocumentDetailType.TemporaryDeliveryOrderClearanceDetailWaste : Constant.SourceDocumentDetailType.TemporaryDeliveryOrderClearanceDetailReturn, temporaryDeliveryOrderClearanceDetail.Id);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingDelivery += temporaryDeliveryOrderClearanceDetail.Quantity;
@@ -151,7 +151,7 @@ namespace Service.Service
                 _stockMutationService.DeleteStockMutations(stockMutations);
 
                 // update TDO Detail to keep track wasted/return quantity
-                if (temporaryDeliveryOrderClearance.IsWasted)
+                if (temporaryDeliveryOrderClearance.IsWaste)
                 {
                     temporaryDeliveryOrderDetail.WasteQuantity -= temporaryDeliveryOrderClearanceDetail.Quantity;
                 }
