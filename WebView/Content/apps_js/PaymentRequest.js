@@ -615,6 +615,7 @@
                     }
                 }
                 else {
+                    ReloadGrid();
                     ReloadGridDetail();
                     $('#TotalAmount').numberbox('setValue',result.totalAmount);
                     $("#item_div").dialog('close')
