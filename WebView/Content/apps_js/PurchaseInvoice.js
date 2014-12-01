@@ -623,6 +623,7 @@
                 else {
                     $('#AmountPayable').val(result.AmountPayable);
                     ReloadGridDetail();
+                    ReloadGrid();
                     $("#item_div").dialog('close')
                 }
             }

@@ -244,7 +244,7 @@ namespace WebView.Controllers
                              model.PayableSourceId,
                              model.DueDate,
                              model.Amount,
-                             model.Currency.Name,
+                             Currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.CreatedAt,
@@ -287,6 +287,7 @@ namespace WebView.Controllers
                             model.PayableSourceId,
                             model.DueDate,
                             model.Amount,
+                            model.Currency,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
                             model.CreatedAt,
@@ -315,6 +316,8 @@ namespace WebView.Controllers
                             model.Code,
                             model.PayableId,
                             PayableCode = model.Payable.Code,
+                            model.AmountPaid,
+                            model.Rate,
                             model.Amount,
                             model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -353,6 +356,8 @@ namespace WebView.Controllers
                             model.PayableId,
                             model.PayableCode,
                             model.Amount,
+                            model.Rate,
+                            model.AmountPaid,
                             model.Description,
                       }
                     }).ToArray()
@@ -385,6 +390,7 @@ namespace WebView.Controllers
                 model.IsGBCH,
                 model.DueDate,
                 model.TotalAmount,
+                model.RateToIDR,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -408,7 +414,11 @@ namespace WebView.Controllers
                 model.Code,
                 model.PayableId,
                 Payable =_payableService.GetObjectById(model.PayableId).Code,
+                model.AmountPaid,
+                model.Rate,
                 model.Amount,
+                Remaining = model.Payable.RemainingAmount,
+                currency = model.Payable.Currency.Name,
                 model.Description,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
@@ -537,6 +547,8 @@ namespace WebView.Controllers
                 var data = _paymentVoucherDetailService.GetObjectById(model.Id);
                 data.PayableId = model.PayableId;
                 data.Amount = model.Amount;
+                data.AmountPaid = model.AmountPaid;
+                data.Rate = model.Rate;
                 data.Description = model.Description;
                 model = _paymentVoucherDetailService.UpdateObject(data,_paymentVoucherService,_cashBankService,_payableService);
                 totalamount = _paymentVoucherService.GetObjectById(model.PaymentVoucherId).TotalAmount;

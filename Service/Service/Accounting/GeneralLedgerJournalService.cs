@@ -1464,7 +1464,6 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, IAccountService _accountService)
         {
-            // TODO: Tax Calculation
             // Debit GoodsPendingClearance, Credit AccountPayable
             #region Debit GoodsPendingClearance, Credit AccountPayable
             decimal PreTax = purchaseInvoice.AmountPayable * 100 / (100 + purchaseInvoice.Tax);
@@ -1475,7 +1474,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + purchaseInvoice.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoice,
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)purchaseInvoice.ConfirmationDate,
@@ -1556,7 +1555,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + purchaseInvoice.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoice,
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)UnconfirmationDate,

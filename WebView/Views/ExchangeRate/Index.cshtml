@@ -49,7 +49,7 @@
                                 <label>Currency </label></td>
                             <td>
                                 <select id="CurrencyId">
-                                    @foreach (var item in Model._currencyService.GetAll())
+                                    @foreach (var item in Model._currencyService.GetQueryable().Where(x => !x.IsBase))
                                     {
                                         <option value ="@item.Id">@item.Name</option>
                                     }

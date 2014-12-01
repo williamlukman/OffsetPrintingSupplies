@@ -324,9 +324,9 @@ namespace WebView.Controllers
                              model.Code,
                              model.ReceivableId,
                              ReceivableCode = model.Receivable.Code,
-                             model.Amount,
-                             model.Rate,
                              model.AmountPaid,
+                             model.Rate,
+                             model.Amount,
                              model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -423,9 +423,9 @@ namespace WebView.Controllers
                 model.Code,
                 model.ReceivableId,
                 Receivable = _receivableService.GetObjectById(model.ReceivableId).Code,
-                model.Amount,
-                model.Rate,
                 model.AmountPaid,
+                model.Rate,
+                model.Amount,
                 Remaining = model.Receivable.RemainingAmount,
                 currency = model.Receivable.Currency.Name,
                 model.Description,
