@@ -241,6 +241,7 @@ namespace WebView.Controllers
                              ItemName = model.TemporaryDeliveryOrderDetail.Item.Name,
                              model.Quantity,
                              WasteCoGS = model.WasteCoGS,
+                             model.SellingPrice,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -283,6 +284,7 @@ namespace WebView.Controllers
                             model.ItemName,
                             model.Quantity,
                             model.WasteCoGS,
+                            model.SellingPrice
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -342,6 +344,8 @@ namespace WebView.Controllers
                 Item = model.TemporaryDeliveryOrderDetail.Item.Name,
                 model.Quantity,
                 model.WasteCoGS,
+                model.SellingPrice,
+                IsWaste = model.TemporaryDeliveryOrderClearance.IsWaste,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -455,6 +459,7 @@ namespace WebView.Controllers
                 var data = _temporaryDeliveryOrderClearanceDetailService.GetObjectById(model.Id);
                 data.TemporaryDeliveryOrderDetailId = model.TemporaryDeliveryOrderDetailId;
                 data.Quantity = model.Quantity;
+                data.SellingPrice = model.SellingPrice;
                 model = _temporaryDeliveryOrderClearanceDetailService.UpdateObject(data, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
             }
             catch (Exception ex)

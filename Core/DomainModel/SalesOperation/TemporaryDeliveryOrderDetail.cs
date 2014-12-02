@@ -17,6 +17,8 @@ namespace Core.DomainModel
         public decimal WasteCOGS { get; set; }
         public int WasteQuantity { get; set; }
         public int RestockQuantity { get; set; }
+        public decimal SellingPrice { get; set; }
+
         public Nullable<int> SalesOrderDetailId { get; set; }
         public Nullable<int> VirtualOrderDetailId { get; set; }
         public bool IsConfirmed { get; set; }

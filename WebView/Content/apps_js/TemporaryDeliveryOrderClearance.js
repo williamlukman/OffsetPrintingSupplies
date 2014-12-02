@@ -52,7 +52,7 @@
     $("#list").jqGrid({
         url: base_url + 'TemporaryDeliveryOrderClearance/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Order Id', 'Order Code', 'Is Waste', 'Total Waste CoGS',
+        colNames: ['ID', 'Code', 'Order Id', 'Order Code', 'Clearance', 'Total Waste CoGS',
                    'Is Confirmed', 'Confirmation Date', 'Clearance Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -99,15 +99,13 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isreconciled: rowIsReconciled });
 
-		          rowClearanceType = $(this).getRowData(cl).clearancetype;
-		          if (rowClearanceType == '0') {
-		              rowClearanceType = "Trial";
-		          } else if (rowClearanceType == '1') {
-		              rowClearanceType = "Sample";
+		          rowIsWaste = $(this).getRowData(cl).iswaste;
+		          if (rowIsWaste == 'true') {
+		              rowIsWaste = "Waste";
 		          } else {
-		              rowClearanceType = "Part Delivery";
+		              rowIsWaste = "Return";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { clearancetype: rowClearanceType });
+		          $(this).jqGrid('setRowData', ids[i], { iswaste: rowIsWaste });
 		      }
 		  }
 
@@ -194,6 +192,13 @@
                             $('#ClearanceType').attr('disabled', true);
                             $('#btnPreviousOrder').attr('disabled', true);
                             $('#tabledetail_div').show();
+                            if (result.IsWaste) {
+                                $('#Price').numberbox('setValue', 0);
+                                $('#Price').attr('disabled', true);
+                            }
+                            else {
+                                $('#Price').removeAttr('disabled');
+                            }
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
                         }
@@ -332,60 +337,6 @@
         $('#confirm_div').dialog('close');
     });
 
-    $('#btn_forward').click(function () {
-        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $('#PushDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-            $('#idpush').val(ret.id);
-            $("#push_div").dialog("open");
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#push_btn_submit').click(function () {
-        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#list").jqGrid('getRowData', id);
-            $.messager.confirm('Confirm', 'Are you sure you want to create delivery order?', function (r) {
-                if (r) {
-                    $.ajax({
-                        url: base_url + "TemporaryDeliveryOrderClearance/Push",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            Id: $('#idpush').val(), ConfirmationDate: $('#PushDate').datebox('getValue'),
-                        }),
-                        success: function (result) {
-                            if (JSON.stringify(result.Errors) != '{}') {
-                                for (var key in result.Errors) {
-                                    if (key != null && key != undefined && key != 'Generic') {
-                                        $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                        $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                                    }
-                                    else {
-                                        $.messager.alert('Warning', result.Errors[key], 'warning');
-                                    }
-                                }
-                            }
-                            else {
-                                ReloadGrid();
-                                $("#push_div").dialog('close');
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#push_btn_cancel').click(function () {
-        $('#push_div').dialog('close');
-    });
-
     $('#btn_del').click(function () {
         clearForm("#frm");
 
@@ -458,7 +409,7 @@
 
         var clearancetype = document.getElementById("ClearanceType").selectedIndex;
 
-        var deliveryorderid = deliveryorderid = $("#PreviousOrderId").val();
+        var temporarydeliveryorderid = $("#PreviousOrderId").val();
 
         $.ajax({
             contentType: "application/json",
@@ -467,7 +418,7 @@
             data: JSON.stringify({
                 Id: id,
                 ClearanceDate: $('#ClearanceDate').datebox('getValue'), IsWaste: $("#ClearanceType").val(),
-                TemporaryDeliveryOrderId: deliveryorderid,
+                TemporaryDeliveryOrderId: temporarydeliveryorderid,
             }),
             async: false,
             cache: false,
@@ -499,7 +450,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Detail Id', 'Detail Code', 'Item Id', 'Item Sku', 'Item Name', 'QTY', 'Waste CoGS'
+        colNames: ['Id', 'Code', 'Detail Id', 'Detail Code', 'Item Id', 'Item Sku', 'Item Name', 'QTY', 'Waste CoGS', 'Price'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
@@ -511,6 +462,7 @@
                   { name: 'itemname', index: 'itemname', width: 130, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'wastecogs', index: 'wastecogs', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -533,7 +485,6 @@
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
-        $('#Price').removeAttr('disabled');
         $('#Quantity').removeAttr('disabled');
         $('#btnItem').removeAttr('disabled');
         $('#row-restock').hide();
@@ -565,60 +516,22 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId).data('process', '');
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#WasteQuantity').val(result.WasteQuantity);
-                            $('#RestockQuantity').val(result.RestockQuantity);
-                            $('#Price').val(result.Price);
+                            $('#Quantity').numberbox('setValue', result.Quantity);
+                            $('#WasteQuantity').numberbox('setValue', result.WasteQuantity);
+                            $('#RestockQuantity').numberbox('setValue', result.RestockQuantity);
+                            if (result.IsWaste) {
+                                $('#Price').attr('disabled', true);
+                                $('#Price').numberbox('setValue', 0);
+                            }
+                            else {
+                                $('#Price').removeAttr('disabled');
+                                $('#Price').numberbox('setValue', result.SellingPrice);
+                            }
                             $('#PreviousOrderDetailId').val(result.TemporaryDeliveryOrderDetailId);
-                            $('#Price').removeAttr('disabled');
                             $('#Quantity').removeAttr('disabled');
                             $('#btnItem').removeAttr('disabled');
                             $('#row-waste').hide();
                             $('#row-restock').hide();
-                            $('#item_div').dialog('open');
-                        }
-                    }
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#btn_process_detail').click(function () {
-        ClearData();
-        clearForm("#item_div");
-        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            $.ajax({
-                dataType: "json",
-                url: base_url + "TemporaryDeliveryOrderClearance/GetInfoDetail?Id=" + id,
-                success: function (result) {
-                    if (result.Id == null) {
-                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
-                    }
-                    else {
-                        if (JSON.stringify(result.Errors) != '{}') {
-                            var error = '';
-                            for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.Errors[key];
-                            }
-                            $.messager.alert('Warning', error, 'warning');
-                        }
-                        else {
-                            $("#item_btn_submit").data('kode', result.Id);
-                            $('#ItemId').val(result.ItemId).data('process', '1');
-                            $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#WasteQuantity').val(result.WasteQuantity);
-                            $('#RestockQuantity').val(result.RestockQuantity);
-                            $('#Price').val(result.Price);
-                            $('#PreviousOrderDetailId').val(result.OrderDetailId);
-                            $('#Price').attr('disabled', true);
-                            $('#Quantity').attr('disabled', true);
-                            $('#btnItem').attr('disabled', true);
-                            $('#row-waste').show();
-                            $('#row-restock').show();
                             $('#item_div').dialog('open');
                         }
                     }
@@ -689,7 +602,7 @@
         }
         var clearancetype = document.getElementById("ClearanceType").selectedIndex;
 
-        var virtualorderdetailid = $("#PreviousOrderDetailId").val();
+        var temporarydeliveryorderdetailid = $("#PreviousOrderDetailId").val();
 
         $.ajax({
             contentType: "application/json",
@@ -697,7 +610,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, TemporaryDeliveryOrderClearanceId: $("#id").val(), 
-                Quantity: $("#Quantity").numberbox('getValue'), TemporaryDeliveryOrderDetailId: virtualorderdetailid,
+                Quantity: $("#Quantity").numberbox('getValue'), TemporaryDeliveryOrderDetailId: temporarydeliveryorderdetailid,
+                SellingPrice: $("#Price").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -736,7 +650,7 @@
     // -------------------------------------------------------Look Up previousorder-------------------------------------------------------
     $('#btnPreviousOrder').click(function () {
         var lookUpURL;
-        lookUpURL = base_url + 'TemporaryDeliveryOrder/GetListConfirmed';
+        lookUpURL = base_url + 'TemporaryDeliveryOrder/GetListConfirmedForNonPartDeliveryOrder';
         
         var lookupGrid = $('#lookup_table_previousorder');
         lookupGrid.setGridParam({
@@ -755,7 +669,7 @@
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
-                  { name: 'clearancetype', index: 'clearancetype', width: 70 },
+                  { name: 'ordertype', index: 'ordertype', width: 70 },
 				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
                   { name: 'ordercode', index: 'ordercode', width: 70 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
@@ -778,6 +692,22 @@
         sortorder: "ASC",
         width: $("#lookup_div_previousorder").width() - 10,
         height: $("#lookup_div_previousorder").height() - 110,
+        gridComplete:
+		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowOrderType = $(this).getRowData(cl).ordertype;
+		          if (rowOrderType == '0') {
+		              rowOrderType = "Trial";
+		          } else if (rowOrderType == '1') {
+		              rowOrderType = "Sample";
+		          } else {
+		              rowOrderType = "Part Delivery";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });
+		      }
+		  }
     });
     $("#lookup_table_previousorder").jqGrid('navGrid', '#lookup_toolbar_previousorder', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
@@ -878,7 +808,7 @@
             $('#PreviousOrderDetailId').val(id);
             $('#ItemId').val(ret.itemid);
             $('#Item').val(ret.itemname);
-            $('#Price').val(ret.price);
+            if (document.getElementById("ClearanceType").selectedIndex == 0) { $('#Price').numberbox('setValue', ret.price); }            
             $('#lookup_div_item').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

@@ -105,6 +105,93 @@ namespace WebView.Controllers
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.IsReconciled,
+                             model.IsPushed,
+                             model.PushDate,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Code,
+                            model.NomorSurat,
+                            model.OrderType,
+                            model.OrderId,
+                            model.OrderCode,
+                            model.WarehouseId,
+                            model.Warehouse,
+                            model.DeliveryDate,
+                            model.IsConfirmed,
+                            model.ConfirmationDate,
+                            model.IsReconciled,
+                            model.IsPushed,
+                            model.PushDate,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetListConfirmed(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _temporaryDeliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse")
+                                                  .Where(x => !x.IsDeleted && x.IsConfirmed);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Code,
+                             model.NomorSurat,
+                             model.OrderType,
+                             model.VirtualOrderId,
+                             VirtualOrderCode = model.VirtualOrder.Code,
+                             model.DeliveryOrderId,
+                             DeliveryOrderCode = model.DeliveryOrder.Code,
+                             OrderId = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrderId : model.VirtualOrderId,
+                             OrderCode = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrder.Code : model.VirtualOrder.Code,
+                             model.WarehouseId,
+                             Warehouse = model.Warehouse.Name,
+                             model.DeliveryDate,
+                             model.IsConfirmed,
+                             model.ConfirmationDate,
+                             model.IsReconciled,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -157,7 +244,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListConfirmed(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetListConfirmedForNonPartDeliveryOrder(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -166,7 +253,8 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _temporaryDeliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse").Where(x => !x.IsDeleted && x.IsConfirmed);
+            var q = _temporaryDeliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse")
+                                                  .Where(x => !x.IsDeleted && x.IsConfirmed && x.OrderType != Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder);
 
             var query = (from model in q
                          select new
@@ -269,7 +357,7 @@ namespace WebView.Controllers
                              model.Quantity,
                              model.RestockQuantity,
                              model.WasteQuantity,
-                             Price = (model.TemporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.SalesOrderDetail.Price : model.VirtualOrderDetail.Price,
+                             Price = (model.TemporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.SalesOrderDetail.Price : model.SellingPrice,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -378,7 +466,7 @@ namespace WebView.Controllers
                 model.RestockQuantity,
                 model.WasteQuantity,
                 Price = _temporaryDeliveryOrderService.GetObjectById(model.TemporaryDeliveryOrderId).OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?
-                        _salesOrderDetailService.GetObjectById((int) model.SalesOrderDetailId).Price : _virtualOrderDetailService.GetObjectById((int) model.VirtualOrderDetailId).Price,
+                        _salesOrderDetailService.GetObjectById((int) model.SalesOrderDetailId).Price : model.SellingPrice,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
