@@ -25,17 +25,17 @@ namespace Data.Repository
 
         public IList<BlendingRecipeDetail> GetAll()
         {
-            return (from x in Context.Items.OfType<BlendingRecipeDetail>() where !x.IsDeleted select x).ToList();
+            return FindAll(x => !x.IsDeleted).ToList();
         }
 
         public IList<BlendingRecipeDetail> GetObjectsByBlendingRecipeId(int BlendingRecipeId)
         {
-            return (from x in Context.Items.OfType<BlendingRecipeDetail>() where x.BlendingRecipeId == BlendingRecipeId && !x.IsDeleted select x).ToList();
+            return FindAll(x => x.BlendingRecipeId == BlendingRecipeId && !x.IsDeleted).ToList();
         }
 
         public BlendingRecipeDetail GetObjectById(int Id)
         {
-            BlendingRecipeDetail blendingRecipeDetail = (from x in Context.Items.OfType<BlendingRecipeDetail>() where x.Id == Id && !x.IsDeleted select x).FirstOrDefault();
+            BlendingRecipeDetail blendingRecipeDetail = FindAll(x => x.Id == Id && !x.IsDeleted).FirstOrDefault();
             if (blendingRecipeDetail != null) { blendingRecipeDetail.Errors = new Dictionary<string, string>(); }
             return blendingRecipeDetail;
         }
@@ -64,7 +64,7 @@ namespace Data.Repository
 
         public bool DeleteObject(int Id)
         {
-            BlendingRecipeDetail blendingRecipeDetail = (from x in Context.Items.OfType<BlendingRecipeDetail>() where x.Id == Id select x).FirstOrDefault();
+            BlendingRecipeDetail blendingRecipeDetail = FindAll(x => x.Id == Id).FirstOrDefault();
             return (Delete(blendingRecipeDetail) == 1) ? true : false;
         }
 

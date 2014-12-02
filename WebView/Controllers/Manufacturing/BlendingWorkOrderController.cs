@@ -70,11 +70,13 @@ namespace WebView.Controllers
                              model.Code,
                              model.BlendingRecipeId,
                              BlendingRecipe = model.BlendingRecipe.Name,
+                             TargetItemSku = model.BlendingRecipe.TargetItem.Sku,
                              TargetItem = model.BlendingRecipe.TargetItem.Name,
                              model.BlendingRecipe.TargetQuantity,
                              UoM = model.BlendingRecipe.TargetItem.UoM.Name,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
+                             model.Description,
                              model.ConfirmationDate,
                              model.BlendingDate,
                              model.CreatedAt,
@@ -114,11 +116,13 @@ namespace WebView.Controllers
                              model.Code,
                              model.BlendingRecipeId,
                              model.BlendingRecipe,
+                             model.TargetItemSku,
                              model.TargetItem,
                              model.TargetQuantity,
                              model.UoM,
                              model.WarehouseId,
                              model.Warehouse,
+                             model.Description,
                              model.ConfirmationDate,
                              model.BlendingDate,
                              model.CreatedAt,
@@ -128,7 +132,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListConfirmed(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetListNonConfirmed(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -146,11 +150,13 @@ namespace WebView.Controllers
                              model.Code,
                              model.BlendingRecipeId,
                              BlendingRecipe = model.BlendingRecipe.Name,
+                             TargetItemSku = model.BlendingRecipe.TargetItem.Sku,
                              TargetItem = model.BlendingRecipe.TargetItem.Name,
                              model.BlendingRecipe.TargetQuantity,
                              UoM = model.BlendingRecipe.TargetItem.UoM.Name,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
+                             model.Description,
                              model.ConfirmationDate,
                              model.BlendingDate,
                              model.CreatedAt,
@@ -190,11 +196,13 @@ namespace WebView.Controllers
                              model.Code,
                              model.BlendingRecipeId,
                              model.BlendingRecipe,
+                             model.TargetItemSku,
                              model.TargetItem,
                              model.TargetQuantity,
                              model.UoM,
                              model.WarehouseId,
                              model.Warehouse,
+                             model.Description,
                              model.ConfirmationDate,
                              model.BlendingDate,
                              model.CreatedAt,
@@ -228,6 +236,7 @@ namespace WebView.Controllers
                 UoM = model.BlendingRecipe.TargetItem.UoM.Name,
                 model.WarehouseId,
                 Warehouse = model.Warehouse.Name,
+                model.Description,
                 model.ConfirmationDate,
                 model.BlendingDate,
                 model.CreatedAt,
@@ -287,7 +296,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _blendingWorkOrderService.GetObjectById(model.Id);
-                model = _blendingWorkOrderService.SoftDeleteObject(model);
+                model = _blendingWorkOrderService.SoftDeleteObject(data);
             }
             catch (Exception ex)
             {

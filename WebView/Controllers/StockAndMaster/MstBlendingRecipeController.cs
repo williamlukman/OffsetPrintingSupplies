@@ -75,6 +75,7 @@ namespace WebView.Controllers
                             model.Name,
                             model.Description,
                             model.TargetItemId,
+                            TargetItemSku = model.TargetItem.Sku,
                             TargetItem = model.TargetItem.Name,
                             model.TargetQuantity,
                             UoM = model.TargetItem.UoM.Name,
@@ -115,6 +116,7 @@ namespace WebView.Controllers
                             model.Name,
                             model.Description,
                             model.TargetItemId,
+                            model.TargetItemSku,
                             model.TargetItem,
                             model.TargetQuantity,
                             model.UoM,
@@ -140,10 +142,9 @@ namespace WebView.Controllers
                          select new
                          {
                              model.Id,
-                             model.BlendingRecipeId,
-                             BlendingRecipe = model.BlendingRecipe.Name,
                              model.ItemId,
-                             Item = model.Item.Name,
+                             ItemSku = model.Item.Sku,
+                             ItemName = model.Item.Name,
                              model.Quantity,
                              UoM = model.Item.UoM.Name,
                              model.CreatedAt,
@@ -180,10 +181,9 @@ namespace WebView.Controllers
                         id = model.Id,
                         cell = new object[] {
                              model.Id,
-                             model.BlendingRecipeId,
-                             model.BlendingRecipe,
                              model.ItemId,
-                             model.Item,
+                             model.ItemSku,
+                             model.ItemName,
                              model.Quantity,
                              model.UoM,
                              model.CreatedAt,
@@ -216,6 +216,7 @@ namespace WebView.Controllers
                              model.PendingDelivery,
                              model.UoMId,
                              UoM = model.UoM.Name,
+                             ItemType = model.ItemType.Name,
                              model.CreatedAt,
                              model.UpdatedAt
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -258,6 +259,7 @@ namespace WebView.Controllers
                             model.PendingDelivery,
                             model.UoMId,
                             model.UoM,
+                            model.ItemType,
                             model.CreatedAt,
                             model.UpdatedAt
                       }

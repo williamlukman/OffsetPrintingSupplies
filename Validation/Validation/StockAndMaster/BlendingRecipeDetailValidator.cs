@@ -38,11 +38,11 @@ namespace Validation.Validation
             return blendingRecipeDetail;
         }
 
-        public BlendingRecipeDetail VNonNegativeQuantity(BlendingRecipeDetail blendingRecipeDetail)
+        public BlendingRecipeDetail VNonNegativeNonZeroQuantity(BlendingRecipeDetail blendingRecipeDetail)
         {
-            if (blendingRecipeDetail.Quantity < 0)
+            if (blendingRecipeDetail.Quantity <= 0)
             {
-                blendingRecipeDetail.Errors.Add("Quantity", "Tidak boleh negatif");
+                blendingRecipeDetail.Errors.Add("Quantity", "Harus lebih besar dari 0");
             }
             return blendingRecipeDetail;
         }
@@ -53,7 +53,7 @@ namespace Validation.Validation
             if (!isValid(blendingRecipeDetail)) { return blendingRecipeDetail; }
             VHasUniqueItem(blendingRecipeDetail, _itemService, _blendingRecipeDetailService);
             if (!isValid(blendingRecipeDetail)) { return blendingRecipeDetail; }
-            VNonNegativeQuantity(blendingRecipeDetail);
+            VNonNegativeNonZeroQuantity(blendingRecipeDetail);
             if (!isValid(blendingRecipeDetail)) { return blendingRecipeDetail; }
             return blendingRecipeDetail;
         }
@@ -70,7 +70,7 @@ namespace Validation.Validation
 
         public BlendingRecipeDetail VAdjustQuantity(BlendingRecipeDetail blendingRecipeDetail)
         {
-            VNonNegativeQuantity(blendingRecipeDetail);
+            VNonNegativeNonZeroQuantity(blendingRecipeDetail);
             return blendingRecipeDetail;
         }
 

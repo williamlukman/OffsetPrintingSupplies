@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Constants;
 
 namespace Validation.Validation
 {
@@ -17,9 +18,9 @@ namespace Validation.Validation
             {
                 blendingRecipe.Errors.Add("TargetItemId", "Tidak boleh tidak ada");
             }
-            else if (!item.ItemType.IsLegacy)
+            else if (item.ItemType.Name != Constant.ItemTypeCase.Chemical)
             {
-                blendingRecipe.Errors.Add("Generic", "Item Type Harus berupa legacy item");
+                blendingRecipe.Errors.Add("TargetItemId", "Item Type Harus berupa Chemical");
             }
             return blendingRecipe;
         }
@@ -37,11 +38,11 @@ namespace Validation.Validation
             return blendingRecipe;
         }
 
-        public BlendingRecipe VNonNegativeQuantity(BlendingRecipe blendingRecipe)
+        public BlendingRecipe VNonZeroNonNegativeQuantity(BlendingRecipe blendingRecipe)
         {
-            if (blendingRecipe.TargetQuantity < 0)
+            if (blendingRecipe.TargetQuantity <= 0)
             {
-                blendingRecipe.Errors.Add("TargetQuantity", "Tidak boleh negatif");
+                blendingRecipe.Errors.Add("TargetQuantity", "Tidak harus lebih besar dari 0");
             }
             return blendingRecipe;
         }
@@ -72,7 +73,7 @@ namespace Validation.Validation
             if (!isValid(blendingRecipe)) { return blendingRecipe; }
             VHasUniqueName(blendingRecipe, _blendingRecipeService);
             if (!isValid(blendingRecipe)) { return blendingRecipe; }
-            VNonNegativeQuantity(blendingRecipe);
+            VNonZeroNonNegativeQuantity(blendingRecipe);
             if (!isValid(blendingRecipe)) { return blendingRecipe; }
             return blendingRecipe;
         }
@@ -92,7 +93,7 @@ namespace Validation.Validation
 
         public BlendingRecipe VAdjustQuantity(BlendingRecipe blendingRecipe)
         {
-            VNonNegativeQuantity(blendingRecipe);
+            VNonZeroNonNegativeQuantity(blendingRecipe);
             return blendingRecipe;
         }
 

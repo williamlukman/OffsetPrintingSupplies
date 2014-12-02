@@ -327,6 +327,8 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\MasterBlendingRecipe.js" />
     <Content Include="Content\apps_js\TemporaryDeliveryOrderClearance.js" />
     <Content Include="Content\apps_js\CustomerStockMutation.js" />
     <Content Include="Content\apps_js\CustomerItem.js" />
@@ -1342,6 +1344,8 @@
     <Content Include="Views\CustomerItem\Index.cshtml" />
     <Content Include="Views\CustomerStockMutation\Index.cshtml" />
     <Content Include="Views\TemporaryDeliveryOrderClearance\Index.cshtml" />
+    <Content Include="Views\MstBlendingRecipe\Index.cshtml" />
+    <Content Include="Views\BlendingWorkOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

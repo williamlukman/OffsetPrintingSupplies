@@ -404,7 +404,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _blanketOrderService.GetObjectById(model.Id);
-                model = _blanketOrderService.SoftDeleteObject(model, _blanketOrderDetailService);
+                model = _blanketOrderService.SoftDeleteObject(data, _blanketOrderDetailService);
             }
             catch (Exception ex)
             {
