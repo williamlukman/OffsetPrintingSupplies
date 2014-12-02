@@ -1,5 +1,4 @@
-﻿@model WebView.Controllers.TemporaryDeliveryOrderController
-@{
+﻿@{
     ViewBag.Title = "Temporary Delivery Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -23,7 +22,8 @@
         <a id="btn_confirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-approval'">Confirm</a>
         <a id="btn_unconfirm" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-undo'">Unconfirm</a>
         <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
-        <a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push2DO</a>
+        <!-- Hide Automation, due to Multiple Clearance -->
+        <!--a id="btn_forward" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-forward'">Push2DO</a-->
         <!--a id="btn_back" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-back'">Back</a-->
     </div>
 
@@ -106,7 +106,8 @@
                         <div id="toolbardetail" class="grid_toolbar">
                             <a id="btn_add_new_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
                             <a id="btn_edit_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit</a>
-                            <a id="btn_process_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Process</a>
+                            <!-- Process is being replaced by Clearance -->
+                            <!--a id="btn_process_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-book'">Process</a-->
                             <a id="btn_del_detail" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
                         </div>
                         <table id="listdetail" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -226,18 +227,6 @@
                       <td>
                          <input id="idpush" type="text" size="10" disabled="disabled"/>
                       </td>
-                  </tr>
-                  <tr>
-                            <td>
-                                <label>Currency </label></td>
-                            <td>
-                                <select id="CurrencyId">
-                                    @foreach (var item in Model._currencyService.GetAll())
-                                    {
-                                        <option value ="@item.Id">@item.Name</option>
-                                    }
-                                </select>
-                            </td>
                   </tr>
                   <tr>
                       <td>

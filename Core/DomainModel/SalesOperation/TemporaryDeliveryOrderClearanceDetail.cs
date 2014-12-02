@@ -15,6 +15,7 @@ namespace Core.DomainModel
         //public bool IsReconciled { get; set; }
         //public bool IsAllCompleted { get; set; }
         public decimal WasteCoGS { get; set; }
+        public decimal SellingPrice { get; set; }
         //public int WasteQuantity { get; set; }
         //public int ReturnQuantity { get; set; }
         //public Nullable<int> SalesOrderDetailId { get; set; }

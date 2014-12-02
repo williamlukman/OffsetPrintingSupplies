@@ -49,7 +49,7 @@
     $("#list").jqGrid({
         url: base_url + 'VirtualOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Type', 'Order Date',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency', 'Type', 'Order Date',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
@@ -57,6 +57,7 @@
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 150 },
+                  { name: 'currency', index: 'currency', width: 150 },
                   { name: 'ordertype', index: 'ordertype', width: 50 },
                   { name: 'orderdate', index: 'orderdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
@@ -129,6 +130,7 @@
         $('#btnContact').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
         $('#OrderType').removeAttr('disabled');
+        $('#CurrencyId').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#OrderDateDiv').show();
         $('#OrderDateDiv2').hide();
@@ -165,6 +167,8 @@
                             $('#OrderType').val(result.OrderType);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#CurrencyId').val(result.CurrencyId);
+                            $('#CurrencyId').attr('disabled', true);
                             $('#OrderDate').datebox('setValue', dateEnt(result.OrderDate));
                             $('#OrderDate2').val(dateEnt(result.OrderDate));
                             $('#OrderDateDiv2').show();
@@ -213,6 +217,8 @@
                             $('#OrderType').val(result.OrderType);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#CurrencyId').val(result.CurrencyId);
+                            $('#CurrencyId').removeAttr('disabled');
                             $('#OrderDate').datebox('setValue', dateEnt(result.OrderDate));
                             $('#btnContact').removeAttr('disabled');
                             $('#OrderType').removeAttr('disabled');
@@ -388,6 +394,8 @@
 
         var e = document.getElementById("OrderType");
         var ordertype = e.options[e.selectedIndex].value;
+        var f = document.getElementById("CurrencyId");
+        var currency = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
@@ -395,7 +403,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), OrderDate: $('#OrderDate').datebox('getValue'),
-                OrderType: ordertype, NomorSurat: $('#NomorSurat').val()
+                OrderType: ordertype, NomorSurat: $('#NomorSurat').val(), CurrencyId: currency
             }),
             async: false,
             cache: false,
@@ -507,7 +515,7 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
+                            $('#Price').numberbox('setValue', result.Price);
                             $('#item_div').dialog('open');
                         }
                     }

@@ -110,6 +110,7 @@ namespace Service.Service
                     stockMutations = _stockMutationService.CreateStockMutationForTemporaryDeliveryOrderClearanceReturn(temporaryDeliveryOrderClearanceDetail, ConfirmationDate, warehouseItem);
                     temporaryDeliveryOrderClearanceDetail.WasteCoGS = 0;
                     temporaryDeliveryOrderDetail.RestockQuantity += temporaryDeliveryOrderClearanceDetail.Quantity;
+                    temporaryDeliveryOrderDetail.SellingPrice = temporaryDeliveryOrderClearanceDetail.SellingPrice;
                 }
                 foreach (var stockMutation in stockMutations)
                 {
@@ -172,8 +173,6 @@ namespace Service.Service
                 _repository.UpdateObject(temporaryDeliveryOrderClearanceDetail);
             }
             return temporaryDeliveryOrderClearanceDetail;
-        }
-
-        
+        }        
     }
 }
