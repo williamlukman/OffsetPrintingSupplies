@@ -16,14 +16,14 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(si => si.DeliveryOrderId)
                 .WillCascadeOnDelete(false);
-            HasRequired(ex => ex.Currency)
-                         .WithMany()
-                         .HasForeignKey(ex => ex.CurrencyId)
-                         .WillCascadeOnDelete(false);
-            HasOptional(ex => ex.ExchangeRate)
-                        .WithMany()
-                        .HasForeignKey(ex => ex.ExchangeRateId)
-                        .WillCascadeOnDelete(false);
+            HasRequired(si => si.Currency)
+                .WithMany()
+                .HasForeignKey(si => si.CurrencyId)
+                .WillCascadeOnDelete(false);
+            HasOptional(si => si.ExchangeRate)
+                .WithMany()
+                .HasForeignKey(si => si.ExchangeRateId)
+                .WillCascadeOnDelete(false);
             HasMany(si => si.SalesInvoiceDetails)
                 .WithRequired(sid => sid.SalesInvoice)
                 .HasForeignKey(sid => sid.SalesInvoiceId);

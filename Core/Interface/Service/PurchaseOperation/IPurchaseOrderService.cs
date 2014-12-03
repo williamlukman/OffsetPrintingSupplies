@@ -17,7 +17,6 @@ namespace Core.Interface.Service
         IList<PurchaseOrder> GetObjectsByContactId(int contactId);
         IList<PurchaseOrder> GetConfirmedObjects();
         PurchaseOrder CreateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
-        PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService);
         PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService);
         PurchaseOrder SoftDeleteObject(PurchaseOrder purchaseOrder, IPurchaseOrderDetailService _purchaseOrderDetailService);
         bool DeleteObject(int Id);

@@ -19,9 +19,6 @@ namespace Core.Interface.Service
         DeliveryOrderDetail CreateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                          ISalesOrderService _salesOrderService, IItemService _itemService);
-        DeliveryOrderDetail CreateObject(int deliveryOrderId, int itemId, int quantity, int salesOrderDetailId,
-                                         IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                         ISalesOrderService _salesOrderService, IItemService _itemService);
         DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail,
                                          IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                          ISalesOrderService _salesOrderService, IItemService _itemService);

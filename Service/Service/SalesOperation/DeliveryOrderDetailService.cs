@@ -63,20 +63,6 @@ namespace Service.Service
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail CreateObject(int deliveryOrderId, int itemId, int quantity, int salesOrderDetailId,
-                                                IDeliveryOrderService _deliveryOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                                ISalesOrderService _salesOrderService, IItemService _itemService)
-        {
-            DeliveryOrderDetail deliveryOrderDetail = new DeliveryOrderDetail
-            {
-                DeliveryOrderId = deliveryOrderId,
-                ItemId = itemId,
-                Quantity = quantity,
-                SalesOrderDetailId = salesOrderDetailId
-            };
-            return this.CreateObject(deliveryOrderDetail, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
-        }
-
         public DeliveryOrderDetail UpdateObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
                                                 ISalesOrderDetailService _salesOrderDetailService, ISalesOrderService _salesOrderService, IItemService _itemService)
         {

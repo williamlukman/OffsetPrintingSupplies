@@ -98,17 +98,19 @@ namespace Service.Service
 
         public RollerWarehouseMutationDetail ConfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, DateTime ConfirmationDate, IRollerWarehouseMutationService _rollerWarehouseMutationService,
                                                          IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService,
-                                                         IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                         IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                          ICoreIdentificationService _coreIdentificationService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             rollerWarehouseMutationDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _blanketService, _warehouseItemService, _customerItemService))
+            if (_validator.ValidConfirmObject(rollerWarehouseMutationDetail, _recoveryOrderService, _coreIdentificationService, _rollerWarehouseMutationService,
+                                              _itemService, _blanketService, _warehouseItemService, _customerItemService))
             {
                 _repository.ConfirmObject(rollerWarehouseMutationDetail);
                 
                 // Set IsDelivered = true
                 RecoveryOrderDetail recoveryOrderDetail = _recoveryOrderDetailService.GetObjectById(rollerWarehouseMutationDetail.RecoveryOrderDetailId);
                 CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
+                CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
                 _coreIdentificationDetailService.DeliverObject(coreIdentificationDetail, _coreIdentificationService, this);
 
                 // reduce warehouseFromItem
@@ -117,7 +119,7 @@ namespace Service.Service
                 RollerWarehouseMutation rollerWarehouseMutation = _rollerWarehouseMutationService.GetObjectById(rollerWarehouseMutationDetail.RollerWarehouseMutationId);
                 WarehouseItem warehouseItemFrom = _warehouseItemService.FindOrCreateObject(rollerWarehouseMutation.WarehouseFromId, rollerWarehouseMutationDetail.ItemId);
                 WarehouseItem warehouseItemTo = _warehouseItemService.FindOrCreateObject(rollerWarehouseMutation.WarehouseToId, rollerWarehouseMutationDetail.ItemId);
-                if (rollerWarehouseMutation.RecoveryOrder.CoreIdentification.IsInHouse)
+                if (coreIdentification.IsInHouse)
                 {
                     IList<StockMutation> stockMutations = _stockMutationService.CreateStockMutationForRollerWarehouseMutation(rollerWarehouseMutationDetail, warehouseItemFrom, warehouseItemTo);
                     foreach (var stockMutation in stockMutations)
@@ -127,12 +129,12 @@ namespace Service.Service
                 }
                 else
                 {
-                    CustomerItem customerItemFrom = _customerItemService.FindOrCreateObject(rollerWarehouseMutation.RecoveryOrder.CoreIdentification.ContactId.GetValueOrDefault(), warehouseItemFrom.Id);
-                    CustomerItem customerItemTo = _customerItemService.FindOrCreateObject(rollerWarehouseMutation.RecoveryOrder.CoreIdentification.ContactId.GetValueOrDefault(), warehouseItemTo.Id);
+                    CustomerItem customerItemFrom = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItemFrom.Id);
+                    CustomerItem customerItemTo = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItemTo.Id);
                     IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.CreateCustomerStockMutationForRollerWarehouseMutation(rollerWarehouseMutationDetail, customerItemFrom, customerItemTo, rollerWarehouseMutationDetail.ItemId);
                     foreach (var customerStockMutation in customerStockMutations)
                     {
-                        _customerStockMutationService.StockMutateObject(customerStockMutation, rollerWarehouseMutation.RecoveryOrder.CoreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
+                        _customerStockMutationService.StockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
                 }
             }
@@ -141,10 +143,11 @@ namespace Service.Service
 
         public RollerWarehouseMutationDetail UnconfirmObject(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, IRollerWarehouseMutationService _rollerWarehouseMutationService,
                                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IStockMutationService _stockMutationService,
-                                                            IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                            IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                             ICoreIdentificationService _coreIdentificationService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
-            if (_validator.ValidUnconfirmObject(rollerWarehouseMutationDetail, _rollerWarehouseMutationService, _itemService, _blanketService, _warehouseItemService, _customerItemService))
+            if (_validator.ValidUnconfirmObject(rollerWarehouseMutationDetail, _recoveryOrderService, _coreIdentificationService, _rollerWarehouseMutationService,
+                                                _itemService, _blanketService, _warehouseItemService, _customerItemService))
             {
                 _repository.UnconfirmObject(rollerWarehouseMutationDetail);
 

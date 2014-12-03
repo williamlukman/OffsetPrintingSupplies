@@ -12,14 +12,14 @@ namespace Data.Mapping
         public PurchaseInvoiceMapping()
         {
             HasKey(pi => pi.Id);
-            HasRequired(ex => ex.Currency)
+            HasRequired(pi => pi.Currency)
                  .WithMany()
-                 .HasForeignKey(ex => ex.CurrencyId)
+                 .HasForeignKey(pi => pi.CurrencyId)
                  .WillCascadeOnDelete(false);
-            HasOptional(ex => ex.ExchangeRate)
-                       .WithMany()
-                       .HasForeignKey(ex => ex.ExchangeRateId)
-                       .WillCascadeOnDelete(false);
+            HasOptional(pi => pi.ExchangeRate)
+                .WithMany()
+                .HasForeignKey(pi => pi.ExchangeRateId)
+                .WillCascadeOnDelete(false);
             HasRequired(pi => pi.PurchaseReceival)
                 .WithMany()
                 .HasForeignKey(pi => pi.PurchaseReceivalId)

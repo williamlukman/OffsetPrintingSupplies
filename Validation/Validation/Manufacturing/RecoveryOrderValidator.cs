@@ -96,7 +96,7 @@ namespace Validation.Validation
             return recoveryOrder;
         }
 
-        public RecoveryOrder VQuantityIsInStock(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService,
+        public RecoveryOrder VQuantityIsInStock(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService,
                                                 IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService,
                                                 IWarehouseItemService _warehouseItemService)
         {
@@ -122,7 +122,8 @@ namespace Validation.Validation
             foreach (var ValuePair in ValuePairItemIdQuantity)
             {
                 WarehouseItem warehouseItem = _warehouseItemService.GetObjectById(ValuePair.Key);
-                if (recoveryOrder.CoreIdentification.IsInHouse)
+                CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(recoveryOrder.CoreIdentificationId);
+                if (coreIdentification.IsInHouse)
                 {
                     if (warehouseItem.Quantity < ValuePair.Value)
                     {
@@ -258,7 +259,8 @@ namespace Validation.Validation
         }
 
         public RecoveryOrder VConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                            IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                            ICoreIdentificationService _coreIdentificationService, IRecoveryOrderDetailService _recoveryOrderDetailService,
+                                            ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             VHasConfirmationDate(recoveryOrder);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
@@ -268,7 +270,8 @@ namespace Validation.Validation
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
             VQuantityReceivedEqualDetails(recoveryOrder, _recoveryOrderDetailService);
             if (!isValid(recoveryOrder)) { return recoveryOrder; }
-            VQuantityIsInStock(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
+            VQuantityIsInStock(recoveryOrder, _coreIdentificationDetailService, _coreIdentificationService,
+                               _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
             return recoveryOrder;
         }
 
@@ -324,11 +327,11 @@ namespace Validation.Validation
             return isValid(recoveryOrder);
         }
 
-        public bool ValidConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService,
+        public bool ValidConfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService,
                                        IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryOrder.Errors.Clear();
-            VConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
+            VConfirmObject(recoveryOrder, _coreIdentificationDetailService, _coreIdentificationService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService);
             return isValid(recoveryOrder);
         }
 

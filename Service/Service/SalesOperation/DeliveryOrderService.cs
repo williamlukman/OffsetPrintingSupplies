@@ -56,17 +56,6 @@ namespace Service.Service
             return (_validator.ValidCreateObject(deliveryOrder, this, _salesOrderService, _warehouseService) ? _repository.CreateObject(deliveryOrder) : deliveryOrder);
         }
 
-        public DeliveryOrder CreateObject(int warehouseId, int salesOrderId, DateTime deliveryDate, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
-        {
-            DeliveryOrder deliveryOrder = new DeliveryOrder
-            {
-                SalesOrderId = salesOrderId,
-                WarehouseId = warehouseId,
-                DeliveryDate = deliveryDate
-            };
-            return this.CreateObject(deliveryOrder, _salesOrderService, _warehouseService);
-        }
-
         public DeliveryOrder UpdateObject(DeliveryOrder deliveryOrder, ISalesOrderService _salesOrderService, IWarehouseService _warehouseService)
         {
             return (_validator.ValidUpdateObject(deliveryOrder, this, _salesOrderService, _warehouseService) ? _repository.UpdateObject(deliveryOrder) : deliveryOrder);
@@ -82,7 +71,7 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService, IDeliveryOrderService _deliveryOrderService,
+        public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
@@ -91,7 +80,7 @@ namespace Service.Service
                                            ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             deliveryOrder.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService, _deliveryOrderService, _itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService))
+            if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService, this, _itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService))
             {
                 decimal TotalCOGS = 0;
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);

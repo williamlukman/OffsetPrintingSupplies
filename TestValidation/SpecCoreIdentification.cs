@@ -73,7 +73,7 @@ namespace TestValidation
             it["confirms_coreidentificationcontact"] = () =>
             {
                 d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService, d._recoveryOrderService,
-                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
+                                               d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
                 d.coreIdentificationContact.IsConfirmed.should_be(true);
                 d.coreIdentificationContact.Errors.Count().should_be(0);
             };
@@ -81,10 +81,10 @@ namespace TestValidation
             it["unconfirms_coreidentificationcontact"] = () =>
             {
                 d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
-                                               d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
+                                               d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
                 d.coreIdentificationContact.IsConfirmed.should_be(true);
                 d.coreIdentificationContact = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationContact, d._coreIdentificationDetailService, d._stockMutationService,
-                                               d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
+                                               d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
                 d.coreIdentificationContact.IsConfirmed.should_be(false);
                 d.coreIdentificationContact.Errors.Count().should_be(0);
             };
@@ -93,7 +93,7 @@ namespace TestValidation
             {
                 d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                                         d._warehouseItemService, d._blanketService);
+                                                                                         d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
                 d.coreIdentificationInHouse.IsConfirmed.should_be(true);
                 d.coreIdentificationInHouse.Errors.Count().should_be(0);
             };
@@ -102,10 +102,11 @@ namespace TestValidation
             {
                 d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                                         d._warehouseItemService, d._blanketService);
+                                                                                         d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
                 d.coreIdentificationInHouse.IsConfirmed.should_be(true);
                 d.coreIdentificationInHouse = d._coreIdentificationService.UnconfirmObject(d.coreIdentificationInHouse, d._coreIdentificationDetailService, d._stockMutationService,
-                                                                                           d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService, d._blanketService);
+                                                                                           d._recoveryOrderService, d._coreBuilderService, d._itemService, d._warehouseItemService,
+                                                                                           d._blanketService, d._customerStockMutationService, d._customerItemService);
                 d.coreIdentificationInHouse.IsConfirmed.should_be(false);
                 d.coreIdentificationInHouse.Errors.Count().should_be(0);
             };
@@ -122,28 +123,45 @@ namespace TestValidation
                 before = () =>
                 {
                     // contact core identification
-                    d.usedCoreBuilderQuantity = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder3Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDContact1, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder4Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDContact3, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder1Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder2Quantity = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
+
+                    Item usedCoreBuilder, usedCoreBuilder1, usedCoreBuilder2, usedCoreBuilder3, usedCoreBuilder4;
+                    usedCoreBuilder = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService);
+                    usedCoreBuilder3 = d._coreIdentificationDetailService.GetCore(d.coreIDContact1, d._coreBuilderService);
+                    usedCoreBuilder4 = d._coreIdentificationDetailService.GetCore(d.coreIDContact3, d._coreBuilderService);
+                    usedCoreBuilder1 = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService);
+                    usedCoreBuilder2 = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService);
+
+                    d.usedCoreBuilderQuantity = usedCoreBuilder.Quantity + usedCoreBuilder.CustomerQuantity;
+                    d.usedCoreBuilder3Quantity = usedCoreBuilder3.Quantity + usedCoreBuilder3.CustomerQuantity;
+                    d.usedCoreBuilder4Quantity = usedCoreBuilder4.Quantity + usedCoreBuilder4.CustomerQuantity;
+                    d.usedCoreBuilder1Quantity = usedCoreBuilder1.Quantity + usedCoreBuilder1.CustomerQuantity;
+                    d.usedCoreBuilder2Quantity = usedCoreBuilder2.Quantity + usedCoreBuilder2.CustomerQuantity;
 
                     d.coreIdentification = d._coreIdentificationService.ConfirmObject(d.coreIdentification, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                         d._warehouseItemService, d._blanketService);
+                                                                         d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
                     d.coreIdentificationContact = d._coreIdentificationService.ConfirmObject(d.coreIdentificationContact, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                         d._warehouseItemService, d._blanketService);
+                                                                         d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
                     d.coreIdentificationInHouse = d._coreIdentificationService.ConfirmObject(d.coreIdentificationInHouse, DateTime.Today, d._coreIdentificationDetailService, d._stockMutationService,
                                                                          d._recoveryOrderService, d._recoveryOrderDetailService, d._coreBuilderService, d._itemService,
-                                                                         d._warehouseItemService, d._blanketService);
-                    
+                                                                         d._warehouseItemService, d._blanketService, d._customerStockMutationService, d._customerItemService);
+
+                    Item usedCoreBuilderFinal, usedCoreBuilder1Final, usedCoreBuilder2Final, usedCoreBuilder3Final, usedCoreBuilder4Final;
+                    usedCoreBuilderFinal = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService);
+                    usedCoreBuilder3Final = d._coreIdentificationDetailService.GetCore(d.coreIDContact1, d._coreBuilderService);
+                    usedCoreBuilder4Final = d._coreIdentificationDetailService.GetCore(d.coreIDContact3, d._coreBuilderService);
+                    usedCoreBuilder1Final = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService);
+                    usedCoreBuilder2Final = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService);
+
+                    // customer core identification
+                    d.usedCoreBuilderFinal = usedCoreBuilderFinal.Quantity + usedCoreBuilderFinal.CustomerQuantity;
+                    d.usedCoreBuilder3Final = usedCoreBuilder3Final.Quantity + usedCoreBuilder3Final.CustomerQuantity;
+                    d.usedCoreBuilder4Final = usedCoreBuilder4Final.Quantity + usedCoreBuilder4Final.CustomerQuantity;
+
                     // in house core identification
-                    d.usedCoreBuilderFinal = d._coreIdentificationDetailService.GetCore(d.coreIdentificationDetail, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder3Final = d._coreIdentificationDetailService.GetCore(d.coreIDContact1, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder4Final = d._coreIdentificationDetailService.GetCore(d.coreIDContact3, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder1Final = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse1, d._coreBuilderService).Quantity;
-                    d.usedCoreBuilder2Final = d._coreIdentificationDetailService.GetCore(d.coreIDInHouse3, d._coreBuilderService).Quantity;
+                    d.usedCoreBuilder1Final = usedCoreBuilder1Final.Quantity + usedCoreBuilder1Final.CustomerQuantity;
+                    d.usedCoreBuilder2Final = usedCoreBuilder2Final.Quantity + usedCoreBuilder2Final.CustomerQuantity;
                 };
 
                 it["validates_finish_details"] = () =>

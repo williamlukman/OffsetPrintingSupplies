@@ -44,21 +44,6 @@ namespace Service.Service
             return _repository.GetObjectByName(name);
         }
 
-        public Contact CreateObject(string Name, string Address, string ContactNo, string PIC,
-                                    string PICContactNo, string Email)
-        {
-            Contact contact = new Contact
-            {
-                Name = Name,
-                Address = Address,
-                ContactNo = ContactNo,
-                PIC = PIC,
-                PICContactNo = PICContactNo,
-                Email = Email
-            };
-            return this.CreateObject(contact);
-        }
-
         public Contact CreateObject(Contact contact)
         {
             contact.Errors = new Dictionary<String, String>();

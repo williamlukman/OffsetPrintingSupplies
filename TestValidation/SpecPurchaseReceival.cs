@@ -61,16 +61,21 @@ namespace TestValidation
         IAccountService _accountService;
         IGeneralLedgerJournalService _generalLedgerJournalService;
         IClosingService _closingService;
-
+        IExchangeRateService _exchangeRateService;
         IPriceMutationService _priceMutationService;
+        ICurrencyService _currencyService;
 
-        private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods, PrepaidExpense, NonCurrentAsset;
-        private Account Expense, COGS, COS, OperationalExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense;
-        private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense, SampleAndTrialExpense;
+        private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods,
+                        PrepaidExpense, PiutangLainLain, NonCurrentAsset, UnrecognizedCapitalGain;
+        private Account Expense, COGS, COS, OperationalExpense, SampleAndTrialExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense,
+                        ExchangeLoss;
+        private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense;
         private Account NonOperationalExpense, DepreciationExpense, Amortization, InterestExpense, TaxExpense, DividentExpense;
-        private Account Liability, CurrentLiability, AccountPayable, GBCHPayable, GoodsPendingClearance, PurchaseAllowance, UnearnedRevenue, AccountPayableNonTrading, NonCurrentLiability;
-        private Account Equity, OwnersEquity, EquityAdjustment;
+        private Account Liability, CurrentLiability, AccountPayable, GBCHPayable, GoodsPendingClearance, PurchaseAllowance, UnearnedRevenue,
+                        HutangLainLain, NonCurrentLiability, TaxPayable;
+        private Account Equity, OwnersEquity, EquityAdjustment, CapitalGain;
         private Account Revenue;
+        public Currency currencyIDR;
 
         void before_each()
         {
@@ -94,11 +99,13 @@ namespace TestValidation
                 _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
                 _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
                 _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
+                _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _accountService = new AccountService(new AccountRepository(), new AccountValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
                 _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+                _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
 
                 if (!_accountService.GetLegacyObjects().Any())
                 {
@@ -111,7 +118,9 @@ namespace TestValidation
                     Raw = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Raw Material", Code = Constant.AccountCode.Raw, LegacyCode = Constant.AccountLegacyCode.Raw, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
                     FinishedGoods = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Finished Goods", Code = Constant.AccountCode.FinishedGoods, LegacyCode = Constant.AccountLegacyCode.FinishedGoods, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
                     PrepaidExpense = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Prepaid Expense (Asset)", Code = Constant.AccountCode.PrepaidExpense, LegacyCode = Constant.AccountLegacyCode.PrepaidExpense, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
+                    PiutangLainLain = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Piutang Lain Lain", Code = Constant.AccountCode.PiutangLainLain, LegacyCode = Constant.AccountLegacyCode.PiutangLainLain, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
                     NonCurrentAsset = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Noncurrent Asset", Code = Constant.AccountCode.NonCurrentAsset, LegacyCode = Constant.AccountLegacyCode.NonCurrentAsset, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                    UnrecognizedCapitalGain = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "UnrecognizedCapitalGain", Code = Constant.AccountCode.UnrecognizedCapitalGain, LegacyCode = Constant.AccountLegacyCode.UnrecognizedCapitalGain, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
 
                     Expense = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Group = Constant.AccountGroup.Expense, IsLegacy = true }, _accountService);
                     COGS = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Cost Of Goods Sold", Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
@@ -132,6 +141,7 @@ namespace TestValidation
                     InterestExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Interest Expense", Code = Constant.AccountCode.InterestExpense, LegacyCode = Constant.AccountLegacyCode.InterestExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
                     TaxExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Tax Expense", Code = Constant.AccountCode.TaxExpense, LegacyCode = Constant.AccountLegacyCode.TaxExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
                     DividentExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Divident Expense", Code = Constant.AccountCode.DividentExpense, LegacyCode = Constant.AccountLegacyCode.DividentExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
+                    ExchangeLoss = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Exchange Loss", Code = Constant.AccountCode.ExchangeLoss, LegacyCode = Constant.AccountLegacyCode.ExchangeLoss, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
 
                     Liability = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Group = Constant.AccountGroup.Liability, IsLegacy = true }, _accountService);
                     CurrentLiability = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Current Liability", Code = Constant.AccountCode.CurrentLiability, LegacyCode = Constant.AccountLegacyCode.CurrentLiability, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
@@ -140,14 +150,24 @@ namespace TestValidation
                     GoodsPendingClearance = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Goods Pending Clearance", Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     UnearnedRevenue = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Unearned Revenue", Code = Constant.AccountCode.UnearnedRevenue, LegacyCode = Constant.AccountLegacyCode.UnearnedRevenue, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     PurchaseAllowance = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Purchase Allowance", Code = Constant.AccountCode.PurchaseAllowance, LegacyCode = Constant.AccountLegacyCode.PurchaseAllowance, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
-                    AccountPayableNonTrading = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Account Payable (Non Trading)", Code = Constant.AccountCode.AccountPayableNonTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableNonTrading, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    HutangLainLain = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Hutang Lain Lain", Code = Constant.AccountCode.HutangLainLain, LegacyCode = Constant.AccountLegacyCode.HutangLainLain, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    TaxPayable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Tax Payable", Code = Constant.AccountCode.TaxPayable, LegacyCode = Constant.AccountLegacyCode.TaxPayable, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     NonCurrentLiability = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Noncurrent Liability", Code = Constant.AccountCode.NonCurrentLiability, LegacyCode = Constant.AccountLegacyCode.NonCurrentLiability, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
 
                     Equity = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Equity", Code = Constant.AccountCode.Equity, LegacyCode = Constant.AccountLegacyCode.Equity, Group = Constant.AccountGroup.Equity, IsLegacy = true }, _accountService);
                     OwnersEquity = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Owners Equity", Code = Constant.AccountCode.OwnersEquity, LegacyCode = Constant.AccountLegacyCode.OwnersEquity, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true }, _accountService);
                     EquityAdjustment = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Equity Adjustment", Code = Constant.AccountCode.EquityAdjustment, LegacyCode = Constant.AccountLegacyCode.EquityAdjustment, Group = Constant.AccountGroup.Equity, ParentId = OwnersEquity.Id, IsLegacy = true }, _accountService);
+                    CapitalGain = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "CapitalGain", Code = Constant.AccountCode.ExchangeGain, LegacyCode = Constant.AccountLegacyCode.ExchangeGain, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true, IsLeaf = true }, _accountService);
 
                     Revenue = _accountService.CreateLegacyObject(new Account() { Level = 1, IsLeaf = true, Name = "Revenue", Code = Constant.AccountCode.Revenue, LegacyCode = Constant.AccountLegacyCode.Revenue, Group = Constant.AccountGroup.Revenue, IsLegacy = true }, _accountService);
+                }
+
+                if (!_currencyService.GetAll().Any())
+                {
+                    currencyIDR = new Currency();
+                    currencyIDR.IsBase = true;
+                    currencyIDR.Name = "IDR";
+                    currencyIDR = _currencyService.CreateObject(currencyIDR, _accountService);
                 }
 
                 Pcs = new UoM()
@@ -163,7 +183,8 @@ namespace TestValidation
                     ContactNo = "021 3863777",
                     PIC = "Mr. President",
                     PICContactNo = "021 3863777",
-                    Email = "random@ri.gov.au"
+                    Email = "random@ri.gov.au",
+                    TaxCode = "01"
                 };
                 contact = _contactService.CreateObject(contact);
 
@@ -237,14 +258,76 @@ namespace TestValidation
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
                                                       _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService);
 
-                purchaseOrder1 = _purchaseOrderService.CreateObject(contact.Id, new DateTime(2014, 07, 09), _contactService);
-                purchaseOrder2 = _purchaseOrderService.CreateObject(contact.Id, new DateTime(2014, 04, 09), _contactService);
-                purchaseOrderDetail_batiktulis_so1 = _purchaseOrderDetailService.CreateObject(purchaseOrder1.Id, item_batiktulis.Id, 500, 2000000, _purchaseOrderService, _itemService);
-                purchaseOrderDetail_busway_so1 = _purchaseOrderDetailService.CreateObject(purchaseOrder1.Id, item_busway.Id, 91, 800000000, _purchaseOrderService, _itemService);
-                purchaseOrderDetail_botolaqua_so1 = _purchaseOrderDetailService.CreateObject(purchaseOrder1.Id, item_botolaqua.Id, 2000, 5000, _purchaseOrderService, _itemService);
-                purchaseOrderDetail_batiktulis_so2 = _purchaseOrderDetailService.CreateObject(purchaseOrder2.Id, item_batiktulis.Id, 40, 2000500, _purchaseOrderService, _itemService);
-                purchaseOrderDetail_busway_so2 = _purchaseOrderDetailService.CreateObject(purchaseOrder2.Id, item_busway.Id, 3, 810000000, _purchaseOrderService, _itemService);
-                purchaseOrderDetail_botolaqua_so2 = _purchaseOrderDetailService.CreateObject(purchaseOrder2.Id, item_botolaqua.Id, 340, 5500, _purchaseOrderService, _itemService);
+                purchaseOrder1 = new PurchaseOrder()
+                {
+                    ContactId = contact.Id,
+                    PurchaseDate = new DateTime(2014, 07, 09),
+                    CurrencyId = currencyIDR.Id,
+                };
+                _purchaseOrderService.CreateObject(purchaseOrder1, _contactService);
+
+                purchaseOrder2 = new PurchaseOrder()
+                {
+                    ContactId = contact.Id,
+                    PurchaseDate = new DateTime(2014, 04, 09),
+                    CurrencyId = currencyIDR.Id,
+                };
+                _purchaseOrderService.CreateObject(purchaseOrder2, _contactService);
+
+                purchaseOrderDetail_batiktulis_so1 = new PurchaseOrderDetail()
+                {
+                    PurchaseOrderId = purchaseOrder1.Id,
+                    ItemId = item_batiktulis.Id,
+                    Quantity = 500,
+                    Price = 2000000
+                };
+                _purchaseOrderDetailService.CreateObject(purchaseOrderDetail_batiktulis_so1, _purchaseOrderService, _itemService);
+
+                purchaseOrderDetail_busway_so1 = new PurchaseOrderDetail()
+                {
+                    PurchaseOrderId = purchaseOrder1.Id,
+                    ItemId = item_busway.Id, 
+                    Quantity = 91, 
+                    Price = 800000000
+                };
+                _purchaseOrderDetailService.CreateObject(purchaseOrderDetail_busway_so1, _purchaseOrderService, _itemService);
+
+                purchaseOrderDetail_botolaqua_so1 = new PurchaseOrderDetail()
+                {
+                    PurchaseOrderId = purchaseOrder1.Id,
+                    ItemId = item_botolaqua.Id,
+                    Quantity = 2000,
+                    Price = 5000
+                };
+                _purchaseOrderDetailService.CreateObject(purchaseOrderDetail_botolaqua_so1, _purchaseOrderService, _itemService);
+
+                purchaseOrderDetail_batiktulis_so2 = new PurchaseOrderDetail()
+                {
+                    PurchaseOrderId = purchaseOrder2.Id,
+                    ItemId = item_batiktulis.Id,
+                    Quantity = 40,
+                    Price = 2000500
+                };
+                _purchaseOrderDetailService.CreateObject(purchaseOrderDetail_batiktulis_so2, _purchaseOrderService, _itemService);
+
+                purchaseOrderDetail_busway_so2 = new PurchaseOrderDetail()
+                {
+                    PurchaseOrderId = purchaseOrder2.Id,
+                    ItemId = item_busway.Id,
+                    Quantity = 3,
+                    Price = 810000000
+                };
+                _purchaseOrderDetailService.CreateObject(purchaseOrderDetail_busway_so2, _purchaseOrderService, _itemService);
+
+                purchaseOrderDetail_botolaqua_so2 = new PurchaseOrderDetail()
+                {
+                    PurchaseOrderId = purchaseOrder2.Id,
+                    ItemId = item_botolaqua.Id,
+                    Quantity = 340,
+                    Price = 5500
+                };
+                _purchaseOrderDetailService.CreateObject(purchaseOrderDetail_botolaqua_so2, _purchaseOrderService, _itemService);
+
                 purchaseOrder1 = _purchaseOrderService.ConfirmObject(purchaseOrder1, DateTime.Today, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 purchaseOrder2 = _purchaseOrderService.ConfirmObject(purchaseOrder2, DateTime.Today, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }
@@ -273,29 +356,99 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    purchaseReceival1 = _purchaseReceivalService.CreateObject(warehouse.Id, purchaseOrder1.Id, new DateTime(2000, 1, 1), _purchaseOrderService, _warehouseService);
-                    purchaseReceival2 = _purchaseReceivalService.CreateObject(warehouse.Id, purchaseOrder2.Id, new DateTime(2014, 5, 5), _purchaseOrderService, _warehouseService);
-                    purchaseReceival3 = _purchaseReceivalService.CreateObject(warehouse.Id, purchaseOrder1.Id, new DateTime(2014, 5, 5), _purchaseOrderService, _warehouseService);
-                    purchaseReceivalDetail_batiktulis_do1 = _purchaseReceivalDetailService.CreateObject(purchaseReceival1.Id, item_batiktulis.Id, 400, purchaseOrderDetail_batiktulis_so1.Id, _purchaseReceivalService,
-                                                                                                  _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-                    purchaseReceivalDetail_busway_do1 = _purchaseReceivalDetailService.CreateObject(purchaseReceival1.Id, item_busway.Id, 91, purchaseOrderDetail_busway_so1.Id, _purchaseReceivalService,
-                                                                                                _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-                    purchaseReceivalDetail_botolaqua_do1 = _purchaseReceivalDetailService.CreateObject(purchaseReceival1.Id, item_botolaqua.Id, 2000, purchaseOrderDetail_botolaqua_so1.Id,  _purchaseReceivalService,
-                                                                                                  _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-                    purchaseReceivalDetail_batiktulis_do2b = _purchaseReceivalDetailService.CreateObject(purchaseReceival2.Id, item_batiktulis.Id, 40, purchaseOrderDetail_batiktulis_so2.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-                    purchaseReceivalDetail_busway_do2 = _purchaseReceivalDetailService.CreateObject(purchaseReceival2.Id, item_busway.Id, 3, purchaseOrderDetail_busway_so2.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-                    purchaseReceivalDetail_botolaqua_do2 = _purchaseReceivalDetailService.CreateObject(purchaseReceival2.Id, item_botolaqua.Id, 340, purchaseOrderDetail_botolaqua_so2.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService);
-                    purchaseReceivalDetail_batiktulis_do2a = _purchaseReceivalDetailService.CreateObject(purchaseReceival3.Id, item_batiktulis.Id, 100, purchaseOrderDetail_batiktulis_so1.Id, _purchaseReceivalService,
-                                                                                                                          _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+                    purchaseReceival1 = new PurchaseReceival()
+                    {
+                        WarehouseId = warehouse.Id,
+                        PurchaseOrderId = purchaseOrder1.Id,
+                        ReceivalDate = new DateTime(2000, 1, 1),
+                    };
+                    _purchaseReceivalService.CreateObject(purchaseReceival1, _purchaseOrderService, _warehouseService);
+
+                    purchaseReceival2 = new PurchaseReceival()
+                    {
+                        WarehouseId = warehouse.Id,
+                        PurchaseOrderId = purchaseOrder2.Id,
+                        ReceivalDate = new DateTime(2014, 5, 5)
+                    };
+                    _purchaseReceivalService.CreateObject(purchaseReceival2, _purchaseOrderService, _warehouseService);
+
+                    purchaseReceival3 = new PurchaseReceival()
+                    {
+                        WarehouseId = warehouse.Id,
+                        PurchaseOrderId = purchaseOrder1.Id,
+                        ReceivalDate = new DateTime(2014, 5, 5)
+                    };
+                    _purchaseReceivalService.CreateObject(purchaseReceival3, _purchaseOrderService, _warehouseService);
+                    
+                    purchaseReceivalDetail_batiktulis_do1 = new PurchaseReceivalDetail()
+                    {
+                        PurchaseReceivalId = purchaseReceival1.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 400,
+                        PurchaseOrderDetailId = purchaseOrderDetail_batiktulis_so1.Id
+                    };
+                    _purchaseReceivalDetailService.CreateObject(purchaseReceivalDetail_batiktulis_do1, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+                    purchaseReceivalDetail_busway_do1 = new PurchaseReceivalDetail()
+                    {
+                        PurchaseReceivalId = purchaseReceival1.Id,
+                        ItemId = item_busway.Id,
+                        Quantity = 91,
+                        PurchaseOrderDetailId = purchaseOrderDetail_busway_so1.Id
+                    };
+                    _purchaseReceivalDetailService.CreateObject(purchaseReceivalDetail_busway_do1, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+                    purchaseReceivalDetail_botolaqua_do1 = new PurchaseReceivalDetail()
+                    {
+                        PurchaseReceivalId = purchaseReceival1.Id,
+                        ItemId = item_botolaqua.Id,
+                        Quantity = 2000,
+                        PurchaseOrderDetailId = purchaseOrderDetail_botolaqua_so1.Id
+                    };
+                    _purchaseReceivalDetailService.CreateObject(purchaseReceivalDetail_botolaqua_do1, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+                    purchaseReceivalDetail_batiktulis_do2b = new PurchaseReceivalDetail()
+                    {
+                        PurchaseReceivalId = purchaseReceival2.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 40,
+                        PurchaseOrderDetailId = purchaseOrderDetail_batiktulis_so2.Id
+                    };
+                    _purchaseReceivalDetailService.CreateObject(purchaseReceivalDetail_batiktulis_do2b, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+                    purchaseReceivalDetail_busway_do2 = new PurchaseReceivalDetail()
+                    {
+                        PurchaseReceivalId = purchaseReceival2.Id,
+                        ItemId = item_busway.Id,
+                        Quantity = 3,
+                        PurchaseOrderDetailId = purchaseOrderDetail_busway_so2.Id
+                    };
+                    _purchaseReceivalDetailService.CreateObject(purchaseReceivalDetail_busway_do2, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+                    purchaseReceivalDetail_botolaqua_do2 = new PurchaseReceivalDetail()
+                    {
+                        PurchaseReceivalId = purchaseReceival2.Id,
+                        ItemId = item_botolaqua.Id,
+                        Quantity = 340,
+                        PurchaseOrderDetailId = purchaseOrderDetail_botolaqua_so2.Id
+                    };
+                    _purchaseReceivalDetailService.CreateObject(purchaseReceivalDetail_botolaqua_do2, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+
+                    purchaseReceivalDetail_batiktulis_do2a = new PurchaseReceivalDetail()
+                    {
+                        PurchaseReceivalId = purchaseReceival3.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 100,
+                        PurchaseOrderDetailId = purchaseOrderDetail_batiktulis_so1.Id
+                    };
+                    _purchaseReceivalDetailService.CreateObject(purchaseReceivalDetail_batiktulis_do2a, _purchaseReceivalService, _purchaseOrderDetailService, _purchaseOrderService, _itemService);
+                    
                     purchaseReceival1 = _purchaseReceivalService.ConfirmObject(purchaseReceival1, DateTime.Today, _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                                               _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                                                                               _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
                     purchaseReceival2 = _purchaseReceivalService.ConfirmObject(purchaseReceival2, DateTime.Today, _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                                               _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                                                                               _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
                     purchaseReceival3 = _purchaseReceivalService.ConfirmObject(purchaseReceival3, DateTime.Today, _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                                               _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                                                                               _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
                 };
 
                 it["validates_purchasereceivals"] = () =>

@@ -20,9 +20,9 @@ namespace Core.Interface.Service
         RecoveryOrder UpdateObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService, ICoreIdentificationService _coreIdentificationService);
         RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                        IRecoveryAccessoryDetailService _recoveryAccessoryDetailService);
-        RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                    IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                    IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
+        RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService,
+                                    IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService,
+                                    IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);
         RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
                                       IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService);

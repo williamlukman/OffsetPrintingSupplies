@@ -56,16 +56,6 @@ namespace Service.Service
             return (_validator.ValidCreateObject(salesOrder, this, _contactService) ? _repository.CreateObject(salesOrder) : salesOrder);
         }
 
-        public SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService)
-        {
-            SalesOrder so = new SalesOrder
-            {
-                ContactId = contactId,
-                SalesDate = salesDate
-            };
-            return this.CreateObject(so, _contactService);
-        }
-
         public SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService)
         {
             return (_validator.ValidUpdateObject(salesOrder, this, _contactService) ? _repository.UpdateObject(salesOrder) : salesOrder);

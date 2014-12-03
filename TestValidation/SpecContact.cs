@@ -61,7 +61,17 @@ namespace TestValidation
                 };
                 d.localWarehouse = d._warehouseService.CreateObject(d.localWarehouse, d._warehouseItemService, d._itemService);
 
-                d.contact = d._contactService.CreateObject("Abbey", "1 Abbey St", "001234567", "Daddy", "001234888", "abbey@abbeyst.com");
+                d.contact = new Contact()
+                {
+                    Name = "Abbey",
+                    Address = "1 Abbey St",
+                    ContactNo = "001234567",
+                    PIC = "Daddy",
+                    PICContactNo = "001234888",
+                    Email = "abbey@abbeyst.com",
+                    TaxCode = "01"
+                };
+                d.contact = d._contactService.CreateObject(d.contact);
             }
         }
 
@@ -82,7 +92,8 @@ namespace TestValidation
                     ContactNo = "0000123",
                     PIC = "Who are you?",
                     PICContactNo = "001234",
-                    Email = "empty@noname.com"
+                    Email = "empty@noname.com",
+                    TaxCode = "01"
                 };
                 noname = d._contactService.CreateObject(noname);
                 noname.Errors.Count().should_not_be(0);
@@ -97,8 +108,9 @@ namespace TestValidation
                     ContactNo = "0000123",
                     PIC = "Who are you?",
                     PICContactNo = "001234",
-                    Email = "empty@noname.com"
-                }; 
+                    Email = "empty@noname.com",
+                    TaxCode = "01"
+                };
                 samename = d._contactService.CreateObject(samename);
                 samename.Errors.Count().should_not_be(0);
             };
@@ -112,7 +124,8 @@ namespace TestValidation
                     ContactNo = "0000123",
                     PIC = "Who are you?",
                     PICContactNo = "001234",
-                    Email = "empty@noname.com"
+                    Email = "empty@noname.com",
+                    TaxCode = "01",
                 };
                 emptyaddress = d._contactService.CreateObject(emptyaddress);
                 emptyaddress.Errors.Count().should_not_be(0);
@@ -127,7 +140,8 @@ namespace TestValidation
                     ContactNo = "   ",
                     PIC = "Who are you?",
                     PICContactNo = "001234",
-                    Email = "empty@noname.com"
+                    Email = "empty@noname.com",
+                    TaxCode = "01",
                 };
                 emptycontact = d._contactService.CreateObject(emptycontact);
                 emptycontact.Errors.Count().should_not_be(0);

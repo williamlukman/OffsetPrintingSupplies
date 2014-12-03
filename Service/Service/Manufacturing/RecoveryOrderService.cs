@@ -101,12 +101,14 @@ namespace Service.Service
             return recoveryOrder;
         }
 
-        public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, IRecoveryOrderDetailService _recoveryOrderDetailService,
-                                             IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IWarehouseService _warehouseService)
+        public RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder, DateTime ConfirmationDate, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService,
+                                           IRecoveryOrderDetailService _recoveryOrderDetailService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService,
+                                           IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                           IWarehouseService _warehouseService)
         {
             recoveryOrder.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(recoveryOrder, _coreIdentificationDetailService, _recoveryOrderDetailService, _coreBuilderService, _itemService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(recoveryOrder, _coreIdentificationDetailService, _coreIdentificationService, _recoveryOrderDetailService,
+                                              _coreBuilderService, _itemService, _warehouseItemService))
             {
                 IList<RecoveryOrderDetail> details = _recoveryOrderDetailService.GetObjectsByRecoveryOrderId(recoveryOrder.Id);
                 IDictionary<int, int> ValuePairItemIdQuantity = new Dictionary<int, int>();

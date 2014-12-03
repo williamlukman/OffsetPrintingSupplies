@@ -12,11 +12,11 @@ namespace Data.Context
 {
     public class OffsetPrintingSuppliesEntities : DbContext
     { 
-        public OffsetPrintingSuppliesEntities() : base("OffsetPrintingExRate")
+        public OffsetPrintingSuppliesEntities() : base("OffsetPrintingTest")
         {
            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
-           //this.Configuration.LazyLoadingEnabled = true; // automatically loads virtual when accessed
+           this.Configuration.LazyLoadingEnabled = true; // automatically loads virtual when accessed
         }
 
         public void DeleteAllTables()

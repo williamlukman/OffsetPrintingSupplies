@@ -111,7 +111,8 @@ namespace Service.Service
         }
 
         public RetailPurchaseInvoice PaidObject(RetailPurchaseInvoice retailPurchaseInvoice, ICashBankService _cashBankService, IPayableService _payableService, 
-                                             IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, IContactService _contactService)
+                                                IPaymentVoucherService _paymentVoucherService, IPaymentVoucherDetailService _paymentVoucherDetailService, 
+                                                IContactService _contactService, ICurrencyService _currencyService)
         {
             if (_validator.ValidPaidObject(retailPurchaseInvoice, _cashBankService, _paymentVoucherService))
             {
@@ -132,7 +133,8 @@ namespace Service.Service
                         IsGBCH = retailPurchaseInvoice.IsGBCH,
                         DueDate = (DateTime) retailPurchaseInvoice.DueDate,
                     };
-                    paymentVoucher = _paymentVoucherService.CreateObject(paymentVoucher, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService); 
+                    paymentVoucher = _paymentVoucherService.CreateObject(paymentVoucher, _paymentVoucherDetailService, 
+                                     _payableService, _contactService, _cashBankService, _currencyService); 
                     retailPurchaseInvoice = _repository.PaidObject(retailPurchaseInvoice);
                 }
             }

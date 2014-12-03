@@ -44,17 +44,22 @@ namespace TestValidation
         IPriceMutationService _priceMutationService;
         IAccountService _accountService;
         IGeneralLedgerJournalService _generalLedgerJournalService;
+        ICurrencyService _currencyService;
 
         int Quantity1;
         int Quantity2;
 
-        private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods, PrepaidExpense, NonCurrentAsset;
-        private Account Expense, COGS, COS, OperationalExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense;
-        private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense, SampleAndTrialExpense;
+        private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods,
+                        PrepaidExpense, PiutangLainLain, NonCurrentAsset, UnrecognizedCapitalGain;
+        private Account Expense, COGS, COS, OperationalExpense, SampleAndTrialExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense,
+                        ExchangeLoss;
+        private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense;
         private Account NonOperationalExpense, DepreciationExpense, Amortization, InterestExpense, TaxExpense, DividentExpense;
-        private Account Liability, CurrentLiability, AccountPayable, GBCHPayable, GoodsPendingClearance, PurchaseAllowance, UnearnedRevenue, AccountPayableNonTrading, NonCurrentLiability;
-        private Account Equity, OwnersEquity, EquityAdjustment;
+        private Account Liability, CurrentLiability, AccountPayable, GBCHPayable, GoodsPendingClearance, PurchaseAllowance, UnearnedRevenue,
+                        HutangLainLain, NonCurrentLiability, TaxPayable;
+        private Account Equity, OwnersEquity, EquityAdjustment, CapitalGain;
         private Account Revenue;
+        public Currency currencyIDR;
 
         void before_each()
         {
@@ -80,7 +85,8 @@ namespace TestValidation
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _accountService = new AccountService(new AccountRepository(), new AccountValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
-                
+                _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+
                 if (!_accountService.GetLegacyObjects().Any())
                 {
                     Asset = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Group = Constant.AccountGroup.Asset, IsLegacy = true }, _accountService);
@@ -92,7 +98,9 @@ namespace TestValidation
                     Raw = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Raw Material", Code = Constant.AccountCode.Raw, LegacyCode = Constant.AccountLegacyCode.Raw, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
                     FinishedGoods = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Finished Goods", Code = Constant.AccountCode.FinishedGoods, LegacyCode = Constant.AccountLegacyCode.FinishedGoods, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
                     PrepaidExpense = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Prepaid Expense (Asset)", Code = Constant.AccountCode.PrepaidExpense, LegacyCode = Constant.AccountLegacyCode.PrepaidExpense, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
+                    PiutangLainLain = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Piutang Lain Lain", Code = Constant.AccountCode.PiutangLainLain, LegacyCode = Constant.AccountLegacyCode.PiutangLainLain, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
                     NonCurrentAsset = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Noncurrent Asset", Code = Constant.AccountCode.NonCurrentAsset, LegacyCode = Constant.AccountLegacyCode.NonCurrentAsset, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                    UnrecognizedCapitalGain = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "UnrecognizedCapitalGain", Code = Constant.AccountCode.UnrecognizedCapitalGain, LegacyCode = Constant.AccountLegacyCode.UnrecognizedCapitalGain, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
 
                     Expense = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Group = Constant.AccountGroup.Expense, IsLegacy = true }, _accountService);
                     COGS = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Cost Of Goods Sold", Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
@@ -113,6 +121,7 @@ namespace TestValidation
                     InterestExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Interest Expense", Code = Constant.AccountCode.InterestExpense, LegacyCode = Constant.AccountLegacyCode.InterestExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
                     TaxExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Tax Expense", Code = Constant.AccountCode.TaxExpense, LegacyCode = Constant.AccountLegacyCode.TaxExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
                     DividentExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Divident Expense", Code = Constant.AccountCode.DividentExpense, LegacyCode = Constant.AccountLegacyCode.DividentExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
+                    ExchangeLoss = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Exchange Loss", Code = Constant.AccountCode.ExchangeLoss, LegacyCode = Constant.AccountLegacyCode.ExchangeLoss, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
 
                     Liability = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Group = Constant.AccountGroup.Liability, IsLegacy = true }, _accountService);
                     CurrentLiability = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Current Liability", Code = Constant.AccountCode.CurrentLiability, LegacyCode = Constant.AccountLegacyCode.CurrentLiability, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
@@ -121,16 +130,25 @@ namespace TestValidation
                     GoodsPendingClearance = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Goods Pending Clearance", Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     UnearnedRevenue = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Unearned Revenue", Code = Constant.AccountCode.UnearnedRevenue, LegacyCode = Constant.AccountLegacyCode.UnearnedRevenue, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     PurchaseAllowance = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Purchase Allowance", Code = Constant.AccountCode.PurchaseAllowance, LegacyCode = Constant.AccountLegacyCode.PurchaseAllowance, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
-                    AccountPayableNonTrading = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Account Payable (Non Trading)", Code = Constant.AccountCode.AccountPayableNonTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableNonTrading, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    HutangLainLain = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Hutang Lain Lain", Code = Constant.AccountCode.HutangLainLain, LegacyCode = Constant.AccountLegacyCode.HutangLainLain, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    TaxPayable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Tax Payable", Code = Constant.AccountCode.TaxPayable, LegacyCode = Constant.AccountLegacyCode.TaxPayable, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     NonCurrentLiability = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Noncurrent Liability", Code = Constant.AccountCode.NonCurrentLiability, LegacyCode = Constant.AccountLegacyCode.NonCurrentLiability, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
 
                     Equity = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Equity", Code = Constant.AccountCode.Equity, LegacyCode = Constant.AccountLegacyCode.Equity, Group = Constant.AccountGroup.Equity, IsLegacy = true }, _accountService);
                     OwnersEquity = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Owners Equity", Code = Constant.AccountCode.OwnersEquity, LegacyCode = Constant.AccountLegacyCode.OwnersEquity, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true }, _accountService);
                     EquityAdjustment = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Equity Adjustment", Code = Constant.AccountCode.EquityAdjustment, LegacyCode = Constant.AccountLegacyCode.EquityAdjustment, Group = Constant.AccountGroup.Equity, ParentId = OwnersEquity.Id, IsLegacy = true }, _accountService);
+                    CapitalGain = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "CapitalGain", Code = Constant.AccountCode.ExchangeGain, LegacyCode = Constant.AccountLegacyCode.ExchangeGain, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true, IsLeaf = true }, _accountService);
 
                     Revenue = _accountService.CreateLegacyObject(new Account() { Level = 1, IsLeaf = true, Name = "Revenue", Code = Constant.AccountCode.Revenue, LegacyCode = Constant.AccountLegacyCode.Revenue, Group = Constant.AccountGroup.Revenue, IsLegacy = true }, _accountService);
                 }
 
+                if (!_currencyService.GetAll().Any())
+                {
+                    currencyIDR = new Currency();
+                    currencyIDR.IsBase = true;
+                    currencyIDR.Name = "IDR";
+                    currencyIDR = _currencyService.CreateObject(currencyIDR, _accountService);
+                }
                 Pcs = new UoM()
                 {
                     Name = "Pcs"
@@ -144,7 +162,8 @@ namespace TestValidation
                     ContactNo = "021 3863777",
                     PIC = "Mr. President",
                     PICContactNo = "021 3863777",
-                    Email = "random@ri.gov.au"
+                    Email = "random@ri.gov.au",
+                    TaxCode = "01",
                 };
                 contact = _contactService.CreateObject(contact);
 
@@ -213,7 +232,13 @@ namespace TestValidation
 
             it["create_salesorder"] = () =>
             {
-                salesOrder = _salesOrderService.CreateObject(contact.Id, new DateTime(2000, 1, 1), _contactService);
+                salesOrder = new SalesOrder()
+                {
+                    ContactId = contact.Id,
+                    SalesDate = new DateTime(2000, 1, 1),
+                    CurrencyId = currencyIDR.Id,
+                };
+                _salesOrderService.CreateObject(salesOrder, _contactService);
                 salesOrder.Errors.Count().should_be(0);
             };
 
@@ -221,7 +246,8 @@ namespace TestValidation
             {
                 salesOrder = new SalesOrder()
                 {
-                    SalesDate = DateTime.Now
+                    SalesDate = DateTime.Now,
+                    CurrencyId = currencyIDR.Id,
                 };
                 _salesOrderService.CreateObject(salesOrder, _contactService);
                 salesOrder.Errors.Count().should_not_be(0);
@@ -241,7 +267,8 @@ namespace TestValidation
                     salesOrder = new SalesOrder
                     {
                         ContactId = contact.Id,
-                        SalesDate = DateTime.Now
+                        SalesDate = DateTime.Now,
+                        CurrencyId = currencyIDR.Id
                     };
                     salesOrder = _salesOrderService.CreateObject(salesOrder, _contactService);
                 };
@@ -254,24 +281,71 @@ namespace TestValidation
 
                 it["delete_salesorder_and_details"] = () =>
                 {
-                    salesOrderDetail1 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_batiktulis.Id, 5, 100000, _salesOrderService, _itemService);
-                    salesOrderDetail2 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_sepatubola.Id, 12, 850000, _salesOrderService, _itemService);
+                    salesOrderDetail1 = new SalesOrderDetail()
+                    {
+                        SalesOrderId = salesOrder.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 5,
+                        Price = 100000
+                    };
+                    _salesOrderDetailService.CreateObject(salesOrderDetail1, _salesOrderService, _itemService);
+
+                    salesOrderDetail2 = new SalesOrderDetail()
+                    {
+                        SalesOrderId = salesOrder.Id,
+                        ItemId = item_sepatubola.Id,
+                        Quantity = 12,
+                        Price = 850000    
+                    };
+                    _salesOrderDetailService.CreateObject(salesOrderDetail2, _salesOrderService, _itemService);
+
                     salesOrder = _salesOrderService.SoftDeleteObject(salesOrder, _salesOrderDetailService);
                     salesOrder.Errors.Count().should_not_be(0);
                 };
 
                 it["delete_salesorderdetail"] = () =>
                 {
-                    salesOrderDetail1 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_batiktulis.Id, 5, 100000, _salesOrderService, _itemService);
-                    salesOrderDetail2 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_sepatubola.Id, 12, 850000, _salesOrderService, _itemService);
+                    salesOrderDetail1 = new SalesOrderDetail()
+                    {
+                        SalesOrderId = salesOrder.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 5,
+                        Price = 100000
+                    };
+                    _salesOrderDetailService.CreateObject(salesOrderDetail1, _salesOrderService, _itemService);
+
+                    salesOrderDetail2 = new SalesOrderDetail()
+                    {
+                        SalesOrderId = salesOrder.Id,
+                        ItemId = item_sepatubola.Id,
+                        Quantity = 12,
+                        Price = 850000
+                    };
+                    _salesOrderDetailService.CreateObject(salesOrderDetail2, _salesOrderService, _itemService);
+
                     salesOrderDetail2 = _salesOrderDetailService.SoftDeleteObject(salesOrderDetail2);
                     salesOrderDetail2.Errors.Count().should_be(0);
                 };
 
                 it["create_salesorderdetails_with_same_item"] = () =>
                 {
-                    salesOrderDetail1 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_batiktulis.Id, 5, 100000, _salesOrderService, _itemService);
-                    salesOrderDetail2 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_batiktulis.Id, 12, 850000, _salesOrderService, _itemService);
+                    salesOrderDetail1 = new SalesOrderDetail()
+                    {
+                        SalesOrderId = salesOrder.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 5,
+                        Price = 100000
+                    };
+                    _salesOrderDetailService.CreateObject(salesOrderDetail1, _salesOrderService, _itemService);
+
+                    salesOrderDetail2 = new SalesOrderDetail()
+                    {
+                        SalesOrderId = salesOrder.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 12,
+                        Price = 850000
+                    };
+                    _salesOrderDetailService.CreateObject(salesOrderDetail2, _salesOrderService, _itemService);
                     salesOrderDetail2.Errors.Count().should_not_be(0);
                 };
 
@@ -279,8 +353,23 @@ namespace TestValidation
                 {
                     before = () =>
                     {
-                        salesOrderDetail1 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_batiktulis.Id, 5, 100000, _salesOrderService, _itemService);
-                        salesOrderDetail2 = _salesOrderDetailService.CreateObject(salesOrder.Id, item_sepatubola.Id, 12, 850000, _salesOrderService, _itemService);
+                        salesOrderDetail1 = new SalesOrderDetail()
+                        {
+                            SalesOrderId = salesOrder.Id,
+                            ItemId = item_batiktulis.Id,
+                            Quantity = 5,
+                            Price = 100000
+                        };
+                        _salesOrderDetailService.CreateObject(salesOrderDetail1, _salesOrderService, _itemService);
+
+                        salesOrderDetail2 = new SalesOrderDetail()
+                        {
+                            SalesOrderId = salesOrder.Id,
+                            ItemId = item_sepatubola.Id,
+                            Quantity = 12,
+                            Price = 850000
+                        };
+                        _salesOrderDetailService.CreateObject(salesOrderDetail2, _salesOrderService, _itemService);
                         Quantity1 = item_batiktulis.PendingDelivery;
                         Quantity2 = item_sepatubola.PendingDelivery;
                         salesOrder = _salesOrderService.ConfirmObject(salesOrder, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);

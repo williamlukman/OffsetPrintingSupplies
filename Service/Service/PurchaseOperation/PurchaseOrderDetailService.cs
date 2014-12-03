@@ -64,18 +64,6 @@ namespace Service.Service
             }
         }
 
-        public PurchaseOrderDetail CreateObject(int purchaseOrderId, int itemId, int quantity, decimal price, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
-        {
-            PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail
-            {
-                PurchaseOrderId = purchaseOrderId,
-                ItemId = itemId,
-                Quantity = quantity,
-                Price = price
-            };
-            return this.CreateObject(purchaseOrderDetail, _purchaseOrderService, _itemService);
-        }
-
         public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
         {
             return (_validator.ValidUpdateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService) ?

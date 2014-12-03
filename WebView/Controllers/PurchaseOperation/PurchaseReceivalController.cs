@@ -31,8 +31,9 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private ICurrencyService _currencyService;
         private IExchangeRateService _exchangeRateService;
-
+        
         public PurchaseReceivalController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -49,6 +50,7 @@ namespace WebView.Controllers
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
@@ -480,7 +482,8 @@ namespace WebView.Controllers
             {
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,
-                        _purchaseOrderDetailService,_stockMutationService,_itemService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService,_exchangeRateService);
+                        _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, 
+                        _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
             {
