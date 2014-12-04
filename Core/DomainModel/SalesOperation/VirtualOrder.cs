@@ -13,6 +13,7 @@ namespace Core.DomainModel
         public int OrderType { get; set; }
         public DateTime OrderDate { get; set; }
         public string NomorSurat { get; set; }
+        public int CurrencyId { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
@@ -24,6 +25,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual ICollection<VirtualOrderDetail> VirtualOrderDetails { get; set; }
+        public virtual Currency Currency { get; set; }
         public virtual Contact Contact {get; set;}
         public Dictionary<String, String> Errors { get; set; }
     }

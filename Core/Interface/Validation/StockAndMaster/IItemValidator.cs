@@ -48,9 +48,11 @@ namespace Core.Interface.Validation
         bool ValidDeleteLegacyObject(Item item, IStockMutationService _stockMutationService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                      IPurchaseOrderDetailService _purchaseOrderDetailService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
                                      ISalesOrderDetailService _salesOrderDetailService);
+        bool ValidAdjustCustomerQuantity(Item item);
         bool ValidAdjustQuantity(Item item);
         bool ValidAdjustPendingDelivery(Item item);
         bool ValidAdjustPendingReceival(Item item);
+        bool ValidAdjustVirtual(Item item);
         //bool ValidOnTrial(Item item);
         //bool ValidReturnOnTrial(Item item);
         bool isValid(Item item);

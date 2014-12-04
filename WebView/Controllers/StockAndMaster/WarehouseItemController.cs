@@ -47,7 +47,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _warehouseItemService.GetQueryable().Include("Warehouse")
-                                         .Include("Item").Include("UoM").Where(x => !x.IsDeleted);
+                                         .Include("Item").Include("UoM").Where(x => !x.IsDeleted && x.WarehouseId == id);
 
             var query = (from model in q
                          select new
@@ -57,6 +57,7 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
+                             model.CustomerQuantity,
                              UoM = model.Item.UoM.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -93,6 +94,7 @@ namespace WebView.Controllers
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
+                            model.CustomerQuantity,
                             model.UoM
                       }
                     }).ToArray()
@@ -109,7 +111,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _warehouseItemService.GetQueryable().Include("Warehouse")
-                                         .Include("Item").Include("UoM").Where(x => !x.IsDeleted);
+                                         .Include("Item").Include("UoM").Where(x => !x.IsDeleted && x.ItemId == id);
 
             var query = (from model in q
                          select new
@@ -119,6 +121,7 @@ namespace WebView.Controllers
                              WarehouseCode = model.Warehouse.Code,
                              Warehouse = model.Warehouse.Name,
                              model.Quantity,
+                             model.CustomerQuantity,
                              UoM = model.Item.UoM.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -155,6 +158,7 @@ namespace WebView.Controllers
                            model.WarehouseCode,
                            model.Warehouse,
                            model.Quantity,
+                           model.CustomerQuantity,
                            model.UoM,
                       }
                     }).ToArray()

@@ -114,7 +114,8 @@ namespace Service.Service
 
         public CoreIdentificationDetail ConfirmObject(CoreIdentificationDetail coreIdentificationDetail, DateTime ConfirmationDate, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, 
+                                                     ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
             coreIdentificationDetail.ConfirmationDate = ConfirmationDate;
             if( _validator.ValidConfirmObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
@@ -128,8 +129,9 @@ namespace Service.Service
                                     _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
                     WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
-                    StockMutation stockMutation = _stockMutationService.CreateStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
-                    _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
+                    CustomerStockMutation customerStockMutation = _customerStockMutationService.CreateCustomerStockMutationForCoreIdentification(coreIdentificationDetail, customerItem, item.Id);
+                    _customerStockMutationService.StockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                 }
                 _repository.ConfirmObject(coreIdentificationDetail);
             }
@@ -138,12 +140,13 @@ namespace Service.Service
 
         public CoreIdentificationDetail UnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                      ICoreBuilderService _coreBuilderService, IStockMutationService _stockMutationService,
-                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, 
+                                                     ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
-            if (_validator.ValidUnconfirmObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService))
+            if (_validator.ValidUnconfirmObject(coreIdentificationDetail, _coreIdentificationService, this, _coreBuilderService, _warehouseItemService, _customerItemService))
             {
                 CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
-                if (coreIdentification.ContactId != null)
+                if (!coreIdentification.IsInHouse && coreIdentification.ContactId != null)
                 {
                     // reduce contact core
                     int MaterialCase = coreIdentificationDetail.MaterialCase;
@@ -151,11 +154,13 @@ namespace Service.Service
                                     _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
                                     _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
                     WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
-                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForCoreIdentification(coreIdentificationDetail, warehouseItem);
-                    foreach (var stockMutation in stockMutations)
+                    CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
+                    IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.CoreIdentificationDetail, coreIdentificationDetail.Id);
+                    foreach (var customerStockMutation in customerStockMutations)
                     {
-                        _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
+                        _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
+                    _customerStockMutationService.DeleteCustomerStockMutations(customerStockMutations);
                 }
                 _repository.UnconfirmObject(coreIdentificationDetail);
             }

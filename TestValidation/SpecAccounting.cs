@@ -78,11 +78,11 @@ namespace TestValidation
                 {
                     // Left Hand Side
                     // Assets
-                    Account Asset, CashBankAccount, AccountReceivable, GBCHReceivable, Inventory;
+                    Account Asset, CashBankAccount, AccountReceivableIDR, GBCHReceivableIDR, Inventory;
 
                     Inventory = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.Inventory);
-                    GBCHReceivable = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.GBCHReceivable);
-                    AccountReceivable = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.AccountReceivable);
+                    GBCHReceivableIDR = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.GBCHReceivable + d.currencyIDR.Id);
+                    AccountReceivableIDR = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.AccountReceivable + d.currencyIDR.Id);
                     Account kontan = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank1.Id);
                     Account bca = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank2.Id);
                     Account cashBank = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.CashBank + d.cashBank.Id);
@@ -93,10 +93,11 @@ namespace TestValidation
                     decimal InventoryAmount = (d.sad1.Price * d.sad1.Quantity) + (d.sad2.Price * d.sad2.Quantity) +
                                               (d.sad3.Price * d.sad3.Quantity) + (d.sad4.Price * d.sad4.Quantity) +
                                               (d.sad5.Price * d.sad5.Quantity) + (d.sadAdhesiveBlanket.Price * d.sadAdhesiveBlanket.Quantity) +
-                                              (d.sadAdhesiveRoller.Price * d.sadAdhesiveRoller.Quantity);
+                                              (d.sadAdhesiveRoller.Price * d.sadAdhesiveRoller.Quantity)
+                                              - d.deliveryOrder1.TotalCOGS - d.deliveryOrder2.TotalCOGS - d.deliveryOrder3.TotalCOGS;
                     decimal GBCHReceivableAmount = 0;
                     decimal ReceivableAmount = (d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount)
-                                               -(d.salesInvoice1.AmountReceivable + d.salesInvoice2.AmountReceivable + d.salesInvoice3.AmountReceivable);
+                                               - (d.salesInvoice1.AmountReceivable + d.salesInvoice2.AmountReceivable + d.salesInvoice3.AmountReceivable);
                     decimal KontanAmount = d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount +
                                            d.cashBankAdjustment.Amount + d.cashBankAdjustment2.Amount - d.cashBankMutation.Amount;
                     decimal cashBank0Amount = d.cashBankAdjustment3.Amount;
@@ -144,7 +145,7 @@ namespace TestValidation
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(kontan.Id, d.thisMonthClosing.Id).Amount.should_be(KontanAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(bca.Id, d.thisMonthClosing.Id).Amount.should_be(bcaAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(CashBankAccount.Id, d.thisMonthClosing.Id).Amount.should_be(cashBankAmount);
-                    d._validCombService.FindOrCreateObjectByAccountAndClosing(AccountReceivable.Id, d.thisMonthClosing.Id).Amount.should_be(ReceivableAmount);
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(AccountReceivableIDR.Id, d.thisMonthClosing.Id).Amount.should_be(ReceivableAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(Asset.Id, d.thisMonthClosing.Id).Amount.should_be(AssetAmount);
 
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(EquityAdjustment.Id, d.thisMonthClosing.Id).Amount.should_be(EquityAdjustmentAmount);

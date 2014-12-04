@@ -65,7 +65,7 @@ namespace Data.Repository
             string ParentCode = ""; 
             using (var db = GetContext())
             {
-                ParentCode = (from obj in db.DeliveryOrders
+                ParentCode = (from obj in db.TemporaryDeliveryOrders
                               where obj.Id == temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId
                               select obj.Code).FirstOrDefault();
             }
@@ -116,7 +116,7 @@ namespace Data.Repository
         public string SetObjectCode(string ParentCode)
         {
             int totalnumberinthemonth = GetAllByMonthCreated().Count() + 1;
-            string Code = ParentCode + totalnumberinthemonth;
+            string Code = ParentCode + "." + totalnumberinthemonth;
             return Code;
         } 
     }

@@ -444,8 +444,8 @@ namespace Validation.Validation
         public BlanketOrderDetail VUnfinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
         {
             VHasBeenFinished(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VBlanketOrderHasNotBeenCompleted(blanketOrderDetail, _blanketOrderService);
+            //if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            //VBlanketOrderHasNotBeenCompleted(blanketOrderDetail, _blanketOrderService);
             return blanketOrderDetail;
         }
 
@@ -464,8 +464,8 @@ namespace Validation.Validation
         public BlanketOrderDetail VUndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
         {
             VHasBeenRejected(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VBlanketOrderHasNotBeenCompleted(blanketOrderDetail, _blanketOrderService);
+            //if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            //VBlanketOrderHasNotBeenCompleted(blanketOrderDetail, _blanketOrderService);
             return blanketOrderDetail;
         }
 

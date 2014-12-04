@@ -295,6 +295,7 @@ namespace WebView.Controllers
                 var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.Price = model.Price;
                 model = _stockAdjustmentDetailService.UpdateObject(data,_stockAdjustmentService,_itemService,_warehouseItemService);
             }
             catch (Exception ex)

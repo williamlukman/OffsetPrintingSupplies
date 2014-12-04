@@ -56,16 +56,6 @@ namespace Service.Service
             return (_validator.ValidCreateObject(purchaseOrder, this, _contactService) ? _repository.CreateObject(purchaseOrder) : purchaseOrder);
         }
 
-        public PurchaseOrder CreateObject(int contactId, DateTime purchaseDate, IContactService _contactService)
-        {
-            PurchaseOrder purchaseOrder = new PurchaseOrder
-            {
-                ContactId = contactId,
-                PurchaseDate = purchaseDate
-            };
-            return this.CreateObject(purchaseOrder, _contactService);
-        }
-
         public PurchaseOrder UpdateObject(PurchaseOrder purchaseOrder, IContactService _contactService)
         {
             return (_validator.ValidUpdateObject(purchaseOrder, this, _contactService) ? _repository.UpdateObject(purchaseOrder) : purchaseOrder);

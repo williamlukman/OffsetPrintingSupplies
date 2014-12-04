@@ -32,6 +32,7 @@ namespace Core.DomainModel
         public virtual Warehouse Warehouse { get; set; }
         public virtual WarehouseItem WarehouseItem { get; set; }
         public Dictionary<String, String> Errors { get; set; }
+        //public virtual ICollection<CustomerStockMutation> CustomerStockMutations { get; set; }
 
     }
 }

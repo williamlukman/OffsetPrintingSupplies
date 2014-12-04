@@ -336,17 +336,18 @@ namespace Service.Service
             #endregion
         }
 
-
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService,IPaymentVoucherDetailService _paymentVoucherDetailService)
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService,
+                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
         {
-            // Credit CashBank, Debit Account Payable
-            #region Credit CashBank, Debit AccountPayable
+            // GBCH: Credit GBCHPayable, Cash: Credit CashBank
+            // Debit Account Payable, Credit ExchangeGain or Debit ExchangeLost
+            #region GBCH: Credit GBCHPayable, Cash: Credit CashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             if (paymentVoucher.IsGBCH)
             {
                 GeneralLedgerJournal creditGBCHPayable = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + paymentVoucher.CashBank.CurrencyId).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + cashBank.CurrencyId).Id,
                     SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
@@ -365,102 +366,224 @@ namespace Service.Service
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = paymentVoucher.TotalAmount
+                    Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
                 journals.Add(creditcashbank);
             }
 
-            IList<PaymentVoucherDetail> pvd = _paymentVoucherDetailService.GetQueryable().Where(x => x.PaymentVoucherId == paymentVoucher.Id).ToList();
+            #endregion
+            #region Debit Account Payable, Credit ExchangeGain or Debit ExchangeLost
+            IList<PaymentVoucherDetail> pvd = _paymentVoucherDetailService.GetQueryable().Where(x => x.PaymentVoucherId == paymentVoucher.Id & !x.IsDeleted).ToList();
             foreach (var detail in pvd)
-              {
-                  GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
-                  {
-                      AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                      SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                      SourceDocumentId = paymentVoucher.Id,
-                      TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
-                      Status = Constant.GeneralLedgerStatus.Debit,
-                      Amount = detail.Payable.Amount * detail.Payable.Rate
-                  };
-                  debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
-                  journals.Add(debitaccountpayable);
+            {
+                Payable payable = _payableService.GetObjectById(detail.PayableId);
+                GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + payable.CurrencyId).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                    SourceDocumentId = paymentVoucher.Id,
+                    TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = detail.Amount * payable.Rate
+                };
+                debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
+                journals.Add(debitaccountpayable);
 
-                  if (detail.Payable.Rate < paymentVoucher.RateToIDR)
-                  {
-                      GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
-                      {
-                          AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
-                          SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                          SourceDocumentId = paymentVoucher.Id,
-                          TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
-                          Status = Constant.GeneralLedgerStatus.Debit,
-                          Amount = (detail.Payable.Rate * detail.Amount) - (paymentVoucher.RateToIDR * detail.Rate * detail.Amount)
-                      };
-                      debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
-                      journals.Add(debitExchangeLoss);
-                  }
-                  else if (detail.Payable.Rate > paymentVoucher.RateToIDR)
-                  {
-                      GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
-                      {
-                          AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
-                          SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                          SourceDocumentId = paymentVoucher.Id,
-                          TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
-                          Status = Constant.GeneralLedgerStatus.Credit,
-                          Amount = (paymentVoucher.RateToIDR * detail.Rate * detail.Amount) - (detail.Payable.Rate * detail.Amount)
-                      };
-                      creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
-                      journals.Add(creditExchangeGain);
-                  }
-              }
-      
+                if (payable.Rate < paymentVoucher.RateToIDR)
+                {
+                    GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                        SourceDocumentId = paymentVoucher.Id,
+                        TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Amount = (paymentVoucher.RateToIDR * detail.Rate * detail.Amount) - (payable.Rate * detail.Amount)
+                    };
+                    debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
+                    journals.Add(debitExchangeLoss);
+                }
+                else if (payable.Rate > paymentVoucher.RateToIDR)
+                {
+                    GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                        SourceDocumentId = paymentVoucher.Id,
+                        TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Amount = (payable.Rate * detail.Amount) - (paymentVoucher.RateToIDR * detail.Rate * detail.Amount)
+                    };
+                    creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
+                    journals.Add(creditExchangeGain);
+                }
+            }      
 
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService, IPaymentVoucherDetailService _paymentVoucherDetailService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService,
+                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService)
         {
-            // Debit CashBank, Credit AccountPayable
-            #region Debit CashBank, Credit AccountPayable
+            // GBCH: Debit GBCHPayable, Cash: Debit CashBank
+            // Credit Account Payable, Debit ExchangeGain or Credit ExchangeLost
+            #region GBCH: Debit GBCHPayable, Cash: Debit CashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
 
-            GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
+            if (paymentVoucher.IsGBCH)
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
-
-            GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+                GeneralLedgerJournal debitGBCHPayable = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + cashBank.CurrencyId).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                    SourceDocumentId = paymentVoucher.Id,
+                    TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                };
+                debitGBCHPayable = CreateObject(debitGBCHPayable, _accountService);
+                journals.Add(debitGBCHPayable);
+            }
+            else
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = UnconfirmationDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentVoucher.TotalAmount
-            };
-            debitcashbank = CreateObject(debitcashbank, _accountService);
+                GeneralLedgerJournal debitcashbank = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + cashBank.Id).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                    SourceDocumentId = paymentVoucher.Id,
+                    TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                };
+                debitcashbank = CreateObject(debitcashbank, _accountService);
+                journals.Add(debitcashbank);
+            }
+            #endregion
+            #region Credit Account Payable, Debit ExchangeGain or Credit ExchangeLost
 
-            journals.Add(creditaccountpayable);
-            journals.Add(debitcashbank);
+            IList<PaymentVoucherDetail> pvd = _paymentVoucherDetailService.GetQueryable().Where(x => x.PaymentVoucherId == paymentVoucher.Id && !x.IsDeleted).ToList();
+            foreach (var detail in pvd)
+            {
+                Payable payable = _payableService.GetObjectById(detail.PayableId);
+                GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + payable.CurrencyId).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                    SourceDocumentId = paymentVoucher.Id,
+                    TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = detail.Amount * payable.Rate
+                };
+                creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
+                journals.Add(creditaccountpayable);
+
+                if (payable.Rate < paymentVoucher.RateToIDR)
+                {
+                    GeneralLedgerJournal creditExchangeLoss = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                        SourceDocumentId = paymentVoucher.Id,
+                        TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Amount = (paymentVoucher.RateToIDR * detail.Rate * detail.Amount) - (payable.Rate * detail.Amount)
+                    };
+                    creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
+                    journals.Add(creditExchangeLoss);
+                }
+                else if (payable.Rate > paymentVoucher.RateToIDR)
+                {
+                    GeneralLedgerJournal debitExchangeGain = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                        SourceDocumentId = paymentVoucher.Id,
+                        TransactionDate = (DateTime)paymentVoucher.ConfirmationDate,
+                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Amount = (payable.Rate * detail.Amount) - (paymentVoucher.RateToIDR * detail.Rate * detail.Amount)
+                    };
+                    debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
+                    journals.Add(debitExchangeGain);
+                }
+            }
 
             return journals;
             #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateReconcileJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
+        {
+            // Debit GBCH, Credit CashBank
+            #region Debit GBCH, Credit CashBank
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            GeneralLedgerJournal debitGBCH = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + cashBank.CurrencyId).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = paymentVoucher.ReconciliationDate.Value,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+            };
+            debitGBCH = CreateObject(debitGBCH, _accountService);
+            journals.Add(debitGBCH);
+
+            GeneralLedgerJournal creditcashBank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + paymentVoucher.CashBankId).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = paymentVoucher.ReconciliationDate.Value,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+            };
+            creditcashBank = CreateObject(creditcashBank, _accountService);
+            journals.Add(creditcashBank);
+            #endregion
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnReconcileJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService)
+        {
+            // Credit GBCH, Debit CashBank
+            #region Credit GBCH, Debit CashBank
+
+            DateTime unReconcileDate = DateTime.Now;
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            GeneralLedgerJournal creditGBCH = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + cashBank.CurrencyId).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = unReconcileDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+            };
+            creditGBCH = CreateObject(creditGBCH, _accountService);
+            journals.Add(creditGBCH);
+
+            GeneralLedgerJournal debitcashBank = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + paymentVoucher.CashBankId).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PaymentVoucher,
+                SourceDocumentId = paymentVoucher.Id,
+                TransactionDate = unReconcileDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+            };
+            debitcashBank = CreateObject(debitcashBank, _accountService);
+            journals.Add(debitcashBank);
+            #endregion
+            return journals;
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService)
         {
-            // Credit AccountPayableNonTrading, Debit User Input
-            #region Credit AccountPayableNonTrading, Debit User Input
+            // Credit AccountPayable, Debit User Input
+            #region Credit AccountPayable, Debit User Input
 
             IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
@@ -498,8 +621,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService)
         {
-            // Debit AccountPayableNonTrading, Credit User Input
-            #region Debit AccountPayableNonTrading, Credit User Input
+            // Debit AccountPayable, Credit User Input
+            #region Debit AccountPayable, Credit User Input
 
             IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
@@ -745,18 +868,19 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher,CashBank cashBank, 
-            IAccountService _accountService,IReceiptVoucherDetailService _receiptVoucherDetailService,IReceiptVoucherService _receiptVoucherService)
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService, 
+                                           IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
         {
-            // Debit CashBank, Credit AccountReceivable
-            #region Debit CashBank, Credit AccountReceivable
+            // GBCH: Debit GBCHReceivable, CashBank: DebitCashBank
+            // Credit AccountReceivable, Credit ExchangeGain or Debit ExchangeLost
+            #region GBCH: Debit GBCHReceivable, CashBank: DebitCashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             //debit cashbank credit AR
             if (receiptVoucher.IsGBCH)
             {
                 GeneralLedgerJournal debitGBCHReceivable = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + receiptVoucher.CashBank.CurrencyId).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
                     SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
@@ -780,77 +904,80 @@ namespace Service.Service
                 debitcashbank = CreateObject(debitcashbank, _accountService);
                 journals.Add(debitcashbank);
             }
-            
 
-            IList<ReceiptVoucherDetail> rvd = _receiptVoucherDetailService.GetQueryable().Where(x => x.ReceiptVoucherId == receiptVoucher.Id).ToList();
+            #endregion
+            #region Credit AccountReceivable, Credit ExchangeGain or Debit ExchangeLost
+
+            IList<ReceiptVoucherDetail> rvd = _receiptVoucherDetailService.GetQueryable().Where(x => x.ReceiptVoucherId == receiptVoucher.Id && !x.IsDeleted).ToList();
             foreach (var detail in rvd)
+            {
+                Receivable receivable = _receivableService.GetObjectById(detail.ReceivableId);
+                GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
                 {
-               
-                 GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
-                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + detail.Receivable.CurrencyId).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + receivable.CurrencyId).Id,
                     SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = detail.Amount * detail.Receivable.Rate
-                 };
-                 creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
-                 journals.Add(creditaccountreceivable);
+                    Amount = detail.Amount * receivable.Rate
+                };
+                creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
+                journals.Add(creditaccountreceivable);
 
-                 if (detail.Receivable.Rate < (receiptVoucher.RateToIDR * detail.Rate))
-                 {
-                     GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
-                     {
-                         AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
-                         SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                         SourceDocumentId = receiptVoucher.Id,
-                         TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
-                         Status = Constant.GeneralLedgerStatus.Credit,
-                         Amount =  (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (detail.Receivable.Rate * detail.Amount)
-                     };
-                     creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
-                     journals.Add(creditExchangeGain);
-                 }
-                 else if (detail.Receivable.Rate > (receiptVoucher.RateToIDR * detail.Rate))
-                 {
-                     GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
-                     {
-                         AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
-                         SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                         SourceDocumentId = receiptVoucher.Id,
-                         TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
-                         Status = Constant.GeneralLedgerStatus.Debit,
-                         Amount = (detail.Receivable.Rate * detail.Amount) -(receiptVoucher.RateToIDR * detail.Rate * detail.Amount) 
-                     };
-                     debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
-                     journals.Add(debitExchangeLoss);
-                 }
+                if (receivable.Rate < (receiptVoucher.RateToIDR * detail.Rate))
+                {
+                    GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                        SourceDocumentId = receiptVoucher.Id,
+                        TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
+                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Amount = (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (receivable.Rate * detail.Amount)
+                    };
+                    creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
+                    journals.Add(creditExchangeGain);
                 }
+                else if (receivable.Rate > (receiptVoucher.RateToIDR * detail.Rate))
+                {
+                    GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
+                        SourceDocumentId = receiptVoucher.Id,
+                        TransactionDate = (DateTime)receiptVoucher.ConfirmationDate,
+                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Amount = (receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount)
+                    };
+                    debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
+                    journals.Add(debitExchangeLoss);
+                }
+            }
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank,
-            IAccountService _accountService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceiptVoucherService _receiptVoucherService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService, 
+                                           IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService)
         {
-            // Credit CashBank, Debit AccountReceivable
-            #region Credit CashBank, Debit AccountReceivable
+            // GBCH: Credit GBCHReceivable, CashBank: Credit CashBank
+            // Debit AccountReceivable, Debit ExchangeGain or Credit ExchangeLost
+            #region Credit GBCHReceivable, CashBank: Credit CashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
             if (receiptVoucher.IsGBCH)
             {
-                GeneralLedgerJournal creditcGBCH = new GeneralLedgerJournal()
+                GeneralLedgerJournal creditGBCH = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + receiptVoucher.CashBank.CurrencyId).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
                     SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
                     Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
                 };
-                creditcGBCH = CreateObject(creditcGBCH, _accountService);
-                journals.Add(creditcGBCH);
+                creditGBCH = CreateObject(creditGBCH, _accountService);
+                journals.Add(creditGBCH);
             }
             else
             {
@@ -866,25 +993,27 @@ namespace Service.Service
                 creditcashbank = CreateObject(creditcashbank, _accountService);
                 journals.Add(creditcashbank);
             }
-         
 
-            IList<ReceiptVoucherDetail> rvd = _receiptVoucherDetailService.GetQueryable().Where(x => x.ReceiptVoucherId == receiptVoucher.Id).ToList();
+            #endregion
+            #region Debit AccountReceivable, Debit ExchangeGain or Credit ExchangeLost
+
+            IList<ReceiptVoucherDetail> rvd = _receiptVoucherDetailService.GetQueryable().Where(x => x.ReceiptVoucherId == receiptVoucher.Id && !x.IsDeleted).ToList();
             foreach (var detail in rvd)
             {
-                 
+                Receivable receivable = _receivableService.GetObjectById(detail.ReceivableId);
                 GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + detail.Receivable.CurrencyId).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + receivable.CurrencyId).Id,
                     SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = detail.Amount * detail.Receivable.Rate
+                    Amount = detail.Amount * receivable.Rate
                 };
                 debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
                 journals.Add(debitaccountreceivable);
 
-                if (detail.Receivable.Rate < (receiptVoucher.RateToIDR * detail.Rate))
+                if (receivable.Rate < (receiptVoucher.RateToIDR * detail.Rate))
                 {
                     GeneralLedgerJournal debitExchangeGain = new GeneralLedgerJournal()
                     {
@@ -893,12 +1022,12 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = UnconfirmationDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (detail.Receivable.Rate * detail.Amount) 
+                        Amount = (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (receivable.Rate * detail.Amount) 
                     };
                     debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                     journals.Add(debitExchangeGain);
                 }
-                else if (detail.Receivable.Rate > (receiptVoucher.RateToIDR * detail.Rate))
+                else if (receivable.Rate > (receiptVoucher.RateToIDR * detail.Rate))
                 {
                     GeneralLedgerJournal creditExchangeLoss = new GeneralLedgerJournal()
                     {
@@ -907,7 +1036,7 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = UnconfirmationDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount =  (detail.Receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount)
+                        Amount =  (receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount)
                     };
                     creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                     journals.Add(creditExchangeLoss);
@@ -918,85 +1047,26 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateReconcileJournalForPaymentVoucher(PaymentVoucher paymentVoucher,
-             IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
         {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            GeneralLedgerJournal debitGBCH = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + paymentVoucher.CashBank.CurrencyId).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = paymentVoucher.ReconciliationDate.Value,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
-            };
-            debitGBCH = CreateObject(debitGBCH, _accountService);
-            journals.Add(debitGBCH);
+            // Credit GBCH, Debit CashBank
+            #region Credit GBCH, Debit CashBank
 
-            GeneralLedgerJournal creditcashBank = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + paymentVoucher.CashBankId).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = paymentVoucher.Id,
-                TransactionDate = paymentVoucher.ReconciliationDate.Value,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
-            };
-            creditcashBank = CreateObject(creditcashBank, _accountService);
-            journals.Add(creditcashBank);
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreateUnReconcileJournalForPaymentVoucher(PaymentVoucher paymenttVoucher,
-           IAccountService _accountService) 
-        {
-            DateTime unReconcileDate = DateTime.Now;
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             GeneralLedgerJournal creditGBCH = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + paymenttVoucher.CashBank.CurrencyId).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = paymenttVoucher.Id,
-                TransactionDate = unReconcileDate,
+                SourceDocumentId = receiptVoucher.Id,
+                TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymenttVoucher.TotalAmount * paymenttVoucher.RateToIDR
+                Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
             };
             creditGBCH = CreateObject(creditGBCH, _accountService);
             journals.Add(creditGBCH);
 
             GeneralLedgerJournal debitcashBank = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + paymenttVoucher.CashBankId).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = paymenttVoucher.Id,
-                TransactionDate = unReconcileDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymenttVoucher.TotalAmount * paymenttVoucher.RateToIDR
-            };
-            debitcashBank = CreateObject(debitcashBank, _accountService);
-            journals.Add(debitcashBank);
-            return journals;
-        }
-
-        public IList<GeneralLedgerJournal> CreateReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher,
-             IAccountService _accountService)
-        {
-            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            GeneralLedgerJournal creditcGBCH = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + receiptVoucher.CashBank.CurrencyId).Id,
-                SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
-                SourceDocumentId = receiptVoucher.Id,
-                TransactionDate = receiptVoucher.ReconciliationDate.Value,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
-            };
-            creditcGBCH = CreateObject(creditcGBCH, _accountService);
-            journals.Add(creditcGBCH);
-
-            GeneralLedgerJournal debitcashBank = new GeneralLedgerJournal()
-            {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.CashBank + receiptVoucher.CashBankId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
@@ -1006,17 +1076,20 @@ namespace Service.Service
             };
             debitcashBank = CreateObject(debitcashBank, _accountService);
             journals.Add(debitcashBank);
+            #endregion
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateUnReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher,
-            IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUnReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService)
         {
+            // Debit GBCH, Credit CashBank
+            #region Debit GBCH, Credit CashBank
+
             DateTime unReconcileDate = DateTime.Now;
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             GeneralLedgerJournal debitGBCH = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + receiptVoucher.CashBank.CurrencyId).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.ReceiptVoucher,
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = unReconcileDate,
@@ -1037,6 +1110,7 @@ namespace Service.Service
             };
             creditcashBank = CreateObject(creditcashBank, _accountService);
             journals.Add(creditcashBank);
+            #endregion
             return journals;
         }
 
@@ -1462,10 +1536,10 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseReceival purchaseReceival, IAccountService _accountService)
         {
-            // TODO: Tax Calculation
             // Debit GoodsPendingClearance, Credit AccountPayable
+            // Debit TaxExpense, Debit ExchangeLoss or Credit ExchangeGain
             #region Debit GoodsPendingClearance, Credit AccountPayable
             decimal PreTax = purchaseInvoice.AmountPayable * 100 / (100 + purchaseInvoice.Tax);
             decimal Tax = purchaseInvoice.AmountPayable - PreTax;
@@ -1475,7 +1549,7 @@ namespace Service.Service
 
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + purchaseInvoice.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoice,
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)purchaseInvoice.ConfirmationDate,
@@ -1492,10 +1566,13 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)purchaseInvoice.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = PreTax * purchaseInvoice.PurchaseReceival.ExchangeRateAmount
+                Amount = PreTax * purchaseReceival.ExchangeRateAmount
             };
             debitGoodsPendingClearance = CreateObject(debitGoodsPendingClearance, _accountService);
             journals.Add(debitGoodsPendingClearance);
+
+            #endregion
+            #region Debit TaxExpense, Debit ExchangeLoss or Credit ExchangeGain
 
             if (Tax > 0)
             {
@@ -1512,7 +1589,7 @@ namespace Service.Service
                 journals.Add(debitTaxExpense);
             }
 
-            if (purchaseInvoice.ExchangeRateAmount > purchaseInvoice.PurchaseReceival.ExchangeRateAmount)
+            if (purchaseInvoice.ExchangeRateAmount > purchaseReceival.ExchangeRateAmount)
             {
                 GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
                 { 
@@ -1521,12 +1598,12 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseInvoice.PurchaseReceival.ExchangeRateAmount
+                    Amount = PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount
                 };
                 debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                 journals.Add(debitExchangeLoss);
             }
-            else if (purchaseInvoice.ExchangeRateAmount < purchaseInvoice.PurchaseReceival.ExchangeRateAmount)
+            else if (purchaseInvoice.ExchangeRateAmount < purchaseReceival.ExchangeRateAmount)
             { 
                 GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
                 {
@@ -1535,18 +1612,19 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.ConfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = PreTax * purchaseInvoice.PurchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount
+                    Amount = PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount
                 };
                 creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                 journals.Add(creditExchangeGain);
             }
-            return journals;
             #endregion
+            return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseReceival purchaseReceival, IAccountService _accountService)
         {
             // Credit GoodsPendingClearance, Debit AccountPayable
+            // Credit TaxExpense, Credit ExchangeLoss or Debit ExchangeGain
             #region Credit GoodsPendingClearance, Debit AccountPayable
             decimal PreTax = purchaseInvoice.AmountPayable * 100 / (100 + purchaseInvoice.Tax);
             decimal Tax = purchaseInvoice.AmountPayable - PreTax;
@@ -1556,7 +1634,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + purchaseInvoice.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoice,
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)UnconfirmationDate,
@@ -1573,11 +1651,13 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)UnconfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = PreTax * purchaseInvoice.PurchaseReceival.ExchangeRateAmount
+                Amount = PreTax * purchaseReceival.ExchangeRateAmount
             };
             credittGoodsPendingClearance = CreateObject(credittGoodsPendingClearance, _accountService);
             journals.Add(credittGoodsPendingClearance);
 
+            #endregion
+            #region Credit TaxExpense, Credit ExchangeLoss or Debit ExchangeGain
             if (Tax > 0)
             {
                 GeneralLedgerJournal creditTaxExpense = new GeneralLedgerJournal()
@@ -1593,7 +1673,7 @@ namespace Service.Service
                 journals.Add(creditTaxExpense);
             }
 
-            if (purchaseInvoice.ExchangeRateAmount > purchaseInvoice.PurchaseReceival.ExchangeRateAmount)
+            if (purchaseInvoice.ExchangeRateAmount > purchaseReceival.ExchangeRateAmount)
             {
                 GeneralLedgerJournal creditExchangeLoss = new GeneralLedgerJournal()
                 { 
@@ -1602,12 +1682,12 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseInvoice.PurchaseReceival.ExchangeRateAmount
+                    Amount = PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount
                 };
                 creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                 journals.Add(creditExchangeLoss);
             }
-            else if (purchaseInvoice.ExchangeRateAmount < purchaseInvoice.PurchaseReceival.ExchangeRateAmount)
+            else if (purchaseInvoice.ExchangeRateAmount < purchaseReceival.ExchangeRateAmount)
             {
                 GeneralLedgerJournal debitExchangeGain = new GeneralLedgerJournal()
                 {
@@ -1616,13 +1696,13 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = PreTax * purchaseInvoice.PurchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount
+                    Amount = PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount
                 };
                 debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                 journals.Add(debitExchangeGain);
             }
-            return journals;
             #endregion
+            return journals;
         }
 
         // SALES OPERATION
@@ -1767,10 +1847,79 @@ namespace Service.Service
             return journals;
             #endregion
         }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForTemporaryDeliveryOrderClearanceWaste(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, IAccountService _accountService)
+        {
+            // Credit Raw (Inventory), Debit SampleAndTrialExpense (SalesExpense)
+            #region Credit Raw , Debit SampleAndTrialExpense
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = temporaryDeliveryOrderClearance.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+            };
+            creditraw = CreateObject(creditraw, _accountService);
+
+            GeneralLedgerJournal debitsampleandtrialexpense = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SampleAndTrialExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = temporaryDeliveryOrderClearance.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+            };
+            debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
+
+            journals.Add(creditraw);
+            journals.Add(debitsampleandtrialexpense);
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForTemporaryDeliveryOrderClearanceWaste(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, IAccountService _accountService)
+        {
+            // Debit Raw (Inventory), Credit SampleAndTrialExpense (SalesExpense)
+            #region Debit Raw , Credit SampleAndTrialExpense
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            DateTime UnconfirmDate = DateTime.Now;
+
+            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = UnconfirmDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+            };
+            debitraw = CreateObject(debitraw, _accountService);
+
+            GeneralLedgerJournal creditsampleandtrialexpense = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SampleAndTrialExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = UnconfirmDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+            };
+            creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
+
+            journals.Add(debitraw);
+            journals.Add(creditsampleandtrialexpense);
+            return journals;
+            #endregion
+        }
         
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, IAccountService _accountService,IExchangeRateService _exchangeRateService,ICurrencyService _currencyService)
         {
-            // TODO: Account Calculation
             // Debit AccountReceivable, Debit Discount, Debit TaxExpense, Credit Revenue
             // Debit COS, Credit FinishedGoods
             #region Debit AccountReceivable, Debit Discount, Debit TaxExpense, Credit Revenue for fixed rate
@@ -1778,7 +1927,8 @@ namespace Service.Service
             decimal Tax = salesInvoice.AmountReceivable - PreTax;
             decimal Discount = PreTax * salesInvoice.Discount / 100;
             decimal Rate = 0;
-            if (salesInvoice.Currency.IsBase == true)
+            Currency currency = _currencyService.GetObjectById(salesInvoice.CurrencyId);
+            if (currency.IsBase == true)
             {
                 Rate = 1;
             }
@@ -2179,7 +2329,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateFinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
         {
-            // Credit Raw (Core, Compound, Accessories), Debit FinishedGoods (Roller)
+            // Credit Raw/Stock (Core, Compound, Accessories), Debit FinishedGoods/ManufacturedGoods (Roller)
             #region Credit Raw (Core, Compound, Accessories), Debit FinishedGoods (Roller)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
@@ -2316,6 +2466,75 @@ namespace Service.Service
         }
 
         // MANUFACTURING CONVERSION
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
+        {
+            // Credit Raw (Source Items), Debit FinishedGoods (Chemical)
+            #region Credit Raw (Source Items), Debit FinishedGoods (Chemical)
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = blendingWorkOrder.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalCost,
+            };
+            creditraw = CreateObject(creditraw, _accountService);
+
+            GeneralLedgerJournal debitfinishedgoods = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = blendingWorkOrder.ConfirmationDate.GetValueOrDefault(),
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = TotalCost,
+            };
+            debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
+
+            journals.Add(creditraw);
+            journals.Add(debitfinishedgoods);
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
+        {
+            // Debit Raw (Source Items), Credit FinishedGoods (Chemical)
+            #region Debit Raw (Source Items), Credit FinishedGoods (Chemical)
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnfinishedDate = DateTime.Now;
+
+            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = UnfinishedDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = TotalCost
+            };
+            debitraw = CreateObject(debitraw, _accountService);
+
+            GeneralLedgerJournal creditfinishedgoods = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = UnfinishedDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalCost
+            };
+            creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
+
+            journals.Add(debitraw);
+            journals.Add(creditfinishedgoods);
+            return journals;
+            #endregion
+        }
 
         public IList<GeneralLedgerJournal> CreateFinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
         {

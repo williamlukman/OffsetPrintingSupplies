@@ -25,7 +25,7 @@ namespace Validation.Validation
 
         public CoreIdentification VInHouseOrHasContact(CoreIdentification coreIdentification, IContactService _contactService)
         {
-            if ((coreIdentification.IsInHouse && coreIdentification.ContactId != null) ||
+            if (/*(coreIdentification.IsInHouse && coreIdentification.ContactId != null) ||*/
                 (!coreIdentification.IsInHouse && coreIdentification.ContactId == null))
             {
                 coreIdentification.Errors.Add("Generic", "Core Identification harus memilih InHouse atau menyertakan informasi Contact");
@@ -120,6 +120,37 @@ namespace Validation.Validation
             }
             return coreIdentification;
         }
+
+        public CoreIdentification VAllDetailsAreConfirmable(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
+        {
+            IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+            foreach (var detail in details)
+            {
+                detail.Errors = new Dictionary<string, string>();
+                detail.ConfirmationDate = coreIdentification.ConfirmationDate;
+                if (!_coreIdentificationDetailService.GetValidator().ValidConfirmObject(detail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService))
+                {
+                    coreIdentification.Errors.Add("Generic", detail.Errors.FirstOrDefault().Key + " " + detail.Errors.FirstOrDefault().Value);
+                    return coreIdentification;
+                }
+            }
+            return coreIdentification;
+        }
+
+        public CoreIdentification VAllDetailsAreUnconfirmable(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService)
+        {
+            IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentification.Id);
+            foreach (var detail in details)
+            {
+                detail.Errors = new Dictionary<string, string>();
+                if (!_coreIdentificationDetailService.GetValidator().ValidUnconfirmObject(detail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService, _customerItemService))
+                {
+                    coreIdentification.Errors.Add("Generic", detail.Errors.FirstOrDefault().Key + " " + detail.Errors.FirstOrDefault().Value);
+                    return coreIdentification;
+                }
+            }
+            return coreIdentification;
+        }
         
         public CoreIdentification VQuantityEqualNumberOfDetails(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
@@ -197,7 +228,7 @@ namespace Validation.Validation
         }
 
         public CoreIdentification VConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                                 ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                                 ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService)
         {
             VHasConfirmationDate(coreIdentification);
             if (!isValid(coreIdentification)) { return coreIdentification; }
@@ -208,14 +239,19 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(coreIdentification);
             if (!isValid(coreIdentification)) { return coreIdentification; }
             VQuantityIsInStock(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _itemService, _warehouseItemService);
+            if (!isValid(coreIdentification)) { return coreIdentification; }
+            VAllDetailsAreConfirmable(coreIdentification, _coreIdentificationDetailService, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
             return coreIdentification;
         }
 
-        public CoreIdentification VUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService)
+        public CoreIdentification VUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                 ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, ICustomerItemService _customerItemService)
         {
             VHasBeenConfirmed(coreIdentification);
             if (!isValid(coreIdentification)) { return coreIdentification; }
             VIsInRecoveryOrder(coreIdentification, _recoveryOrderService);
+            if (!isValid(coreIdentification)) { return coreIdentification; }
+            VAllDetailsAreUnconfirmable(coreIdentification, _coreIdentificationDetailService, _coreIdentificationService, _coreBuilderService, _warehouseItemService, _customerItemService);
             return coreIdentification;
         }
 
@@ -245,17 +281,18 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(CoreIdentification coreIdentification, ICoreIdentificationDetailService _coreIdentificationDetailService,
-                                       ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+                                       ICoreBuilderService _coreBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService)
         {
             coreIdentification.Errors.Clear();
-            VConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _itemService, _warehouseItemService);
+            VConfirmObject(coreIdentification, _coreIdentificationDetailService, _coreBuilderService, _itemService, _warehouseItemService, _coreIdentificationService);
             return isValid(coreIdentification);
         }
 
-        public bool ValidUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService)
+        public bool ValidUnconfirmObject(CoreIdentification coreIdentification, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationDetailService _coreIdentificationDetailService,
+                                                 ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, ICoreIdentificationService _coreIdentificationService, ICustomerItemService _customerItemService)
         {
             coreIdentification.Errors.Clear();
-            VUnconfirmObject(coreIdentification, _recoveryOrderService);
+            VUnconfirmObject(coreIdentification, _recoveryOrderService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService, _coreIdentificationService, _customerItemService);
             return isValid(coreIdentification);
         }
 

@@ -38,6 +38,15 @@ namespace Validation.Validation
 
         public CoreIdentificationDetail VHasUniqueDetailId(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationDetailService _coreIdentificationDetailService)
         {
+            //IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentificationDetail.CoreIdentificationId);
+            //foreach (var detail in details)
+            //{
+            //    if (detail.DetailId == coreIdentificationDetail.DetailId && detail.Id != coreIdentificationDetail.Id)
+            //    {
+            //        coreIdentificationDetail.Errors.Add("DetailId", "Tidak boleh di duplikasi");
+            //        return coreIdentificationDetail;
+            //    }
+            //}
             IList<CoreIdentificationDetail> details = _coreIdentificationDetailService.GetObjectsByCoreIdentificationId(coreIdentificationDetail.CoreIdentificationId);
             foreach (var detail in details)
             {
@@ -249,6 +258,25 @@ namespace Validation.Validation
             return coreIdentificationDetail;
         }
 
+        public CoreIdentificationDetail VCustomerQuantityIsInStockForUnconfirm(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, ICoreBuilderService _coreBuilderService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService)
+        {
+            CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(coreIdentificationDetail.CoreIdentificationId);
+            if (!coreIdentification.IsInHouse)
+            {
+                int MaterialCase = coreIdentificationDetail.MaterialCase;
+                Item item = (MaterialCase == Core.Constants.Constant.MaterialCase.New ?
+                                _coreBuilderService.GetNewCore(coreIdentificationDetail.CoreBuilderId) :
+                                _coreBuilderService.GetUsedCore(coreIdentificationDetail.CoreBuilderId));
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(coreIdentification.WarehouseId, item.Id);
+                CustomerItem customerItem = _customerItemService.FindOrCreateObject(coreIdentification.ContactId.GetValueOrDefault(), warehouseItem.Id);
+                if (customerItem.Quantity < 1)
+                {
+                    coreIdentificationDetail.Errors.Add("Generic", "Stock barang customer tidak boleh kurang dari stock yang mau dimutasikan");
+                }
+            }
+            return coreIdentificationDetail;
+        }
+
         public CoreIdentificationDetail VCreateObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
                                                       ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService,
                                                       IRollerTypeService _rollerTypeService, IMachineService _machineService, IWarehouseItemService _warehouseItemService)
@@ -316,13 +344,15 @@ namespace Validation.Validation
         }
 
         public CoreIdentificationDetail VUnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                                                          ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
+                                                          ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService)
         {
             VCoreIdentificationHasBeenConfirmed(coreIdentificationDetail, _coreIdentificationService);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VHasNotBeenJobScheduled(coreIdentificationDetail);
             if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
             VQuantityIsInStockForContact(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _warehouseItemService);
+            if (!isValid(coreIdentificationDetail)) { return coreIdentificationDetail; }
+            VCustomerQuantityIsInStockForUnconfirm(coreIdentificationDetail, _coreIdentificationService, _coreBuilderService, _customerItemService, _warehouseItemService);
             return coreIdentificationDetail;
         }
 
@@ -358,9 +388,10 @@ namespace Validation.Validation
             bool IsFinished = false;
             foreach (var detail in details)
             {
-                if (detail.IsFinished)
+                if (detail.IsFinished || detail.IsRejected)
                 {
                     IsFinished = true;
+                    break;
                 }
             }
             if (!IsFinished)
@@ -378,7 +409,7 @@ namespace Validation.Validation
 
         public CoreIdentificationDetail VUndoDeliverObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService)
         {
-            VCoreIdentificationHasNotBeenCompleted(coreIdentificationDetail, _coreIdentificationService);
+            //VCoreIdentificationHasNotBeenCompleted(coreIdentificationDetail, _coreIdentificationService);
             return coreIdentificationDetail;
         }
 
@@ -419,10 +450,10 @@ namespace Validation.Validation
         }
 
         public bool ValidUnconfirmObject(CoreIdentificationDetail coreIdentificationDetail, ICoreIdentificationService _coreIdentificationService,
-                               ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService)
+                               ICoreIdentificationDetailService _coreIdentificationDetailService, ICoreBuilderService _coreBuilderService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService)
         {
             coreIdentificationDetail.Errors.Clear();
-            VUnconfirmObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService);
+            VUnconfirmObject(coreIdentificationDetail, _coreIdentificationService, _coreIdentificationDetailService, _coreBuilderService, _warehouseItemService, _customerItemService);
             return isValid(coreIdentificationDetail);
         }
 

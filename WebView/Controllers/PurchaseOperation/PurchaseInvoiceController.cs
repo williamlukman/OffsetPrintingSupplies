@@ -29,6 +29,8 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IExchangeRateService _exchangeRateService;
+        private ICurrencyService _currencyService;
+
         public PurchaseInvoiceController()
         {
             _purchaseOrderService = new PurchaseOrderService(new PurchaseOrderRepository(), new PurchaseOrderValidator());
@@ -44,6 +46,7 @@ namespace WebView.Controllers
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
@@ -408,7 +411,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
                 model = _purchaseInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _purchaseInvoiceDetailService, _purchaseOrderService,
-                        _purchaseReceivalService, _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService,_exchangeRateService);
+                        _purchaseReceivalService, _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService,_currencyService,_exchangeRateService);
             }
             catch (Exception ex)
             {

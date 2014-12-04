@@ -61,7 +61,9 @@ namespace Service.Service
             {
                 ReceiptVoucher rv = _receiptVoucherService.GetQueryable().Where(x => x.Id == receiptVoucherDetail.ReceiptVoucherId).FirstOrDefault();
                 Receivable r = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
-                if (rv.CashBank.CurrencyId == r.CurrencyId)
+                CashBank cashBank = _cashBankService.GetObjectById(rv.CashBankId);
+                Currency currency = _currencyService.GetObjectById(cashBank.CurrencyId);
+                if (currency.Id == r.CurrencyId)
                 {
                     receiptVoucherDetail.Amount = receiptVoucherDetail.AmountPaid;
                 }

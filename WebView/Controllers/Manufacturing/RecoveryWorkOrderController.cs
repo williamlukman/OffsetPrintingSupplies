@@ -84,6 +84,7 @@ namespace WebView.Controllers
                              model.DueDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.IsCompleted,
                              model.CreatedAt,
                              model.UpdatedAt,
 
@@ -131,6 +132,7 @@ namespace WebView.Controllers
                             model.DueDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.IsCompleted,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -590,7 +592,7 @@ namespace WebView.Controllers
             {
                 var data = _recoveryOrderService.GetObjectById(model.Id);
                 model = _recoveryOrderService.ConfirmObject(data,model.ConfirmationDate.Value
-                   ,_coreIdentificationDetailService,_recoveryOrderDetailService,_recoveryAccessoryDetailService,
+                   ,_coreIdentificationDetailService,_coreIdentificationService,_recoveryOrderDetailService,_recoveryAccessoryDetailService,
                    _coreBuilderService,_stockMutationService,_itemService,_blanketService,_warehouseItemService,_warehouseService);
             }
             catch (Exception ex)

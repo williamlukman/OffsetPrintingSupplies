@@ -264,16 +264,21 @@
     <Compile Include="Controllers\Finance\CashBankMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\BlanketWorkProcessController.cs" />
     <Compile Include="Controllers\Finance\CashMutationController.cs" />
+    <Compile Include="Controllers\Manufacturing\BlendingWorkOrderController.cs" />
     <Compile Include="Controllers\Manufacturing\CoreAccessoryDetailController.cs" />
     <Compile Include="Controllers\Finance\PaymentRequestController.cs" />
     <Compile Include="Controllers\Report\FinanceReportController.cs" />
     <Compile Include="Controllers\Report\ReportController.cs" />
+    <Compile Include="Controllers\SalesOperation\TemporaryDeliveryOrderClearanceController.cs" />
     <Compile Include="Controllers\SalesOperation\SalesQuotationController.cs" />
     <Compile Include="Controllers\SalesOperation\VirtualOrderController.cs" />
     <Compile Include="Controllers\SalesOperation\TemporaryDeliveryOrderController.cs" />
     <Compile Include="Controllers\Finance\ReceivableController.cs" />
     <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
+    <Compile Include="Controllers\StockAndMaster\MstBlendingRecipeController.cs" />
+    <Compile Include="Controllers\StockAndMaster\CustomerStockMutationController.cs" />
+    <Compile Include="Controllers\StockAndMaster\CustomerItemController.cs" />
     <Compile Include="Controllers\StockAndMaster\StockMutationController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkProcessController.cs" />
     <Compile Include="Controllers\Manufacturing\RecoveryWorkOrderController.cs" />
@@ -322,6 +327,11 @@
     <Content Include="Content\apps_js\CashMutation.js" />
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
+    <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\MasterBlendingRecipe.js" />
+    <Content Include="Content\apps_js\TemporaryDeliveryOrderClearance.js" />
+    <Content Include="Content\apps_js\CustomerStockMutation.js" />
+    <Content Include="Content\apps_js\CustomerItem.js" />
     <Content Include="Content\apps_js\MasterExchangeRate.js" />
     <Content Include="Content\apps_js\MasterCurrency.js" />
     <Content Include="Content\apps_js\PriceList.js" />
@@ -1331,6 +1341,11 @@
     <Content Include="Views\Report\TopSales.cshtml" />
     <Content Include="Views\Currency\Index.cshtml" />
     <Content Include="Views\ExchangeRate\Index.cshtml" />
+    <Content Include="Views\CustomerItem\Index.cshtml" />
+    <Content Include="Views\CustomerStockMutation\Index.cshtml" />
+    <Content Include="Views\TemporaryDeliveryOrderClearance\Index.cshtml" />
+    <Content Include="Views\MstBlendingRecipe\Index.cshtml" />
+    <Content Include="Views\BlendingWorkOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

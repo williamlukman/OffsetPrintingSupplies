@@ -120,9 +120,9 @@ namespace Data.Repository
             return recoveryOrder;
         }
 
-        public RecoveryOrder CompleteObject(RecoveryOrder recoveryOrder)
+        public RecoveryOrder CompleteObject(RecoveryOrder recoveryOrder, bool IsCompleted = true)
         {
-            recoveryOrder.IsCompleted = true;
+            recoveryOrder.IsCompleted = IsCompleted;
             recoveryOrder.UpdatedAt = DateTime.Now;
             Update(recoveryOrder);
             return recoveryOrder;

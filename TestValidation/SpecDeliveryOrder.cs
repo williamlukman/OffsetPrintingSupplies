@@ -65,14 +65,21 @@ namespace TestValidation
         IServiceCostService _serviceCostService;
         ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
         ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
+        ICustomerStockMutationService _customerStockMutationService;
+        ICustomerItemService _customerItemService;
+        ICurrencyService _currencyService;
 
-        private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods, PrepaidExpense, NonCurrentAsset;
-        private Account Expense, COGS, COS, OperationalExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense;
-        private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense, SampleAndTrialExpense;
+        private Account Asset, CurrentAsset, CashBank, AccountReceivable, GBCHReceivable, Inventory, Raw, FinishedGoods,
+                        PrepaidExpense, PiutangLainLain, NonCurrentAsset, UnrecognizedCapitalGain;
+        private Account Expense, COGS, COS, OperationalExpense, SampleAndTrialExpense, ManufacturingExpense, RecoveryExpense, ConversionExpense,
+                        ExchangeLoss;
+        private Account SellingGeneralAndAdministrationExpense, CashBankAdjustmentExpense, Discount, SalesAllowance, StockAdjustmentExpense;
         private Account NonOperationalExpense, DepreciationExpense, Amortization, InterestExpense, TaxExpense, DividentExpense;
-        private Account Liability, CurrentLiability, AccountPayable, GBCHPayable, GoodsPendingClearance, PurchaseAllowance, UnearnedRevenue, AccountPayableNonTrading, NonCurrentLiability;
-        private Account Equity, OwnersEquity, EquityAdjustment;
+        private Account Liability, CurrentLiability, AccountPayable, GBCHPayable, GoodsPendingClearance, PurchaseAllowance, UnearnedRevenue,
+                        HutangLainLain, NonCurrentLiability, TaxPayable;
+        private Account Equity, OwnersEquity, EquityAdjustment, CapitalGain;
         private Account Revenue;
+        public Currency currencyIDR;
 
         void before_each()
         {
@@ -104,19 +111,24 @@ namespace TestValidation
                 _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
                 _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
                 _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
+                _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
+                _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
+                _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
 
                 if (!_accountService.GetLegacyObjects().Any())
                 {
                     Asset = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Asset", Code = Constant.AccountCode.Asset, LegacyCode = Constant.AccountLegacyCode.Asset, Group = Constant.AccountGroup.Asset, IsLegacy = true }, _accountService);
                     CurrentAsset = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Current Asset", Code = Constant.AccountCode.CurrentAsset, LegacyCode = Constant.AccountLegacyCode.CurrentAsset, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
                     CashBank = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "Cash & Bank", Code = Constant.AccountCode.CashBank, LegacyCode = Constant.AccountLegacyCode.CashBank, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
-                    AccountReceivable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Account Receivable", Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
-                    GBCHReceivable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "GBCH Receivable", Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
+                    AccountReceivable = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "Account Receivable", Code = Constant.AccountCode.AccountReceivable, LegacyCode = Constant.AccountLegacyCode.AccountReceivable, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
+                    GBCHReceivable = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "GBCH Receivable", Code = Constant.AccountCode.GBCHReceivable, LegacyCode = Constant.AccountLegacyCode.GBCHReceivable, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
                     Inventory = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "Inventory", Code = Constant.AccountCode.Inventory, LegacyCode = Constant.AccountLegacyCode.Inventory, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
                     Raw = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Raw Material", Code = Constant.AccountCode.Raw, LegacyCode = Constant.AccountLegacyCode.Raw, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
                     FinishedGoods = _accountService.CreateLegacyObject(new Account() { Level = 4, IsLeaf = true, Name = "Finished Goods", Code = Constant.AccountCode.FinishedGoods, LegacyCode = Constant.AccountLegacyCode.FinishedGoods, Group = Constant.AccountGroup.Asset, ParentId = Inventory.Id, IsLegacy = true }, _accountService);
                     PrepaidExpense = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Prepaid Expense (Asset)", Code = Constant.AccountCode.PrepaidExpense, LegacyCode = Constant.AccountLegacyCode.PrepaidExpense, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
+                    PiutangLainLain = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Piutang Lain Lain", Code = Constant.AccountCode.PiutangLainLain, LegacyCode = Constant.AccountLegacyCode.PiutangLainLain, Group = Constant.AccountGroup.Asset, ParentId = CurrentAsset.Id, IsLegacy = true }, _accountService);
                     NonCurrentAsset = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Noncurrent Asset", Code = Constant.AccountCode.NonCurrentAsset, LegacyCode = Constant.AccountLegacyCode.NonCurrentAsset, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
+                    UnrecognizedCapitalGain = _accountService.CreateObject(new Account() { Level = 2, IsLeaf = true, Name = "UnrecognizedCapitalGain", Code = Constant.AccountCode.UnrecognizedCapitalGain, LegacyCode = Constant.AccountLegacyCode.UnrecognizedCapitalGain, Group = Constant.AccountGroup.Asset, ParentId = Asset.Id, IsLegacy = true }, _accountService);
 
                     Expense = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Expense", Code = Constant.AccountCode.Expense, LegacyCode = Constant.AccountLegacyCode.Expense, Group = Constant.AccountGroup.Expense, IsLegacy = true }, _accountService);
                     COGS = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Cost Of Goods Sold", Code = Constant.AccountCode.COGS, LegacyCode = Constant.AccountLegacyCode.COGS, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
@@ -137,24 +149,34 @@ namespace TestValidation
                     InterestExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Interest Expense", Code = Constant.AccountCode.InterestExpense, LegacyCode = Constant.AccountLegacyCode.InterestExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
                     TaxExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Tax Expense", Code = Constant.AccountCode.TaxExpense, LegacyCode = Constant.AccountLegacyCode.TaxExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
                     DividentExpense = _accountService.CreateObject(new Account() { Level = 3, IsLeaf = true, Name = "Divident Expense", Code = Constant.AccountCode.DividentExpense, LegacyCode = Constant.AccountLegacyCode.DividentExpense, Group = Constant.AccountGroup.Expense, ParentId = NonOperationalExpense.Id, IsLegacy = true }, _accountService);
+                    ExchangeLoss = _accountService.CreateLegacyObject(new Account() { Level = 2, IsLeaf = true, Name = "Exchange Loss", Code = Constant.AccountCode.ExchangeLoss, LegacyCode = Constant.AccountLegacyCode.ExchangeLoss, Group = Constant.AccountGroup.Expense, ParentId = Expense.Id, IsLegacy = true }, _accountService);
 
                     Liability = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Liability", Code = Constant.AccountCode.Liability, LegacyCode = Constant.AccountLegacyCode.Liability, Group = Constant.AccountGroup.Liability, IsLegacy = true }, _accountService);
                     CurrentLiability = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Current Liability", Code = Constant.AccountCode.CurrentLiability, LegacyCode = Constant.AccountLegacyCode.CurrentLiability, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
-                    AccountPayable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Account Payable", Code = Constant.AccountCode.AccountPayable, LegacyCode = Constant.AccountLegacyCode.AccountPayable, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
-                    GBCHPayable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "GBCH Payable", Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    AccountPayable = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "Account Payable", Code = Constant.AccountCode.AccountPayable, LegacyCode = Constant.AccountLegacyCode.AccountPayable, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    GBCHPayable = _accountService.CreateLegacyObject(new Account() { Level = 3, Name = "GBCH Payable", Code = Constant.AccountCode.GBCHPayable, LegacyCode = Constant.AccountLegacyCode.GBCHPayable, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     GoodsPendingClearance = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Goods Pending Clearance", Code = Constant.AccountCode.GoodsPendingClearance, LegacyCode = Constant.AccountLegacyCode.GoodsPendingClearance, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     UnearnedRevenue = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Unearned Revenue", Code = Constant.AccountCode.UnearnedRevenue, LegacyCode = Constant.AccountLegacyCode.UnearnedRevenue, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     PurchaseAllowance = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Purchase Allowance", Code = Constant.AccountCode.PurchaseAllowance, LegacyCode = Constant.AccountLegacyCode.PurchaseAllowance, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
-                    AccountPayableNonTrading = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Account Payable (Non Trading)", Code = Constant.AccountCode.AccountPayableNonTrading, LegacyCode = Constant.AccountLegacyCode.AccountPayableNonTrading, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    HutangLainLain = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Hutang Lain Lain", Code = Constant.AccountCode.HutangLainLain, LegacyCode = Constant.AccountLegacyCode.HutangLainLain, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
+                    TaxPayable = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Tax Payable", Code = Constant.AccountCode.TaxPayable, LegacyCode = Constant.AccountLegacyCode.TaxPayable, Group = Constant.AccountGroup.Liability, ParentId = CurrentLiability.Id, IsLegacy = true }, _accountService);
                     NonCurrentLiability = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Noncurrent Liability", Code = Constant.AccountCode.NonCurrentLiability, LegacyCode = Constant.AccountLegacyCode.NonCurrentLiability, Group = Constant.AccountGroup.Liability, ParentId = Liability.Id, IsLegacy = true }, _accountService);
 
                     Equity = _accountService.CreateLegacyObject(new Account() { Level = 1, Name = "Equity", Code = Constant.AccountCode.Equity, LegacyCode = Constant.AccountLegacyCode.Equity, Group = Constant.AccountGroup.Equity, IsLegacy = true }, _accountService);
                     OwnersEquity = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "Owners Equity", Code = Constant.AccountCode.OwnersEquity, LegacyCode = Constant.AccountLegacyCode.OwnersEquity, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true }, _accountService);
                     EquityAdjustment = _accountService.CreateLegacyObject(new Account() { Level = 3, IsLeaf = true, Name = "Equity Adjustment", Code = Constant.AccountCode.EquityAdjustment, LegacyCode = Constant.AccountLegacyCode.EquityAdjustment, Group = Constant.AccountGroup.Equity, ParentId = OwnersEquity.Id, IsLegacy = true }, _accountService);
+                    CapitalGain = _accountService.CreateLegacyObject(new Account() { Level = 2, Name = "CapitalGain", Code = Constant.AccountCode.ExchangeGain, LegacyCode = Constant.AccountLegacyCode.ExchangeGain, Group = Constant.AccountGroup.Equity, ParentId = Equity.Id, IsLegacy = true, IsLeaf = true }, _accountService);
 
                     Revenue = _accountService.CreateLegacyObject(new Account() { Level = 1, IsLeaf = true, Name = "Revenue", Code = Constant.AccountCode.Revenue, LegacyCode = Constant.AccountLegacyCode.Revenue, Group = Constant.AccountGroup.Revenue, IsLegacy = true }, _accountService);
                 }
 
+                if (!_currencyService.GetAll().Any())
+                {
+                    currencyIDR = new Currency();
+                    currencyIDR.IsBase = true;
+                    currencyIDR.Name = "IDR";
+                    currencyIDR = _currencyService.CreateObject(currencyIDR, _accountService);
+                }
                 Pcs = new UoM()
                 {
                     Name = "Pcs"
@@ -168,7 +190,8 @@ namespace TestValidation
                     ContactNo = "021 3863777",
                     PIC = "Mr. President",
                     PICContactNo = "021 3863777",
-                    Email = "random@ri.gov.au"
+                    Email = "random@ri.gov.au",
+                    TaxCode = "01"
                 };
                 contact = _contactService.CreateObject(contact);
 
@@ -244,14 +267,76 @@ namespace TestValidation
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
                                                       _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService);
 
-                salesOrder1 = _salesOrderService.CreateObject(contact.Id, new DateTime(2014, 07, 09), _contactService);
-                salesOrder2 = _salesOrderService.CreateObject(contact.Id, new DateTime(2014, 04, 09), _contactService);
-                salesOrderDetail_batiktulis_so1 = _salesOrderDetailService.CreateObject(salesOrder1.Id, item_batiktulis.Id, 500, 2000000, _salesOrderService, _itemService);
-                salesOrderDetail_busway_so1 = _salesOrderDetailService.CreateObject(salesOrder1.Id, item_busway.Id, 91, 800000000, _salesOrderService, _itemService);
-                salesOrderDetail_botolaqua_so1 = _salesOrderDetailService.CreateObject(salesOrder1.Id, item_botolaqua.Id, 2000, 5000, _salesOrderService, _itemService);
-                salesOrderDetail_batiktulis_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_batiktulis.Id, 40, 2000500, _salesOrderService, _itemService);
-                salesOrderDetail_busway_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_busway.Id, 3, 810000000, _salesOrderService, _itemService);
-                salesOrderDetail_botolaqua_so2 = _salesOrderDetailService.CreateObject(salesOrder2.Id, item_botolaqua.Id, 340, 5500, _salesOrderService, _itemService);
+                salesOrder1 = new SalesOrder()
+                {
+                    ContactId = contact.Id,
+                    SalesDate = new DateTime(2014, 07, 09),
+                    CurrencyId = currencyIDR.Id,
+                };
+                _salesOrderService.CreateObject(salesOrder1, _contactService);
+
+                salesOrder2 = new SalesOrder()
+                {
+                    ContactId = contact.Id,
+                    SalesDate = new DateTime(2014, 04, 09),
+                    CurrencyId = currencyIDR.Id,
+                };
+                _salesOrderService.CreateObject(salesOrder2, _contactService);
+
+                salesOrderDetail_batiktulis_so1 = new SalesOrderDetail()
+                {
+                    SalesOrderId = salesOrder1.Id,
+                    ItemId = item_batiktulis.Id,
+                    Quantity = 500,
+                    Price = 2000000,
+                };
+                _salesOrderDetailService.CreateObject(salesOrderDetail_batiktulis_so1, _salesOrderService, _itemService);
+
+                salesOrderDetail_busway_so1 = new SalesOrderDetail()
+                {
+                    SalesOrderId = salesOrder1.Id,
+                    ItemId = item_busway.Id,
+                    Quantity = 91,
+                    Price = 800000000
+                };
+                _salesOrderDetailService.CreateObject(salesOrderDetail_busway_so1, _salesOrderService, _itemService);
+
+                salesOrderDetail_botolaqua_so1 = new SalesOrderDetail()
+                {
+                    SalesOrderId = salesOrder1.Id,
+                    ItemId = item_botolaqua.Id,
+                    Quantity = 2000,
+                    Price = 5000
+                };
+                _salesOrderDetailService.CreateObject(salesOrderDetail_botolaqua_so1, _salesOrderService, _itemService);
+
+                salesOrderDetail_batiktulis_so2 = new SalesOrderDetail()
+                {
+                    SalesOrderId = salesOrder2.Id,
+                    ItemId = item_batiktulis.Id,
+                    Quantity = 40,
+                    Price = 2000500
+                };
+                _salesOrderDetailService.CreateObject(salesOrderDetail_batiktulis_so2, _salesOrderService, _itemService);
+
+                salesOrderDetail_busway_so2 = new SalesOrderDetail()
+                {
+                    SalesOrderId = salesOrder2.Id,
+                    ItemId = item_busway.Id,
+                    Quantity = 3,
+                    Price = 810000000
+                };
+                _salesOrderDetailService.CreateObject(salesOrderDetail_busway_so2, _salesOrderService, _itemService);
+
+                salesOrderDetail_botolaqua_so2 = new SalesOrderDetail()
+                {
+                    SalesOrderId = salesOrder2.Id,
+                    ItemId = item_botolaqua.Id,
+                    Quantity = 340,
+                    Price = 5500
+                };
+                _salesOrderDetailService.CreateObject(salesOrderDetail_botolaqua_so2, _salesOrderService, _itemService);
+
                 salesOrder1 = _salesOrderService.ConfirmObject(salesOrder1, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                 salesOrder2 = _salesOrderService.ConfirmObject(salesOrder2, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
             }
@@ -287,32 +372,103 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    deliveryOrder1 = _deliveryOrderService.CreateObject(warehouse.Id, salesOrder1.Id, new DateTime(2000, 1, 1), _salesOrderService, _warehouseService);
-                    deliveryOrder2 = _deliveryOrderService.CreateObject(warehouse.Id, salesOrder2.Id, new DateTime(2014, 5, 5), _salesOrderService, _warehouseService);
-                    deliveryOrder3 = _deliveryOrderService.CreateObject(warehouse.Id, salesOrder1.Id, new DateTime(2014, 5, 5), _salesOrderService, _warehouseService);
-                    deliveryOrderDetail_batiktulis_do1 = _deliveryOrderDetailService.CreateObject(deliveryOrder1.Id, item_batiktulis.Id, 400, salesOrderDetail_batiktulis_so1.Id, _deliveryOrderService,
-                                                                                                  _salesOrderDetailService, _salesOrderService, _itemService);
-                    deliveryOrderDetail_busway_do1 = _deliveryOrderDetailService.CreateObject(deliveryOrder1.Id, item_busway.Id, 91, salesOrderDetail_busway_so1.Id, _deliveryOrderService,
-                                                                                                _salesOrderDetailService, _salesOrderService, _itemService);
-                    deliveryOrderDetail_botolaqua_do1 = _deliveryOrderDetailService.CreateObject(deliveryOrder1.Id, item_botolaqua.Id, 2000, salesOrderDetail_botolaqua_so1.Id,  _deliveryOrderService,
-                                                                                                  _salesOrderDetailService, _salesOrderService, _itemService);
-                    deliveryOrderDetail_batiktulis_do2b = _deliveryOrderDetailService.CreateObject(deliveryOrder2.Id, item_batiktulis.Id, 40, salesOrderDetail_batiktulis_so2.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
-                    deliveryOrderDetail_busway_do2 = _deliveryOrderDetailService.CreateObject(deliveryOrder2.Id, item_busway.Id, 3, salesOrderDetail_busway_so2.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
-                    deliveryOrderDetail_botolaqua_do2 = _deliveryOrderDetailService.CreateObject(deliveryOrder2.Id, item_botolaqua.Id, 340, salesOrderDetail_botolaqua_so2.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
-                    deliveryOrderDetail_batiktulis_do2a = _deliveryOrderDetailService.CreateObject(deliveryOrder3.Id, item_batiktulis.Id, 100, salesOrderDetail_batiktulis_so1.Id, _deliveryOrderService,
-                                                                                                                          _salesOrderDetailService, _salesOrderService, _itemService);
+                    deliveryOrder1 = new DeliveryOrder()
+                    {
+                        WarehouseId = warehouse.Id,
+                        SalesOrderId = salesOrder1.Id,
+                        DeliveryDate = new DateTime(2000, 1, 1)
+                    };
+                    _deliveryOrderService.CreateObject(deliveryOrder1, _salesOrderService, _warehouseService);
+
+                    deliveryOrder2 = new DeliveryOrder()
+                    {
+                        WarehouseId = warehouse.Id,
+                        SalesOrderId = salesOrder2.Id,
+                        DeliveryDate = new DateTime(2014, 5, 5)
+                    };
+                    _deliveryOrderService.CreateObject(deliveryOrder2, _salesOrderService, _warehouseService);
+
+                    deliveryOrder3 = new DeliveryOrder()
+                    {
+                        WarehouseId = warehouse.Id,
+                        SalesOrderId = salesOrder1.Id,
+                        DeliveryDate = new DateTime(2014, 5, 5)
+                    };
+                    _deliveryOrderService.CreateObject(deliveryOrder3, _salesOrderService, _warehouseService);
+
+                    deliveryOrderDetail_batiktulis_do1 = new DeliveryOrderDetail()
+                    {
+                        DeliveryOrderId = deliveryOrder1.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 400,
+                        SalesOrderDetailId = salesOrderDetail_batiktulis_so1.Id
+                    };
+                    _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_batiktulis_do1, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+                    deliveryOrderDetail_busway_do1 = new DeliveryOrderDetail()
+                    {
+                        DeliveryOrderId = deliveryOrder1.Id,
+                        ItemId = item_busway.Id,
+                        Quantity = 91,
+                        SalesOrderDetailId = salesOrderDetail_busway_so1.Id
+                    };
+                    _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_busway_do1, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+
+                    deliveryOrderDetail_botolaqua_do1 = new DeliveryOrderDetail()
+                    {
+                        DeliveryOrderId = deliveryOrder1.Id,
+                        ItemId = item_botolaqua.Id,
+                        Quantity = 2000,
+                        SalesOrderDetailId = salesOrderDetail_botolaqua_so1.Id
+                    };
+                    _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_botolaqua_do1, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+                    deliveryOrderDetail_batiktulis_do2b = new DeliveryOrderDetail()
+                    {
+                        DeliveryOrderId = deliveryOrder2.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 40,
+                        SalesOrderDetailId = salesOrderDetail_batiktulis_so2.Id
+                    };
+                    _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_batiktulis_do2b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+                    deliveryOrderDetail_busway_do2 = new DeliveryOrderDetail()
+                    {
+                        DeliveryOrderId = deliveryOrder2.Id,
+                        ItemId = item_busway.Id,
+                        Quantity = 3,
+                        SalesOrderDetailId = salesOrderDetail_busway_so2.Id
+                    };
+                    _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_busway_do2, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+                    deliveryOrderDetail_botolaqua_do2 = new DeliveryOrderDetail()
+                    {
+                        DeliveryOrderId = deliveryOrder2.Id,
+                        ItemId = item_botolaqua.Id,
+                        Quantity = 340,
+                        SalesOrderDetailId = salesOrderDetail_botolaqua_so2.Id
+                    };
+                    _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_botolaqua_do2, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+                    deliveryOrderDetail_batiktulis_do2a = new DeliveryOrderDetail()
+                    {
+                        DeliveryOrderId = deliveryOrder3.Id,
+                        ItemId = item_batiktulis.Id,
+                        Quantity = 100,
+                        SalesOrderDetailId = salesOrderDetail_batiktulis_so1.Id
+                    };
+                    _deliveryOrderDetailService.CreateObject(deliveryOrderDetail_batiktulis_do2a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
                     deliveryOrder1 = _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
                                                                          _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService);
+                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
                     deliveryOrder2 = _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
                                                                          _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService);
+                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
                     deliveryOrder3 = _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService,
                                                                          _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService);
+                                                                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
                 };
 
                 it["validates_deliveryorders"] = () =>
@@ -332,7 +488,8 @@ namespace TestValidation
                     deliveryOrder1 = _deliveryOrderService.UnconfirmObject(deliveryOrder1, _deliveryOrderDetailService,
                                                                            _salesInvoiceService, _salesInvoiceDetailService, _salesOrderService,
                                                                            _salesOrderDetailService, _stockMutationService, _itemService,
-                                                                           _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                                                                           _blanketService, _warehouseItemService, _accountService,
+                                                                           _generalLedgerJournalService, _closingService, _customerStockMutationService, _customerItemService);
                     deliveryOrder1.Errors.Count().should_be(0);
                 };
 

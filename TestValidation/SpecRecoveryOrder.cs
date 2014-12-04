@@ -81,7 +81,7 @@ namespace TestValidation
 
             it["confirms_recovery_order"] = () =>
             {
-                d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
+                d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._coreIdentificationService, d._recoveryOrderDetailService,
                                                                                 d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService, d._blanketService,
                                                                                 d._warehouseItemService, d._warehouseService);
                 d.recoveryOrderContact.IsConfirmed.should_be(true);
@@ -90,7 +90,7 @@ namespace TestValidation
 
             it["unconfirms_recovery_order"] = () =>
             {
-                d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
+                d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._coreIdentificationService, d._recoveryOrderDetailService,
                                                                                 d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                 d._blanketService, d._warehouseItemService, d._warehouseService);
                 d.recoveryOrderContact.IsConfirmed.should_be(true);
@@ -103,7 +103,7 @@ namespace TestValidation
 
             it["deletes_recoveryorder_with_processed_detail"] = () =>
             {
-                d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
+                d.recoveryOrderContact = d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._coreIdentificationService, d._recoveryOrderDetailService,
                                                                                 d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                                                 d._blanketService, d._warehouseItemService, d._warehouseService);
                 d.recoveryODContact1 = d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1, d._recoveryOrderService);
@@ -118,10 +118,10 @@ namespace TestValidation
             {
                 before = () =>
                 {
-                    d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
+                    d._recoveryOrderService.ConfirmObject(d.recoveryOrderContact, DateTime.Today, d._coreIdentificationDetailService, d._coreIdentificationService, d._recoveryOrderDetailService,
                                                           d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                           d._blanketService, d._warehouseItemService, d._warehouseService);
-                    d._recoveryOrderService.ConfirmObject(d.recoveryOrderInHouse, DateTime.Today, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
+                    d._recoveryOrderService.ConfirmObject(d.recoveryOrderInHouse, DateTime.Today, d._coreIdentificationDetailService, d._coreIdentificationService, d._recoveryOrderDetailService,
                                                           d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService,
                                                           d._blanketService, d._warehouseItemService, d._warehouseService);
                     d._recoveryOrderDetailService.DisassembleObject(d.recoveryODContact1, d._recoveryOrderService);
@@ -147,8 +147,8 @@ namespace TestValidation
                     d.recoveryOrderContact = d._recoveryOrderService.UnconfirmObject(d.recoveryOrderContact, d._coreIdentificationDetailService, d._recoveryOrderDetailService,
                                                                                       d._recoveryAccessoryDetailService, d._coreBuilderService, d._stockMutationService, d._itemService, d._blanketService,
                                                                                       d._warehouseItemService, d._warehouseService);
-                    d.recoveryOrderContact.IsConfirmed.should_be(true);
-                    d.recoveryOrderContact.Errors.Count().should_not_be(0);
+                    d.recoveryOrderContact.IsConfirmed.should_be(false);
+                    d.recoveryOrderContact.Errors.Count().should_be(0);
                 };
 
                 context["when recovery order details are all finished"] = () =>
@@ -226,20 +226,33 @@ namespace TestValidation
                     {
                         before = () =>
                         {
-                            d.usedCoreBuilder1Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedCoreBuilder2Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedCoreBuilder3Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODContact1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedCoreBuilder4Quantity = d._recoveryOrderDetailService.GetCore(d.recoveryODContact3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder1Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder2Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder3Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder4Quantity = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
+                            Item usedCoreBuilder1, usedCoreBuilder2, usedCoreBuilder3, usedCoreBuilder4, 
+                                 usedRollerBuilder1, usedRollerBuilder2, usedRollerBuilder3, usedRollerBuilder4;
+
+                            usedCoreBuilder1 = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedCoreBuilder2 = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedCoreBuilder3 = d._recoveryOrderDetailService.GetCore(d.recoveryODContact1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedCoreBuilder4 = d._recoveryOrderDetailService.GetCore(d.recoveryODContact3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedRollerBuilder1 = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+                            usedRollerBuilder2 = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+                            usedRollerBuilder3 = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+                            usedRollerBuilder4 = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+
+                            d.usedCoreBuilder1Quantity = usedCoreBuilder1.Quantity + usedCoreBuilder1.CustomerQuantity;
+                            d.usedCoreBuilder2Quantity = usedCoreBuilder2.Quantity + usedCoreBuilder2.CustomerQuantity;
+                            d.usedCoreBuilder3Quantity = usedCoreBuilder3.Quantity + usedCoreBuilder3.CustomerQuantity;
+                            d.usedCoreBuilder4Quantity = usedCoreBuilder4.Quantity + usedCoreBuilder4.CustomerQuantity;
+                            d.usedRollerBuilder1Quantity = usedRollerBuilder1.Quantity + usedRollerBuilder1.CustomerQuantity;
+                            d.usedRollerBuilder2Quantity = usedRollerBuilder2.Quantity + usedRollerBuilder1.CustomerQuantity;
+                            d.usedRollerBuilder3Quantity = usedRollerBuilder3.Quantity + usedRollerBuilder1.CustomerQuantity;
+                            d.usedRollerBuilder4Quantity = usedRollerBuilder4.Quantity + usedRollerBuilder1.CustomerQuantity;
                             d.accessory1quantity = d._itemService.GetObjectById(d.itemAccessory1.Id).Quantity;
                             
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODContact1, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
                                                                        d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
-                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService,
+                                                                       d._customerStockMutationService, d._customerItemService);
                             d._recoveryOrderDetailService.RejectObject(d.recoveryODContact2, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
                                                                        d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
                                                                        d._warehouseItemService, d._blanketService, d._stockMutationService,
@@ -247,28 +260,43 @@ namespace TestValidation
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODContact3, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
                                                                        d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
-                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService,
+                                                                       d._customerStockMutationService, d._customerItemService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODInHouse1, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
                                                                        d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
-                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService,
+                                                                       d._customerStockMutationService, d._customerItemService);
                             d._recoveryOrderDetailService.FinishObject(d.recoveryODInHouse2, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService,
                                                                        d._recoveryOrderService, d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService,
                                                                        d._itemService, d._warehouseItemService, d._blanketService, d._stockMutationService,
-                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService);
+                                                                       d._accountService, d._generalLedgerJournalService, d._closingService, d._serviceCostService,
+                                                                       d._customerStockMutationService, d._customerItemService);
                             d._recoveryOrderDetailService.RejectObject(d.recoveryODInHouse3, DateTime.Today, d._coreIdentificationService, d._coreIdentificationDetailService, d._recoveryOrderService,
                                                                        d._recoveryAccessoryDetailService, d._coreBuilderService, d._rollerBuilderService, d._itemService,
                                                                        d._warehouseItemService, d._blanketService, d._stockMutationService,
                                                                        d._accountService, d._generalLedgerJournalService, d._closingService);
 
-                            d.usedCoreBuilder1Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedCoreBuilder2Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedCoreBuilder3Final = d._recoveryOrderDetailService.GetCore(d.recoveryODContact1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedCoreBuilder4Final = d._recoveryOrderDetailService.GetCore(d.recoveryODContact3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder1Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder2Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder3Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
-                            d.usedRollerBuilder4Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService).Quantity;
+                            Item usedCoreBuilder1Final, usedCoreBuilder2Final, usedCoreBuilder3Final, usedCoreBuilder4Final,
+                                 usedRollerBuilder1Final, usedRollerBuilder2Final, usedRollerBuilder3Final, usedRollerBuilder4Final;
+
+                            usedCoreBuilder1Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedCoreBuilder2Final = d._recoveryOrderDetailService.GetCore(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedCoreBuilder3Final = d._recoveryOrderDetailService.GetCore(d.recoveryODContact1, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedCoreBuilder4Final = d._recoveryOrderDetailService.GetCore(d.recoveryODContact3, d._coreIdentificationDetailService, d._coreBuilderService, d._itemService);
+                            usedRollerBuilder1Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+                            usedRollerBuilder2Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODInHouse3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+                            usedRollerBuilder3Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact1, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+                            usedRollerBuilder4Final = d._recoveryOrderDetailService.GetRoller(d.recoveryODContact3, d._coreIdentificationDetailService, d._rollerBuilderService, d._itemService);
+
+                            d.usedCoreBuilder1Final = usedCoreBuilder1Final.Quantity + usedCoreBuilder1Final.CustomerQuantity;
+                            d.usedCoreBuilder2Final = usedCoreBuilder2Final.Quantity + usedCoreBuilder2Final.CustomerQuantity;
+                            d.usedCoreBuilder3Final = usedCoreBuilder3Final.Quantity + usedCoreBuilder3Final.CustomerQuantity;
+                            d.usedCoreBuilder4Final = usedCoreBuilder4Final.Quantity + usedCoreBuilder4Final.CustomerQuantity;
+                            d.usedRollerBuilder1Final = usedRollerBuilder1Final.Quantity + usedRollerBuilder1Final.CustomerQuantity;
+                            d.usedRollerBuilder2Final = usedRollerBuilder2Final.Quantity + usedRollerBuilder2Final.CustomerQuantity;
+                            d.usedRollerBuilder3Final = usedRollerBuilder3Final.Quantity + usedRollerBuilder3Final.CustomerQuantity;
+                            d.usedRollerBuilder4Final = usedRollerBuilder4Final.Quantity + usedRollerBuilder4Final.CustomerQuantity;
                         };
                         
                         it["validates_finish"] = () =>

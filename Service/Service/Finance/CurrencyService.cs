@@ -46,20 +46,21 @@ namespace Service.Service
             return _repository.GetObjectByName(Name);
         }
 
-        public string GenerateAccountCode(IAccountService _accountService,string accountLegacyCode,int id)
+        public string GenerateAccountCode(IAccountService _accountService, string accountLegacyCode, int id)
         {
             int ParentId = _accountService.GetObjectByLegacyCode(accountLegacyCode).Id;
             string parentCode = _accountService.GetObjectById(ParentId).Code;
             return parentCode + id.ToString();
         }
+
         //Tambah Account Currency Di COA
-        public Currency CreateObject(Currency currency,IAccountService _accountService)
+        public Currency CreateObject(Currency currency, IAccountService _accountService)
         {
             currency.Errors = new Dictionary<string, string>();
             if (_validator.ValidCreateObject(currency, this))
             {
                 _repository.CreateObject(currency);
-                string CodeAr = GenerateAccountCode(_accountService, Constant.AccountLegacyCode.AccountReceivable,currency.Id);
+                string CodeAr = GenerateAccountCode(_accountService, Constant.AccountLegacyCode.AccountReceivable, currency.Id);
                 Account arAccount = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable);
                 Account accountar = new Account()
                 {

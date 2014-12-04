@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         IList<PaymentVoucher> GetObjectsByCashBankId(int cashBankId);
         IList<PaymentVoucher> GetObjectsByContactId(int contactId);
         PaymentVoucher CreateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                    IContactService _contactService, ICashBankService _cashBankService);
+                                    IContactService _contactService, ICashBankService _cashBankService, ICurrencyService _currencyService);
         PaymentVoucher UpdateAmount(PaymentVoucher paymentVoucher);
         PaymentVoucher UpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
                                     IContactService _contactService, ICashBankService _cashBankService);

@@ -324,9 +324,9 @@ namespace WebView.Controllers
                              model.Code,
                              model.ReceivableId,
                              ReceivableCode = model.Receivable.Code,
-                             model.Amount,
-                             model.Rate,
                              model.AmountPaid,
+                             model.Rate,
+                             model.Amount,
                              model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -423,9 +423,9 @@ namespace WebView.Controllers
                 model.Code,
                 model.ReceivableId,
                 Receivable = _receivableService.GetObjectById(model.ReceivableId).Code,
-                model.Amount,
-                model.Rate,
                 model.AmountPaid,
+                model.Rate,
+                model.Amount,
                 Remaining = model.Receivable.RemainingAmount,
                 currency = model.Receivable.Currency.Name,
                 model.Description,
@@ -583,7 +583,7 @@ namespace WebView.Controllers
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,
                     _receiptVoucherDetailService,_cashBankService,_receivableService,_cashMutationService,
-                    _accountService, _generalLedgerJournalService, _closingService,_currencyService,_salesInvoiceService,_exchangeRateService,_receiptVoucherService);
+                    _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _salesInvoiceService);
             }
             catch (Exception ex)
             {
@@ -606,7 +606,7 @@ namespace WebView.Controllers
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnconfirmObject(data,_receiptVoucherDetailService,_cashBankService,
                     _receivableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService,
-                    _currencyService,_exchangeRateService,_receiptVoucherService);
+                    _currencyService,_exchangeRateService);
             }
             catch (Exception ex)
             {
@@ -628,7 +628,7 @@ namespace WebView.Controllers
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.ReconcileObject(data,model.ReconciliationDate.Value,_receiptVoucherDetailService,
                     _cashMutationService, _cashBankService, _receivableService,_accountService, _generalLedgerJournalService, _closingService,
-                    _currencyService,_exchangeRateService,_salesInvoiceService,_receiptVoucherService);
+                    _currencyService,_exchangeRateService,_salesInvoiceService);
             }
             catch (Exception ex)
             {
@@ -650,8 +650,7 @@ namespace WebView.Controllers
                 var data = _receiptVoucherService.GetObjectById(model.Id);
                 model = _receiptVoucherService.UnreconcileObject(data,_receiptVoucherDetailService,_cashMutationService,
                                                                  _cashBankService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                                                 _currencyService,_exchangeRateService,_receiptVoucherService
-                    );
+                                                                 _currencyService,_exchangeRateService);
             }
             catch (Exception ex)
             {

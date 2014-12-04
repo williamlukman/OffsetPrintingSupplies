@@ -20,22 +20,29 @@ namespace Core.Interface.Validation
         RollerWarehouseMutation VHasNotBeenConfirmed(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation VHasBeenConfirmed(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation VDetailsAreVerifiedConfirmable(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                                               IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService,
+                                                               IRecoveryOrderService _recoveryOrderService, ICoreIdentificationService _coreIdentificationService);
+        RollerWarehouseMutation VAllDetailsAreUnconfirmable(RollerWarehouseMutation rollerWarehouseMutation, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationService _coreIdentificationService,
+                                                            IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService, IRollerWarehouseMutationService _rollerWarehouseMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService);
         RollerWarehouseMutation VCreateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, IRecoveryOrderService _recoveryOrderService);
         RollerWarehouseMutation VUpdateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, IRecoveryOrderService _recoveryOrderService);
         RollerWarehouseMutation VDeleteObject(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation VHasConfirmationDate(RollerWarehouseMutation rollerWarehouseMutation);
         RollerWarehouseMutation VConfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        RollerWarehouseMutation VUnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                               IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService,
+                                               IRecoveryOrderService _recoveryOrderService, ICoreIdentificationService _coreIdentificationService);
+        RollerWarehouseMutation VUnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationService _coreIdentificationService, 
+                                                IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
+                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService);
         bool ValidCreateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, IRecoveryOrderService _recoveryOrderService);
         bool ValidUpdateObject(RollerWarehouseMutation rollerWarehouseMutation, IWarehouseService _warehouseService, IRecoveryOrderService _recoveryOrderService);
         bool ValidDeleteObject(RollerWarehouseMutation rollerWarehouseMutation);
         bool ValidConfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        bool ValidUnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
-                                  IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
+                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService,
+                                IRecoveryOrderService _recoveryOrderService, ICoreIdentificationService _coreIdentificationService);
+        bool ValidUnconfirmObject(RollerWarehouseMutation rollerWarehouseMutation, IRecoveryOrderService _recoveryOrderService, ICoreIdentificationService _coreIdentificationService,
+                                  IRollerWarehouseMutationService _rollerWarehouseMutationService, IRollerWarehouseMutationDetailService _rollerWarehouseMutationDetailService,
+                                  IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService);
         bool isValid(RollerWarehouseMutation rollerWarehouseMutation);
         string PrintError(RollerWarehouseMutation rollerWarehouseMutation);
     }

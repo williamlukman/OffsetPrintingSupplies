@@ -14,6 +14,7 @@ namespace Data.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using Core.DomainModel;
 
     internal sealed class Configuration : DbMigrationsConfiguration<OffsetPrintingSuppliesEntities>
     {
@@ -37,6 +38,23 @@ namespace Data.Migrations
             //      new Person { FullName = "Brice Lambson" },
             //      new Person { FullName = "Rowan Miller" }
             //    );
+
+            int? exrate = null; 
+            ExchangeRate exrates = context.ExchangeRates.FirstOrDefault();
+            if (exrates != null) { exrate = exrates.Id; }
+            foreach (var x in context.SalesInvoices.Where(x => x.ExchangeRateId == null))
+            {
+                x.ExchangeRateId = exrate;
+            }
+
+            int? whid = null;
+            WarehouseItem warehouseItem = context.WarehouseItems.FirstOrDefault();
+            if (warehouseItem != null) { whid = warehouseItem.Id; }
+            foreach (var customerItem in context.CustomerItems.Where(x => x.WarehouseItemId == null))
+            {
+                customerItem.WarehouseItemId = whid;
+            }
+
             //if (context.Currencys.FirstOrDefault() == null)
             //{
             //    context.Currencys.Add(
@@ -71,6 +89,7 @@ namespace Data.Migrations
             //{
             //    x.ExchangeRateId = exrates.Id;
             //}
+
         }
     }
 }

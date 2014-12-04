@@ -22,6 +22,9 @@ namespace Core.DomainModel
         public Nullable<DateTime> ConfirmationDate { get; set; }
         public bool IsDeliveryCompleted { get; set; } // DeliveryOrder has been confirmed, Restock has been processed
         public bool IsReconciled { get; set; } // Waste + Restock = Quantity, Waste has been thrown
+        public Nullable<DateTime> PushDate { get; set; }
+        public bool IsPushed { get; set; } // Sudah dibuatkan (Sales Order dan) Delivery Order 
+
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
 
@@ -29,6 +32,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual ICollection<TemporaryDeliveryOrderDetail> TemporaryDeliveryOrderDetails { get; set; }
+        public virtual ICollection<TemporaryDeliveryOrderClearance> TemporaryDeliveryOrderClearances { get; set; }
         public virtual VirtualOrder VirtualOrder { get; set; }
         public virtual DeliveryOrder DeliveryOrder { get; set; }
         public Dictionary<String, String> Errors { get; set; }

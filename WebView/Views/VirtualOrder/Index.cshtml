@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebView.Controllers.VirtualOrderController
+@{
     ViewBag.Title = "Virtual Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -86,6 +87,18 @@
                              <div id="OrderDateDiv2"><input id="OrderDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                          </tr>
+                        <tr>
+                            <td>
+                                <label>Currency </label></td>
+                            <td>
+                                <select id="CurrencyId">
+                                    @foreach (var item in Model._currencyService.GetAll())
+                                    {
+                                        <option value ="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -112,6 +125,17 @@
         </div>
         <div id="item_info">
               <table  width="100%" border="0" cellpadding="5" cellspacing="5" class="input_form_tbl">
+                  <tr class="hide-row">
+                      <td width="139" nowrap style="width: 100px">
+                          Trading / Service
+                      </td>
+                      <td>
+                        <select id="IsService">
+                            <option value="false">Trading</option>
+                            <option value="true">Service</option>
+                        </select>
+                      </td>
+                  </tr>
                   <tr>
                       <td>
                           Item

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Constants;
 
 namespace Service.Service
 {
@@ -24,6 +25,11 @@ namespace Service.Service
         public ITemporaryDeliveryOrderDetailValidator GetValidator()
         {
             return _validator;
+        }
+
+        public ITemporaryDeliveryOrderDetailRepository GetRepository()
+        {
+            return _repository;
         }
 
         public IQueryable<TemporaryDeliveryOrderDetail> GetQueryable()
@@ -140,13 +146,14 @@ namespace Service.Service
                 TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderDetail.ItemId);
                 Item item = _itemService.GetObjectById(temporaryDeliveryOrderDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrder(temporaryDeliveryOrderDetail, warehouseItem);
+                IList<StockMutation> stockMutations = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.TemporaryDeliveryOrderDetail, temporaryDeliveryOrderDetail.Id);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingDelivery += temporaryDeliveryOrderDetail.Quantity;
                     //item.Quantity += temporaryDeliveryOrderDetail.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
+                _stockMutationService.DeleteStockMutations(stockMutations);
 
                 if (temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
                     temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder)

@@ -85,14 +85,17 @@ namespace Service.Service
         public PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, DateTime ConfirmationDate, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                               IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService,
                                               IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,IExchangeRateService _exchangeRateService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                              ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             purchaseReceival.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService,_exchangeRateService))
             {
                 decimal TotalCOGS = 0;
                 decimal TotalAmount = 0;
-                if (purchaseReceival.PurchaseOrder.Currency.IsBase == false)
+                PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
+                Currency currency = _currencyService.GetObjectById(purchaseOrder.CurrencyId);
+                if (currency.IsBase == false)
                 {
                     purchaseReceival.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, purchaseReceival.PurchaseOrder.CurrencyId).Id;
                     purchaseReceival.ExchangeRateAmount = _exchangeRateService.GetObjectById(purchaseReceival.ExchangeRateId.Value).Rate;
@@ -105,16 +108,16 @@ namespace Service.Service
                 IList<PurchaseReceivalDetail> purchaseReceivalDetails = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
                 foreach (var detail in purchaseReceivalDetails)
                 {
+                    PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(detail.PurchaseOrderDetailId);
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseReceivalDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                     TotalCOGS += detail.COGS;
-                    TotalAmount += (detail.PurchaseOrderDetail.Price * detail.PurchaseOrderDetail.Quantity);
+                    TotalAmount += (purchaseOrderDetail.Price * purchaseOrderDetail.Quantity);
                 }
                 purchaseReceival.TotalCOGS = TotalCOGS;
                 purchaseReceival.TotalAmount = TotalAmount;
                 _repository.ConfirmObject(purchaseReceival);
                 _generalLedgerJournalService.CreateConfirmationJournalForPurchaseReceival(purchaseReceival, _accountService);
-                PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
                 _purchaseOrderService.CheckAndSetReceivalComplete(purchaseOrder, _purchaseOrderDetailService);
             }
             return purchaseReceival;

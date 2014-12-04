@@ -40,6 +40,7 @@ namespace Core.Constants
             public static string RecoveryOrderDetail = "RecoveryOrderDetail";
             public static string RecoveryAccessoryDetail = "RecoveryAccessoryDetail";
             public static string BlanketOrderDetail = "BlanketOrderDetail";
+            public static string BlendingWorkOrder = "BlendingWorkOrder";
         }
         #endregion
 

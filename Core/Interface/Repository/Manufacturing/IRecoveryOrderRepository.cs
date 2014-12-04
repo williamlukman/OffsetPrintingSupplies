@@ -19,7 +19,7 @@ namespace Core.Interface.Repository
         RecoveryOrder SoftDeleteObject(RecoveryOrder recoveryOrder);
         RecoveryOrder ConfirmObject(RecoveryOrder recoveryOrder);
         RecoveryOrder UnconfirmObject(RecoveryOrder recoveryOrder);
-        RecoveryOrder CompleteObject(RecoveryOrder recoveryOrder);
+        RecoveryOrder CompleteObject(RecoveryOrder recoveryOrder, bool IsCompleted = true);
         RecoveryOrder AdjustQuantity(RecoveryOrder recoveryOrder);
         bool DeleteObject(int Id);
     }

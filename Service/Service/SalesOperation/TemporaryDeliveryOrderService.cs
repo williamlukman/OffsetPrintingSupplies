@@ -108,9 +108,9 @@ namespace Service.Service
                                                       IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                                       ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                                       IStockMutationService _stockMutationService, IItemService _itemService,
-                                                      IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                      IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService)
         {
-            if (_validator.ValidUnconfirmObject(temporaryDeliveryOrder))
+            if (_validator.ValidUnconfirmObject(temporaryDeliveryOrder, _temporaryDeliveryOrderClearanceService))
             {
                 IList<TemporaryDeliveryOrderDetail> temporaryDeliveryOrderDetails = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
                 foreach (var detail in temporaryDeliveryOrderDetails)
@@ -170,8 +170,9 @@ namespace Service.Service
         {
             if (_validator.ValidPushObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _closingService, _deliveryOrderService))
             {
-                ReconcileObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _stockMutationService, _accountService, _generalLedgerJournalService,
-                                _closingService, _warehouseItemService, _itemService, _blanketService);
+                // Replaced with confirmed Temp DO Clearance
+                //ReconcileObject(temporaryDeliveryOrder, PushDate, _temporaryDeliveryOrderDetailService, _stockMutationService, _accountService, _generalLedgerJournalService,
+                //                _closingService, _warehouseItemService, _itemService, _blanketService);
 
                 IList<TemporaryDeliveryOrderDetail> temporaryDeliveryOrderDetails = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrder.Id);
                 #region Part Delivery Order
@@ -204,17 +205,19 @@ namespace Service.Service
                         SalesDate = PushDate,
                         OrderType = virtualOrder.OrderType,
                         OrderCode = virtualOrder.Code,
+                        CurrencyId = virtualOrder.CurrencyId,
                     };
                     _salesOrderService.CreateObject(salesOrder, _contactService);
 
                     foreach (var tempDetail in temporaryDeliveryOrderDetails)
                     {
                         VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)tempDetail.VirtualOrderDetailId);
+                        // Sales Order Detail using Manually Pricing
                         SalesOrderDetail salesOrderDetail = new SalesOrderDetail()
                         {
                             ItemId = tempDetail.ItemId,
                             Quantity = tempDetail.RestockQuantity,
-                            Price = virtualOrderDetail.Price,
+                            Price = tempDetail.SellingPrice,
                             SalesOrderId = salesOrder.Id,
                             OrderCode = virtualOrderDetail.Code,
                             PendingDeliveryQuantity = tempDetail.RestockQuantity
@@ -249,10 +252,13 @@ namespace Service.Service
                         _deliveryOrderDetailService.CreateObject(deliveryOrderDetail, _deliveryOrderService,
                                                                  _salesOrderDetailService, _salesOrderService, _itemService);
                     }
-                    //_deliveryOrderService.ConfirmObject(deliveryOrder, PushDate, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
-                    //                                    _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService,
-                    //                                    _generalLedgerJournalService, _closingService, _serviceCostService, _temporaryDeliveryOrderDetailService, this);
                 }
+                #endregion
+                #region Set Push = true
+                temporaryDeliveryOrder.IsReconciled = true;
+                temporaryDeliveryOrder.IsPushed = true;
+                temporaryDeliveryOrder.PushDate = PushDate;
+                _repository.Update(temporaryDeliveryOrder);
                 #endregion
             }
             return temporaryDeliveryOrder;

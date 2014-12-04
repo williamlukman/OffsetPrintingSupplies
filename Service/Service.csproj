@@ -75,6 +75,7 @@
     <Compile Include="Service\Finance\PurchaseDownPaymentService.cs" />
     <Compile Include="Service\Manufacturing\BlanketOrderDetailService.cs" />
     <Compile Include="Service\Manufacturing\BlanketOrderService.cs" />
+    <Compile Include="Service\Manufacturing\BlendingWorkOrderService.cs" />
     <Compile Include="Service\Manufacturing\CoreAccessoryDetailService.cs" />
     <Compile Include="Service\Finance\PayableService.cs" />
     <Compile Include="Service\Finance\PaymentRequestService.cs" />
@@ -84,6 +85,8 @@
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceService.cs" />
+    <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderClearanceDetailService.cs" />
+    <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderClearanceService.cs" />
     <Compile Include="Service\SalesOperation\SalesQuotationDetailService.cs" />
     <Compile Include="Service\SalesOperation\SalesQuotationService.cs" />
     <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderDetailService.cs" />
@@ -94,6 +97,10 @@
     <Compile Include="Service\SalesOperation\RetailSalesInvoiceService.cs" />
     <Compile Include="Service\StockAndMaster\CompanyService.cs" />
     <Compile Include="Service\StockAndMaster\CompoundService.cs" />
+    <Compile Include="Service\StockAndMaster\BlendingRecipeService.cs" />
+    <Compile Include="Service\StockAndMaster\BlendingRecipeDetailService.cs" />
+    <Compile Include="Service\StockAndMaster\CustomerStockMutationService.cs" />
+    <Compile Include="Service\StockAndMaster\CustomerItemService.cs" />
     <Compile Include="Service\StockAndMaster\ServiceCostService.cs" />
     <Compile Include="Service\StockAndMaster\PriceMutationService.cs" />
     <Compile Include="Service\Finance\ReceivableService.cs" />

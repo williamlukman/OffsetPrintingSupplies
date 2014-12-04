@@ -726,7 +726,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ReceiptVoucherId: $("#id").val(), ReceivableId: $("#ReceivableId").val(), Description: $("#Description").val(),
-                AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue')
+                AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue'),
+                Amount: $("#Amount").numberbox('getValue')
             }),
             async: false,
             cache: false,

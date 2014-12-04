@@ -10,10 +10,12 @@ namespace Core.DomainModel
         public int Id { get; set; }
         public int WarehouseId { get; set; }
         public int ItemId { get; set; }
+        //public int CustomerItemId { get; set; }
 
         public int Quantity { get; set; }
         public int PendingDelivery { get; set; }
         public int PendingReceival { get; set; }
+        public int CustomerQuantity { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -22,5 +24,6 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
         public virtual Warehouse Warehouse { get; set; }
         public virtual Item Item { get; set; }
+        public virtual ICollection<CustomerItem> CustomerItems { get; set; }
     }
 }

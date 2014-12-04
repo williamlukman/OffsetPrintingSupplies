@@ -25,6 +25,7 @@ namespace WebView.Controllers
         private IContactService _contactService;
         private ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
         private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
+        public ICurrencyService _currencyService;
 
         public VirtualOrderController()
         {
@@ -37,12 +38,12 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
             _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
-
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
         {
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -64,6 +65,7 @@ namespace WebView.Controllers
                              model.NomorSurat,
                              model.ContactId,
                              Contact = model.Contact.Name,
+                             Currency = model.Currency.Name,
                              model.OrderType,
                              model.OrderDate,
                              model.IsConfirmed,
@@ -106,6 +108,7 @@ namespace WebView.Controllers
                             model.NomorSurat,
                             model.ContactId,
                             model.Contact,
+                            model.Currency,
                             model.OrderType,
                             model.OrderDate,
                             model.IsConfirmed,
@@ -354,6 +357,8 @@ namespace WebView.Controllers
                 model.OrderType,
                 model.OrderDate,
                 ConfirmationDate = model.ConfirmationDate,
+                Currency = model.Currency.Name,
+                model.CurrencyId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -431,6 +436,7 @@ namespace WebView.Controllers
                 data.OrderType = model.OrderType;
                 data.OrderDate = model.OrderDate;
                 data.NomorSurat = model.NomorSurat;
+                data.CurrencyId = model.CurrencyId;
                 model = _virtualOrderService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)

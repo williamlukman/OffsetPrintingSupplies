@@ -84,6 +84,14 @@ namespace Validation.Validation
             {
                 item.Errors.Add("Generic", "Minimum quantity tidak boleh negatif");
             }
+            else if (item.Virtual < 0)
+            {
+                item.Errors.Add("Generic", "Virtual Quantity tidak boleh negatif");
+            }
+            else if (item.CustomerQuantity < 0)
+            {
+                item.Errors.Add("Generic", "Customer Item Quantity tidak boleh negatif");
+            }
             return item;
         }
 
@@ -254,6 +262,12 @@ namespace Validation.Validation
             return item;
         }
 
+        public Item VAdjustCustomerQuantity(Item item)
+        {
+            VNonNegativeQuantity(item);
+            return item;
+        }
+
         public Item VAdjustQuantity(Item item)
         {
             VNonNegativeQuantity(item);
@@ -267,6 +281,12 @@ namespace Validation.Validation
         }
 
         public Item VAdjustPendingReceival(Item item)
+        {
+            VNonNegativeQuantity(item);
+            return item;
+        }
+
+        public Item VAdjustVirtual(Item item)
         {
             VNonNegativeQuantity(item);
             return item;
@@ -316,6 +336,13 @@ namespace Validation.Validation
             return isValid(item);
         }
 
+        public bool ValidAdjustCustomerQuantity(Item item)
+        {
+            item.Errors.Clear();
+            VAdjustCustomerQuantity(item);
+            return isValid(item);
+        }
+
         public bool ValidAdjustQuantity(Item item)
         {
             item.Errors.Clear();
@@ -334,6 +361,13 @@ namespace Validation.Validation
         {
             item.Errors.Clear();
             VAdjustPendingReceival(item);
+            return isValid(item);
+        }
+
+        public bool ValidAdjustVirtual(Item item)
+        {
+            item.Errors.Clear();
+            VAdjustVirtual(item);
             return isValid(item);
         }
 

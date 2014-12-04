@@ -27,12 +27,16 @@ namespace Core.DomainModel
         public int Virtual { get; set; }
         public int MinimumQuantity { get; set; }
         //public int OnTrial { get; set; }
+        public int CustomerQuantity { get; set; }
+        public int CustomerVirtual { get; set; } // unused ?
 
         public decimal SellingPrice { get; set; }
         public int PriceMutationId { get; set; }
         public decimal AvgPrice { get; set; }
+        public decimal CustomerAvgPrice { get; set; }
         public virtual ICollection<StockMutation> StockMutations { get; set; }
         public virtual ICollection<PriceMutation> PriceMutations { get; set; }
+        //public virtual ICollection<CustomerStockMutation> CustomerStockMutations { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -43,5 +47,6 @@ namespace Core.DomainModel
         public virtual ItemType ItemType { get; set; }
         public virtual ICollection<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
         public virtual ICollection<WarehouseItem> WarehouseItems { get; set; }
+        //public virtual ICollection<CustomerItem> CustomerItems { get; set; }
     }
 }

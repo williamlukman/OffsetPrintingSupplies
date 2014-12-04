@@ -36,6 +36,8 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IServiceCostService _serviceCostService;
+        private ICustomerItemService _customerItemService;
+        private ICustomerStockMutationService _customerStockMutationService;
 
         public RecoveryWorkProcessController()
         {
@@ -59,6 +61,8 @@ namespace WebView.Controllers
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _serviceCostService = new ServiceCostService(new ServiceCostRepository(), new ServiceCostValidator());
+            _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
+            _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
         }
 
         public ActionResult Index()
@@ -448,7 +452,8 @@ namespace WebView.Controllers
                 model = _recoveryOrderDetailService.FinishObject(data, model.FinishedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
                     _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService, _blanketService,
-                    _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
+                    _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                    _customerStockMutationService, _customerItemService);
             }
             catch (Exception ex)
             {
@@ -472,7 +477,8 @@ namespace WebView.Controllers
                 model = _recoveryOrderDetailService.UnfinishObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService
                     ,_coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService
-                    ,_stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService);
+                    ,_stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService
+                    ,_customerStockMutationService, _customerItemService);
             }
             catch (Exception ex)
             {

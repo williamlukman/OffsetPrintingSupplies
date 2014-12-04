@@ -61,18 +61,6 @@ namespace Service.Service
             return salesOrderDetail;
         }
 
-        public SalesOrderDetail CreateObject(int salesOrderId, int itemId, int quantity, decimal price, ISalesOrderService _salesOrderService, IItemService _itemService)
-        {
-            SalesOrderDetail sod = new SalesOrderDetail
-            {
-                SalesOrderId = salesOrderId,
-                ItemId = itemId,
-                Quantity = quantity,
-                Price = price
-            };
-            return this.CreateObject(sod, _salesOrderService, _itemService);
-        }
-
         public SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail, ISalesOrderService _salesOrderService, IItemService _itemService)
         {
             return (_validator.ValidUpdateObject(salesOrderDetail, this, _salesOrderService, _itemService) ? _repository.UpdateObject(salesOrderDetail) : salesOrderDetail);

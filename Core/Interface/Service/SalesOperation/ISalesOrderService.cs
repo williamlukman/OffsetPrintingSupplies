@@ -17,7 +17,6 @@ namespace Core.Interface.Service
         IList<SalesOrder> GetObjectsByContactId(int contactId);
         IList<SalesOrder> GetConfirmedObjects();
         SalesOrder CreateObject(SalesOrder salesOrder, IContactService _contactService);
-        SalesOrder CreateObject(int contactId, DateTime salesDate, IContactService _contactService);
         SalesOrder UpdateObject(SalesOrder salesOrder, IContactService _contactService);
         SalesOrder SoftDeleteObject(SalesOrder salesOrder, ISalesOrderDetailService _salesOrderDetailService);
         bool DeleteObject(int Id);

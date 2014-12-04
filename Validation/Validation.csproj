@@ -66,6 +66,7 @@
     <Compile Include="Validation\Finance\SalesAllowanceValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderDetailValidator.cs" />
     <Compile Include="Validation\Manufacturing\BlanketOrderValidator.cs" />
+    <Compile Include="Validation\Manufacturing\BlendingWorkOrderValidator.cs" />
     <Compile Include="Validation\Manufacturing\CoreAccessoryDetailValidator.cs" />
     <Compile Include="Validation\Finance\PayableValidator.cs" />
     <Compile Include="Validation\Finance\PaymentRequestValidator.cs" />
@@ -75,6 +76,8 @@
     <Compile Include="Validation\PurchaseOperation\PurchaseInvoiceValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\RetailPurchaseInvoiceDetailValidator.cs" />
     <Compile Include="Validation\PurchaseOperation\RetailPurchaseInvoiceValidator.cs" />
+    <Compile Include="Validation\SalesOperation\TemporaryDeliveryOrderClearanceDetailValidator.cs" />
+    <Compile Include="Validation\SalesOperation\TemporaryDeliveryOrderClearanceValidator.cs" />
     <Compile Include="Validation\SalesOperation\SalesQuotationDetailValidator.cs" />
     <Compile Include="Validation\SalesOperation\SalesQuotationValidator.cs" />
     <Compile Include="Validation\SalesOperation\TemporaryDeliveryOrderDetailValidator.cs" />
@@ -85,6 +88,10 @@
     <Compile Include="Validation\SalesOperation\RetailSalesInvoiceValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CompanyValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CompoundValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\BlendingRecipeValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\BlendingRecipeDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\CustomerStockMutationValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\CustomerItemValidator.cs" />
     <Compile Include="Validation\StockAndMaster\ServiceCostValidator.cs" />
     <Compile Include="Validation\StockAndMaster\PriceMutationValidator.cs" />
     <Compile Include="Validation\Finance\ReceivableValidator.cs" />

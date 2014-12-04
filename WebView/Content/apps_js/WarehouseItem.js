@@ -102,13 +102,14 @@
             url: base_url + 'WarehouseItem/GetListItem?Id=' + id,
             datatype: "json",
             mtype: 'GET',
-            colNames: ['ID', 'Sku', 'Item Name', 'QTY', 'UoM'
+            colNames: ['ID', 'Sku', 'Item Name', 'QTY', "Customer's QTY", 'UoM'
             ],
             colModel: [
                       { name: 'itemid', index: 'itemid', width: 80, align: "center"},
                       { name: 'sku', index: 'sku', width: 80 },
                       { name: 'item', index: 'item', width: 200},
-                      { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                      { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'customerquantity', index: 'customerquantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'uomname', index: 'uomname', width: 100 },
             ],
             page: '1',
@@ -137,12 +138,13 @@
             url: base_url + 'WarehouseItem/GetListWarehouse?Id=' + id,
             datatype: "json",
             mtype: 'GET',
-            colNames: ['ID', 'Code', 'Name', 'QTY', 'UoM'],
+            colNames: ['ID', 'Code', 'Name', 'QTY', "Customer's QTY", 'UoM'],
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center"},
                       { name: 'code', index: 'code', width: 80 },
                       { name: 'name', index: 'name', width: 200 },
-                      { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                      { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                      { name: 'customerquantity', index: 'customerquantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'uomname', index: 'uomname', width: 100 },
             ],
             page: '1',

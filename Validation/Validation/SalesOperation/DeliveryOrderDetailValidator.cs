@@ -136,6 +136,27 @@ namespace Validation.Validation
             return deliveryOrderDetail;
         }
 
+        public DeliveryOrderDetail VHasItemCustomerQuantity(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, IItemService _itemService, IWarehouseItemService _warehouseItemService, ICustomerItemService _customerItemService)
+        {
+            DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(deliveryOrder.WarehouseId, deliveryOrderDetail.ItemId);
+            CustomerItem customerItem = _customerItemService.FindOrCreateObject(deliveryOrder.SalesOrder.ContactId, warehouseItem.Id);
+            Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
+            if (item.CustomerQuantity - deliveryOrderDetail.Quantity < 0)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "Item quantity kurang dari quantity untuk dikirim");
+            }
+            else if (warehouseItem.CustomerQuantity - deliveryOrderDetail.Quantity < 0)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "WarehouseItem quantity kurang dari quantity untuk dikirim");
+            }
+            else if (customerItem.Quantity - deliveryOrderDetail.Quantity < 0)
+            {
+                deliveryOrderDetail.Errors.Add("Generic", "CustomerItem quantity kurang dari quantity untuk dikirim");
+            }
+            return deliveryOrderDetail;
+        }
+
         public DeliveryOrderDetail VHasBeenConfirmed(DeliveryOrderDetail deliveryOrderDetail)
         {
             if (!deliveryOrderDetail.IsConfirmed)
@@ -231,7 +252,7 @@ namespace Validation.Validation
 
         public DeliveryOrderDetail VConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
                                                   IDeliveryOrderDetailService _deliveryOrderDetailService,  ISalesOrderDetailService _salesOrderDetailService,
-                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService)
+                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService)
         {
             VHasConfirmationDate(deliveryOrderDetail);
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
@@ -241,6 +262,10 @@ namespace Validation.Validation
             if (!salesOrderDetail.IsService)
             {
                 VHasItemQuantity(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService);
+            }
+            else
+            {
+                VHasItemCustomerQuantity(deliveryOrderDetail, _deliveryOrderService, _itemService, _warehouseItemService, _customerItemService);
             }
             if (!isValid(deliveryOrderDetail)) { return deliveryOrderDetail; }
             VQuantityOfDeliveryOrderDetailsIsLessThanOrEqualSalesOrderDetail(deliveryOrderDetail, _deliveryOrderDetailService, _salesOrderDetailService, false);
@@ -277,11 +302,11 @@ namespace Validation.Validation
 
         public bool ValidConfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService,
                                        IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
-                                       IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService)
+                                       IItemService _itemService, IWarehouseItemService _warehouseItemService, IServiceCostService _serviceCostService, ICustomerItemService _customerItemService)
         {
             deliveryOrderDetail.Errors.Clear();
             VConfirmObject(deliveryOrderDetail, _deliveryOrderService, _deliveryOrderDetailService,
-                           _salesOrderDetailService, _itemService, _warehouseItemService, _serviceCostService);
+                           _salesOrderDetailService, _itemService, _warehouseItemService, _serviceCostService, _customerItemService);
             return isValid(deliveryOrderDetail);
         }
 

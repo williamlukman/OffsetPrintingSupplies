@@ -529,7 +529,7 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#DetailId').val(result.DetailId);
+                            $('#DetailId').numberbox('setValue', result.DetailId);
                             var e = document.getElementById("MaterialCase");
                             if (result.MaterialCase == 1) {
                                 e.selectedIndex = 0;
@@ -633,7 +633,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, DetailId: $("#DetailId").val(), CoreIdentificationId: $("#id").val(),
+                Id: id, DetailId: $("#DetailId").numberbox('getValue'), CoreIdentificationId: $("#id").val(),
                 MaterialCase: moving, CoreBuilderId: $("#CoreBuilderId").val(), CoreBuilderBaseSku: $("#CoreBuilderBaseSku").val(), RollerTypeId: $("#RollerTypeId").val(),
                 MachineId: $("#MachineId").val(), RD: $("#RD").numberbox('getValue'), CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'),
                 WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'), RepairRequestCase: repairrequestcase

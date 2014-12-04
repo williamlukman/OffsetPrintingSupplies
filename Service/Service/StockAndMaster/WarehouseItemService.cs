@@ -88,6 +88,16 @@ namespace Service.Service
             return (warehouseItem = _validator.ValidDeleteObject(warehouseItem) ? _repository.SoftDeleteObject(warehouseItem) : warehouseItem);
         }
 
+        public WarehouseItem AdjustCustomerQuantity(WarehouseItem warehouseItem, int quantity)
+        {
+            warehouseItem.CustomerQuantity += quantity;
+            if (_validator.ValidAdjustCustomerQuantity(warehouseItem))
+            {
+                _repository.UpdateObject(warehouseItem);
+            }
+            return warehouseItem;
+        }
+
         public WarehouseItem AdjustQuantity(WarehouseItem warehouseItem, int quantity)
         {
             warehouseItem.Quantity += quantity;
