@@ -23,6 +23,9 @@ namespace WebView.Controllers
         private IValidCombService _validCombService;
         public ICurrencyService _currencyService ;
         private IExchangeRateClosingService _exchangeRateClosingService;
+        private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
+        private IVCNonBaseCurrencyService _vCNonBaseCurrencyService;
+
         public ClosingController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
@@ -31,6 +34,8 @@ namespace WebView.Controllers
             _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateClosingService = new ExchangeRateClosingService(new ExchangeRateClosingRepository(), new ExchangeRateClosingValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
+            _vCNonBaseCurrencyService = new VCNonBaseCurrencyService(new VCNonBaseCurrencyRepository(), new VCNonBaseCurrencyValidator());
         }
 
         public ActionResult Index()
@@ -257,7 +262,7 @@ namespace WebView.Controllers
 
                 var data = _closingService.GetObjectById(model.Id);
                 data.ClosedAt = model.ClosedAt;
-                model = _closingService.CloseObject(data, _accountService, _generalLedgerJournalService, _validCombService);
+                model = _closingService.CloseObject(data, _accountService, _generalLedgerJournalService, _validCombService,_gLNonBaseCurrencyService,_exchangeRateClosingService,_vCNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -294,7 +299,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _closingService.GetObjectById(model.Id);
-                model = _closingService.OpenObject(data, _accountService, _validCombService);
+                model = _closingService.OpenObject(data, _accountService, _validCombService,_vCNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -329,7 +334,7 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                if (!_closingService.DeleteObject(model.Id, _accountService, _validCombService))
+                if (!_closingService.DeleteObject(model.Id, _accountService, _validCombService,_vCNonBaseCurrencyService))
                 {
                     return Json(new
                     {
