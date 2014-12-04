@@ -62,6 +62,7 @@ namespace WebView.Controllers
                              model.PICContactNo,
                              model.Email,
                              model.TaxCode,
+                             model.IsTaxable,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -103,6 +104,7 @@ namespace WebView.Controllers
                             model.PICContactNo,
                             model.Email,
                             model.TaxCode,
+                            model.IsTaxable,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -134,6 +136,7 @@ namespace WebView.Controllers
                  model.PICContactNo,
                  model.Email,
                  model.TaxCode,
+                 model.IsTaxable,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -170,6 +173,7 @@ namespace WebView.Controllers
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
                 data.TaxCode = model.TaxCode;
+                data.IsTaxable = model.IsTaxable;
                 model = _contactService.UpdateObject(data);
             }
             catch (Exception ex)

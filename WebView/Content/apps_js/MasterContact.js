@@ -7,6 +7,18 @@
         $('span[class=errormessage]').text('').remove();
     }
 
+    function onIsTaxable() {
+        if (document.getElementById('IsTaxable').checked) {
+            $('#TaxCode').removeAttr('disabled');
+        } else {
+            $('#TaxCode').attr('disabled', true);
+        }
+    };
+
+    document.getElementById('IsTaxable').onchange = function () {
+        onIsTaxable();
+    };
+
     function ReloadGrid() {
         $("#list").setGridParam({ url: base_url + 'MstContact/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
@@ -26,7 +38,7 @@
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact','PIC','PIC Contact','Email', 'Tax Code', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address','Contact','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
@@ -36,6 +48,7 @@
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },
                   { name: 'taxcode', index: 'taxcode', width: 50 },
+                  { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -52,6 +65,18 @@
         height: $(window).height() - 200,
         gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowIsTaxable = $(this).getRowData(cl).istaxable;
+		          if (rowIsTaxable == 'true') {
+		              rowIsTaxable = "YES"; // + $(this).getRowData(cl).taxcode;
+		          } else {
+		              rowIsTaxable = "NO";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { istaxable: rowIsTaxable });
+
+		      }
 		      //var ids = $(this).jqGrid('getDataIDs');
 		      //for (var i = 0; i < ids.length; i++) {
 		      //    var cl = ids[i];
@@ -82,6 +107,8 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        document.getElementById("IsTaxable").checked = true;
+        onIsTaxable();
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
     });
@@ -116,6 +143,8 @@
                             $('#PIC').val(result.PIC);
                             $('#PICContactNo').val(result.PICContactNo);
                             $('#Email').val(result.Email);
+                            document.getElementById("IsTaxable").checked = result.IsTaxable;
+                            onIsTaxable();
                             var e = document.getElementById("TaxCode");
                             var taxcode = result.TaxCode;
                             if (result.TaxCode == "01"){ e.selectedIndex = 0; }
@@ -216,7 +245,7 @@
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
-                Email: $("#Email").val(), TaxCode: taxcode
+                Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
             }),
             async: false,
             cache: false,
