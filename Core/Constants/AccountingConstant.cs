@@ -21,6 +21,7 @@ namespace Core.Constants
             public static string CashBankMutation = "CashBankMutation";
             //public static string CashSalesInvoice = "CashSalesInvoice";
             //public static string CustomPurchaseInvoice = "CustomPurchaseInvoice";
+            public static string Closing = "Closing";
             public static string Memorial = "Memorial";
             public static string PaymentRequest = "PaymentRequest";
             public static string PaymentVoucher = "PaymentVoucher";

@@ -12,13 +12,11 @@ namespace Core.DomainModel
         public int ValidCombId { get; set; }
 
         public decimal Amount { get; set; }
-        public int CurrencyId { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
          
         public virtual ValidComb ValidComb { get; set; }
-        public virtual Currency Currency { get; set; }
 
     }
 }

@@ -15,9 +15,12 @@ namespace Core.Interface.Service
         Closing GetObjectById(int Id);
         Closing GetObjectByPeriodAndYear(int Period, int YearPeriod);
         Closing CreateObject(Closing closing, IList<ExchangeRateClosing> exchangeRateClosing,IAccountService _accountService, IValidCombService _validCombService,IExchangeRateClosingService _exchangeRateClosingService);
-        Closing CloseObject(Closing closing, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService);
-        Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService);
-        bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService);
+        Closing CloseObject(Closing closing, IAccountService _accountService,
+                                   IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService,
+            IGLNonBaseCurrencyService _gLNonBaseCurrencyService, IExchangeRateClosingService _exchangeRateClosingService,
+            IVCNonBaseCurrencyService _vCNonBaseCurrencyService);
+        Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService);
+        bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService);
         bool IsDateClosed(DateTime DateToCheck);
     }
 }
