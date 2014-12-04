@@ -19,7 +19,7 @@ namespace Validation.Validation
             return cashBankMutation;
         }
          
-        public CashBankMutation VHasDifferentCurrency(CashBankMutation cashBankMutation,ICashBankService _cashBankService)
+        public CashBankMutation VHasSameCurrency(CashBankMutation cashBankMutation,ICashBankService _cashBankService)
         {
             CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
             CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
@@ -142,7 +142,7 @@ namespace Validation.Validation
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
             VNonNegativeNorZeroSourceCashBank(cashBankMutation, _cashBankService);
             if (!isValid(cashBankMutation)) { return cashBankMutation; }
-            VHasDifferentCurrency(cashBankMutation, _cashBankService);
+            VHasSameCurrency(cashBankMutation, _cashBankService);
             return cashBankMutation;
         }
 

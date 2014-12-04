@@ -83,6 +83,7 @@ namespace Core.Constants
             public static string StockAdjustmentExpense = "2302004";
             public static string SampleAndTrialExpense = "2302005";
             public static string NonOperationalExpense = "24";
+
             public static string DepreciationExpense = "2401";
             public static string Amortization = "2402";            
             public static string InterestExpense = "2403";
@@ -120,29 +121,26 @@ namespace Core.Constants
             public static string Inventory = "A1104";
             public static string Raw = "A1104001";
             public static string FinishedGoods = "A1104002";
-            public static string PrepaidExpense = "A1105";
             public static string PiutangLainLain = "A1106";
-            public static string NonCurrentAsset = "A12";
-            public static string UnrecognizedCapitalGain = "A13";
 
             public static string Expense = "X2";
             public static string COGS = "X21";
-            public static string COS = "X22";
-            public static string OperationalExpense = "X23";
+            public static string COS = "X22"; //
+            public static string OperationalExpense = "X23"; //
             public static string ManufacturingExpense = "X2301";
-            public static string RecoveryExpense = "X2301001";
-            public static string ConversionExpense = "X2301002";
-            public static string SellingGeneralAndAdministrationExpense = "X2302";
+            public static string RecoveryExpense = "X2301001"; //
+            public static string ConversionExpense = "X2301002"; //
+            public static string SellingGeneralAndAdministrationExpense = "X2302"; //
             public static string CashBankAdjustmentExpense = "X2302001";
             public static string Discount = "X2302002";
-            public static string SalesAllowance = "X2302003";
+            public static string SalesAllowance = "X2302003"; //
             public static string StockAdjustmentExpense = "X2302004";
-            public static string SampleAndTrialExpense = "X2302005";
+            public static string SampleAndTrialExpense = "X2302005"; //
             public static string NonOperationalExpense = "X24";
             public static string DepreciationExpense = "X2401";
             public static string Amortization = "X2402";
             public static string InterestExpense = "X2403";
-            public static string TaxExpense = "X2404";
+            public static string TaxExpense = "X2404"; 
             public static string DividentExpense = "X2405";
             public static string ExchangeLoss = "X25";
 
@@ -151,9 +149,7 @@ namespace Core.Constants
             public static string AccountPayable = "L3101";
             public static string GBCHPayable = "L3102";
             public static string GoodsPendingClearance = "L3103";
-            public static string UnearnedRevenue = "L3104";
             public static string PurchaseAllowance = "L3105";
-            public static string AccountPayableNonTrading = "L3106";
             public static string HutangLainLain = "L3107";
             public static string TaxPayable = "L3108";
 

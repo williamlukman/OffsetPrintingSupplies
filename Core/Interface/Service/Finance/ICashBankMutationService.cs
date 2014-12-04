@@ -21,9 +21,11 @@ namespace Core.Interface.Service
         CashBankMutation SoftDeleteObject(CashBankMutation cashBankMutation);
         bool DeleteObject(int Id);
         CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
+                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                       ICurrencyService _currencyService, IExchangeRateService _exchangeService);
         CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
+                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                         ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
 
     }
 }

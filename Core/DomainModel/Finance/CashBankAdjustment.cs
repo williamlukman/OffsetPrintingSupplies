@@ -13,6 +13,8 @@ namespace Core.DomainModel
         public DateTime AdjustmentDate { get; set; }
         public int Amount { get; set; }
         public string Code { get; set; }
+        public decimal ExchangeRateAmount { get; set; }
+        public Nullable<int> ExchangeRateId { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
@@ -22,6 +24,7 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
 
         public virtual CashBank CashBank { get; set; }
+        public virtual ExchangeRate ExchangeRate { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }
