@@ -20,6 +20,9 @@ namespace TestValidation
         public IBlanketService _blanketService;
         public IBlanketOrderService _blanketOrderService;
         public IBlanketOrderDetailService _blanketOrderDetailService;
+        public IBlendingRecipeService _blendingRecipeService;
+        public IBlendingRecipeDetailService _blendingRecipeDetailService;
+        public IBlendingWorkOrderService _blendingWorkOrderService;
         public ICashBankService _cashBankService;
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
@@ -95,7 +98,7 @@ namespace TestValidation
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
-        public UoM Pcs, Boxes, Tubs;
+        public UoM Pcs, Boxes, Tubs, Bottles;
         public Item item, itemAdhesiveBlanket, itemAdhesiveRoller, itemCompound, itemCompound1, itemCompound2, itemAccessory1, itemAccessory2;
         public Warehouse localWarehouse, movingWarehouse;
         public Contact contact;
@@ -113,8 +116,12 @@ namespace TestValidation
         public RecoveryAccessoryDetail accessory1, accessory2, accessory3, accessory4;
         public Item bargeneric, barleft1, barleft2, barright1, barright2;
         public Item rollBlanket1, rollBlanket2, rollBlanket3;
+        public Item itemBlending, itemBlendingDet1, itemBlendingDet2, itemBlendingDet3;
+        public BlendingRecipe blending;
+        public BlendingRecipeDetail blendingDet1, blendingDet2, blendingDet3;
         public Blanket blanket1, blanket2, blanket3;
         public BlanketOrder blanketOrderContact;
+        public BlendingWorkOrder blendingWorkOrder;
         public BlanketOrderDetail blanketODContact1, blanketODContact2, blanketODContact3, blanketODContact4; 
         public WarehouseMutation warehouseMutation;
         public WarehouseMutationDetail wmoDetail1, wmoDetail2, wmoDetail3, wmoDetail4, wmoDetail5, wmoDetail6,
@@ -125,6 +132,7 @@ namespace TestValidation
         public StockAdjustment stockAdjustment, sa;
         public StockAdjustmentDetail stockAD, stockAD1, stockAD2, stockAD3, stockAD4;
         public StockAdjustmentDetail sad1, sad2, sad3, sad4, sad5, sadAdhesiveRoller, sadAdhesiveBlanket;
+        public StockAdjustmentDetail sadBlendingItem1, sadBlendingItem2, sadBlendingItem3, sadBlendingItem4;
 
         public SalesOrder salesOrder1, salesOrder2, salesOrder3;
         public SalesOrderDetail salesOD1a, salesOD1b, salesOD2a, salesOD2b, salesOD3a, salesOD3b;
@@ -194,6 +202,9 @@ namespace TestValidation
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
             _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
             _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
+            _blendingRecipeService = new BlendingRecipeService(new BlendingRecipeRepository(), new BlendingRecipeValidator());
+            _blendingRecipeDetailService = new BlendingRecipeDetailService(new BlendingRecipeDetailRepository(), new BlendingRecipeDetailValidator());
+            _blendingWorkOrderService = new BlendingWorkOrderService(new BlendingWorkOrderRepository(), new BlendingWorkOrderValidator());
             _cashBankAdjustmentService = new CashBankAdjustmentService(new CashBankAdjustmentRepository(), new CashBankAdjustmentValidator());
             _cashBankMutationService = new CashBankMutationService(new CashBankMutationRepository(), new CashBankMutationValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
@@ -359,6 +370,7 @@ namespace TestValidation
             PopulateSingles();
             PopulateBuilders();
             PopulateBlanket();
+            PopulateBlendingRecipe();
             PopulateWarehouseMutationForRollerIdentificationAndRecovery();
             PopulateCoreIdentifications();
             PopulateRecoveryOrders();
@@ -368,6 +380,7 @@ namespace TestValidation
             PopulateCoreIdentifications2();
             PopulateRollerWarehouseMutation();
             PopulateBlanketOrders();
+            PopulateBlendingWorkOrders();
 
             // @SalesBuilder
             PopulateSalesAndDelivery();
@@ -382,6 +395,41 @@ namespace TestValidation
             PopulateCashBank();
             PopulateSales();
             PopulateValidComb();
+        }
+
+        public void PopulateDataNoClosing()
+        {
+            PopulateUserRole();
+            PopulateWarehouse();
+            PopulateItem();
+            PopulateSingles();
+            PopulateBuilders();
+            PopulateBlanket();
+            PopulateBlendingRecipe();
+            PopulateWarehouseMutationForRollerIdentificationAndRecovery();
+            PopulateCoreIdentifications();
+            PopulateRecoveryOrders();
+            PopulateRecoveryOrders2();
+            PopulateStockAdjustment();
+            PopulateRecoveryOrders3();
+            PopulateCoreIdentifications2();
+            PopulateRollerWarehouseMutation();
+            PopulateBlanketOrders();
+            PopulateBlendingWorkOrders();
+
+            // @SalesBuilder
+            PopulateSalesAndDelivery();
+            PopulateSalesInvoice();
+            PopulateReceiptVoucher();
+
+            // @PurchaseBuilder
+            PopulatePurchaseOrderAndPurchaseReceival();
+            PopulatePurchaseInvoice();
+            PopulatePaymentVoucher();
+
+            PopulateCashBank();
+            PopulateSales();
+            //PopulateValidComb();
         }
 
         public void PopulateUserRole()
@@ -476,6 +524,52 @@ namespace TestValidation
             };
             _uomService.CreateObject(Tubs);
 
+            Bottles = new UoM()
+            {
+                Name = "Bottles"
+            };
+            _uomService.CreateObject(Bottles);
+
+            itemBlending = new Item()
+            {
+                ItemTypeId = _itemTypeService.GetObjectByName("Chemical").Id,
+                Name = "Kimia XYZ volume 1 L",
+                Sku = "CBI123",
+                UoMId = Bottles.Id,
+                SellingPrice = 10000,
+            };
+            _itemService.CreateObject(itemBlending, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
+
+            itemBlendingDet1 = new Item()
+            {
+                ItemTypeId = _itemTypeService.GetObjectByName("Chemical").Id,
+                Name = "Drum Oli volume 5 L",
+                Sku = "CBI124",
+                UoMId = Bottles.Id,
+                SellingPrice = 4000,
+            };
+            _itemService.CreateObject(itemBlendingDet1, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
+
+            itemBlendingDet2 = new Item()
+            {
+                ItemTypeId = _itemTypeService.GetObjectByName("Chemical").Id,
+                Name = "Botol kosong volume 1L",
+                Sku = "CBI125",
+                UoMId = Bottles.Id,
+                SellingPrice = 2000,
+            };
+            _itemService.CreateObject(itemBlendingDet2, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
+
+            itemBlendingDet3 = new Item()
+            {
+                ItemTypeId = _itemTypeService.GetObjectByName("Chemical").Id,
+                Name = "Drum Pewarna 5L",
+                Sku = "CBI126",
+                UoMId = Bottles.Id,
+                SellingPrice = 4000,
+            };
+            _itemService.CreateObject(itemBlendingDet3, _uomService, _itemTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
+
             itemAdhesiveBlanket = new Item()
             {
                 ItemTypeId = _itemTypeService.GetObjectByName("AdhesiveBlanket").Id,
@@ -547,6 +641,46 @@ namespace TestValidation
                 WarehouseId = localWarehouse.Id
             };
             _stockAdjustmentService.CreateObject(sa, _warehouseService);
+
+            sadBlendingItem1 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                Quantity = 100,
+                ItemId = itemBlending.Id,
+                Code = "IACBR001",
+                Price = 5000
+            };
+            _stockAdjustmentDetailService.CreateObject(sadBlendingItem1, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sadBlendingItem2 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                Quantity = 100,
+                ItemId = itemBlendingDet1.Id,
+                Code = "IACBR002",
+                Price = 2000
+            };
+            _stockAdjustmentDetailService.CreateObject(sadBlendingItem2, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sadBlendingItem3 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                Quantity = 100,
+                ItemId = itemBlendingDet2.Id,
+                Code = "IACBR003",
+                Price = 1000
+            };
+            _stockAdjustmentDetailService.CreateObject(sadBlendingItem3, _stockAdjustmentService, _itemService, _warehouseItemService);
+
+            sadBlendingItem4 = new StockAdjustmentDetail()
+            {
+                StockAdjustmentId = sa.Id,
+                Quantity = 100,
+                ItemId = itemBlendingDet3.Id,
+                Code = "IACBR004",
+                Price = 2000
+            };
+            _stockAdjustmentDetailService.CreateObject(sadBlendingItem4, _stockAdjustmentService, _itemService, _warehouseItemService);
 
             sadAdhesiveBlanket = new StockAdjustmentDetail()
             {
@@ -1906,6 +2040,56 @@ namespace TestValidation
                 BlanketOrderId = blanketOrderContact.Id
             };
             _blanketOrderDetailService.CreateObject(blanketODContact4, _blanketOrderService, _blanketService);
+        }
+
+        public void PopulateBlendingRecipe()
+        {
+            blending = new BlendingRecipe()
+            {
+                Name = "Pencampuran pewarna dan oli",
+                TargetItemId = itemBlending.Id,
+                TargetQuantity = 10,
+            };
+            _blendingRecipeService.CreateObject(blending, _itemService, _itemTypeService);
+
+            blendingDet1 = new BlendingRecipeDetail()
+            {
+                BlendingRecipeId = blending.Id,
+                ItemId = itemBlendingDet1.Id,
+                Quantity = 1,
+            };
+            _blendingRecipeDetailService.CreateObject(blendingDet1, _blendingRecipeService, _itemService);
+
+            blendingDet2 = new BlendingRecipeDetail()
+            {
+                BlendingRecipeId = blending.Id,
+                ItemId = itemBlendingDet2.Id,
+                Quantity = 10,
+            };
+            _blendingRecipeDetailService.CreateObject(blendingDet2, _blendingRecipeService, _itemService);
+
+            blendingDet3 = new BlendingRecipeDetail()
+            {
+                BlendingRecipeId = blending.Id,
+                ItemId = itemBlendingDet3.Id,
+                Quantity = 1,
+            };
+            _blendingRecipeDetailService.CreateObject(blendingDet3, _blendingRecipeService, _itemService);
+            
+        }
+
+        public void PopulateBlendingWorkOrders()
+        {
+            blendingWorkOrder = new BlendingWorkOrder()
+            {
+                Code = "CBWO001",
+                BlendingDate = DateTime.Now,
+                BlendingRecipeId = blending.Id,
+                WarehouseId = localWarehouse.Id
+            };
+            _blendingWorkOrderService.CreateObject(blendingWorkOrder, _blendingRecipeService, _warehouseService);
+
+            
         }
 
         public void PopulateCashBank()

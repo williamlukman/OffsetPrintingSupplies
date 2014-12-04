@@ -11,16 +11,20 @@ namespace Validation.Validation
 {
     public class BlendingRecipeValidator : IBlendingRecipeValidator
     {
-        public BlendingRecipe VHasTargetItemAndIsLegacy(BlendingRecipe blendingRecipe, IItemService _itemService)
+        public BlendingRecipe VHasTargetItemAndIsLegacy(BlendingRecipe blendingRecipe, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             Item item = _itemService.GetObjectById(blendingRecipe.TargetItemId);
             if (item == null)
             {
                 blendingRecipe.Errors.Add("TargetItemId", "Tidak boleh tidak ada");
             }
-            else if (item.ItemType.Name != Constant.ItemTypeCase.Chemical)
+            else
             {
-                blendingRecipe.Errors.Add("TargetItemId", "Item Type Harus berupa Chemical");
+                ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                if (itemType == null || itemType.Name != Constant.ItemTypeCase.Chemical)
+                {
+                    blendingRecipe.Errors.Add("TargetItemId", "Item Type Harus berupa Chemical");
+                }
             }
             return blendingRecipe;
         }
@@ -67,9 +71,9 @@ namespace Validation.Validation
             return blendingRecipe;
         }
 
-        public BlendingRecipe VCreateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService)
+        public BlendingRecipe VCreateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
-            VHasTargetItemAndIsLegacy(blendingRecipe, _itemService);
+            VHasTargetItemAndIsLegacy(blendingRecipe, _itemService, _itemTypeService);
             if (!isValid(blendingRecipe)) { return blendingRecipe; }
             VHasUniqueName(blendingRecipe, _blendingRecipeService);
             if (!isValid(blendingRecipe)) { return blendingRecipe; }
@@ -78,9 +82,9 @@ namespace Validation.Validation
             return blendingRecipe;
         }
 
-        public BlendingRecipe VUpdateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService)
+        public BlendingRecipe VUpdateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
-            return VCreateObject(blendingRecipe, _blendingRecipeService, _itemService);
+            return VCreateObject(blendingRecipe, _blendingRecipeService, _itemService, _itemTypeService);
         }
 
         public BlendingRecipe VDeleteObject(BlendingRecipe blendingRecipe, IBlendingRecipeDetailService _blendingRecipeDetailService, IBlendingWorkOrderService _blendingWorkOrderService)
@@ -97,16 +101,16 @@ namespace Validation.Validation
             return blendingRecipe;
         }
 
-        public bool ValidCreateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService)
+        public bool ValidCreateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
-            VCreateObject(blendingRecipe, _blendingRecipeService, _itemService);
+            VCreateObject(blendingRecipe, _blendingRecipeService, _itemService, _itemTypeService);
             return isValid(blendingRecipe);
         }
 
-        public bool ValidUpdateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService)
+        public bool ValidUpdateObject(BlendingRecipe blendingRecipe, IBlendingRecipeService _blendingRecipeService, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             blendingRecipe.Errors.Clear();
-            VUpdateObject(blendingRecipe, _blendingRecipeService, _itemService);
+            VUpdateObject(blendingRecipe, _blendingRecipeService, _itemService, _itemTypeService);
             return isValid(blendingRecipe);
         }
 

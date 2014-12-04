@@ -641,17 +641,17 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public StockMutation CreateStockMutationForBlendingWorkOrderTarget(BlendingWorkOrder blendingWorkOrder, WarehouseItem warehouseItem)
+        public StockMutation CreateStockMutationForBlendingWorkOrderTarget(BlendingWorkOrder blendingWorkOrder, BlendingRecipe blendingRecipe, WarehouseItem warehouseItem)
         {
             StockMutation stockMutation = new StockMutation();
-            stockMutation.ItemId = blendingWorkOrder.BlendingRecipe.TargetItemId;
+            stockMutation.ItemId = blendingRecipe.TargetItemId;
             stockMutation.WarehouseId = blendingWorkOrder.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
-            stockMutation.Quantity = blendingWorkOrder.BlendingRecipe.TargetQuantity;
+            stockMutation.Quantity = blendingRecipe.TargetQuantity;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.BlendingWorkOrder;
             stockMutation.SourceDocumentId = blendingWorkOrder.Id;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlendingRecipe;
-            stockMutation.SourceDocumentDetailId = blendingWorkOrder.BlendingRecipe.Id;
+            stockMutation.SourceDocumentDetailId = blendingRecipe.Id;
             stockMutation.ItemCase = Constant.ItemCase.Ready;
             stockMutation.Status = Constant.MutationStatus.Addition;
             stockMutation.MutationDate = blendingWorkOrder.ConfirmationDate.GetValueOrDefault();

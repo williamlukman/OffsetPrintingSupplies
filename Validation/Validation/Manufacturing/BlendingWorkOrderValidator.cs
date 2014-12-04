@@ -43,10 +43,11 @@ namespace Validation.Validation
             return blendingWorkOrder;
         }
 
-        public BlendingWorkOrder VTargetQuantityIsInStock(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService)
+        public BlendingWorkOrder VTargetQuantityIsInStock(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IBlendingRecipeService _blendingRecipeService)
         {
-            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(blendingWorkOrder.WarehouseId, blendingWorkOrder.BlendingRecipe.TargetItemId);
-            if (warehouseItem.Quantity < blendingWorkOrder.BlendingRecipe.TargetQuantity)
+            BlendingRecipe blendingRecipe = _blendingRecipeService.GetObjectById(blendingWorkOrder.BlendingRecipeId);
+            WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(blendingWorkOrder.WarehouseId, blendingRecipe.TargetItemId);
+            if (warehouseItem.Quantity < blendingRecipe.TargetQuantity)
             {
                 blendingWorkOrder.Errors.Add("Generic", "Stock quantity untuk Target item tidak cukup");
             }
@@ -187,11 +188,11 @@ namespace Validation.Validation
             return blendingWorkOrder;
         }
 
-        public BlendingWorkOrder VUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IClosingService _closingService)
+        public BlendingWorkOrder VUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IBlendingRecipeService _blendingRecipeService, IClosingService _closingService)
         {
             VHasBeenConfirmed(blendingWorkOrder);
             if (!isValid(blendingWorkOrder)) { return blendingWorkOrder; }
-            VTargetQuantityIsInStock(blendingWorkOrder, _warehouseItemService);
+            VTargetQuantityIsInStock(blendingWorkOrder, _warehouseItemService, _blendingRecipeService);
             if (!isValid(blendingWorkOrder)) { return blendingWorkOrder; }
             VGeneralLedgerPostingHasNotBeenClosed(blendingWorkOrder, _closingService, 2);
             return blendingWorkOrder;
@@ -229,10 +230,10 @@ namespace Validation.Validation
             return isValid(blendingWorkOrder);
         }
 
-        public bool ValidUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IClosingService _closingService)
+        public bool ValidUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IBlendingRecipeService _blendingRecipeService, IClosingService _closingService)
         {
             blendingWorkOrder.Errors.Clear();
-            VUnconfirmObject(blendingWorkOrder, _warehouseItemService, _closingService);
+            VUnconfirmObject(blendingWorkOrder, _warehouseItemService, _blendingRecipeService, _closingService);
             return isValid(blendingWorkOrder);
         }
 

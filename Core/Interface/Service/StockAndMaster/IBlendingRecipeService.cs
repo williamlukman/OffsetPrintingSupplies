@@ -16,8 +16,8 @@ namespace Core.Interface.Service
         IList<BlendingRecipe> GetAll();
         IList<BlendingRecipe> GetObjectsByTargetItemId(int TargetItemId);
         BlendingRecipe GetObjectById(int Id);
-        BlendingRecipe CreateObject(BlendingRecipe blendingRecipe, IItemService _itemService);
-        BlendingRecipe UpdateObject(BlendingRecipe blendingRecipe, IItemService _itemService);
+        BlendingRecipe CreateObject(BlendingRecipe blendingRecipe, IItemService _itemService, IItemTypeService _itemTypeService);
+        BlendingRecipe UpdateObject(BlendingRecipe blendingRecipe, IItemService _itemService, IItemTypeService _itemTypeService);
         BlendingRecipe SoftDeleteObject(BlendingRecipe blendingRecipe, IBlendingRecipeDetailService _blendingRecipeDetailService, IBlendingWorkOrderService _blendingWorkOrderService);
         BlendingRecipe AdjustQuantity(BlendingRecipe blendingRecipe, int quantity);
         bool DeleteObject(int Id);

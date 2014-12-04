@@ -49,19 +49,19 @@ namespace Service.Service
             return _repository.GetObjectById(Id);
         }
 
-        public BlendingRecipe CreateObject(BlendingRecipe blendingRecipe, IItemService _itemService)
+        public BlendingRecipe CreateObject(BlendingRecipe blendingRecipe, IItemService _itemService, IItemTypeService _itemTypeService)
         {
             blendingRecipe.Errors = new Dictionary<String, String>();
-            if (_validator.ValidCreateObject(blendingRecipe, this, _itemService))
+            if (_validator.ValidCreateObject(blendingRecipe, this, _itemService, _itemTypeService))
             {
                 blendingRecipe = _repository.CreateObject(blendingRecipe);
             }
             return blendingRecipe;
         }
 
-        public BlendingRecipe UpdateObject(BlendingRecipe blendingRecipe, IItemService _itemService)
+        public BlendingRecipe UpdateObject(BlendingRecipe blendingRecipe, IItemService _itemService, IItemTypeService _itemTypeService)
         {
-            if (_validator.ValidUpdateObject(blendingRecipe, this, _itemService))
+            if (_validator.ValidUpdateObject(blendingRecipe, this, _itemService, _itemTypeService))
             {
                 _repository.UpdateObject(blendingRecipe);
             }

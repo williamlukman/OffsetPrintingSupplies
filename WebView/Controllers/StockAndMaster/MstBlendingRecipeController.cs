@@ -330,7 +330,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _blendingRecipeService.CreateObject(model, _itemService);
+                model = _blendingRecipeService.CreateObject(model, _itemService, _itemTypeService);
             }
             catch (Exception ex)
             {
@@ -373,7 +373,7 @@ namespace WebView.Controllers
                 data.Description = model.Description;
                 data.TargetItemId = model.TargetItemId;
                 data.TargetQuantity = model.TargetQuantity;
-                model = _blendingRecipeService.UpdateObject(data, _itemService);
+                model = _blendingRecipeService.UpdateObject(data, _itemService, _itemTypeService);
             }
             catch (Exception ex)
             {

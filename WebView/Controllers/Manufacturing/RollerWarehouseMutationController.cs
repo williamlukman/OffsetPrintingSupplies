@@ -411,7 +411,7 @@ namespace WebView.Controllers
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
                 model = _rollerWarehouseMutationService.ConfirmObject(data,model.ConfirmationDate.Value
                     ,_rollerWarehouseMutationDetailService,_itemService,_blanketService
-                    ,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService, _coreIdentificationDetailService,_coreIdentificationService
+                    ,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService, _recoveryOrderService,_coreIdentificationDetailService,_coreIdentificationService
                     ,_customerStockMutationService, _customerItemService);
             }
             catch (Exception ex)
@@ -435,7 +435,7 @@ namespace WebView.Controllers
                 var data = _rollerWarehouseMutationService.GetObjectById(model.Id);
                 model = _rollerWarehouseMutationService.UnconfirmObject(data,_rollerWarehouseMutationDetailService,
                     _itemService,_blanketService,_warehouseItemService,_stockMutationService,_recoveryOrderDetailService,
-                    _coreIdentificationDetailService,_coreIdentificationService,
+                    _recoveryOrderService,_coreIdentificationDetailService,_coreIdentificationService,
                     _customerStockMutationService, _customerItemService);
             }
             catch (Exception ex)

@@ -13,14 +13,14 @@ namespace Core.Interface.Validation
         BlendingWorkOrder VUpdateObject(BlendingWorkOrder blendingWorkOrder, IBlendingWorkOrderService _blendingWorkOrderService, IBlendingRecipeService _blendingRecipeService, IWarehouseService _warehouseService);
         BlendingWorkOrder VDeleteObject(BlendingWorkOrder blendingWorkOrder);
         BlendingWorkOrder VConfirmObject(BlendingWorkOrder blendingWorkOrder, IBlendingRecipeDetailService _blendingRecipeDetailService, IWarehouseItemService _warehouseItemService, IClosingService _closingService);
-        BlendingWorkOrder VUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IClosingService _closingService);
+        BlendingWorkOrder VUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IBlendingRecipeService _blendingRecipeService, IClosingService _closingService);
         BlendingWorkOrder VAdjustQuantity(BlendingWorkOrder blendingWorkOrder);
 
         bool ValidCreateObject(BlendingWorkOrder blendingWorkOrder, IBlendingWorkOrderService _blendingWorkOrderService, IBlendingRecipeService _blendingRecipeService, IWarehouseService _warehouseService);
         bool ValidUpdateObject(BlendingWorkOrder blendingWorkOrder, IBlendingWorkOrderService _blendingWorkOrderService, IBlendingRecipeService _blendingRecipeService, IWarehouseService _warehouseService);
         bool ValidDeleteObject(BlendingWorkOrder blendingWorkOrder);
         bool ValidConfirmObject(BlendingWorkOrder blendingWorkOrder, IBlendingRecipeDetailService _blendingRecipeDetailService, IWarehouseItemService _warehouseItemService, IClosingService _closingService);
-        bool ValidUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IClosingService _closingService);
+        bool ValidUnconfirmObject(BlendingWorkOrder blendingWorkOrder, IWarehouseItemService _warehouseItemService, IBlendingRecipeService _blendingRecipeService, IClosingService _closingService);
         bool ValidAdjustQuantity(BlendingWorkOrder blendingWorkOrder);
         bool isValid(BlendingWorkOrder blendingWorkOrder);
         string PrintError(BlendingWorkOrder blendingWorkOrder);

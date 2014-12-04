@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecBlendingWorkOrder.cs" />
     <Compile Include="SpecAccounting.cs" />
     <Compile Include="SpecTemporaryDeliveryOrder.cs" />
     <Compile Include="SalesBuilder.cs" />

@@ -565,7 +565,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
-                model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _deliveryOrderService, _salesOrderService, _salesOrderDetailService,
+                model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
                         _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
             }

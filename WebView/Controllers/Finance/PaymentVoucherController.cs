@@ -431,7 +431,7 @@ namespace WebView.Controllers
             {
              
                 model = _paymentVoucherService.CreateObject(model,_paymentVoucherDetailService,_payableService
-                    ,_contactService,_cashBankService);
+                    , _contactService, _cashBankService, _currencyService);
             }
             catch (Exception ex)
             {
