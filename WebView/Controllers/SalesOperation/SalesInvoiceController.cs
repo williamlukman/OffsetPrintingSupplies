@@ -32,6 +32,7 @@ namespace WebView.Controllers
         private IRollerBuilderService _rollerBuilderService;
         public ICurrencyService _currencyService;
         public IExchangeRateService _exchangeRateService;
+        private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
         public SalesInvoiceController()
         {
@@ -51,6 +52,7 @@ namespace WebView.Controllers
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         }
 
         public ActionResult Index()
@@ -430,7 +432,8 @@ namespace WebView.Controllers
             var data = _salesInvoiceService.GetObjectById(model.Id);
             model = _salesInvoiceService.ConfirmObject(data, model.ConfirmationDate.Value, _salesInvoiceDetailService, _salesOrderService,
                     _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _receivableService, _accountService,
-                    _generalLedgerJournalService, _closingService, _serviceCostService, _rollerBuilderService, _itemService,_exchangeRateService,_currencyService);
+                    _generalLedgerJournalService, _closingService, _serviceCostService, _rollerBuilderService, 
+                    _itemService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
             //}
             //catch (Exception ex)
             //{
@@ -453,7 +456,7 @@ namespace WebView.Controllers
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService, _deliveryOrderService,
                         _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _accountService,
-                        _generalLedgerJournalService, _closingService,_exchangeRateService,_currencyService);
+                        _generalLedgerJournalService, _closingService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {

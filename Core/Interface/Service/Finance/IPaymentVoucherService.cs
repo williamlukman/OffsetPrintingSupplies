@@ -24,16 +24,20 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         PaymentVoucher ConfirmObject(PaymentVoucher paymentVoucher, DateTime ConfirmationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                      ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
+                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+            IClosingService _closingService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
         PaymentVoucher UnconfirmObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                        ICashBankService _cashBankService, IPayableService _payableService, ICashMutationService _cashMutationService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
+                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+            IClosingService _closingService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
         PaymentVoucher ReconcileObject(PaymentVoucher paymentVoucher, DateTime ReconciliationDate, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                        ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
+                                       IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+            IClosingService _closingService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
         PaymentVoucher UnreconcileObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                          ICashMutationService _cashMutationService, ICashBankService _cashBankService, IPayableService _payableService,
-                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
+                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
+            IClosingService _closingService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
         PaymentVoucher CalculateTotalAmount(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService);
     }
 }

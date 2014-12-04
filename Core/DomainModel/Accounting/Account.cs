@@ -29,5 +29,6 @@ namespace Core.DomainModel
         public virtual ICollection<ValidComb> ValidCombs { get; set; }
         public virtual Account Parent { get; set; } 
         public virtual ICollection<GeneralLedgerJournal> GeneralLedgerJournals { get; set; }
+
     }
 }
