@@ -1008,12 +1008,12 @@ namespace Service.Service
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = UnconfirmationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = detail.Amount * detail.Receivable.Rate
+                    Amount = detail.Amount * receivable.Rate
                 };
                 debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
                 journals.Add(debitaccountreceivable);
 
-                if (detail.Receivable.Rate < (receiptVoucher.RateToIDR * detail.Rate))
+                if (receivable.Rate < (receiptVoucher.RateToIDR * detail.Rate))
                 {
                     GeneralLedgerJournal debitExchangeGain = new GeneralLedgerJournal()
                     {
@@ -1022,12 +1022,12 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = UnconfirmationDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (detail.Receivable.Rate * detail.Amount) 
+                        Amount = (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (receivable.Rate * detail.Amount) 
                     };
                     debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                     journals.Add(debitExchangeGain);
                 }
-                else if (detail.Receivable.Rate > (receiptVoucher.RateToIDR * detail.Rate))
+                else if (receivable.Rate > (receiptVoucher.RateToIDR * detail.Rate))
                 {
                     GeneralLedgerJournal creditExchangeLoss = new GeneralLedgerJournal()
                     {
@@ -1036,7 +1036,7 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = UnconfirmationDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount =  (detail.Receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount)
+                        Amount =  (receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount)
                     };
                     creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                     journals.Add(creditExchangeLoss);

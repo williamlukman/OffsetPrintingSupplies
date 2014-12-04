@@ -15,6 +15,7 @@ namespace Core.DomainModel
         public string PIC { get; set; }
         public string PICContactNo { get; set; }
         public string Email { get; set; }
+        public bool IsTaxable { get; set; }
         public string TaxCode { get; set; }
 
         public bool IsDeleted { get; set; }

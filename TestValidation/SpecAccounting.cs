@@ -97,7 +97,7 @@ namespace TestValidation
                                               - d.deliveryOrder1.TotalCOGS - d.deliveryOrder2.TotalCOGS - d.deliveryOrder3.TotalCOGS;
                     decimal GBCHReceivableAmount = 0;
                     decimal ReceivableAmount = (d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount)
-                                               -(d.salesInvoice1.AmountReceivable + d.salesInvoice2.AmountReceivable + d.salesInvoice3.AmountReceivable);
+                                               - (d.salesInvoice1.AmountReceivable + d.salesInvoice2.AmountReceivable + d.salesInvoice3.AmountReceivable);
                     decimal KontanAmount = d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount +
                                            d.cashBankAdjustment.Amount + d.cashBankAdjustment2.Amount - d.cashBankMutation.Amount;
                     decimal cashBank0Amount = d.cashBankAdjustment3.Amount;
@@ -145,7 +145,7 @@ namespace TestValidation
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(kontan.Id, d.thisMonthClosing.Id).Amount.should_be(KontanAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(bca.Id, d.thisMonthClosing.Id).Amount.should_be(bcaAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(CashBankAccount.Id, d.thisMonthClosing.Id).Amount.should_be(cashBankAmount);
-                    d._validCombService.FindOrCreateObjectByAccountAndClosing(AccountReceivableIDR.Id, d.thisMonthClosing.Id).Amount.should_be(ReceivableAmount);
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(AccountReceivableIDR.Id, d.thisMonthClosing.Id).Amount.should_be(0);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(Asset.Id, d.thisMonthClosing.Id).Amount.should_be(AssetAmount);
 
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(EquityAdjustment.Id, d.thisMonthClosing.Id).Amount.should_be(EquityAdjustmentAmount);
