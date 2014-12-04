@@ -20,6 +20,10 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(cbm => cbm.TargetCashBankId)
                 .WillCascadeOnDelete(false);
+            HasOptional(cbm => cbm.ExchangeRate)
+                .WithMany()
+                .HasForeignKey(cbm => cbm.ExchangeRateId)
+                .WillCascadeOnDelete(false);
             Ignore(cbm => cbm.Errors);
         }
     }
