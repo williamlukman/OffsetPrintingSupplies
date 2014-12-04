@@ -74,7 +74,7 @@ namespace Service.Service
         {
             salesInvoice.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService,
-                                              _salesOrderDetailService, _serviceCostService, _closingService))
+                                              _salesOrderDetailService, _serviceCostService, _closingService,_exchangeRateService))
             {
                 // confirm details
                 decimal TotalCOS = 0;

@@ -15,6 +15,10 @@ namespace Data.Mapping
             HasMany(c => c.ValidCombs)
                 .WithRequired(v => v.Closing)
                 .HasForeignKey(v => v.ClosingId);
+            HasMany(c => c.ExchangeRateClosings)
+              .WithRequired(v => v.Closing)
+              .HasForeignKey(v => v.ClosingId)
+              .WillCascadeOnDelete(true);
             Ignore(c => c.Errors);
         }
     }

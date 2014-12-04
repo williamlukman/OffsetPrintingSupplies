@@ -10,7 +10,6 @@ using Data.Repository;
 using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
-using System.Data.Objects;
 
 namespace WebView.Controllers
 {
@@ -22,13 +21,16 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IValidCombService _validCombService;
-
+        public ICurrencyService _currencyService ;
+        private IExchangeRateClosingService _exchangeRateClosingService;
         public ClosingController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _exchangeRateClosingService = new ExchangeRateClosingService(new ExchangeRateClosingRepository(), new ExchangeRateClosingValidator());
         }
 
         public ActionResult Index()
@@ -38,7 +40,7 @@ namespace WebView.Controllers
                 return Content("You are not allowed to View this Page.");
             }
 
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -61,6 +63,7 @@ namespace WebView.Controllers
                             model.BeginningPeriod,
                             model.EndDatePeriod,
                             model.IsClosed,
+                            model.IsYear,
                             model.ClosedAt
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -98,6 +101,7 @@ namespace WebView.Controllers
                             model.YearPeriod,
                             model.BeginningPeriod,
                             model.EndDatePeriod,
+                            model.IsYear,
                             model.IsClosed,
                             model.ClosedAt
                       }
@@ -165,8 +169,42 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetInfo(int Id)
+        {
+            Closing model = new Closing();
+            try
+            {
+               
+                model = _closingService.GetObjectById(Id);
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("GetInfo", ex);
+                model.Errors.Add("Generic", "Error : " + ex);
+            }
+
+            return Json(new
+            {
+                model.Id,
+                model.Period,
+                model.YearPeriod,
+                model.BeginningPeriod,
+                model.EndDatePeriod,
+                model.IsYear,
+                model.Errors, 
+                exchangeRateClosings = ( 
+                    from detail in model.ExchangeRateClosings
+                    select new
+                    {
+                        detail.CurrencyId,
+                        detail.Currency.Name,
+                        detail.Rate
+                    })
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
-        public dynamic Insert(Closing model)
+        public dynamic Insert(Closing model,IList<ExchangeRateClosing> exchangeRateClosing)
         {
             try
             {
@@ -181,7 +219,7 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                model = _closingService.CreateObject(model, _accountService, _validCombService);
+                model = _closingService.CreateObject(model,exchangeRateClosing, _accountService, _validCombService,_exchangeRateClosingService);
             }
             catch (Exception ex)
             {
@@ -293,10 +331,9 @@ namespace WebView.Controllers
 
                 if (!_closingService.DeleteObject(model.Id, _accountService, _validCombService))
                 {
-                    Errors.Add("Generic", "This period has been closed.");
                     return Json(new
                     {
-                        Errors
+                        model.Errors
                     }, JsonRequestBehavior.AllowGet);
                 };
             }

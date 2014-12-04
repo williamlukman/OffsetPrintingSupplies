@@ -72,7 +72,7 @@ namespace Service.Service
                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,IExchangeRateService _exchangeRateService)
         {
             purchaseInvoice.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService))
+            if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService,_exchangeRateService))
             {
                 // confirm details
                 // add all amount into amountpayable

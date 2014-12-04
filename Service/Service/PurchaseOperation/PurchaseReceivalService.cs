@@ -88,7 +88,7 @@ namespace Service.Service
                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,IExchangeRateService _exchangeRateService)
         {
             purchaseReceival.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService))
+            if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService,_exchangeRateService))
             {
                 decimal TotalCOGS = 0;
                 decimal TotalAmount = 0;

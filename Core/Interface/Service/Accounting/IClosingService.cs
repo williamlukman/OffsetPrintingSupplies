@@ -14,7 +14,7 @@ namespace Core.Interface.Service
         IList<Closing> GetAll();
         Closing GetObjectById(int Id);
         Closing GetObjectByPeriodAndYear(int Period, int YearPeriod);
-        Closing CreateObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService);
+        Closing CreateObject(Closing closing, IList<ExchangeRateClosing> exchangeRateClosing,IAccountService _accountService, IValidCombService _validCombService,IExchangeRateClosingService _exchangeRateClosingService);
         Closing CloseObject(Closing closing, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService);
         Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService);
         bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService);

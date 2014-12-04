@@ -14,6 +14,7 @@ namespace Core.DomainModel
         public int SourceDocumentId { get; set; }
         public int Status { get; set; }
         public DateTime TransactionDate { get; set; }
+        public decimal CurrencyAmount { get; set; }
         public decimal Amount { get; set; }
 
         public DateTime CreatedAt { get; set; }

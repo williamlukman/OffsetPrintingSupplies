@@ -26,13 +26,14 @@
     $("#list").jqGrid({
         url: base_url + 'Closing/GetList',
         datatype: "json",
-        colNames: ['ID', 'Period', 'Year', 'Beginning', 'End Date', 'Status', 'Closing'],
+        colNames: ['ID', 'Period', 'Year', 'Beginning', 'End Date','Is Year', 'Status', 'Closing'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
 				  { name: 'period', index: 'period', width: 60 },
 				  { name: 'year', index: 'yearperiod', width: 60 },
                   { name: 'beginning', index: 'beginningperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
                   { name: 'enddate', index: 'enddateperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
+				  { name: 'isyear', index: 'isyear', width: 60 },
                   { name: 'isclosed', index: 'isclosed', width: 80 },
                   { name: 'closing', index: 'closing', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } }
         ],
@@ -52,27 +53,21 @@
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsBank = $(this).getRowData(cl).isbank;
+		          rowIsBank = $(this).getRowData(cl).isyear;
 		          if (rowIsBank == 'true') {
 		              rowIsBank = "YES";
 		          } else {
 		              rowIsBank = "NO";
 		          }
-		          $(this).jqGrid('setRowData', ids[i], { isbank: rowIsBank });
-
+		          $(this).jqGrid('setRowData', ids[i], { isyear: rowIsBank });
+		          rowIsBank = $(this).getRowData(cl).isclosed;
+		          if (rowIsBank == 'true') {
+		              rowIsBank = "Close";
+		          } else {
+		              rowIsBank = "Open";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isclosed: rowIsBank });
 		      }
-		      //var ids = $(this).jqGrid('getDataIDs');
-		      //for (var i = 0; i < ids.length; i++) {
-		      //    var cl = ids[i];
-		      //    rowDel = $(this).getRowData(cl).deletedimg;
-		      //    if (rowDel == 'true') {
-		      //        img = "<img src ='" + base_url + "content/assets/images/remove.png' title='Data has been deleted !' width='16px' height='16px'>";
-
-		      //    } else {
-		      //        img = "";
-		      //    }
-		      //    $(this).jqGrid('setRowData', ids[i], { deletedimg: img });
-		      //}
 		  }
 
     });//END GRID
@@ -92,8 +87,117 @@
         ClearData();
         clearForm('#frm');
         vStatusSaving = 0; //add data mode	
+        $('#BaginningPeriodDiv').show();
+        $('#BaginningPeriodDiv2').hide();
+        $('#EndDatePeriodDiv').show();
+        $('#EndDatePeriodDiv2').hide();
+        $('#Period').removeAttr('disabled');
+        $('#YearPeriod').removeAttr('disabled');
+        $('#IsYear').removeAttr('disabled');
+        $('#form_btn_save').show();
+
+        $.ajax({
+            dataType: "json",
+            url: base_url + "Currency/GetListNonBase?",
+            success: function (result) {
+                if (result.query != null) {
+                    createContainerTable();
+                    var tbody = $('#list_containerSE');
+                    for (var i = 1; i <= result.query.length; i++) {
+                        var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
+                        $("<td>").addClass("tableCell").text(result.query[i-1].Id).appendTo(trow);
+                        $("<td>").addClass("tableCell").text(result.query[i - 1].Name).appendTo(trow);
+                        $("<td>").addClass("tableCell")
+                            .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>')
+                            .appendTo(trow);
+                        trow.appendTo(tbody);
+                        $('#list_containerSE tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>');
+                        $('#list_containerSE tr:last td:eq(2)').find('#TotalAmount').numberbox();
+                    }
+                }
+            }
+        });
         $('#form_div').dialog('open');
     });
+
+    $('#btn_view').click(function () {
+        ClearData();
+        clearForm("#frm");
+        $('#form_btn_save').hide();
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "Closing/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $('#Id').val(result.Id);
+                            $('#Period').val(result.Period);
+                            $('#YearPeriod').val(result.YearPeriod);
+                            $('#BeginningPeriod2').val(dateEnt(result.BeginningPeriod));
+                            $('#EndDatePeriod2').val(dateEnt(result.EndDatePeriod));
+                            $('#BaginningPeriodDiv').hide();
+                            $('#BaginningPeriodDiv2').show();
+                            $('#EndDatePeriodDiv').hide();
+                            $('#EndDatePeriodDiv2').show();
+                            var f = document.getElementById("IsYear");
+                            if (result.IsYear == true) {
+                                f.selectedIndex = 1;
+                            }
+                            else {
+                                f.selectedIndex = 0;
+                            }
+                            $('#Period').attr('disabled', true);
+                            $('#YearPeriod').attr('disabled', true);
+                            $('#IsYear').attr('disabled', true);
+                            $('#form_div').dialog('open');
+                            createContainerTable();
+                            var tbody = $('#list_containerSE');
+                            for (var i = 1; i <= result.exchangeRateClosings.length; i++) {
+                                var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
+                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].CurrencyId).appendTo(trow);
+                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].Name).appendTo(trow);
+                                $("<td>").addClass("tableCell")
+                                .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate+ ' disabled="disabled""/>')
+                                .appendTo(trow);
+                                $('#list_containerSE tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate + ' disabled="disabled""/>');
+                                $('#list_containerSE tr:last td:eq(2)').find('#TotalAmount').numberbox();
+                                trow.appendTo(tbody);
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    function createContainerTable() {
+        var tbody = $('#list_containerSE');
+        if (tbody == null || tbody.length < 1) return;
+        // Clear 
+        $("#list_containerSE tr.tableRow").each(function () {
+            $(this).remove();
+        });
+
+        var trow = $("<tr>").addClass("tableRow").addClass('ui-jqgrid-labels ui-widget-content');
+        $("<th>").addClass("tableCell").addClass("ui-state-default ui-th-column ui-th-ltr").text('Id').appendTo(trow);
+        $("<th>").addClass("tableCell").addClass("ui-state-default ui-th-column ui-th-ltr").text('Currency').appendTo(trow);
+        $("<th>").addClass("tableCell").addClass("ui-state-default ui-th-column ui-th-ltr").text('Rate To IDR').appendTo(trow);
+        trow.appendTo(tbody);
+    }
 
     $('#btn_close').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
@@ -142,7 +246,19 @@
 
         var submitURL = '';
         var id = $("#form_btn_save").data('kode');
-
+        var seaContainer = [];
+        var seaContainerIdx = 0;
+        $('#list_containerSE tr').each(function () {
+            if (seaContainerIdx > 0) {
+                obj = {};
+                obj['CurrencyId'] = $.trim($(this).find('td:eq(0)').text());
+                obj['Rate'] = $.trim($(this).find('#TotalAmount').numberbox('getValue'));
+                seaContainer.push(obj);
+            }
+            seaContainerIdx++;
+        });
+        var f = document.getElementById("IsYear");
+        var isyear = f.options[f.selectedIndex].value;
         submitURL = base_url + 'Closing/Insert';
 
         $.ajax({
@@ -151,8 +267,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Period: $("#Period").val(), YearPeriod: $("#YearPeriod").val(),
-                BeginningPeriod: $('#BeginningPeriod').datebox('getValue'),
-                EndDatePeriod: $('#EndDatePeriod').datebox('getValue')
+                BeginningPeriod: $('#BeginningPeriod').datebox('getValue'), IsYear: isyear,
+                EndDatePeriod: $('#EndDatePeriod').datebox('getValue'), exchangeRateClosing: seaContainer 
             }),
             async: false,
             cache: false,
