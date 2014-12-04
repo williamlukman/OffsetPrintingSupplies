@@ -718,7 +718,6 @@ namespace TestValidation
                 PaymentDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
                 DueDate = DateTime.Today.AddDays(14),
-                TotalAmount = pi1.AmountPayable + pi2.AmountPayable + pi3.AmountPayable,
                 RateToIDR = 1
             };
             _paymentVoucherService.CreateObject(pv, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService, _currencyService);
@@ -727,7 +726,6 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi1.Id).Id,
-                Amount = pi1.AmountPayable,
                 AmountPaid = pi1.AmountPayable,
                 Description = "Payment buat Purchase Invoice 1",
                 Rate = 1
@@ -738,7 +736,6 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi2.Id).Id,
-                Amount = pi2.AmountPayable,
                 AmountPaid = pi2.AmountPayable,
                 Description = "Payment buat Purchase Invoice 2",
                 Rate = 1,
@@ -749,7 +746,6 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi3.Id).Id,
-                Amount = pi3.AmountPayable,
                 AmountPaid = pi3.AmountPayable,
                 Description = "Payment buat Purchase Invoice 3",
                 Rate = 1

@@ -2526,7 +2526,6 @@ namespace TestValidation
                 PaymentDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
                 DueDate = DateTime.Today.AddDays(14),
-                TotalAmount = pi1.AmountPayable + pi2.AmountPayable + pi3.AmountPayable,
                 RateToIDR = 1
             };
             _paymentVoucherService.CreateObject(pv, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService, _currencyService);
@@ -2535,7 +2534,6 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi1.Id).Id,
-                Amount = pi1.AmountPayable,
                 AmountPaid = pi1.AmountPayable,
                 Description = "Payment buat Purchase Invoice 1",
                 Rate = 1
@@ -2546,7 +2544,6 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi2.Id).Id,
-                Amount = pi2.AmountPayable,
                 AmountPaid = pi2.AmountPayable,
                 Description = "Payment buat Purchase Invoice 2",
                 Rate = 1
@@ -2557,7 +2554,6 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi3.Id).Id,
-                Amount = pi3.AmountPayable,
                 AmountPaid = pi3.AmountPayable,
                 Description = "Payment buat Purchase Invoice 3",
                 Rate = 1
@@ -2844,7 +2840,6 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(6),
                 IsGBCH = false,
                 ReceiptDate = DateTime.Today,
-                TotalAmount = salesInvoice1.AmountReceivable,
                 RateToIDR = 1
             };
             _receiptVoucherService.CreateObject(receiptVoucher1, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
@@ -2856,7 +2851,6 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(6),
                 IsGBCH = false,
                 ReceiptDate = DateTime.Today,
-                TotalAmount = salesInvoice2.AmountReceivable,
                 RateToIDR = 1
             };
             _receiptVoucherService.CreateObject(receiptVoucher2, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
@@ -2868,7 +2862,6 @@ namespace TestValidation
                 DueDate = DateTime.Today.AddDays(6),
                 IsGBCH = false,
                 ReceiptDate = DateTime.Today,
-                TotalAmount = salesInvoice3.AmountReceivable,
                 RateToIDR = 1
             };
             _receiptVoucherService.CreateObject(receiptVoucher3, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
@@ -2876,7 +2869,6 @@ namespace TestValidation
             receiptVD1a = new ReceiptVoucherDetail()
             {
                 ReceiptVoucherId = receiptVoucher1.Id,
-                Amount = salesID1a.Amount + salesID1b.Amount,
                 AmountPaid = salesID1a.Amount + salesID1b.Amount,
                 ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice1.Id).Id,
                 Rate = 1
@@ -2886,7 +2878,6 @@ namespace TestValidation
             receiptVD2a = new ReceiptVoucherDetail()
             {
                 ReceiptVoucherId = receiptVoucher2.Id,
-                Amount = salesID2a.Amount + salesID2b.Amount,
                 AmountPaid = salesID2a.Amount + salesID2b.Amount,
                 ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice2.Id).Id,
                 Rate = 1
@@ -2896,7 +2887,6 @@ namespace TestValidation
             receiptVD3a = new ReceiptVoucherDetail()
             {
                 ReceiptVoucherId = receiptVoucher3.Id,
-                Amount = salesID3a.Amount + salesID3b.Amount,
                 AmountPaid = salesID3a.Amount + salesID3b.Amount,
                 ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice3.Id).Id,
                 Rate = 1

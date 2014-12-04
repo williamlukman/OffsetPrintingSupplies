@@ -145,7 +145,7 @@ namespace TestValidation
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(kontan.Id, d.thisMonthClosing.Id).Amount.should_be(KontanAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(bca.Id, d.thisMonthClosing.Id).Amount.should_be(bcaAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(CashBankAccount.Id, d.thisMonthClosing.Id).Amount.should_be(cashBankAmount);
-                    d._validCombService.FindOrCreateObjectByAccountAndClosing(AccountReceivableIDR.Id, d.thisMonthClosing.Id).Amount.should_be(0);
+                    d._validCombService.FindOrCreateObjectByAccountAndClosing(AccountReceivableIDR.Id, d.thisMonthClosing.Id).Amount.should_be(ReceivableAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(Asset.Id, d.thisMonthClosing.Id).Amount.should_be(AssetAmount);
 
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(EquityAdjustment.Id, d.thisMonthClosing.Id).Amount.should_be(EquityAdjustmentAmount);
