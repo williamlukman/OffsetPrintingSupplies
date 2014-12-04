@@ -34,7 +34,7 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private ICurrencyService _currencyService;
-
+        private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
         public PaymentVoucherController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
@@ -54,6 +54,7 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         }
 
 
@@ -575,7 +576,7 @@ namespace WebView.Controllers
                 var data = _paymentVoucherService.GetObjectById(model.Id);
                 model = _paymentVoucherService.ConfirmObject(data,model.ConfirmationDate.Value,
                     _paymentVoucherDetailService,_cashBankService,_payableService,_cashMutationService,
-                    _accountService,_generalLedgerJournalService, _closingService,_currencyService);
+                    _accountService,_generalLedgerJournalService, _closingService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -597,7 +598,8 @@ namespace WebView.Controllers
 
                 var data = _paymentVoucherService.GetObjectById(model.Id);
                 model = _paymentVoucherService.UnconfirmObject(data,_paymentVoucherDetailService,_cashBankService,
-                    _payableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                    _payableService,_cashMutationService,_accountService, _generalLedgerJournalService, _closingService,_currencyService,
+                    _gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -618,7 +620,7 @@ namespace WebView.Controllers
             {
                 var data = _paymentVoucherService.GetObjectById(model.Id);
                 model = _paymentVoucherService.ReconcileObject(data,model.ReconciliationDate.Value,_paymentVoucherDetailService,
-                    _cashMutationService,_cashBankService,_payableService,_accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                    _cashMutationService,_cashBankService,_payableService,_accountService, _generalLedgerJournalService, _closingService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -639,7 +641,7 @@ namespace WebView.Controllers
             {
                 var data = _paymentVoucherService.GetObjectById(model.Id);
                 model = _paymentVoucherService.UnreconcileObject(data,_paymentVoucherDetailService,_cashMutationService,
-                    _cashBankService,_payableService, _accountService, _generalLedgerJournalService, _closingService,_currencyService
+                    _cashBankService,_payableService, _accountService, _generalLedgerJournalService, _closingService,_currencyService,_gLNonBaseCurrencyService
                     );
             }
             catch (Exception ex)

@@ -46,14 +46,14 @@ namespace Service.Service
             return _repository.GetObjectByPeriodAndYear(Period, YearPeriod);
         }
 
-        public Closing CreateObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService)
+        public Closing CreateObject(Closing closing, IList<ExchangeRateClosing> exchangeRateClosing ,IAccountService _accountService, IValidCombService _validCombService,IExchangeRateClosingService _exchangeRateClosingService)
         {
             closing.Errors = new Dictionary<String, String>();
             // Create all ValidComb
 
             if (_validator.ValidCreateObject(closing, this))
             {
-                _repository.CreateObject(closing);
+                closing = _repository.CreateObject(closing);
                 IList<Account> allAccounts = _accountService.GetQueryable().Where(x => !x.IsDeleted).OrderBy(x => x.Code).ToList();
                 foreach (var account in allAccounts)
                 {
@@ -64,6 +64,16 @@ namespace Service.Service
                         Amount = 0
                     };
                     _validCombService.CreateObject(validComb, _accountService, this);
+                }
+                foreach (var eRClosing in exchangeRateClosing)
+                {
+                    ExchangeRateClosing er = new ExchangeRateClosing()
+                    {
+                        ClosingId = closing.Id,
+                        Rate = eRClosing.Rate,
+                        CurrencyId = eRClosing.CurrencyId,
+                    };
+                    _exchangeRateClosingService.CreateObject(er);
                 }
             }
             return closing;

@@ -29,6 +29,7 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IExchangeRateService _exchangeRateService;
+        private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
         public PaymentRequestController()
         {
@@ -45,6 +46,7 @@ namespace WebView.Controllers
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         }
 
         public ActionResult Index()
@@ -465,7 +467,8 @@ namespace WebView.Controllers
 
                 var data = _paymentRequestService.GetObjectById(model.Id);
                 model = _paymentRequestService.ConfirmObject(data, model.ConfirmationDate.Value, _payableService, _paymentRequestDetailService,
-                                                             _accountService, _generalLedgerJournalService, _closingService,_exchangeRateService);
+                                                             _accountService, _generalLedgerJournalService, _closingService,_exchangeRateService
+                                                             ,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -502,7 +505,8 @@ namespace WebView.Controllers
                 }
 
                 var data = _paymentRequestService.GetObjectById(model.Id);
-                model = _paymentRequestService.UnconfirmObject(data, _paymentRequestDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService);
+                model = _paymentRequestService.UnconfirmObject(data, _paymentRequestDetailService, _payableService, _accountService, 
+                    _generalLedgerJournalService, _closingService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {

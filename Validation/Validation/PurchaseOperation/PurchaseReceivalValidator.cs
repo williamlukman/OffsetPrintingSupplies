@@ -117,6 +117,16 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
+        public PurchaseReceival VHasExchangeRateList(PurchaseReceival purchaseReceival, IExchangeRateService _exchangeRateService)
+        {
+            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, purchaseReceival.PurchaseOrder.CurrencyId);
+            if (exchangeRate == null)
+            {
+                purchaseReceival.Errors.Add("Generic", "Tidak ada list Exchange Rate untuk " + purchaseReceival.PurchaseOrder.Currency.Name);
+            }
+            return purchaseReceival;
+        }
+
         public PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService)
         {
             VHasUniqueNomorSurat(purchaseReceival, _purchaseReceivalService);
@@ -147,13 +157,15 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public PurchaseReceival VConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        public PurchaseReceival VConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,IExchangeRateService _exchangeRateService)
         {
             VHasConfirmationDate(purchaseReceival);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasNotBeenConfirmed(purchaseReceival);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasPurchaseReceivalDetails(purchaseReceival, _purchaseReceivalDetailService);
+            if (!isValid(purchaseReceival)) { return purchaseReceival; }
+            VHasExchangeRateList(purchaseReceival, _exchangeRateService);
             return purchaseReceival;
         }
 
@@ -185,10 +197,10 @@ namespace Validation.Validation
             return isValid(purchaseReceival);
         }
 
-        public bool ValidConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
+        public bool ValidConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,IExchangeRateService _exchangeRateService)
         {
             purchaseReceival.Errors.Clear();
-            VConfirmObject(purchaseReceival, _purchaseReceivalDetailService);
+            VConfirmObject(purchaseReceival, _purchaseReceivalDetailService,_exchangeRateService);
             return isValid(purchaseReceival);
         }
 
