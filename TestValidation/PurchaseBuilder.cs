@@ -677,7 +677,7 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
         }
 
         public void PopulateOrderAndReceivalData()
@@ -950,6 +950,7 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi1.Id).Id,
+                Amount = pi1.AmountPayable,
                 AmountPaid = pi1.AmountPayable,
                 Description = "Payment buat Purchase Invoice 1",
                 Rate = 1
@@ -960,6 +961,7 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi2.Id).Id,
+                Amount = pi2.AmountPayable,
                 AmountPaid = pi2.AmountPayable,
                 Description = "Payment buat Purchase Invoice 2",
                 Rate = 1,
@@ -970,6 +972,7 @@ namespace TestValidation
             {
                 PaymentVoucherId = pv.Id,
                 PayableId = _payableService.GetObjectBySource(Core.Constants.Constant.PayableSource.PurchaseInvoice, pi3.Id).Id,
+                Amount = pi3.AmountPayable,
                 AmountPaid = pi3.AmountPayable,
                 Description = "Payment buat Purchase Invoice 3",
                 Rate = 1

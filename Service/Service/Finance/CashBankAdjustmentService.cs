@@ -78,12 +78,21 @@ namespace Service.Service
 
         public CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService
-                                              , ICurrencyService _currencyService)
+                                              , ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             cashBankAdjustment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(cashBankAdjustment, _cashBankService, _closingService))
             {
                 CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
+                if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
+                {
+                    cashBankAdjustment.ExchangeRateId = _exchangeRateService.GetLatestRate(cashBankAdjustment.ConfirmationDate.Value, cashBank.CurrencyId).Id;
+                    cashBankAdjustment.ExchangeRateAmount = _exchangeRateService.GetObjectById(cashBankAdjustment.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    cashBankAdjustment.ExchangeRateAmount = 1;
+                }
                 CashMutation cashMutation = _cashMutationService.CreateCashMutationForCashBankAdjustment(cashBankAdjustment, cashBank);
                 // cashBank.Amount += cashBankAdjustment.Amount;
                 _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);

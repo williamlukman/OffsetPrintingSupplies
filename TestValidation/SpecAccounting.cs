@@ -93,7 +93,9 @@ namespace TestValidation
                     decimal InventoryAmount = (d.sad1.Price * d.sad1.Quantity) + (d.sad2.Price * d.sad2.Quantity) +
                                               (d.sad3.Price * d.sad3.Quantity) + (d.sad4.Price * d.sad4.Quantity) +
                                               (d.sad5.Price * d.sad5.Quantity) + (d.sadAdhesiveBlanket.Price * d.sadAdhesiveBlanket.Quantity) +
-                                              (d.sadAdhesiveRoller.Price * d.sadAdhesiveRoller.Quantity)
+                                              (d.sadAdhesiveRoller.Price * d.sadAdhesiveRoller.Quantity) +
+                                              (d.sadBlendingItem1.Price * d.sadBlendingItem1.Quantity) + (d.sadBlendingItem2.Price * d.sadBlendingItem2.Quantity) +
+                                              (d.sadBlendingItem3.Price * d.sadBlendingItem3.Quantity) + (d.sadBlendingItem4.Price * d.sadBlendingItem4.Quantity) +
                                               - d.deliveryOrder1.TotalCOGS - d.deliveryOrder2.TotalCOGS - d.deliveryOrder3.TotalCOGS;
                     decimal GBCHReceivableAmount = 0;
                     decimal ReceivableAmount = (d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount)
@@ -134,7 +136,9 @@ namespace TestValidation
                                                      (d.sad5.Price * d.sad5.Quantity) + d.cashBankAdjustment.Amount +
                                                      (d.sadAdhesiveBlanket.Price * d.sadAdhesiveBlanket.Quantity) +
                                                      (d.sadAdhesiveRoller.Price * d.sadAdhesiveRoller.Quantity) +
-                                                     d.cashBankAdjustment3.Amount;
+                                                     (d.sadBlendingItem1.Price * d.sadBlendingItem1.Quantity) + (d.sadBlendingItem2.Price * d.sadBlendingItem2.Quantity) +
+                                                     (d.sadBlendingItem3.Price * d.sadBlendingItem3.Quantity) + (d.sadBlendingItem4.Price * d.sadBlendingItem4.Quantity) +
+                                                     d.cashBankAdjustment2.Amount + d.cashBankAdjustment3.Amount;
 
                     OwnersEquity = d._accountService.GetObjectByLegacyCode(Core.Constants.Constant.AccountLegacyCode.OwnersEquity);
                     decimal OwnersEquityAmount = EquityAdjustmentAmount;
@@ -149,7 +153,6 @@ namespace TestValidation
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(Asset.Id, d.thisMonthClosing.Id).Amount.should_be(AssetAmount);
 
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(EquityAdjustment.Id, d.thisMonthClosing.Id).Amount.should_be(EquityAdjustmentAmount);
-                    d._validCombService.FindOrCreateObjectByAccountAndClosing(OwnersEquity.Id, d.thisMonthClosing.Id).Amount.should_be(OwnersEquityAmount);
                     d._validCombService.FindOrCreateObjectByAccountAndClosing(Equity.Id, d.thisMonthClosing.Id).Amount.should_be(EquityAmount);
                 };
             };

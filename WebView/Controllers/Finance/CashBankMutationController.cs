@@ -24,6 +24,7 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private ICurrencyService _currencyService;
+        private IExchangeRateService _exchangeRateService;
 
         public CashBankMutationController()
         {
@@ -35,6 +36,7 @@ namespace WebView.Controllers
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
         public ActionResult Index()
@@ -204,7 +206,7 @@ namespace WebView.Controllers
                 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService,
-                                                               _accountService,_generalLedgerJournalService, _closingService,_currencyService);
+                                                               _accountService,_generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
             }
             catch (Exception ex)
             {

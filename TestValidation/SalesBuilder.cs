@@ -105,7 +105,8 @@ namespace TestValidation
         public ReceiptVoucher rv;
         public ReceiptVoucherDetail rvd1, rvd2, rvd3;
         // currency
-        public Currency currencyIDR, currency2;
+        public Currency currencyEUR, currencyUSD, currencyIDR;
+        public ExchangeRate DayMinusTwoRateEUR, DayMinusOneRateEUR, DayRateEUR, DayMinusTwoRateUSD, DayMinusOneRateUSD, DayRateUSD;
 
         public SalesBuilder()
         {
@@ -591,14 +592,71 @@ namespace TestValidation
             };
             contact = _contactService.CreateObject(contact);
 
-            currency2 = new Currency()
+            currencyEUR = new Currency()
+            {
+                Name = "EURO",
+                IsBase = false,
+                IsDeleted = false,
+                CreatedAt = DateTime.Now,
+            };
+            currencyEUR = _currencyService.CreateObject(currencyEUR, _accountService);
+
+            currencyUSD = new Currency()
             {
                 Name = "USD",
                 IsBase = false,
                 IsDeleted = false,
                 CreatedAt = DateTime.Now
             };
-            currency2 = _currencyService.CreateObject(currency2, _accountService);
+            currencyUSD = _currencyService.CreateObject(currencyUSD, _accountService);
+
+            DayMinusTwoRateEUR = new ExchangeRate()
+            {
+                CurrencyId = currencyEUR.Id,
+                ExRateDate = DateTime.Today.AddDays(-2),
+                Rate = 15100
+            };
+            DayMinusTwoRateEUR = _exchangeRateService.CreateObject(DayMinusTwoRateEUR);
+
+            DayMinusOneRateEUR = new ExchangeRate()
+            {
+                CurrencyId = currencyEUR.Id,
+                ExRateDate = DateTime.Today.AddDays(-2),
+                Rate = 15050
+            };
+            DayMinusOneRateEUR = _exchangeRateService.CreateObject(DayMinusOneRateEUR);
+
+            DayRateEUR = new ExchangeRate()
+            {
+                CurrencyId = currencyEUR.Id,
+                ExRateDate = DateTime.Today.AddDays(-2),
+                Rate = 15000
+            };
+            DayRateEUR = _exchangeRateService.CreateObject(DayRateEUR);
+
+            DayMinusTwoRateUSD = new ExchangeRate()
+            {
+                CurrencyId = currencyUSD.Id,
+                ExRateDate = DateTime.Today.AddDays(-2),
+                Rate = 12100
+            };
+            DayMinusTwoRateUSD = _exchangeRateService.CreateObject(DayMinusTwoRateUSD);
+
+            DayMinusOneRateUSD = new ExchangeRate()
+            {
+                CurrencyId = currencyUSD.Id,
+                ExRateDate = DateTime.Today.AddDays(-2),
+                Rate = 12150
+            };
+            DayMinusOneRateUSD = _exchangeRateService.CreateObject(DayMinusOneRateUSD);
+
+            DayRateUSD = new ExchangeRate()
+            {
+                CurrencyId = currencyUSD.Id,
+                ExRateDate = DateTime.Today.AddDays(-2),
+                Rate = 12200
+            };
+            DayRateUSD = _exchangeRateService.CreateObject(DayRateUSD);
 
             cashBank = new CashBank()
             {
@@ -617,7 +675,7 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
         }
 
         public void PopulateOrderAndReceivalData()

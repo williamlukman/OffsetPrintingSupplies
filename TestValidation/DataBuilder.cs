@@ -1116,7 +1116,7 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment3, _cashBankService);
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment3, DateTime.Now, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService, _currencyService);
+                                                     _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
         }
 
         public void PopulateBuilders()
@@ -2331,7 +2331,7 @@ namespace TestValidation
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
 
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Today, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
 
             cashBankAdjustment2 = new CashBankAdjustment()
             {
@@ -2342,7 +2342,7 @@ namespace TestValidation
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
 
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Today, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
 
             cashBankMutation = new CashBankMutation()
             {
@@ -2354,7 +2354,7 @@ namespace TestValidation
             _cashBankMutationService.CreateObject(cashBankMutation, _cashBankService);
 
             _cashBankMutationService.ConfirmObject(cashBankMutation, DateTime.Today, _cashMutationService, _cashBankService,
-                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
 
         }
 
@@ -2627,7 +2627,6 @@ namespace TestValidation
                 ReceiptDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
                 DueDate = DateTime.Today.AddDays(14),
-                TotalAmount = si1.AmountReceivable + si2.AmountReceivable + si3.AmountReceivable,
                 RateToIDR = 1,                
             };
             _receiptVoucherService.CreateObject(rv, _receiptVoucherDetailService, _receivableService, _contactService, _cashBankService);
@@ -3281,6 +3280,7 @@ namespace TestValidation
             receiptVD1a = new ReceiptVoucherDetail()
             {
                 ReceiptVoucherId = receiptVoucher1.Id,
+                Amount = salesID1a.Amount + salesID1b.Amount,
                 AmountPaid = salesID1a.Amount + salesID1b.Amount,
                 ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice1.Id).Id,
                 Rate = 1
@@ -3290,6 +3290,7 @@ namespace TestValidation
             receiptVD2a = new ReceiptVoucherDetail()
             {
                 ReceiptVoucherId = receiptVoucher2.Id,
+                Amount = salesID2a.Amount + salesID2b.Amount,
                 AmountPaid = salesID2a.Amount + salesID2b.Amount,
                 ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice2.Id).Id,
                 Rate = 1
@@ -3299,6 +3300,7 @@ namespace TestValidation
             receiptVD3a = new ReceiptVoucherDetail()
             {
                 ReceiptVoucherId = receiptVoucher3.Id,
+                Amount = salesID3a.Amount + salesID3b.Amount,
                 AmountPaid = salesID3a.Amount + salesID3b.Amount,
                 ReceivableId = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice3.Id).Id,
                 Rate = 1
