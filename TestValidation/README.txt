@@ -5,3 +5,5 @@ Steps:
 2. Type 'Install-Package Nspec'
 3. Once Nspec is installed, you can build all the projects
 4. Type 'NSpecRunner.exe .\TestValidation\bin\Debug\TestValidation.dll
+
+Update 5/12/2014
