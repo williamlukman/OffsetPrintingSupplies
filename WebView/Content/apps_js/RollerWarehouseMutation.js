@@ -163,7 +163,7 @@
                             $('#WarehouseFrom').val(result.WarehouseFrom);
                             $('#WarehouseToId').val(result.WarehouseToId);
                             $('#WarehouseTo').val(result.WarehouseTo);
-                            $('#Quantity').val(result.Quantity);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
                             $('#form_btn_save').hide();
                             $('#btnRecoveryWorkOrder').attr('disabled', true);
                             $('#btnWarehouseFrom').attr('disabled', true);
@@ -217,7 +217,7 @@
                             $('#WarehouseFrom').val(result.WarehouseFrom);
                             $('#WarehouseToId').val(result.WarehouseToId);
                             $('#WarehouseTo').val(result.WarehouseTo);
-                            $('#Quantity').val(result.Quantity);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
                             $('#MutationDate').datebox('setValue', dateEnt(result.MutationDate));
                             $('#MutationDate2').val(dateEnt(result.MutationDate));
                             $('#MutationDateDiv2').hide();

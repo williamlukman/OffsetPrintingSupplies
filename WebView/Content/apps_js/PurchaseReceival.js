@@ -495,8 +495,8 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
+                            $('#Price').numberbox('setValue',result.Price);
                             $('#PurchaseOrderDetailId').val(result.PurchaseOrderDetailId);
                             $('#item_div').dialog('open');
                         }
@@ -725,7 +725,7 @@
             $('#PurchaseOrderDetailId').val(id);
             $('#ItemId').val(ret.itemid);
             $('#Item').val(ret.itemname);
-            $('#Price').val(ret.price);
+            $('#Price').numberbox('setValue',ret.price);
             $('#lookup_div_item').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

@@ -68,6 +68,7 @@ namespace Data.Repository
         public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail)
         {
             purchaseOrderDetail.UpdatedAt = DateTime.Now;
+            purchaseOrderDetail.PendingReceivalQuantity = purchaseOrderDetail.Quantity;
             Update(purchaseOrderDetail);
             return purchaseOrderDetail;
         }

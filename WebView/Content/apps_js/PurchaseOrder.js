@@ -487,8 +487,8 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
+                            $('#Price').numberbox('setValue',result.Price);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -560,7 +560,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, PurchaseOrderId: $("#id").val(), ItemId: $("#ItemId").val(),Quantity: $("#Quantity").numberbox('getValue'),
+                Id: id, PurchaseOrderId: $("#id").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'),
                 Price: $("#Price").numberbox('getValue')
             }),
             async: false,

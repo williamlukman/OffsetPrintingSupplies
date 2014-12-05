@@ -88,7 +88,8 @@ namespace Data.Repository
         public PurchaseOrder UnconfirmObject(PurchaseOrder purchaseOrder)
         {
             purchaseOrder.IsConfirmed = false;
-            UpdateObject(purchaseOrder);
+            purchaseOrder.ConfirmationDate = null;
+            Update(purchaseOrder);
             return purchaseOrder;
         }
 

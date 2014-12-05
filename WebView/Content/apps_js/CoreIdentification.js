@@ -162,7 +162,7 @@
                             $('#Warehouse').val(result.Warehouse);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#Quantity').val(result.Quantity);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
                             var e = document.getElementById("IsInHouse");
                             if (result.IsInHouse == 1) {
                                 e.selectedIndex = 0;
@@ -221,7 +221,7 @@
                             $('#Warehouse').val(result.Warehouse);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#Quantity').val(result.Quantity);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
                             var e = document.getElementById("IsInHouse");
                             if (result.IsInHouse == 1) {
                                 e.selectedIndex = 0;
