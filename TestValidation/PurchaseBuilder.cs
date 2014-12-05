@@ -82,6 +82,7 @@ namespace TestValidation
         public IWarehouseService _warehouseService;
         public IWarehouseMutationService _warehouseMutationService;
         public IWarehouseMutationDetailService _warehouseMutationDetailService;
+        public IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
         public ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
@@ -179,6 +180,8 @@ namespace TestValidation
 
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
+
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
             typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);
@@ -929,11 +932,11 @@ namespace TestValidation
         public void PopulateVoucher()
         {
             _purchaseInvoiceService.ConfirmObject(pi1, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
-                                                  _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                  _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
             _purchaseInvoiceService.ConfirmObject(pi2, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
-                                                  _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                  _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
             _purchaseInvoiceService.ConfirmObject(pi3, DateTime.Today, _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService,
-                                                  _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                  _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
 
             pv = new PaymentVoucher()
             {
@@ -980,10 +983,10 @@ namespace TestValidation
             _paymentVoucherDetailService.CreateObject(pvd3, _paymentVoucherService, _cashBankService, _payableService);
 
             _paymentVoucherService.ConfirmObject(pv, DateTime.Today, _paymentVoucherDetailService, _cashBankService, _payableService, _cashMutationService,
-                                                 _accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                                                 _accountService, _generalLedgerJournalService, _closingService,_currencyService, _gLNonBaseCurrencyService);
 
             _paymentVoucherService.ReconcileObject(pv, DateTime.Today.AddDays(10), _paymentVoucherDetailService, _cashMutationService, _cashBankService, _payableService,
-                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService);
+                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService, _gLNonBaseCurrencyService);
         }
     }
 }
