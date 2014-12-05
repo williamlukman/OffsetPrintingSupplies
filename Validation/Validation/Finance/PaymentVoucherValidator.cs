@@ -144,7 +144,7 @@ namespace Validation.Validation
             {
                 detailsamount += detail.Amount;
             }
-            if (detailsamount != paymentVoucher.TotalAmount)
+            if (Math.Round(detailsamount, 2) != Math.Round(paymentVoucher.TotalAmount, 2))
             {
                 paymentVoucher.Errors.Add("Generic", "Jumlah amount di details harus sama dengan totalamount");  
             }
