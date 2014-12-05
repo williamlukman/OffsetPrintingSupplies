@@ -79,7 +79,8 @@ namespace Service.Service
 
         public PaymentRequest ConfirmObject(PaymentRequest paymentRequest, DateTime ConfirmationDate, IPayableService _payableService,
                                             IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,
-                                            IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,IExchangeRateService _exchangeRateService)
+                                            IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+            IExchangeRateService _exchangeRateService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             paymentRequest.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
@@ -109,20 +110,21 @@ namespace Service.Service
                     DueDate = paymentRequest.DueDate
                 };
                 _payableService.CreateObject(payable);
-                _generalLedgerJournalService.CreateConfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
+                _generalLedgerJournalService.CreateConfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService,_gLNonBaseCurrencyService);
             }
             return paymentRequest;
         }
 
         public PaymentRequest UnconfirmObject(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IPayableService _payableService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService
+            , IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
             {
                 _repository.UnconfirmObject(paymentRequest);
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
                 _payableService.DeleteObject(payable.Id);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService,_gLNonBaseCurrencyService);
             }
             return paymentRequest;
         }

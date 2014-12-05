@@ -30,14 +30,14 @@ namespace Core.Interface.Validation
         PurchaseInvoice VDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         PurchaseInvoice VHasConfirmationDate(PurchaseInvoice purchaseInvoice);
         PurchaseInvoice VConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                       IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IClosingService _closingService);
+                                       IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IClosingService _closingService, IExchangeRateService _exchangeRateService);
         PurchaseInvoice VUnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                          IPayableService _payableService, IClosingService _closingService);
         bool ValidCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService);
         bool ValidUpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         bool ValidDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         bool ValidConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
-                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IClosingService _closingService);
+                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IClosingService _closingService,IExchangeRateService _exchangeRateService);
         bool ValidUnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPaymentVoucherDetailService _paymentVoucherDetailService,
                                   IPayableService _payableService, IClosingService _closingService);
         bool isValid(PurchaseInvoice purchaseInvoice);

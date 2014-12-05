@@ -23,12 +23,12 @@ namespace Core.Interface.Validation
         PurchaseReceival VCreateObject(PurchaseReceival purchaseReceival, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService);
         PurchaseReceival VUpdateObject(PurchaseReceival purchaseReceival, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService);
         PurchaseReceival VDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        PurchaseReceival VConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        PurchaseReceival VConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IExchangeRateService _exchangeRateService);
         PurchaseReceival VUnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseInvoiceService _purchaseInvoiceService);
         bool ValidCreateObject(PurchaseReceival purchaseReceival, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService);
         bool ValidUpdateObject(PurchaseReceival purchaseReceival, IPurchaseReceivalService _purchaseReceivalService, IPurchaseOrderService _purchaseOrderService, IWarehouseService _warehouseService);
         bool ValidDeleteObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
-        bool ValidConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
+        bool ValidConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IExchangeRateService _exchangeRateService);
         bool ValidUnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseInvoiceService _purchaseInvoiceService);
         bool isValid(PurchaseReceival purchaseReceival);
         string PrintError(PurchaseReceival purchaseReceival);

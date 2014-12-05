@@ -30,6 +30,16 @@ namespace Validation.Validation
             }
             return salesInvoice;
         }
+         
+        public SalesInvoice VHasExchangeRateList(SalesInvoice salesInvoice, IExchangeRateService _exchangeRateService)
+        {
+            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value,salesInvoice.CurrencyId);
+            if (exchangeRate == null)
+            {
+                salesInvoice.Errors.Add("Generic", "Tidak ada list Exchange Rate untuk " + salesInvoice.Currency.Name);
+            }
+            return salesInvoice;
+        }
 
         public SalesInvoice VHasNoSalesInvoiceDetails(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService)
         {
@@ -249,7 +259,7 @@ namespace Validation.Validation
         public SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                            IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                            ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
-                                           IClosingService _closingService)
+                                           IClosingService _closingService,IExchangeRateService _exchangeRateService)
         {
             VHasConfirmationDate(salesInvoice);
             if (!isValid(salesInvoice)) { return salesInvoice; }
@@ -265,6 +275,8 @@ namespace Validation.Validation
                                                   _salesOrderDetailService, _serviceCostService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService, 1);
+            if (!isValid(salesInvoice)) { return salesInvoice; }
+            VHasExchangeRateList(salesInvoice, _exchangeRateService);
             return salesInvoice;
         }
 
@@ -307,11 +319,11 @@ namespace Validation.Validation
         public bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                        IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                        ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
-                                       IClosingService _closingService)
+                                       IClosingService _closingService, IExchangeRateService _exchangeRateService)
         {
             salesInvoice.Errors.Clear();
             VConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService,
-                           _salesOrderDetailService, _serviceCostService, _closingService);
+                           _salesOrderDetailService, _serviceCostService, _closingService,_exchangeRateService);
             return isValid(salesInvoice);
         }
 

@@ -22,5 +22,6 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
 
         public virtual Account Account { get; set; }
+
     }
 }

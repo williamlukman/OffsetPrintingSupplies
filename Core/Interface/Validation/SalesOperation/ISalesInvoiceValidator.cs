@@ -33,7 +33,7 @@ namespace Core.Interface.Validation
         SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                     IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                     ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
-                                    IClosingService _closingService);
+                                    IClosingService _closingService,IExchangeRateService _exchangeRateService);
         SalesInvoice VUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                       IReceivableService _receivableService, IClosingService _closingService);
         bool ValidCreateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService);
@@ -41,7 +41,7 @@ namespace Core.Interface.Validation
         bool ValidDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
         bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                 IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, IClosingService _closingService);
+                                ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, IClosingService _closingService, IExchangeRateService _exchangeRateService);
         bool ValidUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                   IReceivableService _receivableService, IClosingService _closingService);
         bool isValid(SalesInvoice salesInvoice);

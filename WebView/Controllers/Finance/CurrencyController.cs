@@ -50,6 +50,26 @@ namespace WebView.Controllers
         {
             return View();
         }
+
+        public dynamic GetListNonBase()
+        {
+
+            // Get Data
+            var q = _currencyService.GetQueryable().Where(x => !x.IsDeleted && x.IsBase == false);
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                         });
+
+            return Json(new
+            {
+              query
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement

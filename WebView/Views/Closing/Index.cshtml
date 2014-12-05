@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebView.Controllers.ClosingController
+@{
     ViewBag.Title = "Closing";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -14,7 +15,8 @@
     title=".: Closing :.">
     <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
-        <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
+        <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a> 
+        <a id="btn_view" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">View</a>
         <a id="btn_close" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-no'">Close</a>
         <a id="btn_open" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'">Reopen</a>
         <a id="btn_del" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Delete</a>
@@ -42,7 +44,7 @@
                         <tr nowrap>
                             <td width="139" nowrap style="width: 100px">
                                 <label>ID</label></td>
-                            <td width="550">
+                            <td width="550" colspan="5">
                                 <input id="id" type="text" size="10" disabled="disabled"/></td>
                         </tr>
                         <tr>
@@ -51,7 +53,11 @@
                             </td>
                             <td>
                                <input id="Period" name="Period" type="text" size="10"/>
+                            </td>
+                            <td>
                                <label class="label-space">&nbsp;&nbsp;&nbsp;Year</label>
+                            </td>
+                            <td>
                                <input id="YearPeriod" name="YearPeriod" type="text" size="10"/>
                             </td>
                         </tr>
@@ -59,12 +65,32 @@
                             <td>
                                 <label>Beginning</label></td>
                              <td>
-                                 <input id="BeginningPeriod"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                                 <input name="BeginningPeriod" type="text" size="1" hidden="hidden"/>
-                                 <label class="label-space">Ending</label>
-                                 <input id="EndDatePeriod"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/>
-                                 <input name="EndDatePeriod" type="text" size="1" hidden="hidden"/>
+                                <div id="BaginningPeriodDiv"><input id="BeginningPeriod"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                <div id="BaginningPeriodDiv2"> <input id="BeginningPeriod2" name="BeginningPeriod" type="text" size="10" disabled="disabled"/></div>
                              </td>
+                            <td>
+                                <label class="label-space">Ending</label>
+                            </td>
+                            <td>
+                                 <div id="EndDatePeriodDiv"><input id="EndDatePeriod"class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToShortDateString()"/></div>
+                                 <div id="EndDatePeriodDiv2"><input id="EndDatePeriod2" name="EndDatePeriod" type="text" size="10" disabled="disabled"/></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Is Year Closing</label>
+                            </td>
+                            <td colspan="5">
+                                <select id="IsYear">
+                                  <option value="False">No</option>
+                                  <option value="True">Yes</option>
+                               </select>
+                            </td>
+                        </tr>
+                        <tr>
+                                <td colspan="5">
+                                      <table id="list_containerSE" class="scroll dummyClass ui-jqgrid-htable" cellpadding="0" cellspacing="0" border="0" width="100%"></table>
+                                </td>
                         </tr>
                     </table>
                 @*</fieldset>*@

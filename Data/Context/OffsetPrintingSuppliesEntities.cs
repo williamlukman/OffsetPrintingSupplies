@@ -165,6 +165,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new WarehouseMutationDetailMapping());
             modelBuilder.Configurations.Add(new CurrencyMapping());
             modelBuilder.Configurations.Add(new ExchangeRateMapping());
+            modelBuilder.Configurations.Add(new VCNonBaseCurrencyMapping());
+            modelBuilder.Configurations.Add(new GLNonBaseCurrencyMapping());
 
             base.OnModelCreating(modelBuilder);
         }
@@ -259,6 +261,8 @@ namespace Data.Context
         public DbSet<RetailSalesInvoiceDetail> RetailSalesInvoiceDetails { get; set; }
         public DbSet<Currency> Currencys { get; set; } 
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
-
+        public DbSet<GLNonBaseCurrency> GLNonBaseCurrencys { get; set; }
+        public DbSet<VCNonBaseCurrency> VCNonBaseCurrencys { get; set; }
+         
     }
 }
