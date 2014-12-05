@@ -299,7 +299,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _closingService.GetObjectById(model.Id);
-                model = _closingService.OpenObject(data, _accountService, _validCombService,_vCNonBaseCurrencyService);
+                model = _closingService.OpenObject(data, _accountService, _validCombService,_vCNonBaseCurrencyService,_generalLedgerJournalService,_exchangeRateClosingService);
             }
             catch (Exception ex)
             {

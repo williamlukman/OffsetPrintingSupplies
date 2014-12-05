@@ -128,7 +128,9 @@ namespace Service.Service
                             totalAmountInLedgers -= ledger.Amount;
                         }
                     }
+
                     totalAmountInLedgers += totalAmountLast;
+
                    #region adjust Exrate
                     decimal totalCurrencyAmountInLedger = 0;
                     decimal totalAmountForVCnonBAse = 0;
@@ -139,6 +141,8 @@ namespace Service.Service
                         {
                             if((leaf.LegacyCode == Constant.AccountLegacyCode.AccountPayable + exRate.CurrencyId) ||
                             (leaf.LegacyCode == Constant.AccountLegacyCode.AccountReceivable + exRate.CurrencyId) ||
+                            (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHPayable + exRate.CurrencyId) ||
+                            (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHReceivable + exRate.CurrencyId) ||
                             (leaf.LegacyCode == Constant.AccountLegacyCode.CashBank + exRate.CurrencyId))
                             {
                                 if (lastClosing != null)
@@ -252,60 +256,110 @@ namespace Service.Service
                                             };
                                             debitAccountPayable = _generalLedgerJournalService.CreateObject(debitAccountPayable, _accountService);
                                             totalAmountInLedgers = totalCurrencyAmountInLedger;
-
                                         }
+                                    else if (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHPayable + exRate.CurrencyId)
+                                    {
+                                        GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Credit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        creditExchangeGain = _generalLedgerJournalService.CreateObject(creditExchangeGain, _accountService);
+
+                                        GeneralLedgerJournal debitGBCHPayable = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = leaf.Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Debit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        debitGBCHPayable = _generalLedgerJournalService.CreateObject(debitGBCHPayable, _accountService);
+                                        totalAmountInLedgers = totalCurrencyAmountInLedger;
+                                    }
                                     else if (leaf.LegacyCode == Constant.AccountLegacyCode.AccountReceivable + exRate.CurrencyId)
+                                    {
+                                        GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
                                         {
-                                            GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
-                                            {
-                                                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
-                                                SourceDocument = Constant.GeneralLedgerSource.Closing,
-                                                SourceDocumentId = closing.Id,
-                                                TransactionDate = (DateTime)closing.EndDatePeriod,
-                                                Status = Constant.GeneralLedgerStatus.Debit,
-                                                Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
-                                            };
-                                            debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
+                                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Debit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
 
-                                            GeneralLedgerJournal creditAccountReceiable = new GeneralLedgerJournal()
-                                            {
-                                                AccountId = leaf.Id,
-                                                SourceDocument = Constant.GeneralLedgerSource.Closing,
-                                                SourceDocumentId = closing.Id,
-                                                TransactionDate = (DateTime)closing.EndDatePeriod,
-                                                Status = Constant.GeneralLedgerStatus.Credit,
-                                                Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
-                                            };
-                                            creditAccountReceiable = _generalLedgerJournalService.CreateObject(creditAccountReceiable, _accountService);
-                                            totalAmountInLedgers = totalCurrencyAmountInLedger;
+                                        GeneralLedgerJournal creditAccountReceiable = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = leaf.Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Credit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        creditAccountReceiable = _generalLedgerJournalService.CreateObject(creditAccountReceiable, _accountService);
+                                        totalAmountInLedgers = totalCurrencyAmountInLedger;
 
-                                        }
+                                    }
+                                    else if (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHReceivable + exRate.CurrencyId)
+                                    {
+                                        GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Debit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
+
+                                        GeneralLedgerJournal creditGBCHReceivable = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = leaf.Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Credit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        creditGBCHReceivable = _generalLedgerJournalService.CreateObject(creditGBCHReceivable, _accountService);
+                                        totalAmountInLedgers = totalCurrencyAmountInLedger;
+
+                                    }
                                     else if (leaf.LegacyCode == Constant.AccountLegacyCode.CashBank + exRate.CurrencyId)
+                                    {
+                                        GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
                                         {
-                                            GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
-                                            {
-                                                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
-                                                SourceDocument = Constant.GeneralLedgerSource.Closing,
-                                                SourceDocumentId = closing.Id,
-                                                TransactionDate = (DateTime)closing.EndDatePeriod,
-                                                Status = Constant.GeneralLedgerStatus.Debit,
-                                                Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
-                                            };
-                                            debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
+                                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Debit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
 
-                                            GeneralLedgerJournal creditCashBank = new GeneralLedgerJournal()
-                                            {
-                                                AccountId = leaf.Id,
-                                                SourceDocument = Constant.GeneralLedgerSource.Closing,
-                                                SourceDocumentId = closing.Id,
-                                                TransactionDate = (DateTime)closing.EndDatePeriod,
-                                                Status = Constant.GeneralLedgerStatus.Credit,
-                                                Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
-                                            };
-                                            creditCashBank = _generalLedgerJournalService.CreateObject(creditCashBank, _accountService);
-                                            totalAmountInLedgers = totalCurrencyAmountInLedger;
+                                        GeneralLedgerJournal creditCashBank = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = leaf.Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Credit,
+                                            Amount = totalAmountInLedgers - totalCurrencyAmountInLedger
+                                        };
+                                        creditCashBank = _generalLedgerJournalService.CreateObject(creditCashBank, _accountService);
+                                        totalAmountInLedgers = totalCurrencyAmountInLedger;
 
-                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -370,6 +424,33 @@ namespace Service.Service
                                         totalAmountInLedgers = totalCurrencyAmountInLedger;
 
                                     }
+                                    else if (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHPayable + exRate.CurrencyId)
+                                    {
+                                        GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Debit,
+                                            Amount = totalCurrencyAmountInLedger - totalAmountInLedgers
+                                        };
+                                        debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
+
+                                        GeneralLedgerJournal creditGBCHPayable = new GeneralLedgerJournal()
+                                        { 
+                                            AccountId = leaf.Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Credit,
+                                            Amount = totalCurrencyAmountInLedger - totalAmountInLedgers
+
+                                        };
+                                        creditGBCHPayable = _generalLedgerJournalService.CreateObject(creditGBCHPayable, _accountService);
+                                        totalAmountInLedgers = totalCurrencyAmountInLedger;
+
+                                    }
                                     else if (leaf.LegacyCode == Constant.AccountLegacyCode.AccountReceivable + exRate.CurrencyId)
                                     {
                                         GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
@@ -395,6 +476,34 @@ namespace Service.Service
 
                                         };
                                         debitAccountReceiable = _generalLedgerJournalService.CreateObject(debitAccountReceiable, _accountService);
+                                        totalAmountInLedgers = totalCurrencyAmountInLedger;
+
+                                    }
+                                    else if (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHReceivable + exRate.CurrencyId)
+                                    {
+                                        GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Credit,
+                                            Amount = totalCurrencyAmountInLedger - totalAmountInLedgers
+
+                                        };
+                                        creditExchangeGain = _generalLedgerJournalService.CreateObject(creditExchangeGain, _accountService);
+
+                                        GeneralLedgerJournal debitGBCHReceiveable = new GeneralLedgerJournal()
+                                        {
+                                            AccountId = leaf.Id,
+                                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                            SourceDocumentId = closing.Id,
+                                            TransactionDate = (DateTime)closing.EndDatePeriod,
+                                            Status = Constant.GeneralLedgerStatus.Debit,
+                                            Amount = totalCurrencyAmountInLedger - totalAmountInLedgers
+
+                                        };
+                                        debitGBCHReceiveable = _generalLedgerJournalService.CreateObject(debitGBCHReceiveable, _accountService);
                                         totalAmountInLedgers = totalCurrencyAmountInLedger;
 
                                     }
@@ -535,7 +644,9 @@ namespace Service.Service
             _validCombService.CalculateTotalAmount(validComb, _accountService, this);
         }
 
-        public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService,IVCNonBaseCurrencyService _vCNonBaseCurrencyService)
+        public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService,
+            IVCNonBaseCurrencyService _vCNonBaseCurrencyService,IGeneralLedgerJournalService _generalLedgerJournalService
+            ,IExchangeRateClosingService _exchangeRateClosingService)
         {
             if (_validator.ValidOpenObject(closing))
             {
@@ -548,7 +659,90 @@ namespace Service.Service
                     _vCNonBaseCurrencyService.DeleteObject(validComb.Id);
                 }
 
+                string[] AccountList = { 
+                                     Constant.AccountLegacyCode.AccountPayable,
+                                     Constant.AccountLegacyCode.AccountReceivable,
+                                     Constant.AccountLegacyCode.GBCHPayable,
+                                     Constant.AccountLegacyCode.GBCHReceivable,
+                                     Constant.AccountLegacyCode.CashBank,
+                                     Constant.AccountLegacyCode.ExchangeGain,
+                                     Constant.AccountLegacyCode.ExchangeLoss
+                                 };
+                 
 
+                IList<ExchangeRateClosing> exRates = _exchangeRateClosingService.GetQueryable().Where(x => x.ClosingId == closing.Id).ToList();
+
+                foreach (var exRate in exRates)
+                {
+                    foreach (var account in AccountList)
+                    {
+                        Account acc = new Account(); 
+                        List<GeneralLedgerJournal> GL = new List<GeneralLedgerJournal>();
+                        if (account == Constant.AccountLegacyCode.ExchangeGain || account == Constant.AccountLegacyCode.ExchangeLoss)
+                        {
+                            acc = _accountService.GetObjectByLegacyCode(account);
+                             GL = _generalLedgerJournalService.GetQueryable()
+                                 .Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing
+                                     && x.SourceDocumentId == closing.Id && x.Account.Code == acc.Code
+                                     ).ToList();
+                        }
+                        else
+                        {
+                            acc = _accountService.GetObjectByLegacyCode(account + exRate.CurrencyId);
+                            if (acc != null)
+                            {
+                                GL = _generalLedgerJournalService.GetQueryable()
+                               .Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing
+                                   && x.SourceDocumentId == closing.Id && x.Account.Code == acc.Code
+                                   ).ToList();
+                            }
+                        }
+                        if (acc != null)
+                        {
+                            decimal amountDebet = 0;
+                            decimal amountCredit = 0;
+                            foreach (var ledger in GL)
+                            {
+                                if (ledger.Status == Constant.GeneralLedgerStatus.Debit)
+                                {
+                                    amountDebet += ledger.Amount;
+                                }
+                                else
+                                {
+                                    amountCredit += ledger.Amount;
+                                }
+                            }
+                            if (amountDebet > amountCredit)
+                            {
+                                GeneralLedgerJournal creditAccount = new GeneralLedgerJournal()
+                                {
+                                    AccountId = acc.Id,
+                                    SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                    SourceDocumentId = closing.Id,
+                                    TransactionDate = (DateTime)closing.EndDatePeriod,
+                                    Status = Constant.GeneralLedgerStatus.Credit,
+                                    Amount = amountDebet - amountCredit
+
+                                };
+                                creditAccount = _generalLedgerJournalService.CreateObject(creditAccount, _accountService);
+                            }
+                            else if (amountCredit > amountDebet)
+                            {
+                                GeneralLedgerJournal debitAccount = new GeneralLedgerJournal()
+                                {
+                                    AccountId = acc.Id,
+                                    SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                    SourceDocumentId = closing.Id,
+                                    TransactionDate = (DateTime)closing.EndDatePeriod,
+                                    Status = Constant.GeneralLedgerStatus.Debit,
+                                    Amount = amountCredit - amountDebet
+
+                                };
+                                debitAccount = _generalLedgerJournalService.CreateObject(debitAccount, _accountService);
+                            }
+                        }
+                    }
+                }
             }
 
 
