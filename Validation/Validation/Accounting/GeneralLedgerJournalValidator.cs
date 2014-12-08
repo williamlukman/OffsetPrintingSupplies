@@ -34,7 +34,8 @@ namespace Validation.Validation
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.SalesAllowance) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RecoveryOrderDetail) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RecoveryAccessoryDetail) &&
-                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlanketOrderDetail))
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlanketOrderDetail) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlendingWorkOrder))
             {
                 generalLedgerJournal.Errors.Add("SourceDocument", "Harus merupakan bagian dari Constant.SourceDocument");
             }

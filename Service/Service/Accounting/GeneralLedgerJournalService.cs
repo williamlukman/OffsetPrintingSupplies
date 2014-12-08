@@ -2754,8 +2754,8 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
         {
-            // Credit Raw (Source Items), Debit FinishedGoods (Chemical)
-            #region Credit Raw (Source Items), Debit FinishedGoods (Chemical)
+            // Credit Raw (Source Items), Debit FinishedGoods (Chemical), Debit BlendingExpense (2%)
+            #region Credit Raw (Source Items), Debit FinishedGoods (Chemical), Debit BlendingExpense (2%)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
             GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
@@ -2776,20 +2776,32 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = TotalCost,
+                Amount = TotalCost * (decimal) 0.98,
             };
             debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
 
+            GeneralLedgerJournal debitproductioncost = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ManufacturingExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = blendingWorkOrder.BlendingDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = TotalCost * (decimal) 0.02,
+            };
+            debitproductioncost = CreateObject(debitproductioncost, _accountService);
+
             journals.Add(creditraw);
             journals.Add(debitfinishedgoods);
+            journals.Add(debitproductioncost);
             return journals;
             #endregion
         }
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
         {
-            // Debit Raw (Source Items), Credit FinishedGoods (Chemical)
-            #region Debit Raw (Source Items), Credit FinishedGoods (Chemical)
+            // Debit Raw (Source Items), Credit FinishedGoods (Chemical), Credit BlendingExpense (2%)
+            #region Debit Raw (Source Items), Credit FinishedGoods (Chemical), Credit BlendingExpense (2%)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnfinishedDate = DateTime.Now;
 
@@ -2811,9 +2823,20 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = TotalCost
+                Amount = TotalCost * (decimal) 0.98
             };
             creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
+
+            GeneralLedgerJournal creditproductioncost = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ManufacturingExpense).Id,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = blendingWorkOrder.BlendingDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = TotalCost * (decimal) 0.02
+            };
+            creditproductioncost = CreateObject(creditproductioncost, _accountService);
 
             journals.Add(debitraw);
             journals.Add(creditfinishedgoods);
