@@ -12,7 +12,7 @@ namespace Data.Context
 {
     public class OffsetPrintingSuppliesEntities : DbContext
     { 
-        public OffsetPrintingSuppliesEntities() : base("OffsetPrintingTest")
+        public OffsetPrintingSuppliesEntities() : base("OffsetPrintingTestClosing")
         {
            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
@@ -25,8 +25,8 @@ namespace Data.Context
 
             IList<String> userroleNames = new List<String>()
                                         { "UserMenu", "UserAccount", "UserAccess" };
-            IList<String> accountingNames = new List<String>()
-                                        { "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal", "Account" };
+            IList<String> accountingNames = new List<String>() { "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal",
+                                        "Account", "GLNonBaseCurrency" ,"VCNonBaseCurrencyRepository"};
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -262,7 +262,7 @@ namespace Data.Context
         public DbSet<Currency> Currencys { get; set; } 
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
         public DbSet<GLNonBaseCurrency> GLNonBaseCurrencys { get; set; }
-        public DbSet<VCNonBaseCurrency> VCNonBaseCurrencys { get; set; }
+        public DbSet<VCNonBaseCurrency> VCNonBaseCurrencys { get; set; } 
          
     }
 }

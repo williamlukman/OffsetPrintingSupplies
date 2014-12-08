@@ -82,6 +82,7 @@ namespace TestValidation
         public IWarehouseService _warehouseService;
         public IWarehouseMutationService _warehouseMutationService;
         public IWarehouseMutationDetailService _warehouseMutationDetailService;
+        public IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
         public ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
@@ -176,6 +177,7 @@ namespace TestValidation
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _warehouseMutationService = new WarehouseMutationService(new WarehouseMutationRepository(), new WarehouseMutationValidator());
             _warehouseMutationDetailService = new WarehouseMutationDetailService(new WarehouseMutationDetailRepository(), new WarehouseMutationDetailValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
 
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
             typeBar = _itemTypeService.CreateObject("Bar", "Bar");
@@ -931,13 +933,13 @@ namespace TestValidation
         {
             _salesInvoiceService.ConfirmObject(si1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService, 
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(si2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService, 
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(si3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
 
             rv = new ReceiptVoucher()
             {
@@ -985,10 +987,10 @@ namespace TestValidation
             _receiptVoucherDetailService.CreateObject(rvd3, _receiptVoucherService, _cashBankService, _receivableService, _currencyService);
 
             _receiptVoucherService.ConfirmObject(rv, DateTime.Today, _receiptVoucherDetailService, _cashBankService, _receivableService, _cashMutationService,
-                                                 _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService, _salesInvoiceService);
+                                                 _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService, _salesInvoiceService, _gLNonBaseCurrencyService);
 
             _receiptVoucherService.ReconcileObject(rv, DateTime.Today.AddDays(10), _receiptVoucherDetailService, _cashMutationService, _cashBankService, _receivableService,
-                                                   _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _salesInvoiceService);
+                                                   _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _salesInvoiceService, _gLNonBaseCurrencyService);
         }
     }
 }
