@@ -276,6 +276,7 @@
     <Compile Include="Controllers\Finance\ReceivableController.cs" />
     <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
+    <Compile Include="Controllers\StockAndMaster\CustomerStockAdjustmentController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstBlendingRecipeController.cs" />
     <Compile Include="Controllers\StockAndMaster\CustomerStockMutationController.cs" />
     <Compile Include="Controllers\StockAndMaster\CustomerItemController.cs" />
@@ -328,6 +329,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\CustomerStockAdjustment.js" />
     <Content Include="Content\apps_js\MasterBlendingRecipe.js" />
     <Content Include="Content\apps_js\TemporaryDeliveryOrderClearance.js" />
     <Content Include="Content\apps_js\CustomerStockMutation.js" />
@@ -1346,6 +1348,7 @@
     <Content Include="Views\TemporaryDeliveryOrderClearance\Index.cshtml" />
     <Content Include="Views\MstBlendingRecipe\Index.cshtml" />
     <Content Include="Views\BlendingWorkOrder\Index.cshtml" />
+    <Content Include="Views\CustomerStockAdjustment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

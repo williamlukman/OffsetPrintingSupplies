@@ -377,33 +377,34 @@ namespace Service.Service
         //    }
         //    return customerStockMutations;
         //}
-          
-        //public CustomerStockMutation CreateCustomerStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, CustomerItem customerItem)
-        //{
-        //    CustomerStockMutation customerStockMutation = new CustomerStockMutation();
-        //    customerStockMutation.ItemId = customerItem.ItemId;
-        //    customerStockMutation.StockMutationId = customerItem.StockMutationId;
-        //    customerStockMutation.CustomerItemId = customerItem.Id;
-        //    customerStockMutation.Quantity = (stockAdjustmentDetail.Quantity >= 0) ? stockAdjustmentDetail.Quantity : (-1) * stockAdjustmentDetail.Quantity;
-        //    customerStockMutation.SourceDocumentType = Constant.SourceDocumentType.StockAdjustment;
-        //    customerStockMutation.SourceDocumentId = stockAdjustmentDetail.StockAdjustmentId;
-        //    customerStockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.StockAdjustmentDetail;
-        //    customerStockMutation.SourceDocumentDetailId = stockAdjustmentDetail.Id;
-        //    customerStockMutation.ItemCase = Constant.ItemCase.Ready;
-        //    customerStockMutation.Status = (stockAdjustmentDetail.Quantity >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
-        //    customerStockMutation.MutationDate = (DateTime) stockAdjustmentDetail.ConfirmationDate;
-        //    return _repository.CreateObject(customerStockMutation);
-        //}
 
-        //public IList<CustomerStockMutation> DeleteCustomerStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, CustomerItem customerItem)
-        //{
-        //    IList<CustomerStockMutation> customerStockMutations = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.StockAdjustmentDetail, stockAdjustmentDetail.Id);
-        //    foreach (var customerStockMutation in customerStockMutations)
-        //    {
-        //        _repository.Delete(customerStockMutation);
-        //    }
-        //    return customerStockMutations;
-        //}
+        public CustomerStockMutation CreateCustomerStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, CustomerItem customerItem, int ItemId)
+        {
+            CustomerStockMutation customerStockMutation = new CustomerStockMutation();
+            customerStockMutation.ItemId = ItemId;
+            customerStockMutation.ContactId = customerItem.ContactId;
+            customerStockMutation.CustomerItemId = customerItem.Id;
+            customerStockMutation.WarehouseItemId = customerItem.WarehouseItemId;
+            customerStockMutation.Quantity = (customerStockAdjustmentDetail.Quantity >= 0) ? customerStockAdjustmentDetail.Quantity : (-1) * customerStockAdjustmentDetail.Quantity;
+            customerStockMutation.SourceDocumentType = Constant.SourceDocumentType.CustomerStockAdjustment;
+            customerStockMutation.SourceDocumentId = customerStockAdjustmentDetail.CustomerStockAdjustmentId;
+            customerStockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.CustomerStockAdjustmentDetail;
+            customerStockMutation.SourceDocumentDetailId = customerStockAdjustmentDetail.Id;
+            customerStockMutation.ItemCase = Constant.ItemCase.Ready;
+            customerStockMutation.Status = (customerStockAdjustmentDetail.Quantity >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
+            customerStockMutation.MutationDate = (DateTime)customerStockAdjustmentDetail.ConfirmationDate;
+            return _repository.CreateObject(customerStockMutation);
+        }
+
+        public IList<CustomerStockMutation> DeleteCustomerStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, CustomerItem customerItem)
+        {
+            IList<CustomerStockMutation> customerStockMutations = _repository.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.CustomerStockAdjustmentDetail, customerStockAdjustmentDetail.Id);
+            foreach (var customerStockMutation in customerStockMutations)
+            {
+                _repository.Delete(customerStockMutation);
+            }
+            return customerStockMutations;
+        }
 
         public CustomerStockMutation CreateCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem, int ItemId)
         {

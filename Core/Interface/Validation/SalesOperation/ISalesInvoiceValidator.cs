@@ -11,6 +11,7 @@ namespace Core.Interface.Validation
     {
         SalesInvoice VHasUniqueNomorSurat(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService);
         SalesInvoice VHasDeliveryOrder(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
+        SalesInvoice VHasExchangeRateList(SalesInvoice salesInvoice, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService);
         SalesInvoice VHasNoSalesInvoiceDetails(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
         SalesInvoice VHasSalesInvoiceDetails(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
         SalesInvoice VDeliveryOrderHasNotBeenInvoiceCompleted(SalesInvoice salesInvoice, IDeliveryOrderService _deliveryOrderService);
@@ -33,15 +34,15 @@ namespace Core.Interface.Validation
         SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                     IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                     ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
-                                    IClosingService _closingService,IExchangeRateService _exchangeRateService);
+                                    IClosingService _closingService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService);
         SalesInvoice VUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                       IReceivableService _receivableService, IClosingService _closingService);
         bool ValidCreateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService);
         bool ValidUpdateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService);
         bool ValidDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);
-        bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
-                                IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService, IClosingService _closingService, IExchangeRateService _exchangeRateService);
+        bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderService _deliveryOrderService, 
+                                IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService, 
+                                IServiceCostService _serviceCostService, IClosingService _closingService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService);
         bool ValidUnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService,
                                   IReceivableService _receivableService, IClosingService _closingService);
         bool isValid(SalesInvoice salesInvoice);

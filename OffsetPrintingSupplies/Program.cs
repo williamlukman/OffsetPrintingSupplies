@@ -25,33 +25,11 @@ namespace OffsetPrintingSupplies
 
                 db.DeleteAllTables();
 
+                //PurchaseBuilder p = new PurchaseBuilder();
+                //p.PopulateData();
+
                 DataBuilder d = new DataBuilder();
-                
-                //DataFunction(d);
-                d.PopulateDataNoClosing();
-
-                d._blendingWorkOrderService.ConfirmObject(d.blendingWorkOrder, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
-                                                        d._blanketService, d._itemService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
-
-                d._blendingWorkOrderService.UnconfirmObject(d.blendingWorkOrder, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
-                                                    d._blanketService, d._itemService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
-
-                d._blendingWorkOrderService.SoftDeleteObject(d.blendingWorkOrder);
-
-                //d.PopulateUserRole();
-                //d.PopulateWarehouse();
-                //d.PopulateItem(); // 1. Stock Adjustment
-                //d.PopulateSingles();
-                //d.PopulateCashBank(); // 2. CashBankAdjustment, 3. CashBankMutation, 4. CashBankAdjustment (Negative)
-
-                //d.PopulateSales(); // 5. 3x Cash Invoice
-                //d.PopulateValidComb(); // 7. Closing
-                //// salesinvoice 148000 + salesinvoice 144000 + salesinvoice 152000
-                //// receiptvoucher 221 148000, 222 144000, 223 152000
-                //decimal ReceivableAmount = (d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount)
-                //           - (d.salesInvoice1.AmountReceivable + d.salesInvoice2.AmountReceivable + d.salesInvoice3.AmountReceivable);
-                //decimal KontanAmount = d.receiptVoucher1.TotalAmount + d.receiptVoucher2.TotalAmount + d.receiptVoucher3.TotalAmount +
-                //                       d.cashBankAdjustment.Amount + d.cashBankAdjustment2.Amount - d.cashBankMutation.Amount;
+                DataFunction(d);
 
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();

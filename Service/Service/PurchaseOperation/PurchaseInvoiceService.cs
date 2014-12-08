@@ -73,7 +73,7 @@ namespace Service.Service
                                              ICurrencyService _currencyService, IExchangeRateService _exchangeRateService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             purchaseInvoice.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService,_exchangeRateService))
+            if (_validator.ValidConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService,_exchangeRateService, _currencyService))
             {
                 // confirm details
                 // add all amount into amountpayable
@@ -89,7 +89,7 @@ namespace Service.Service
                 Currency currency = _currencyService.GetObjectById(purchaseInvoice.CurrencyId);
                 if (currency.IsBase == false)
                 {
-                    purchaseInvoice.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseInvoice.ConfirmationDate.Value, purchaseInvoice.CurrencyId).Id;
+                    purchaseInvoice.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseInvoice.ConfirmationDate.Value, currency).Id;
                     purchaseInvoice.ExchangeRateAmount = _exchangeRateService.GetObjectById(purchaseInvoice.ExchangeRateId.Value).Rate;
                 }
                 else
@@ -100,7 +100,8 @@ namespace Service.Service
                 // create payable
                 purchaseInvoice = _repository.UpdateObject(purchaseInvoice);
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
-                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseInvoice(purchaseInvoice, purchaseReceival, _accountService,_gLNonBaseCurrencyService);
+                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseInvoice(purchaseInvoice, purchaseReceival,
+                                             _accountService, _gLNonBaseCurrencyService, _currencyService);
                 _purchaseReceivalService.CheckAndSetInvoiceComplete(purchaseReceival, _purchaseReceivalDetailService);
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
                 Payable payable = _payableService.CreateObject(purchaseOrder.ContactId, Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id,purchaseInvoice.CurrencyId, purchaseInvoice.AmountPayable,purchaseInvoice.ExchangeRateAmount, purchaseInvoice.DueDate);
@@ -112,7 +113,7 @@ namespace Service.Service
                                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                                IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
-            IClosingService _closingService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                               IClosingService _closingService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             if (_validator.ValidUnconfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _paymentVoucherDetailService, _payableService, _closingService))
             {
@@ -123,7 +124,8 @@ namespace Service.Service
                     _purchaseInvoiceDetailService.UnconfirmObject(detail, _purchaseReceivalService, _purchaseReceivalDetailService);
                 }
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseInvoice.PurchaseReceivalId);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseInvoice(purchaseInvoice, purchaseReceival, _accountService,_gLNonBaseCurrencyService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseInvoice(purchaseInvoice, purchaseReceival, _accountService,
+                                             _gLNonBaseCurrencyService, _currencyService);
                 _repository.UnconfirmObject(purchaseInvoice);
                 _purchaseReceivalService.UnsetInvoiceComplete(purchaseReceival);
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PurchaseInvoice, purchaseInvoice.Id);

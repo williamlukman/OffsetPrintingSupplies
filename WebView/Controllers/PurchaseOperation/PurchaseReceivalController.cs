@@ -162,7 +162,8 @@ namespace WebView.Controllers
                              model.ConfirmationDate,
                              model.CreatedAt,
                              model.UpdatedAt,
-                             Tax = (model.PurchaseOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                             Tax = model.PurchaseOrder.Contact.IsTaxable ?
+                                   (model.PurchaseOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
                                    (model.PurchaseOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
                                    (model.PurchaseOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
                                    (model.PurchaseOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
@@ -170,7 +171,7 @@ namespace WebView.Controllers
                                    (model.PurchaseOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
                                    (model.PurchaseOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
                                    (model.PurchaseOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
-                                   (model.PurchaseOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0   
+                                   (model.PurchaseOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0 : 0,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();

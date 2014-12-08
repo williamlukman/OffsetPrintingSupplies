@@ -26,10 +26,12 @@ namespace WebView.Controllers
         private IBlanketService _blanketService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
+        private IClosingService _closingService;
 
         public StockAdjustmentController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+            _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
             _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
@@ -222,6 +224,7 @@ namespace WebView.Controllers
                 model.ItemId,
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
+                model.Price,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -359,7 +362,7 @@ namespace WebView.Controllers
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService,
                                                               _itemService, _blanketService, _warehouseItemService,
-                                                              _accountService, _generalLedgerJournalService);
+                                                              _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -381,7 +384,7 @@ namespace WebView.Controllers
 
                 var data = _stockAdjustmentService.GetObjectById(model.Id);
                 model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,
-                                                                _blanketService,_warehouseItemService,_accountService,_generalLedgerJournalService);
+                                                                _blanketService,_warehouseItemService,_accountService,_generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

@@ -506,8 +506,8 @@
                             }
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
+                            $('#Price').numberbox('setValue',result.Price);
                             $('#item_div').dialog('open');
                         }
                     }

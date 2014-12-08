@@ -71,11 +71,11 @@ namespace Service.Service
                                           ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                           IReceivableService _receivableService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
                                           IClosingService _closingService, IServiceCostService _serviceCostService, IRollerBuilderService _rollerBuilderService,
-            IItemService _itemService,IExchangeRateService _exchangeRateService,ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                          IItemService _itemService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             salesInvoice.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService,
-                                              _salesOrderDetailService, _serviceCostService, _closingService,_exchangeRateService))
+                                              _salesOrderDetailService, _serviceCostService, _closingService,_exchangeRateService, _currencyService))
             {
                 // confirm details
                 decimal TotalCOS = 0;
@@ -92,9 +92,10 @@ namespace Service.Service
                 salesInvoice.TotalCOS = TotalCOS;
                 salesInvoice = CalculateAmountReceivable(salesInvoice, _salesInvoiceDetailService);
                 salesInvoice = _repository.ConfirmObject(salesInvoice);
-                if (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == false)
+                Currency currency = _currencyService.GetObjectById(salesInvoice.CurrencyId);
+                if (currency.IsBase == false)
                 {
-                    salesInvoice.ExchangeRateId = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value, salesInvoice.CurrencyId).Id;
+                    salesInvoice.ExchangeRateId = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value, currency).Id;
                     salesInvoice.ExchangeRateAmount = _exchangeRateService.GetObjectById(salesInvoice.ExchangeRateId.Value).Rate;
                 }
                 else

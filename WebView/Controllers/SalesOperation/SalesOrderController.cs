@@ -424,6 +424,7 @@ namespace WebView.Controllers
                 data.ItemId = model.ItemId;
                 data.IsService = model.IsService;
                 data.Quantity = model.Quantity;
+                data.PendingDeliveryQuantity = model.Quantity;
                 data.Price = model.Price;
                 model = _salesOrderDetailService.UpdateObject(data, _salesOrderService, _itemService);
             }

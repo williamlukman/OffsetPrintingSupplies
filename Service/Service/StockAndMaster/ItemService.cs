@@ -284,7 +284,7 @@ namespace Service.Service
 
         public decimal CalculateAndUpdateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
         {
-            item.CustomerAvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgPrice);
+            item.CustomerAvgPrice = CalculateCustomerAvgPrice(item, addedQuantity, addedAvgPrice);
             _repository.Update(item);
             return item.CustomerAvgPrice;
         }

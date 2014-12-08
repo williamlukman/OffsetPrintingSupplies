@@ -246,16 +246,16 @@
 
         var submitURL = '';
         var id = $("#form_btn_save").data('kode');
-        var seaContainer = [];
-        var seaContainerIdx = 0;
-        $('#list_containerSE tr').each(function () {
-            if (seaContainerIdx > 0) {
+        var exchangerateclosingContainer = [];
+        var exchangerateclosingContainerIdx = 0;
+        $('#list_exchangerateclosing').each(function () {
+            if (exchangerateclosingContainerIdx > 0) {
                 obj = {};
                 obj['CurrencyId'] = $.trim($(this).find('td:eq(0)').text());
                 obj['Rate'] = $.trim($(this).find('#TotalAmount').numberbox('getValue'));
-                seaContainer.push(obj);
+                exchangerateclosingContainer.push(obj);
             }
-            seaContainerIdx++;
+            exchangerateclosingContainerIdx++;
         });
         var f = document.getElementById("IsYear");
         var isyear = f.options[f.selectedIndex].value;
@@ -268,7 +268,7 @@
             data: JSON.stringify({
                 Id: id, Period: $("#Period").val(), YearPeriod: $("#YearPeriod").val(),
                 BeginningPeriod: $('#BeginningPeriod').datebox('getValue'), IsYear: isyear,
-                EndDatePeriod: $('#EndDatePeriod').datebox('getValue'), exchangeRateClosing: seaContainer 
+                EndDatePeriod: $('#EndDatePeriod').datebox('getValue'), exchangeRateClosing: exchangerateclosingContainer
             }),
             async: false,
             cache: false,

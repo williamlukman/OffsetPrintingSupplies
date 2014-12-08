@@ -10,6 +10,7 @@ namespace Core.Interface.Validation
     public interface ICashBankMutationValidator
     {
         CashBankMutation VHasDifferentCashBank(CashBankMutation cashBankMutation);
+        CashBankMutation VHasSameCurrency(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VHasSourceCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VHasTargetCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VHasNotBeenConfirmed(CashBankMutation cashBankMutation);

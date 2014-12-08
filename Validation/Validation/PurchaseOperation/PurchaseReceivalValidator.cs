@@ -117,9 +117,12 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public PurchaseReceival VHasExchangeRateList(PurchaseReceival purchaseReceival, IExchangeRateService _exchangeRateService)
+        public PurchaseReceival VHasExchangeRateList(PurchaseReceival purchaseReceival, IExchangeRateService _exchangeRateService, 
+                                                     IPurchaseOrderService _purchaseOrderService, ICurrencyService _currencyService)
         {
-            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, purchaseReceival.PurchaseOrder.CurrencyId);
+            PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
+            Currency currency = _currencyService.GetObjectById(purchaseOrder.CurrencyId);
+            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, currency);
             if (exchangeRate == null)
             {
                 purchaseReceival.Errors.Add("Generic", "Tidak ada list Exchange Rate untuk " + purchaseReceival.PurchaseOrder.Currency.Name);
@@ -157,7 +160,8 @@ namespace Validation.Validation
             return purchaseReceival;
         }
 
-        public PurchaseReceival VConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,IExchangeRateService _exchangeRateService)
+        public PurchaseReceival VConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, 
+                                               IExchangeRateService _exchangeRateService, IPurchaseOrderService _purchaseOrderService, ICurrencyService _currencyService)
         {
             VHasConfirmationDate(purchaseReceival);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
@@ -165,7 +169,7 @@ namespace Validation.Validation
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
             VHasPurchaseReceivalDetails(purchaseReceival, _purchaseReceivalDetailService);
             if (!isValid(purchaseReceival)) { return purchaseReceival; }
-            VHasExchangeRateList(purchaseReceival, _exchangeRateService);
+            VHasExchangeRateList(purchaseReceival, _exchangeRateService, _purchaseOrderService, _currencyService);
             return purchaseReceival;
         }
 
@@ -197,10 +201,11 @@ namespace Validation.Validation
             return isValid(purchaseReceival);
         }
 
-        public bool ValidConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,IExchangeRateService _exchangeRateService)
+        public bool ValidConfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
+                                       IExchangeRateService _exchangeRateService, IPurchaseOrderService _purchaseOrderService, ICurrencyService _currencyService)
         {
             purchaseReceival.Errors.Clear();
-            VConfirmObject(purchaseReceival, _purchaseReceivalDetailService,_exchangeRateService);
+            VConfirmObject(purchaseReceival, _purchaseReceivalDetailService, _exchangeRateService, _purchaseOrderService, _currencyService);
             return isValid(purchaseReceival);
         }
 

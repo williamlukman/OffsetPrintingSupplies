@@ -46,6 +46,8 @@ namespace Core.Interface.Service
          IList<StockMutation> DeleteStockMutationForTemporaryDeliveryOrderClearanceReturn(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem);
          IList<StockMutation> DeleteStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, WarehouseItem warehouseItem);
+         StockMutation CreateStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, WarehouseItem warehouseItem);
+         IList<StockMutation> DeleteStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, WarehouseItem warehouseItem);
          IList<StockMutation> DeleteStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, WarehouseItem warehouseItem, bool CaseAddition);

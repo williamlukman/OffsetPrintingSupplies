@@ -49,7 +49,7 @@
     $("#list").jqGrid({
         url: base_url + 'StockAdjustment/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse Name', 'Description', 'AdjusmentDate',
+        colNames: ['ID', 'Code', 'Warehouse Name', 'Description', 'AdjustmentDate',
                     'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
@@ -465,8 +465,8 @@
                             $("#item_btn_submit").data('kode', result.Id);
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
+                            $('#Quantity').numberbox('setValue',result.Quantity);
+                            $('#Price').numberbox('setValue',result.Price);
                             $('#item_div').dialog('open');
                         }
                     }

@@ -186,7 +186,8 @@ namespace WebView.Controllers
                              Price = model.Price,
                              Discount = 0,
                              GlobalDiscount = 0,
-                             Tax = (model.PurchaseOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                             Tax = model.PurchaseOrder.Contact.IsTaxable ?
+                                   (model.PurchaseOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
                                    (model.PurchaseOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
                                    (model.PurchaseOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
                                    (model.PurchaseOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
@@ -194,7 +195,7 @@ namespace WebView.Controllers
                                    (model.PurchaseOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
                                    (model.PurchaseOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
                                    (model.PurchaseOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
-                                   (model.PurchaseOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                                   (model.PurchaseOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0 : 0,
                              Allowance = 0,
                              Code = model.PurchaseOrder.NomorSurat,
                              Date = model.PurchaseOrder.ConfirmationDate.Value,
@@ -343,7 +344,8 @@ namespace WebView.Controllers
                              Price = model.Price,
                              Discount = 0,
                              GlobalDiscount = 0,
-                             Tax = (model.VirtualOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                             Tax = model.VirtualOrder.Contact.IsTaxable ?
+                                   (model.VirtualOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
                                    (model.VirtualOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
                                    (model.VirtualOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
                                    (model.VirtualOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
@@ -351,7 +353,7 @@ namespace WebView.Controllers
                                    (model.VirtualOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
                                    (model.VirtualOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
                                    (model.VirtualOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
-                                   (model.VirtualOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                                   (model.VirtualOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0 : 0,
                              Allowance = 0,
                              Code = model.VirtualOrder.NomorSurat,
                              Date = model.VirtualOrder.ConfirmationDate.Value,
@@ -457,7 +459,8 @@ namespace WebView.Controllers
                              Price = model.QuotationPrice,
                              Discount = 0,
                              GlobalDiscount = 0,
-                             Tax = (model.SalesQuotation.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                             Tax = model.SalesQuotation.Contact.IsTaxable ?
+                                   (model.SalesQuotation.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
                                    (model.SalesQuotation.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
                                    (model.SalesQuotation.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
                                    (model.SalesQuotation.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
@@ -465,7 +468,7 @@ namespace WebView.Controllers
                                    (model.SalesQuotation.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
                                    (model.SalesQuotation.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
                                    (model.SalesQuotation.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
-                                   (model.SalesQuotation.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                                   (model.SalesQuotation.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0 : 0,
                              Allowance = 0,
                              Code = model.SalesQuotation.NomorSurat,
                              VersionNo = model.SalesQuotation.VersionNo,
@@ -516,7 +519,8 @@ namespace WebView.Controllers
                              Price = model.Price,
                              Discount = 0,
                              GlobalDiscount = 0,
-                             Tax = (model.SalesOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
+                             Tax = model.SalesOrder.Contact.IsTaxable ?
+                                   (model.SalesOrder.Contact.TaxCode == "01") ? Constant.TaxValue.Code01 :
                                    (model.SalesOrder.Contact.TaxCode == "02") ? Constant.TaxValue.Code02 :
                                    (model.SalesOrder.Contact.TaxCode == "03") ? Constant.TaxValue.Code03 :
                                    (model.SalesOrder.Contact.TaxCode == "04") ? Constant.TaxValue.Code04 :
@@ -524,7 +528,7 @@ namespace WebView.Controllers
                                    (model.SalesOrder.Contact.TaxCode == "06") ? Constant.TaxValue.Code06 :
                                    (model.SalesOrder.Contact.TaxCode == "07") ? Constant.TaxValue.Code07 :
                                    (model.SalesOrder.Contact.TaxCode == "08") ? Constant.TaxValue.Code08 :
-                                   (model.SalesOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0,
+                                   (model.SalesOrder.Contact.TaxCode == "09") ? Constant.TaxValue.Code09 : 0 : 0,
                              Allowance = 0,
                              Code = model.SalesOrder.NomorSurat,
                              Date = model.SalesOrder.ConfirmationDate.Value,

@@ -142,9 +142,9 @@ namespace Validation.Validation
             decimal detailsamount = 0;
             foreach (var detail in details)
             {
-                detailsamount += detail.Amount;
+                detailsamount += detail.AmountPaid;
             }
-            if (detailsamount != paymentVoucher.TotalAmount)
+            if (Math.Round(detailsamount, 2) != Math.Round(paymentVoucher.TotalAmount, 2))
             {
                 paymentVoucher.Errors.Add("Generic", "Jumlah amount di details harus sama dengan totalamount");  
             }

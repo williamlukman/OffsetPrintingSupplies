@@ -452,7 +452,13 @@
         $('#reconcile_div').dialog('close');
     });
 
-    $("#AmountPaid, #Rate").blur(function () {
+    $("#Rate").blur(function () {
+        var total = parseFloat($('#Amount').numberbox('getValue')) * parseFloat($('#Rate').numberbox('getValue'));
+        //total = Math.round(total * 100) / 100;
+        $('#AmountPaid').numberbox('setValue', total);
+    });
+
+    $("#AmountPaid").blur(function () {
         var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
         //total = Math.round(total * 100) / 100;
         $('#Amount').numberbox('setValue', total);
@@ -939,12 +945,15 @@
             $('#Currency').text(ret.currency);
             if (ret.currency == $('#CurrencyCashBank').val()) {
                 $('#Rate').attr('disabled', true);
-                $('#Rate').numberbox('setValue', 1);
             }
             else {
                 $('#Rate').removeAttr('disabled');
-                $('#Rate').numberbox('setValue', 1);
             }
+            $('#Rate').numberbox('setValue', 1);
+            $('#AmountPaid').numberbox('setValue', ret.remainingamount);
+            var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
+            //total = Math.round(total * 100) / 100;
+            $('#Amount').numberbox('setValue', total);
             $('#Remaining').numberbox('setValue', ret.remainingamount);
             $('#lookup_div_payable').dialog('close');
         } else {

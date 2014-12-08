@@ -21,8 +21,11 @@ namespace Core.DomainModel
         public Nullable<DateTime> UpdatedAt { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+        public decimal ExchangeRateAmount { get; set; }
+        public Nullable<int> ExchangeRateId { get; set; }
 
         public virtual CashBank SourceCashBank { get; set; }
         public virtual CashBank TargetCashBank { get; set; }
+        public virtual ExchangeRate ExchangeRate { get; set; }
     }
 }

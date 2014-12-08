@@ -522,10 +522,11 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
+                            $('#PurchaseReceivalDetailId').val(result.PurchaseReceivalDetailId);
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
-                            $('#Quantity').val(result.Quantity);
-                            $('#Price').val(result.Price);
+                            $('#Quantity').numberbox('setValue', result.Quantity);
+                            $('#Price').numberbox('setValue', result.Price);
                             $('#PurchaseOrderDetailId').val(result.PurchaseOrderDetailId);
                             $('#item_div').dialog('open');
                             $("#Discount").attr('disabled', true);
@@ -600,7 +601,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, PurchaseInvoiceId: $("#id").val(), PurchaseReceivalDetailId: $("#PurchaseReceivalDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
+                Id: id, PurchaseInvoiceId: $("#id").val(), PurchaseReceivalDetailId: $("#PurchaseReceivalDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'),
             }),
             async: false,
             cache: false,

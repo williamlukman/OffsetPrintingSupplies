@@ -81,13 +81,24 @@ namespace Service.Service
         }
 
         public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
+                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                              ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             cashBankMutation.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(cashBankMutation, _cashBankService, _closingService))
             {
                 CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
                 CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
+                Currency currency = _currencyService.GetObjectById(sourceCashBank.CurrencyId);
+                if (currency.IsBase == false)
+                {
+                    cashBankMutation.ExchangeRateId = _exchangeRateService.GetLatestRate(cashBankMutation.ConfirmationDate.Value, currency).Id;
+                    cashBankMutation.ExchangeRateAmount = _exchangeRateService.GetObjectById(cashBankMutation.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    cashBankMutation.ExchangeRateAmount = 1;
+                }
                 IList<CashMutation> cashMutations = _cashMutationService.CreateCashMutationForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank);
                 foreach (var cashMutation in cashMutations)
                 {
@@ -100,7 +111,8 @@ namespace Service.Service
         }
 
         public CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService)
+                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, 
+                                                ICurrencyService _currencyService)
         {
             if (_validator.ValidUnconfirmObject(cashBankMutation, _cashBankService, _closingService))
             {

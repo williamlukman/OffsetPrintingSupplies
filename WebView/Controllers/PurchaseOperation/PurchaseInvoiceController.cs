@@ -437,7 +437,7 @@ namespace WebView.Controllers
                 var data = _purchaseInvoiceService.GetObjectById(model.Id);
                 model = _purchaseInvoiceService.UnconfirmObject(data,_purchaseInvoiceDetailService,
                         _purchaseReceivalService,_purchaseReceivalDetailService,_paymentVoucherDetailService,_payableService,
-                        _accountService,_generalLedgerJournalService,_closingService,_gLNonBaseCurrencyService);
+                        _accountService,_generalLedgerJournalService,_closingService,_gLNonBaseCurrencyService, _currencyService);
             }
             catch (Exception ex)
             {

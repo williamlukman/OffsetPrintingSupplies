@@ -472,7 +472,7 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').numberbox('setValue', result.Quantity);
-                            //$('#Price').val(result.Price);
+                            //$('#Price').numberbox('setValue',result.Price);
                             $('#item_div').dialog('open');
                         }
                     }
