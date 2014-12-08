@@ -88,6 +88,30 @@ namespace Validation.Validation
             return stockAdjustment;
         }
 
+        public StockAdjustment VGeneralLedgerPostingHasNotBeenClosed(StockAdjustment stockAdjustment, IClosingService _closingService, int CaseConfirmUnconfirm)
+        {
+            switch (CaseConfirmUnconfirm)
+            {
+                case (1): // Confirm
+                    {
+                        if (_closingService.IsDateClosed(stockAdjustment.AdjustmentDate))
+                        {
+                            stockAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
+                case (2): // Unconfirm
+                    {
+                        if (_closingService.IsDateClosed(stockAdjustment.AdjustmentDate))
+                        {
+                            stockAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
+                        }
+                        break;
+                    }
+            }
+            return stockAdjustment;
+        }
+
         public StockAdjustment VCreateObject(StockAdjustment stockAdjustment, IWarehouseService _warehouseService)
         {
             VAdjustmentDate(stockAdjustment);
@@ -120,7 +144,7 @@ namespace Validation.Validation
         }
 
         public StockAdjustment VConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IClosingService _closingService)
         {
             VHasConfirmationDate(stockAdjustment);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
@@ -128,14 +152,18 @@ namespace Validation.Validation
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VHasStockAdjustmentDetails(stockAdjustment, _stockAdjustmentDetailService);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
+            VGeneralLedgerPostingHasNotBeenClosed(stockAdjustment, _closingService, 1);
+            if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VDetailsAreVerifiedConfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService);
             return stockAdjustment;
         }
 
         public StockAdjustment VUnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IClosingService _closingService)
         {
             VHasBeenConfirmed(stockAdjustment);
+            if (!isValid(stockAdjustment)) { return stockAdjustment; }
+            VGeneralLedgerPostingHasNotBeenClosed(stockAdjustment, _closingService, 2);
             return stockAdjustment;
         }
 
@@ -160,18 +188,18 @@ namespace Validation.Validation
         }
 
         public bool ValidConfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                       IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IClosingService _closingService)
         {
             stockAdjustment.Errors.Clear();
-            VConfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService);
+            VConfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService, _closingService);
             return isValid(stockAdjustment);
         }
 
         public bool ValidUnconfirmObject(StockAdjustment stockAdjustment, IStockAdjustmentService _stockAdjustmentService, IStockAdjustmentDetailService _stockAdjustmentDetailService,
-                                         IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
+                                         IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, IClosingService _closingService)
         {
             stockAdjustment.Errors.Clear();
-            VUnconfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService);
+            VUnconfirmObject(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService, _closingService);
             return isValid(stockAdjustment);
         }
 

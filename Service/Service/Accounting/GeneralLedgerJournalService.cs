@@ -1717,6 +1717,141 @@ namespace Service.Service
             return journals;
         }
 
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForCustomerStockAdjustment(CustomerStockAdjustment customerStockAdjustment, IAccountService _accountService)
+        {
+            // if (customerStockAdjustmentTotal >= 0) then Debit Raw, Credit StockEquityAdjusment
+            // if (customerStockAdjustmentTotal < 0) then Debit StockAdjustmentExpense, Credit Raw
+            #region if (customerStockAdjustmentTotal >= 0) then Debit Raw, Credit StockEquityAdjustment
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            if (customerStockAdjustment.Total >= 0)
+            {
+                GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = customerStockAdjustment.Total
+                };
+                debitraw = CreateObject(debitraw, _accountService);
+
+                GeneralLedgerJournal creditstockequityadjustment = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = customerStockAdjustment.Total
+                };
+                creditstockequityadjustment = CreateObject(creditstockequityadjustment, _accountService);
+
+                journals.Add(debitraw);
+                journals.Add(creditstockequityadjustment);
+            }
+            #endregion
+            #region if (customerStockAdjustmentTotal < 0) then Debit CustomerStockAdjustmentExpense, Credit Raw
+            else
+            {
+                GeneralLedgerJournal debitstockadjustmentexpense = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.StockAdjustmentExpense).Id, // CustomerStockAdjustmentExpense ??
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Abs(customerStockAdjustment.Total)
+                };
+                debitstockadjustmentexpense = CreateObject(debitstockadjustmentexpense, _accountService);
+
+                GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Abs(customerStockAdjustment.Total)
+                };
+                creditraw = CreateObject(creditraw, _accountService);
+
+                journals.Add(debitstockadjustmentexpense);
+                journals.Add(creditraw);
+            }
+            #endregion
+            return journals;
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCustomerStockAdjustment(CustomerStockAdjustment customerStockAdjustment, IAccountService _accountService)
+        {
+            // if (customerStockAdjustmentTotal >= 0) then Credit Raw, Debit StockEquityAdjustment
+            // if (customerStockAdjustmentTotal < 0) then Credit StockAdjustmentExpense, Debit Raw
+            #region if (customerStockAdjustmentTotal >= 0) then Credit Raw, Debit StockEquityAdjustment
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            DateTime UnconfirmationDate = DateTime.Now;
+
+            if (customerStockAdjustment.Total >= 0)
+            {
+                GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = customerStockAdjustment.Total
+                };
+                creditraw = CreateObject(creditraw, _accountService);
+
+                GeneralLedgerJournal debitstockequityadjustment = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = customerStockAdjustment.Total
+                };
+                debitstockequityadjustment = CreateObject(debitstockequityadjustment, _accountService);
+
+                journals.Add(creditraw);
+                journals.Add(debitstockequityadjustment);
+            }
+            #endregion
+            #region if (customerStockAdjustmentTotal < 0) then Credit CustomerStockAdjustmentExpense, Debit Raw
+            else
+            {
+                GeneralLedgerJournal creditstockadjustmentexpense = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.StockAdjustmentExpense).Id, // CustomerStockAdjustmentExpense ??
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Abs(customerStockAdjustment.Total)
+                };
+                creditstockadjustmentexpense = CreateObject(creditstockadjustmentexpense, _accountService);
+
+                GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                    SourceDocumentId = customerStockAdjustment.Id,
+                    TransactionDate = customerStockAdjustment.AdjustmentDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Abs(customerStockAdjustment.Total)
+                };
+                debitraw = CreateObject(debitraw, _accountService);
+
+                journals.Add(creditstockadjustmentexpense);
+                journals.Add(debitraw);
+            }
+            #endregion
+            return journals;
+        }
+
         // PURCHASE OPERATION
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseReceival(PurchaseReceival purchaseReceival, IAccountService _accountService)

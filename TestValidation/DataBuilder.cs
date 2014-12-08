@@ -987,7 +987,7 @@ namespace TestValidation
             _stockAdjustmentDetailService.CreateObject(sad5, _stockAdjustmentService, _itemService, _warehouseItemService);
  
             _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
-                                                  _accountService, _generalLedgerJournalService);
+                                                  _accountService, _generalLedgerJournalService, _closingService);
         }
 
         public void PopulateSingles()
@@ -1386,7 +1386,7 @@ namespace TestValidation
             _stockAdjustmentDetailService.CreateObject(sadRollerUsedCore4, _stockAdjustmentService, _itemService, _warehouseItemService);
 
             _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
-                                                  _accountService, _generalLedgerJournalService);
+                                                  _accountService, _generalLedgerJournalService, _closingService);
         }
 
         public void PopulateWarehouseMutationForRollerIdentificationAndRecovery()
@@ -1882,7 +1882,7 @@ namespace TestValidation
         public void PopulateRecoveryOrders3()
         {
             _stockAdjustmentService.ConfirmObject(stockAdjustment, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, 
-                                                  _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService);
+                                                  _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             
             recoveryOrderContact2 = new RecoveryOrder()
             {
@@ -2233,7 +2233,7 @@ namespace TestValidation
             _stockAdjustmentDetailService.CreateObject(sadBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
 
             _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
-                                                  _accountService, _generalLedgerJournalService);
+                                                  _accountService, _generalLedgerJournalService, _closingService);
         }
 
         public void PopulateBlanketOrders()

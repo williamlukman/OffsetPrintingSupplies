@@ -96,6 +96,8 @@
     <Compile Include="Mapping\StockAndMaster\CompoundMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\BlendingRecipeMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\BlendingRecipeDetailMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\CustomerStockAdjustmentDetailMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\CustomerStockAdjustmentMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CustomerStockMutationMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CustomerItemMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ServiceCostMapping.cs" />
@@ -197,6 +199,8 @@
     <Compile Include="Repository\StockAndMaster\CompoundRepository.cs" />
     <Compile Include="Repository\StockAndMaster\BlendingRecipeRepository.cs" />
     <Compile Include="Repository\StockAndMaster\BlendingRecipeDetailRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\CustomerStockAdjustmentDetailRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\CustomerStockAdjustmentRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CustomerStockMutationRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CustomerItemRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ServiceCostRepository.cs" />

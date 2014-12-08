@@ -49,7 +49,7 @@ namespace Data.Context
                                           "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate","Currency"};
             IList<String> stockAndMasterNames = new List<String>()
                                         { "PriceMutation", "CustomerStockMutation", "StockMutation", "CustomerItem", "WarehouseMutationDetail", "WarehouseMutation",
-                                          "ServiceCost", "RollerBuilder", "StockAdjustmentDetail", "StockAdjustment",
+                                          "ServiceCost", "RollerBuilder", "CustomerStockAdjustmentDetail", "CustomerStockAdjustment", "StockAdjustmentDetail", "StockAdjustment",
                                           "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
                                           "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "Company" };
@@ -93,6 +93,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new CoreAccessoryDetailMapping());
             modelBuilder.Configurations.Add(new CoreIdentificationDetailMapping());
             modelBuilder.Configurations.Add(new CustomerItemMapping());
+            modelBuilder.Configurations.Add(new CustomerStockAdjustmentMapping());
+            modelBuilder.Configurations.Add(new CustomerStockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new CustomerStockMutationMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderMapping());
             modelBuilder.Configurations.Add(new DeliveryOrderDetailMapping());
@@ -190,6 +192,8 @@ namespace Data.Context
         public DbSet<CoreAccessoryDetail> CoreAccessoryDetails { get; set; }
         public DbSet<CoreIdentificationDetail> CoreIdentificationDetails { get; set; }
         public DbSet<CustomerItem> CustomerItems { get; set; }
+        public DbSet<CustomerStockAdjustment> CustomerStockAdjustments { get; set; }
+        public DbSet<CustomerStockAdjustmentDetail> CustomerStockAdjustmentDetails { get; set; }
         public DbSet<CustomerStockMutation> CustomerStockMutations { get; set; }
         public DbSet<DeliveryOrderDetail> DeliveryOrderDetails { get; set; }
         public DbSet<DeliveryOrder> DeliveryOrders { get; set; }

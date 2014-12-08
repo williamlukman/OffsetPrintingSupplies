@@ -490,7 +490,7 @@ namespace TestValidation
                 _stockAdjustmentDetailService.CreateObject(sadBotolAqua, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService);
+                                                      _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
 
                 salesOrder1 = new SalesOrder()
                 {

@@ -489,6 +489,33 @@ namespace Service.Service
             return stockMutations;
         }
 
+        public StockMutation CreateStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, WarehouseItem warehouseItem)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
+            stockMutation.WarehouseId = warehouseItem.WarehouseId;
+            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.Quantity = (customerStockAdjustmentDetail.Quantity >= 0) ? customerStockAdjustmentDetail.Quantity : (-1) * customerStockAdjustmentDetail.Quantity;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.CustomerStockAdjustment;
+            stockMutation.SourceDocumentId = customerStockAdjustmentDetail.CustomerStockAdjustmentId;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.CustomerStockAdjustmentDetail;
+            stockMutation.SourceDocumentDetailId = customerStockAdjustmentDetail.Id;
+            stockMutation.ItemCase = Constant.ItemCase.Ready;
+            stockMutation.Status = (customerStockAdjustmentDetail.Quantity >= 0) ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
+            stockMutation.MutationDate = (DateTime)customerStockAdjustmentDetail.ConfirmationDate;
+            return _repository.CreateObject(stockMutation);
+        }
+
+        public IList<StockMutation> DeleteStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, WarehouseItem warehouseItem)
+        {
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.CustomerStockAdjustmentDetail, customerStockAdjustmentDetail.Id);
+            foreach (var stockMutation in stockMutations)
+            {
+                _repository.Delete(stockMutation);
+            }
+            return stockMutations;
+        }
+
         public StockMutation CreateStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, WarehouseItem warehouseItem)
         {
             StockMutation stockMutation = new StockMutation();

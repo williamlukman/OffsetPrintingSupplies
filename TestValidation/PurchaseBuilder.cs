@@ -583,7 +583,7 @@ namespace TestValidation
             _stockAdjustmentDetailService.CreateObject(sadRollBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
 
             _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
-                                                  _accountService, _generalLedgerJournalService);
+                                                  _accountService, _generalLedgerJournalService, _closingService);
 
             contact = new Contact()
             {
