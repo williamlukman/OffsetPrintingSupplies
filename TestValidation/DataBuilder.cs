@@ -3333,10 +3333,23 @@ namespace TestValidation
                 Period = DateTime.Today.Month,
                 YearPeriod = DateTime.Today.Year,
             };
-            _closingService.CreateObject(thisMonthClosing, , _accountService, _validCombService, _exchangeRateClosingService);
+            IList<ExchangeRateClosing> exchangeRateClosing = new List<ExchangeRateClosing>();
+            ExchangeRateClosing usd = new ExchangeRateClosing()
+            {
+                CurrencyId = currencyUSD.Id,
+                Rate = 12000
+            };
+            ExchangeRateClosing eur = new ExchangeRateClosing()
+            {
+                CurrencyId = currencyEUR.Id,
+                Rate = 15000
+            };
+            exchangeRateClosing.Add(usd);
+            exchangeRateClosing.Add(eur);
+            _closingService.CreateObject(thisMonthClosing, exchangeRateClosing, _accountService, _validCombService, _exchangeRateClosingService);
 
             thisMonthClosing.ClosedAt = DateTime.Today;
-            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService,_gLNonBaseCurrencyService,_exchangeRateClosingService,_vCNonBaseCurrencyService);
+            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService, _gLNonBaseCurrencyService, _exchangeRateClosingService, _vCNonBaseCurrencyService);
         }
     }
 }
