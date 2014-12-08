@@ -43,6 +43,7 @@ namespace NSpec
         IStockMutationService _stockMutationService;
         IItemService _itemService;
         IAccountService _accountService;
+        IClosingService _closingService;
         IGeneralLedgerJournalService _generalLedgerJournalService;
         ICurrencyService _currencyService;
 
@@ -76,6 +77,7 @@ namespace NSpec
                 _itemService = new ItemService(new ItemRepository(), new ItemValidator());
 
                 _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+                _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
 
                 if (!_accountService.GetLegacyObjects().Any())
@@ -442,7 +444,7 @@ namespace NSpec
                 _stockAdjustmentDetailService.CreateObject(sadItem2, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _blanketService, _warehouseItemService, _accountService , _generalLedgerJournalService);
+                                                      _itemService, _blanketService, _warehouseItemService, _accountService , _generalLedgerJournalService, _closingService);
 
             }
         }

@@ -13,34 +13,36 @@ using System.Data.Entity;
 
 namespace WebView.Controllers
 {
-    public class StockAdjustmentController : Controller
+    public class CustomerStockAdjustmentController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("StockAdjustmentController");
-        private IStockAdjustmentService _stockAdjustmentService;
-        private IStockAdjustmentDetailService _stockAdjustmentDetailService;
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("CustomerStockAdjustmentController");
+        private ICustomerStockAdjustmentService _customerStockAdjustmentService;
+        private ICustomerStockAdjustmentDetailService _customerStockAdjustmentDetailService;
         private IWarehouseService _warehouseService;
+        private IContactService _contactService;
         private IItemService _itemService;
         private IUoMService _uomService;
         private IWarehouseItemService _warehouseItemService;
-        private IStockMutationService _stockMutationService;
-        private IBlanketService _blanketService;
+        private ICustomerStockMutationService _customerStockMutationService;
+        private ICustomerItemService _customerItemService;
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
 
-        public StockAdjustmentController()
+        public CustomerStockAdjustmentController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
-            _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
-            _stockAdjustmentDetailService = new StockAdjustmentDetailService(new StockAdjustmentDetailRepository(), new StockAdjustmentDetailValidator());
+            _customerStockAdjustmentService = new CustomerStockAdjustmentService(new CustomerStockAdjustmentRepository(), new CustomerStockAdjustmentValidator());
+            _customerStockAdjustmentDetailService = new CustomerStockAdjustmentDetailService(new CustomerStockAdjustmentDetailRepository(), new CustomerStockAdjustmentDetailValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
-            _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
-            _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
+            _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
+            _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
         }
 
 
@@ -58,13 +60,14 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _stockAdjustmentService.GetQueryable().Include("Warehouse").Where(x => !x.IsDeleted);
+            var q = _customerStockAdjustmentService.GetQueryable().Include("Warehouse").Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.Contact.Name,
                              Warehouse = model.Warehouse.Name,
                              model.Description,
                              model.AdjustmentDate,
@@ -104,6 +107,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.Warehouse,
                             model.Description,
                             model.AdjustmentDate,
@@ -124,8 +128,8 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _stockAdjustmentDetailService.GetQueryable().Include("Item").Include("UoM")
-                                                 .Where(x => x.StockAdjustmentId == id && !x.IsDeleted);
+            var q = _customerStockAdjustmentDetailService.GetQueryable().Include("Item").Include("UoM")
+                                                 .Where(x => x.CustomerStockAdjustmentId == id && !x.IsDeleted);
 
             var query = (from model in q
                          select new
@@ -182,10 +186,10 @@ namespace WebView.Controllers
 
         public dynamic GetInfo(int Id)
         {
-            StockAdjustment model = new StockAdjustment();
+            CustomerStockAdjustment model = new CustomerStockAdjustment();
             try
             {
-                model = _stockAdjustmentService.GetObjectById(Id);
+                model = _customerStockAdjustmentService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -196,21 +200,23 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
+                model.Code,
+                model.ContactId,
+                Contact = model.Contact.Name,
                 model.WarehouseId,
-                Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
+                Warehouse = model.Warehouse.Name,
                 model.AdjustmentDate,
                 model.Description,
-                model.Code,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
 
         public dynamic GetInfoDetail(int Id)
         {
-            StockAdjustmentDetail model = new StockAdjustmentDetail();
+            CustomerStockAdjustmentDetail model = new CustomerStockAdjustmentDetail();
             try
             {
-                model = _stockAdjustmentDetailService.GetObjectById(Id);
+                model = _customerStockAdjustmentDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -230,11 +236,11 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Insert(StockAdjustment model)
+        public dynamic Insert(CustomerStockAdjustment model)
         {
             try
             {
-                model = _stockAdjustmentService.CreateObject(model,_warehouseService);
+                model = _customerStockAdjustmentService.CreateObject(model,_warehouseService, _contactService);
             }
             catch (Exception ex)
             {
@@ -249,11 +255,11 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic InsertDetail(StockAdjustmentDetail model)
+        public dynamic InsertDetail(CustomerStockAdjustmentDetail model)
         {
             try
             {
-                model = _stockAdjustmentDetailService.CreateObject(model,_stockAdjustmentService,_itemService,_warehouseItemService);
+                model = _customerStockAdjustmentDetailService.CreateObject(model,_customerStockAdjustmentService,_itemService,_warehouseItemService,_customerItemService);
             }
             catch (Exception ex)
             {
@@ -268,15 +274,16 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Update(StockAdjustment model)
+        public dynamic Update(CustomerStockAdjustment model)
         {
             try
             {
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
+                var data = _customerStockAdjustmentService.GetObjectById(model.Id);
                 data.AdjustmentDate = model.AdjustmentDate;
                 data.Description = model.Description;
                 data.WarehouseId = model.WarehouseId;
-                model = _stockAdjustmentService.UpdateObject(data,_warehouseService);
+                data.ContactId = model.ContactId;
+                model = _customerStockAdjustmentService.UpdateObject(data,_warehouseService,_contactService);
             }
             catch (Exception ex)
             {
@@ -291,15 +298,15 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UpdateDetail(StockAdjustmentDetail model)
+        public dynamic UpdateDetail(CustomerStockAdjustmentDetail model)
         {
             try
             {
-                var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
+                var data = _customerStockAdjustmentDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
                 data.Price = model.Price;
-                model = _stockAdjustmentDetailService.UpdateObject(data,_stockAdjustmentService,_itemService,_warehouseItemService);
+                model = _customerStockAdjustmentDetailService.UpdateObject(data,_customerStockAdjustmentService,_itemService,_warehouseItemService,_customerItemService);
             }
             catch (Exception ex)
             {
@@ -315,12 +322,12 @@ namespace WebView.Controllers
 
 
         [HttpPost]
-        public dynamic Delete(StockAdjustment model)
+        public dynamic Delete(CustomerStockAdjustment model)
         {
             try
             {
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.SoftDeleteObject(data, _stockAdjustmentDetailService);
+                var data = _customerStockAdjustmentService.GetObjectById(model.Id);
+                model = _customerStockAdjustmentService.SoftDeleteObject(data, _customerStockAdjustmentDetailService);
             }
             catch (Exception ex)
             {
@@ -335,12 +342,12 @@ namespace WebView.Controllers
         }
          
         [HttpPost]
-        public dynamic DeleteDetail(StockAdjustmentDetail model)
+        public dynamic DeleteDetail(CustomerStockAdjustmentDetail model)
         {
             try
             {
-                var data = _stockAdjustmentDetailService.GetObjectById(model.Id);
-                model = _stockAdjustmentDetailService.SoftDeleteObject(data);
+                var data = _customerStockAdjustmentDetailService.GetObjectById(model.Id);
+                model = _customerStockAdjustmentDetailService.SoftDeleteObject(data);
             }
             catch (Exception ex)
             {
@@ -355,13 +362,13 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic Confirm(StockAdjustment model)
+        public dynamic Confirm(CustomerStockAdjustment model)
         {
             try
             {
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.Value, _stockAdjustmentDetailService, _stockMutationService,
-                                                              _itemService, _blanketService, _warehouseItemService,
+                var data = _customerStockAdjustmentService.GetObjectById(model.Id);
+                model = _customerStockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), _customerStockAdjustmentDetailService, _customerStockMutationService,
+                                                              _itemService, _customerItemService, _warehouseItemService,
                                                               _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
@@ -377,14 +384,14 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic UnConfirm(StockAdjustment model)
+        public dynamic UnConfirm(CustomerStockAdjustment model)
         {
             try
             {
 
-                var data = _stockAdjustmentService.GetObjectById(model.Id);
-                model = _stockAdjustmentService.UnconfirmObject(data,_stockAdjustmentDetailService,_stockMutationService,_itemService,
-                                                                _blanketService,_warehouseItemService,_accountService,_generalLedgerJournalService, _closingService);
+                var data = _customerStockAdjustmentService.GetObjectById(model.Id);
+                model = _customerStockAdjustmentService.UnconfirmObject(data,_customerStockAdjustmentDetailService,_customerStockMutationService,_itemService,
+                                                                _customerItemService,_warehouseItemService,_accountService,_generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

@@ -43,6 +43,7 @@ namespace TestValidation
 
         IPriceMutationService _priceMutationService;
         IAccountService _accountService;
+        IClosingService _closingService;
         IGeneralLedgerJournalService _generalLedgerJournalService;
         ICurrencyService _currencyService;
 
@@ -74,6 +75,7 @@ namespace TestValidation
 
                 _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
                 _accountService = new AccountService(new AccountRepository(), new AccountValidator());
+                _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
                 _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
                 _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
 
@@ -441,7 +443,7 @@ namespace TestValidation
                 _stockAdjustmentDetailService.CreateObject(sadBatikTulis, _stockAdjustmentService, _itemService, _warehouseItemService);
 
                 _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService,
-                                                      _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService);
+                                                      _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
 
             }
         }

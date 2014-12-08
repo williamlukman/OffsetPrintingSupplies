@@ -39,8 +39,8 @@ namespace Core.Interface.Service
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForTemporaryDeliveryOrderWaste(TemporaryDeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
          //IList<CustomerStockMutation> CreateCustomerStockMutationForTemporaryDeliveryOrderRestock(TemporaryDeliveryOrderDetail deliveryOrderDetail, DateTime PushDate, CustomerItem customerItem);
          //IList<CustomerStockMutation> DeleteCustomerStockMutationForTemporaryDeliveryOrderRestock(TemporaryDeliveryOrderDetail deliveryOrderDetail, CustomerItem customerItem);
-         //CustomerStockMutation CreateCustomerStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, CustomerItem customerItem);
-         //IList<CustomerStockMutation> DeleteCustomerStockMutationForStockAdjustment(StockAdjustmentDetail stockAdjustmentDetail, CustomerItem customerItem);
+         CustomerStockMutation CreateCustomerStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, CustomerItem customerItem, int ItemId);
+         IList<CustomerStockMutation> DeleteCustomerStockMutationForCustomerStockAdjustment(CustomerStockAdjustmentDetail customerStockAdjustmentDetail, CustomerItem customerItem);
          CustomerStockMutation CreateCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem, int ItemId);
          IList<CustomerStockMutation> DeleteCustomerStockMutationForCoreIdentification(CoreIdentificationDetail coreIdentificationDetail, CustomerItem customerItem);
          CustomerStockMutation CreateCustomerStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, CustomerItem customerItem, int ItemId, bool CaseAddition);

@@ -93,6 +93,8 @@
     <Compile Include="DomainModel\StockAndMaster\Compound.cs" />
     <Compile Include="DomainModel\StockAndMaster\BlendingRecipe.cs" />
     <Compile Include="DomainModel\StockAndMaster\BlendingRecipeDetail.cs" />
+    <Compile Include="DomainModel\StockAndMaster\CustomerStockAdjustmentDetail.cs" />
+    <Compile Include="DomainModel\StockAndMaster\CustomerStockAdjustment.cs" />
     <Compile Include="DomainModel\StockAndMaster\CustomerStockMutation.cs" />
     <Compile Include="DomainModel\StockAndMaster\CustomerItem.cs" />
     <Compile Include="DomainModel\StockAndMaster\ServiceCost.cs" />
@@ -183,6 +185,8 @@
     <Compile Include="Interface\Repository\SalesOperation\ITemporaryDeliveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\ICustomerStockAdjustmentDetailRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\ICustomerStockAdjustmentRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IBlendingRecipeDetailRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IBlendingRecipeRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\ICustomerStockMutationRepository.cs" />
@@ -280,6 +284,8 @@
     <Compile Include="Interface\Service\SalesOperation\ITemporaryDeliveryOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderDetailService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\ICustomerStockAdjustmentService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\ICustomerStockAdjustmentDetailService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IBlendingRecipeDetailService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IBlendingRecipeService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\ICustomerStockMutationService.cs" />
@@ -375,6 +381,8 @@
     <Compile Include="Interface\Validation\SalesOperation\ITemporaryDeliveryOrderValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\ICustomerStockAdjustmentDetailValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\IStockAdjustmentValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IBlendingRecipeDetailValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IBlendingRecipeValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\ICustomerStockMutationValidator.cs" />
@@ -402,7 +410,7 @@
     <Compile Include="Interface\Validation\SalesOperation\ISalesOrderValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IUoMValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IStockAdjustmentDetailValidator.cs" />
-    <Compile Include="Interface\Validation\StockAndMaster\IStockAdjustmentValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\ICustomerStockAdjustmentValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IStockMutationValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IWarehouseMutationDetailValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IWarehouseMutationValidator.cs" />
