@@ -89,9 +89,10 @@ namespace Service.Service
             {
                 CashBank sourceCashBank = _cashBankService.GetObjectById(cashBankMutation.SourceCashBankId);
                 CashBank targetCashBank = _cashBankService.GetObjectById(cashBankMutation.TargetCashBankId);
-                if (_currencyService.GetObjectById(sourceCashBank.CurrencyId).IsBase == false)
+                Currency currency = _currencyService.GetObjectById(sourceCashBank.CurrencyId);
+                if (currency.IsBase == false)
                 {
-                    cashBankMutation.ExchangeRateId = _exchangeRateService.GetLatestRate(cashBankMutation.ConfirmationDate.Value, sourceCashBank.CurrencyId).Id;
+                    cashBankMutation.ExchangeRateId = _exchangeRateService.GetLatestRate(cashBankMutation.ConfirmationDate.Value, currency).Id;
                     cashBankMutation.ExchangeRateAmount = _exchangeRateService.GetObjectById(cashBankMutation.ExchangeRateId.Value).Rate;
                 }
                 else

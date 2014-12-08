@@ -16,7 +16,7 @@ namespace Core.Interface.Service
         ExchangeRate CreateObject(ExchangeRate exchangeRate);
         ExchangeRate UpdateObject(ExchangeRate exchangeRate);
         ExchangeRate SoftDeleteObject(ExchangeRate exchangeRate);
-        ExchangeRate GetLatestRate(DateTime date,int currencyid);
+        ExchangeRate GetLatestRate(DateTime date, Currency currency);
         bool IsExchangeRateDateDuplicated(ExchangeRate exchangeRate);
         bool DeleteObject(int Id);
     }

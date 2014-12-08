@@ -30,6 +30,7 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private IExchangeRateService _exchangeRateService;
         private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
+        private ICurrencyService _currencyService;
 
         public PaymentRequestController()
         {
@@ -47,6 +48,7 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
             _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
         }
 
         public ActionResult Index()
@@ -467,8 +469,8 @@ namespace WebView.Controllers
 
                 var data = _paymentRequestService.GetObjectById(model.Id);
                 model = _paymentRequestService.ConfirmObject(data, model.ConfirmationDate.Value, _payableService, _paymentRequestDetailService,
-                                                             _accountService, _generalLedgerJournalService, _closingService,_exchangeRateService
-                                                             ,_gLNonBaseCurrencyService);
+                                                             _accountService, _generalLedgerJournalService, _closingService,_exchangeRateService,
+                                                             _gLNonBaseCurrencyService, _currencyService);
             }
             catch (Exception ex)
             {
@@ -506,7 +508,7 @@ namespace WebView.Controllers
 
                 var data = _paymentRequestService.GetObjectById(model.Id);
                 model = _paymentRequestService.UnconfirmObject(data, _paymentRequestDetailService, _payableService, _accountService, 
-                    _generalLedgerJournalService, _closingService,_gLNonBaseCurrencyService);
+                    _generalLedgerJournalService, _closingService,_gLNonBaseCurrencyService, _currencyService);
             }
             catch (Exception ex)
             {

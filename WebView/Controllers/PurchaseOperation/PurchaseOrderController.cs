@@ -419,6 +419,7 @@ namespace WebView.Controllers
                 var data = _purchaseOrderDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.PendingReceivalQuantity = model.Quantity;
                 data.Price = model.Price;
                 model = _purchaseOrderDetailService.UpdateObject(data,_purchaseOrderService,_itemService);
             }

@@ -99,9 +99,10 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
-        public PurchaseInvoice VHasExchangeRateList(PurchaseInvoice purchaseInvoice, IExchangeRateService _exchangeRateService)
+        public PurchaseInvoice VHasExchangeRateList(PurchaseInvoice purchaseInvoice, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService)
         {
-            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(purchaseInvoice.ConfirmationDate.Value, purchaseInvoice.CurrencyId);
+            Currency currency = _currencyService.GetObjectById(purchaseInvoice.CurrencyId);
+            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(purchaseInvoice.ConfirmationDate.Value, currency);
             if (exchangeRate == null)
             {
                 purchaseInvoice.Errors.Add("Generic", "Tidak ada list Exchange Rate untuk " + purchaseInvoice.Currency.Name);
@@ -264,7 +265,7 @@ namespace Validation.Validation
 
         public PurchaseInvoice VConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                               IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IClosingService _closingService,
-                                              IExchangeRateService _exchangeRateService)
+                                              IExchangeRateService _exchangeRateService, ICurrencyService _currencyService)
         {
             VHasConfirmationDate(purchaseInvoice);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
@@ -280,7 +281,7 @@ namespace Validation.Validation
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VGeneralLedgerPostingHasNotBeenClosed(purchaseInvoice, _closingService, 1);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
-            VHasExchangeRateList(purchaseInvoice, _exchangeRateService);
+            VHasExchangeRateList(purchaseInvoice, _exchangeRateService, _currencyService);
             return purchaseInvoice;
         }
 
@@ -321,10 +322,11 @@ namespace Validation.Validation
 
         public bool ValidConfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                        IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
-                                        IClosingService _closingService,IExchangeRateService _exchangeRateService)
+                                       IClosingService _closingService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService)
         {
             purchaseInvoice.Errors.Clear();
-            VConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService, _closingService,_exchangeRateService);
+            VConfirmObject(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalService, _purchaseReceivalDetailService,
+                           _closingService, _exchangeRateService, _currencyService);
             return isValid(purchaseInvoice);
         }
 

@@ -334,12 +334,14 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService,
-                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService,
+                                           ICurrencyService _currencyService)
         {
             // GBCH: Credit GBCHPayable, Cash: Credit CashBank
             // Debit Account Payable, Credit ExchangeGain or Debit ExchangeLost
             #region GBCH: Credit GBCHPayable, Cash: Credit CashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             if (paymentVoucher.IsGBCH)
             {
                 GeneralLedgerJournal creditGBCHPayable = new GeneralLedgerJournal()
@@ -354,7 +356,7 @@ namespace Service.Service
                 creditGBCHPayable = CreateObject(creditGBCHPayable, _accountService);
                 journals.Add(creditGBCHPayable);
 
-                if (cashBank.Currency.IsBase == false)
+                if (cashBankCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency creditGBCHPayable2 = new GLNonBaseCurrency()
                     {
@@ -378,7 +380,7 @@ namespace Service.Service
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
                 journals.Add(creditcashbank);
-                if (cashBank.Currency.IsBase == false)
+                if (cashBankCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency creditcashbank2 = new GLNonBaseCurrency()
                     {
@@ -396,6 +398,7 @@ namespace Service.Service
             foreach (var detail in pvd)
             {
                 Payable payable = _payableService.GetObjectById(detail.PayableId);
+                Currency payableCurrency = _currencyService.GetObjectById(payable.CurrencyId);
                 GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + payable.CurrencyId).Id,
@@ -406,7 +409,7 @@ namespace Service.Service
                     Amount = detail.Amount * payable.Rate
                 };
                 debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
-                if (payable.Currency.IsBase == false)
+                if (payableCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency debitaccountpayable2 = new GLNonBaseCurrency()
                     {
@@ -452,14 +455,15 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentVoucher(PaymentVoucher paymentVoucher, CashBank cashBank, IAccountService _accountService,
-                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                           IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
+                                           IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // GBCH: Debit GBCHPayable, Cash: Debit CashBank
             // Credit Account Payable, Debit ExchangeGain or Credit ExchangeLost
             #region GBCH: Debit GBCHPayable, Cash: Debit CashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
-
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             if (paymentVoucher.IsGBCH)
             {
                 GeneralLedgerJournal debitGBCHPayable = new GeneralLedgerJournal()
@@ -473,7 +477,7 @@ namespace Service.Service
                 };
                 debitGBCHPayable = CreateObject(debitGBCHPayable, _accountService);
                 journals.Add(debitGBCHPayable);
-                if (cashBank.Currency.IsBase == false)
+                if (cashBankCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency debitGBCHPayable2 = new GLNonBaseCurrency()
                     {
@@ -498,7 +502,7 @@ namespace Service.Service
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
                 journals.Add(debitcashbank);
-                if (cashBank.Currency.IsBase == false)
+                if (cashBankCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency debitcashbank2 = new GLNonBaseCurrency()
                     {
@@ -516,6 +520,7 @@ namespace Service.Service
             foreach (var detail in pvd)
             {
                 Payable payable = _payableService.GetObjectById(detail.PayableId);
+                Currency payableCurrency = _currencyService.GetObjectById(payable.CurrencyId);
                 GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + payable.CurrencyId).Id,
@@ -528,7 +533,7 @@ namespace Service.Service
                 creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
                 journals.Add(creditaccountpayable);
 
-                if (payable.Currency.IsBase == false)
+                if (payableCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency creditaccountpayable2 = new GLNonBaseCurrency()
                     {
@@ -574,11 +579,12 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateReconcileJournalForPaymentVoucher(PaymentVoucher paymentVoucher, 
-            CashBank cashBank, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+            CashBank cashBank, IAccountService _accountService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Debit GBCH, Credit CashBank
             #region Debit GBCH, Credit CashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             GeneralLedgerJournal debitGBCH = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + cashBank.CurrencyId).Id,
@@ -591,7 +597,7 @@ namespace Service.Service
             debitGBCH = CreateObject(debitGBCH, _accountService);
             journals.Add(debitGBCH);
 
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency debitGBCH2 = new GLNonBaseCurrency()
                 {
@@ -612,7 +618,7 @@ namespace Service.Service
             };
             creditcashBank = CreateObject(creditcashBank, _accountService);
             journals.Add(creditcashBank);
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency creditcashBank2 = new GLNonBaseCurrency()
                 {
@@ -627,13 +633,14 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateUnReconcileJournalForPaymentVoucher(PaymentVoucher paymentVoucher, 
-            CashBank cashBank, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+            CashBank cashBank, IAccountService _accountService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Credit GBCH, Debit CashBank
             #region Credit GBCH, Debit CashBank
 
             DateTime unReconcileDate = DateTime.Now;
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             GeneralLedgerJournal creditGBCH = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHPayable + cashBank.CurrencyId).Id,
@@ -646,7 +653,7 @@ namespace Service.Service
             creditGBCH = CreateObject(creditGBCH, _accountService);
             journals.Add(creditGBCH);
 
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency creditGBCH2 = new GLNonBaseCurrency()
                 {
@@ -669,7 +676,7 @@ namespace Service.Service
             debitcashBank = CreateObject(debitcashBank, _accountService);
             journals.Add(debitcashBank);
 
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency debitcashBank2 = new GLNonBaseCurrency()
                 {
@@ -685,14 +692,15 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, 
-            IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                           IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,
+                                           IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Credit AccountPayable, Debit User Input
             #region Credit AccountPayable, Debit User Input
 
             IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            
+            Currency paymentRequestCurrency = _currencyService.GetObjectById(paymentRequest.CurrencyId);
             GeneralLedgerJournal creditAccountPayable = new GeneralLedgerJournal()
             { 
                 AccountId = paymentRequest.AccountPayableId,
@@ -705,7 +713,7 @@ namespace Service.Service
             creditAccountPayable = CreateObject(creditAccountPayable, _accountService);
             journals.Add(creditAccountPayable);
 
-            if (paymentRequest.Currency.IsBase == false)
+            if (paymentRequestCurrency.IsBase == false)
             {
                 GLNonBaseCurrency creditAccountPayable2 = new GLNonBaseCurrency()
                 {
@@ -735,14 +743,14 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, 
-            IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService,
+                                           IAccountService _accountService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Debit AccountPayable, Credit User Input
             #region Debit AccountPayable, Credit User Input
-
             IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency paymentRequestCurrency = _currencyService.GetObjectById(paymentRequest.CurrencyId);
             DateTime UnconfirmationDate = DateTime.Now;
 
             GeneralLedgerJournal debitAccountPayable = new GeneralLedgerJournal()
@@ -757,7 +765,7 @@ namespace Service.Service
             debitAccountPayable = CreateObject(debitAccountPayable, _accountService);
             journals.Add(debitAccountPayable);
 
-            if (paymentRequest.Currency.IsBase == false)
+            if (paymentRequestCurrency.IsBase == false)
             {
                 GLNonBaseCurrency debitAccountPayable2 = new GLNonBaseCurrency()
                 {
@@ -996,12 +1004,14 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService, 
-                                           IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                           IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
+                                           IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // GBCH: Debit GBCHReceivable, CashBank: DebitCashBank
             // Credit AccountReceivable, Credit ExchangeGain or Debit ExchangeLost
             #region GBCH: Debit GBCHReceivable, CashBank: DebitCashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             //debit cashbank credit AR
             if (receiptVoucher.IsGBCH)
             {
@@ -1016,15 +1026,17 @@ namespace Service.Service
                 };
                 debitGBCHReceivable = CreateObject(debitGBCHReceivable, _accountService);
                 journals.Add(debitGBCHReceivable);
-            if (cashBank.Currency.IsBase == false){
-                GLNonBaseCurrency debitGBCHReceivable2 = new GLNonBaseCurrency()
+
+                if (cashBankCurrency.IsBase == false)
                 {
-                    GeneralLedgerJournalId = debitGBCHReceivable.Id,
-                    CurrencyId = cashBank.CurrencyId,
-                    Amount = receiptVoucher.TotalAmount,
-                };
-                debitGBCHReceivable2 = _gLNonBaseCurrencyService.CreateObject(debitGBCHReceivable2, _accountService);
-            }
+                    GLNonBaseCurrency debitGBCHReceivable2 = new GLNonBaseCurrency()
+                    {
+                        GeneralLedgerJournalId = debitGBCHReceivable.Id,
+                        CurrencyId = cashBank.CurrencyId,
+                        Amount = receiptVoucher.TotalAmount,
+                    };
+                    debitGBCHReceivable2 = _gLNonBaseCurrencyService.CreateObject(debitGBCHReceivable2, _accountService);
+                }
             }
             else
             {
@@ -1039,7 +1051,7 @@ namespace Service.Service
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
                 journals.Add(debitcashbank);
-                if (cashBank.Currency.IsBase == false)
+                if (cashBankCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency debitcashbank2 = new GLNonBaseCurrency()
                     {
@@ -1058,6 +1070,7 @@ namespace Service.Service
             foreach (var detail in rvd)
             {
                 Receivable receivable = _receivableService.GetObjectById(detail.ReceivableId);
+                Currency receivableCurrency = _currencyService.GetObjectById(receivable.CurrencyId);
                 GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + receivable.CurrencyId).Id,
@@ -1069,7 +1082,8 @@ namespace Service.Service
                 };
                 creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
                 journals.Add(creditaccountreceivable);
-                if (receivable.Currency.IsBase == false)
+
+                if (receivableCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency creditaccountreceivable2 = new GLNonBaseCurrency()
                     {
@@ -1114,12 +1128,14 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService, 
-                                           IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                           IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
+                                           IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // GBCH: Credit GBCHReceivable, CashBank: Credit CashBank
             // Debit AccountReceivable, Debit ExchangeGain or Credit ExchangeLost
             #region Credit GBCHReceivable, CashBank: Credit CashBank
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             DateTime UnconfirmationDate = DateTime.Now;
             if (receiptVoucher.IsGBCH)
             {
@@ -1134,7 +1150,7 @@ namespace Service.Service
                 };
                 creditGBCH = CreateObject(creditGBCH, _accountService);
                 journals.Add(creditGBCH);
-                if (cashBank.Currency.IsBase == false)
+                if (cashBankCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency creditGBCH2 = new GLNonBaseCurrency()
                     {
@@ -1159,7 +1175,7 @@ namespace Service.Service
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
                 journals.Add(creditcashbank);
-                if (cashBank.Currency.IsBase == false)
+                if (cashBankCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency creditcashbank2 = new GLNonBaseCurrency()
                     {
@@ -1178,6 +1194,7 @@ namespace Service.Service
             foreach (var detail in rvd)
             {
                 Receivable receivable = _receivableService.GetObjectById(detail.ReceivableId);
+                Currency receivableCurrency = _currencyService.GetObjectById(receivable.CurrencyId);
                 GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + receivable.CurrencyId).Id,
@@ -1189,7 +1206,7 @@ namespace Service.Service
                 };
                 debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
-                if (receivable.Currency.IsBase == false)
+                if (receivableCurrency.IsBase == false)
                 {
                     GLNonBaseCurrency debitaccountreceivable2 = new GLNonBaseCurrency()
                     {
@@ -1237,12 +1254,13 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher,
-            CashBank cashBank, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                           CashBank cashBank, IAccountService _accountService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Credit GBCH, Debit CashBank
             #region Credit GBCH, Debit CashBank
 
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             GeneralLedgerJournal creditGBCH = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
@@ -1255,7 +1273,7 @@ namespace Service.Service
             creditGBCH = CreateObject(creditGBCH, _accountService);
             journals.Add(creditGBCH);
 
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency creditGBCH2 = new GLNonBaseCurrency()
                 {
@@ -1278,7 +1296,7 @@ namespace Service.Service
             debitcashBank = CreateObject(debitcashBank, _accountService);
             journals.Add(debitcashBank);
 
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency debitcashBank2 = new GLNonBaseCurrency()
                 {
@@ -1292,14 +1310,15 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateUnReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, 
-            CashBank cashBank, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+        public IList<GeneralLedgerJournal> CreateUnReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank,
+                                           IAccountService _accountService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Debit GBCH, Credit CashBank
             #region Debit GBCH, Credit CashBank
 
             DateTime unReconcileDate = DateTime.Now;
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency cashBankCurrency = _currencyService.GetObjectById(cashBank.CurrencyId);
             GeneralLedgerJournal debitGBCH = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GBCHReceivable + cashBank.CurrencyId).Id,
@@ -1312,7 +1331,7 @@ namespace Service.Service
             debitGBCH = CreateObject(debitGBCH, _accountService);
             journals.Add(debitGBCH);
 
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency debitGBCH2 = new GLNonBaseCurrency()
                 {
@@ -1333,7 +1352,7 @@ namespace Service.Service
             };
             creditcashBank = CreateObject(creditcashBank, _accountService);
 
-            if (cashBank.Currency.IsBase == false)
+            if (cashBankCurrency.IsBase == false)
             {
                 GLNonBaseCurrency creditcashBank2 = new GLNonBaseCurrency()
                 {
@@ -1771,8 +1790,8 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice,
-            PurchaseReceival purchaseReceival, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseReceival purchaseReceival,
+                                           IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Debit GoodsPendingClearance, Credit AccountPayable
             // Debit TaxPayable, Debit ExchangeLoss or Credit ExchangeGain
@@ -1782,7 +1801,7 @@ namespace Service.Service
             decimal Discount = PreTax * purchaseInvoice.Discount / 100;
 
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
+            Currency purchaseInvoiceCurrency = _currencyService.GetObjectById(purchaseInvoice.CurrencyId);
             GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + purchaseInvoice.CurrencyId).Id,
@@ -1794,7 +1813,7 @@ namespace Service.Service
             };
             creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
             journals.Add(creditaccountpayable);
-            if (purchaseInvoice.Currency.IsBase == false)
+            if (purchaseInvoiceCurrency.IsBase == false)
             {
                 GLNonBaseCurrency creditaccountpayable2 = new GLNonBaseCurrency()
                 {
@@ -1866,8 +1885,8 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, 
-            PurchaseReceival purchaseReceival, IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseReceival purchaseReceival,
+                                           IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Credit GoodsPendingClearance, Debit AccountPayable
             // Credit TaxPayable, Credit ExchangeLoss or Debit ExchangeGain
@@ -1876,6 +1895,7 @@ namespace Service.Service
             decimal Tax = purchaseInvoice.AmountPayable - PreTax;
             decimal Discount = PreTax * purchaseInvoice.Discount / 100;
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency purchaseInvoiceCurrency = _currencyService.GetObjectById(purchaseInvoice.CurrencyId);
             DateTime UnconfirmationDate = DateTime.Now;
 
             GeneralLedgerJournal debitaccountpayable = new GeneralLedgerJournal()
@@ -1890,7 +1910,7 @@ namespace Service.Service
             debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
             journals.Add(debitaccountpayable);
 
-            if (purchaseInvoice.Currency.IsBase == false)
+            if (purchaseInvoiceCurrency.IsBase == false)
             {
                 GLNonBaseCurrency debitaccountpayable2 = new GLNonBaseCurrency()
                 {
@@ -2177,7 +2197,7 @@ namespace Service.Service
         }
         
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice,
-            IAccountService _accountService,IExchangeRateService _exchangeRateService,ICurrencyService _currencyService,
+            IAccountService _accountService,IExchangeRateService _exchangeRateService, ICurrencyService _currencyService,
             IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             // Debit AccountReceivable, Debit Discount, Debit TaxPayable, Credit Revenue
@@ -2210,7 +2230,7 @@ namespace Service.Service
             };  
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
-            if (salesInvoice.Currency.IsBase == false)
+            if (currency.IsBase == false)
             {
                 GLNonBaseCurrency debitaccountreceivable2 = new GLNonBaseCurrency()
                 {
@@ -2399,7 +2419,7 @@ namespace Service.Service
 
         public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesInvoice(SalesInvoice salesInvoice,
             IAccountService _accountService, IExchangeRateService _exchangeRateService, 
-            ICurrencyService _currencyService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+            ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             // Credit AccountReceivable, Credit Discount, Credit TaxPayable, Debit Revenue
             // Credit COS, Debit FinishedGoods
@@ -2408,18 +2428,19 @@ namespace Service.Service
             decimal Tax = salesInvoice.AmountReceivable - PreTax;
             decimal Discount = PreTax * salesInvoice.Discount / 100;
             decimal Rate = 0;
-            if (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == true)
+            Currency currency = _currencyService.GetObjectById(salesInvoice.CurrencyId);
+            if (currency.IsBase == true)
             {
                 Rate = 1;
             }
             else
             {
-                Rate = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value,salesInvoice.CurrencyId).Rate;
+                Rate = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value, currency).Rate;
             }
 
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UnconfirmationDate = DateTime.Now;
-
+            Currency salesInvoiceCurrency = _currencyService.GetObjectById(salesInvoice.CurrencyId);
             GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesInvoice.CurrencyId).Id,
@@ -2432,7 +2453,7 @@ namespace Service.Service
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
             journals.Add(creditaccountreceivable);
 
-            if (salesInvoice.Currency.IsBase == false)
+            if (salesInvoiceCurrency.IsBase == false)
             {
                 GLNonBaseCurrency creditaccountreceivable2 = new GLNonBaseCurrency()
                 {

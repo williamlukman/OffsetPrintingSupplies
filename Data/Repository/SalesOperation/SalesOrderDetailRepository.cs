@@ -68,7 +68,6 @@ namespace Data.Repository
         public SalesOrderDetail UpdateObject(SalesOrderDetail salesOrderDetail)
         {
             salesOrderDetail.UpdatedAt = DateTime.Now;
-            salesOrderDetail.PendingDeliveryQuantity = salesOrderDetail.Quantity;
             Update(salesOrderDetail);
             return salesOrderDetail;
         }

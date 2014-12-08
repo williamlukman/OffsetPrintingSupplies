@@ -89,7 +89,7 @@ namespace Service.Service
                                               ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             purchaseReceival.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService,_exchangeRateService))
+            if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService, _exchangeRateService, _purchaseOrderService, _currencyService))
             {
                 decimal TotalCOGS = 0;
                 decimal TotalAmount = 0;
@@ -97,7 +97,7 @@ namespace Service.Service
                 Currency currency = _currencyService.GetObjectById(purchaseOrder.CurrencyId);
                 if (currency.IsBase == false)
                 {
-                    purchaseReceival.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, purchaseReceival.PurchaseOrder.CurrencyId).Id;
+                    purchaseReceival.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, currency).Id;
                     purchaseReceival.ExchangeRateAmount = _exchangeRateService.GetObjectById(purchaseReceival.ExchangeRateId.Value).Rate;
                 }
                 else

@@ -66,9 +66,10 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public ExchangeRate GetLatestRate(DateTime date,int currencyId)
+        public ExchangeRate GetLatestRate(DateTime date, Currency currency)
         {
-            return GetQueryable().Where(x => x.ExRateDate <= date && x.CurrencyId == currencyId).OrderByDescending(x => x.ExRateDate).FirstOrDefault();
+            if (currency.IsBase) { return new ExchangeRate() { Rate = 1, ExRateDate = DateTime.Today }; }
+            else { return GetQueryable().Where(x => x.ExRateDate <= date && x.CurrencyId == currency.Id).OrderByDescending(x => x.ExRateDate).FirstOrDefault(); }
         }
 
         public bool IsExchangeRateDateDuplicated(ExchangeRate exchangeRate)

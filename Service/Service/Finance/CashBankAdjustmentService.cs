@@ -86,7 +86,7 @@ namespace Service.Service
                 CashBank cashBank = _cashBankService.GetObjectById(cashBankAdjustment.CashBankId);
                 if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
                 {
-                    cashBankAdjustment.ExchangeRateId = _exchangeRateService.GetLatestRate(cashBankAdjustment.ConfirmationDate.Value, cashBank.CurrencyId).Id;
+                    cashBankAdjustment.ExchangeRateId = _exchangeRateService.GetLatestRate(cashBankAdjustment.ConfirmationDate.Value, _currencyService.GetObjectById(cashBank.CurrencyId)).Id;
                     cashBankAdjustment.ExchangeRateAmount = _exchangeRateService.GetObjectById(cashBankAdjustment.ExchangeRateId.Value).Rate;
                 }
                 else

@@ -31,12 +31,13 @@ namespace Validation.Validation
             return salesInvoice;
         }
          
-        public SalesInvoice VHasExchangeRateList(SalesInvoice salesInvoice, IExchangeRateService _exchangeRateService)
+        public SalesInvoice VHasExchangeRateList(SalesInvoice salesInvoice, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService)
         {
-            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value,salesInvoice.CurrencyId);
+            Currency currency = _currencyService.GetObjectById(salesInvoice.CurrencyId);
+            ExchangeRate exchangeRate = _exchangeRateService.GetLatestRate(salesInvoice.ConfirmationDate.Value, currency);
             if (exchangeRate == null)
             {
-                salesInvoice.Errors.Add("Generic", "Tidak ada list Exchange Rate untuk " + salesInvoice.Currency.Name);
+                salesInvoice.Errors.Add("Generic", "Tidak ada list Exchange Rate untuk Sales Invoice ini");
             }
             return salesInvoice;
         }
@@ -259,7 +260,7 @@ namespace Validation.Validation
         public SalesInvoice VConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                            IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                            ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
-                                           IClosingService _closingService,IExchangeRateService _exchangeRateService)
+                                           IClosingService _closingService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService)
         {
             VHasConfirmationDate(salesInvoice);
             if (!isValid(salesInvoice)) { return salesInvoice; }
@@ -276,7 +277,7 @@ namespace Validation.Validation
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService, 1);
             if (!isValid(salesInvoice)) { return salesInvoice; }
-            VHasExchangeRateList(salesInvoice, _exchangeRateService);
+            VHasExchangeRateList(salesInvoice, _exchangeRateService, _currencyService);
             return salesInvoice;
         }
 
@@ -319,11 +320,11 @@ namespace Validation.Validation
         public bool ValidConfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                        IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                        ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
-                                       IClosingService _closingService, IExchangeRateService _exchangeRateService)
+                                       IClosingService _closingService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService)
         {
             salesInvoice.Errors.Clear();
             VConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService,
-                           _salesOrderDetailService, _serviceCostService, _closingService,_exchangeRateService);
+                           _salesOrderDetailService, _serviceCostService, _closingService,_exchangeRateService, _currencyService);
             return isValid(salesInvoice);
         }
 

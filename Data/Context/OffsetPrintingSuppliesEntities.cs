@@ -25,8 +25,8 @@ namespace Data.Context
 
             IList<String> userroleNames = new List<String>()
                                         { "UserMenu", "UserAccount", "UserAccess" };
-            IList<String> accountingNames = new List<String>() { "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal",
-                                        "Account", "GLNonBaseCurrency" ,"VCNonBaseCurrencyRepository"};
+            IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal",
+                                        "Account" };
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",

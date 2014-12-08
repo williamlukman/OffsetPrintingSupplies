@@ -25,18 +25,11 @@ namespace OffsetPrintingSupplies
 
                 db.DeleteAllTables();
 
+                //PurchaseBuilder p = new PurchaseBuilder();
+                //p.PopulateData();
+
                 DataBuilder d = new DataBuilder();
-
-                d.PopulateUserRole();
-                d.PopulateWarehouse();
-                d.PopulateItem(); // 1. Stock Adjustment
-                d.PopulateSingles();
-                d.PopulateCashBank(); // 2. CashBankAdjustment, 3. CashBankMutation, 4. CashBankAdjustment (Negative)
-
-                d.PopulateSales(); // 5. 3x Cash Invoice
-                d.PopulateValidComb(); // 7. Closing
-
-                //DataFunction(d);
+                DataFunction(d);
 
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();

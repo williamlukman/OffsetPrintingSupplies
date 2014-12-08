@@ -25,7 +25,8 @@ namespace Core.Interface.Service
         PurchaseInvoice UnconfirmObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService,
                                         IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                         IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService,
-                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
+                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                        IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
         PurchaseInvoice CalculateAmountPayable(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
     }
 }
