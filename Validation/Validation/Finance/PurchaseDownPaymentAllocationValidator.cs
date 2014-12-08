@@ -132,26 +132,11 @@ namespace Validation.Validation
             return purchaseDownPaymentAllocation;
         }
 
-        public PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IClosingService _closingService, int CaseConfirmUnconfirmReconcileUnreconcile)
+        public PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirmReconcileUnreconcile)
+            if (_closingService.IsDateClosed(purchaseDownPaymentAllocation.AllocationDate))
             {
-                case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(purchaseDownPaymentAllocation.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            purchaseDownPaymentAllocation.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
-                case (2): // Unconfirm
-                    {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            purchaseDownPaymentAllocation.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
+                purchaseDownPaymentAllocation.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return purchaseDownPaymentAllocation;
         }
@@ -219,7 +204,7 @@ namespace Validation.Validation
             VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService,
                                                                 _payableService, _receivableService);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
-            VGeneralLedgerPostingHasNotBeenClosed(purchaseDownPaymentAllocation, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(purchaseDownPaymentAllocation, _closingService);
             return purchaseDownPaymentAllocation;
         }
 
@@ -229,7 +214,7 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(purchaseDownPaymentAllocation);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
-            VGeneralLedgerPostingHasNotBeenClosed(purchaseDownPaymentAllocation, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(purchaseDownPaymentAllocation, _closingService);
             return purchaseDownPaymentAllocation;
         }
 

@@ -19,8 +19,7 @@ namespace Core.Interface.Validation
         PurchaseDownPayment VHasNotBeenDeleted(PurchaseDownPayment purchaseDownPayment);
         PurchaseDownPayment VHasBeenConfirmed(PurchaseDownPayment purchaseDownPayment);
         PurchaseDownPayment VHasNotBeenConfirmed(PurchaseDownPayment purchaseDownPayment);
-        PurchaseDownPayment VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPayment purchaseDownPayment, IClosingService _closingService, int CaseConfirmUnconfirm);
-
+        PurchaseDownPayment VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPayment purchaseDownPayment, IClosingService _closingService);
         PurchaseDownPayment VCreateObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentService _purchaseDownPaymentService, IContactService _contactService);
         PurchaseDownPayment VUpdateObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentService _purchaseDownPaymentService, IContactService _contactService);
         PurchaseDownPayment VDeleteObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService);

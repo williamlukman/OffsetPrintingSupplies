@@ -225,37 +225,23 @@ namespace Validation.Validation
             switch (CaseConfirmUnconfirmReconcileUnreconcile)
             {
                 case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(salesAllowance.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            salesAllowance.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
                 case (2): // Unconfirm
+                {
+                    if (_closingService.IsDateClosed(salesAllowance.AllowanceAllocationDate))
                     {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            salesAllowance.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
+                        salesAllowance.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
+                    break;
+                }
                 case (3): // Reconcile
-                    {
-                        if (_closingService.IsDateClosed(salesAllowance.ReconciliationDate.GetValueOrDefault()))
-                        {
-                            salesAllowance.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
                 case (4): // Unreconcile
+                {
+                    if (_closingService.IsDateClosed(salesAllowance.ReconciliationDate.GetValueOrDefault()))
                     {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            salesAllowance.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
+                        salesAllowance.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
+                    break;
+                }
             }
             return salesAllowance;
         }

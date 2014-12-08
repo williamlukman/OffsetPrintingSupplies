@@ -19,8 +19,7 @@ namespace Core.Interface.Validation
         SalesDownPayment VHasNotBeenDeleted(SalesDownPayment salesDownPayment);
         SalesDownPayment VHasBeenConfirmed(SalesDownPayment salesDownPayment);
         SalesDownPayment VHasNotBeenConfirmed(SalesDownPayment salesDownPayment);
-        SalesDownPayment VGeneralLedgerPostingHasNotBeenClosed(SalesDownPayment salesDownPayment, IClosingService _closingService, int CaseConfirmUnconfirm);
-
+        SalesDownPayment VGeneralLedgerPostingHasNotBeenClosed(SalesDownPayment salesDownPayment, IClosingService _closingService);
         SalesDownPayment VCreateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService);
         SalesDownPayment VUpdateObject(SalesDownPayment salesDownPayment, ISalesDownPaymentService _salesDownPaymentService, IContactService _contactService);
         SalesDownPayment VDeleteObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService);

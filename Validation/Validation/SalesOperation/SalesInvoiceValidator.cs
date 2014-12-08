@@ -186,26 +186,11 @@ namespace Validation.Validation
             return salesInvoice;
         }
 
-        public SalesInvoice VGeneralLedgerPostingHasNotBeenClosed(SalesInvoice salesInvoice, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public SalesInvoice VGeneralLedgerPostingHasNotBeenClosed(SalesInvoice salesInvoice, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(salesInvoice.InvoiceDate))
             {
-                case (1): // Confirm
-                {
-                    if (_closingService.IsDateClosed(salesInvoice.ConfirmationDate.GetValueOrDefault()))
-                    {
-                        salesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
-                    }
-                    break;
-                }
-                case (2): // Unconfirm
-                {
-                    if (_closingService.IsDateClosed(DateTime.Now))
-                    {
-                        salesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
-                    }
-                    break;
-                }
+                salesInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return salesInvoice;
         }
@@ -275,7 +260,7 @@ namespace Validation.Validation
             VAllSalesInvoiceDetailsAreConfirmable(salesInvoice, _salesInvoiceDetailService, _deliveryOrderDetailService,
                                                   _salesOrderDetailService, _serviceCostService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
-            VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService);
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VHasExchangeRateList(salesInvoice, _exchangeRateService, _currencyService);
             return salesInvoice;
@@ -293,7 +278,7 @@ namespace Validation.Validation
             if (!isValid(salesInvoice)) { return salesInvoice; }
             VReceivableHasNoOtherAssociation(salesInvoice, _receivableService, _receiptVoucherDetailService); // _salesAllowanceAllocationDetailService
             if (!isValid(salesInvoice)) { return salesInvoice; }
-            VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(salesInvoice, _closingService);
             return salesInvoice;
         }
 

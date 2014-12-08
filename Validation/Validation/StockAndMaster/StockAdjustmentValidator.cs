@@ -88,26 +88,11 @@ namespace Validation.Validation
             return stockAdjustment;
         }
 
-        public StockAdjustment VGeneralLedgerPostingHasNotBeenClosed(StockAdjustment stockAdjustment, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public StockAdjustment VGeneralLedgerPostingHasNotBeenClosed(StockAdjustment stockAdjustment, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(stockAdjustment.AdjustmentDate))
             {
-                case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(stockAdjustment.AdjustmentDate))
-                        {
-                            stockAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
-                case (2): // Unconfirm
-                    {
-                        if (_closingService.IsDateClosed(stockAdjustment.AdjustmentDate))
-                        {
-                            stockAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
+                stockAdjustment.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return stockAdjustment;
         }
@@ -152,7 +137,7 @@ namespace Validation.Validation
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VHasStockAdjustmentDetails(stockAdjustment, _stockAdjustmentDetailService);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
-            VGeneralLedgerPostingHasNotBeenClosed(stockAdjustment, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(stockAdjustment, _closingService);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
             VDetailsAreVerifiedConfirmable(stockAdjustment, _stockAdjustmentService, _stockAdjustmentDetailService, _itemService, _blanketService, _warehouseItemService);
             return stockAdjustment;
@@ -163,7 +148,7 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(stockAdjustment);
             if (!isValid(stockAdjustment)) { return stockAdjustment; }
-            VGeneralLedgerPostingHasNotBeenClosed(stockAdjustment, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(stockAdjustment, _closingService);
             return stockAdjustment;
         }
 

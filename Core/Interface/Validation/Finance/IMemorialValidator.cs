@@ -15,8 +15,7 @@ namespace Core.Interface.Validation
         Memorial VHasBeenConfirmed(Memorial memorial);
         Memorial VHasNotBeenDeleted(Memorial memorial);
         Memorial VHasConfirmationDate(Memorial memorial);
-        Memorial VGeneralLedgerPostingHasNotBeenClosed(Memorial memorial, IClosingService _closingService, int CaseConfirmUnconfirm);
-
+        Memorial VGeneralLedgerPostingHasNotBeenClosed(Memorial memorial, IClosingService _closingService);
         Memorial VCreateObject(Memorial memorial);
         Memorial VUpdateObject(Memorial memorial);
         Memorial VDeleteObject(Memorial memorial);

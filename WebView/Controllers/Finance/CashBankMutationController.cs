@@ -62,6 +62,7 @@ namespace WebView.Controllers
                              model.Code,
                              SourceCashBank = model.SourceCashBank.Name,
                              TargetCashBank = model.TargetCashBank.Name,
+                             model.MutationDate,
                              model.Amount,
                              model.ConfirmationDate,
                              model.CreatedAt,
@@ -100,6 +101,7 @@ namespace WebView.Controllers
                             model.Code,
                             model.SourceCashBank,
                             model.TargetCashBank,
+                            model.MutationDate,
                             model.Amount,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -132,6 +134,7 @@ namespace WebView.Controllers
                 SourceCashBank = _cashBankService.GetObjectById(model.SourceCashBankId).Name,
                 model.TargetCashBankId,
                 TargetCashBank = _cashBankService.GetObjectById(model.TargetCashBankId).Name,
+                model.MutationDate,
                 model.IsConfirmed,
                 model.ConfirmationDate,
                 model.Errors
@@ -165,6 +168,7 @@ namespace WebView.Controllers
                 data.SourceCashBankId = model.SourceCashBankId;
                 data.TargetCashBankId = model.TargetCashBankId;
                 data.Amount = model.Amount;
+                data.MutationDate = model.MutationDate;
                 model = _cashBankMutationService.UpdateObject(data,_cashBankService);
             }
             catch (Exception ex)

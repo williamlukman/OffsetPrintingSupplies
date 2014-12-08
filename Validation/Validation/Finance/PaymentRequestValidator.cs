@@ -83,26 +83,11 @@ namespace Validation.Validation
             return obj;
         }
 
-        public PaymentRequest VGeneralLedgerPostingHasNotBeenClosed(PaymentRequest paymentRequest, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public PaymentRequest VGeneralLedgerPostingHasNotBeenClosed(PaymentRequest paymentRequest, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(paymentRequest.RequestedDate))
             {
-                case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(paymentRequest.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            paymentRequest.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
-                case (2): // Unconfirm
-                    {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            paymentRequest.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
+                paymentRequest.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return paymentRequest;
         }
@@ -141,7 +126,7 @@ namespace Validation.Validation
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VHasNotBeenConfirmed(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
-            VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService);
             return paymentRequest;
         }
 
@@ -151,7 +136,7 @@ namespace Validation.Validation
             if (!isValid(paymentRequest)) { return paymentRequest; }
             VHasNotBeenDeleted(paymentRequest);
             if (!isValid(paymentRequest)) { return paymentRequest; }
-            VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(paymentRequest, _closingService);
             return paymentRequest;
         }
 

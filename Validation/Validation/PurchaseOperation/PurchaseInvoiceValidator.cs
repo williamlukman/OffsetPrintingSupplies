@@ -192,26 +192,11 @@ namespace Validation.Validation
             return purchaseInvoice;
         }
 
-        public PurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(PurchaseInvoice purchaseInvoice, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public PurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(PurchaseInvoice purchaseInvoice, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(purchaseInvoice.InvoiceDate))
             {
-                case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(purchaseInvoice.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            purchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
-                case (2): // Unconfirm
-                    {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            purchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
+                purchaseInvoice.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return purchaseInvoice;
         }
@@ -279,7 +264,7 @@ namespace Validation.Validation
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VAllPurchaseInvoiceDetailsAreConfirmable(purchaseInvoice, _purchaseInvoiceDetailService, _purchaseReceivalDetailService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
-            VGeneralLedgerPostingHasNotBeenClosed(purchaseInvoice, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(purchaseInvoice, _closingService);
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VHasExchangeRateList(purchaseInvoice, _exchangeRateService, _currencyService);
             return purchaseInvoice;
@@ -296,7 +281,7 @@ namespace Validation.Validation
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
             VPayableHasNoOtherAssociation(purchaseInvoice, _payableService, _paymentVoucherDetailService); // _purchaseAllowanceAllocationDetailService
             if (!isValid(purchaseInvoice)) { return purchaseInvoice; }
-            VGeneralLedgerPostingHasNotBeenClosed(purchaseInvoice, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(purchaseInvoice, _closingService);
             return purchaseInvoice;
         }
 

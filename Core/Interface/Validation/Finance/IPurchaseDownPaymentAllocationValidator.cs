@@ -24,7 +24,7 @@ namespace Core.Interface.Validation
                                       IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
         PurchaseDownPaymentAllocation VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(PurchaseDownPaymentAllocation salesDownPaymentAllocation,
                                       IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPayableService _payableService, IReceivableService _receivableService);
-        PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IClosingService _closingService, int CaseConfirmUnconfirm);
+        PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IClosingService _closingService);
         PurchaseDownPaymentAllocation VCreateObject(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IPurchaseDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                  IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPurchaseDownPaymentService _salesDownPaymentService,
                                                  IContactService _contactService, IReceivableService _receivableService);
