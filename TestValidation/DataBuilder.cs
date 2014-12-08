@@ -30,6 +30,8 @@ namespace TestValidation
         public IClosingService _closingService;
         public ICurrencyService _currencyService;
         public ICustomerItemService _customerItemService;
+        public ICustomerStockAdjustmentDetailService _customerStockAdjustmentDetailService;
+        public ICustomerStockAdjustmentService _customerStockAdjustmentService;
         public ICustomerStockMutationService _customerStockMutationService;
         public ICoreBuilderService _coreBuilderService;
         public ICoreIdentificationService _coreIdentificationService;
@@ -137,6 +139,9 @@ namespace TestValidation
         public StockAdjustmentDetail sad1, sad2, sad3, sad4, sad5, sadAdhesiveRoller, sadAdhesiveBlanket;
         public StockAdjustmentDetail sadBlendingItem1, sadBlendingItem2, sadBlendingItem3, sadBlendingItem4;
 
+        public CustomerStockAdjustment customerStockAdjustment, csa;
+        public CustomerStockAdjustmentDetail cstockAD, cstockAD1, cstockAD2, cstockAD3, cstockAD4;
+
         public SalesOrder salesOrder1, salesOrder2, salesOrder3;
         public SalesOrderDetail salesOD1a, salesOD1b, salesOD2a, salesOD2b, salesOD3a, salesOD3b;
         public DeliveryOrder deliveryOrder1, deliveryOrder2, deliveryOrder3;
@@ -208,6 +213,8 @@ namespace TestValidation
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
+            _customerStockAdjustmentDetailService = new CustomerStockAdjustmentDetailService(new CustomerStockAdjustmentDetailRepository(), new CustomerStockAdjustmentDetailValidator());
+            _customerStockAdjustmentService = new CustomerStockAdjustmentService(new CustomerStockAdjustmentRepository(), new CustomerStockAdjustmentValidator());
             _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
             _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
             _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
@@ -610,6 +617,7 @@ namespace TestValidation
             PopulateRecoveryOrders();
             PopulateRecoveryOrders2();
             PopulateStockAdjustment();
+            PopulateCustomerStockAdjustment();
             PopulateRecoveryOrders3();
             PopulateCoreIdentifications2();
             PopulateRollerWarehouseMutation();
@@ -645,6 +653,7 @@ namespace TestValidation
             PopulateRecoveryOrders();
             PopulateRecoveryOrders2();
             PopulateStockAdjustment();
+            PopulateCustomerStockAdjustment();
             PopulateRecoveryOrders3();
             PopulateCoreIdentifications2();
             PopulateRollerWarehouseMutation();
@@ -1876,7 +1885,63 @@ namespace TestValidation
                 StockAdjustmentId = stockAdjustment.Id,
                 Price = 50000
             };
-            stockAD1 = _stockAdjustmentDetailService.CreateObject(stockAD4, _stockAdjustmentService, _itemService, _warehouseItemService);
+            stockAD4 = _stockAdjustmentDetailService.CreateObject(stockAD4, _stockAdjustmentService, _itemService, _warehouseItemService);
+        }
+
+        public void PopulateCustomerStockAdjustment()
+        {
+            customerStockAdjustment = new CustomerStockAdjustment()
+            {
+                ContactId = contact.Id,
+                WarehouseId = movingWarehouse.Id,
+                AdjustmentDate = DateTime.Now
+            };
+            _customerStockAdjustmentService.CreateObject(customerStockAdjustment, _warehouseService, _contactService);
+
+            cstockAD = new CustomerStockAdjustmentDetail()
+            {
+                ItemId = coreBuilder.UsedCoreItemId,
+                Quantity = 3,
+                CustomerStockAdjustmentId = customerStockAdjustment.Id,
+                Price = 50000
+            };
+            _customerStockAdjustmentDetailService.CreateObject(cstockAD, _customerStockAdjustmentService, _itemService, _warehouseItemService, _customerItemService);
+
+            cstockAD1 = new CustomerStockAdjustmentDetail()
+            {
+                ItemId = coreBuilder1.UsedCoreItemId,
+                Quantity = 3,
+                CustomerStockAdjustmentId = customerStockAdjustment.Id,
+                Price = 50000
+            };
+            _customerStockAdjustmentDetailService.CreateObject(cstockAD1, _customerStockAdjustmentService, _itemService, _warehouseItemService, _customerItemService);
+
+            cstockAD2 = new CustomerStockAdjustmentDetail()
+            {
+                ItemId = coreBuilder2.UsedCoreItemId,
+                Quantity = 3,
+                CustomerStockAdjustmentId = customerStockAdjustment.Id,
+                Price = 50000
+            };
+            _customerStockAdjustmentDetailService.CreateObject(cstockAD2, _customerStockAdjustmentService, _itemService, _warehouseItemService, _customerItemService);
+
+            cstockAD3 = new CustomerStockAdjustmentDetail()
+            {
+                ItemId = coreBuilder3.UsedCoreItemId,
+                Quantity = 3,
+                CustomerStockAdjustmentId = customerStockAdjustment.Id,
+                Price = 50000
+            };
+            _customerStockAdjustmentDetailService.CreateObject(cstockAD3, _customerStockAdjustmentService, _itemService, _warehouseItemService, _customerItemService);
+
+            cstockAD4 = new CustomerStockAdjustmentDetail()
+            {
+                ItemId = coreBuilder4.UsedCoreItemId,
+                Quantity = 3,
+                CustomerStockAdjustmentId = customerStockAdjustment.Id,
+                Price = 50000
+            };
+            _customerStockAdjustmentDetailService.CreateObject(cstockAD4, _customerStockAdjustmentService, _itemService, _warehouseItemService, _customerItemService);
         }
 
         public void PopulateRecoveryOrders3()
