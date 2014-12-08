@@ -275,6 +275,7 @@
 
         if ($('#MutationDate').datebox('getValue') == "") {
             return $($('#MutationDate').addClass('errormessage').before('<span class="errormessage">**' + "Mutation Date Belum Terisi" + '</span>'));
+        }
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
