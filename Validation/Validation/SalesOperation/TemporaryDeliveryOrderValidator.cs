@@ -35,7 +35,8 @@ namespace Validation.Validation
                                                                       IDeliveryOrderService _deliveryOrderService)
         {
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 VirtualOrder virtualOrder = _virtualOrderService.GetObjectById((int)temporaryDeliveryOrder.VirtualOrderId);
                 if (virtualOrder == null)

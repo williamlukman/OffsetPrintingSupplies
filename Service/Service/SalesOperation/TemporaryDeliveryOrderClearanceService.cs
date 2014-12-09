@@ -78,7 +78,7 @@ namespace Service.Service
 
         public TemporaryDeliveryOrderClearance ConfirmObject(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, DateTime ConfirmationDate, 
                                      ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, IStockMutationService _stockMutationService, IItemService _itemService,
-                                     IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                     IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
                                      IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService)
         {
             temporaryDeliveryOrderClearance.ConfirmationDate = ConfirmationDate;
@@ -90,7 +90,7 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _temporaryDeliveryOrderClearanceDetailService.ConfirmObject(detail, ConfirmationDate, this, _stockMutationService, _itemService,
-                                                                      _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService);
+                                                                      _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService);
                     temporaryDeliveryOrderClearance.TotalWasteCoGS += detail.WasteCoGS;
                 }
                 _repository.ConfirmObject(temporaryDeliveryOrderClearance);

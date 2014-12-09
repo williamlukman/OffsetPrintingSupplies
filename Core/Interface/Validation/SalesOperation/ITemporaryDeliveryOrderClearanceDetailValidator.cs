@@ -15,9 +15,10 @@ namespace Core.Interface.Validation
                                                           ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         TemporaryDeliveryOrderClearanceDetail VDeleteObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
         TemporaryDeliveryOrderClearanceDetail VConfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                    ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                                             ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
+                                                             ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         TemporaryDeliveryOrderClearanceDetail VUnconfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
-        TemporaryDeliveryOrderClearanceDetail VProcessObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
+        TemporaryDeliveryOrderClearanceDetail VProcessObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
 
         bool ValidCreateObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService,
                                       ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
@@ -25,9 +26,10 @@ namespace Core.Interface.Validation
                                       ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         bool ValidDeleteObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
         bool ValidConfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                       ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+                                ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
+                                ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         bool ValidUnconfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
-        bool ValidProcessObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
+        bool ValidProcessObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService);
         bool isValid(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
         string PrintError(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail);
     }

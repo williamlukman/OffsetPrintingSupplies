@@ -71,6 +71,8 @@ namespace TestValidation
         public IStockMutationService _stockMutationService;
         public ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
         public ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
+        public ITemporaryDeliveryOrderClearanceDetailService _temporaryDeliveryOrderClearanceDetailService;
+        public ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService;
         public IUoMService _uomService;
         public IUserAccountService _userAccountService;
         public IUserMenuService _userMenuService;
@@ -166,6 +168,8 @@ namespace TestValidation
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
             _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
+            _temporaryDeliveryOrderClearanceDetailService = new TemporaryDeliveryOrderClearanceDetailService(new TemporaryDeliveryOrderClearanceDetailRepository(), new TemporaryDeliveryOrderClearanceDetailValidator());
+            _temporaryDeliveryOrderClearanceService = new TemporaryDeliveryOrderClearanceService(new TemporaryDeliveryOrderClearanceRepository(), new TemporaryDeliveryOrderClearanceValidator());
             _userAccountService = new UserAccountService(new UserAccountRepository(), new UserAccountValidator());
             _userMenuService = new UserMenuService(new UserMenuRepository(), new UserMenuValidator());
             _userAccessService = new UserAccessService(new UserAccessRepository(), new UserAccessValidator());

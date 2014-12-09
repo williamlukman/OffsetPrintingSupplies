@@ -43,6 +43,7 @@ namespace Core.Constants
             public static int PartDeliveryOrder = 2;
             public static int SalesOrder = 3;
             public static int SalesQuotation = 4;
+            public static int Consignment = 5;
         }
         #endregion
 
