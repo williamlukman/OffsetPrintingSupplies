@@ -481,7 +481,7 @@ namespace WebView.Controllers
             {
                 var data = _temporaryDeliveryOrderClearanceDetailService.GetObjectById(model.Id);
                 data.Quantity = model.Quantity;
-                model = _temporaryDeliveryOrderClearanceDetailService.ProcessObject(data);
+                model = _temporaryDeliveryOrderClearanceDetailService.ProcessObject(data, _temporaryDeliveryOrderDetailService);
             }
             catch (Exception ex)
             {
@@ -502,7 +502,7 @@ namespace WebView.Controllers
             {
                 var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
                 model = _temporaryDeliveryOrderClearanceService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), _temporaryDeliveryOrderClearanceDetailService,
-                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService, 
+                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, 
                         _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)

@@ -53,6 +53,11 @@ namespace TestValidation
                 d.sales1.IsConfirmed.should_be_true();
                 d.sales2.IsConfirmed.should_be_true();
             };
+
+            it["validates_partdeliveryorder"] = () =>
+            {
+                d.GramDeliveryOrder1.IsConfirmed.should_be_true();
+            };
         }
     }
 }

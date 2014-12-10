@@ -39,7 +39,15 @@ namespace OffsetPrintingSupplies
 
         public static void DataFunction(DataBuilder d)
         {
-            d.PopulateData();
+            // d.PopulateData();
+            d.PopulateUserRole();
+            d.PopulateWarehouse();
+            d.PopulateItem();
+            d.PopulateSingles();
+            d.PopulateCashBank();
+
+            d.PopulateVirtualOrder();
+
         }
     }
 }
