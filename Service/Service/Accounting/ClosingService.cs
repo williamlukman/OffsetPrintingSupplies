@@ -84,7 +84,7 @@ namespace Service.Service
         public Closing CloseObject(Closing closing, IAccountService _accountService,
                                    IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService,
             IGLNonBaseCurrencyService _gLNonBaseCurrencyService,IExchangeRateClosingService _exchangeRateClosingService,
-            IVCNonBaseCurrencyService _vCNonBaseCurrencyService)
+            IVCNonBaseCurrencyService _vCNonBaseCurrencyService,ICashBankService _cashBankService)
         {
             if (_validator.ValidCloseObject(closing, this))
             {
@@ -139,11 +139,14 @@ namespace Service.Service
                     {
                         if (closing.IsYear == true)
                         {
-                            if((leaf.LegacyCode == Constant.AccountLegacyCode.AccountPayable + exRate.CurrencyId) ||
+                            var cashBank = _cashBankService.GetQueryable().Where(x => x.Currency.IsBase == false && x.CurrencyId == exRate.CurrencyId).ToList();
+                            foreach (var cashbankd in cashBank)
+                            {
+                                 if((leaf.LegacyCode == Constant.AccountLegacyCode.AccountPayable + exRate.CurrencyId) ||
                             (leaf.LegacyCode == Constant.AccountLegacyCode.AccountReceivable + exRate.CurrencyId) ||
                             (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHPayable + exRate.CurrencyId) ||
                             (leaf.LegacyCode == Constant.AccountLegacyCode.GBCHReceivable + exRate.CurrencyId) ||
-                            (leaf.LegacyCode == Constant.AccountLegacyCode.CashBank + exRate.CurrencyId))
+                            (leaf.LegacyCode == Constant.AccountLegacyCode.CashBank + cashbankd.Id))
                             {
                                 if (lastClosing != null)
                                 {
@@ -183,48 +186,54 @@ namespace Service.Service
                                 }
                                 totalCurrencyAmountInLedger = totalCurrencyAmountInLedger * exRate.Rate;
                             }
+                            }
+                           
                         }
                         else
                         {
-                            if (leaf.LegacyCode == Constant.AccountLegacyCode.CashBank + exRate.CurrencyId)
+                            var cashBank = _cashBankService.GetQueryable().Where(x => x.Currency.IsBase == false && x.CurrencyId == exRate.CurrencyId).ToList();
+                            foreach (var cashbankd in cashBank)
                             {
-                                if (lastClosing != null)
+                                if (leaf.LegacyCode == Constant.AccountLegacyCode.CashBank + cashbankd.Id)
                                 {
-                                    var lastValid = _vCNonBaseCurrencyService.GetQueryable()
-                                        .Where(x => x.ValidComb.AccountId == leaf.Id && x.ValidComb.ClosingId == lastClosing.Id)
-                                        .FirstOrDefault();
-                                    if (lastValid != null)
+                                    if (lastClosing != null)
                                     {
-                                        totalCurrencyAmountInLedger += lastValid.Amount;
-                                        totalAmountForVCnonBAse += lastValid.Amount;
+                                        var lastValid = _vCNonBaseCurrencyService.GetQueryable()
+                                            .Where(x => x.ValidComb.AccountId == leaf.Id && x.ValidComb.ClosingId == lastClosing.Id)
+                                            .FirstOrDefault();
+                                        if (lastValid != null)
+                                        {
+                                            totalCurrencyAmountInLedger += lastValid.Amount;
+                                            totalAmountForVCnonBAse += lastValid.Amount;
+                                        }
                                     }
-                                }
 
-                                IList<GLNonBaseCurrency> glNonBases = _gLNonBaseCurrencyService.GetQueryable()
-                              .Where(x => x.GeneralLedgerJournal.AccountId == leaf.Id &&
-                                                                    x.GeneralLedgerJournal.TransactionDate >= closing.BeginningPeriod &&
-                                                                    x.GeneralLedgerJournal.TransactionDate < EndDate && x.CurrencyId == exRate.CurrencyId).ToList();
-                                foreach (var glNonBase in glNonBases)
-                                {
-                                    Account account = _accountService.GetObjectById(glNonBase.GeneralLedgerJournal.AccountId);
-                                    if ((glNonBase.GeneralLedgerJournal.Status == Constant.GeneralLedgerStatus.Debit &&
-                                        (account.Group == Constant.AccountGroup.Asset ||
-                                         account.Group == Constant.AccountGroup.Expense)) ||
-                                       (glNonBase.GeneralLedgerJournal.Status == Constant.GeneralLedgerStatus.Credit &&
-                                        (account.Group == Constant.AccountGroup.Liability ||
-                                         account.Group == Constant.AccountGroup.Equity ||
-                                         account.Group == Constant.AccountGroup.Revenue)))
+                                    IList<GLNonBaseCurrency> glNonBases = _gLNonBaseCurrencyService.GetQueryable()
+                                  .Where(x => x.GeneralLedgerJournal.AccountId == leaf.Id &&
+                                                                        x.GeneralLedgerJournal.TransactionDate >= closing.BeginningPeriod &&
+                                                                        x.GeneralLedgerJournal.TransactionDate < EndDate && x.CurrencyId == exRate.CurrencyId).ToList();
+                                    foreach (var glNonBase in glNonBases)
                                     {
-                                        totalCurrencyAmountInLedger += glNonBase.Amount;
-                                        totalAmountForVCnonBAse += glNonBase.Amount;
+                                        Account account = _accountService.GetObjectById(glNonBase.GeneralLedgerJournal.AccountId);
+                                        if ((glNonBase.GeneralLedgerJournal.Status == Constant.GeneralLedgerStatus.Debit &&
+                                            (account.Group == Constant.AccountGroup.Asset ||
+                                             account.Group == Constant.AccountGroup.Expense)) ||
+                                           (glNonBase.GeneralLedgerJournal.Status == Constant.GeneralLedgerStatus.Credit &&
+                                            (account.Group == Constant.AccountGroup.Liability ||
+                                             account.Group == Constant.AccountGroup.Equity ||
+                                             account.Group == Constant.AccountGroup.Revenue)))
+                                        {
+                                            totalCurrencyAmountInLedger += glNonBase.Amount;
+                                            totalAmountForVCnonBAse += glNonBase.Amount;
+                                        }
+                                        else
+                                        {
+                                            totalCurrencyAmountInLedger -= glNonBase.Amount;
+                                            totalAmountForVCnonBAse -= glNonBase.Amount;
+                                        }
                                     }
-                                    else
-                                    {
-                                        totalCurrencyAmountInLedger -= glNonBase.Amount;
-                                        totalAmountForVCnonBAse -= glNonBase.Amount;
-                                    }
+                                    totalCurrencyAmountInLedger = totalCurrencyAmountInLedger * exRate.Rate;
                                 }
-                                totalCurrencyAmountInLedger = totalCurrencyAmountInLedger * exRate.Rate;
                             }
                         }
 
