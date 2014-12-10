@@ -202,12 +202,15 @@ namespace TestValidation
         public DeliveryOrderDetail deliveryDetail1a, deliveryDetail1b, deliveryDetail2a, deliveryDetail2b;
 
         public SalesOrder GramSalesOrder1;
+        public SalesOrderDetail GramSOD1a, GramSOD1b;
         public DeliveryOrder GramDeliveryOrder1;
         public TemporaryDeliveryOrder GramTDO1, GramTDO2;
         public TemporaryDeliveryOrderDetail GramTDOD1a, GramTDOD1b, GramTDOD2a, GramTDOD2b;
-        public DeliveryOrderDetail GramDOD1a, GramDOD1b, GramDOD1c, GramDOD1d;
+        public TemporaryDeliveryOrderClearance GramTDOC1R, GramTDOC1W, GramTDOC2R;
+        public TemporaryDeliveryOrderClearanceDetail GramTDOC1Ra, GramTDOC1Rb, GramTDOC1Wa, GramTDOC2Ra, GramTDOC2Rb;
+        public DeliveryOrderDetail GramDOD1a, GramDOD1b;
         public SalesInvoice GramSI1;
-        public SalesInvoiceDetail GramSI1a, GramSI1b, GramSI1c, GramSI1d;
+        public SalesInvoiceDetail GramSI1a, GramSI1b;
 
         // currency
         public Currency currencyEUR, currencyUSD, currencyIDR;
@@ -1006,7 +1009,7 @@ namespace TestValidation
             {
                 StockAdjustmentId = sa.Id,
                 ItemId = itemAccessory1.Id,
-                Quantity = 15,
+                Quantity = 150,
                 Code = "ITAC001",
                 Price = 50000
             };
@@ -1016,7 +1019,7 @@ namespace TestValidation
             {
                 StockAdjustmentId = sa.Id,
                 ItemId = itemAccessory2.Id,
-                Quantity = 10,
+                Quantity = 100,
                 Code = "ITAC002",
                 Price = 50000
             };
@@ -3749,6 +3752,236 @@ namespace TestValidation
             sales2 = _salesOrderService.ConfirmObject(sales2, DateTime.Today, _salesOrderDetailService, _stockMutationService, _itemService,
                                                       _blanketService, _warehouseItemService);
 
+            GramSalesOrder1 = new SalesOrder()
+            {
+                ContactId = contact.Id,
+                CurrencyId = currencyIDR.Id,
+                OrderType = Constant.OrderTypeCase.SalesOrder,
+                Code = "GramSO001",
+                SalesDate = DateTime.Today,
+                NomorSurat = "SO.G.1.1.2015"
+            };
+            GramSalesOrder1 = _salesOrderService.CreateObject(GramSalesOrder1, _contactService);
+
+            GramSOD1a = new SalesOrderDetail()
+            {
+                ItemId = itemAccessory1.Id,
+                Code = "GramSO001A",
+                Quantity = 100,
+                Price = 25000,
+                SalesOrderId = GramSalesOrder1.Id
+            };
+            GramSOD1a = _salesOrderDetailService.CreateObject(GramSOD1a, _salesOrderService, _itemService);
+
+            GramSOD1b = new SalesOrderDetail()
+            {
+                ItemId = itemAccessory2.Id,
+                Code = "GramSO001B",
+                Quantity = 80,
+                Price = 30000,
+                SalesOrderId = GramSalesOrder1.Id,
+            };
+            GramSOD1b = _salesOrderDetailService.CreateObject(GramSOD1b, _salesOrderService, _itemService);
+
+            GramSalesOrder1 = _salesOrderService.ConfirmObject(GramSalesOrder1, DateTime.Today, _salesOrderDetailService,
+                              _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+
+            GramDeliveryOrder1 = new DeliveryOrder()
+            {
+                NomorSurat = "DO.G.1.1.2015",
+                SalesOrderId = GramSalesOrder1.Id,
+                Code = "GramDO001",
+                WarehouseId = localWarehouse.Id,
+                DeliveryDate = DateTime.Today,
+            };
+            GramDeliveryOrder1 = _deliveryOrderService.CreateObject(GramDeliveryOrder1, _salesOrderService, _warehouseService);
+
+            GramTDO1 = new TemporaryDeliveryOrder()
+            {
+                DeliveryOrderId = GramDeliveryOrder1.Id,
+                OrderType = Constant.OrderTypeCase.PartDeliveryOrder,
+                NomorSurat = "DO.G.1.1.2015.T1",
+                WarehouseId = GramDeliveryOrder1.WarehouseId,
+                Code = "GramDO001_T1",
+                DeliveryDate = DateTime.Today,
+            };
+            GramTDO1 = _temporaryDeliveryOrderService.CreateObject(GramTDO1, _virtualOrderService, _deliveryOrderService, _warehouseService);
+
+            GramTDO2 = new TemporaryDeliveryOrder()
+            {
+                DeliveryOrderId = GramDeliveryOrder1.Id,
+                OrderType = Constant.OrderTypeCase.PartDeliveryOrder,
+                NomorSurat = "DO.G.1.1.2015.T2",
+                WarehouseId = GramDeliveryOrder1.WarehouseId,
+                Code = "GramDO001_T2",
+                DeliveryDate = DateTime.Today,
+            };
+            GramTDO2 = _temporaryDeliveryOrderService.CreateObject(GramTDO2, _virtualOrderService, _deliveryOrderService, _warehouseService);
+
+            GramTDOD1a = new TemporaryDeliveryOrderDetail()
+            {
+                TemporaryDeliveryOrderId = GramTDO1.Id,
+                ItemId = GramSOD1a.ItemId,
+                Quantity = GramSOD1a.Quantity - 50,
+                SalesOrderDetailId = GramSOD1a.Id,
+                Code = "GramTDOD1a",
+            };
+            GramTDOD1a = _temporaryDeliveryOrderDetailService.CreateObject(GramTDOD1a, _temporaryDeliveryOrderService, _virtualOrderDetailService,
+                                                                           _salesOrderDetailService, _deliveryOrderService, _itemService);
+
+            GramTDOD2a = new TemporaryDeliveryOrderDetail()
+            {
+                TemporaryDeliveryOrderId = GramTDO2.Id,
+                ItemId = GramSOD1a.ItemId,
+                Quantity = 50,
+                SalesOrderDetailId = GramSOD1a.Id,
+                Code = "GramTDOD2a",
+            };
+            GramTDOD2a = _temporaryDeliveryOrderDetailService.CreateObject(GramTDOD2a, _temporaryDeliveryOrderService, _virtualOrderDetailService,
+                                                                           _salesOrderDetailService, _deliveryOrderService, _itemService);
+
+            GramTDOD1b = new TemporaryDeliveryOrderDetail()
+            {
+                TemporaryDeliveryOrderId = GramTDO1.Id,
+                ItemId = GramSOD1b.ItemId,
+                Quantity = GramSOD1b.Quantity - 50,
+                SalesOrderDetailId = GramSOD1b.Id,
+                Code = "GramTDOD1b",
+            };
+            GramTDOD1b = _temporaryDeliveryOrderDetailService.CreateObject(GramTDOD1b, _temporaryDeliveryOrderService, _virtualOrderDetailService,
+                                                                           _salesOrderDetailService, _deliveryOrderService, _itemService);
+
+            GramTDOD2b = new TemporaryDeliveryOrderDetail()
+            {
+                TemporaryDeliveryOrderId = GramTDO2.Id,
+                ItemId = GramSOD1b.ItemId,
+                Quantity = 50,
+                SalesOrderDetailId = GramSOD1b.Id,
+                Code = "GramTDOD2b",
+            };
+            GramTDOD2b = _temporaryDeliveryOrderDetailService.CreateObject(GramTDOD2b, _temporaryDeliveryOrderService, _virtualOrderDetailService,
+                                                                           _salesOrderDetailService, _deliveryOrderService, _itemService);
+
+            GramTDO1 = _temporaryDeliveryOrderService.ConfirmObject(GramTDO1, DateTime.Today, _temporaryDeliveryOrderDetailService, _virtualOrderService, _virtualOrderDetailService,
+                       _deliveryOrderService, _deliveryOrderDetailService, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+
+            GramTDO2 = _temporaryDeliveryOrderService.ConfirmObject(GramTDO2, DateTime.Today, _temporaryDeliveryOrderDetailService, _virtualOrderService, _virtualOrderDetailService,
+                       _deliveryOrderService, _deliveryOrderDetailService, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
+
+            GramTDOC1R = new TemporaryDeliveryOrderClearance()
+            {
+                ClearanceDate = DateTime.Today,
+                Code = "GramTDOC1R",
+                TemporaryDeliveryOrderId = GramTDO1.Id,
+                IsWaste = false
+            };
+            GramTDOC1R = _temporaryDeliveryOrderClearanceService.CreateObject(GramTDOC1R, _temporaryDeliveryOrderService);
+
+            /*
+            GramTDOC1W = new TemporaryDeliveryOrderClearance()
+            {
+                ClearanceDate = DateTime.Today,
+                Code = "GramTDOC1W",
+                TemporaryDeliveryOrderId = GramTDO1.Id,
+                IsWaste = true
+            };
+            GramTDOC1W = _temporaryDeliveryOrderClearanceService.CreateObject(GramTDOC1W, _temporaryDeliveryOrderService);
+            */
+
+            GramTDOC2R = new TemporaryDeliveryOrderClearance()
+            {
+                ClearanceDate = DateTime.Today,
+                Code = "GramTDOC2R",
+                TemporaryDeliveryOrderId = GramTDO2.Id,
+                IsWaste = false
+            };
+            GramTDOC2R = _temporaryDeliveryOrderClearanceService.CreateObject(GramTDOC2R, _temporaryDeliveryOrderService);
+
+            GramTDOC1Ra = new TemporaryDeliveryOrderClearanceDetail()
+            {
+                TemporaryDeliveryOrderClearanceId = GramTDOC1R.Id,
+                TemporaryDeliveryOrderDetailId = GramTDOD1a.Id,
+                Quantity = GramTDOD1a.Quantity,
+                Code = "GramTDOC1Ra",
+            };
+            GramTDOC1Ra = _temporaryDeliveryOrderClearanceDetailService.CreateObject(GramTDOC1Ra, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
+
+            GramTDOC1Rb = new TemporaryDeliveryOrderClearanceDetail()
+            {
+                TemporaryDeliveryOrderClearanceId = GramTDOC1R.Id,
+                TemporaryDeliveryOrderDetailId = GramTDOD1b.Id,
+                Quantity = GramTDOD1b.Quantity,
+                Code = "GramTDOC1Rb",
+            };
+            GramTDOC1Rb = _temporaryDeliveryOrderClearanceDetailService.CreateObject(GramTDOC1Rb, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
+
+            /*
+            GramTDOC1Wa = new TemporaryDeliveryOrderClearanceDetail()
+            {
+                TemporaryDeliveryOrderClearanceId = GramTDOC1W.Id,
+                TemporaryDeliveryOrderDetailId = GramTDOD1a.Id,
+                Quantity = 5,
+                Code = "GramTDOC1Wa",
+            };
+            GramTDOC1Wa = _temporaryDeliveryOrderClearanceDetailService.CreateObject(GramTDOC1Wa, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
+            */
+
+            GramTDOC2Ra = new TemporaryDeliveryOrderClearanceDetail()
+            {
+                TemporaryDeliveryOrderClearanceId = GramTDOC2R.Id,
+                TemporaryDeliveryOrderDetailId = GramTDOD2a.Id,
+                Quantity = GramTDOD2a.Quantity,
+                Code = "GramTDOC2Ra",
+            };
+            GramTDOC2Ra = _temporaryDeliveryOrderClearanceDetailService.CreateObject(GramTDOC2Ra, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
+
+            GramTDOC2Rb = new TemporaryDeliveryOrderClearanceDetail()
+            {
+                TemporaryDeliveryOrderClearanceId = GramTDOC2R.Id,
+                TemporaryDeliveryOrderDetailId = GramTDOD2b.Id,
+                Quantity = GramTDOD2b.Quantity,
+                Code = "GramTDOC2Rb",
+            };
+            GramTDOC2Rb = _temporaryDeliveryOrderClearanceDetailService.CreateObject(GramTDOC2Rb, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
+
+            GramTDOC1R = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC1R, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+                         _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
+
+            /* No waste for Part Delivery Order
+            GramTDOC1W = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC1W, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+                         _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
+            */
+            GramTDOC2R = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC2R, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+                         _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
+
+            GramDOD1a = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = GramDeliveryOrder1.Id,
+                OrderCode = GramTDOD1a.Code + "," + GramTDOD2a.Code,
+                OrderType = GramTDO1.OrderType,
+                Code = "GramDOD1a",
+                ItemId = GramSOD1a.ItemId,
+                Quantity = GramSOD1a.Quantity,
+                SalesOrderDetailId = GramSOD1a.Id,
+            };
+            GramDOD1a = _deliveryOrderDetailService.CreateObject(GramDOD1a, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            GramDOD1b = new DeliveryOrderDetail()
+            {
+                DeliveryOrderId = GramDeliveryOrder1.Id,
+                OrderCode = GramTDOD1b.Code + "," + GramTDOD2b.Code,
+                OrderType = GramTDO1.OrderType,
+                Code = "GramDOD1b",
+                ItemId = GramSOD1b.ItemId,
+                Quantity = GramSOD1b.Quantity,
+                SalesOrderDetailId = GramSOD1b.Id,
+            };
+            GramDOD1b = _deliveryOrderDetailService.CreateObject(GramDOD1b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
+
+            GramDeliveryOrder1 = _deliveryOrderService.ConfirmObject(GramDeliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
+                                                                     _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService,
+                                                                     _closingService, _serviceCostService, _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService,
+                                                                     _customerStockMutationService, _customerItemService);
         }
 
         public void PopulateValidComb()
