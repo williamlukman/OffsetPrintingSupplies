@@ -22,10 +22,10 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
                                        IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                       ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
+                                       ICurrencyService _currencyService, IExchangeRateService _exchangeRateService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
         CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                         ICurrencyService _currencyService);
+                                         ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
 
     }
 }

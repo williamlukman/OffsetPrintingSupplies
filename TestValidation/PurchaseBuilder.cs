@@ -684,7 +684,7 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Now, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
         }
 
         public void PopulateOrderAndReceivalData()

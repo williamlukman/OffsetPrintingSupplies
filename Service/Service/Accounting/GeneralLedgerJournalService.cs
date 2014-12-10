@@ -310,7 +310,8 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService,
+                                           ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService)
         {
             // Debit TargetCashBank, Credit SourceCashBank
             #region Debit TargetCashBank, Credit SourceCashBank
@@ -338,6 +339,25 @@ namespace Service.Service
             };
             creditsourcecashbank = CreateObject(creditsourcecashbank, _accountService);
 
+            if (_currencyService.GetObjectById(sourceCashBank.CurrencyId).IsBase == false)
+            {
+                GLNonBaseCurrency creditsourcecashbank2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = creditsourcecashbank.Id,
+                    CurrencyId = sourceCashBank.CurrencyId,
+                    Amount = cashBankMutation.Amount
+                };
+                creditsourcecashbank2 = _glNonBaseCurrencyService.CreateObject(creditsourcecashbank2, _accountService);
+
+                GLNonBaseCurrency debittargetcashbank2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = debittargetcashbank.Id,
+                    CurrencyId = targetCashBank.CurrencyId,
+                    Amount = cashBankMutation.Amount
+                };
+                debittargetcashbank2 = _glNonBaseCurrencyService.CreateObject(debittargetcashbank2, _accountService);
+            }
+
             journals.Add(debittargetcashbank);
             journals.Add(creditsourcecashbank);
 
@@ -345,7 +365,8 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankMutation(CashBankMutation cashBankMutation, CashBank sourceCashBank, CashBank targetCashBank, IAccountService _accountService,
+                                           ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService)
         {
             // Debit SourceCashBank, Credit TargetCashBank
             #region Debit SourceCashBank, Credit TargetCashBank
@@ -372,6 +393,25 @@ namespace Service.Service
                 Amount = cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount
             };
             debitsourcecashbank = CreateObject(debitsourcecashbank, _accountService);
+
+            if (_currencyService.GetObjectById(sourceCashBank.CurrencyId).IsBase == false)
+            {
+                GLNonBaseCurrency debitsourcecashbank2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = debitsourcecashbank.Id,
+                    CurrencyId = sourceCashBank.CurrencyId,
+                    Amount = cashBankMutation.Amount
+                };
+                debitsourcecashbank2 = _glNonBaseCurrencyService.CreateObject(debitsourcecashbank2, _accountService);
+
+                GLNonBaseCurrency credittargetcashbank2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = credittargetcashbank.Id,
+                    CurrencyId = targetCashBank.CurrencyId,
+                    Amount = cashBankMutation.Amount
+                };
+                credittargetcashbank2 = _glNonBaseCurrencyService.CreateObject(credittargetcashbank2, _accountService);
+            }
 
             journals.Add(credittargetcashbank);
             journals.Add(debitsourcecashbank);

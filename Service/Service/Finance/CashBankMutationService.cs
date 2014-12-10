@@ -82,7 +82,7 @@ namespace Service.Service
 
         public CashBankMutation ConfirmObject(CashBankMutation cashBankMutation, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                              ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
+                                              ICurrencyService _currencyService, IExchangeRateService _exchangeRateService, IGLNonBaseCurrencyService _glNonBaseCurrencyService)
         {
             cashBankMutation.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(cashBankMutation, _cashBankService, _closingService))
@@ -104,7 +104,8 @@ namespace Service.Service
                 {
                     _cashMutationService.CashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
-                _generalLedgerJournalService.CreateConfirmationJournalForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank, _accountService);
+                _generalLedgerJournalService.CreateConfirmationJournalForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank, _accountService,
+                                             _currencyService, _glNonBaseCurrencyService);
                 _repository.ConfirmObject(cashBankMutation);
             }
             return cashBankMutation;
@@ -112,7 +113,7 @@ namespace Service.Service
 
         public CashBankMutation UnconfirmObject(CashBankMutation cashBankMutation, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, 
-                                                ICurrencyService _currencyService)
+                                                ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService)
         {
             if (_validator.ValidUnconfirmObject(cashBankMutation, _cashBankService, _closingService))
             {
@@ -123,7 +124,8 @@ namespace Service.Service
                 {
                     _cashMutationService.ReverseCashMutateObject(cashMutation, _cashBankService,_currencyService);
                 }
-                _generalLedgerJournalService.CreateUnconfirmationJournalForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForCashBankMutation(cashBankMutation, sourceCashBank, targetCashBank, _accountService,
+                                             _currencyService, _glNonBaseCurrencyService);
                 _repository.UnconfirmObject(cashBankMutation);
             }
             return cashBankMutation;

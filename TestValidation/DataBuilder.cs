@@ -1161,7 +1161,7 @@ namespace TestValidation
             };
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment3, _cashBankService);
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment3, DateTime.Now, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                     _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
         }
 
         public void PopulateBuilders()
@@ -2432,7 +2432,7 @@ namespace TestValidation
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment, _cashBankService);
 
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment, DateTime.Today, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
 
             cashBankAdjustment2 = new CashBankAdjustment()
             {
@@ -2443,7 +2443,7 @@ namespace TestValidation
             _cashBankAdjustmentService.CreateObject(cashBankAdjustment2, _cashBankService);
 
             _cashBankAdjustmentService.ConfirmObject(cashBankAdjustment2, DateTime.Today, _cashMutationService, _cashBankService,
-                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
+                                                     _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
 
             cashBankMutation = new CashBankMutation()
             {
@@ -2456,7 +2456,7 @@ namespace TestValidation
             _cashBankMutationService.CreateObject(cashBankMutation, _cashBankService);
 
             _cashBankMutationService.ConfirmObject(cashBankMutation, DateTime.Today, _cashMutationService, _cashBankService,
-                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
+                                                   _accountService, _generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
 
         }
 
@@ -4009,7 +4009,7 @@ namespace TestValidation
             _closingService.CreateObject(thisMonthClosing, exchangeRateClosing, _accountService, _validCombService, _exchangeRateClosingService);
 
             thisMonthClosing.ClosedAt = DateTime.Today;
-            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService, _gLNonBaseCurrencyService, _exchangeRateClosingService, _vCNonBaseCurrencyService);
+            _closingService.CloseObject(thisMonthClosing, _accountService, _generalLedgerJournalService, _validCombService, _gLNonBaseCurrencyService, _exchangeRateClosingService, _vCNonBaseCurrencyService, _cashBankService);
         }
     }
 }

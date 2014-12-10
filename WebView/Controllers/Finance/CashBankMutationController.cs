@@ -25,6 +25,7 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private ICurrencyService _currencyService;
         private IExchangeRateService _exchangeRateService;
+        private IGLNonBaseCurrencyService _glNonBaseCurrencyService;
 
         public CashBankMutationController()
         {
@@ -37,6 +38,7 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _glNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         }
 
         public ActionResult Index()
@@ -210,7 +212,8 @@ namespace WebView.Controllers
                 
                 var data = _cashBankMutationService.GetObjectById(model.Id);
                 model = _cashBankMutationService.ConfirmObject(data,model.ConfirmationDate.Value,_cashMutationService,_cashBankService,
-                                                               _accountService,_generalLedgerJournalService, _closingService,_currencyService, _exchangeRateService);
+                                                               _accountService,_generalLedgerJournalService, _closingService,_currencyService, 
+                                                               _exchangeRateService, _glNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -230,7 +233,8 @@ namespace WebView.Controllers
             try
             {
                 var data = _cashBankMutationService.GetObjectById(model.Id);
-                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService,_generalLedgerJournalService, _closingService,_currencyService);
+                model = _cashBankMutationService.UnconfirmObject(data,_cashMutationService,_cashBankService,_accountService,
+                        _generalLedgerJournalService, _closingService,_currencyService, _glNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
