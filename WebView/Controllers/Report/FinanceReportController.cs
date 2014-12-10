@@ -90,7 +90,7 @@ namespace WebView.Controllers
             ValidComb DepreciationExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.DepreciationExpense).Id, closing.Id);
             ValidComb AmortizationExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Amortization).Id, closing.Id);
             ValidComb InterestExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestExpense).Id, closing.Id);
-            ValidComb TaxExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxPayable).Id, closing.Id);
+            ValidComb TaxExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxExpense).Id, closing.Id);
             ValidComb DividentExpense = _validCombService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.DividentExpense).Id, closing.Id);
 
             ModelIncomeStatement model = new ModelIncomeStatement()

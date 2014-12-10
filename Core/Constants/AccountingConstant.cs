@@ -68,8 +68,7 @@ namespace Core.Constants
             public static string FinishedGoods = "1104002";
             public static string PrepaidExpense = "1105";
             public static string PiutangLainLain = "1106";
-            public static string NonCurrentAsset = "12";
-            public static string UnrecognizedCapitalGain = "13";
+            public static string TaxReceivable = "1107";
 
             public static string Expense = "2";
             public static string COGS = "21";
@@ -124,6 +123,7 @@ namespace Core.Constants
             public static string Raw = "A1104001";
             public static string FinishedGoods = "A1104002";
             public static string PiutangLainLain = "A1106";
+            public static string TaxReceivable = "A1107";
 
             public static string Expense = "X2";
             public static string COGS = "X21";
