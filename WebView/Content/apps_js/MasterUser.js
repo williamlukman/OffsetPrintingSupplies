@@ -248,6 +248,8 @@
                 this.checked = false;
             else if (tag == 'select')
                 this.selectedIndex = 0;
+            if ($(this).hasClass('easyui-numberbox'))
+                $(this).numberbox('clear');
         });
     }
 

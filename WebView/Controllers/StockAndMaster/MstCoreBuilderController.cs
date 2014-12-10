@@ -37,10 +37,6 @@ namespace WebView.Controllers
         private IBlanketOrderDetailService _blanketOrderDetailService;
 
         private IRollerTypeService _rollerTypeService;
-        private ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
-                        typeConsumable, typeGlue, typeUnderpacking, typeRoller;
-        private RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
-                        typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
 
         public MstCoreBuilderController()
         {

@@ -363,6 +363,8 @@
             else if (tag == 'select')
                 this.selectedIndex = -1;
             $('#Code').data('kode', 0);
+            if ($(this).hasClass('easyui-numberbox'))
+                $(this).numberbox('clear');
         });
     }
 

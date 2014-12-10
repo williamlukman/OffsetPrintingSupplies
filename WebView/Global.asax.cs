@@ -21,7 +21,6 @@ namespace WebView
     public class MvcApplication : System.Web.HttpApplication
     {
         private IAccountService _accountService;
-        private IContactService _contactService;
         private IItemTypeService _itemTypeService;
         private IRollerTypeService _rollerTypeService;
         private IUserMenuService _userMenuService;
