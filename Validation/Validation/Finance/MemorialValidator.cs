@@ -73,26 +73,11 @@ namespace Validation.Validation
             return obj;
         }
 
-        public Memorial VGeneralLedgerPostingHasNotBeenClosed(Memorial memorial, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public Memorial VGeneralLedgerPostingHasNotBeenClosed(Memorial memorial, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(memorial.ConfirmationDate.GetValueOrDefault()))
             {
-                case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(memorial.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            memorial.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
-                case (2): // Unconfirm
-                    {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            memorial.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
+                memorial.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return memorial;
         }
@@ -131,7 +116,7 @@ namespace Validation.Validation
             if (!isValid(memorial)) { return memorial; }
             VDebitEqualCreditEqualAmount(memorial, _memorialDetailService);
             if (!isValid(memorial)) { return memorial; }
-            VGeneralLedgerPostingHasNotBeenClosed(memorial, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(memorial, _closingService);
             return memorial;
         }
 
@@ -141,7 +126,7 @@ namespace Validation.Validation
             if (!isValid(memorial)) { return memorial; }
             VHasNotBeenDeleted(memorial);
             if (!isValid(memorial)) { return memorial; }
-            VGeneralLedgerPostingHasNotBeenClosed(memorial, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(memorial, _closingService);
             return memorial;
         }
 

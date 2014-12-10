@@ -126,26 +126,11 @@ namespace Validation.Validation
             return blendingWorkOrder;
         }
 
-        public BlendingWorkOrder VGeneralLedgerPostingHasNotBeenClosed(BlendingWorkOrder blendingWorkOrder, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public BlendingWorkOrder VGeneralLedgerPostingHasNotBeenClosed(BlendingWorkOrder blendingWorkOrder, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(blendingWorkOrder.BlendingDate))
             {
-                case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(blendingWorkOrder.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            blendingWorkOrder.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
-                case (2): // Unconfirm
-                    {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            blendingWorkOrder.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
+                blendingWorkOrder.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return blendingWorkOrder;
         }
@@ -184,7 +169,7 @@ namespace Validation.Validation
             if (!isValid(blendingWorkOrder)) { return blendingWorkOrder; }
             VSourceQuantityIsInStock(blendingWorkOrder, _blendingRecipeDetailService, _warehouseItemService);
             if (!isValid(blendingWorkOrder)) { return blendingWorkOrder; }
-            VGeneralLedgerPostingHasNotBeenClosed(blendingWorkOrder, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(blendingWorkOrder, _closingService);
             return blendingWorkOrder;
         }
 
@@ -194,7 +179,7 @@ namespace Validation.Validation
             if (!isValid(blendingWorkOrder)) { return blendingWorkOrder; }
             VTargetQuantityIsInStock(blendingWorkOrder, _warehouseItemService, _blendingRecipeService);
             if (!isValid(blendingWorkOrder)) { return blendingWorkOrder; }
-            VGeneralLedgerPostingHasNotBeenClosed(blendingWorkOrder, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(blendingWorkOrder, _closingService);
             return blendingWorkOrder;
         }
 

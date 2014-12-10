@@ -225,37 +225,23 @@ namespace Validation.Validation
             switch (CaseConfirmUnconfirmReconcileUnreconcile)
             {
                 case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(receiptVoucher.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            receiptVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
                 case (2): // Unconfirm
+                {
+                    if (_closingService.IsDateClosed(receiptVoucher.ReceiptDate))
                     {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            receiptVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
+                        receiptVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
+                    break;
+                }
                 case (3): // Reconcile
-                    {
-                        if (_closingService.IsDateClosed(receiptVoucher.ReconciliationDate.GetValueOrDefault()))
-                        {
-                            receiptVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
                 case (4): // Unreconcile
+                {
+                    if (_closingService.IsDateClosed(receiptVoucher.ReconciliationDate.GetValueOrDefault()))
                     {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            receiptVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
+                        receiptVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
+                    break;
+                }
             }
             return receiptVoucher;
         }

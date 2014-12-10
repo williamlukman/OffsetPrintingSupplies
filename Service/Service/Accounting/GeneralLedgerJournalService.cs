@@ -2280,7 +2280,7 @@ namespace Service.Service
 
             GeneralLedgerJournal debitsampleandtrialexpense = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SampleAndTrialExpense).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ManufacturingExpense).Id,
                 SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,

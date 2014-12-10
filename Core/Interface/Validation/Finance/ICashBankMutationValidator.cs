@@ -9,6 +9,7 @@ namespace Core.Interface.Validation
 {
     public interface ICashBankMutationValidator
     {
+        CashBankMutation VHasMutationDate(CashBankMutation cashBankMutation);
         CashBankMutation VHasDifferentCashBank(CashBankMutation cashBankMutation);
         CashBankMutation VHasSameCurrency(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VHasSourceCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
@@ -19,7 +20,7 @@ namespace Core.Interface.Validation
         CashBankMutation VNonNegativeNorZeroAmount(CashBankMutation cashBankMutation);
         CashBankMutation VNonNegativeNorZeroSourceCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VNonNegativeNorZeroTargetCashBank(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
-        CashBankMutation VGeneralLedgerPostingHasNotBeenClosed(CashBankMutation cashBankMutation, IClosingService _closingService, int CaseConfirmUnconfirm);
+        CashBankMutation VGeneralLedgerPostingHasNotBeenClosed(CashBankMutation cashBankMutation, IClosingService _closingService);
         CashBankMutation VCreateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VUpdateObject(CashBankMutation cashBankMutation, ICashBankService _cashBankService);
         CashBankMutation VDeleteObject(CashBankMutation cashBankMutation);

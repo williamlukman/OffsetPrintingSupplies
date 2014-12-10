@@ -148,6 +148,60 @@ namespace TestValidation
                 d.item.Quantity.should_be(0);
             };
 
+            it["customer_stock_adjust_quantity_valid"] = () =>
+            {
+                d.customerStockAdjustment = new CustomerStockAdjustment()
+                {
+                    ContactId = d.contact.Id,
+                    WarehouseId = d.localWarehouse.Id,
+                    AdjustmentDate = DateTime.Today,
+                    Description = "Customer Stock Adjust Positive"
+                };
+                d._customerStockAdjustmentService.CreateObject(d.customerStockAdjustment, d._warehouseService, d._contactService);
+
+                d.cstockAD1 = new CustomerStockAdjustmentDetail()
+                {
+                    ItemId = d.item.Id,
+                    Quantity = 10,
+                    CustomerStockAdjustmentId = d.customerStockAdjustment.Id,
+                    Price = 50000
+                };
+                d._customerStockAdjustmentDetailService.CreateObject(d.cstockAD1, d._customerStockAdjustmentService, d._itemService, d._warehouseItemService, d._customerItemService);
+
+                d._customerStockAdjustmentService.ConfirmObject(d.customerStockAdjustment, DateTime.Today, d._customerStockAdjustmentDetailService, d._customerStockMutationService,
+                                                        d._itemService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+
+                d.item.Errors.Count().should_be(0);
+                d.item.CustomerQuantity.should_be(d.cstockAD1.Quantity);
+            };
+
+            it["customer_stock_adjust_quantity_invalid"] = () =>
+            {
+                d.customerStockAdjustment = new CustomerStockAdjustment()
+                {
+                    ContactId = d.contact.Id,
+                    WarehouseId = d.localWarehouse.Id,
+                    AdjustmentDate = DateTime.Today,
+                    Description = "Customer Stock Adjust Positive"
+                };
+                d._customerStockAdjustmentService.CreateObject(d.customerStockAdjustment, d._warehouseService, d._contactService);
+
+                d.cstockAD1 = new CustomerStockAdjustmentDetail()
+                {
+                    ItemId = d.item.Id,
+                    Quantity = -10,
+                    CustomerStockAdjustmentId = d.customerStockAdjustment.Id,
+                    Price = 50000
+                };
+                d._customerStockAdjustmentDetailService.CreateObject(d.cstockAD1, d._customerStockAdjustmentService, d._itemService, d._warehouseItemService, d._customerItemService);
+
+                d._customerStockAdjustmentService.ConfirmObject(d.customerStockAdjustment, DateTime.Today, d._customerStockAdjustmentDetailService, d._customerStockMutationService,
+                                                        d._itemService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+
+                d.customerStockAdjustment.Errors.Count().should_not_be(0);
+                d.item.CustomerQuantity.should_be(0);
+            };
+
             it["delete_item"] = () =>
             {
                 d.item = d._itemService.SoftDeleteObject(d.item, d._stockMutationService, d._itemTypeService, d._warehouseItemService, d._blanketService, 

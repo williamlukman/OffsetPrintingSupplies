@@ -86,15 +86,17 @@ namespace Service.Service
         }
 
         public TemporaryDeliveryOrderClearanceDetail ConfirmObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, DateTime ConfirmationDate, ITemporaryDeliveryOrderClearanceService _temporaryDeliveryOrderClearanceService,
-                                                          IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
+                                                                   IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                                                    ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
             temporaryDeliveryOrderClearanceDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, this, _temporaryDeliveryOrderDetailService, _itemService, _warehouseItemService))
+            if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderClearanceService, this, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _itemService, _warehouseItemService))
             {
                 TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance = _temporaryDeliveryOrderClearanceService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderClearanceId);
                 TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetailId.GetValueOrDefault());
-                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrderClearance.TemporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
-                Item item = _itemService.GetObjectById(temporaryDeliveryOrderClearanceDetail.TemporaryDeliveryOrderDetail.ItemId);
+                TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
+                WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderDetail.ItemId);
+                Item item = _itemService.GetObjectById(temporaryDeliveryOrderDetail.ItemId);
                 IList<StockMutation> stockMutations = null;
                 if (temporaryDeliveryOrderClearance.IsWaste)
                 {
@@ -166,9 +168,9 @@ namespace Service.Service
             return temporaryDeliveryOrderClearanceDetail;
         }
 
-        public TemporaryDeliveryOrderClearanceDetail ProcessObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail)
+        public TemporaryDeliveryOrderClearanceDetail ProcessObject(TemporaryDeliveryOrderClearanceDetail temporaryDeliveryOrderClearanceDetail, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService)
         {
-            if (_validator.ValidProcessObject(temporaryDeliveryOrderClearanceDetail))
+            if (_validator.ValidProcessObject(temporaryDeliveryOrderClearanceDetail, _temporaryDeliveryOrderDetailService))
             {
                 _repository.UpdateObject(temporaryDeliveryOrderClearanceDetail);
             }

@@ -98,26 +98,11 @@ namespace Validation.Validation
         }
 
 
-        public TemporaryDeliveryOrderClearance VGeneralLedgerPostingHasNotBeenClosed(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public TemporaryDeliveryOrderClearance VGeneralLedgerPostingHasNotBeenClosed(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, IClosingService _closingService)
         {
-            switch (CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(temporaryDeliveryOrderClearance.ClearanceDate))
             {
-                case (1): // Confirm
-                    {
-                        if (_closingService.IsDateClosed(temporaryDeliveryOrderClearance.ConfirmationDate.GetValueOrDefault()))
-                        {
-                            temporaryDeliveryOrderClearance.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
-                case (2): // Unconfirm
-                    {
-                        if (_closingService.IsDateClosed(DateTime.Now))
-                        {
-                            temporaryDeliveryOrderClearance.Errors.Add("Generic", "Ledger sudah tutup buku");
-                        }
-                        break;
-                    }
+                temporaryDeliveryOrderClearance.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return temporaryDeliveryOrderClearance;
         }
@@ -172,7 +157,7 @@ namespace Validation.Validation
             if (!isValid(temporaryDeliveryOrderClearance)) { return temporaryDeliveryOrderClearance; }
             VHasTemporaryDeliveryOrderClearanceDetails(temporaryDeliveryOrderClearance, _temporaryDeliveryOrderClearanceDetailService);
             if (!isValid(temporaryDeliveryOrderClearance)) { return temporaryDeliveryOrderClearance; }
-            VGeneralLedgerPostingHasNotBeenClosed(temporaryDeliveryOrderClearance, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(temporaryDeliveryOrderClearance, _closingService);
             return temporaryDeliveryOrderClearance;
         }
 
@@ -180,7 +165,7 @@ namespace Validation.Validation
         {
             VHasBeenConfirmed(temporaryDeliveryOrderClearance);
             if (!isValid(temporaryDeliveryOrderClearance)) { return temporaryDeliveryOrderClearance; }
-            VGeneralLedgerPostingHasNotBeenClosed(temporaryDeliveryOrderClearance, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(temporaryDeliveryOrderClearance, _closingService);
             return temporaryDeliveryOrderClearance;
         }
 

@@ -57,7 +57,8 @@ namespace Validation.Validation
         {
             TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                 if (virtualOrderDetail == null)
@@ -83,7 +84,8 @@ namespace Validation.Validation
             TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
             IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByTemporaryDeliveryOrderId(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 foreach (var detail in details)
                 {
@@ -113,7 +115,8 @@ namespace Validation.Validation
         {
             TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                 if (!virtualOrderDetail.IsConfirmed)
@@ -138,7 +141,8 @@ namespace Validation.Validation
         {
             TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder || 
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                 IList<TemporaryDeliveryOrderDetail> details = _temporaryDeliveryOrderDetailService.GetObjectsByVirtualOrderDetailId((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
@@ -187,7 +191,8 @@ namespace Validation.Validation
         {
             TemporaryDeliveryOrder temporaryDeliveryOrder = _temporaryDeliveryOrderService.GetObjectById(temporaryDeliveryOrderDetail.TemporaryDeliveryOrderId);
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                 if (temporaryDeliveryOrder.VirtualOrderId != virtualOrderDetail.VirtualOrderId)

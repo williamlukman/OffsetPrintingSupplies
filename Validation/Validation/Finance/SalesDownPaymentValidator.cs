@@ -108,26 +108,11 @@ namespace Validation.Validation
             return salesDownPayment;
         }
 
-        public SalesDownPayment VGeneralLedgerPostingHasNotBeenClosed(SalesDownPayment salesDownPayment, IClosingService _closingService, int CaseConfirmUnconfirm)
+        public SalesDownPayment VGeneralLedgerPostingHasNotBeenClosed(SalesDownPayment salesDownPayment, IClosingService _closingService)
         {
-            switch(CaseConfirmUnconfirm)
+            if (_closingService.IsDateClosed(salesDownPayment.DownPaymentDate))
             {
-                case(1): // Confirm
-                {
-                    if (_closingService.IsDateClosed(salesDownPayment.ConfirmationDate.GetValueOrDefault()))
-                    {
-                        salesDownPayment.Errors.Add("Generic", "Ledger sudah tutup buku");
-                    }
-                    break;
-                }
-                case (2): // Unconfirm
-                {
-                    if (_closingService.IsDateClosed(DateTime.Now))
-                    {
-                        salesDownPayment.Errors.Add("Generic", "Ledger sudah tutup buku");
-                    }
-                    break;
-                }
+                salesDownPayment.Errors.Add("Generic", "Ledger sudah tutup buku");
             }
             return salesDownPayment;
         }
@@ -179,7 +164,7 @@ namespace Validation.Validation
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VHasNotBeenDeleted(salesDownPayment);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
-            VGeneralLedgerPostingHasNotBeenClosed(salesDownPayment, _closingService, 1);
+            VGeneralLedgerPostingHasNotBeenClosed(salesDownPayment, _closingService);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VCreateObject(salesDownPayment, _salesDownPaymentService, _contactService);
             return salesDownPayment;
@@ -197,7 +182,7 @@ namespace Validation.Validation
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
             VReceivableHasNotBeenPaidAndHasNoSalesDownPaymentAllocation(salesDownPayment, _receivableService, _salesDownPaymentAllocationService);
             if (!isValid(salesDownPayment)) { return salesDownPayment; }
-            VGeneralLedgerPostingHasNotBeenClosed(salesDownPayment, _closingService, 2);
+            VGeneralLedgerPostingHasNotBeenClosed(salesDownPayment, _closingService);
             return salesDownPayment;
         }
 

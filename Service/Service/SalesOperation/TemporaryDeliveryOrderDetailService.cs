@@ -121,7 +121,8 @@ namespace Service.Service
                 }
 
                 if (temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
-                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder)
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.Consignment)
                 {
                     VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                     _virtualOrderDetailService.SetDeliveryComplete(virtualOrderDetail, temporaryDeliveryOrderDetail.Quantity); 

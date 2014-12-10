@@ -16,8 +16,7 @@ namespace Core.Interface.Validation
         PaymentRequest VHasBeenConfirmed(PaymentRequest paymentRequest);
         PaymentRequest VHasNotBeenDeleted(PaymentRequest paymentRequest);
         PaymentRequest VHasConfirmationDate(PaymentRequest paymentRequest);
-        PaymentRequest VGeneralLedgerPostingHasNotBeenClosed(PaymentRequest paymentRequest, IClosingService _closingService, int CaseConfirmUnconfirm);
-
+        PaymentRequest VGeneralLedgerPostingHasNotBeenClosed(PaymentRequest paymentRequest, IClosingService _closingService);
         PaymentRequest VCreateObject(PaymentRequest paymentRequest, IContactService _contactService);
         PaymentRequest VUpdateObject(PaymentRequest paymentRequest, IContactService _contactService);
         PaymentRequest VDeleteObject(PaymentRequest paymentRequest);

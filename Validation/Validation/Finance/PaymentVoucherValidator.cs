@@ -225,32 +225,18 @@ namespace Validation.Validation
             switch(CaseConfirmUnconfirmReconcileUnreconcile)
             {
                 case(1): // Confirm
-                {
-                    if (_closingService.IsDateClosed(paymentVoucher.ConfirmationDate.GetValueOrDefault()))
-                    {
-                        paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
-                    }
-                    break;
-                }
                 case(2): // Unconfirm
                 {
-                    if (_closingService.IsDateClosed(DateTime.Now))
+                    if (_closingService.IsDateClosed(paymentVoucher.PaymentDate))
                     {
                         paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }
                     break;
                 }
                 case(3): // Reconcile
+                case(4): // Unreconcile
                 {
                     if (_closingService.IsDateClosed(paymentVoucher.ReconciliationDate.GetValueOrDefault()))
-                    {
-                        paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
-                    }
-                    break;
-                }
-                case (4): // Unreconcile
-                {
-                    if (_closingService.IsDateClosed(DateTime.Now))
                     {
                         paymentVoucher.Errors.Add("Generic", "Ledger sudah tutup buku");
                     }

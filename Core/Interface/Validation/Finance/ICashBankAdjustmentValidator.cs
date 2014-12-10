@@ -15,7 +15,7 @@ namespace Core.Interface.Validation
         CashBankAdjustment VHasNotBeenConfirmed(CashBankAdjustment cashBankAdjustment);
         CashBankAdjustment VNonZeroAmount(CashBankAdjustment cashBankAdjustment);
         CashBankAdjustment VNonNegativeNorZeroCashBankAmount(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService, bool CaseConfirm);
-        CashBankAdjustment VGeneralLedgerPostingHasNotBeenClosed(CashBankAdjustment cashBankAdjustment, IClosingService _closingService, int CaseConfirmUnconfirm);
+        CashBankAdjustment VGeneralLedgerPostingHasNotBeenClosed(CashBankAdjustment cashBankAdjustment, IClosingService _closingService);
         CashBankAdjustment VCreateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         CashBankAdjustment VUpdateObject(CashBankAdjustment cashBankAdjustment, ICashBankService _cashBankService);
         CashBankAdjustment VDeleteObject(CashBankAdjustment cashBankAdjustment);

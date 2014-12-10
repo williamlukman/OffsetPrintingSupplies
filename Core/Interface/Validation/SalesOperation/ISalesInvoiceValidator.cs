@@ -26,7 +26,7 @@ namespace Core.Interface.Validation
                                                            ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService);
         SalesInvoice VAllSalesInvoiceDetailsAreUnconfirmable(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService);
         SalesInvoice VReceivableHasNoOtherAssociation(SalesInvoice salesInvoice, IReceivableService _receivableService, IReceiptVoucherDetailService _receiptVoucherDetailService);
-        SalesInvoice VGeneralLedgerPostingHasNotBeenClosed(SalesInvoice salesInvoice, IClosingService _closingService, int CaseConfirmUnconfirm);
+        SalesInvoice VGeneralLedgerPostingHasNotBeenClosed(SalesInvoice salesInvoice, IClosingService _closingService);
         SalesInvoice VCreateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService);
         SalesInvoice VUpdateObject(SalesInvoice salesInvoice, ISalesInvoiceService _salesInvoiceService, IDeliveryOrderService _deliveryOrderService, ISalesInvoiceDetailService _salesInvoiceDetailService);
         SalesInvoice VDeleteObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService);

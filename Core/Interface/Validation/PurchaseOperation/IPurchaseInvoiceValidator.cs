@@ -24,7 +24,7 @@ namespace Core.Interface.Validation
         PurchaseInvoice VAllPurchaseInvoiceDetailsAreConfirmable(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseInvoice VAllPurchaseInvoiceDetailsAreUnconfirmable(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService);
         PurchaseInvoice VPayableHasNoOtherAssociation(PurchaseInvoice purchaseInvoice, IPayableService _payableService, IPaymentVoucherDetailService _paymentVoucherDetailService);
-        PurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(PurchaseInvoice purchaseInvoice, IClosingService _closingService, int CaseConfirmUnconfirm);
+        PurchaseInvoice VGeneralLedgerPostingHasNotBeenClosed(PurchaseInvoice purchaseInvoice, IClosingService _closingService);
         PurchaseInvoice VCreateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService);
         PurchaseInvoice VUpdateObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService, IPurchaseReceivalService _purchaseReceivalService, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);
         PurchaseInvoice VDeleteObject(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceDetailService _purchaseInvoiceDetailService);

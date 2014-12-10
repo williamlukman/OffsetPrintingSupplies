@@ -24,7 +24,7 @@ namespace Core.Interface.Validation
                                       ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
         SalesDownPaymentAllocation VAllSalesDownPaymentAllocationDetailsAreConfirmable(SalesDownPaymentAllocation salesDownPaymentAllocation,
                                       ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IReceivableService _receivableService, IPayableService _payableService);
-        SalesDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(SalesDownPaymentAllocation salesDownPaymentAllocation, IClosingService _closingService, int CaseConfirmUnconfirm);
+        SalesDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(SalesDownPaymentAllocation salesDownPaymentAllocation, IClosingService _closingService);
         SalesDownPaymentAllocation VCreateObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                  ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
                                                  IContactService _contactService, IPayableService _payableService);
