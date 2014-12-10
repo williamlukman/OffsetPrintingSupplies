@@ -100,7 +100,7 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(customerStockAdjustmentDetail.ItemId);
                 item.CustomerAvgPrice = _itemService.CalculateAndUpdateCustomerAvgPrice(item, customerStockAdjustmentDetail.Quantity, customerStockAdjustmentDetail.Price);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(customerStockAdjustment.WarehouseId, item.Id);
-                CustomerItem customerItem = _customerItemService.FindOrCreateObject(customerStockAdjustment.WarehouseId, item.Id);
+                CustomerItem customerItem = _customerItemService.FindOrCreateObject(customerStockAdjustment.ContactId, warehouseItem.Id);
                 CustomerStockMutation customerStockMutation = _customerStockMutationService.CreateCustomerStockMutationForCustomerStockAdjustment(customerStockAdjustmentDetail, customerItem, item.Id);
                 _customerStockMutationService.StockMutateObject(customerStockMutation, false, _itemService, _customerItemService, _warehouseItemService);
             }
@@ -116,7 +116,7 @@ namespace Service.Service
                 Item item = _itemService.GetObjectById(customerStockAdjustmentDetail.ItemId);
                 item.CustomerAvgPrice = _itemService.CalculateAndUpdateCustomerAvgPrice(item, customerStockAdjustmentDetail.Quantity * (-1), customerStockAdjustmentDetail.Price);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(customerStockAdjustment.WarehouseId, item.Id);
-                CustomerItem customerItem = _customerItemService.FindOrCreateObject(customerStockAdjustment.WarehouseId, item.Id);
+                CustomerItem customerItem = _customerItemService.FindOrCreateObject(customerStockAdjustment.ContactId, warehouseItem.Id);
                 IList<CustomerStockMutation> customerStockMutations = _customerStockMutationService.GetObjectsBySourceDocumentDetailForCustomerItem(customerItem.Id, Constant.SourceDocumentDetailType.CustomerStockAdjustmentDetail, customerStockAdjustmentDetail.Id);
                 foreach (var customerStockMutation in customerStockMutations)
                 {

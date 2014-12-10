@@ -66,6 +66,7 @@ namespace Data.Repository
                 {
                     ContactId = ContactId,
                     WarehouseItemId = WarehouseItemId,
+                    Quantity = 0
                 };
                 customerItem = CreateObject(customerItem);
                 

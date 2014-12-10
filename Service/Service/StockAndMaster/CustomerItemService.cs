@@ -75,9 +75,7 @@ namespace Service.Service
             {
                 ContactId = contact.Id,
                 WarehouseItemId = warehouseItem.Id,
-                Quantity = 0,
-                Contact = contact,
-                WarehouseItem = warehouseItem
+                Quantity = 0
             };
             return CreateObject(customerItem, _contactService, _warehouseItemService);
         }
