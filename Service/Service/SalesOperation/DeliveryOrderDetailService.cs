@@ -112,7 +112,10 @@ namespace Service.Service
                     deliveryOrderDetail.COGS = deliveryOrderDetail.Quantity * item.CustomerAvgPrice;
                 }
                 deliveryOrderDetail = _repository.ConfirmObject(deliveryOrderDetail);
-                _salesOrderDetailService.SetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity);
+                if (deliveryOrderDetail.OrderType != Constant.OrderTypeCase.PartDeliveryOrder)
+                {
+                    _salesOrderDetailService.SetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity);
+                }
             }
             return deliveryOrderDetail;
         }

@@ -91,19 +91,22 @@ namespace Validation.Validation
             SalesOrderDetail salesOrderDetail = _salesOrderDetailService.GetObjectById(deliveryOrderDetail.SalesOrderDetailId);
             IList<DeliveryOrderDetail> details = _deliveryOrderDetailService.GetObjectsBySalesOrderDetailId(deliveryOrderDetail.SalesOrderDetailId);
 
-            int totalDeliveryQuantity = 0;
-            foreach (var detail in details)
+            if (deliveryOrderDetail.OrderType != Constant.OrderTypeCase.PartDeliveryOrder)
             {
-                if (!detail.IsConfirmed)
+                int totalDeliveryQuantity = 0;
+                foreach (var detail in details)
                 {
-                    totalDeliveryQuantity += detail.Quantity;
+                    if (!detail.IsConfirmed)
+                    {
+                        totalDeliveryQuantity += detail.Quantity;
+                    }
                 }
-            }
-            if (CaseCreate) { totalDeliveryQuantity += deliveryOrderDetail.Quantity; }
-            if (totalDeliveryQuantity > salesOrderDetail.PendingDeliveryQuantity)
-            {
-                int maxquantity = salesOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + deliveryOrderDetail.Quantity;
-                deliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
+                if (CaseCreate) { totalDeliveryQuantity += deliveryOrderDetail.Quantity; }
+                if (totalDeliveryQuantity > salesOrderDetail.PendingDeliveryQuantity)
+                {
+                    int maxquantity = salesOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + deliveryOrderDetail.Quantity;
+                    deliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
+                }
             }
             return deliveryOrderDetail;
         }
