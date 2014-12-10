@@ -22,8 +22,8 @@ namespace Core.Interface.Service
         bool DeleteObject(int Id);
         CashBankAdjustment ConfirmObject(CashBankAdjustment cashBankAdjustment, DateTime ConfirmationDate, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
                                          IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                         ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
+                                         ICurrencyService _currencyService, IExchangeRateService _exchangeRateService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
         CashBankAdjustment UnconfirmObject(CashBankAdjustment cashBankAdjustment, ICashMutationService _cashMutationService, ICashBankService _cashBankService,
-                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService);
+                                           IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
     }
 }

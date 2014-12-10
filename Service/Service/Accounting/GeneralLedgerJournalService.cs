@@ -127,7 +127,8 @@ namespace Service.Service
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, 
+            IAccountService _accountService,ICurrencyService _currencyService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             // if (Amount >= 0) then Debit CashBank, Credit CashBankEquityAdjustment
             // if (Amount < 0) then Debit CashBankAdjustmentExpense, Credit CashBank
@@ -148,6 +149,17 @@ namespace Service.Service
                     Amount = cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
+
+                if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
+                {
+                    GLNonBaseCurrency debitcashbank2 = new GLNonBaseCurrency()
+                    {
+                        GeneralLedgerJournalId = debitcashbank.Id,
+                        CurrencyId = cashBank.CurrencyId,
+                        Amount = cashBankAdjustment.Amount,
+                    };
+                    debitcashbank2 = _gLNonBaseCurrencyService.CreateObject(debitcashbank2, _accountService);
+                }
 
                 GeneralLedgerJournal creditcashbankequityadjustment = new GeneralLedgerJournal()
                 {
@@ -189,6 +201,17 @@ namespace Service.Service
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
 
+                if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
+                {
+                    GLNonBaseCurrency creditcashbank2 = new GLNonBaseCurrency()
+                    {
+                        GeneralLedgerJournalId = creditcashbank.Id,
+                        CurrencyId = cashBank.CurrencyId,
+                        Amount = Math.Abs(cashBankAdjustment.Amount),
+                    };
+                    creditcashbank2 = _gLNonBaseCurrencyService.CreateObject(creditcashbank2, _accountService);
+                }
+
                 journals.Add(debitcashbankadjustmentexpense);
                 journals.Add(creditcashbank);
             }
@@ -196,7 +219,8 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService
+            ,ICurrencyService _currencyService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             // if (Amount >= 0) then Credit CashBank, Debit CashBankEquityAdjustment
             // if (Amount < 0) then Debit CashBank, Credit CashBankAdjustmentExpense
@@ -215,6 +239,17 @@ namespace Service.Service
                     Amount = cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
+
+                if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
+                {
+                    GLNonBaseCurrency creditcashbank2 = new GLNonBaseCurrency()
+                    {
+                        GeneralLedgerJournalId = creditcashbank.Id,
+                        CurrencyId = cashBank.CurrencyId,
+                        Amount = cashBankAdjustment.Amount
+                    };
+                    creditcashbank2 = _gLNonBaseCurrencyService.CreateObject(creditcashbank2, _accountService);
+                }
 
                 GeneralLedgerJournal debitcashbankequityadjustment = new GeneralLedgerJournal()
                 {
@@ -255,6 +290,18 @@ namespace Service.Service
                     Amount = Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
+
+                if (_currencyService.GetObjectById(cashBank.CurrencyId).IsBase == false)
+                {
+                    GLNonBaseCurrency debitcashbank2 = new GLNonBaseCurrency()
+                    {
+                        GeneralLedgerJournalId = debitcashbank.Id,
+                        CurrencyId = cashBank.CurrencyId,
+                        Amount = cashBankAdjustment.Amount
+                    };
+                    debitcashbank2 = _gLNonBaseCurrencyService.CreateObject(debitcashbank2, _accountService);
+                }
+
 
                 journals.Add(creditcashbankadjustmentexpense);
                 journals.Add(debitcashbank);
