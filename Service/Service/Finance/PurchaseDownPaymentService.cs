@@ -80,7 +80,8 @@ namespace Service.Service
         }
 
         public PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment, DateTime ConfirmationDate, IPayableService _payableService, IReceivableService _receivableService,
-                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                 IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                                 ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             purchaseDownPayment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseDownPayment, _payableService, _receivableService, this, _contactService, _accountService,
@@ -113,8 +114,20 @@ namespace Service.Service
                 purchaseDownPayment.ReceivableId = receivable.Id;
                 purchaseDownPayment.PayableId = payable.Id;
 
+                Currency currency = _currencyService.GetObjectById(purchaseDownPayment.CurrencyId);
+                if (currency.IsBase == false)
+                {
+                    purchaseDownPayment.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseDownPayment.ConfirmationDate.Value, currency).Id;
+                    purchaseDownPayment.ExchangeRateAmount = _exchangeRateService.GetObjectById(purchaseDownPayment.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    purchaseDownPayment.ExchangeRateAmount = 1;
+                }
+
                 _repository.ConfirmObject(purchaseDownPayment);
                 _generalLedgerJournalService.CreateConfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService);
+
             }
             return purchaseDownPayment;
         }

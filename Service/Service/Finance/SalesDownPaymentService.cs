@@ -80,12 +80,24 @@ namespace Service.Service
         }
 
         public SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService, IPayableService _payableService,
-                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                              ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             salesDownPayment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesDownPayment, _receivableService, _payableService, this, _contactService, _accountService,
                                               _generalLedgerJournalService, _closingService))
             {
+                Currency currency = _currencyService.GetObjectById(salesDownPayment.CurrencyId);
+                if (currency.IsBase == false)
+                {
+                    salesDownPayment.ExchangeRateId = _exchangeRateService.GetLatestRate(salesDownPayment.ConfirmationDate.Value, currency).Id;
+                    salesDownPayment.ExchangeRateAmount = _exchangeRateService.GetObjectById(salesDownPayment.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    salesDownPayment.ExchangeRateAmount = 1;
+                }
+
                 Receivable receivable = new Receivable()
                 {
                     ContactId = salesDownPayment.ContactId,
@@ -94,7 +106,8 @@ namespace Service.Service
                     DueDate = salesDownPayment.DueDate == null ? salesDownPayment.DownPaymentDate : salesDownPayment.DueDate.Value,
                     CompletionDate = null,
                     ReceivableSource = Constant.SourceDocumentType.SalesDownPayment,
-                    ReceivableSourceId = salesDownPayment.Id
+                    ReceivableSourceId = salesDownPayment.Id,
+                    Rate = salesDownPayment.ExchangeRateAmount
                 };
                 _receivableService.CreateObject(receivable);
 
@@ -106,7 +119,8 @@ namespace Service.Service
                     DueDate = salesDownPayment.DueDate == null ? salesDownPayment.DownPaymentDate : salesDownPayment.DueDate.Value,
                     CompletionDate = null,
                     PayableSource = Constant.SourceDocumentType.SalesDownPayment,
-                    PayableSourceId = salesDownPayment.Id
+                    PayableSourceId = salesDownPayment.Id,
+                    Rate = salesDownPayment.ExchangeRateAmount
                 };
                 _payableService.CreateObject(payable);
 

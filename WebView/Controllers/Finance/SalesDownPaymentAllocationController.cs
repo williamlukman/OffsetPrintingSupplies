@@ -465,8 +465,8 @@ namespace WebView.Controllers
             {
                 var data = _purchaseDownPaymentAllocationService.GetObjectById(model.Id);
                 model = _purchaseDownPaymentAllocationService.ConfirmObject(data, model.ConfirmationDate.Value,
-                    _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _receivableService, _payableService,
-                    _accountService, _generalLedgerJournalService, _closingService);
+                        _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _receivableService, _payableService,
+                        _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
