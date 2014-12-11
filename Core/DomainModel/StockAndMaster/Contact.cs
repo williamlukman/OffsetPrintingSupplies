@@ -11,6 +11,11 @@ namespace Core.DomainModel
 
         public string Name { get; set; }
         public string Address { get; set; }
+        
+        public string DeliveryAddress { get; set; }
+        public string NPWP { get; set; }
+        public string Description { get; set; }
+    
         public string ContactNo { get; set; }
         public string PIC { get; set; }
         public string PICContactNo { get; set; }
