@@ -147,6 +147,7 @@ namespace WebView
             _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
 
             baseCompany = _companyService.GetQueryable().FirstOrDefault();
           
