@@ -1579,7 +1579,7 @@ namespace Service.Service
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPaymentAllocation(SalesDownPaymentAllocation salesDownPaymentAllocation, IAccountService _accountService,
-                                           ISalesDownPaymentService _salesDownPaymentService)
+                                           ISalesDownPaymentService _salesDownPaymentService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService)
         {
             // Debit HutangLainLain, Credit AccountReceivable
             #region Debit HutangLainLain, Credit AccountReceivable
@@ -1592,18 +1592,18 @@ namespace Service.Service
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesDownPaymentAllocation.TotalAmount
+                Amount = salesDownPaymentAllocation.TotalAmount * salesDownPaymentAllocation.Payable.Rate
             };
             debithutanglainlain = CreateObject(debithutanglainlain, _accountService);
 
             GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable ).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesDownPaymentAllocation.Payable.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesDownPaymentAllocation.TotalAmount
+                Amount = salesDownPaymentAllocation.TotalAmount * salesDownPaymentAllocation.Payable.Rate
             };
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
 
@@ -1639,14 +1639,48 @@ namespace Service.Service
             journals.Add(debithutanglainlain);
             journals.Add(creditaccountreceivable);
 
+            IList<SalesDownPaymentAllocationDetail> salesDownPaymentAllocationDetail = _salesDownPaymentAllocationDetailService.GetObjectsBySalesDownPaymentAllocationId(salesDownPaymentAllocation.Id);
+
+            foreach (var item in salesDownPaymentAllocationDetail)
+            {
+                if (item.Rate * salesDownPaymentAllocation.RateToIDR > item.Receivable.Rate)
+                {
+                    GeneralLedgerJournal debitExchangeGain = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
+                        SourceDocumentId = salesDownPaymentAllocation.Id,
+                        TransactionDate = salesDownPaymentAllocation.AllocationDate,
+                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Amount = (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR) - (item.Amount * item.Receivable.Rate)
+                    };
+                    debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
+                    journals.Add(debitExchangeGain);
+                }
+                else if (item.Rate * salesDownPaymentAllocation.RateToIDR < item.Receivable.Rate)
+                {
+                    GeneralLedgerJournal creditExchangeLoss = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
+                        SourceDocumentId = salesDownPaymentAllocation.Id,
+                        TransactionDate = salesDownPaymentAllocation.AllocationDate,
+                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Amount = (item.Amount * item.Receivable.Rate) - (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR)
+                    };
+                    creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
+                    journals.Add(creditExchangeLoss);
+                }
+            }
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPaymentAllocation(SalesDownPaymentAllocation salesDownPaymentAllocation, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPaymentAllocation(SalesDownPaymentAllocation salesDownPaymentAllocation, IAccountService _accountService,
+                                           ISalesDownPaymentService _salesDownPaymentService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService)
         {
-            // Credit HutangLainLain, Debit Revenue
-            #region Credit HutangLainLain, Debit Revenue
+            // Credit HutangLainLain, Debit AccountReceivable
+            #region Credit HutangLainLain, Debit AccountReceivable
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
             GeneralLedgerJournal credithutanglainlain = new GeneralLedgerJournal()
@@ -1656,24 +1690,86 @@ namespace Service.Service
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesDownPaymentAllocation.TotalAmount
+                Amount = salesDownPaymentAllocation.TotalAmount * salesDownPaymentAllocation.Payable.Rate
             };
             credithutanglainlain = CreateObject(credithutanglainlain, _accountService);
 
-            GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()
+            GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesDownPaymentAllocation.Payable.CurrencyId).Id,
                 SourceDocument = Constant.GeneralLedgerSource.SalesDownPayment,
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesDownPaymentAllocation.TotalAmount
+                Amount = salesDownPaymentAllocation.TotalAmount * salesDownPaymentAllocation.Payable.Rate
             };
-            debitrevenue = CreateObject(debitrevenue, _accountService);
+            debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
+
+            if (salesDownPaymentAllocation.Payable.Rate < salesDownPaymentAllocation.RateToIDR)
+            {
+                GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
+                    SourceDocumentId = salesDownPaymentAllocation.Id,
+                    TransactionDate = salesDownPaymentAllocation.AllocationDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount) - (salesDownPaymentAllocation.Payable.Rate * salesDownPaymentAllocation.TotalAmount)
+                };
+                debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
+                journals.Add(debitExchangeLoss);
+            }
+            else if (salesDownPaymentAllocation.Payable.Rate > salesDownPaymentAllocation.RateToIDR)
+            {
+                GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
+                    SourceDocumentId = salesDownPaymentAllocation.Id,
+                    TransactionDate = salesDownPaymentAllocation.AllocationDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = (salesDownPaymentAllocation.Payable.Rate * salesDownPaymentAllocation.TotalAmount) - (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount)
+                };
+                creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
+                journals.Add(creditExchangeGain);
+            }
 
             journals.Add(credithutanglainlain);
-            journals.Add(debitrevenue);
+            journals.Add(debitaccountreceivable);
 
+            IList<SalesDownPaymentAllocationDetail> salesDownPaymentAllocationDetail = _salesDownPaymentAllocationDetailService.GetObjectsBySalesDownPaymentAllocationId(salesDownPaymentAllocation.Id);
+
+            foreach (var item in salesDownPaymentAllocationDetail)
+            {
+                if (item.Rate * salesDownPaymentAllocation.RateToIDR > item.Receivable.Rate)
+                {
+                    GeneralLedgerJournal creditExchangeGain = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeGain).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
+                        SourceDocumentId = salesDownPaymentAllocation.Id,
+                        TransactionDate = salesDownPaymentAllocation.AllocationDate,
+                        Status = Constant.GeneralLedgerStatus.Credit,
+                        Amount = (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR) - (item.Amount * item.Receivable.Rate)
+                    };
+                    creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
+                    journals.Add(creditExchangeGain);
+                }
+                else if (item.Rate * salesDownPaymentAllocation.RateToIDR < item.Receivable.Rate)
+                {
+                    GeneralLedgerJournal debitExchangeLoss = new GeneralLedgerJournal()
+                    {
+                        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ExchangeLoss).Id,
+                        SourceDocument = Constant.GeneralLedgerSource.SalesDownPaymentAllocation,
+                        SourceDocumentId = salesDownPaymentAllocation.Id,
+                        TransactionDate = salesDownPaymentAllocation.AllocationDate,
+                        Status = Constant.GeneralLedgerStatus.Debit,
+                        Amount = (item.Amount * item.Receivable.Rate) - (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR)
+                    };
+                    debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
+                    journals.Add(debitExchangeLoss);
+                }
+            }
             return journals;
             #endregion
         }

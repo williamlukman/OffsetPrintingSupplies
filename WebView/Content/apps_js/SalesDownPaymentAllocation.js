@@ -120,6 +120,12 @@
         window.open(base_url + 'Print_Forms/Printmstbank.aspx');
     });
 
+    $("#AmountPaid, #Rate").blur(function () {
+        var total = parseFloat($('#AmountPaid').numberbox('getValue')) / parseFloat($('#Rate').numberbox('getValue'));
+        //total = Math.round(total * 100) / 100;
+        $('#Amount').numberbox('setValue', total);
+    });
+
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
@@ -127,9 +133,11 @@
         $('#AllocationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnSalesDownPayment').removeAttr('disabled');
+        $('#btnPayable').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#AllocationDateDiv').show();
         $('#AllocationDateDiv2').hide();
+        $('#RateToIDR').removeAttr('disabled');
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -162,9 +170,11 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#SalesDownPaymentId').val(result.SalesDownPaymentId);
+                            $('#CurrencyCashBank').val(result.currency);
                             $('#PayableId').val(result.PayableId);
                             $('#Payable').val(result.Payable);
-                            $('#TotalAmount').numberbox('setValue',result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
+                            $('#RateToIDR').numberbox('setValue', result.RateToIDR);
                             $('#AllocationDate').datebox('setValue', dateEnt(result.AllocationDate));
                             $('#AllocationDate2').val(dateEnt(result.AllocationDate));
                             $('#AllocationDateDiv2').show();
@@ -173,6 +183,7 @@
                             $('#btnContact').attr('disabled', true);
                             $('#btnPayable').attr('disabled', true);
                             $('#TotalAmount').attr('disabled', true);
+                            $('#RateToIDR').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -211,21 +222,18 @@
                             $('#Code').val(result.Code);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#SalesDownPaymentId').val(result.SalesDownPaymentId);
+                            $('#CurrencyCashBank').val(result.currency);
                             $('#PayableId').val(result.PayableId);
                             $('#Payable').val(result.Payable);
-                            $('#TotalAmount').val(result.TotalAmount);
-                            var e = document.getElementById("IsGBCH");
-                            if (result.IsGBCH == true) {
-                                e.selectedIndex = 0;
-                            }
-                            else {
-                                e.selectedIndex = 1;
-                            }
+                            $('#TotalAmount').numberbox('setValue', result.TotalAmount);
+                            $('#RateToIDR').numberbox('setValue', result.RateToIDR);
                             $('#AllocationDate').datebox('setValue', dateEnt(result.AllocationDate));
                             $('#AllocationDate2').val(dateEnt(result.AllocationDate));
                             $('#AllocationDateDiv2').show();
                             $('#AllocationDateDiv').hide();
                             $('#btnContact').removeAttr('disabled');
+                            $('#RateToIDR').removeAttr('disabled');
                             $('#btnPayable').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
@@ -399,7 +407,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), SalesDownPaymentId: $("#SalesDownPaymentId").val(),
-                AllocationDate: $('#AllocationDate').datebox('getValue'),PayableId: $("#PayableId").val()
+                AllocationDate: $('#AllocationDate').datebox('getValue'), PayableId: $("#PayableId").val(), RateToIDR: $("#RateToIDR").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -489,8 +497,20 @@
                             $('#ReceivableId').val(result.ReceivableId);
                             $('#Receivable').val(result.Receivable);
                             $('#Amount').val(result.Amount);
+                            $('#Rate').numberbox('setValue', result.Rate);
+                            $('#AmountPaid').numberbox('setValue', result.AmountPaid);
+                            $('#Currency').text(result.currency);
+                            $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#SalesDownPaymentAllocationDetailId').val(result.SalesDownPaymentAllocationDetailId);
+                            if (result.currency == $('#CurrencyCashBank').val()) {
+                                $('#Rate').attr('disabled', true);
+                                $('#Rate').numberbox('setValue', result.Rate);
+                            }
+                            else {
+                                $('#Rate').removeAttr('disabled');
+                                $('#Rate').numberbox('setValue', result.Rate);
+                            }
                             $('#item_div').dialog('open');
                         }
                     }
@@ -527,6 +547,8 @@
                                 }
                             }
                             else {
+                                $("#TotalAmount").numberbox('setValue', result.totalAmount)
+                                ReloadGrid();
                                 ReloadGridDetail();
                                 $("#delete_confirm_div").dialog('close');
                             }
@@ -563,7 +585,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, SalesDownPaymentAllocationId: $("#id").val(), ReceivableId: $("#ReceivableId").val(), Description: $("#Description").val(),
-                Amount: $("#Amount").numberbox('getValue'),
+                AmountPaid: $("#AmountPaid").numberbox('getValue'), Rate: $("#Rate").numberbox('getValue'),
             }),
             async: false,
             cache: false,
@@ -586,7 +608,7 @@
                 else {
                     ReloadGridDetail();
                     ReloadGrid();
-                    $("#TotalAmount").numberbox('setValue',result.totalamount)
+                    $("#TotalAmount").numberbox('setValue', result.totalAmount)
                     $("#item_div").dialog('close')
                 }
             }
@@ -672,20 +694,20 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Payable Source', 'Payable Id', 'Amount',
-                    'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id',
+                   'Due Date', 'Total', 'Currency', 'Remaining', 'PendClearance'
+        ],
         colModel: [
-    			  { name: 'id', index: 'id', width: 50, align: "center" },
-                  { name: 'code', index: 'code', width: 70 },
-				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
-                  { name: 'payablesource', index: 'payablesource', width: 100 },
-                  { name: 'payableid', index: 'payableid', width: 50 },
-                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
-                  { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'code', index: 'code', width: 55, sortable: false },
+                  { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true },
+                  { name: 'contactname', index: 'contactname', width: 150, sortable: false, hidden: true },
+                  { name: 'payablesource', index: 'payablesource', width: 100, sortable: false },
+                  { name: 'payablesourceid', index: 'payablesourceid', width: 40, align: 'right', sortable: false },
+                  { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
+                  { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         page: '1',
         pager: $('#lookup_pager_payable'),
@@ -712,8 +734,9 @@
         var id = jQuery("#lookup_table_payable").jqGrid('getGridParam', 'selrow');
         if (id) {
             var ret = jQuery("#lookup_table_payable").jqGrid('getRowData', id);
+            $('#CurrencyCashBank').val(ret.currency);
 
-            $('#PayableId').val(ret.id).data("kode", id);
+            $('#PayableId').val(id).data("kode", id);
             $('#Payable').val(ret.code);
             $('#lookup_div_payable').dialog('close');
         } else {
@@ -739,7 +762,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Receivable Source', 'Id',
-                    'Due Date', 'Total', 'Remaining', 'PendClearance'
+                    'Due Date', 'Total', 'Currency', 'Remaining', 'PendClearance'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
@@ -749,6 +772,7 @@
                   { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
@@ -779,7 +803,16 @@
             var ret = jQuery("#lookup_table_receivable").jqGrid('getRowData', id);
             $('#ReceivableId').val(id);
             $('#Receivable').val(ret.code);
-
+            $('#Currency').text(ret.currency);
+            if (ret.currency == $('#CurrencyCashBank').val()) {
+                $('#Rate').attr('disabled', true);
+                $('#Rate').numberbox('setValue', 1);
+            }
+            else {
+                $('#Rate').removeAttr('disabled');
+                $('#Rate').numberbox('setValue', 1);
+            }
+            $('#Remaining').numberbox('setValue', ret.remainingamount);
             $('#lookup_div_receivable').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

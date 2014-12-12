@@ -60,7 +60,7 @@ namespace Service.Service
             if (_validator.ValidCreateObject(receiptVoucherDetail, _receiptVoucherService, this, _cashBankService, _receivableService,_currencyService))
             {
                 ReceiptVoucher rv = _receiptVoucherService.GetQueryable().Where(x => x.Id == receiptVoucherDetail.ReceiptVoucherId).FirstOrDefault();
-                Receivable r = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);
+                Receivable r = _receivableService.GetObjectById(receiptVoucherDetail.ReceivableId);           
                 CashBank cashBank = _cashBankService.GetObjectById(rv.CashBankId);
                 Currency currency = _currencyService.GetObjectById(cashBank.CurrencyId);
                 if (currency.Id == r.CurrencyId)

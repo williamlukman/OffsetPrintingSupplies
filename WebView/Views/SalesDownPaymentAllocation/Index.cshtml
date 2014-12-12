@@ -86,8 +86,16 @@
                                 <label>Total Amount</label></td>
                              <td colspan="5">
                                <input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" disabled="disabled" />
+                               <input id="CurrencyCashBank" name="CurrencyCashBank" type="text" size="10" maxlength="50" class="editable upper" disabled="disabled" />
                              </td>     
-                         </tr>                      
+                         </tr>  
+                        <tr>
+                             <td >
+                                <label>Rate to IDR</label></td>
+                             <td colspan="5">
+                               <input id="RateToIDR" name="RateToIDR" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','"  value="0" />
+                             </td>
+                       </tr>                 
                     </table>
                     <div id="tabledetail_div">
                         <div id="toolbardetail" class="grid_toolbar">
@@ -118,7 +126,7 @@
                       <td width="139" nowrap style="width: 100px">
                           Receivable
                       </td>
-                      <td>
+                      <td colspan="4">
                          <input id="ReceivableId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                          <input id="btnReceivable" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                          <input id="Receivable" name="ReceivableId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
@@ -126,13 +134,34 @@
                       </td>
                   </tr>
                   <tr>
+                        <td>
+                            Rate
+                        </td>
+                        <td>
+                               <input id="Rate" name="Rate" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',min:0.01,precision:2" value="1" />
+                        </td>
+                        <td>
+                             <label>Remaining Amount</label>
+                        </td>
+                        <td>
+                               <input id="Remaining" name="Remaining" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" disabled ="disabled" />
+                            <span id="Currency"></span>
+                        </td>
+                    </tr>
+                  <tr>
+                        <td>
+                            Amount Paid
+                        </td>
+                        <td>
+                               <input id="AmountPaid" name="AmountPaid" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0" />
+                        </td>
                       <td>
-                            Amount
+                           <label> Actual Amount</label>    
                       </td>
-                      <td>
-                            <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0" />
-                      </td>
-                  </tr>
+                        <td>
+                               <input id="Amount" name="Amount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" disabled="disabled" value="0" />
+                        </td>
+                    </tr>
                   <tr>
                       <td>
                             <label>Description</label></td>

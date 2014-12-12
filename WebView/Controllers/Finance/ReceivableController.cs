@@ -352,12 +352,13 @@ namespace WebView.Controllers
                              Contact = model.Contact.Name,
                              model.ReceivableSource,
                              model.ReceivableSourceId,
+                             model.DueDate,
                              model.Amount,
+                             currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
-                             model.DueDate,
-                             model.CompletionDate,
                              model.CreatedAt,
+                             model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -384,23 +385,23 @@ namespace WebView.Controllers
                 page = page,
                 records = totalRecords,
                 rows = (
-                    from receivable in list
+                    from model in list
                     select new
                     {
-                        id = receivable.Id,
+                        id = model.Id,
                         cell = new object[] {
-                            receivable.Id,
-                            receivable.Code,
-                            receivable.ContactId,
-                            receivable.Contact,
-                            receivable.ReceivableSource,
-                            receivable.ReceivableSourceId,
-                            receivable.Amount,
-                            receivable.RemainingAmount,
-                            receivable.PendingClearanceAmount,
-                            receivable.DueDate,
-                            receivable.CompletionDate,
-                            receivable.CreatedAt,
+                            model.Code,
+                            model.ContactId,
+                            model.Contact,
+                            model.ReceivableSource,
+                            model.ReceivableSourceId,
+                            model.DueDate,
+                            model.Amount,
+                            model.currency,
+                            model.RemainingAmount,
+                            model.PendingClearanceAmount,
+                            model.CreatedAt,
+                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

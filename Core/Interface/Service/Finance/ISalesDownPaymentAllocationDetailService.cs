@@ -19,7 +19,7 @@ namespace Core.Interface.Service
                                                       ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IPayableService _payableService);
         SalesDownPaymentAllocationDetail UpdateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                       ISalesDownPaymentService _salesDownPaymentService, IReceivableService _receivableService, IPayableService _payableService);
-        SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail);
+        SalesDownPaymentAllocationDetail SoftDeleteObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,ISalesDownPaymentAllocationService _salesDownPaymentAllocationService);
         bool DeleteObject(int Id);
         SalesDownPaymentAllocationDetail ConfirmObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, DateTime ConfirmationDate,
                                                        ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentService _salesDownPaymentService,

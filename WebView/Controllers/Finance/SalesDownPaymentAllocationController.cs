@@ -299,8 +299,10 @@ namespace WebView.Controllers
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.PayableId,
                 Payable = model.Payable.Code,
+                currency = model.Payable.Currency.Name,
                 model.AllocationDate,
                 model.TotalAmount,
+                model.RateToIDR,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -326,6 +328,11 @@ namespace WebView.Controllers
                 Receivable = _receivableService.GetObjectById(model.ReceivableId).Code,
                 model.Amount,
                 model.Description,
+                model.Rate,
+                model.AmountPaid,
+                Remaining = model.Receivable.Amount,
+                currency = model.Receivable.Currency.Name,
+
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -349,16 +356,16 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
+         
         [HttpPost]
         public dynamic InsertDetail(SalesDownPaymentAllocationDetail model)
         {
-            decimal totalamount = 0;
+            decimal totalAmount = 0;
             try
             {
                 model = _salesDownPaymentAllocationDetailService.CreateObject(model, _salesDownPaymentAllocationService, _salesDownPaymentService,
                                                                                  _receivableService, _payableService);
-                totalamount = _salesDownPaymentAllocationService.GetObjectById(model.SalesDownPaymentAllocationId).TotalAmount;
+                totalAmount = _salesDownPaymentAllocationService.GetObjectById(model.SalesDownPaymentAllocationId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -370,7 +377,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
-                totalamount
+                totalAmount
             });
         }
 
@@ -383,7 +390,7 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.PayableId = model.PayableId;
                 data.AllocationDate = model.AllocationDate;
-                data.TotalAmount = model.TotalAmount;
+                data.RateToIDR = model.RateToIDR;
                 model = _salesDownPaymentAllocationService.UpdateObject(data, _salesDownPaymentService, _salesDownPaymentAllocationDetailService, _contactService, _payableService);
             }
             catch (Exception ex)
@@ -421,10 +428,12 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic DeleteDetail(SalesDownPaymentAllocationDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
                 var data = _salesDownPaymentAllocationDetailService.GetObjectById(model.Id);
-                model = _salesDownPaymentAllocationDetailService.SoftDeleteObject(data);
+                model = _salesDownPaymentAllocationDetailService.SoftDeleteObject(data,_salesDownPaymentAllocationService);
+                totalAmount = _salesDownPaymentAllocationService.GetObjectById(model.SalesDownPaymentAllocationId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -435,20 +444,23 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
             });
         }
 
         [HttpPost]
         public dynamic UpdateDetail(SalesDownPaymentAllocationDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
                 var data = _salesDownPaymentAllocationDetailService.GetObjectById(model.Id);
                 data.ReceivableId = model.ReceivableId;
-                data.Amount = model.Amount;
+                data.AmountPaid = model.AmountPaid;
                 data.Description = model.Description;
                 model = _salesDownPaymentAllocationDetailService.UpdateObject(data, _salesDownPaymentAllocationService, _salesDownPaymentService,
                                                                                  _receivableService, _payableService);
+                totalAmount = _salesDownPaymentAllocationService.GetObjectById(model.SalesDownPaymentAllocationId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -459,6 +471,8 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
+
             });
         }
 

@@ -58,7 +58,7 @@ namespace Service.Service
             decimal total = 0;
             foreach (SalesDownPaymentAllocationDetail detail in paymentVoucherDetails)
             {
-                total += detail.Amount;
+                total += detail.AmountPaid;
             }
             salesDownPaymentAllocation.TotalAmount = total;
             salesDownPaymentAllocation = _repository.UpdateObject(salesDownPaymentAllocation);
@@ -113,6 +113,7 @@ namespace Service.Service
                     _salesDownPaymentAllocationDetailService.ConfirmObject(detail, ConfirmationDate, this, _salesDownPaymentService, _receivableService, _payableService);
                 }
                 _repository.ConfirmObject(salesDownPaymentAllocation);
+                _generalLedgerJournalService.CreateConfirmationJournalForSalesDownPaymentAllocation(salesDownPaymentAllocation, _accountService, _salesDownPaymentService, _salesDownPaymentAllocationDetailService);
             }
             return salesDownPaymentAllocation;
         }
@@ -131,6 +132,7 @@ namespace Service.Service
                     _salesDownPaymentAllocationDetailService.UnconfirmObject(detail, this, _salesDownPaymentService, _receivableService, _payableService);
                 }
                 _repository.UnconfirmObject(salesDownPaymentAllocation);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesDownPaymentAllocation(salesDownPaymentAllocation, _accountService, _salesDownPaymentService, _salesDownPaymentAllocationDetailService);
             }
             return salesDownPaymentAllocation;
         }
