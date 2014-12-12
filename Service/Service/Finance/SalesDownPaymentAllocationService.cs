@@ -51,6 +51,20 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
+
+        public SalesDownPaymentAllocation CalculateTotalAmount(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService)
+        {
+            IList<SalesDownPaymentAllocationDetail> paymentVoucherDetails = _salesDownPaymentAllocationDetailService.GetObjectsBySalesDownPaymentAllocationId(salesDownPaymentAllocation.Id);
+            decimal total = 0;
+            foreach (SalesDownPaymentAllocationDetail detail in paymentVoucherDetails)
+            {
+                total += detail.Amount;
+            }
+            salesDownPaymentAllocation.TotalAmount = total;
+            salesDownPaymentAllocation = _repository.UpdateObject(salesDownPaymentAllocation);
+            return salesDownPaymentAllocation;
+        }
+
         public SalesDownPaymentAllocation CreateObject(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentService _salesDownPaymentService, 
                                                        ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IContactService _contactService, IPayableService _payableService)
         {

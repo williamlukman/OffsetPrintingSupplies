@@ -36,6 +36,9 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IExchangeRateService _exchangeRateService;
+        private ICurrencyService _currencyService;
+        private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
         public PurchaseDownPaymentController()
         {
@@ -59,6 +62,9 @@ namespace WebView.Controllers
             _purchaseDownPaymentService = new PurchaseDownPaymentService(new PurchaseDownPaymentRepository(), new PurchaseDownPaymentValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         }
 
 
@@ -316,7 +322,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
                 model = _purchaseDownPaymentService.ConfirmObject(data, model.ConfirmationDate.Value, _payableService, _receivableService,
-                        _contactService, _accountService, _generalLedgerJournalService, _closingService);
+                        _contactService, _accountService, _generalLedgerJournalService, _closingService,_currencyService,_exchangeRateService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -337,7 +343,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseDownPaymentService.GetObjectById(model.Id);
                 model = _purchaseDownPaymentService.UnconfirmObject(data, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService,
-                    _payableService, _receivableService, _contactService, _accountService, _generalLedgerJournalService, _closingService);
+                    _payableService, _receivableService, _contactService, _accountService, _generalLedgerJournalService, _closingService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {

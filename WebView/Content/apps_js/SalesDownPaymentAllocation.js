@@ -127,7 +127,6 @@
         $('#AllocationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#btnContact').removeAttr('disabled');
         $('#btnSalesDownPayment').removeAttr('disabled');
-        $('#TotalAmount').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#AllocationDateDiv').show();
         $('#AllocationDateDiv2').hide();
@@ -165,7 +164,7 @@
                             $('#SalesDownPaymentId').val(result.SalesDownPaymentId);
                             $('#PayableId').val(result.PayableId);
                             $('#Payable').val(result.Payable);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue',result.TotalAmount);
                             $('#AllocationDate').datebox('setValue', dateEnt(result.AllocationDate));
                             $('#AllocationDate2').val(dateEnt(result.AllocationDate));
                             $('#AllocationDateDiv2').show();
@@ -228,7 +227,6 @@
                             $('#AllocationDateDiv').hide();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnPayable').removeAttr('disabled');
-                            $('#TotalAmount').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -401,8 +399,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), SalesDownPaymentId: $("#SalesDownPaymentId").val(),
-                TotalAmount: $("#TotalAmount").numberbox('getValue'), AllocationDate: $('#AllocationDate').datebox('getValue'),
-                PayableId: $("#PayableId").val()
+                AllocationDate: $('#AllocationDate').datebox('getValue'),PayableId: $("#PayableId").val()
             }),
             async: false,
             cache: false,
@@ -588,6 +585,8 @@
                 }
                 else {
                     ReloadGridDetail();
+                    ReloadGrid();
+                    $("#TotalAmount").numberbox('setValue',result.totalamount)
                     $("#item_div").dialog('close')
                 }
             }

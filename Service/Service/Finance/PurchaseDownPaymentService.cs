@@ -81,7 +81,7 @@ namespace Service.Service
 
         public PurchaseDownPayment ConfirmObject(PurchaseDownPayment purchaseDownPayment, DateTime ConfirmationDate, IPayableService _payableService, IReceivableService _receivableService,
                                                  IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                                 ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
+                                                 ICurrencyService _currencyService, IExchangeRateService _exchangeRateService,IGLNonBaseCurrencyService _glNonBaseCurrencyService)
         {
             purchaseDownPayment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseDownPayment, _payableService, _receivableService, this, _contactService, _accountService,
@@ -126,7 +126,7 @@ namespace Service.Service
                 }
 
                 _repository.ConfirmObject(purchaseDownPayment);
-                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService);
+                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService,_currencyService,_glNonBaseCurrencyService);
 
             }
             return purchaseDownPayment;
@@ -135,7 +135,7 @@ namespace Service.Service
         public PurchaseDownPayment UnconfirmObject(PurchaseDownPayment purchaseDownPayment, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                                 IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPayableService _payableService, IReceivableService _receivableService, 
                                                 IContactService _contactService, IAccountService _accountService,
-                                                IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,ICurrencyService _currencyService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             if (_validator.ValidUnconfirmObject(purchaseDownPayment, _payableService, _receivableService, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService,
                                                 _accountService, _generalLedgerJournalService, _closingService))
@@ -146,7 +146,7 @@ namespace Service.Service
                 purchaseDownPayment.PayableId = null;
 
                 _repository.UnconfirmObject(purchaseDownPayment);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService, _currencyService, _gLNonBaseCurrencyService);
             }
             return purchaseDownPayment;
         }

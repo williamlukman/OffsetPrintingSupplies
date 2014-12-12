@@ -45,19 +45,21 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Down Payment Date',
                    'Due Date', 'Total Amount',
-                   'Is Confirmed', 'Confirmation Date', 'Receivable Id', 'Payable Id', 'Created At', 'Updated At'],
+                   'Is Confirmed', 'Currency','Rate','Confirmation Date', 'Receivable Id', 'Payable Id', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
+                  { name: 'Contact', index: 'Contact', width: 150 },
                   { name: 'downpaymentdate', index: 'downpaymentdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 80, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalamount', index: 'totalamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
+    			  { name: 'Currency', index: 'Currency', width: 100 },
+                  { name: 'ExchangeRateAmount', index: 'ExchangeRateAmount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-    			  { name: 'receivableid', index: 'receivableid', width: 50 },
-    			  { name: 'payableid', index: 'payableid', width: 50 },
+    			  { name: 'receivableid', index: 'receivableid', width: 100 },
+    			  { name: 'payableid', index: 'payableid', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -143,9 +145,10 @@
                             $('#Code').val(result.Code);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
-                            $('#TotalAmount').val(result.TotalAmount);
+                            $('#TotalAmount').numberbox('setValue',result.TotalAmount);
                             $('#ReceivableId').val(result.ReceivableId);
                             $('#PayableId').val(result.PayableId);
+                            $('#CurrencyId').val(result.CurrencyId);
                             $('#DownPaymentDate').datebox('setValue', dateEnt(result.DownPaymentDate));
                             $('#DownPaymentDate2').val(dateEnt(result.DownPaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -321,7 +324,8 @@
         else {
             submitURL = base_url + 'SalesDownPayment/Insert';
         }
-
+        var g = document.getElementById("CurrencyId");
+        var currency = g.options[g.selectedIndex].value;
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -329,6 +333,8 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), TotalAmount: $("#TotalAmount").numberbox('getValue'),
                 DownPaymentDate: $('#DownPaymentDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                CurrencyId: currency
+
             }),
             async: false,
             cache: false,
@@ -403,7 +409,7 @@
             var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
             $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
+            $('#Contact').val(ret.name);
             $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

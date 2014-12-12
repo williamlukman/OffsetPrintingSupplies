@@ -62,6 +62,8 @@ namespace Service.Service
             {
                 _repository.CreateObject(salesDownPaymentAllocationDetail);
             }
+            SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectById(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
+            _salesDownPaymentAllocationService.CalculateTotalAmount(salesDownPaymentAllocation,this);
             return salesDownPaymentAllocationDetail;
         }
 

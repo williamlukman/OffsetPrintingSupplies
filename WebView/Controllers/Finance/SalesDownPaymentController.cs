@@ -36,6 +36,9 @@ namespace WebView.Controllers
         private IAccountService _accountService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
+        private IExchangeRateService _exchangeRateService;
+        public ICurrencyService _currencyService;
+        private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
         public SalesDownPaymentController()
         {
@@ -59,12 +62,15 @@ namespace WebView.Controllers
             _salesDownPaymentService = new SalesDownPaymentService(new SalesDownPaymentRepository(), new SalesDownPaymentValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         }
 
 
         public ActionResult Index()
         {
-            return View();
+            return View(this);
         }
 
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
@@ -89,6 +95,8 @@ namespace WebView.Controllers
                              model.DueDate,
                              model.TotalAmount,
                              model.IsConfirmed,
+                             Currency = model.Currency.Name,
+                             model.ExchangeRateAmount,
                              model.ConfirmationDate,
                              model.ReceivableId,
                              model.PayableId,
@@ -133,6 +141,8 @@ namespace WebView.Controllers
                             model.DueDate,
                             model.TotalAmount,
                             model.IsConfirmed,
+                            model.Currency,
+                            model.ExchangeRateAmount,
                             model.ConfirmationDate,
                             model.ReceivableId,
                             model.PayableId,
@@ -241,6 +251,7 @@ namespace WebView.Controllers
                 ConfirmationDate = model.ConfirmationDate,
                 model.ReceivableId,
                 model.PayableId,
+                model.CurrencyId,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -273,7 +284,7 @@ namespace WebView.Controllers
                 data.ContactId = model.ContactId;
                 data.DownPaymentDate = model.DownPaymentDate;
                 data.DueDate = model.DueDate;
-                data.TotalAmount = model.TotalAmount;
+                data.CurrencyId = model.CurrencyId;
                 model = _salesDownPaymentService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
@@ -315,7 +326,7 @@ namespace WebView.Controllers
             {
                 var data = _salesDownPaymentService.GetObjectById(model.Id);
                 model = _salesDownPaymentService.ConfirmObject(data,model.ConfirmationDate.Value, _receivableService, _payableService,
-                        _contactService, _accountService,_generalLedgerJournalService, _closingService);
+                        _contactService, _accountService,_generalLedgerJournalService, _closingService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {
@@ -336,7 +347,7 @@ namespace WebView.Controllers
             {
                 var data = _salesDownPaymentService.GetObjectById(model.Id);
                 model = _salesDownPaymentService.UnconfirmObject(data, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService, 
-                    _receivableService, _payableService, _contactService,_accountService, _generalLedgerJournalService, _closingService);
+                    _receivableService, _payableService, _contactService,_accountService, _generalLedgerJournalService, _closingService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)
             {

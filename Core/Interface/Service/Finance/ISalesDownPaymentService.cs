@@ -18,12 +18,12 @@ namespace Core.Interface.Service
         SalesDownPayment UpdateObject(SalesDownPayment salesDownPayment, IContactService _contactService);
         SalesDownPayment SoftDeleteObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService);
         bool DeleteObject(int Id);
-        SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService,
-                                       IPayableService _payableService, IContactService _contactService, IAccountService _accountService,
-                                       IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+        SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService, IPayableService _payableService,
+                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                              IExchangeRateService _exchangeRateService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
         SalesDownPayment UnconfirmObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                         ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
-                                         IReceivableService _receivableService, IPayableService _payableService, IContactService _contactService,
-                                         IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
+                                                ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IReceivableService _receivableService,
+                                                IPayableService _payableService, IContactService _contactService, IAccountService _accountService,
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,ICurrencyService _currencyService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService);
     }
 }
