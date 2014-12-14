@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebView.Controllers.PurchaseDownPaymentController
+@{
     ViewBag.Title = "Purchase Down Payment";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -96,6 +97,18 @@
                                 <div id="DueDateDiv2"><input id="DueDate2" type="text" size="10" disabled="disabled"/></div>
                             </td>
                        </tr>
+                        <tr>
+                            <td>
+                                <label>Currency </label></td>
+                            <td>
+                                <select id="CurrencyId">
+                                    @foreach (var item in Model._currencyService.GetAll())
+                                    {
+                                        <option value ="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
                        <tr>
                              <td >
                                 <label>Total Amount</label></td>

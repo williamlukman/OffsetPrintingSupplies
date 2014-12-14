@@ -87,6 +87,17 @@ namespace Service.Service
             if (_validator.ValidConfirmObject(purchaseDownPayment, _payableService, _receivableService, this, _contactService, _accountService,
                                               _generalLedgerJournalService, _closingService))
             {
+                Currency currency = _currencyService.GetObjectById(purchaseDownPayment.CurrencyId);
+                if (currency.IsBase == false)
+                {
+                    purchaseDownPayment.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseDownPayment.ConfirmationDate.Value, currency).Id;
+                    purchaseDownPayment.ExchangeRateAmount = _exchangeRateService.GetObjectById(purchaseDownPayment.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    purchaseDownPayment.ExchangeRateAmount = 1;
+                }
+
                 Receivable receivable = new Receivable()
                 {
                     ContactId = purchaseDownPayment.ContactId,
@@ -95,7 +106,9 @@ namespace Service.Service
                     DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value,
                     CompletionDate = null,
                     ReceivableSource = Constant.SourceDocumentType.PurchaseDownPayment,
-                    ReceivableSourceId = purchaseDownPayment.Id
+                    ReceivableSourceId = purchaseDownPayment.Id,
+                    CurrencyId = purchaseDownPayment.CurrencyId,
+                    Rate = purchaseDownPayment.ExchangeRateAmount,
                 };
                 _receivableService.CreateObject(receivable);
 
@@ -107,23 +120,14 @@ namespace Service.Service
                     DueDate = purchaseDownPayment.DueDate == null ? purchaseDownPayment.DownPaymentDate : purchaseDownPayment.DueDate.Value,
                     CompletionDate = null,
                     PayableSource = Constant.SourceDocumentType.PurchaseDownPayment,
-                    PayableSourceId = purchaseDownPayment.Id
+                    PayableSourceId = purchaseDownPayment.Id,
+                    CurrencyId = purchaseDownPayment.CurrencyId,
+                    Rate = purchaseDownPayment.ExchangeRateAmount,
                 };
                 _payableService.CreateObject(payable);
 
                 purchaseDownPayment.ReceivableId = receivable.Id;
                 purchaseDownPayment.PayableId = payable.Id;
-
-                Currency currency = _currencyService.GetObjectById(purchaseDownPayment.CurrencyId);
-                if (currency.IsBase == false)
-                {
-                    purchaseDownPayment.ExchangeRateId = _exchangeRateService.GetLatestRate(purchaseDownPayment.ConfirmationDate.Value, currency).Id;
-                    purchaseDownPayment.ExchangeRateAmount = _exchangeRateService.GetObjectById(purchaseDownPayment.ExchangeRateId.Value).Rate;
-                }
-                else
-                {
-                    purchaseDownPayment.ExchangeRateAmount = 1;
-                }
 
                 _repository.ConfirmObject(purchaseDownPayment);
                 _generalLedgerJournalService.CreateConfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService,_currencyService,_glNonBaseCurrencyService);
