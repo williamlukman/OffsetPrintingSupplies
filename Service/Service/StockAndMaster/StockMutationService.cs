@@ -815,7 +815,7 @@ namespace Service.Service
             // item.AvgCost = _blanketService.CalculateAvgCost(item, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
             // blanket.AvgCost = _blanketService.CalculateAvgCost(blanket, stockAdjustmentDetail.Quantity, stockAdjustmentDetailPrice);
 
-            int Quantity = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
+            decimal Quantity = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = stockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int) stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(stockMutation.ItemId);
             Blanket blanket = _blanketService.GetObjectById(stockMutation.ItemId);
@@ -832,11 +832,11 @@ namespace Service.Service
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
                 { _itemService.AdjustQuantity(item, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
-                { _itemService.AdjustPendingDelivery(item, Quantity); }
+                { _itemService.AdjustPendingDelivery(item, (int) Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingReceival)
-                { _itemService.AdjustPendingReceival(item, Quantity); }
+                { _itemService.AdjustPendingReceival(item, (int) Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.Virtual)
-                { _itemService.AdjustVirtual(item, Quantity); }
+                { _itemService.AdjustVirtual(item, (int) Quantity); }
             }
             else
             {
@@ -844,9 +844,9 @@ namespace Service.Service
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
                 { _blanketService.AdjustQuantity(blanket, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
-                { _blanketService.AdjustPendingDelivery(blanket, Quantity); }
+                { _blanketService.AdjustPendingDelivery(blanket, (int) Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingReceival)
-                { _blanketService.AdjustPendingReceival(blanket, Quantity); }
+                { _blanketService.AdjustPendingReceival(blanket, (int) Quantity); }
             }
         }
 
@@ -854,7 +854,7 @@ namespace Service.Service
         {
             // decimal stockAdjustmentDetailPrice = (stockMutation.Status == Constant.MutationStatus.Addition) ? stockAdjustmentDetail.Price : ((-1) * stockAdjustmentDetail.Price);
 
-            int Quantity = (stockMutation.Status == Constant.MutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
+            decimal Quantity = (stockMutation.Status == Constant.MutationStatus.Deduction) ? stockMutation.Quantity : (-1) * stockMutation.Quantity;
             WarehouseItem warehouseItem = stockMutation.WarehouseItemId == null ? null : _warehouseItemService.GetObjectById((int)stockMutation.WarehouseItemId);
             Item item = _itemService.GetObjectById(stockMutation.ItemId);
             Blanket blanket = _blanketService.GetObjectById(stockMutation.ItemId);
@@ -869,11 +869,11 @@ namespace Service.Service
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
                 { _itemService.AdjustQuantity(item, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
-                { _itemService.AdjustPendingDelivery(item, Quantity); }
+                { _itemService.AdjustPendingDelivery(item, (int) Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingReceival)
-                { _itemService.AdjustPendingReceival(item, Quantity); }
+                { _itemService.AdjustPendingReceival(item, (int) Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.Virtual)
-                { _itemService.AdjustVirtual(item, Quantity); }
+                { _itemService.AdjustVirtual(item, (int) Quantity); }
             }
             else
             {
@@ -881,9 +881,9 @@ namespace Service.Service
                 if (stockMutation.ItemCase == Constant.ItemCase.Ready)
                 { _blanketService.AdjustQuantity(blanket, Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingDelivery)
-                { _blanketService.AdjustPendingDelivery(blanket, Quantity); }
+                { _blanketService.AdjustPendingDelivery(blanket, (int) Quantity); }
                 else if (stockMutation.ItemCase == Constant.ItemCase.PendingReceival)
-                { _blanketService.AdjustPendingReceival(blanket, Quantity); }
+                { _blanketService.AdjustPendingReceival(blanket, (int) Quantity); }
             }
         }
     }

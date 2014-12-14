@@ -219,9 +219,9 @@ namespace Service.Service
             return item;
         }
 
-        public Item AdjustCustomerQuantity(Item item, int quantity)
+        public Item AdjustCustomerQuantity(Item item, decimal quantity)
         {
-            item.CustomerQuantity += quantity;
+            item.CustomerQuantity += (int) quantity;
             return (item = _validator.ValidAdjustCustomerQuantity(item) ? _repository.UpdateObject(item) : item);
         }
 
@@ -231,7 +231,7 @@ namespace Service.Service
         //    return (item = _validator.ValidAdjustCustomerVirtual(item) ? _repository.UpdateObject(item) : item);
         //}
 
-        public Item AdjustQuantity(Item item, int quantity)
+        public Item AdjustQuantity(Item item, decimal quantity)
         {
             item.Quantity += quantity;
             return (item = _validator.ValidAdjustQuantity(item) ? _repository.UpdateObject(item) : item);
@@ -255,34 +255,34 @@ namespace Service.Service
             return (item = _validator.ValidAdjustVirtual(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public decimal CalculateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             // Use this function to calculate averagePrice
-            int originalQuantity = item.Quantity + item.Virtual;
+            decimal originalQuantity = item.Quantity + item.Virtual;
             decimal originalAvgPrice = item.AvgPrice;
             decimal avgPrice = (originalQuantity + addedQuantity == 0) ? 0 :
                 ((originalQuantity * originalAvgPrice) + (addedQuantity * addedAvgPrice)) / (originalQuantity + addedQuantity);
             return avgPrice;
         }
 
-        public decimal CalculateAndUpdateAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateAndUpdateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             item.AvgPrice = CalculateAvgPrice(item, addedQuantity, addedAvgPrice);
             _repository.Update(item);
             return item.AvgPrice;
         }
 
-        public decimal CalculateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateCustomerAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             // Use this function to calculate averagePrice
-            int originalQuantity = item.CustomerQuantity + item.CustomerVirtual;
+            decimal originalQuantity = item.CustomerQuantity + item.CustomerVirtual;
             decimal originalAvgPrice = item.CustomerAvgPrice;
             decimal avgPrice = (originalQuantity + addedQuantity == 0) ? 0 :
                 ((originalQuantity * originalAvgPrice) + (addedQuantity * addedAvgPrice)) / (originalQuantity + addedQuantity);
             return avgPrice;
         }
 
-        public decimal CalculateAndUpdateCustomerAvgPrice(Item item, int addedQuantity, decimal addedAvgPrice)
+        public decimal CalculateAndUpdateCustomerAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice)
         {
             item.CustomerAvgPrice = CalculateCustomerAvgPrice(item, addedQuantity, addedAvgPrice);
             _repository.Update(item);

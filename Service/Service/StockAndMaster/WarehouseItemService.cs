@@ -88,9 +88,9 @@ namespace Service.Service
             return (warehouseItem = _validator.ValidDeleteObject(warehouseItem) ? _repository.SoftDeleteObject(warehouseItem) : warehouseItem);
         }
 
-        public WarehouseItem AdjustCustomerQuantity(WarehouseItem warehouseItem, int quantity)
+        public WarehouseItem AdjustCustomerQuantity(WarehouseItem warehouseItem, decimal quantity)
         {
-            warehouseItem.CustomerQuantity += quantity;
+            warehouseItem.CustomerQuantity += (int) quantity;
             if (_validator.ValidAdjustCustomerQuantity(warehouseItem))
             {
                 _repository.UpdateObject(warehouseItem);
@@ -98,7 +98,7 @@ namespace Service.Service
             return warehouseItem;
         }
 
-        public WarehouseItem AdjustQuantity(WarehouseItem warehouseItem, int quantity)
+        public WarehouseItem AdjustQuantity(WarehouseItem warehouseItem, decimal quantity)
         {
             warehouseItem.Quantity += quantity;
             if (_validator.ValidAdjustQuantity(warehouseItem)) 
@@ -108,9 +108,9 @@ namespace Service.Service
             return warehouseItem;
         }
 
-        public WarehouseItem AdjustPendingReceival(WarehouseItem warehouseItem, int quantity)
+        public WarehouseItem AdjustPendingReceival(WarehouseItem warehouseItem, decimal quantity)
         {
-            warehouseItem.PendingReceival += quantity;
+            warehouseItem.PendingReceival += (int) quantity;
             if (_validator.ValidAdjustPendingReceival(warehouseItem))
             {
                 _repository.UpdateObject(warehouseItem);
@@ -118,9 +118,9 @@ namespace Service.Service
             return warehouseItem;
         }
 
-        public WarehouseItem AdjustPendingDelivery(WarehouseItem warehouseItem, int quantity)
+        public WarehouseItem AdjustPendingDelivery(WarehouseItem warehouseItem, decimal quantity)
         {
-            warehouseItem.PendingDelivery += quantity;
+            warehouseItem.PendingDelivery += (int) quantity;
             if (_validator.ValidAdjustPendingDelivery(warehouseItem))
             {
                 _repository.UpdateObject(warehouseItem);

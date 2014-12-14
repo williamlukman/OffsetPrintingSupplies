@@ -166,7 +166,7 @@ namespace Service.Service
             return blanket;
         }
 
-        public Blanket AdjustQuantity(Blanket blanket, int quantity)
+        public Blanket AdjustQuantity(Blanket blanket, decimal quantity)
         {
             blanket.Quantity += quantity;
             return (blanket = _validator.ValidAdjustQuantity(blanket) ? _repository.UpdateObject(blanket) : blanket);

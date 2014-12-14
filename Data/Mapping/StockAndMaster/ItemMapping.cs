@@ -25,6 +25,10 @@ namespace Data.Mapping
             HasMany(i => i.PriceMutations)
                 .WithRequired(pm => pm.Item)
                 .HasForeignKey(pm => pm.ItemId);
+            HasOptional(i => i.Currency)
+                .WithMany()
+                .HasForeignKey(i => i.CurrencyId)
+                .WillCascadeOnDelete(false);
             Ignore(i => i.Errors);
         }
     }

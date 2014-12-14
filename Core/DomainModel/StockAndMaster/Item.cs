@@ -21,22 +21,24 @@ namespace Core.DomainModel
         public bool IsTradeable { get; set; }
 
         public int UoMId { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public int PendingDelivery { get; set; }
         public int PendingReceival { get; set; }
         public int Virtual { get; set; }
         public int MinimumQuantity { get; set; }
-        //public int OnTrial { get; set; }
+
         public int CustomerQuantity { get; set; }
         public int CustomerVirtual { get; set; } // unused ?
 
         public decimal SellingPrice { get; set; }
+        public Nullable<int> CurrencyId { get; set; }
         public int PriceMutationId { get; set; }
         public decimal AvgPrice { get; set; }
         public decimal CustomerAvgPrice { get; set; }
+
         public virtual ICollection<StockMutation> StockMutations { get; set; }
         public virtual ICollection<PriceMutation> PriceMutations { get; set; }
-        //public virtual ICollection<CustomerStockMutation> CustomerStockMutations { get; set; }
+        public virtual Currency Currency { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
