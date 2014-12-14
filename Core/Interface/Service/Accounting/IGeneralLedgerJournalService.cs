@@ -31,11 +31,15 @@ namespace Core.Interface.Service
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPaymentRequest(PaymentRequest paymentRequest, IPaymentRequestDetailService _paymentRequestDetailService, IAccountService _accountService,
                                     IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, IAccountService _accountService,
-                                           ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
+                                    ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseDownPayment(PurchaseDownPayment purchaseDownPayment, IAccountService _accountService,
-                                          ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
-        IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseDownPaymentAllocation(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IAccountService _accountService);
-        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseDownPaymentAllocation(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IAccountService _accountService);
+                                    ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseDownPaymentAllocation(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IAccountService _accountService,
+                                    IPurchaseDownPaymentService _purchaseDownPaymentService, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
+                                    IPayableService _payableService, IReceivableService _receivableService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseDownPaymentAllocation(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IAccountService _accountService,
+                                    IPurchaseDownPaymentService _purchaseDownPaymentService, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService,
+                                    IPayableService _payableService, IReceivableService _receivableService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForPurchaseAllowance(PurchaseAllowance purchaseAllowance, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService,
@@ -49,13 +53,15 @@ namespace Core.Interface.Service
         IList<GeneralLedgerJournal> CreateUnReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService,
                                     IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, IAccountService _accountService,
-                                           ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
+                                    ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, IAccountService _accountService,
-                                           ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
+                                    ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPaymentAllocation(SalesDownPaymentAllocation salesDownPaymentAllocation, IAccountService _accountService,
-                                           ISalesDownPaymentService _salesDownPaymentService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+                                    ISalesDownPaymentService _salesDownPaymentService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                    IPayableService _payableService, IReceivableService _receivableService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPaymentAllocation(SalesDownPaymentAllocation salesDownPaymentAllocation, IAccountService _accountService,
-                                           ISalesDownPaymentService _salesDownPaymentService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+                                    ISalesDownPaymentService _salesDownPaymentService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                    IPayableService _payableService, IReceivableService _receivableService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesAllowance(SalesAllowance salesAllowance, CashBank cashBank, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForCashBankAdjustment(CashBankAdjustment cashBankAdjustment, CashBank cashBank, IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService);

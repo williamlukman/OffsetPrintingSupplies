@@ -61,8 +61,9 @@ namespace Service.Service
             if (_validator.ValidCreateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, this, _salesDownPaymentService, _receivableService, _payableService))
             {
                 SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectById(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
-                Receivable rv = _receivableService.GetObjectById(salesDownPaymentAllocationDetail.ReceivableId);
-                if (salesDownPaymentAllocation.Payable.CurrencyId == rv.CurrencyId)
+                Receivable receivable = _receivableService.GetObjectById(salesDownPaymentAllocationDetail.ReceivableId);
+                Payable payable = _payableService.GetObjectById(salesDownPaymentAllocation.PayableId);
+                if (payable.CurrencyId == receivable.CurrencyId)
                 {
                     salesDownPaymentAllocationDetail.Amount = salesDownPaymentAllocationDetail.AmountPaid;
                 }
@@ -82,7 +83,9 @@ namespace Service.Service
             if (_validator.ValidUpdateObject(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, this, _salesDownPaymentService, _receivableService, _payableService))
             {
                 SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectById(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
-                if (salesDownPaymentAllocation.Payable.CurrencyId == salesDownPaymentAllocationDetail.Receivable.CurrencyId)
+                Payable payable = _payableService.GetObjectById(salesDownPaymentAllocation.PayableId);
+                Receivable receivable = _receivableService.GetObjectById(salesDownPaymentAllocationDetail.ReceivableId);
+                if (payable.CurrencyId == receivable.CurrencyId)
                 {
                     salesDownPaymentAllocationDetail.Amount = salesDownPaymentAllocationDetail.AmountPaid;
                 }

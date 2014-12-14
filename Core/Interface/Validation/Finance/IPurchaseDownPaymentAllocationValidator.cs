@@ -20,8 +20,6 @@ namespace Core.Interface.Validation
         PurchaseDownPaymentAllocation VHasNotBeenDeleted(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
         PurchaseDownPaymentAllocation VHasBeenConfirmed(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
         PurchaseDownPaymentAllocation VHasNotBeenConfirmed(PurchaseDownPaymentAllocation salesDownPaymentAllocation);
-        PurchaseDownPaymentAllocation VTotalAmountEqualDetailsAmount(PurchaseDownPaymentAllocation salesDownPaymentAllocation,
-                                      IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
         PurchaseDownPaymentAllocation VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(PurchaseDownPaymentAllocation salesDownPaymentAllocation,
                                       IPurchaseDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPayableService _payableService, IReceivableService _receivableService);
         PurchaseDownPaymentAllocation VGeneralLedgerPostingHasNotBeenClosed(PurchaseDownPaymentAllocation salesDownPaymentAllocation, IClosingService _closingService);

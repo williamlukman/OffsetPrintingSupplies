@@ -78,13 +78,13 @@ namespace TestValidation
 
             it["finishes_detail"] = () =>
             {
-                int quantitywarehousefrom = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
-                int quantitywarehouseto = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
+                decimal quantitywarehousefrom = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
+                decimal quantitywarehouseto = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
                 d.warehouseMutation = d._warehouseMutationService.ConfirmObject(d.warehouseMutation, DateTime.Today, d._warehouseMutationDetailService, d._itemService,
                                                                                           d._blanketService, d._warehouseItemService, d._stockMutationService);
                 d.wmoDetail1.IsConfirmed.should_be(true);
-                int quantitywarehousefromfinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
-                int quantitywarehousetofinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
+                decimal quantitywarehousefromfinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseFromId, d.wmoDetail1.ItemId).Quantity;
+                decimal quantitywarehousetofinal = d._warehouseItemService.FindOrCreateObject(d.warehouseMutation.WarehouseToId, d.wmoDetail1.ItemId).Quantity;
                 d.wmoDetail1.Errors.Count().should_be(0);
                 quantitywarehousefromfinal.should_be(quantitywarehousefrom - d.wmoDetail1.Quantity);
                 quantitywarehousetofinal.should_be(quantitywarehouseto + d.wmoDetail1.Quantity);

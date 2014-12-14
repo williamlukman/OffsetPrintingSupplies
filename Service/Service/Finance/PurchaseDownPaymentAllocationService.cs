@@ -51,6 +51,19 @@ namespace Service.Service
             return _repository.GetObjectsByContactId(contactId);
         }
 
+        public PurchaseDownPaymentAllocation CalculateTotalAmount(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService)
+        {
+            IList<PurchaseDownPaymentAllocationDetail> paymentVoucherDetails = _purchaseDownPaymentAllocationDetailService.GetObjectsByPurchaseDownPaymentAllocationId(purchaseDownPaymentAllocation.Id);
+            decimal total = 0;
+            foreach (PurchaseDownPaymentAllocationDetail detail in paymentVoucherDetails)
+            {
+                total += detail.AmountPaid;
+            }
+            purchaseDownPaymentAllocation.TotalAmount = total;
+            purchaseDownPaymentAllocation = _repository.UpdateObject(purchaseDownPaymentAllocation);
+            return purchaseDownPaymentAllocation;
+        }
+
         public PurchaseDownPaymentAllocation CreateObject(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentService _purchaseDownPaymentService, 
                                                           IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IContactService _contactService, IReceivableService _receivableService)
         {
@@ -91,6 +104,8 @@ namespace Service.Service
                     _purchaseDownPaymentAllocationDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseDownPaymentService, _payableService, _receivableService);
                 }
                 _repository.ConfirmObject(purchaseDownPaymentAllocation);
+                _generalLedgerJournalService.CreateConfirmationJournalForPurchaseDownPaymentAllocation(purchaseDownPaymentAllocation, _accountService, _purchaseDownPaymentService, _purchaseDownPaymentAllocationDetailService,
+                                             _payableService, _receivableService);
             }
             return purchaseDownPaymentAllocation;
         }
@@ -109,6 +124,8 @@ namespace Service.Service
                     _purchaseDownPaymentAllocationDetailService.UnconfirmObject(detail, this, _purchaseDownPaymentService, _payableService, _receivableService);
                 }
                 _repository.UnconfirmObject(purchaseDownPaymentAllocation);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseDownPaymentAllocation(purchaseDownPaymentAllocation, _accountService, _purchaseDownPaymentService, _purchaseDownPaymentAllocationDetailService,
+                                             _payableService, _receivableService);
             }
             return purchaseDownPaymentAllocation;
         }

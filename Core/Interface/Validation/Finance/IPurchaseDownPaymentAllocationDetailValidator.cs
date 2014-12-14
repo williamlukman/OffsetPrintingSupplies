@@ -21,8 +21,8 @@ namespace Core.Interface.Validation
         PurchaseDownPaymentAllocationDetail VUniquePayableId(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
                                             IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPayableService _payableService);
         PurchaseDownPaymentAllocationDetail VDetailsAmountLessOrEqualPurchaseDownPaymentTotal(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail,
-                                            IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                            IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService);
+                                            IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, 
+                                            IReceivableService _receivableService);
         PurchaseDownPaymentAllocationDetail VCreateObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
                                                        IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPurchaseDownPaymentService _purchaseDownPaymentService,
                                                        IPayableService _payableService, IReceivableService _receivableService);

@@ -21,8 +21,8 @@ namespace Core.Interface.Validation
         SalesDownPaymentAllocationDetail VUniqueReceivableId(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
                                             ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IReceivableService _receivableService);
         SalesDownPaymentAllocationDetail VDetailsAmountLessOrEqualSalesDownPaymentTotal(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail,
-                                            ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                            ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService);
+                                         ISalesDownPaymentAllocationService _salesDownPaymentAllocationService, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService,
+                                         IPayableService _payableService);
         SalesDownPaymentAllocationDetail VCreateObject(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                        ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, ISalesDownPaymentService _salesDownPaymentService,
                                                        IReceivableService _receivableService, IPayableService _payableService);

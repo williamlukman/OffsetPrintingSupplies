@@ -60,7 +60,19 @@ namespace Service.Service
             purchaseDownPaymentAllocationDetail.Errors = new Dictionary<String, String>();
             if (_validator.ValidCreateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _payableService, _receivableService))
             {
+                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
+                Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);
+                Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
+                if (receivable.CurrencyId == payable.CurrencyId)
+                {
+                    purchaseDownPaymentAllocationDetail.Amount = purchaseDownPaymentAllocationDetail.AmountPaid;
+                }
+                else
+                {
+                    purchaseDownPaymentAllocationDetail.Amount = purchaseDownPaymentAllocationDetail.AmountPaid / purchaseDownPaymentAllocationDetail.Rate;
+                }
                 _repository.CreateObject(purchaseDownPaymentAllocationDetail);
+                _purchaseDownPaymentAllocationService.CalculateTotalAmount(purchaseDownPaymentAllocation, this);
             }
             return purchaseDownPaymentAllocationDetail;
         }
@@ -70,16 +82,30 @@ namespace Service.Service
         {
             if (_validator.ValidUpdateObject(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, this, _purchaseDownPaymentService, _payableService, _receivableService))
             {
+                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
+                Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
+                Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);
+                if (payable.CurrencyId == receivable.CurrencyId)
+                {
+                    purchaseDownPaymentAllocationDetail.Amount = purchaseDownPaymentAllocationDetail.AmountPaid;
+                }
+                else
+                {
+                    purchaseDownPaymentAllocationDetail.Amount = purchaseDownPaymentAllocationDetail.AmountPaid / purchaseDownPaymentAllocationDetail.Rate;
+                }
                 _repository.UpdateObject(purchaseDownPaymentAllocationDetail);
+                _purchaseDownPaymentAllocationService.CalculateTotalAmount(purchaseDownPaymentAllocation, this);
             }
             return purchaseDownPaymentAllocationDetail;
         }
 
-        public PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail)
+        public PurchaseDownPaymentAllocationDetail SoftDeleteObject(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService)
         {
             if (_validator.ValidDeleteObject(purchaseDownPaymentAllocationDetail))
             {
                 _repository.SoftDeleteObject(purchaseDownPaymentAllocationDetail);
+                PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
+                _purchaseDownPaymentAllocationService.CalculateTotalAmount(purchaseDownPaymentAllocation, this);
             }
             return purchaseDownPaymentAllocationDetail;
         }
@@ -99,7 +125,7 @@ namespace Service.Service
                 PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
 
                 Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
-                receivable.RemainingAmount -= purchaseDownPaymentAllocationDetail.Amount;
+                receivable.RemainingAmount -= purchaseDownPaymentAllocationDetail.AmountPaid;
                 _receivableService.UpdateObject(receivable);
 
                 Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);
@@ -120,7 +146,7 @@ namespace Service.Service
                 PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
 
                 Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
-                receivable.RemainingAmount += purchaseDownPaymentAllocationDetail.Amount;
+                receivable.RemainingAmount += purchaseDownPaymentAllocationDetail.AmountPaid;
                 _receivableService.UpdateObject(receivable);
 
                 Payable payable = _payableService.GetObjectById(purchaseDownPaymentAllocationDetail.PayableId);

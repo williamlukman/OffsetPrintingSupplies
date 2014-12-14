@@ -14,6 +14,7 @@ namespace Core.DomainModel
         public DateTime AllocationDate { get; set; }
 
         public decimal TotalAmount { get; set; }
+        public decimal RateToIDR { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

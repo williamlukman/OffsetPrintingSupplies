@@ -104,19 +104,20 @@ namespace Validation.Validation
         }
 
         public PurchaseDownPaymentAllocationDetail VDetailsAmountLessOrEqualPurchaseDownPaymentTotal(PurchaseDownPaymentAllocationDetail purchaseDownPaymentAllocationDetail, IPurchaseDownPaymentAllocationService _purchaseDownPaymentAllocationService,
-                                                                                 IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService)
+                                                                                                     IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IReceivableService _receivableService)
         {
             IList<PurchaseDownPaymentAllocationDetail> purchaseDownPaymentAllocationDetails = _purchaseDownPaymentAllocationDetailService.GetObjectsByPurchaseDownPaymentAllocationId(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
             decimal TotalPurchaseDownPaymentAllocationDetails = 0;
             foreach (var detail in purchaseDownPaymentAllocationDetails)
             {
-                TotalPurchaseDownPaymentAllocationDetails += detail.Amount;
+                TotalPurchaseDownPaymentAllocationDetails += detail.AmountPaid;
             }
             PurchaseDownPaymentAllocation purchaseDownPaymentAllocation = _purchaseDownPaymentAllocationService.GetObjectById(purchaseDownPaymentAllocationDetail.PurchaseDownPaymentAllocationId);
-            if (purchaseDownPaymentAllocation.TotalAmount < TotalPurchaseDownPaymentAllocationDetails)
+            Receivable receivable = _receivableService.GetObjectById(purchaseDownPaymentAllocation.ReceivableId);
+            if (receivable.RemainingAmount < TotalPurchaseDownPaymentAllocationDetails)
             {
-                decimal sisa = purchaseDownPaymentAllocation.TotalAmount - TotalPurchaseDownPaymentAllocationDetails + purchaseDownPaymentAllocationDetail.Amount;
-                purchaseDownPaymentAllocationDetail.Errors.Add("Generic", "Payment Voucher hanya menyediakan sisa dana sebesar " + sisa);
+                decimal sisa = purchaseDownPaymentAllocation.TotalAmount - TotalPurchaseDownPaymentAllocationDetails + purchaseDownPaymentAllocationDetail.AmountPaid;
+                purchaseDownPaymentAllocationDetail.Errors.Add("Generic", "Down Payment Voucher hanya menyediakan sisa dana sebesar " + sisa);
             }
             return purchaseDownPaymentAllocationDetail;
         }
@@ -139,7 +140,7 @@ namespace Validation.Validation
             if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
             VUniquePayableId(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationDetailService, _payableService);
             if (!isValid(purchaseDownPaymentAllocationDetail)) { return purchaseDownPaymentAllocationDetail; }
-            VDetailsAmountLessOrEqualPurchaseDownPaymentTotal(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService);
+            VDetailsAmountLessOrEqualPurchaseDownPaymentTotal(purchaseDownPaymentAllocationDetail, _purchaseDownPaymentAllocationService, _purchaseDownPaymentAllocationDetailService, _receivableService);
             return purchaseDownPaymentAllocationDetail;
         }
 

@@ -96,21 +96,6 @@ namespace Validation.Validation
             return purchaseDownPaymentAllocation;
         }
 
-        public PurchaseDownPaymentAllocation VTotalAmountEqualDetailsAmount(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation, IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService)
-        {
-            IList<PurchaseDownPaymentAllocationDetail> details = _purchaseDownPaymentAllocationDetailService.GetObjectsByPurchaseDownPaymentAllocationId(purchaseDownPaymentAllocation.Id);
-            decimal detailsamount = 0;
-            foreach (var detail in details)
-            {
-                detailsamount += detail.Amount;
-            }
-            if (detailsamount != purchaseDownPaymentAllocation.TotalAmount)
-            {
-                purchaseDownPaymentAllocation.Errors.Add("Generic", "Jumlah amount di details harus sama dengan totalamount");
-            }
-            return purchaseDownPaymentAllocation;
-        }
-
         public PurchaseDownPaymentAllocation VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(PurchaseDownPaymentAllocation purchaseDownPaymentAllocation,
                                           IPurchaseDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService, IPayableService _payableService, IReceivableService _receivableService)
         {
@@ -198,8 +183,6 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(purchaseDownPaymentAllocation);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
             VHasNotBeenDeleted(purchaseDownPaymentAllocation);
-            if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
-            VTotalAmountEqualDetailsAmount(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService);
             if (!isValid(purchaseDownPaymentAllocation)) { return purchaseDownPaymentAllocation; }
             VAllPurchaseDownPaymentAllocationDetailsAreConfirmable(purchaseDownPaymentAllocation, _purchaseDownPaymentAllocationDetailService,
                                                                 _payableService, _receivableService);

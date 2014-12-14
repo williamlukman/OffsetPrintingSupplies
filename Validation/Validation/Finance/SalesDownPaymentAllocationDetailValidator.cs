@@ -104,7 +104,7 @@ namespace Validation.Validation
         }
 
         public SalesDownPaymentAllocationDetail VDetailsAmountLessOrEqualSalesDownPaymentTotal(SalesDownPaymentAllocationDetail salesDownPaymentAllocationDetail, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
-                                                                                 ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService)
+                                                                                               ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IPayableService _payableService)
         {
             IList<SalesDownPaymentAllocationDetail> salesDownPaymentAllocationDetails = _salesDownPaymentAllocationDetailService.GetObjectsBySalesDownPaymentAllocationId(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
             decimal TotalSalesDownPaymentAllocationDetails = 0;
@@ -113,7 +113,8 @@ namespace Validation.Validation
                 TotalSalesDownPaymentAllocationDetails += detail.AmountPaid;
             }
             SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectById(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
-            if (salesDownPaymentAllocation.Payable.RemainingAmount < TotalSalesDownPaymentAllocationDetails)
+            Payable payable = _payableService.GetObjectById(salesDownPaymentAllocation.PayableId); 
+            if (payable.RemainingAmount < TotalSalesDownPaymentAllocationDetails)
             {
                 decimal sisa = salesDownPaymentAllocation.TotalAmount - TotalSalesDownPaymentAllocationDetails + salesDownPaymentAllocationDetail.AmountPaid;
                 salesDownPaymentAllocationDetail.Errors.Add("Generic", "Down Payment Voucher hanya menyediakan sisa dana sebesar " + sisa);
@@ -139,7 +140,7 @@ namespace Validation.Validation
             if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
             VUniqueReceivableId(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationDetailService, _receivableService);
             if (!isValid(salesDownPaymentAllocationDetail)) { return salesDownPaymentAllocationDetail; }
-            VDetailsAmountLessOrEqualSalesDownPaymentTotal(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService);
+            VDetailsAmountLessOrEqualSalesDownPaymentTotal(salesDownPaymentAllocationDetail, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService, _payableService);
             return salesDownPaymentAllocationDetail;
         }
 
