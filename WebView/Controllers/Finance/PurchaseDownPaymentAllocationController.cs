@@ -34,6 +34,7 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IReceivableService _receivableService;
+        private IExchangeRateService _exchangeRateService;
 
         public PurchaseDownPaymentAllocationController()
         {
@@ -56,6 +57,7 @@ namespace WebView.Controllers
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
 

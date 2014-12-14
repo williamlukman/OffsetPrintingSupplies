@@ -110,13 +110,13 @@ namespace Validation.Validation
             decimal TotalSalesDownPaymentAllocationDetails = 0;
             foreach (var detail in salesDownPaymentAllocationDetails)
             {
-                TotalSalesDownPaymentAllocationDetails += detail.Amount;
+                TotalSalesDownPaymentAllocationDetails += detail.AmountPaid;
             }
             SalesDownPaymentAllocation salesDownPaymentAllocation = _salesDownPaymentAllocationService.GetObjectById(salesDownPaymentAllocationDetail.SalesDownPaymentAllocationId);
-            if (salesDownPaymentAllocation.TotalAmount < TotalSalesDownPaymentAllocationDetails)
+            if (salesDownPaymentAllocation.Payable.RemainingAmount < TotalSalesDownPaymentAllocationDetails)
             {
-                decimal sisa = salesDownPaymentAllocation.TotalAmount - TotalSalesDownPaymentAllocationDetails + salesDownPaymentAllocationDetail.Amount;
-                salesDownPaymentAllocationDetail.Errors.Add("Generic", "Payment Voucher hanya menyediakan sisa dana sebesar " + sisa);
+                decimal sisa = salesDownPaymentAllocation.TotalAmount - TotalSalesDownPaymentAllocationDetails + salesDownPaymentAllocationDetail.AmountPaid;
+                salesDownPaymentAllocationDetail.Errors.Add("Generic", "Down Payment Voucher hanya menyediakan sisa dana sebesar " + sisa);
             }
             return salesDownPaymentAllocationDetail;
         }

@@ -202,12 +202,14 @@ namespace WebView.Controllers
                              Contact = model.Contact.Name,
                              model.PayableSource,
                              model.PayableSourceId,
+                             model.DueDate,
                              model.Amount,
+                             currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
-                             model.DueDate,
                              model.CompletionDate,
                              model.CreatedAt,
+                             model.UpdatedAt
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -239,19 +241,20 @@ namespace WebView.Controllers
                     {
                         id = payable.Id,
                         cell = new object[] {
-                            payable.Id,
                             payable.Code,
                             payable.ContactId,
                             payable.Contact,
                             payable.PayableSource,
                             payable.PayableSourceId,
+                            payable.DueDate,
                             payable.Amount,
+                            payable.currency,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
-                            payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,
-                      }
+                            payable.UpdatedAt,
+                        }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }

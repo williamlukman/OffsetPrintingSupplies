@@ -15,6 +15,10 @@ namespace Core.DomainModel
         public DateTime DownPaymentDate { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
 
+        public int CurrencyId { get; set; }
+        public decimal ExchangeRateAmount { get; set; }
+        public Nullable<int> ExchangeRateId { get; set; }
+
         public decimal TotalAmount { get; set; }
 
         public bool IsConfirmed { get; set; }
@@ -26,6 +30,7 @@ namespace Core.DomainModel
 
         public virtual Contact Contact { get; set; }
         public virtual Receivable Receivable { get; set; }
+        public virtual Currency Currency { get; set; }
         public virtual Payable Payable { get; set; }
 
         public Dictionary<String, String> Errors { get; set; }

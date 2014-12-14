@@ -16,17 +16,17 @@ namespace WebView.Controllers
     public class SalesDownPaymentAllocationController : Controller
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("SalesDownPaymentAllocationController");
-        private ISalesOrderService _purchaseOrderService;
-        private ISalesOrderDetailService _purchaseOrderDetailService;
-        private ISalesInvoiceService _purchaseInvoiceService;
-        private ISalesInvoiceDetailService _purchaseInvoiceDetailService;
-        private IDeliveryOrderService _purchaseReceivalService;
-        private IDeliveryOrderDetailService _purchaseReceivalDetailService;
-        private ISalesDownPaymentService _purchaseDownPaymentService;
+        private ISalesOrderService _salesOrderService;
+        private ISalesOrderDetailService _salesOrderDetailService;
+        private ISalesInvoiceService _salesInvoiceService;
+        private ISalesInvoiceDetailService _salesInvoiceDetailService;
+        private IDeliveryOrderService _deliveryOrderService;
+        private IDeliveryOrderDetailService _deliveryOrderDetailService;
+        private ISalesDownPaymentService _salesDownPaymentService;
         private IReceivableService _receivableService;
         private IItemService _itemService;
-        private ISalesDownPaymentAllocationService _purchaseDownPaymentAllocationService;
-        private ISalesDownPaymentAllocationDetailService _purchaseDownPaymentAllocationDetailService;
+        private ISalesDownPaymentAllocationService _salesDownPaymentAllocationService;
+        private ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService;
         private ICashBankService _cashBankService;
         private ICashMutationService _cashMutationService;
         private IContactService _contactService;
@@ -34,6 +34,7 @@ namespace WebView.Controllers
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IClosingService _closingService;
         private IPayableService _payableService;
+        private IExchangeRateService _exchangeRateService;
 
         public SalesDownPaymentAllocationController()
         {
@@ -41,21 +42,22 @@ namespace WebView.Controllers
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _cashBankService = new CashBankService(new CashBankRepository(), new CashBankValidator());
             _cashMutationService = new CashMutationService(new CashMutationRepository(), new CashMutationValidator());
-            _purchaseOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
-            _purchaseOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
-            _purchaseInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
-            _purchaseInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
-            _purchaseReceivalService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
-            _purchaseReceivalDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
-            _purchaseDownPaymentService = new SalesDownPaymentService(new SalesDownPaymentRepository(), new SalesDownPaymentValidator());
-            _purchaseDownPaymentAllocationService = new SalesDownPaymentAllocationService(new SalesDownPaymentAllocationRepository(), new SalesDownPaymentAllocationValidator());
-            _purchaseDownPaymentAllocationDetailService = new SalesDownPaymentAllocationDetailService(new SalesDownPaymentAllocationDetailRepository(), new SalesDownPaymentAllocationDetailValidator());
+            _salesOrderService = new SalesOrderService(new SalesOrderRepository(), new SalesOrderValidator());
+            _salesOrderDetailService = new SalesOrderDetailService(new SalesOrderDetailRepository(), new SalesOrderDetailValidator());
+            _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
+            _salesInvoiceDetailService = new SalesInvoiceDetailService(new SalesInvoiceDetailRepository(), new SalesInvoiceDetailValidator());
+            _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
+            _deliveryOrderDetailService = new DeliveryOrderDetailService(new DeliveryOrderDetailRepository(), new DeliveryOrderDetailValidator());
+            _salesDownPaymentService = new SalesDownPaymentService(new SalesDownPaymentRepository(), new SalesDownPaymentValidator());
+            _salesDownPaymentAllocationService = new SalesDownPaymentAllocationService(new SalesDownPaymentAllocationRepository(), new SalesDownPaymentAllocationValidator());
+            _salesDownPaymentAllocationDetailService = new SalesDownPaymentAllocationDetailService(new SalesDownPaymentAllocationDetailRepository(), new SalesDownPaymentAllocationDetailValidator());
             _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
-            _purchaseDownPaymentAllocationService = new SalesDownPaymentAllocationService(new SalesDownPaymentAllocationRepository(), new SalesDownPaymentAllocationValidator());
+            _salesDownPaymentAllocationService = new SalesDownPaymentAllocationService(new SalesDownPaymentAllocationRepository(), new SalesDownPaymentAllocationValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
 
@@ -73,7 +75,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseDownPaymentAllocationService.GetQueryable().Include("SalesDownPayment")
+            var q = _salesDownPaymentAllocationService.GetQueryable().Include("SalesDownPayment")
                                                                         .Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
@@ -221,7 +223,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseDownPaymentAllocationDetailService.GetQueryable().Include("SalesDownPaymentAllocation").Include("Receivable")
+            var q = _salesDownPaymentAllocationDetailService.GetQueryable().Include("SalesDownPaymentAllocation").Include("Receivable")
                     .Where(x => x.SalesDownPaymentAllocationId == id && !x.IsDeleted);
 
             var query = (from model in q
@@ -281,7 +283,7 @@ namespace WebView.Controllers
             SalesDownPaymentAllocation model = new SalesDownPaymentAllocation();
             try
             {
-                model = _purchaseDownPaymentAllocationService.GetObjectById(Id);
+                model = _salesDownPaymentAllocationService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -297,8 +299,10 @@ namespace WebView.Controllers
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.PayableId,
                 Payable = model.Payable.Code,
+                currency = model.Payable.Currency.Name,
                 model.AllocationDate,
                 model.TotalAmount,
+                model.RateToIDR,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -308,7 +312,7 @@ namespace WebView.Controllers
             SalesDownPaymentAllocationDetail model = new SalesDownPaymentAllocationDetail();
             try
             {
-                model = _purchaseDownPaymentAllocationDetailService.GetObjectById(Id);
+                model = _salesDownPaymentAllocationDetailService.GetObjectById(Id);
             }
             catch (Exception ex)
             {
@@ -324,6 +328,11 @@ namespace WebView.Controllers
                 Receivable = _receivableService.GetObjectById(model.ReceivableId).Code,
                 model.Amount,
                 model.Description,
+                model.Rate,
+                model.AmountPaid,
+                Remaining = model.Receivable.Amount,
+                currency = model.Receivable.Currency.Name,
+
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -334,7 +343,7 @@ namespace WebView.Controllers
             try
             {
 
-                model = _purchaseDownPaymentAllocationService.CreateObject(model, _purchaseDownPaymentService, _purchaseDownPaymentAllocationDetailService, _contactService, _payableService);
+                model = _salesDownPaymentAllocationService.CreateObject(model, _salesDownPaymentService, _salesDownPaymentAllocationDetailService, _contactService, _payableService);
             }
             catch (Exception ex)
             {
@@ -347,14 +356,16 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
+         
         [HttpPost]
         public dynamic InsertDetail(SalesDownPaymentAllocationDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
-                model = _purchaseDownPaymentAllocationDetailService.CreateObject(model, _purchaseDownPaymentAllocationService, _purchaseDownPaymentService,
+                model = _salesDownPaymentAllocationDetailService.CreateObject(model, _salesDownPaymentAllocationService, _salesDownPaymentService,
                                                                                  _receivableService, _payableService);
+                totalAmount = _salesDownPaymentAllocationService.GetObjectById(model.SalesDownPaymentAllocationId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -366,6 +377,7 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
             });
         }
 
@@ -374,12 +386,12 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _purchaseDownPaymentAllocationService.GetObjectById(model.Id);
+                var data = _salesDownPaymentAllocationService.GetObjectById(model.Id);
                 data.ContactId = model.ContactId;
                 data.PayableId = model.PayableId;
                 data.AllocationDate = model.AllocationDate;
-                data.TotalAmount = model.TotalAmount;
-                model = _purchaseDownPaymentAllocationService.UpdateObject(data, _purchaseDownPaymentService, _purchaseDownPaymentAllocationDetailService, _contactService, _payableService);
+                data.RateToIDR = model.RateToIDR;
+                model = _salesDownPaymentAllocationService.UpdateObject(data, _salesDownPaymentService, _salesDownPaymentAllocationDetailService, _contactService, _payableService);
             }
             catch (Exception ex)
             {
@@ -398,8 +410,8 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _purchaseDownPaymentAllocationService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentAllocationService.SoftDeleteObject(data, _purchaseDownPaymentAllocationDetailService);
+                var data = _salesDownPaymentAllocationService.GetObjectById(model.Id);
+                model = _salesDownPaymentAllocationService.SoftDeleteObject(data, _salesDownPaymentAllocationDetailService);
             }
             catch (Exception ex)
             {
@@ -416,10 +428,12 @@ namespace WebView.Controllers
         [HttpPost]
         public dynamic DeleteDetail(SalesDownPaymentAllocationDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
-                var data = _purchaseDownPaymentAllocationDetailService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentAllocationDetailService.SoftDeleteObject(data);
+                var data = _salesDownPaymentAllocationDetailService.GetObjectById(model.Id);
+                model = _salesDownPaymentAllocationDetailService.SoftDeleteObject(data,_salesDownPaymentAllocationService);
+                totalAmount = _salesDownPaymentAllocationService.GetObjectById(model.SalesDownPaymentAllocationId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -430,20 +444,23 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
             });
         }
 
         [HttpPost]
         public dynamic UpdateDetail(SalesDownPaymentAllocationDetail model)
         {
+            decimal totalAmount = 0;
             try
             {
-                var data = _purchaseDownPaymentAllocationDetailService.GetObjectById(model.Id);
+                var data = _salesDownPaymentAllocationDetailService.GetObjectById(model.Id);
                 data.ReceivableId = model.ReceivableId;
-                data.Amount = model.Amount;
+                data.AmountPaid = model.AmountPaid;
                 data.Description = model.Description;
-                model = _purchaseDownPaymentAllocationDetailService.UpdateObject(data, _purchaseDownPaymentAllocationService, _purchaseDownPaymentService,
+                model = _salesDownPaymentAllocationDetailService.UpdateObject(data, _salesDownPaymentAllocationService, _salesDownPaymentService,
                                                                                  _receivableService, _payableService);
+                totalAmount = _salesDownPaymentAllocationService.GetObjectById(model.SalesDownPaymentAllocationId).TotalAmount;
             }
             catch (Exception ex)
             {
@@ -454,6 +471,8 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors,
+                totalAmount
+
             });
         }
 
@@ -463,10 +482,10 @@ namespace WebView.Controllers
         {
             try
             {
-                var data = _purchaseDownPaymentAllocationService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentAllocationService.ConfirmObject(data, model.ConfirmationDate.Value,
-                    _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService, _receivableService, _payableService,
-                    _accountService, _generalLedgerJournalService, _closingService);
+                var data = _salesDownPaymentAllocationService.GetObjectById(model.Id);
+                model = _salesDownPaymentAllocationService.ConfirmObject(data, model.ConfirmationDate.Value,
+                        _salesDownPaymentAllocationDetailService, _salesDownPaymentService, _receivableService, _payableService,
+                        _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {
@@ -486,8 +505,8 @@ namespace WebView.Controllers
             try
             {
 
-                var data = _purchaseDownPaymentAllocationService.GetObjectById(model.Id);
-                model = _purchaseDownPaymentAllocationService.UnconfirmObject(data, _purchaseDownPaymentAllocationDetailService, _purchaseDownPaymentService,
+                var data = _salesDownPaymentAllocationService.GetObjectById(model.Id);
+                model = _salesDownPaymentAllocationService.UnconfirmObject(data, _salesDownPaymentAllocationDetailService, _salesDownPaymentService,
                     _receivableService, _payableService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)

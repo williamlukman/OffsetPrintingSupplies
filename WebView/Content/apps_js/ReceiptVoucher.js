@@ -874,6 +874,7 @@
 
             $('#CashBankId').val(ret.id).data("kode", id);
             $('#CashBank').val(ret.name);
+            $('#CurrencyCashBank').val(ret.currency);
             $('#lookup_div_cashbank').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

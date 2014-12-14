@@ -96,20 +96,6 @@ namespace Validation.Validation
             return salesDownPaymentAllocation;
         }
 
-        public SalesDownPaymentAllocation VTotalAmountEqualDetailsAmount(SalesDownPaymentAllocation salesDownPaymentAllocation, ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService)
-        {
-            IList<SalesDownPaymentAllocationDetail> details = _salesDownPaymentAllocationDetailService.GetObjectsBySalesDownPaymentAllocationId(salesDownPaymentAllocation.Id);
-            decimal detailsamount = 0;
-            foreach (var detail in details)
-            {
-                detailsamount += detail.Amount;
-            }
-            if (detailsamount != salesDownPaymentAllocation.TotalAmount)
-            {
-                salesDownPaymentAllocation.Errors.Add("Generic", "Jumlah amount di details harus sama dengan totalamount");
-            }
-            return salesDownPaymentAllocation;
-        }
 
         public SalesDownPaymentAllocation VAllSalesDownPaymentAllocationDetailsAreConfirmable(SalesDownPaymentAllocation salesDownPaymentAllocation,
                                           ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IReceivableService _receivableService, IPayableService _payableService)
@@ -198,8 +184,6 @@ namespace Validation.Validation
             VHasNotBeenConfirmed(salesDownPaymentAllocation);
             if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
             VHasNotBeenDeleted(salesDownPaymentAllocation);
-            if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
-            VTotalAmountEqualDetailsAmount(salesDownPaymentAllocation, _salesDownPaymentAllocationDetailService);
             if (!isValid(salesDownPaymentAllocation)) { return salesDownPaymentAllocation; }
             VAllSalesDownPaymentAllocationDetailsAreConfirmable(salesDownPaymentAllocation, _salesDownPaymentAllocationDetailService, 
                                                                 _receivableService, _payableService);

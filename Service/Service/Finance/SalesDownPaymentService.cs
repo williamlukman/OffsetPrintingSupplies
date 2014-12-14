@@ -80,12 +80,24 @@ namespace Service.Service
         }
 
         public SalesDownPayment ConfirmObject(SalesDownPayment salesDownPayment, DateTime ConfirmationDate, IReceivableService _receivableService, IPayableService _payableService,
-                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                              IContactService _contactService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
+                                              IExchangeRateService _exchangeRateService,ICurrencyService _currencyService,IGLNonBaseCurrencyService _glNonBaseCurrencyService)
         {
             salesDownPayment.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesDownPayment, _receivableService, _payableService, this, _contactService, _accountService,
                                               _generalLedgerJournalService, _closingService))
             {
+                Currency currency = _currencyService.GetObjectById(salesDownPayment.CurrencyId);
+                if (currency.IsBase == false)
+                {
+                    salesDownPayment.ExchangeRateId = _exchangeRateService.GetLatestRate(salesDownPayment.ConfirmationDate.Value, currency).Id;
+                    salesDownPayment.ExchangeRateAmount = _exchangeRateService.GetObjectById(salesDownPayment.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    salesDownPayment.ExchangeRateAmount = 1;
+                }
+
                 Receivable receivable = new Receivable()
                 {
                     ContactId = salesDownPayment.ContactId,
@@ -94,7 +106,9 @@ namespace Service.Service
                     DueDate = salesDownPayment.DueDate == null ? salesDownPayment.DownPaymentDate : salesDownPayment.DueDate.Value,
                     CompletionDate = null,
                     ReceivableSource = Constant.SourceDocumentType.SalesDownPayment,
-                    ReceivableSourceId = salesDownPayment.Id
+                    ReceivableSourceId = salesDownPayment.Id,
+                    CurrencyId = salesDownPayment.CurrencyId,
+                    Rate = salesDownPayment.ExchangeRateAmount,
                 };
                 _receivableService.CreateObject(receivable);
 
@@ -106,7 +120,9 @@ namespace Service.Service
                     DueDate = salesDownPayment.DueDate == null ? salesDownPayment.DownPaymentDate : salesDownPayment.DueDate.Value,
                     CompletionDate = null,
                     PayableSource = Constant.SourceDocumentType.SalesDownPayment,
-                    PayableSourceId = salesDownPayment.Id
+                    PayableSourceId = salesDownPayment.Id,
+                    Rate = salesDownPayment.ExchangeRateAmount,
+                    CurrencyId = salesDownPayment.CurrencyId,
                 };
                 _payableService.CreateObject(payable);
 
@@ -114,7 +130,7 @@ namespace Service.Service
                 salesDownPayment.PayableId = payable.Id;
 
                 _repository.ConfirmObject(salesDownPayment);
-                _generalLedgerJournalService.CreateConfirmationJournalForSalesDownPayment(salesDownPayment, _accountService);
+                _generalLedgerJournalService.CreateConfirmationJournalForSalesDownPayment(salesDownPayment, _accountService,_currencyService,_glNonBaseCurrencyService);
             }
             return salesDownPayment;
         }
@@ -122,7 +138,7 @@ namespace Service.Service
         public SalesDownPayment UnconfirmObject(SalesDownPayment salesDownPayment, ISalesDownPaymentAllocationService _salesDownPaymentAllocationService,
                                                 ISalesDownPaymentAllocationDetailService _salesDownPaymentAllocationDetailService, IReceivableService _receivableService,
                                                 IPayableService _payableService, IContactService _contactService, IAccountService _accountService,
-                                                IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
+                                                IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,ICurrencyService _currencyService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             if (_validator.ValidUnconfirmObject(salesDownPayment, _receivableService, _payableService, _salesDownPaymentAllocationService, _salesDownPaymentAllocationDetailService,
                                                 _accountService, _generalLedgerJournalService, _closingService))
@@ -133,7 +149,7 @@ namespace Service.Service
                 salesDownPayment.PayableId = null;
 
                 _repository.UnconfirmObject(salesDownPayment);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesDownPayment(salesDownPayment, _accountService);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesDownPayment(salesDownPayment, _accountService, _currencyService, _gLNonBaseCurrencyService);
             }
             return salesDownPayment;
         }
