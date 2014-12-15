@@ -74,6 +74,7 @@
                                <input id="ItemTypeId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                <input id="ItemType" name="ItemTypeId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />                                         
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -92,14 +93,16 @@
                                 <input id="ContactId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnContact" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Contact" name="ContactId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
-                          <tr>
+                        <tr>
                             <td>
                                 <label>Machine</label></td>
                             <td colspan="3">
                                 <input id="MachineId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnMachine" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Machine" name="MachineId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -108,6 +111,16 @@
                                 <input id="AdhesiveId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
                                 <input id="btnAdhesive" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
                                 <input id="Adhesive" name="AdhesiveId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Adhesive 2</label></td>
+                            <td colspan="3">
+                                <input id="Adhesive2Id"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnAdhesive2" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="Adhesive2" name="Adhesive2Id" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -175,6 +188,7 @@
                                 <select id="ApplicationCase">
                                       <option value="Sheetfed">Sheetfed</option>
                                       <option value="Web">Web</option>
+                                      <option value="Both">Both</option>
                                 </select>
                             </td>
                         </tr>
@@ -195,6 +209,10 @@
                                     Cropped AR
                                 </label>
                                 <input id="LeftOverAR" name="LeftOverAR" type="text" size="4" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
+                                <label style="margin-left: 0.7in; margin-right: 0.2in">
+                                    Cropped Special
+                                </label>
+                                <input id="Special" name="Special" type="text" size="4" maxlength="4" class="textright easyui-numberbox" data-options="groupSeparator:','" value="0"" />
                             </td>
                         </tr>                
                     </table>
@@ -232,9 +250,9 @@
         <table id="lookup_table_machine" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_machine" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up machine -->
+    <!-- END Look Up machine -->
 
-        <!-- Look Up adhesive -->
+    <!-- Look Up adhesive -->
     <div id="lookup_div_adhesive" class="easyui-dialog" title="List Adhesive" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
@@ -246,9 +264,23 @@
         <table id="lookup_table_adhesive" class="scroll" cellpadding="0" cellspacing="0"></table>
         <div id="lookup_pager_adhesive" class="scroll" style="text-align: center;"></div>
     </div>
-<!-- END Look Up adhesive -->
+    <!-- END Look Up adhesive -->
 
- <!-- Look Up rollBlanket -->
+        <!-- Look Up adhesive2 -->
+    <div id="lookup_div_adhesive2" class="easyui-dialog" title="List Adhesive 2" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_adhesive2" class="grid_toolbar">
+            <a id="lookup_btn_add_adhesive2" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_adhesive2" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_adhesive2" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_adhesive2" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up adhesive2 -->
+
+    <!-- Look Up rollBlanket -->
     <div id="lookup_div_rollBlanket" class="easyui-dialog" title="List RollBlanket" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 

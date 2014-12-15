@@ -46,7 +46,7 @@
         colNames: ['ID', 'Code', 'Name', 'Description','Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
-                  { name: 'code', index: 'code', width: 60 },
+                  { name: 'code', index: 'code', width: 120 },
 				  { name: 'name', index: 'name', width: 180 },
                   { name: 'description', index: 'description', width: 250 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

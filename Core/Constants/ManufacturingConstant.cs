@@ -11,6 +11,7 @@ namespace Core.Constants
         {
             public static string Sheetfed = "Sheetfed";
             public static string Web = "Web";
+            public static string Both = "Both";
         }
 
         public class MaterialCase

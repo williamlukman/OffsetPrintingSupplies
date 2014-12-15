@@ -49,7 +49,7 @@
         datatype: "json",
         colNames: ['ID','Blanket Order ID', 'Code', 'Blanket Id', 'Sku','Name','Sku','Name', 'Sku', 'Name',
                    'Sku', 'Name','C', 'SS', 'BP',
-                   'ATA','Adhesive QTY', 'BM', 'BHP', 'BPOT',
+                   'ATA','Adhesive QTY', 'Adhesive2 QTY', 'BM', 'BHP', 'BPOT',
                    'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
         ],
         colModel: [
@@ -70,6 +70,7 @@
                   { name: 'isbarprepared', index: 'isbarprepared', width: 30, sortable: false },
                   { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 30, sortable: false },
                   { name: 'adhesiveusage', index: 'adhesiveusage', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'adhesive2usage', index: 'adhesive2usage', align: 'right', width: 85, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isbarmounted', index: 'isbarmounted', width: 30, sortable: false },
                   { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 30, sortable: false },
                   { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 30, sortable: false },
@@ -233,6 +234,7 @@
                             $('#RightBarSku').val(result.RightBarSku);
                             $('#RightBar').val(result.RightBar);
                             $('#AdhesiveUsage').val(result.AdhesiveUsage);
+                            $('#Adhesive2Usage').val(result.Adhesive2Usage);
                             document.getElementById("iscut").checked = result.IsCut;
                             document.getElementById("issidesealed").checked = result.IsSideSealed;
                             document.getElementById("isbarprepared").checked = result.IsBarPrepared;
@@ -248,9 +250,11 @@
                             if (result.IsAdhesiveTapeApplied) {
                                 $('#isadhesivetapeapplied').attr('disabled', true);
                                 $('#AdhesiveUsage').attr('disabled', true);
+                                $('#Adhesive2Usage').attr('disabled', true);
                             } else {
                                 $('#isadhesivetapeapplied').removeAttr('disabled');
                                 $('#AdhesiveUsage').removeAttr('disabled');
+                                $('#Adhesive2Usage').removeAttr('disabled');
                             }
                             if (!result.HasBar || result.IsBarMounted) { $('#isbarmounted').attr('disabled', true); } else { $('#isbarmounted').removeAttr('disabled'); }
                             if (!result.HasBar || result.IsBarHeatPressed) { $('#isbarheatpressed').attr('disabled', true); } else { $('#isbarheatpressed').removeAttr('disabled'); }
@@ -288,7 +292,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, AdhesiveUsage: $('#AdhesiveUsage').numberbox('getValue'),
+                Id: id, AdhesiveUsage: $('#AdhesiveUsage').numberbox('getValue'), Adhesive2Usage: $('#Adhesive2Usage').numberbox('getValue'),
                 IsCut: document.getElementById("iscut").checked, IsSideSealed: document.getElementById("issidesealed").checked,
                 IsBarPrepared: document.getElementById("isbarprepared").checked, IsAdhesiveTapeApplied: document.getElementById("isadhesivetapeapplied").checked,
                 IsBarMounted: document.getElementById("isbarmounted").checked, IsBarHeatPressed: document.getElementById("isbarheatpressed").checked,
