@@ -3332,69 +3332,83 @@ namespace WebView
 
         public void CreateUserMenus()
         {
+            _userMenuService.CreateObject(Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Contact, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.ItemType, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.UoM, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Machine, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.RollerType, Constant.MenuGroupName.Master);
 
-            _userMenuService.CreateObject(Constant.MenuName.CashBank, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.CashMutation, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.CashBankAdjustment, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.CashBankMutation, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.PaymentRequest, Constant.MenuGroupName.Master);
-            _userMenuService.CreateObject(Constant.MenuName.Memorial, Constant.MenuGroupName.Master);
-
             _userMenuService.CreateObject(Constant.MenuName.Blanket, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.BlendingRecipe, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.CoreBuilder, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.RollerBuilder, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.StockAdjustment, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.StockMutation, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CustomerStockAdjustment, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CustomerStockMutation, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Warehouse, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.WarehouseItem, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.CustomerItem, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.WarehouseMutation, Constant.MenuGroupName.Master);
 
             _userMenuService.CreateObject(Constant.MenuName.BlanketWorkOrder, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.BlanketWorkProcess, Constant.MenuGroupName.Manufacturing);
+            _userMenuService.CreateObject(Constant.MenuName.BlendingWorkOrder, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.RollerIdentification, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.RollerAccessoryDetail, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.RollerWarehouseMutation, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.RecoveryWorkOrder, Constant.MenuGroupName.Manufacturing);
             _userMenuService.CreateObject(Constant.MenuName.RecoveryWorkProcess, Constant.MenuGroupName.Manufacturing);
 
+            _userMenuService.CreateObject(Constant.MenuName.CashBank, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.CashMutation, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.CashBankAdjustment, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.CashBankMutation, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Currency, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.ExchangeRate, Constant.MenuGroupName.Transaction);
+
+            _userMenuService.CreateObject(Constant.MenuName.PaymentRequest, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.PurchaseOrder, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.PurchaseReceival, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.PurchaseInvoice, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.PurchaseDownPayment, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.PurchaseDPAllocation, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.CustomPurchaseInvoice, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.PaymentVoucher, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.Payable, Constant.MenuGroupName.Transaction);
 
-            _userMenuService.CreateObject(Constant.MenuName.SalesOrder, Constant.MenuGroupName.Transaction);            
+            _userMenuService.CreateObject(Constant.MenuName.SalesQuotation, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.SalesOrder, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.SalesDownPayment, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.SalesDPAllocation, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.DeliveryOrder, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.VirtualOrder, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.TemporaryDeliveryOrder, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.TemporaryDeliveryOrderClearance, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.SalesInvoice, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.RetailSalesInvoice, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.CashSalesInvoice, Constant.MenuGroupName.Transaction);
             //_userMenuService.CreateObject(Constant.MenuName.CashSalesReturn, Constant.MenuGroupName.Transaction)
             _userMenuService.CreateObject(Constant.MenuName.ReceiptVoucher, Constant.MenuGroupName.Transaction);
             _userMenuService.CreateObject(Constant.MenuName.Receivable, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Memorial, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Account, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.Closing, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Transaction);
+            _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Transaction);
 
             //_userMenuService.CreateObject(Constant.MenuName.Item, Constant.MenuGroupName.Report);
             //_userMenuService.CreateObject(Constant.MenuName.Sales, Constant.MenuGroupName.Report);
             //_userMenuService.CreateObject(Constant.MenuName.TopSales, Constant.MenuGroupName.Report);
             //_userMenuService.CreateObject(Constant.MenuName.ProfitLoss, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.Account, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.Closing, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.GeneralLedger, Constant.MenuGroupName.Report);
-            _userMenuService.CreateObject(Constant.MenuName.ValidComb, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.BalanceSheet, Constant.MenuGroupName.Report);
             _userMenuService.CreateObject(Constant.MenuName.IncomeStatement, Constant.MenuGroupName.Report);
 
             _userMenuService.CreateObject(Constant.MenuName.User, Constant.MenuGroupName.Setting);
             _userMenuService.CreateObject(Constant.MenuName.UserAccessRight, Constant.MenuGroupName.Setting);
-            _userMenuService.CreateObject(Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Setting);
+            
         }
 
         public void CreateSysAdmin()

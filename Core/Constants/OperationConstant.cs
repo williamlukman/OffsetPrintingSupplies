@@ -123,6 +123,7 @@ namespace Core.Constants
 
         public class MenuName
         {
+            public static string CompanyInfo = "Company Info";
             public static string Contact = "Contact";
             public static string ItemType = "ItemType";
             public static string UoM = "UoM";
@@ -134,23 +135,33 @@ namespace Core.Constants
             public static string CashMutation = "Cash Mutation";
             public static string CashBankAdjustment = "CashBank Adjustment";
             public static string CashBankMutation = "CashBank Mutation";
+            public static string Currency = "Currency";
+            public static string ExchangeRate = "Exchange Rate";
             public static string PaymentRequest = "Payment Request";
-            public static string DownPayment = "Down Payment";
+            public static string PurchaseDownPayment = "Purchase Down Payment";
+            public static string PurchaseDPAllocation = "Purchase DP Allocation";
             public static string PurchaseAllowance = "Purchase Allowance";
             public static string SalesAllowance = "Sales Allowance";
+            public static string SalesDownPayment = "Sales Down Payment";
+            public static string SalesDPAllocation = "Sales DP Allocation";
 
             public static string Blanket = "Blanket";
+            public static string BlendingRecipe = "Blending Recipe";
             public static string CoreBuilder = "CoreBuilder";
             public static string Item = "Item";
             public static string RollerBuilder = "RollerBuilder";
             public static string StockAdjustment = "Stock Adjustment";
             public static string StockMutation = "Stock Mutation";
+            public static string CustomerStockAdjustment = "Customer's Stock Adjustment";
+            public static string CustomerStockMutation = "Customer's Stock Mutation";
             public static string Warehouse = "Warehouse";
             public static string WarehouseItem = "Warehouse Item";
+            public static string CustomerItem = "Customer's Warehouse Item";
             public static string WarehouseMutation = "Warehouse Mutation";
 
             public static string BlanketWorkOrder = "Blanket Work Order";
             public static string BlanketWorkProcess = "Blanket Work Process";
+            public static string BlendingWorkOrder = "Blending Work Order";
             public static string RollerIdentification = "Roller Identification";
             public static string RollerAccessoryDetail = "Roller Accessory Detail";
             public static string RollerWarehouseMutation = "Roller Warehouse Mutation";
@@ -164,9 +175,11 @@ namespace Core.Constants
             public static string PaymentVoucher = "Payment Voucher";
             public static string Payable = "Payable";
 
+            public static string SalesQuotation = "Sales Quotation";
             public static string SalesOrder = "Sales Order";
             public static string VirtualOrder = "Virtual Order";
             public static string TemporaryDeliveryOrder = "Temporary Delivery Order";
+            public static string TemporaryDeliveryOrderClearance = "Temporary Delivery Order Clearance";
             public static string DeliveryOrder = "Delivery Order";
             public static string SalesInvoice = "Sales Invoice";
             public static string CashSalesInvoice = "Cash Sales Invoice";
@@ -188,7 +201,7 @@ namespace Core.Constants
 
             public static string User = "User";
             public static string UserAccessRight = "User Access Right";
-            public static string CompanyInfo = "Company Info";
+            
         }
         #endregion
     }
