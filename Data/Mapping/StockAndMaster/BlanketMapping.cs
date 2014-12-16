@@ -22,9 +22,13 @@ namespace Data.Mapping
             HasMany(b => b.BlanketOrderDetails)
                 .WithRequired(bod => bod.Blanket)
                 .HasForeignKey(bod => bod.BlanketId);
-            HasRequired(b => b.Adhesive)
+            HasOptional(b => b.Adhesive)
                 .WithMany()
                 .HasForeignKey(b => b.AdhesiveId)
+                .WillCascadeOnDelete(false);
+            HasOptional(b => b.Adhesive2)
+                .WithMany()
+                .HasForeignKey(b => b.Adhesive2Id)
                 .WillCascadeOnDelete(false);
             HasOptional(b => b.LeftBarItem)
                 .WithMany()

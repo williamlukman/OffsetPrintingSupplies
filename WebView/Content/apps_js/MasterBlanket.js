@@ -22,6 +22,7 @@
     $("#form_div").dialog('close');
     $("#lookup_div_machine").dialog('close');
     $("#lookup_div_adhesive").dialog('close');
+    $("#lookup_div_adhesive2").dialog('close');
     $("#lookup_div_rollBlanket").dialog('close');
     $("#lookup_div_leftbaritem").dialog('close');
     $("#lookup_div_rightbaritem").dialog('close');
@@ -34,6 +35,7 @@
     $("#ContactId").hide();
     $("#MachineId").hide();
     $("#AdhesiveId").hide();
+    $("#Adhesive2Id").hide();
     $("#RollBlanketItemId").hide();
     $("#ItemTypeId").hide();
     $("#LeftBarItemId").hide();
@@ -45,7 +47,7 @@
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 'Roll No', 'QTY', 'UoM',
                    'AC', 'AR', 'Thickness', 'KS', 'Description',
-                   'ItemType', 'Machine', 'Adhesive', 'Roll Blanket', 
+                   'ItemType', 'Machine', 'Adhesive', 'Adhesive2', 'Roll Blanket', 
                    'Bar1', 'Bar2', 'Customer',
                    'Application', 'Cropping', 'AC-', 'AR-',
                    'Created At', 'Updated At'],
@@ -64,6 +66,7 @@
                   { name: 'itemtypename', index: 'itemtypename', width: 60, hidden: true },
                   { name: 'machinename', index: 'machinename', width: 90 },
                   { name: 'adhesivename', index: 'adhesivename', width: 90 },
+                  { name: 'adhesive2name', index: 'adhesive2name', width: 90 },
                   { name: 'rollBlanketname', index: 'rollBlanketname', width: 90 },
                   { name: 'leftbaritemname', index: 'leftbaritemname', width: 90 },
                   { name: 'rightbaritemname', index: 'rightbaritemname', width: 90 },
@@ -170,6 +173,8 @@
                             $('#Machine').val(result.Machine);
                             $('#AdhesiveId').val(result.AdhesiveId);
                             $('#Adhesive').val(result.Adhesive);
+                            $('#Adhesive2Id').val(result.Adhesive2Id);
+                            $('#Adhesive2').val(result.Adhesive2);
                             document.getElementById("IsBarRequired").value = result.IsBarRequired == true ? true : false;
                             $('#RollBlanketItemId').val(result.RollBlanketItemId);
                             $('#RollBlanketItem').val(result.RollBlanketItem);
@@ -186,6 +191,7 @@
                             document.getElementById("CroppingType").value = result.CroppingType;
                             $('#LeftOverAC').numberbox('setValue', (result.LeftOverAC));
                             $('#LeftOverAR').numberbox('setValue', (result.LeftOverAR));
+                            $('#Special').numberbox('setValue', (result.Special));
                             $('#form_div').dialog('open');
                         }
                     }
@@ -284,10 +290,12 @@
                 Id: id, ItemTypeId: $("#ItemTypeId").val(), Sku: $("#Sku").val(), Name: $("#Name").val(),
                 Description: $("#Description").val(), UoMId: $("#UoMId").val(), RollNo: $("#RollNo").val(),
                 ContactId: $("#ContactId").val(), MachineId: $("#MachineId").val(), AdhesiveId: $("#AdhesiveId").val(),
-                RollBlanketItemId: $("#RollBlanketItemId").val(), IsBarRequired: isbar, HasLeftBar : hasleftbar, HasRightBar : hasrightbar,
-                LeftBarItemId: $("#LeftBarItemId").val(), RightBarItemId: $("#RightBarItemId").val(), AC: $("#AC").val(),
-                AR: $("#AR").val(), thickness: $("#thickness").val(), KS: $("#KS").val(), ApplicationCase: applicationcase,
-                CroppingType: croppingtype, LeftOverAC: $("#LeftOverAC").val(), LeftOverAR: $("#LeftOverAR").val()
+                Adhesive2Id: $("#Adhesive2Id").val(), RollBlanketItemId: $("#RollBlanketItemId").val(), IsBarRequired: isbar,
+                HasLeftBar: hasleftbar, HasRightBar: hasrightbar, LeftBarItemId: $("#LeftBarItemId").val(),
+                RightBarItemId: $("#RightBarItemId").val(), AC: $("#AC").val(), AR: $("#AR").val(),
+                thickness: $("#thickness").val(), KS: $("#KS").val(), ApplicationCase: applicationcase,
+                CroppingType: croppingtype, LeftOverAC: $("#LeftOverAC").numberbox('getValue'), LeftOverAR: $("#LeftOverAR").numberbox('getValue'),
+                Special: $("#Special").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -569,6 +577,74 @@
 
 
     // ---------------------------------------------End Lookup adhesive----------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up adhesive2-------------------------------------------------------
+    $('#btnAdhesive2').click(function () {
+        var lookUpURL = base_url + 'MstBlanket/GetListAdhesiveBlanket';
+        var lookupGrid = $('#lookup_table_adhesive2');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_adhesive2').dialog('open');
+    });
+
+    jQuery("#lookup_table_adhesive2").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['ID', 'SKU', 'Name',
+                     'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
+                     'UoM Id', 'UoM', 'Created At', 'Updated At'],
+        colModel: [
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
+                  { name: 'sku', index: 'sku', width: 70 },
+				  { name: 'name', index: 'name', width: 100 },
+                  { name: 'description', index: 'description', width: 100, hidden: true },
+                  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'uomid', index: 'uomid', width: 80, hidden: true },
+                  { name: 'uom', index: 'uom', width: 60 },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_adhesive2'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_adhesive2").width() - 10,
+        height: $("#lookup_div_adhesive2").height() - 110,
+    });
+    $("#lookup_table_adhesive2").jqGrid('navGrid', '#lookup_toolbar_adhesive2', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_adhesive2').click(function () {
+        $('#lookup_div_adhesive2').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_adhesive2').click(function () {
+        var id = jQuery("#lookup_table_adhesive2").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_adhesive2").jqGrid('getRowData', id);
+
+            $('#Adhesive2Id').val(ret.id).data("kode", id);
+            $('#Adhesive2').val(ret.name);
+
+            $('#lookup_div_adhesive2').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup adhesive2----------------------------------------------------------------
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {

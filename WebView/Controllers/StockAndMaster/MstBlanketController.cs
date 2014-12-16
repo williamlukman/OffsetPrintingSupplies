@@ -83,6 +83,7 @@ namespace WebView.Controllers
                             ItemType = model.ItemType.Name,
                             Machine = model.Machine.Name,
                             Adhesive = model.Adhesive.Name,
+                            Adhesive2 = model.Adhesive2.Name,
                             RollBlanketItem = model.RollBlanketItem.Name,
                             LeftBarItem = model.LeftBarItem.Name,
                             RightBarItem = model.RightBarItem.Name,
@@ -91,6 +92,7 @@ namespace WebView.Controllers
                             model.CroppingType,
                             model.LeftOverAC,
                             model.LeftOverAR,
+                            model.Special,
                             model.CreatedAt,
                             model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -138,6 +140,7 @@ namespace WebView.Controllers
                             model.ItemType,
                             model.Machine,
                             model.Adhesive,
+                            model.Adhesive2,
                             model.RollBlanketItem,
                             model.LeftBarItem,
                             model.RightBarItem,
@@ -146,6 +149,7 @@ namespace WebView.Controllers
                             model.CroppingType,
                             model.LeftOverAC,
                             model.LeftOverAR,
+                            model.Special,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -467,7 +471,9 @@ namespace WebView.Controllers
                 model.MachineId,
                 Machine = _machineService.GetObjectById(model.MachineId).Name,
                 model.AdhesiveId,
-                Adhesive = _itemService.GetObjectById(model.AdhesiveId).Name,
+                Adhesive = model.AdhesiveId.GetValueOrDefault() == null ? "" : _itemService.GetObjectById(model.AdhesiveId.GetValueOrDefault()).Name,
+                model.Adhesive2Id,
+                Adhesive2 = model.Adhesive2Id.GetValueOrDefault() == null ? "" : _itemService.GetObjectById(model.Adhesive2Id.GetValueOrDefault()).Name,
                 model.RollBlanketItemId,
                 RollBlanketItem = _itemService.GetObjectById(model.RollBlanketItemId).Name,
                 model.IsBarRequired,
@@ -486,6 +492,7 @@ namespace WebView.Controllers
                 model.CroppingType,
                 model.LeftOverAC,
                 model.LeftOverAR,
+                model.Special,
                 model.CreatedAt,
                 model.UpdatedAt,
                 model.Errors
@@ -529,6 +536,7 @@ namespace WebView.Controllers
                 data.Description = model.Description;
                 data.MachineId = model.MachineId;
                 data.AdhesiveId = model.AdhesiveId;
+                data.Adhesive2Id = model.Adhesive2Id;
                 data.RollBlanketItemId = model.RollBlanketItemId;
                 data.IsBarRequired = model.IsBarRequired;
                 data.HasLeftBar = model.HasLeftBar;
@@ -539,6 +547,7 @@ namespace WebView.Controllers
                 data.CroppingType = model.CroppingType;
                 data.LeftOverAC = model.LeftOverAC;
                 data.LeftOverAR = model.LeftOverAR;
+                data.Special = model.Special;
                 model = _blanketService.UpdateObject(data,_blanketService,_uomService,_itemService,_itemTypeService,_contactService,_machineService,_warehouseItemService,_warehouseService,_priceMutationService);
             }
             catch (Exception ex)
