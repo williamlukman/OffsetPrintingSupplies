@@ -30,6 +30,7 @@ namespace Core.Constants
         {
             public static string Hollow = "Hollow";
             public static string Shaft = "Shaft";
+            public static string None = "None";
         }
 
         public class CroppingType

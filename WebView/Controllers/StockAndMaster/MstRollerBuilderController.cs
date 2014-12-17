@@ -347,7 +347,7 @@ namespace WebView.Controllers
                 model.CompoundId,
                 Compound = _itemService.GetObjectById(model.CompoundId).Name,
                 model.AdhesiveId,
-                Adhesive = _itemService.GetObjectById(model.AdhesiveId).Name,
+                Adhesive = model.AdhesiveId == null ? "" : _itemService.GetObjectById(model.AdhesiveId.GetValueOrDefault()).Name,
                 model.CoreBuilderId,
                 CoreBuilder = _coreBuilderService.GetObjectById(model.CoreBuilderId).Name,
                 model.RD,

@@ -508,6 +508,7 @@
                             }
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
+                            $('#UoM').val(result.UoM);
                             $('#Quantity').numberbox('setValue',result.Quantity);
                             $('#Price').numberbox('setValue',result.Price);
                             $('#item_div').dialog('open');
@@ -697,17 +698,19 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM', 'Price'],
+        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'Customer Item', 'UoM', 'UoM Id', 'Price'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 120 },
+				  { name: 'name', index: 'name', width: 240 },
                   { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }},
-                  { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true},
+                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true},
+                  { name: 'customersquantity', index: 'customersquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true},
                   { name: 'uom', index: 'uom', width: 40 },
+                  { name: 'uomid', index: 'uomid', width: 40, hidden: true },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         page: '1',
@@ -738,7 +741,7 @@
 
             $('#ItemId').val(ret.id).data("kode", id);
             $('#Item').val(ret.name);
-
+            $('#UoM').val(ret.uom);
             $('#lookup_div_item').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

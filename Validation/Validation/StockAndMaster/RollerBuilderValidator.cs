@@ -94,11 +94,13 @@ namespace Validation.Validation
 
         public RollerBuilder VHasAdhesive(RollerBuilder rollerBuilder, IItemService _itemService)
         {
+            /*
             Item adhesive = _itemService.GetObjectById(rollerBuilder.AdhesiveId);
             if (adhesive == null)
             {
                 rollerBuilder.Errors.Add("AdhesiveId", "Tidak terasosiasi dengan adhesive");
             }
+             * */
             return rollerBuilder;
         }
 
