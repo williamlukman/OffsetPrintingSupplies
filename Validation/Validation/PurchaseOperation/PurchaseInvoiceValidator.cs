@@ -13,7 +13,7 @@ namespace Validation.Validation
     {
         public PurchaseInvoice VHasUniqueNomorSurat(PurchaseInvoice purchaseInvoice, IPurchaseInvoiceService _purchaseInvoiceService)
         {
-            IList<PurchaseInvoice> duplicates =_purchaseInvoiceService.GetQueryable().Where(x => x.NomorSurat == purchaseInvoice.NomorSurat && x.Id != purchaseInvoice.Id).ToList();
+            IList<PurchaseInvoice> duplicates =_purchaseInvoiceService.GetQueryable().Where(x => x.NomorSurat == purchaseInvoice.NomorSurat && x.Id != purchaseInvoice.Id && !x.IsDeleted).ToList();
             if (duplicates.Any())
             {
                 purchaseInvoice.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");

@@ -13,7 +13,7 @@ namespace Validation.Validation
     {
         public SalesQuotation VHasUniqueNomorSurat(SalesQuotation salesQuotation, ISalesQuotationService _salesQuotationService)
         {
-            IList<SalesQuotation> duplicates = _salesQuotationService.GetQueryable().Where(x => x.NomorSurat == salesQuotation.NomorSurat && x.Id != salesQuotation.Id).ToList();
+            IList<SalesQuotation> duplicates = _salesQuotationService.GetQueryable().Where(x => x.NomorSurat == salesQuotation.NomorSurat && x.Id != salesQuotation.Id && !x.IsDeleted).ToList();
             if (duplicates.Any())
             {
                 salesQuotation.Errors.Add("NomorSurat", "Tidak boleh merupakan duplikasi");
@@ -80,7 +80,7 @@ namespace Validation.Validation
 
         public SalesQuotation VHasNoSalesOrder(SalesQuotation salesQuotation, ISalesOrderService _salesOrderService)
         {
-            IList<SalesOrder> salesOrders = _salesOrderService.GetQueryable().Where(x => x.OrderCode == salesQuotation.Code).ToList();
+            IList<SalesOrder> salesOrders = _salesOrderService.GetQueryable().Where(x => x.OrderCode == salesQuotation.Code && !x.IsDeleted).ToList();
             if (salesOrders.Any())
             {
                 salesQuotation.Errors.Add("Generic", "Sudah memiliki sales order");

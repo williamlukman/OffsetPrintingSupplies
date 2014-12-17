@@ -58,7 +58,7 @@
             colModel: [
                       { name: 'id', index: 'id', width: 35, align: "center" },
                       { name: 'sku', index: 'sku', width: 70 },
-                      { name: 'name', index: 'name', width: 120 },
+                      { name: 'name', index: 'name', width: 240 },
                       { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                       { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -108,7 +108,7 @@
             colModel: [
                       { name: 'itemid', index: 'itemid', width: 80, align: "center"},
                       { name: 'sku', index: 'sku', width: 80 },
-                      { name: 'item', index: 'item', width: 200},
+                      { name: 'item', index: 'item', width: 240},
                       { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'uomname', index: 'uomname', width: 100 },
             ],
@@ -142,7 +142,7 @@
             colModel: [
                       { name: 'id', index: 'id', width: 80, align: "center"},
                       { name: 'code', index: 'code', width: 80 },
-                      { name: 'name', index: 'name', width: 200 },
+                      { name: 'name', index: 'name', width: 240 },
                       { name: 'quantity', index: 'quantity', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                       { name: 'uomname', index: 'uomname', width: 100 },
             ],

@@ -309,6 +309,7 @@ namespace WebView.Controllers
                 model.IsService,
                 model.Quantity,
                 model.Price,
+                UoM = model.Item.UoM.Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

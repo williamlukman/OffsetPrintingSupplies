@@ -17,7 +17,7 @@ namespace Core.DomainModel
         public string SkuRollerNewCore { get; set; }
         public int RollerUsedCoreItemId { get; set; }
         public int RollerNewCoreItemId { get; set; }
-        public int AdhesiveId { get; set; }
+        public Nullable<int> AdhesiveId { get; set; }
         public int UoMId { get; set; }
 
         public string Name { get; set; }
