@@ -2380,7 +2380,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoiceMigration.Id,
                     TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = purchaseInvoiceMigration.Tax * purchaseInvoiceMigration.Rate
+                    Amount = purchaseInvoiceMigration.Tax
                 };
                 debitPPNMASUKAN = CreateObject(debitPPNMASUKAN, _accountService);
                 journals.Add(debitPPNMASUKAN);
@@ -2837,7 +2837,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoiceMigration.Id,
                     TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = salesInvoiceMigration.Tax * Rate
+                    Amount = salesInvoiceMigration.Tax
                 };
                 creditppnkeluaran = CreateObject(creditppnkeluaran, _accountService);
                 journals.Add(creditppnkeluaran);

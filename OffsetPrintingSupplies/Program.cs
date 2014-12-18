@@ -24,7 +24,7 @@ namespace OffsetPrintingSupplies
                 db.Configuration.ProxyCreationEnabled = true;
 
                 DataBuilder d = new DataBuilder();
-                d.TestMigration();
+                d.InvoiceMigration();
                 
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();
