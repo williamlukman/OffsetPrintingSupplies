@@ -80,10 +80,12 @@
     <Compile Include="Mapping\Finance\PaymentRequestMapping.cs" />
     <Compile Include="Mapping\Finance\PaymentVoucherDetailMapping.cs" />
     <Compile Include="Mapping\Finance\PaymentVoucherMapping.cs" />
+    <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceMigrationMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\PurchaseInvoiceMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceDetailMapping.cs" />
     <Compile Include="Mapping\PurchaseOperation\RetailPurchaseInvoiceMapping.cs" />
+    <Compile Include="Mapping\SalesOperation\SalesInvoiceMigrationMapping.cs" />
     <Compile Include="Mapping\SalesOperation\TemporaryDeliveryOrderClearanceDetailMapping.cs" />
     <Compile Include="Mapping\SalesOperation\TemporaryDeliveryOrderClearanceMapping.cs" />
     <Compile Include="Mapping\SalesOperation\SalesQuotationDetailMapping.cs" />
@@ -181,10 +183,12 @@
     <Compile Include="Repository\Finance\PaymentRequestRepository.cs" />
     <Compile Include="Repository\Finance\PaymentVoucherDetailRepository.cs" />
     <Compile Include="Repository\Finance\PaymentVoucherRepository.cs" />
+    <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceMigrationRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\PurchaseInvoiceRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceDetailRepository.cs" />
     <Compile Include="Repository\PurchaseOperation\RetailPurchaseInvoiceRepository.cs" />
+    <Compile Include="Repository\SalesOperation\SalesInvoiceMigrationRepository.cs" />
     <Compile Include="Repository\SalesOperation\TemporaryDeliveryOrderClearanceDetailRepository.cs" />
     <Compile Include="Repository\SalesOperation\TemporaryDeliveryOrderClearanceRepository.cs" />
     <Compile Include="Repository\SalesOperation\SalesQuotationDetailRepository.cs" />

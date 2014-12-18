@@ -73,6 +73,21 @@ namespace Service.Service
             return this.CreateObject(payable);
         }
 
+        public Payable CreateObject(int contactId, string payableSource, int payableSourceId, int currencyId, decimal amount, decimal rate)
+        {
+            Payable payable = new Payable
+            {
+                ContactId = contactId,
+                PayableSource = payableSource,
+                PayableSourceId = payableSourceId,
+                CurrencyId = currencyId,
+                Amount = amount,
+                RemainingAmount = amount,
+                Rate = rate
+            };
+            return this.CreateObject(payable);
+        }
+
         public Payable UpdateObject(Payable payable)
         {
             return (_validator.ValidUpdateObject(payable, this) ? _repository.UpdateObject(payable) : payable);

@@ -117,6 +117,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new PriceMutationMapping());
             modelBuilder.Configurations.Add(new PurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new PurchaseInvoiceMapping());
+            modelBuilder.Configurations.Add(new PurchaseInvoiceMigrationMapping());
             modelBuilder.Configurations.Add(new PurchaseOrderMapping());
             modelBuilder.Configurations.Add(new PurchaseOrderDetailMapping());
             modelBuilder.Configurations.Add(new PurchaseReceivalMapping());
@@ -142,6 +143,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new SalesAllowanceMapping());
             modelBuilder.Configurations.Add(new SalesInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new SalesInvoiceMapping());
+            modelBuilder.Configurations.Add(new SalesInvoiceMigrationMapping());
             modelBuilder.Configurations.Add(new SalesOrderMapping());
             modelBuilder.Configurations.Add(new SalesOrderDetailMapping());
             modelBuilder.Configurations.Add(new SalesQuotationDetailMapping());
@@ -214,6 +216,7 @@ namespace Data.Context
         public DbSet<PurchaseAllowance> PurchaseAllowances { get; set; }
         public DbSet<PurchaseInvoiceDetail> PurchaseInvoiceDetails { get; set; }
         public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
+        public DbSet<PurchaseInvoiceMigration> PurchaseInvoiceMigrations { get; set; }
         public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
@@ -235,6 +238,7 @@ namespace Data.Context
         public DbSet<SalesAllowance> SalesAllowances { get; set; }
         public DbSet<SalesInvoiceDetail> SalesInvoiceDetails { get; set; }
         public DbSet<SalesInvoice> SalesInvoices { get; set; }
+        public DbSet<SalesInvoiceMigration> SalesInvoiceMigrations { get; set; }
         public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
         public DbSet<SalesOrder> SalesOrders { get; set; }
         public DbSet<SalesQuotationDetail> SalesQuotationDetails { get; set; }

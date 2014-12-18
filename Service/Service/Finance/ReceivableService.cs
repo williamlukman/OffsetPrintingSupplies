@@ -73,6 +73,21 @@ namespace Service.Service
             return this.CreateObject(receivable);
         }
 
+        public Receivable CreateObject(int contactId, string receivableSource, int receivableSourceId, int currencyId, decimal amount, decimal Rate)
+        {
+            Receivable receivable = new Receivable
+            {
+                ContactId = contactId,
+                ReceivableSource = receivableSource,
+                ReceivableSourceId = receivableSourceId,
+                CurrencyId = currencyId,
+                Amount = amount,
+                RemainingAmount = amount,
+                Rate = Rate
+            };
+            return this.CreateObject(receivable);
+        }
+
         public Receivable UpdateObject(Receivable receivable)
         {
             return (_validator.ValidUpdateObject(receivable, this) ? _repository.UpdateObject(receivable) : receivable);

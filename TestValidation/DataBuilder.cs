@@ -92,7 +92,8 @@ namespace TestValidation
         public IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
         public IExchangeRateClosingService _exchangeRateClosingService;
         public IVCNonBaseCurrencyService _vCNonBaseCurrencyService;
-       
+        public ISalesInvoiceMigrationService _salesInvoiceMigrationService;
+        public IPurchaseInvoiceMigrationService _purchaseInvoiceMigrationService;
         public CashBank cashBank, pettyCash, cashBank1, cashBank2;
         public CashBankAdjustment cashBankAdjustment, cashBankAdjustment2, cashBankAdjustment3;
         public CashBankMutation cashBankMutation;
@@ -296,6 +297,8 @@ namespace TestValidation
             _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
             _exchangeRateClosingService = new ExchangeRateClosingService(new ExchangeRateClosingRepository(), new ExchangeRateClosingValidator());
             _vCNonBaseCurrencyService = new VCNonBaseCurrencyService(new VCNonBaseCurrencyRepository(), new VCNonBaseCurrencyValidator());
+            _salesInvoiceMigrationService = new SalesInvoiceMigrationService(new SalesInvoiceMigrationRepository());
+            _purchaseInvoiceMigrationService = new PurchaseInvoiceMigrationService(new PurchaseInvoiceMigrationRepository());
 
             typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket");
             typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller");
@@ -628,6 +631,40 @@ namespace TestValidation
                 currencyIDR.Name = "IDR";
                 currencyIDR = _currencyService.CreateObject(currencyIDR, _accountService);
             }
+        }
+
+        public void InvoiceMigration()
+        {
+            Contact customer = _contactService.GetObjectByName("ACEH MEDIA GRAFIKA");
+            Currency USD = _currencyService.GetObjectByName("USD");
+            Currency IDR = _currencyService.GetObjectByName("Rupiah");
+
+            // For Payable and Receivable
+            SalesInvoiceMigration salesInvoiceMigration = new SalesInvoiceMigration()
+            {
+                NomorSurat = "002.14.87584022",
+                CurrencyId = USD.Id,
+                AmountReceivable = (decimal) 1451.2,
+                DPP = (decimal) 1451.2,
+                Tax = (decimal) 0,
+                Rate = (decimal) 12148,
+                ContactId = customer.Id,
+                InvoiceDate = new DateTime(2014, 12, 1),
+            };
+            salesInvoiceMigration = _salesInvoiceMigrationService.CreateObject(salesInvoiceMigration, _generalLedgerJournalService, _accountService, _gLNonBaseCurrencyService, _currencyService, _receivableService);
+
+            PurchaseInvoiceMigration purchaseInvoiceMigration = new PurchaseInvoiceMigration()
+            {
+                NomorSurat = "6531",
+                CurrencyId = IDR.Id,
+                AmountPayable = (decimal) 1788209,
+                DPP = (decimal) 1625645,
+                Tax = (decimal) 162564,
+                InvoiceDate = new DateTime(2014, 12, 1),
+                ContactId = customer.Id,
+                Rate = 1,
+            };
+            purchaseInvoiceMigration = _purchaseInvoiceMigrationService.CreateObject(purchaseInvoiceMigration, _generalLedgerJournalService, _accountService, _gLNonBaseCurrencyService, _currencyService, _payableService);
         }
 
         public void PopulateData()
@@ -2244,6 +2281,7 @@ namespace TestValidation
                 thickness = 1,
                 MachineId = machine.Id,
                 AdhesiveId = itemAdhesiveBlanket.Id,
+                Adhesive2Id = itemAdhesiveBlanket.Id,
                 CroppingType = Core.Constants.Constant.CroppingType.Normal,
                 ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
@@ -2269,6 +2307,7 @@ namespace TestValidation
                 thickness = 1,
                 MachineId = machine.Id,
                 AdhesiveId = itemAdhesiveBlanket.Id,
+                Adhesive2Id = itemAdhesiveBlanket.Id,
                 CroppingType = Core.Constants.Constant.CroppingType.Normal,
                 ApplicationCase = Core.Constants.Constant.ApplicationCase.Web
             };
@@ -2294,6 +2333,7 @@ namespace TestValidation
                 thickness = 1,
                 MachineId = machine.Id,
                 AdhesiveId = itemAdhesiveBlanket.Id,
+                Adhesive2Id = itemAdhesiveBlanket.Id,
                 CroppingType = Core.Constants.Constant.CroppingType.Special,
                 LeftOverAC = 6,
                 LeftOverAR = 9,

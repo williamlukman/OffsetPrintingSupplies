@@ -2330,11 +2330,70 @@ namespace Service.Service
             #endregion
         }
 
+        public IList<GeneralLedgerJournal> CreateJournalForPurchaseInvoiceMigration(PurchaseInvoiceMigration purchaseInvoiceMigration,
+                                           IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+        {
+            // Debit GoodsPendingClearance, Credit AccountPayable, Debit PPNMASUKAN
+            #region Debit GoodsPendingClearance, Debit PPNMASUKAN, Credit AccountPayable
+
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency purchaseInvoiceMigrationCurrency = _currencyService.GetObjectById(purchaseInvoiceMigration.CurrencyId);
+            GeneralLedgerJournal creditaccountpayable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountPayable + purchaseInvoiceMigration.CurrencyId).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoiceMigration,
+                SourceDocumentId = purchaseInvoiceMigration.Id,
+                TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = purchaseInvoiceMigration.AmountPayable * purchaseInvoiceMigration.Rate
+            };
+            creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
+            journals.Add(creditaccountpayable);
+            if (purchaseInvoiceMigrationCurrency.IsBase == false)
+            {
+                GLNonBaseCurrency creditaccountpayable2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = creditaccountpayable.Id,
+                    CurrencyId = purchaseInvoiceMigration.CurrencyId,
+                    Amount = purchaseInvoiceMigration.AmountPayable,
+                };
+                creditaccountpayable2 = _gLNonBaseCurrencyService.CreateObject(creditaccountpayable2, _accountService);
+            }
+            GeneralLedgerJournal debitGoodsPendingClearance = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoiceMigration,
+                SourceDocumentId = purchaseInvoiceMigration.Id,
+                TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = purchaseInvoiceMigration.DPP * purchaseInvoiceMigration.Rate
+            };
+            debitGoodsPendingClearance = CreateObject(debitGoodsPendingClearance, _accountService);
+            journals.Add(debitGoodsPendingClearance);
+
+            if (purchaseInvoiceMigration.Tax > 0)
+            {
+                GeneralLedgerJournal debitPPNMASUKAN = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNMASUKAN).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoiceMigration,
+                    SourceDocumentId = purchaseInvoiceMigration.Id,
+                    TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = purchaseInvoiceMigration.Tax * purchaseInvoiceMigration.Rate
+                };
+                debitPPNMASUKAN = CreateObject(debitPPNMASUKAN, _accountService);
+                journals.Add(debitPPNMASUKAN);
+            }
+            #endregion
+            return journals;
+        }
+
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseInvoice(PurchaseInvoice purchaseInvoice, PurchaseReceival purchaseReceival,
                                            IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Debit GoodsPendingClearance, Credit AccountPayable
-            // Debit TaxPayable, Debit ExchangeLoss or Credit ExchangeGain
+            // Debit PPNMASUKAN, Debit ExchangeLoss or Credit ExchangeGain
             #region Debit GoodsPendingClearance, Credit AccountPayable
             decimal PreTax = purchaseInvoice.AmountPayable * 100 / (100 + purchaseInvoice.Tax);
             decimal Tax = purchaseInvoice.AmountPayable - PreTax;
@@ -2376,21 +2435,21 @@ namespace Service.Service
             journals.Add(debitGoodsPendingClearance);
 
             #endregion
-            #region Debit TaxPayable, Debit ExchangeLoss or Credit ExchangeGain
+            #region Debit PPNMASUKAN, Debit ExchangeLoss or Credit ExchangeGain
 
             if (Tax > 0)
             {
-                GeneralLedgerJournal debitTaxPayable = new GeneralLedgerJournal()
+                GeneralLedgerJournal debitPPNMASUKAN = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxPayable).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNMASUKAN).Id,
                     SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoice,
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
                     Amount = Tax * purchaseInvoice.ExchangeRateAmount
                 };
-                debitTaxPayable = CreateObject(debitTaxPayable, _accountService);
-                journals.Add(debitTaxPayable);
+                debitPPNMASUKAN = CreateObject(debitPPNMASUKAN, _accountService);
+                journals.Add(debitPPNMASUKAN);
             }
 
             if (purchaseInvoice.ExchangeRateAmount > purchaseReceival.ExchangeRateAmount)
@@ -2429,7 +2488,7 @@ namespace Service.Service
                                            IAccountService _accountService,IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
         {
             // Credit GoodsPendingClearance, Debit AccountPayable
-            // Credit TaxPayable, Credit ExchangeLoss or Debit ExchangeGain
+            // Credit PPNMASUKAN, Credit ExchangeLoss or Debit ExchangeGain
             #region Credit GoodsPendingClearance, Debit AccountPayable
             decimal PreTax = purchaseInvoice.AmountPayable * 100 / (100 + purchaseInvoice.Tax);
             decimal Tax = purchaseInvoice.AmountPayable - PreTax;
@@ -2474,20 +2533,20 @@ namespace Service.Service
             journals.Add(credittGoodsPendingClearance);
 
             #endregion
-            #region Credit TaxPayable, Credit ExchangeLoss or Debit ExchangeGain
+            #region Credit PPNMASUKAN, Credit ExchangeLoss or Debit ExchangeGain
             if (Tax > 0)
             {
-                GeneralLedgerJournal creditTaxPayable = new GeneralLedgerJournal()
+                GeneralLedgerJournal creditPPNMASUKAN = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxPayable).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNMASUKAN).Id,
                     SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoice,
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
                     Amount = Tax * purchaseInvoice.ExchangeRateAmount
                 };
-                creditTaxPayable = CreateObject(creditTaxPayable, _accountService);
-                journals.Add(creditTaxPayable);
+                creditPPNMASUKAN = CreateObject(creditPPNMASUKAN, _accountService);
+                journals.Add(creditPPNMASUKAN);
             }
 
             if (purchaseInvoice.ExchangeRateAmount > purchaseReceival.ExchangeRateAmount)
@@ -2735,14 +2794,78 @@ namespace Service.Service
             return journals;
             #endregion
         }
-        
+
+        public IList<GeneralLedgerJournal> CreateJournalForSalesInvoiceMigration(SalesInvoiceMigration salesInvoiceMigration,
+                                            IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+        {
+            // Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue
+            #region Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue for fixed rate
+            decimal Rate = salesInvoiceMigration.Rate;
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesInvoiceMigration.CurrencyId).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
+                SourceDocumentId = salesInvoiceMigration.Id,
+                TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = salesInvoiceMigration.AmountReceivable * Rate
+            };
+            debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
+
+            Currency currency = _currencyService.GetObjectById(salesInvoiceMigration.CurrencyId);
+            if (currency.IsBase == false)
+            {
+                GLNonBaseCurrency debitaccountreceivable2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = debitaccountreceivable.Id,
+                    CurrencyId = salesInvoiceMigration.CurrencyId,
+                    Amount = salesInvoiceMigration.AmountReceivable,
+                };
+                debitaccountreceivable2 = _gLNonBaseCurrencyService.CreateObject(debitaccountreceivable2, _accountService);
+            }
+
+            journals.Add(debitaccountreceivable);
+
+            if (salesInvoiceMigration.Tax > 0)
+            {
+                GeneralLedgerJournal creditppnkeluaran = new GeneralLedgerJournal()
+                {
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
+                    SourceDocument = Constant.GeneralLedgerSource.SalesInvoiceMigration,
+                    SourceDocumentId = salesInvoiceMigration.Id,
+                    TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = salesInvoiceMigration.Tax * Rate
+                };
+                creditppnkeluaran = CreateObject(creditppnkeluaran, _accountService);
+                journals.Add(creditppnkeluaran);
+            }
+
+            GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
+            {
+                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
+                SourceDocument = Constant.GeneralLedgerSource.SalesInvoiceMigration,
+                SourceDocumentId = salesInvoiceMigration.Id,
+                TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = salesInvoiceMigration.DPP * Rate
+            };
+            creditrevenue = CreateObject(creditrevenue, _accountService);
+
+            journals.Add(creditrevenue);
+            #endregion
+            return journals;
+        }
+
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice,
             IAccountService _accountService,IExchangeRateService _exchangeRateService, ICurrencyService _currencyService,
             IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
-            // Debit AccountReceivable, Debit Discount, Debit TaxReceivable, Credit Revenue
+            // Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue
             // Debit COS, Credit FinishedGoods
-            #region Debit AccountReceivable, Debit Discount, Debit TaxReceivable, Credit Revenue for fixed rate
+            #region Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue for fixed rate
             decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
             decimal Tax = salesInvoice.AmountReceivable - PreTax;
             decimal Discount = PreTax * salesInvoice.Discount / 100;
@@ -2800,17 +2923,17 @@ namespace Service.Service
 
             if (Tax > 0)
             {
-                GeneralLedgerJournal credittaxreceivable = new GeneralLedgerJournal()
+                GeneralLedgerJournal creditppnkeluaran = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxReceivable).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
                     SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
                     Amount = Tax * Rate
                 };
-                credittaxreceivable = CreateObject(credittaxreceivable, _accountService);
-                journals.Add(credittaxreceivable);
+                creditppnkeluaran = CreateObject(creditppnkeluaran, _accountService);
+                journals.Add(creditppnkeluaran);
             }
 
             GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
@@ -2826,7 +2949,7 @@ namespace Service.Service
 
             journals.Add(creditrevenue);
             #endregion
-            #region Debit AccountReceivable, Debit Discount, Debit TaxReceivable, Credit Revenue for custom rate
+            #region Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue for custom rate
 
             ///*
             //decimal Tax = salesInvoice.AmountReceivable * salesInvoice.Tax / (100 - salesInvoice.Tax);
@@ -2898,17 +3021,17 @@ namespace Service.Service
 
             //    journals.Add(debitaccountreceivable2);
 
-            //    GeneralLedgerJournal credittaxreceivable = new GeneralLedgerJournal()
+            //    GeneralLedgerJournal creditppnkeluaran = new GeneralLedgerJournal()
             //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxReceivable).Id,
+            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
             //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
             //        SourceDocumentId = salesInvoice.Id,
             //        TransactionDate = (DateTime)salesInvoice.InvoiceDate,
             //        Status = Constant.GeneralLedgerStatus.Credit,
             //        Amount = Tax * (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == true ? 1 : Rate)
             //    };
-            //    credittaxpayable = CreateObject(credittaxreceivable, _accountService);
-            //    journals.Add(credittaxreceivable);
+            //    creditppmmasukan = CreateObject(creditppnkeluaran, _accountService);
+            //    journals.Add(creditppnkeluaran);
             //}
 
             //GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
@@ -2960,9 +3083,9 @@ namespace Service.Service
             IAccountService _accountService, IExchangeRateService _exchangeRateService, 
             ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
-            // Credit AccountReceivable, Credit Discount, Credit TaxReceivable, Debit Revenue
+            // Credit AccountReceivable, Credit Discount, Credit PPNKELUARAN, Debit Revenue
             // Credit COS, Debit FinishedGoods
-            #region Credit AccountReceivable, Credit Discount, Credit TaxReceivable, Debit Revenue with master exchangeRate
+            #region Credit AccountReceivable, Credit Discount, Credit PPNKELUARAN, Debit Revenue with master exchangeRate
             decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
             decimal Tax = salesInvoice.AmountReceivable - PreTax;
             decimal Discount = PreTax * salesInvoice.Discount / 100;
@@ -3020,17 +3143,17 @@ namespace Service.Service
 
             if (Tax > 0)
             {
-                GeneralLedgerJournal debittaxreceivable = new GeneralLedgerJournal()
+                GeneralLedgerJournal debitppnkeluaran = new GeneralLedgerJournal()
                 {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxReceivable).Id,
+                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
                     SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
                     Amount = Tax * Rate
                 };
-                debittaxreceivable = CreateObject(debittaxreceivable, _accountService);
-                journals.Add(debittaxreceivable);
+                debitppnkeluaran = CreateObject(debitppnkeluaran, _accountService);
+                journals.Add(debitppnkeluaran);
             }
 
             GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()
@@ -3047,7 +3170,7 @@ namespace Service.Service
             journals.Add(debitrevenue);
 
             #endregion
-            #region Credit AccountReceivable, Credit Discount, Credit TaxReceivable, Debit Revenue with custom Rate
+            #region Credit AccountReceivable, Credit Discount, Credit PPNKELUARAN, Debit Revenue with custom Rate
             //decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
             //decimal Tax = salesInvoice.AmountReceivable - PreTax;
             //decimal Discount = PreTax * salesInvoice.Discount / 100;
@@ -3112,17 +3235,17 @@ namespace Service.Service
 
             //    journals.Add(creditaccountreceivable2);
 
-            //    GeneralLedgerJournal debittaxreceivable = new GeneralLedgerJournal()
+            //    GeneralLedgerJournal debitppnkeluaran = new GeneralLedgerJournal()
             //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.TaxReceivable).Id,
+            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
             //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
             //        SourceDocumentId = salesInvoice.Id,
             //        TransactionDate = salesInvoice.InvoiceDate,
             //        Status = Constant.GeneralLedgerStatus.Debit,
             //        Amount = Tax * (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == true ? 1 : Rate)
             //    };
-            //    debittaxreceivable = CreateObject(debittaxreceivable, _accountService);
-            //    journals.Add(debittaxreceivable);
+            //    debitppnkeluaran = CreateObject(debitppnkeluaran, _accountService);
+            //    journals.Add(debitppnkeluaran);
             //}
 
             //GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()

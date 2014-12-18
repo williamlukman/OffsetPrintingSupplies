@@ -23,29 +23,37 @@ namespace OffsetPrintingSupplies
                 db.Configuration.LazyLoadingEnabled = true;
                 db.Configuration.ProxyCreationEnabled = true;
 
-                ZengraBuilder z = new ZengraBuilder();
-
-                z.PopulateMasterData();
-                z.PopulateContact();
-                z.PopulateSupplier();
-                z.PopulateCOA();
-                z.PopulateFinance();
-                z.PopulateItemSerpong();
-                //z.AdjustItemSerpong();
-                z.PopulateItemSurabaya();
-                //z.AdjustItemSurabaya();
-                //z.AdjustItemSemarang();
-                z.PopulateBarsForBlanket();
-                z.PopulateBlanket();
-                //z.StockAdjustBlanket();
-                z.PopulateCore();
-                //z.AdjustCore();
-                z.PopulateRoller();
-                //z.AdjustRoller();
+                DataBuilder d = new DataBuilder();
+                d.TestMigration();
+                
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();
 
             }
+        }
+
+        void DataAwalZentrum()
+        {
+            ZengraBuilder z = new ZengraBuilder();
+
+            // Warning: it will take around 1 hour to run the whole process
+            z.PopulateMasterData();
+            z.PopulateContact();
+            z.PopulateSupplier();
+            z.PopulateCOA();
+            z.PopulateFinance();
+            z.PopulateItemSerpong();
+            z.PopulateItemSurabaya();
+            z.PopulateBarsForBlanket();
+            z.PopulateBlanket();
+            z.PopulateCore();
+            z.PopulateRoller();
+            z.AdjustCore();
+            z.StockAdjustBlanket();
+            z.AdjustItemSurabaya();
+            z.AdjustItemSemarang();
+            z.AdjustItemSerpong();
+            z.AdjustRoller();
         }
     }
 }
