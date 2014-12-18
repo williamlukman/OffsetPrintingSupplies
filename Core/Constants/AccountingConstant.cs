@@ -30,6 +30,7 @@ namespace Core.Constants
             public static string PurchaseAllowance = "PurchaseAllowance";
             public static string PurchaseReceival = "PurchaseReceival";
             public static string PurchaseInvoice = "PurchaseInvoice";
+            public static string PurchaseInvoiceMigration = "PurchaseInvoiceMigration";
             public static string StockAdjustment = "StockAdjustment";
             public static string CustomerStockAdjustment = "CustomerStockAdjustment";
             public static string ReceiptVoucher = "ReceiptVoucher";
@@ -39,6 +40,7 @@ namespace Core.Constants
             public static string SalesDownPaymentAllocation = "SalesDownPaymentAllocation";
             public static string SalesAllowance = "SalesAllowance";
             public static string SalesInvoice = "SalesInvoice";
+            public static string SalesInvoiceMigration = "SalesInvoiceMigration";
             public static string RecoveryOrderDetail = "RecoveryOrderDetail";
             public static string RecoveryAccessoryDetail = "RecoveryAccessoryDetail";
             public static string BlanketOrderDetail = "BlanketOrderDetail";
@@ -68,7 +70,7 @@ namespace Core.Constants
             public static string FinishedGoods = "1104002";
             public static string PrepaidExpense = "1105";
             public static string PiutangLainLain = "1106";
-            public static string TaxReceivable = "1107";
+            public static string PPNMASUKAN = "1107";
 
             public static string Expense = "2";
             public static string COGS = "21";
@@ -101,7 +103,7 @@ namespace Core.Constants
             public static string PurchaseAllowance = "3105";
             public static string AccountPayableNonTrading = "3106";
             public static string HutangLainLain = "3107";
-            public static string TaxPayable = "3108";
+            public static string PPNKELUARAN = "3108";
             public static string NonCurrentLiability = "32";
 
             public static string Equity = "4";
@@ -123,7 +125,7 @@ namespace Core.Constants
             public static string Raw = "A1104001";
             public static string FinishedGoods = "A1104002";
             public static string PiutangLainLain = "A1106";
-            public static string TaxReceivable = "A1107";
+            public static string PPNMASUKAN = "A1107";
 
             public static string Expense = "X2";
             public static string COGS = "X21";
@@ -153,7 +155,7 @@ namespace Core.Constants
             public static string GoodsPendingClearance = "L3103";
             public static string PurchaseAllowance = "L3105";
             public static string HutangLainLain = "L3107";
-            public static string TaxPayable = "L3108";
+            public static string PPNKELUARAN = "L3108";
 
             public static string NonCurrentLiability = "L32";
              

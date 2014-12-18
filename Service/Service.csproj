@@ -83,10 +83,12 @@
     <Compile Include="Service\Finance\PaymentRequestService.cs" />
     <Compile Include="Service\Finance\PaymentVoucherDetailService.cs" />
     <Compile Include="Service\Finance\PaymentVoucherService.cs" />
+    <Compile Include="Service\PurchaseOperation\PurchaseInvoiceMigrationService.cs" />
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\PurchaseInvoiceService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceDetailService.cs" />
     <Compile Include="Service\PurchaseOperation\RetailPurchaseInvoiceService.cs" />
+    <Compile Include="Service\SalesOperation\SalesInvoiceMigrationService.cs" />
     <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderClearanceDetailService.cs" />
     <Compile Include="Service\SalesOperation\TemporaryDeliveryOrderClearanceService.cs" />
     <Compile Include="Service\SalesOperation\SalesQuotationDetailService.cs" />

@@ -94,6 +94,7 @@ namespace Core.Constants
             public static string SalesDownPayment = "SalesDownPayment";
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string PurchaseDownPaymentAllocationDetail = "PurchaseDownPaymentAllocationDetail";
+            public static string PurchaseInvoiceMigration = "PurchaseInvoiceMigration";
         }
 
         public class ReceivableSource
@@ -103,6 +104,7 @@ namespace Core.Constants
             public static string PurchaseDownPayment = "PurchaseDownPayment";
             public static string SalesDownPayment = "SalesDownPayment";
             public static string SalesDownPaymentAllocationDetail = "SalesDownPaymentAllocationDetail";
+            public static string SalesInvoiceMigration = "SalesInvoiceMigration";
         }
         #endregion
 

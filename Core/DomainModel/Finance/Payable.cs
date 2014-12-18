@@ -15,7 +15,7 @@ namespace Core.DomainModel
         public int CurrencyId { get; set; }
 
         public decimal Rate { get; set; }
-        public DateTime DueDate { get; set; }
+        public Nullable<DateTime> DueDate { get; set; }
         public decimal Amount { get; set; }
         public decimal RemainingAmount { get; set; }
         public decimal PendingClearanceAmount { get; set; }

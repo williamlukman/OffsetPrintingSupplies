@@ -399,7 +399,8 @@ namespace WebView.Controllers
                          {
                              OrderType = (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.PartDeliveryOrder) ? "Part Delivery Order" :
                                          (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder) ? "Trial Order" :
-                                         (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder) ? "Sample Order" : "",
+                                         (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder) ? "Sample Order" :
+                                         (model.TemporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment) ? "Consignment Order" : "",
                              SKU = model.Item.Sku,
                              Name = model.Item.Name,
                              UoM = model.Item.UoM.Name,

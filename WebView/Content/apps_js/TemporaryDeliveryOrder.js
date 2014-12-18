@@ -111,7 +111,9 @@
 		              rowOrderType = "Trial";
 		          } else if (rowOrderType == '1') {
 		              rowOrderType = "Sample";
-		          } else {
+		          } else if (rowOrderType == '2') {
+		              rowOrderType = "Consignment";
+		          } else if (rowOrderType == '3') {
 		              rowOrderType = "Part Delivery";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });
@@ -477,7 +479,7 @@
         var virtualorderid;
         var deliveryorderid;
 
-        if (ordertype == 0 || ordertype == 1) {
+        if (ordertype == 0 || ordertype == 1 || ordertype == 2) {
             virtualorderid = $("#PreviousOrderId").val();
             deliveryorderid = null;
         }
@@ -721,7 +723,7 @@
         var virtualorderdetailid;
         var salesorderdetailid;
 
-        if (ordertype == 0 || ordertype == 1) {
+        if (ordertype == 0 || ordertype == 1 || ordertype == 2) {
             virtualorderdetailid = $("#PreviousOrderDetailId").val();
             salesorderdetailid = null;
         }
@@ -776,6 +778,7 @@
     // -------------------------------------------------------Look Up previousorder-------------------------------------------------------
     $('#btnPreviousOrder').click(function () {
         var lookUpURL;
+        var index = document.getElementById("OrderType").selectedIndex;
         if (document.getElementById("OrderType").selectedIndex == 0) {
             lookUpURL = base_url + 'VirtualOrder/GetTrialListConfirmedNotCompleted';
         }
@@ -783,6 +786,9 @@
             lookUpURL = base_url + 'VirtualOrder/GetSampleListConfirmedNotCompleted';
         }
         else if (document.getElementById("OrderType").selectedIndex == 2) {
+            lookUpURL = base_url + 'VirtualOrder/GetConsignmentListConfirmedNotCompleted';
+        }
+        else if (document.getElementById("OrderType").selectedIndex == 3) {
             lookUpURL = base_url + 'DeliveryOrder/GetListNotConfirmed';
         }
         var lookupGrid = $('#lookup_table_previousorder');
@@ -852,7 +858,8 @@
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {
         var lookUpURL;
-        if (document.getElementById("OrderType").selectedIndex == 0 || document.getElementById("OrderType").selectedIndex == 1) {
+        if (document.getElementById("OrderType").selectedIndex == 0 || document.getElementById("OrderType").selectedIndex == 1
+            || document.getElementById("OrderType").selectedIndex == 2) {
             lookUpURL = base_url + 'VirtualOrder/GetListDetail?Id=' + $("#PreviousOrderId").val();
         }
         else {
