@@ -157,7 +157,8 @@ namespace Service.Service
                 _stockMutationService.DeleteStockMutations(stockMutations);
 
                 if (temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
-                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder)
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.Consignment)
                 {
                     VirtualOrderDetail virtualOrderDetail = _virtualOrderDetailService.GetObjectById((int)temporaryDeliveryOrderDetail.VirtualOrderDetailId);
                     _virtualOrderDetailService.UnsetDeliveryComplete(virtualOrderDetail, temporaryDeliveryOrderDetail.Quantity, _virtualOrderService);

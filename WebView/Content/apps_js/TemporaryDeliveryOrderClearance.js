@@ -103,9 +103,9 @@
 
 		          rowIsWaste = $(this).getRowData(cl).iswaste;
 		          if (rowIsWaste == 'true') {
-		              rowIsWaste = "Waste";
+		              rowIsWaste = "Rejected";
 		          } else {
-		              rowIsWaste = "Return";
+		              rowIsWaste = "Approved";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { iswaste: rowIsWaste });
 		      }
@@ -194,12 +194,12 @@
                             $('#ClearanceType').attr('disabled', true);
                             $('#btnPreviousOrder').attr('disabled', true);
                             $('#tabledetail_div').show();
+                            $('#Price').numberbox('setValue', 0);
                             if (result.IsWaste) {
-                                $('#Price').numberbox('setValue', 0);
-                                $('#Price').attr('disabled', true);
+                                $('#Price').removeAttr('disabled');
                             }
                             else {
-                                $('#Price').removeAttr('disabled');
+                                $('#Price').attr('disabled', true);
                             }
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -521,13 +521,12 @@
                             $('#Quantity').numberbox('setValue', result.Quantity);
                             $('#WasteQuantity').numberbox('setValue', result.WasteQuantity);
                             $('#RestockQuantity').numberbox('setValue', result.RestockQuantity);
+                            $('#Price').numberbox('setValue', result.SellingPrice);
                             if (result.IsWaste) {
-                                $('#Price').attr('disabled', true);
-                                $('#Price').numberbox('setValue', 0);
+                                $('#Price').removeAttr('disabled');
                             }
                             else {
-                                $('#Price').removeAttr('disabled');
-                                $('#Price').numberbox('setValue', result.SellingPrice);
+                                $('#Price').attr('disabled', true);
                             }
                             $('#PreviousOrderDetailId').val(result.TemporaryDeliveryOrderDetailId);
                             $('#Quantity').removeAttr('disabled');

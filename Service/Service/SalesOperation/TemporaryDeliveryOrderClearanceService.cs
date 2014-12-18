@@ -85,6 +85,7 @@ namespace Service.Service
             if (_validator.ValidConfirmObject(temporaryDeliveryOrderClearance, _temporaryDeliveryOrderClearanceDetailService, _closingService))
             {
                 temporaryDeliveryOrderClearance.TotalWasteCoGS = 0;
+                // TODO: Checked TemporaryDeliveryOrder for Full Clearance, set Reconciled to true
                 IList<TemporaryDeliveryOrderClearanceDetail> temporaryDeliveryOrderClearanceDetails = _temporaryDeliveryOrderClearanceDetailService.GetObjectsByTemporaryDeliveryOrderClearanceId(temporaryDeliveryOrderClearance.Id);
                 foreach (var detail in temporaryDeliveryOrderClearanceDetails)
                 {

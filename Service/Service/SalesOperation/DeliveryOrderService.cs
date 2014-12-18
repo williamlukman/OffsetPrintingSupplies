@@ -92,6 +92,7 @@ namespace Service.Service
                                                               _blanketService, _warehouseItemService, _serviceCostService, _customerStockMutationService, _customerItemService);
                     if (detail.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
                         detail.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
+                        detail.OrderType == Core.Constants.Constant.OrderTypeCase.Consignment ||
                         detail.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder)
                     {
                         TemporaryDeliveryOrderDetail temporaryDeliveryOrderDetail = _temporaryDeliveryOrderDetailService.GetObjectByCode(detail.OrderCode);

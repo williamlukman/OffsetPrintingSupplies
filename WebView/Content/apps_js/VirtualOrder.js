@@ -86,8 +86,10 @@
 		          rowOrderType = $(this).getRowData(cl).ordertype;
 		          if (rowOrderType == '0') {
 		              rowOrderType = "Trial";
-		          } else {
+		          } else if (rowOrderType == '1') {
 		              rowOrderType = "Sample";
+		          } else {
+		              rowOrderType = "Consignment";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });
 		      }

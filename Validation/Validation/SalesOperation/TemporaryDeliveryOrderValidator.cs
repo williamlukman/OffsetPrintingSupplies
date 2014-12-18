@@ -115,7 +115,8 @@ namespace Validation.Validation
         public TemporaryDeliveryOrder VVirtualOrderHasBeenConfirmed(TemporaryDeliveryOrder temporaryDeliveryOrder, IVirtualOrderService _virtualOrderService)
         {
             if (temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.TrialOrder ||
-                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder)
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.SampleOrder ||
+                temporaryDeliveryOrder.OrderType == Constant.OrderTypeCase.Consignment)
             {
                 VirtualOrder virtualOrder = _virtualOrderService.GetObjectById((int)temporaryDeliveryOrder.VirtualOrderId);
                 if (!virtualOrder.IsConfirmed)

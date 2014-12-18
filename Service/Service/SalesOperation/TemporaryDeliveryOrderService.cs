@@ -94,7 +94,8 @@ namespace Service.Service
                 }
                 _repository.ConfirmObject(temporaryDeliveryOrder);
                 if (temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
-                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder)
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||
+                    temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.Consignment)
                 {
                     VirtualOrder virtualOrder = _virtualOrderService.GetObjectById((int) temporaryDeliveryOrder.VirtualOrderId);
                     _virtualOrderService.CheckAndSetDeliveryComplete(virtualOrder, _virtualOrderDetailService);
