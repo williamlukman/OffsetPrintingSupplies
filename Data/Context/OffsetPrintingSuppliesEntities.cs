@@ -45,22 +45,22 @@ namespace Data.Context
                                           "DeliveryOrderDetail", "TemporaryDeliveryOrderClearanceDetail", "TemporaryDeliveryOrderClearance", "TemporaryDeliveryOrderDetail", "TemporaryDeliveryOrder", "DeliveryOrder",
                                           "SalesOrderDetail", "SalesOrder", "SalesQuotationDetail", "SalesQuotation", 
                                           "VirtualOrderDetail", "VirtualOrder"};
-            IList<String> financeNames = new List<String>() {
-                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate","Currency"};
             IList<String> stockAndMasterNames = new List<String>()
                                         { "PriceMutation", "CustomerStockMutation", "StockMutation", "CustomerItem", "WarehouseMutationDetail", "WarehouseMutation",
                                           "ServiceCost", "RollerBuilder", "CustomerStockAdjustmentDetail", "CustomerStockAdjustment", "StockAdjustmentDetail", "StockAdjustment",
                                           "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
                                           "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "Company" };
+            IList<String> financeNames = new List<String>() {
+                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate","Currency"};
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));
             manufacturingNames.ToList().ForEach(x => tableNames.Add(x));
             purchaseOperationNames.ToList().ForEach(x => tableNames.Add(x));
             salesOperationNames.ToList().ForEach(x => tableNames.Add(x));
-            financeNames.ToList().ForEach(x => tableNames.Add(x));
             stockAndMasterNames.ToList().ForEach(x => tableNames.Add(x));
+            financeNames.ToList().ForEach(x => tableNames.Add(x));
 
             foreach (var tableName in tableNames)
             {
