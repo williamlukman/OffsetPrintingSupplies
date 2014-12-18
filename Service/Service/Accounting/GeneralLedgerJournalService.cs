@@ -254,7 +254,7 @@ namespace Service.Service
                 GeneralLedgerJournal debitcashbankequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
-                    SourceDocument = cashBankAdjustment.GetType().ToString(),
+                    SourceDocument = Constant.GeneralLedgerSource.CashBankAdjustment,
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
