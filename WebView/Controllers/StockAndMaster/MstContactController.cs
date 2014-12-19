@@ -63,6 +63,7 @@ namespace WebView.Controllers
                              model.Email,
                              model.TaxCode,
                              model.IsTaxable,
+                             model.ContactType,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -105,6 +106,7 @@ namespace WebView.Controllers
                             model.Email,
                             model.TaxCode,
                             model.IsTaxable,
+                            model.ContactType,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }

@@ -22,6 +22,8 @@ namespace Core.DomainModel
         public string Email { get; set; }
         public bool IsTaxable { get; set; }
         public string TaxCode { get; set; }
+        public string ContactType { get; set; } // Customer/Supplier
+        public int DefaultPaymentTerm { get; set; } // duedate days
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

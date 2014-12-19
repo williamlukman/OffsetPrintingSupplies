@@ -11,6 +11,15 @@ namespace Validation.Validation
 {
     public class AccountValidator : IAccountValidator
     {
+        public Account VHasUniqueCode(Account account, IAccountService _accountService)
+        {
+            var list = _accountService.GetQueryable().Where(x => x.Code == account.Code && !x.IsDeleted && x.Id != account.Id);
+            if (list.Any())
+            {
+                account.Errors.Add("Code", "Tidak boleh diduplikasi");
+            }
+            return account;
+        }
 
         /*public Account VHasCashBank(Account account, ICashBankService _cashBankService)
         {
@@ -87,6 +96,8 @@ namespace Validation.Validation
             //VHasCashBank(account, _cashBankService);
             //if (!isValid(account)) { return account; }
             VHasCode(account);
+            if (!isValid(account)) { return account; }
+            VHasUniqueCode(account, _accountService);
             if (!isValid(account)) { return account; }
             VHasName(account);
             if (!isValid(account)) { return account; }
