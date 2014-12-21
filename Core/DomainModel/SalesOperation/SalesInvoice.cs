@@ -18,6 +18,7 @@ namespace Core.DomainModel
         public decimal TotalCOS { get; set; }
         public decimal AmountReceivable { get; set; }
         public decimal Discount { get; set; } // 0 - 100
+        public decimal DPP { get; set; }
         public decimal Tax { get; set; } // 0 - 100
         public Nullable<int> ExchangeRateId { get; set; }
 

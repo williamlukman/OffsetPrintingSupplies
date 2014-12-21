@@ -127,6 +127,7 @@ namespace Core.Constants
         {
             public static string CompanyInfo = "Company Info";
             public static string Contact = "Contact";
+            public static string Supplier = "Supplier";
             public static string ItemType = "ItemType";
             public static string UoM = "UoM";
             public static string Machine = "Machine";

@@ -20,7 +20,7 @@
     };
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstContact/GetListCustomer', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstContact/GetListSupplier', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -36,7 +36,7 @@
     
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstContact/GetListCustomer',
+        url: base_url + 'MstContact/GetListSupplier',
         datatype: "json",
         colNames: ['ID', 'Name', 'Address','Contact','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At'],
         colModel: [

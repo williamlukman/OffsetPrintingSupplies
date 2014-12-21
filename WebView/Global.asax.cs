@@ -393,6 +393,7 @@ namespace WebView
         {
             _userMenuService.CreateObject(Constant.MenuName.CompanyInfo, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Contact, Constant.MenuGroupName.Master);
+            _userMenuService.CreateObject(Constant.MenuName.Supplier, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.ItemType, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.UoM, Constant.MenuGroupName.Master);
             _userMenuService.CreateObject(Constant.MenuName.Machine, Constant.MenuGroupName.Master);

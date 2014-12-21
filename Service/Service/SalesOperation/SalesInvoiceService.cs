@@ -67,11 +67,11 @@ namespace Service.Service
             return _repository.DeleteObject(Id);
         }
 
-        public SalesInvoice ConfirmObject(SalesInvoice salesInvoice, DateTime ConfirmationDate, ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService,
+        public SalesInvoice ConfirmObject(SalesInvoice salesInvoice, DateTime ConfirmationDate, ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, 
                                           ISalesOrderDetailService _salesOrderDetailService, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
-                                          IReceivableService _receivableService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
-                                          IClosingService _closingService, IServiceCostService _serviceCostService, IRollerBuilderService _rollerBuilderService,
-                                          IItemService _itemService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+                                          IReceivableService _receivableService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, 
+                                          IServiceCostService _serviceCostService, IRollerBuilderService _rollerBuilderService, IItemService _itemService, IContactService _contactService,
+                                          IExchangeRateService _exchangeRateService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             salesInvoice.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(salesInvoice, _salesInvoiceDetailService, _deliveryOrderService, _deliveryOrderDetailService,
@@ -103,10 +103,11 @@ namespace Service.Service
                     salesInvoice.ExchangeRateAmount = 1;
                 }
                 salesInvoice = _repository.UpdateObject(salesInvoice);
-                _generalLedgerJournalService.CreateConfirmationJournalForSalesInvoice(salesInvoice, _accountService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
-                _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+                Contact contact = _contactService.GetObjectById(salesOrder.ContactId);
+                _generalLedgerJournalService.CreateConfirmationJournalForSalesInvoice(salesInvoice, contact, _accountService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                _deliveryOrderService.CheckAndSetInvoiceComplete(deliveryOrder, _deliveryOrderDetailService);
                 // create receivable
                 Receivable receivable = _receivableService.CreateObject(salesOrder.ContactId, Constant.ReceivableSource.SalesInvoice, salesInvoice.Id, salesInvoice.CurrencyId, salesInvoice.AmountReceivable,salesInvoice.ExchangeRateAmount, salesInvoice.DueDate);
             }
@@ -148,6 +149,7 @@ namespace Service.Service
             decimal Discount = salesInvoice.Discount / 100 * AmountReceivable;
             decimal TaxableAmount = AmountReceivable - Discount;
             decimal Tax = salesInvoice.Tax / 100 * TaxableAmount;
+            salesInvoice.DPP = TaxableAmount;
             salesInvoice.AmountReceivable = TaxableAmount + Tax;
             _repository.Update(salesInvoice);
             return salesInvoice;

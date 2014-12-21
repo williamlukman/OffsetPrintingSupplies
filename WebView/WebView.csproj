@@ -343,6 +343,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\MasterSupplier.js" />
     <Content Include="Content\apps_js\CustomerStockAdjustment.js" />
     <Content Include="Content\apps_js\MasterBlendingRecipe.js" />
     <Content Include="Content\apps_js\TemporaryDeliveryOrderClearance.js" />
@@ -1363,6 +1364,7 @@
     <Content Include="Views\MstBlendingRecipe\Index.cshtml" />
     <Content Include="Views\BlendingWorkOrder\Index.cshtml" />
     <Content Include="Views\CustomerStockAdjustment\Index.cshtml" />
+    <Content Include="Views\MstVendor\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

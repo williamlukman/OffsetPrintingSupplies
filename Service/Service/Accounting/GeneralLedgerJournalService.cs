@@ -90,7 +90,7 @@ namespace Service.Service
                     SourceDocumentId = memorial.Id,
                     TransactionDate = (DateTime)memorial.ConfirmationDate,
                     Status = memorialDetail.Status,
-                    Amount = memorialDetail.Amount
+                    Amount = Math.Round(memorialDetail.Amount, 2)
                 };
                 journal = CreateObject(journal, _accountService);
                 journals.Add(journal);
@@ -117,7 +117,7 @@ namespace Service.Service
                     SourceDocumentId = memorial.Id,
                     TransactionDate = (DateTime) memorial.ConfirmationDate,
                     Status = (memorialDetail.Status == Constant.GeneralLedgerStatus.Debit) ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
-                    Amount = memorialDetail.Amount
+                    Amount = Math.Round(memorialDetail.Amount, 2)
                 };
                 journal = CreateObject(journal, _accountService);
                 journals.Add(journal);
@@ -146,7 +146,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round(cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
 
@@ -168,7 +168,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round(cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 creditcashbankequityadjustment = CreateObject(creditcashbankequityadjustment, _accountService);
 
@@ -186,7 +186,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round(Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 debitcashbankadjustmentexpense = CreateObject(debitcashbankadjustmentexpense, _accountService);
 
@@ -197,7 +197,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = (DateTime)cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round( Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
 
@@ -207,7 +207,7 @@ namespace Service.Service
                     {
                         GeneralLedgerJournalId = creditcashbank.Id,
                         CurrencyId = cashBank.CurrencyId,
-                        Amount = Math.Abs(cashBankAdjustment.Amount),
+                        Amount = Math.Abs(cashBankAdjustment.Amount)
                     };
                     creditcashbank2 = _gLNonBaseCurrencyService.CreateObject(creditcashbank2, _accountService);
                 }
@@ -236,7 +236,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round( cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
 
@@ -258,7 +258,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round(cashBankAdjustment.Amount * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 debitcashbankequityadjustment = CreateObject(debitcashbankequityadjustment, _accountService);
 
@@ -276,7 +276,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round(Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 creditcashbankadjustmentexpense = CreateObject(creditcashbankadjustmentexpense, _accountService);
 
@@ -287,7 +287,7 @@ namespace Service.Service
                     SourceDocumentId = cashBankAdjustment.Id,
                     TransactionDate = cashBankAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount
+                    Amount = Math.Round(Math.Abs(cashBankAdjustment.Amount) * cashBankAdjustment.ExchangeRateAmount, 2)
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
 
@@ -301,7 +301,6 @@ namespace Service.Service
                     };
                     debitcashbank2 = _gLNonBaseCurrencyService.CreateObject(debitcashbank2, _accountService);
                 }
-
 
                 journals.Add(creditcashbankadjustmentexpense);
                 journals.Add(debitcashbank);
@@ -324,7 +323,7 @@ namespace Service.Service
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime)cashBankMutation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount
+                Amount = Math.Round(cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount, 2)
             };
             debittargetcashbank = CreateObject(debittargetcashbank, _accountService);
 
@@ -335,7 +334,7 @@ namespace Service.Service
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime)cashBankMutation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount
+                Amount = Math.Round(cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount, 2)
             };
             creditsourcecashbank = CreateObject(creditsourcecashbank, _accountService);
 
@@ -379,7 +378,7 @@ namespace Service.Service
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime) cashBankMutation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount
+                Amount = Math.Round(cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount, 2)
             };
             credittargetcashbank = CreateObject(credittargetcashbank, _accountService);
 
@@ -390,7 +389,7 @@ namespace Service.Service
                 SourceDocumentId = cashBankMutation.Id,
                 TransactionDate = (DateTime) cashBankMutation.ConfirmationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount
+                Amount = Math.Round(cashBankMutation.Amount * cashBankMutation.ExchangeRateAmount, 2)
             };
             debitsourcecashbank = CreateObject(debitsourcecashbank, _accountService);
 
@@ -438,7 +437,7 @@ namespace Service.Service
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                    Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
                 };
                 creditGBCHPayable = CreateObject(creditGBCHPayable, _accountService);
                 journals.Add(creditGBCHPayable);
@@ -463,7 +462,7 @@ namespace Service.Service
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                    Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
                 journals.Add(creditcashbank);
@@ -493,7 +492,7 @@ namespace Service.Service
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = detail.Amount * payable.Rate
+                    Amount = Math.Round( detail.Amount * payable.Rate, 2)
                 };
                 debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
                 if (payableCurrency.IsBase == false)
@@ -516,7 +515,7 @@ namespace Service.Service
                         SourceDocumentId = paymentVoucher.Id,
                         TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (paymentVoucher.RateToIDR * detail.Rate * detail.Amount) - (payable.Rate * detail.Amount)
+                        Amount = Math.Round( (paymentVoucher.RateToIDR * detail.Rate * detail.Amount) - (payable.Rate * detail.Amount), 2)
                     };
                     debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                     journals.Add(debitExchangeLoss);
@@ -530,7 +529,7 @@ namespace Service.Service
                         SourceDocumentId = paymentVoucher.Id,
                         TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount = (payable.Rate * detail.Amount) - (paymentVoucher.RateToIDR * detail.Rate * detail.Amount)
+                        Amount = Math.Round( (payable.Rate * detail.Amount) - (paymentVoucher.RateToIDR * detail.Rate * detail.Amount), 2)
                     };
                     creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                     journals.Add(creditExchangeGain);
@@ -560,7 +559,7 @@ namespace Service.Service
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                    Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
                 };
                 debitGBCHPayable = CreateObject(debitGBCHPayable, _accountService);
                 journals.Add(debitGBCHPayable);
@@ -585,7 +584,7 @@ namespace Service.Service
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                    Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
                 journals.Add(debitcashbank);
@@ -615,7 +614,7 @@ namespace Service.Service
                     SourceDocumentId = paymentVoucher.Id,
                     TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = detail.Amount * payable.Rate
+                    Amount = Math.Round(detail.Amount * payable.Rate, 2)
                 };
                 creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
                 journals.Add(creditaccountpayable);
@@ -640,7 +639,7 @@ namespace Service.Service
                         SourceDocumentId = paymentVoucher.Id,
                         TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount = (paymentVoucher.RateToIDR * detail.Rate * detail.Amount) - (payable.Rate * detail.Amount)
+                        Amount = Math.Round((paymentVoucher.RateToIDR * detail.Rate * detail.Amount) - (payable.Rate * detail.Amount), 2)
                     };
                     creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                     journals.Add(creditExchangeLoss);
@@ -654,7 +653,7 @@ namespace Service.Service
                         SourceDocumentId = paymentVoucher.Id,
                         TransactionDate = (DateTime)paymentVoucher.PaymentDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (payable.Rate * detail.Amount) - (paymentVoucher.RateToIDR * detail.Rate * detail.Amount)
+                        Amount = Math.Round((payable.Rate * detail.Amount) - (paymentVoucher.RateToIDR * detail.Rate * detail.Amount), 2)
                     };
                     debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                     journals.Add(debitExchangeGain);
@@ -679,7 +678,7 @@ namespace Service.Service
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = paymentVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
             };
             debitGBCH = CreateObject(debitGBCH, _accountService);
             journals.Add(debitGBCH);
@@ -701,7 +700,7 @@ namespace Service.Service
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = paymentVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
             };
             creditcashBank = CreateObject(creditcashBank, _accountService);
             journals.Add(creditcashBank);
@@ -735,7 +734,7 @@ namespace Service.Service
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = paymentVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
             };
             creditGBCH = CreateObject(creditGBCH, _accountService);
             journals.Add(creditGBCH);
@@ -758,7 +757,7 @@ namespace Service.Service
                 SourceDocumentId = paymentVoucher.Id,
                 TransactionDate = paymentVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentVoucher.TotalAmount * paymentVoucher.RateToIDR
+                Amount = Math.Round(paymentVoucher.TotalAmount * paymentVoucher.RateToIDR, 2)
             };
             debitcashBank = CreateObject(debitcashBank, _accountService);
             journals.Add(debitcashBank);
@@ -795,7 +794,7 @@ namespace Service.Service
                 SourceDocumentId = paymentRequest.Id,
                 TransactionDate = (DateTime)paymentRequest.RequestedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = paymentRequest.Amount * paymentRequest.ExchangeRateAmount
+                Amount = Math.Round(paymentRequest.Amount * paymentRequest.ExchangeRateAmount, 2)
             };
             creditAccountPayable = CreateObject(creditAccountPayable, _accountService);
             journals.Add(creditAccountPayable);
@@ -820,7 +819,7 @@ namespace Service.Service
                     SourceDocumentId = paymentRequest.Id,
                     TransactionDate = (DateTime)paymentRequest.RequestedDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = paymentRequestDetail.Amount * paymentRequest.ExchangeRateAmount
+                    Amount = Math.Round(paymentRequestDetail.Amount * paymentRequest.ExchangeRateAmount, 2)
                 };
                 journal = CreateObject(journal, _accountService);
                 journals.Add(journal);
@@ -838,8 +837,7 @@ namespace Service.Service
             IList<PaymentRequestDetail> details = _paymentRequestDetailService.GetObjectsByPaymentRequestId(paymentRequest.Id);
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             Currency paymentRequestCurrency = _currencyService.GetObjectById(paymentRequest.CurrencyId);
-            DateTime UnconfirmationDate = DateTime.Now;
-
+            
             GeneralLedgerJournal debitAccountPayable = new GeneralLedgerJournal()
             {
                 AccountId = paymentRequest.AccountPayableId,
@@ -847,7 +845,7 @@ namespace Service.Service
                 SourceDocumentId = paymentRequest.Id,
                 TransactionDate = paymentRequest.RequestedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = paymentRequest.Amount * paymentRequest.ExchangeRateAmount
+                Amount = Math.Round(paymentRequest.Amount * paymentRequest.ExchangeRateAmount, 2)
             };
             debitAccountPayable = CreateObject(debitAccountPayable, _accountService);
             journals.Add(debitAccountPayable);
@@ -872,7 +870,7 @@ namespace Service.Service
                     SourceDocumentId = paymentRequest.Id,
                     TransactionDate = paymentRequest.RequestedDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = paymentRequestDetail.Amount * paymentRequest.ExchangeRateAmount
+                    Amount = Math.Round(paymentRequestDetail.Amount * paymentRequest.ExchangeRateAmount, 2)
                 };
                 journal = CreateObject(journal, _accountService);
                 journals.Add(journal);
@@ -895,7 +893,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPayment.Id,
                 TransactionDate = (DateTime)purchaseDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount
+                Amount = Math.Round(purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount, 2)
             };
             debitpiutanglainlain = CreateObject(debitpiutanglainlain, _accountService);
 
@@ -906,7 +904,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPayment.Id,
                 TransactionDate = (DateTime)purchaseDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount
+                Amount = Math.Round(purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount, 2)
             };
             creditpayable = CreateObject(creditpayable, _accountService);
 
@@ -944,7 +942,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPayment.Id,
                 TransactionDate = purchaseDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount
+                Amount = Math.Round(purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount, 2)
             };
             creditpiutanglainlain = CreateObject(creditpiutanglainlain, _accountService);
 
@@ -955,7 +953,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPayment.Id,
                 TransactionDate = purchaseDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount
+                Amount = Math.Round(purchaseDownPayment.TotalAmount * purchaseDownPayment.ExchangeRateAmount, 2)
             };
             debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
 
@@ -994,7 +992,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)purchaseDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseDownPaymentAllocation.TotalAmount * receivable.Rate
+                Amount = Math.Round(purchaseDownPaymentAllocation.TotalAmount * receivable.Rate, 2)
             };
             creditpiutanglainlain = CreateObject(creditpiutanglainlain, _accountService);
 
@@ -1005,7 +1003,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)purchaseDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseDownPaymentAllocation.TotalAmount * receivable.Rate
+                Amount = Math.Round(purchaseDownPaymentAllocation.TotalAmount * receivable.Rate, 2)
             };
             debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
 
@@ -1018,7 +1016,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseDownPaymentAllocation.Id,
                     TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = (purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount) - (receivable.Rate * purchaseDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount) - (receivable.Rate * purchaseDownPaymentAllocation.TotalAmount), 2)
                 };
                 creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                 journals.Add(creditExchangeLoss);
@@ -1032,7 +1030,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseDownPaymentAllocation.Id,
                     TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = (receivable.Rate * purchaseDownPaymentAllocation.TotalAmount) - (purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((receivable.Rate * purchaseDownPaymentAllocation.TotalAmount) - (purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount), 2)
                 };
                 debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                 journals.Add(debitExchangeGain);
@@ -1055,7 +1053,7 @@ namespace Service.Service
                         SourceDocumentId = purchaseDownPaymentAllocation.Id,
                         TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR) - (item.Amount * payable.Rate)
+                        Amount = Math.Round((item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR) - (item.Amount * payable.Rate), 2)
                     };
                     debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                     journals.Add(debitExchangeGain);
@@ -1069,7 +1067,7 @@ namespace Service.Service
                         SourceDocumentId = purchaseDownPaymentAllocation.Id,
                         TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount = (item.Amount * payable.Rate) - (item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR)
+                        Amount = Math.Round((item.Amount * payable.Rate) - (item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR), 2)
                     };
                     creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                     journals.Add(creditExchangeLoss);
@@ -1095,7 +1093,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)purchaseDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseDownPaymentAllocation.TotalAmount * receivable.Rate
+                Amount = Math.Round(purchaseDownPaymentAllocation.TotalAmount * receivable.Rate, 2)
             };
             debitpiutanglainlain = CreateObject(debitpiutanglainlain, _accountService);
 
@@ -1106,7 +1104,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)purchaseDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseDownPaymentAllocation.TotalAmount * receivable.Rate
+                Amount = Math.Round(purchaseDownPaymentAllocation.TotalAmount * receivable.Rate, 2)
             };
             creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
 
@@ -1119,7 +1117,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseDownPaymentAllocation.Id,
                     TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = (purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount) - (receivable.Rate * purchaseDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount) - (receivable.Rate * purchaseDownPaymentAllocation.TotalAmount), 2)
                 };
                 debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                 journals.Add(debitExchangeLoss);
@@ -1133,7 +1131,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseDownPaymentAllocation.Id,
                     TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = (receivable.Rate * purchaseDownPaymentAllocation.TotalAmount) - (purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((receivable.Rate * purchaseDownPaymentAllocation.TotalAmount) - (purchaseDownPaymentAllocation.RateToIDR * purchaseDownPaymentAllocation.TotalAmount), 2)
                 };
                 creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                 journals.Add(creditExchangeGain);
@@ -1156,7 +1154,7 @@ namespace Service.Service
                         SourceDocumentId = purchaseDownPaymentAllocation.Id,
                         TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount = (item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR) - (item.Amount * payable.Rate)
+                        Amount = Math.Round((item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR) - (item.Amount * payable.Rate), 2)
                     };
                     creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                     journals.Add(creditExchangeGain);
@@ -1170,7 +1168,7 @@ namespace Service.Service
                         SourceDocumentId = purchaseDownPaymentAllocation.Id,
                         TransactionDate = purchaseDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (item.Amount * payable.Rate) - (item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR)
+                        Amount = Math.Round((item.Amount * payable.Rate) - (item.Amount * item.Rate * purchaseDownPaymentAllocation.RateToIDR), 2)
                     };
                     debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                     journals.Add(debitExchangeLoss);
@@ -1192,7 +1190,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseAllowance.Id,
                 TransactionDate = (DateTime)purchaseAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseAllowance.TotalAmount
+                Amount = Math.Round(purchaseAllowance.TotalAmount, 2)
             };
             debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
 
@@ -1203,7 +1201,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseAllowance.Id,
                 TransactionDate = (DateTime)purchaseAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseAllowance.TotalAmount
+                Amount = Math.Round(purchaseAllowance.TotalAmount, 2)
             };
             creditpurchaseallowance = CreateObject(creditpurchaseallowance, _accountService);
 
@@ -1228,7 +1226,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseAllowance.Id,
                 TransactionDate = purchaseAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseAllowance.TotalAmount
+                Amount = Math.Round(purchaseAllowance.TotalAmount, 2)
             };
             creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
 
@@ -1239,7 +1237,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseAllowance.Id,
                 TransactionDate = purchaseAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseAllowance.TotalAmount
+                Amount = Math.Round(purchaseAllowance.TotalAmount, 2)
             };
             debitpurchaseallowance = CreateObject(debitpurchaseallowance, _accountService);
 
@@ -1269,7 +1267,7 @@ namespace Service.Service
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                    Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
                 };
                 debitGBCHReceivable = CreateObject(debitGBCHReceivable, _accountService);
                 journals.Add(debitGBCHReceivable);
@@ -1294,7 +1292,7 @@ namespace Service.Service
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                    Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
                 };
                 debitcashbank = CreateObject(debitcashbank, _accountService);
                 journals.Add(debitcashbank);
@@ -1325,7 +1323,7 @@ namespace Service.Service
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = detail.Amount * receivable.Rate
+                    Amount = Math.Round(detail.Amount * receivable.Rate, 2)
                 };
                 creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
                 journals.Add(creditaccountreceivable);
@@ -1350,7 +1348,7 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount = (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (receivable.Rate * detail.Amount)
+                        Amount = Math.Round((receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (receivable.Rate * detail.Amount), 2)
                     };
                     creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                     journals.Add(creditExchangeGain);
@@ -1364,7 +1362,7 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = (DateTime)receiptVoucher.ReceiptDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount)
+                        Amount = Math.Round((receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount), 2)
                     };
                     debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                     journals.Add(debitExchangeLoss);
@@ -1393,7 +1391,7 @@ namespace Service.Service
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = receiptVoucher.ReceiptDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                    Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
                 };
                 creditGBCH = CreateObject(creditGBCH, _accountService);
                 journals.Add(creditGBCH);
@@ -1407,7 +1405,6 @@ namespace Service.Service
                     };
                     creditGBCH2 = _gLNonBaseCurrencyService.CreateObject(creditGBCH2, _accountService);
                 }
-
             }
             else
             {
@@ -1418,7 +1415,7 @@ namespace Service.Service
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = receiptVoucher.ReceiptDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                    Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
                 };
                 creditcashbank = CreateObject(creditcashbank, _accountService);
                 journals.Add(creditcashbank);
@@ -1449,7 +1446,7 @@ namespace Service.Service
                     SourceDocumentId = receiptVoucher.Id,
                     TransactionDate = receiptVoucher.ReceiptDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = detail.Amount * receivable.Rate
+                    Amount = Math.Round(detail.Amount * receivable.Rate, 2)
                 };
                 debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
@@ -1475,7 +1472,7 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = receiptVoucher.ReceiptDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (receivable.Rate * detail.Amount) 
+                        Amount = Math.Round((receiptVoucher.RateToIDR * detail.Rate * detail.Amount) - (receivable.Rate * detail.Amount), 2)
                     };
                     debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                     journals.Add(debitExchangeGain);
@@ -1489,7 +1486,7 @@ namespace Service.Service
                         SourceDocumentId = receiptVoucher.Id,
                         TransactionDate = receiptVoucher.ReceiptDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount =  (receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount)
+                        Amount =  Math.Round((receivable.Rate * detail.Amount) - (receiptVoucher.RateToIDR * detail.Rate * detail.Amount), 2)
                     };
                     creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                     journals.Add(creditExchangeLoss);
@@ -1515,7 +1512,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
             };
             creditGBCH = CreateObject(creditGBCH, _accountService);
             journals.Add(creditGBCH);
@@ -1538,7 +1535,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
             };
             debitcashBank = CreateObject(debitcashBank, _accountService);
             journals.Add(debitcashBank);
@@ -1573,7 +1570,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
             };
             debitGBCH = CreateObject(debitGBCH, _accountService);
             journals.Add(debitGBCH);
@@ -1595,7 +1592,7 @@ namespace Service.Service
                 SourceDocumentId = receiptVoucher.Id,
                 TransactionDate = receiptVoucher.ReconciliationDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = receiptVoucher.TotalAmount * receiptVoucher.RateToIDR
+                Amount = Math.Round(receiptVoucher.TotalAmount * receiptVoucher.RateToIDR, 2)
             };
             creditcashBank = CreateObject(creditcashBank, _accountService);
 
@@ -1629,7 +1626,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPayment.Id,
                 TransactionDate = (DateTime)salesDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount
+                Amount = Math.Round(salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount, 2)
             };
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
@@ -1652,7 +1649,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPayment.Id,
                 TransactionDate = (DateTime)salesDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount
+                Amount = Math.Round(salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount, 2)
             };
             credithutanglainlain = CreateObject(credithutanglainlain, _accountService);
 
@@ -1678,7 +1675,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPayment.Id,
                 TransactionDate = salesDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount
+                Amount = Math.Round(salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount, 2)
             };
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
 
@@ -1701,7 +1698,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPayment.Id,
                 TransactionDate = salesDownPayment.DownPaymentDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount
+                Amount = Math.Round(salesDownPayment.TotalAmount * salesDownPayment.ExchangeRateAmount, 2)
             };
             debithutanglainlain = CreateObject(debithutanglainlain, _accountService);
 
@@ -1728,7 +1725,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesDownPaymentAllocation.TotalAmount * payable.Rate
+                Amount = Math.Round(salesDownPaymentAllocation.TotalAmount * payable.Rate, 2)
             };
             debithutanglainlain = CreateObject(debithutanglainlain, _accountService);
 
@@ -1739,7 +1736,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesDownPaymentAllocation.TotalAmount * payable.Rate
+                Amount = Math.Round(salesDownPaymentAllocation.TotalAmount * payable.Rate, 2)
             };
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
 
@@ -1752,7 +1749,7 @@ namespace Service.Service
                     SourceDocumentId = salesDownPaymentAllocation.Id,
                     TransactionDate = salesDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount) - (payable.Rate * salesDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount) - (payable.Rate * salesDownPaymentAllocation.TotalAmount), 2)
                 };
                 creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                 journals.Add(creditExchangeLoss);
@@ -1766,7 +1763,7 @@ namespace Service.Service
                     SourceDocumentId = salesDownPaymentAllocation.Id,
                     TransactionDate = salesDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = (payable.Rate * salesDownPaymentAllocation.TotalAmount) - (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((payable.Rate * salesDownPaymentAllocation.TotalAmount) - (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount), 2)
                 };
                 debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                 journals.Add(debitExchangeGain);
@@ -1789,7 +1786,7 @@ namespace Service.Service
                         SourceDocumentId = salesDownPaymentAllocation.Id,
                         TransactionDate = salesDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR) - (item.Amount * receivable.Rate)
+                        Amount = Math.Round((item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR) - (item.Amount * receivable.Rate), 2)
                     };
                     debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                     journals.Add(debitExchangeGain);
@@ -1803,7 +1800,7 @@ namespace Service.Service
                         SourceDocumentId = salesDownPaymentAllocation.Id,
                         TransactionDate = salesDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount = (item.Amount * receivable.Rate) - (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR)
+                        Amount = Math.Round((item.Amount * receivable.Rate) - (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR), 2)
                     };
                     creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                     journals.Add(creditExchangeLoss);
@@ -1829,7 +1826,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesDownPaymentAllocation.TotalAmount * payable.Rate
+                Amount = Math.Round(salesDownPaymentAllocation.TotalAmount * payable.Rate, 2)
             };
             credithutanglainlain = CreateObject(credithutanglainlain, _accountService);
 
@@ -1840,7 +1837,7 @@ namespace Service.Service
                 SourceDocumentId = salesDownPaymentAllocation.Id,
                 TransactionDate = (DateTime)salesDownPaymentAllocation.AllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesDownPaymentAllocation.TotalAmount * payable.Rate
+                Amount = Math.Round(salesDownPaymentAllocation.TotalAmount * payable.Rate, 2)
             };
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
@@ -1853,7 +1850,7 @@ namespace Service.Service
                     SourceDocumentId = salesDownPaymentAllocation.Id,
                     TransactionDate = salesDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount) - (payable.Rate * salesDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount) - (payable.Rate * salesDownPaymentAllocation.TotalAmount), 2)
                 };
                 debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                 journals.Add(debitExchangeLoss);
@@ -1867,7 +1864,7 @@ namespace Service.Service
                     SourceDocumentId = salesDownPaymentAllocation.Id,
                     TransactionDate = salesDownPaymentAllocation.AllocationDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = (payable.Rate * salesDownPaymentAllocation.TotalAmount) - (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount)
+                    Amount = Math.Round((payable.Rate * salesDownPaymentAllocation.TotalAmount) - (salesDownPaymentAllocation.RateToIDR * salesDownPaymentAllocation.TotalAmount), 2)
                 };
                 creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                 journals.Add(creditExchangeGain);
@@ -1890,7 +1887,7 @@ namespace Service.Service
                         SourceDocumentId = salesDownPaymentAllocation.Id,
                         TransactionDate = salesDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Credit,
-                        Amount = (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR) - (item.Amount * receivable.Rate)
+                        Amount = Math.Round((item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR) - (item.Amount * receivable.Rate), 2)
                     };
                     creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                     journals.Add(creditExchangeGain);
@@ -1904,7 +1901,7 @@ namespace Service.Service
                         SourceDocumentId = salesDownPaymentAllocation.Id,
                         TransactionDate = salesDownPaymentAllocation.AllocationDate,
                         Status = Constant.GeneralLedgerStatus.Debit,
-                        Amount = (item.Amount * receivable.Rate) - (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR)
+                        Amount = Math.Round((item.Amount * receivable.Rate) - (item.Amount * item.Rate * salesDownPaymentAllocation.RateToIDR), 2)
                     };
                     debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                     journals.Add(debitExchangeLoss);
@@ -1927,7 +1924,7 @@ namespace Service.Service
                 SourceDocumentId = salesAllowance.Id,
                 TransactionDate = (DateTime)salesAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesAllowance.TotalAmount
+                Amount = Math.Round(salesAllowance.TotalAmount, 2)
             };
             debitsalesallowance = CreateObject(debitsalesallowance, _accountService);
 
@@ -1938,7 +1935,7 @@ namespace Service.Service
                 SourceDocumentId = salesAllowance.Id,
                 TransactionDate = (DateTime)salesAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesAllowance.TotalAmount
+                Amount = Math.Round(salesAllowance.TotalAmount, 2)
             };
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
 
@@ -1963,7 +1960,7 @@ namespace Service.Service
                 SourceDocumentId = salesAllowance.Id,
                 TransactionDate = salesAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesAllowance.TotalAmount
+                Amount = Math.Round(salesAllowance.TotalAmount, 2)
             };
             creditsalesallowance = CreateObject(creditsalesallowance, _accountService);
 
@@ -1974,7 +1971,7 @@ namespace Service.Service
                 SourceDocumentId = salesAllowance.Id,
                 TransactionDate = salesAllowance.AllowanceAllocationDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesAllowance.TotalAmount
+                Amount = Math.Round(salesAllowance.TotalAmount, 2)
             };
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
@@ -2003,7 +2000,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Round(stockAdjustment.Total, 2)
                 };
                 debitraw = CreateObject(debitraw, _accountService);
 
@@ -2014,7 +2011,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Round(stockAdjustment.Total, 2)
                 };
                 creditstockequityadjustment = CreateObject(creditstockequityadjustment, _accountService);
 
@@ -2032,7 +2029,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Abs(stockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(stockAdjustment.Total), 2)
                 };
                 debitstockadjustmentexpense = CreateObject(debitstockadjustmentexpense, _accountService);
 
@@ -2043,7 +2040,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Abs(stockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(stockAdjustment.Total), 2)
                 };
                 creditraw = CreateObject(creditraw, _accountService);
 
@@ -2071,7 +2068,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Round(stockAdjustment.Total, 2)
                 };
                 creditraw = CreateObject(creditraw, _accountService);
 
@@ -2082,7 +2079,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = stockAdjustment.Total
+                    Amount = Math.Round(stockAdjustment.Total, 2)
                 };
                 debitstockequityadjustment = CreateObject(debitstockequityadjustment, _accountService);
 
@@ -2100,7 +2097,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Abs(stockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(stockAdjustment.Total), 2)
                 };
                 creditstockadjustmentexpense = CreateObject(creditstockadjustmentexpense, _accountService);
 
@@ -2111,7 +2108,7 @@ namespace Service.Service
                     SourceDocumentId = stockAdjustment.Id,
                     TransactionDate = stockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Abs(stockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(stockAdjustment.Total), 2)
                 };
                 debitraw = CreateObject(debitraw, _accountService);
 
@@ -2138,7 +2135,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = customerStockAdjustment.Total
+                    Amount = Math.Round(customerStockAdjustment.Total, 2)
                 };
                 debitraw = CreateObject(debitraw, _accountService);
 
@@ -2149,7 +2146,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = customerStockAdjustment.Total
+                    Amount = Math.Round(customerStockAdjustment.Total, 2)
                 };
                 creditstockequityadjustment = CreateObject(creditstockequityadjustment, _accountService);
 
@@ -2167,7 +2164,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Abs(customerStockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(customerStockAdjustment.Total), 2)
                 };
                 debitstockadjustmentexpense = CreateObject(debitstockadjustmentexpense, _accountService);
 
@@ -2178,7 +2175,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Abs(customerStockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(customerStockAdjustment.Total), 2)
                 };
                 creditraw = CreateObject(creditraw, _accountService);
 
@@ -2206,7 +2203,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = customerStockAdjustment.Total
+                    Amount = Math.Round(customerStockAdjustment.Total, 2)
                 };
                 creditraw = CreateObject(creditraw, _accountService);
 
@@ -2217,7 +2214,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = customerStockAdjustment.Total
+                    Amount = Math.Round(customerStockAdjustment.Total, 2)
                 };
                 debitstockequityadjustment = CreateObject(debitstockequityadjustment, _accountService);
 
@@ -2235,7 +2232,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Abs(customerStockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(customerStockAdjustment.Total), 2)
                 };
                 creditstockadjustmentexpense = CreateObject(creditstockadjustmentexpense, _accountService);
 
@@ -2246,7 +2243,7 @@ namespace Service.Service
                     SourceDocumentId = customerStockAdjustment.Id,
                     TransactionDate = customerStockAdjustment.AdjustmentDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Abs(customerStockAdjustment.Total)
+                    Amount = Math.Round(Math.Abs(customerStockAdjustment.Total), 2)
                 };
                 debitraw = CreateObject(debitraw, _accountService);
 
@@ -2272,7 +2269,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseReceival.Id,
                 TransactionDate = (DateTime)purchaseReceival.ReceivalDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount
+                Amount = Math.Round(purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -2283,7 +2280,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseReceival.Id,
                 TransactionDate = (DateTime)purchaseReceival.ReceivalDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount
+                Amount = Math.Round(purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount, 2)
             };
             creditgoodsPendingclearance = CreateObject(creditgoodsPendingclearance, _accountService);
 
@@ -2308,7 +2305,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseReceival.Id,
                 TransactionDate = purchaseReceival.ReceivalDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount
+                Amount = Math.Round(purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -2319,7 +2316,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseReceival.Id,
                 TransactionDate = purchaseReceival.ReceivalDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount
+                Amount = Math.Round(purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount, 2)
             };
             debitgoodsPendingclearance = CreateObject(debitgoodsPendingclearance, _accountService);
 
@@ -2345,7 +2342,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoiceMigration.Id,
                 TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseInvoiceMigration.AmountPayable * purchaseInvoiceMigration.Rate
+                Amount = Math.Round(purchaseInvoiceMigration.AmountPayable * purchaseInvoiceMigration.Rate, 2)
             };
             creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
             journals.Add(creditaccountpayable);
@@ -2366,7 +2363,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoiceMigration.Id,
                 TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseInvoiceMigration.DPP * purchaseInvoiceMigration.Rate
+                Amount = Math.Round(purchaseInvoiceMigration.DPP * purchaseInvoiceMigration.Rate, 2)
             };
             debitGoodsPendingClearance = CreateObject(debitGoodsPendingClearance, _accountService);
             journals.Add(debitGoodsPendingClearance);
@@ -2380,7 +2377,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoiceMigration.Id,
                     TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = purchaseInvoiceMigration.Tax
+                    Amount = Math.Round(purchaseInvoiceMigration.Tax, 2)
                 };
                 debitPPNMASUKAN = CreateObject(debitPPNMASUKAN, _accountService);
                 journals.Add(debitPPNMASUKAN);
@@ -2408,7 +2405,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = purchaseInvoice.AmountPayable * purchaseInvoice.ExchangeRateAmount
+                Amount = Math.Round(purchaseInvoice.AmountPayable * purchaseInvoice.ExchangeRateAmount, 2)
             };
             creditaccountpayable = CreateObject(creditaccountpayable, _accountService);
             journals.Add(creditaccountpayable);
@@ -2429,7 +2426,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = PreTax * purchaseReceival.ExchangeRateAmount
+                Amount = Math.Round(PreTax * purchaseReceival.ExchangeRateAmount, 2)
             };
             debitGoodsPendingClearance = CreateObject(debitGoodsPendingClearance, _accountService);
             journals.Add(debitGoodsPendingClearance);
@@ -2446,7 +2443,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Tax * purchaseInvoice.ExchangeRateAmount
+                    Amount = Math.Round(Tax * purchaseInvoice.ExchangeRateAmount, 2)
                 };
                 debitPPNMASUKAN = CreateObject(debitPPNMASUKAN, _accountService);
                 journals.Add(debitPPNMASUKAN);
@@ -2461,7 +2458,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount
+                    Amount = Math.Round(PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount, 2)
                 };
                 debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                 journals.Add(debitExchangeLoss);
@@ -2475,7 +2472,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount
+                    Amount = Math.Round(PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount, 2)
                 };
                 creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                 journals.Add(creditExchangeGain);
@@ -2504,7 +2501,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = purchaseInvoice.AmountPayable * purchaseInvoice.ExchangeRateAmount
+                Amount = Math.Round(purchaseInvoice.AmountPayable * purchaseInvoice.ExchangeRateAmount, 2)
             };
             debitaccountpayable = CreateObject(debitaccountpayable, _accountService);
             journals.Add(debitaccountpayable);
@@ -2527,7 +2524,7 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoice.Id,
                 TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = PreTax * purchaseReceival.ExchangeRateAmount
+                Amount = Math.Round(PreTax * purchaseReceival.ExchangeRateAmount, 2)
             };
             credittGoodsPendingClearance = CreateObject(credittGoodsPendingClearance, _accountService);
             journals.Add(credittGoodsPendingClearance);
@@ -2543,7 +2540,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Tax * purchaseInvoice.ExchangeRateAmount
+                    Amount = Math.Round(Tax * purchaseInvoice.ExchangeRateAmount, 2)
                 };
                 creditPPNMASUKAN = CreateObject(creditPPNMASUKAN, _accountService);
                 journals.Add(creditPPNMASUKAN);
@@ -2558,7 +2555,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount
+                    Amount = Math.Round(PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount, 2)
                 };
                 creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                 journals.Add(creditExchangeLoss);
@@ -2572,7 +2569,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount
+                    Amount = Math.Round(PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount, 2)
                 };
                 debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                 journals.Add(debitExchangeGain);
@@ -2596,7 +2593,7 @@ namespace Service.Service
                 SourceDocumentId = deliveryOrder.Id,
                 TransactionDate = (DateTime)deliveryOrder.DeliveryDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = deliveryOrder.TotalCOGS
+                Amount = Math.Round(deliveryOrder.TotalCOGS, 2)
             };
             debitcogs = CreateObject(debitcogs, _accountService);
 
@@ -2607,7 +2604,7 @@ namespace Service.Service
                 SourceDocumentId = deliveryOrder.Id,
                 TransactionDate = (DateTime)deliveryOrder.DeliveryDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = deliveryOrder.TotalCOGS
+                Amount = Math.Round(deliveryOrder.TotalCOGS, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -2632,7 +2629,7 @@ namespace Service.Service
                 SourceDocumentId = deliveryOrder.Id,
                 TransactionDate = deliveryOrder.DeliveryDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = deliveryOrder.TotalCOGS
+                Amount = Math.Round(deliveryOrder.TotalCOGS, 2)
             };
             creditcogs = CreateObject(creditcogs, _accountService);
 
@@ -2643,7 +2640,7 @@ namespace Service.Service
                 SourceDocumentId = deliveryOrder.Id,
                 TransactionDate = deliveryOrder.DeliveryDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = deliveryOrder.TotalCOGS
+                Amount = Math.Round(deliveryOrder.TotalCOGS, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -2667,7 +2664,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrder.Id,
                 TransactionDate = PushDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+                Amount = Math.Round(temporaryDeliveryOrder.TotalWasteCOGS, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -2679,7 +2676,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrder.Id,
                 TransactionDate = PushDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+                Amount = Math.Round(temporaryDeliveryOrder.TotalWasteCOGS, 2)
             };
             debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
 
@@ -2704,7 +2701,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrder.Id,
                 TransactionDate = temporaryDeliveryOrder.PushDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+                Amount =  Math.Round(temporaryDeliveryOrder.TotalWasteCOGS, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -2715,7 +2712,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrder.Id,
                 TransactionDate = temporaryDeliveryOrder.PushDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = temporaryDeliveryOrder.TotalWasteCOGS
+                Amount = Math.Round(temporaryDeliveryOrder.TotalWasteCOGS, 2)
             };
             creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
 
@@ -2738,7 +2735,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+                Amount = Math.Round(temporaryDeliveryOrderClearance.TotalWasteCoGS, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -2749,7 +2746,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+                Amount = Math.Round(temporaryDeliveryOrderClearance.TotalWasteCoGS, 2)
             };
             debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
 
@@ -2774,7 +2771,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+                Amount = Math.Round(temporaryDeliveryOrderClearance.TotalWasteCoGS, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -2785,7 +2782,7 @@ namespace Service.Service
                 SourceDocumentId = temporaryDeliveryOrderClearance.Id,
                 TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = temporaryDeliveryOrderClearance.TotalWasteCoGS
+                Amount = Math.Round(temporaryDeliveryOrderClearance.TotalWasteCoGS, 2)
             };
             creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
 
@@ -2806,11 +2803,11 @@ namespace Service.Service
             GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesInvoiceMigration.CurrencyId).Id,
-                SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
+                SourceDocument = Constant.GeneralLedgerSource.SalesInvoiceMigration,
                 SourceDocumentId = salesInvoiceMigration.Id,
                 TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesInvoiceMigration.AmountReceivable * Rate
+                Amount = Math.Round(salesInvoiceMigration.AmountReceivable * Rate, 2)
             };
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
@@ -2837,7 +2834,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoiceMigration.Id,
                     TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = salesInvoiceMigration.Tax
+                    Amount = Math.Round(salesInvoiceMigration.Tax, 2)
                 };
                 creditppnkeluaran = CreateObject(creditppnkeluaran, _accountService);
                 journals.Add(creditppnkeluaran);
@@ -2850,7 +2847,7 @@ namespace Service.Service
                 SourceDocumentId = salesInvoiceMigration.Id,
                 TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesInvoiceMigration.DPP * Rate
+                Amount = Math.Round(salesInvoiceMigration.DPP * Rate, 2)
             };
             creditrevenue = CreateObject(creditrevenue, _accountService);
 
@@ -2859,12 +2856,12 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice,
-            IAccountService _accountService,IExchangeRateService _exchangeRateService, ICurrencyService _currencyService,
-            IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, Contact contact,
+                                           IAccountService _accountService, IExchangeRateService _exchangeRateService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
             // Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue
             // Debit COS, Credit FinishedGoods
+
             #region Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue for fixed rate
             decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
             decimal Tax = salesInvoice.AmountReceivable - PreTax;
@@ -2889,7 +2886,7 @@ namespace Service.Service
                 SourceDocumentId = salesInvoice.Id,
                 TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = salesInvoice.AmountReceivable * Rate
+                Amount = Math.Round(salesInvoice.AmountReceivable * Rate, 2)
             };  
             debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
 
@@ -2913,9 +2910,9 @@ namespace Service.Service
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Discount).Id,
                     SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
                     SourceDocumentId = salesInvoice.Id,
-                   TransactionDate = (DateTime)salesInvoice.InvoiceDate,
+                    TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Discount * Rate
+                    Amount = Math.Round(Discount * Rate, 2)
                 };
                 debitdiscount = CreateObject(debitdiscount, _accountService);
                 journals.Add(debitdiscount);
@@ -2930,7 +2927,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Tax * Rate
+                    Amount = contact.IsTaxable ? (decimal) Math.Round(Tax * Rate, 2) : (decimal) Math.Round(salesInvoice.AmountReceivable / 11, 2)
                 };
                 creditppnkeluaran = CreateObject(creditppnkeluaran, _accountService);
                 journals.Add(creditppnkeluaran);
@@ -2943,109 +2940,11 @@ namespace Service.Service
                 SourceDocumentId = salesInvoice.Id,
                 TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = PreTax * Rate
+                Amount = contact.IsTaxable ? (decimal) Math.Round(PreTax * Rate, 2) : (decimal) Math.Round(salesInvoice.DPP * 10 / 11, 2)
             };
             creditrevenue = CreateObject(creditrevenue, _accountService);
 
             journals.Add(creditrevenue);
-            #endregion
-            #region Debit AccountReceivable, Debit Discount, Debit PPNKELUARAN, Credit Revenue for custom rate
-
-            ///*
-            //decimal Tax = salesInvoice.AmountReceivable * salesInvoice.Tax / (100 - salesInvoice.Tax);
-            //decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 - salesInvoice.Tax);
-            //decimal Discount = PreTax * salesInvoice.Discount / (100 - salesInvoice.Discount);
-            //*/
-            //decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
-            //decimal Tax = salesInvoice.AmountReceivable - PreTax;
-            //decimal Discount = PreTax * salesInvoice.Discount / 100;
-            //decimal Rate =  _exchangeRateService.GetQueryable().Where(x => x.ExRateDate <= salesInvoice.ConfirmationDate.Value)
-            //    .OrderByDescending(x =>x.ExRateDate).FirstOrDefault().Rate;
-            //IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            
-            //GeneralLedgerJournal debitaccountreceivable = new GeneralLedgerJournal()
-            //{
-            //    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesInvoice.CurrencyId).Id,
-            //    SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //    SourceDocumentId = salesInvoice.Id,
-            //    TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //    Status = Constant.GeneralLedgerStatus.Debit,
-            //    Amount = salesInvoice.AmountReceivable * salesInvoice.ExchangeRateAmount
-            //};
-            //debitaccountreceivable = CreateObject(debitaccountreceivable, _accountService);
-
-            //journals.Add(debitaccountreceivable);
-
-             
-           
-            //if (Discount > 0)
-            //{
-            //    GeneralLedgerJournal debitdiscount = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Discount).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Debit,
-            //        Amount = Discount * salesInvoice.ExchangeRateAmount
-            //    };
-            //    debitdiscount = CreateObject(debitdiscount, _accountService);
-            //    journals.Add(debitdiscount);
-            //}
-
-            //if (Tax > 0)
-            //{
-            //    GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Credit,
-            //        Amount = Tax * salesInvoice.ExchangeRateAmount
-            //    };
-            //    creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
-
-            //    journals.Add(creditaccountreceivable);
-
-            //    GeneralLedgerJournal debitaccountreceivable2 = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Debit,
-            //        Amount = Tax * (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == true ? 1 : Rate)
-            //    };
-            //    debitaccountreceivable2 = CreateObject(debitaccountreceivable2, _accountService);
-
-            //    journals.Add(debitaccountreceivable2);
-
-            //    GeneralLedgerJournal creditppnkeluaran = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Credit,
-            //        Amount = Tax * (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == true ? 1 : Rate)
-            //    };
-            //    creditppmmasukan = CreateObject(creditppnkeluaran, _accountService);
-            //    journals.Add(creditppnkeluaran);
-            //}
-
-            //GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
-            //{
-            //    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
-            //    SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //    SourceDocumentId = salesInvoice.Id,
-            //    TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //    Status = Constant.GeneralLedgerStatus.Credit,
-            //    Amount = PreTax * salesInvoice.ExchangeRateAmount
-            //};
-            //creditrevenue = CreateObject(creditrevenue, _accountService);
-
-            //journals.Add(creditrevenue);
             #endregion
             #region Debit COS, Credit FinishedGoods
             if (salesInvoice.TotalCOS > 0)
@@ -3057,7 +2956,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = salesInvoice.TotalCOS
+                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
                 };
                 debitCOS = CreateObject(debitCOS, _accountService);
 
@@ -3068,7 +2967,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = salesInvoice.TotalCOS
+                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
                 };
                 creditFinishedGoods = CreateObject(creditFinishedGoods, _accountService);
 
@@ -3079,7 +2978,7 @@ namespace Service.Service
             return journals;
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesInvoice(SalesInvoice salesInvoice,
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, Contact contact,
             IAccountService _accountService, IExchangeRateService _exchangeRateService, 
             ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
@@ -3101,7 +3000,6 @@ namespace Service.Service
             }
 
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime UnconfirmationDate = DateTime.Now;
             Currency salesInvoiceCurrency = _currencyService.GetObjectById(salesInvoice.CurrencyId);
             GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
             {
@@ -3110,7 +3008,7 @@ namespace Service.Service
                 SourceDocumentId = salesInvoice.Id,
                 TransactionDate = salesInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = salesInvoice.AmountReceivable * Rate
+                Amount = Math.Round(salesInvoice.AmountReceivable * Rate, 2)
             };
             creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
             journals.Add(creditaccountreceivable);
@@ -3135,7 +3033,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Discount * Rate
+                    Amount = Math.Round(Discount * Rate, 2)
                 };
                 creditdiscount = CreateObject(creditdiscount, _accountService);
                 journals.Add(creditdiscount);
@@ -3150,7 +3048,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Tax * Rate
+                    Amount = contact.IsTaxable ? Math.Round (Tax * Rate, 2) : Math.Round(salesInvoice.AmountReceivable / 11, 2)
                 };
                 debitppnkeluaran = CreateObject(debitppnkeluaran, _accountService);
                 journals.Add(debitppnkeluaran);
@@ -3163,103 +3061,12 @@ namespace Service.Service
                 SourceDocumentId = salesInvoice.Id,
                 TransactionDate = salesInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = PreTax * Rate
+                Amount = contact.IsTaxable ? Math.Round (PreTax * Rate, 2) : Math.Round(salesInvoice.AmountReceivable * 10 / 11, 2)
             };
             debitrevenue = CreateObject(debitrevenue, _accountService);
 
             journals.Add(debitrevenue);
 
-            #endregion
-            #region Credit AccountReceivable, Credit Discount, Credit PPNKELUARAN, Debit Revenue with custom Rate
-            //decimal PreTax = salesInvoice.AmountReceivable * 100 / (100 + salesInvoice.Tax);
-            //decimal Tax = salesInvoice.AmountReceivable - PreTax;
-            //decimal Discount = PreTax * salesInvoice.Discount / 100;
-            //decimal Rate = _exchangeRateService.GetQueryable().Where(x => x.ExRateDate <= salesInvoice.ConfirmationDate.Value)
-            //   .OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate;
-
-            //IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            //DateTime UnconfirmationDate = DateTime.Now;
-
-            //GeneralLedgerJournal creditaccountreceivable = new GeneralLedgerJournal()
-            //{
-            //    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesInvoice.CurrencyId).Id,
-            //    SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //    SourceDocumentId = salesInvoice.Id,
-            //    TransactionDate = salesInvoice.InvoiceDate,
-            //    Status = Constant.GeneralLedgerStatus.Credit,
-            //    Amount = salesInvoice.AmountReceivable * salesInvoice.ExchangeRateAmount
-            //};
-            //creditaccountreceivable = CreateObject(creditaccountreceivable, _accountService);
-            //journals.Add(creditaccountreceivable);
-
-            //if (Discount > 0)
-            //{
-            //    GeneralLedgerJournal creditdiscount = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Discount).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Credit,
-            //        Amount = Discount * salesInvoice.ExchangeRateAmount
-            //    };
-            //    creditdiscount = CreateObject(creditdiscount, _accountService);
-            //    journals.Add(creditdiscount);
-            //}
-
-            //if (Tax > 0)
-            //{
-            //    GeneralLedgerJournal debetccountreceivable = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesInvoice.CurrencyId).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Debit,
-            //        Amount = Tax * salesInvoice.ExchangeRateAmount
-            //    };
-            //    debetccountreceivable = CreateObject(debetccountreceivable, _accountService);
-
-            //    journals.Add(debetccountreceivable);
-
-            //    GeneralLedgerJournal creditaccountreceivable2 = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.AccountReceivable + salesInvoice.CurrencyId).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Credit,
-            //        Amount = Tax * (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == true ? 1 : Rate)
-            //    };
-            //    creditaccountreceivable2 = CreateObject(creditaccountreceivable2, _accountService);
-
-            //    journals.Add(creditaccountreceivable2);
-
-            //    GeneralLedgerJournal debitppnkeluaran = new GeneralLedgerJournal()
-            //    {
-            //        AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
-            //        SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //        SourceDocumentId = salesInvoice.Id,
-            //        TransactionDate = salesInvoice.InvoiceDate,
-            //        Status = Constant.GeneralLedgerStatus.Debit,
-            //        Amount = Tax * (_currencyService.GetObjectById(salesInvoice.CurrencyId).IsBase == true ? 1 : Rate)
-            //    };
-            //    debitppnkeluaran = CreateObject(debitppnkeluaran, _accountService);
-            //    journals.Add(debitppnkeluaran);
-            //}
-
-            //GeneralLedgerJournal debitrevenue = new GeneralLedgerJournal()
-            //{
-            //    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
-            //    SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-            //    SourceDocumentId = salesInvoice.Id,
-            //    TransactionDate = salesInvoice.InvoiceDate,
-            //    Status = Constant.GeneralLedgerStatus.Debit,
-            //    Amount = PreTax * salesInvoice.ExchangeRateAmount
-            //};
-            //debitrevenue = CreateObject(debitrevenue, _accountService);
-
-            //journals.Add(debitrevenue);
             #endregion
             #region Credit COS, Debit FinishedGoods
             if (salesInvoice.TotalCOS > 0)
@@ -3271,7 +3078,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = salesInvoice.TotalCOS
+                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
                 };
                 creditCOS = CreateObject(creditCOS, _accountService);
 
@@ -3282,7 +3089,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = salesInvoice.TotalCOS
+                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
                 };
                 debitFinishedGoods = CreateObject(debitFinishedGoods, _accountService);
 
@@ -3294,7 +3101,6 @@ namespace Service.Service
         }
 
         // MANUFACTURING RECOVERY
-
         public IList<GeneralLedgerJournal> CreateFinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
         {
             // Credit Raw/Stock (Core, Compound, Accessories), Debit FinishedGoods/ManufacturedGoods (Roller)
@@ -3308,7 +3114,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -3319,7 +3125,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
 
@@ -3343,7 +3149,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = recoveryOrderDetail.FinishedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -3354,7 +3160,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = recoveryOrderDetail.FinishedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
 
@@ -3377,7 +3183,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = (DateTime)recoveryOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -3388,7 +3194,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = (DateTime)recoveryOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             debitrecoveryexpense = CreateObject(debitrecoveryexpense, _accountService);
 
@@ -3412,7 +3218,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = recoveryOrderDetail.RejectedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -3423,7 +3229,7 @@ namespace Service.Service
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = recoveryOrderDetail.RejectedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = recoveryOrderDetail.TotalCost
+                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
             creditrecoveryexpense = CreateObject(creditrecoveryexpense, _accountService);
 
@@ -3448,7 +3254,7 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = TotalCost,
+                Amount = Math.Round(TotalCost, 2),
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -3459,7 +3265,7 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = TotalCost * (decimal) 0.98,
+                Amount = Math.Round(TotalCost * (decimal) 0.98, 2),
             };
             debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
 
@@ -3470,7 +3276,7 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = TotalCost * (decimal) 0.02,
+                Amount = Math.Round(TotalCost * (decimal) 0.02, 2),
             };
             debitproductioncost = CreateObject(debitproductioncost, _accountService);
 
@@ -3495,7 +3301,7 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = TotalCost
+                Amount = Math.Round(TotalCost, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -3506,7 +3312,7 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = TotalCost * (decimal) 0.98
+                Amount = Math.Round(TotalCost * (decimal) 0.98, 2)
             };
             creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
 
@@ -3517,7 +3323,7 @@ namespace Service.Service
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = TotalCost * (decimal) 0.02
+                Amount = Math.Round(TotalCost * (decimal) 0.02, 2)
             };
             creditproductioncost = CreateObject(creditproductioncost, _accountService);
 
@@ -3540,7 +3346,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -3551,7 +3357,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
 
@@ -3575,7 +3381,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = blanketOrderDetail.FinishedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -3586,7 +3392,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = blanketOrderDetail.FinishedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
 
@@ -3609,7 +3415,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             creditraw = CreateObject(creditraw, _accountService);
 
@@ -3621,7 +3427,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             debitconversionexpense = CreateObject(debitconversionexpense, _accountService);
 
@@ -3645,7 +3451,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = blanketOrderDetail.RejectedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             debitraw = CreateObject(debitraw, _accountService);
 
@@ -3657,7 +3463,7 @@ namespace Service.Service
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = blanketOrderDetail.RejectedDate.Value,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = blanketOrderDetail.TotalCost
+                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             creditconversionexpense = CreateObject(creditconversionexpense, _accountService);
 

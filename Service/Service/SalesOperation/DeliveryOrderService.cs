@@ -75,14 +75,26 @@ namespace Service.Service
                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
                                            IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
-                                           IServiceCostService _serviceCostService,
-                                           ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
-                                           ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
+                                           IServiceCostService _serviceCostService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
+                                           ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, ICustomerStockMutationService _customerStockMutationService, 
+                                           ICustomerItemService _customerItemService, ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
             deliveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService, this, _itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService))
             {
                 decimal TotalCOGS = 0;
+                SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+                Currency currency = _currencyService.GetObjectById(salesOrder.CurrencyId);
+                if (currency.IsBase == false)
+                {
+                    deliveryOrder.ExchangeRateId = _exchangeRateService.GetLatestRate(deliveryOrder.ConfirmationDate.Value, currency).Id;
+                    deliveryOrder.ExchangeRateAmount = _exchangeRateService.GetObjectById(deliveryOrder.ExchangeRateId.Value).Rate;
+                }
+                else
+                {
+                    deliveryOrder.ExchangeRateAmount = 1;
+                }
+                
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var detail in deliveryOrderDetails)
                 {
@@ -101,12 +113,13 @@ namespace Service.Service
                             _temporaryDeliveryOrderDetailService.CompleteObject(temporaryDeliveryOrderDetail);
                         }
                     }
-                    TotalCOGS += detail.COGS;
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    Currency itemCurrency = item.CurrencyId == null ? _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault() : _currencyService.GetObjectById(item.CurrencyId.Value);
+                    TotalCOGS += detail.COGS * _exchangeRateService.GetLatestRate(deliveryOrder.ConfirmationDate.Value, itemCurrency).Rate;
                 }
                 deliveryOrder.TotalCOGS = TotalCOGS;
                 _repository.ConfirmObject(deliveryOrder);
                 _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrder(deliveryOrder, _accountService);
-                SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
                 _salesOrderService.CheckAndSetDeliveryComplete(salesOrder, _salesOrderDetailService);
                 IList<TemporaryDeliveryOrder> temporaryDeliveryOrders = _temporaryDeliveryOrderService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var temporaryDeliveryOrder in temporaryDeliveryOrders)

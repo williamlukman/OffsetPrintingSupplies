@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Master Contact";
+    ViewBag.Title = "Master Supplier";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,10 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/mastercontact.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/mastersupplier.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Master Contact :.">
+    title=".: Master Vendor :.">
 <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
@@ -79,12 +79,11 @@
                             </td>
                             <td colspan="3">
                                 <select id="ContactType">
-                                    <option value="Supplier">Supplier</option>
-                                    <option value="Customer" selected="selected">Customer</option>
+                                    <option value="Supplier" selected="selected">Supplier</option>
+                                    <option value="Customer">Customer</option>
                                 </select>
                             </td>
                         </tr>
-
                         <tr>
                             <td valign="top">
                                 <label>Address</label></td>

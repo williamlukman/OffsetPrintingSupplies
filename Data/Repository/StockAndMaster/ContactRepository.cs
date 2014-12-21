@@ -46,6 +46,7 @@ namespace Data.Repository
         {
             contact.IsDeleted = false;
             contact.CreatedAt = DateTime.Now;
+            if (contact.DefaultPaymentTerm == null) { contact.DefaultPaymentTerm = 0; }
             return Create(contact);
         }
 

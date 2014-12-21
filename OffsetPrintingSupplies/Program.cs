@@ -23,8 +23,10 @@ namespace OffsetPrintingSupplies
                 db.Configuration.LazyLoadingEnabled = true;
                 db.Configuration.ProxyCreationEnabled = true;
 
-                DataBuilder d = new DataBuilder();
-                d.InvoiceMigration();
+                DataAwalZentrum();
+
+                //DataBuilder d = new DataBuilder();
+                //d.InvoiceMigration();
                 
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();
@@ -32,10 +34,9 @@ namespace OffsetPrintingSupplies
             }
         }
 
-        void DataAwalZentrum()
+        public static void DataAwalZentrum()
         {
             ZengraBuilder z = new ZengraBuilder();
-
             // Warning: it will take around 1 hour to run the whole process
             z.PopulateMasterData();
             z.PopulateContact();
@@ -48,6 +49,7 @@ namespace OffsetPrintingSupplies
             z.PopulateBlanket();
             z.PopulateCore();
             z.PopulateRoller();
+            z.PopulateWarehouse();
             z.AdjustCore();
             z.StockAdjustBlanket();
             z.AdjustItemSurabaya();

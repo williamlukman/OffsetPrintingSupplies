@@ -25,13 +25,14 @@ namespace Core.Interface.Service
                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
                                     IServiceCostService _serviceCostService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService, ITemporaryDeliveryOrderService _temporaryDeliveryOrderService,
-                                    ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService);
+                                    ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService,
+                                    ICurrencyService _currencyService, IExchangeRateService _exchangeRateService);
         DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesInvoiceService _salesInvoiceService,
                                       ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
                                       IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
                                       IWarehouseItemService _warehouseItemService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
                                       IClosingService _closingService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService);
        DeliveryOrder CheckAndSetInvoiceComplete(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService);
-        DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder);
+       DeliveryOrder UnsetInvoiceComplete(DeliveryOrder deliveryOrder);
     }
 }

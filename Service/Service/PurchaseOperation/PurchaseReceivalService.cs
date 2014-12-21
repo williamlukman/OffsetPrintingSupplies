@@ -111,7 +111,9 @@ namespace Service.Service
                     PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(detail.PurchaseOrderDetailId);
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseReceivalDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
-                    TotalCOGS += detail.COGS;
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    Currency itemCurrency = item.CurrencyId == null?  _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault() : _currencyService.GetObjectById(item.CurrencyId.Value);
+                    TotalCOGS += detail.COGS * _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, itemCurrency).Rate;
                     TotalAmount += (purchaseOrderDetail.Price * purchaseOrderDetail.Quantity);
                 }
                 purchaseReceival.TotalCOGS = TotalCOGS;

@@ -56,7 +56,7 @@
     $("#list").jqGrid({
         url: base_url + 'CoreIdentification/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse', 'InHouse', 'Contact',
+        colNames: ['ID', 'Code', 'Warehouse', 'InHouseStock', 'Contact',
                    'QTY', 'Identified Date',
                    'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
@@ -734,7 +734,7 @@
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
-        var lookUpURL = base_url + 'MstContact/GetList';
+        var lookUpURL = base_url + 'MstContact/GetListCustomer';
         var lookupGrid = $('#lookup_table_contact');
         lookupGrid.setGridParam({
             url: lookUpURL
