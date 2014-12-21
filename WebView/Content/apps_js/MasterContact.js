@@ -38,7 +38,7 @@
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetListCustomer',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Status', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
@@ -49,7 +49,8 @@
                   { name: 'email', index: 'email', width: 150 },
                   { name: 'taxcode', index: 'taxcode', width: 50 },
                   { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'contacttype', index: 'contacttype', width: 100 },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
