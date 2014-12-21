@@ -117,6 +117,7 @@ namespace Service.Service
         public SalesInvoice UnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService,
                                             IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                             IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
+                                            ISalesOrderService _salesOrderService, IContactService _contactService,
                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
                                             IExchangeRateService _exchangeRateService,ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
@@ -128,9 +129,11 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _salesInvoiceDetailService.UnconfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService);
                 }
-                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoice(salesInvoice, _accountService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
-                _repository.UnconfirmObject(salesInvoice);
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
+                SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
+                Contact contact = _contactService.GetObjectById(salesOrder.ContactId);
+                _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoice(salesInvoice, contact, _accountService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                _repository.UnconfirmObject(salesInvoice);
                 _deliveryOrderService.UnsetInvoiceComplete(deliveryOrder);
                 Receivable receivable = _receivableService.GetObjectBySource(Constant.ReceivableSource.SalesInvoice, salesInvoice.Id);
                 _receivableService.SoftDeleteObject(receivable);

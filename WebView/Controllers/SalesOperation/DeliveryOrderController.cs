@@ -37,6 +37,8 @@ namespace WebView.Controllers
         private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
         private ICustomerStockMutationService _customerStockMutationService;
         private ICustomerItemService _customerItemService;
+        private ICurrencyService _currencyService;
+        private IExchangeRateService _exchangeRateService;
 
         public DeliveryOrderController()
         {
@@ -60,6 +62,8 @@ namespace WebView.Controllers
             _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
             _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
             _customerItemService = new CustomerItemService(new CustomerItemRepository(), new CustomerItemValidator());
+            _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
+            _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
         }
 
         public ActionResult Index()
@@ -568,7 +572,7 @@ namespace WebView.Controllers
                 var data = _deliveryOrderService.GetObjectById(model.Id);
                 model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
                         _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                        _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                        _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
             {

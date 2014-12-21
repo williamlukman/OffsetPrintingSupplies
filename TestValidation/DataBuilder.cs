@@ -2656,13 +2656,13 @@ namespace TestValidation
             TimeSpan lateDeliveryDate = new TimeSpan(2, 0, 0, 0);
             _deliveryOrderService.ConfirmObject(do1, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
                                                 _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             _deliveryOrderService.ConfirmObject(do2, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
                                                 _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             _deliveryOrderService.ConfirmObject(do3, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, 
                                                 _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
 
             si1 = new SalesInvoice()
             {
@@ -2754,13 +2754,13 @@ namespace TestValidation
         {
             _salesInvoiceService.ConfirmObject(si1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(si2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(si3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
 
             rv = new ReceiptVoucher()
             {
@@ -3287,13 +3287,13 @@ namespace TestValidation
 
             _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
                                                 _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
                                                 _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
                                                 _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
-                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService);
+                                                _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
 
             salesInvoice1 = new SalesInvoice()
             {
@@ -3378,13 +3378,13 @@ namespace TestValidation
 
             _salesInvoiceService.ConfirmObject(salesInvoice1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(salesInvoice2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(salesInvoice3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
 
             receiptVoucher1 = new ReceiptVoucher()
             {
@@ -4021,7 +4021,7 @@ namespace TestValidation
             GramDeliveryOrder1 = _deliveryOrderService.ConfirmObject(GramDeliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
                                                                      _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService,
                                                                      _closingService, _serviceCostService, _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService,
-                                                                     _customerStockMutationService, _customerItemService);
+                                                                     _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
         }
 
         public void PopulateValidComb()
