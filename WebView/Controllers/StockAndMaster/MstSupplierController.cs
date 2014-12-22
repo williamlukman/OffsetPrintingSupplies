@@ -13,9 +13,9 @@ using System.Data.Entity;
 
 namespace WebView.Controllers
 {
-    public class MstContactController : Controller
+    public class MstSupplierController : Controller
     {
-        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ContactController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("SupplierController");
         private IContactService _contactService;
         private IBlanketService _blanketService;
         private ICoreIdentificationService _coreIdentificationService;
@@ -24,7 +24,7 @@ namespace WebView.Controllers
         private ISalesQuotationService _salesQuotationService;
         private IVirtualOrderService _virtualOrderService;
 
-        public MstContactController()
+        public MstSupplierController()
         {
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _coreIdentificationService = new CoreIdentificationService(new CoreIdentificationRepository(), new CoreIdentificationValidator());
@@ -131,8 +131,6 @@ namespace WebView.Controllers
                              model.Id,
                              model.Name,
                              model.Address,
-                             model.DeliveryAddress,
-                             model.NPWP,
                              model.ContactNo,
                              model.PIC,
                              model.PICContactNo,
@@ -141,7 +139,6 @@ namespace WebView.Controllers
                              model.IsTaxable,
                              model.CreatedAt,
                              model.UpdatedAt,
-                             model.Description
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -176,8 +173,6 @@ namespace WebView.Controllers
                             model.Id,
                             model.Name,
                             model.Address,
-                            model.DeliveryAddress,
-                            model.NPWP,
                             model.ContactNo,
                             model.PIC,
                             model.PICContactNo,
@@ -186,7 +181,6 @@ namespace WebView.Controllers
                             model.IsTaxable,
                             model.CreatedAt,
                             model.UpdatedAt,
-                            model.Description
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

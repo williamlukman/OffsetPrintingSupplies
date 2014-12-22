@@ -56,17 +56,19 @@
     $("#list").jqGrid({
         url: base_url + 'CoreIdentification/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse', 'InHouseStock', 'Contact',
-                   'QTY', 'Identified Date',
+        colNames: ['ID', 'Code', 'No. Diss', 'Warehouse', 'InHouseStock', 'Contact',
+                   'QTY', 'Identified Date', 'Incoming Roll Date',
                    'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'nodiss', index: 'nodiss', width: 70 },
                   { name: 'warehouse', index: 'warehouse', width: 150 },
                   { name: 'isinhouse', index: 'isinhouse', width: 50, align: 'right' },
                   { name: 'contact', index: 'contact', width: 130 },
                   { name: 'quantity', index: 'quantity', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'identifieddate', index: 'identifieddate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'incomingroll', index: 'incomingroll', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -124,13 +126,17 @@
         ClearData();
         clearForm('#frm');
         $('#IdentifiedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#IncomingRoll').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#Code').removeAttr('disabled');
+        $('#NomorDisassembly').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#IsInHouse').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#IdentifiedDateDiv').show();
         $('#IdentifiedDateDiv2').hide();
+        $('#IncomingRollDiv').show();
+        $('#IncomingRollDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
@@ -160,6 +166,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorDisassembly').val(result.NomorDisassembly);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#ContactId').val(result.ContactId);
@@ -176,8 +183,13 @@
                             $('#IdentifiedDate2').val(dateEnt(result.IdentifiedDate));
                             $('#IdentifiedDateDiv').hide();
                             $('#IdentifiedDateDiv2').show();
+                            $('#IncomingRoll').datebox('setValue', dateEnt(result.IncomingRoll));
+                            $('#IncomingRoll2').val(dateEnt(result.IncomingRoll));
+                            $('#IncomingRollDiv').hide();
+                            $('#IncomingRollDiv2').show();
                             $('#form_btn_save').hide();
                             $('#Code').attr('disabled', true);
+                            $('#NomorDisassembly').attr('disabled', true);
                             $('#Quantity').attr('disabled', true);
                             $('#IsInHouse').attr('disabled', true);
                             $('#btnWarehouse').attr('disabled', true);
@@ -219,6 +231,7 @@
                         else {
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NomorDisassembly').val(result.NomorDisassembly);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#ContactId').val(result.ContactId);
@@ -235,8 +248,13 @@
                             $('#IdentifiedDatee2').val(dateEnt(result.IdentifiedDate));
                             $('#IdentifiedDateDiv').show();
                             $('#IdentifiedDateDiv2').hide();
+                            $('#IncomingRoll').datebox('setValue', dateEnt(result.IncomingRoll));
+                            $('#IncomingRolle2').val(dateEnt(result.IncomingRoll));
+                            $('#IncomingRollDiv').show();
+                            $('#IncomingRollDiv2').hide();
                             $('#form_btn_save').hide();
                             $('#Code').removeAttr('disabled');
+                            $('#NomorDisassembly').removeAttr('disabled');
                             $('#Quantity').removeAttr('disabled');
                             $('#IsInHouse').removeAttr('disabled');
                             $('#btnWareHouse').removeAttr('disabled');
@@ -417,8 +435,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Code: $("#Code").val(), WarehouseId: $("#WarehouseId").val(), ContactId: $("#ContactId").val(),
-                IsInHouse: moving, Quantity: $("#Quantity").numberbox('getValue'),
-                IdentifiedDate: $('#IdentifiedDate').datebox('getValue')
+                IsInHouse: moving, Quantity: $("#Quantity").numberbox('getValue'), NomorDisassembly: $('#NomorDisassembly').val(),
+                IdentifiedDate: $('#IdentifiedDate').datebox('getValue'), IncomingRoll: $('#IncomingRoll').datebox('getValue')
             }),
             async: false,
             cache: false,
@@ -457,6 +475,7 @@
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 40, sortable: false},
                   { name: 'rolleridentificationid', index: 'rolleridentificationid', width: 130, sortable: false, hidden: true },
+                  { name: 'rollerno', index: 'rollerno', width: 60, sortable: false },
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 70, sortable: false },
@@ -547,6 +566,7 @@
                                 f.selectedIndex = 1;
                             }
                             $('#CoreIdentificationId').val(result.CoreIdentificationId);
+                            $('#RollerNo').val(result.RollerNo);
                             $('#CoreBuilderId').val(result.CoreBuilderId);
                             $('#CoreBuilderBaseSku').val(result.CoreBuilderBaseSku);
                             $('#CoreBuilder').val(result.CoreBuilder);
@@ -635,7 +655,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, DetailId: $("#DetailId").numberbox('getValue'), CoreIdentificationId: $("#id").val(),
+                Id: id, DetailId: $("#DetailId").numberbox('getValue'), CoreIdentificationId: $("#id").val(), RollerNo: $("#RollerNo").val(),
                 MaterialCase: moving, CoreBuilderId: $("#CoreBuilderId").val(), CoreBuilderBaseSku: $("#CoreBuilderBaseSku").val(), RollerTypeId: $("#RollerTypeId").val(),
                 MachineId: $("#MachineId").val(), RD: $("#RD").numberbox('getValue'), CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'),
                 WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'), RepairRequestCase: repairrequestcase

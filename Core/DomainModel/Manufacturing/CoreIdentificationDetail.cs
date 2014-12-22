@@ -8,6 +8,8 @@ namespace Core.DomainModel
     public partial class CoreIdentificationDetail
     {
         public int Id { get; set; }
+        public string RollerNo { get; set; }
+
         public int CoreIdentificationId { get; set; }
         public int DetailId { get; set; }
         public int MaterialCase { get; set; }

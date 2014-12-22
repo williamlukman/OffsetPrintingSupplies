@@ -290,6 +290,7 @@
     <Compile Include="Controllers\Finance\ReceivableController.cs" />
     <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
+    <Compile Include="Controllers\StockAndMaster\MstSupplierController.cs" />
     <Compile Include="Controllers\StockAndMaster\CustomerStockAdjustmentController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstBlendingRecipeController.cs" />
     <Compile Include="Controllers\StockAndMaster\CustomerStockMutationController.cs" />

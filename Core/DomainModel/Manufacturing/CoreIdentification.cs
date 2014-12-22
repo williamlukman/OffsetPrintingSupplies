@@ -9,6 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public string NomorDisassembly { get; set; }
         public int WarehouseId { get; set; } // Workshop Warehouse
 
         public Nullable<int> ContactId { get; set; }
@@ -17,7 +18,7 @@ namespace Core.DomainModel
         public DateTime IdentifiedDate { get; set; }
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
-
+        public Nullable<DateTime> IncomingRoll { get; set; }
         public bool IsCompleted { get; set; }
 
         public bool IsDeleted { get; set; }

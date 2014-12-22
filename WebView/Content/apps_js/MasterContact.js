@@ -38,20 +38,22 @@
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetListCustomer',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Status', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address', 'DeliveryAddress', 'NPWP', 'Contact No','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At', 'Description'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
+                  { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
+                  { name: 'npwp', index: 'npwp', width: 100 },
                   { name: 'contact', index: 'contactno', width: 100 },
                   { name: 'pic', index: 'pic', width: 120 },
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },
                   { name: 'taxcode', index: 'taxcode', width: 50 },
                   { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
-                  { name: 'contacttype', index: 'contacttype', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'description', index: 'description', width: 250 },
         ],
         page: '1',
         pager: $('#pager'),
@@ -140,6 +142,9 @@
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
                             $('#Address').val(result.Address);
+                            $('#DeliveryAddress').val(result.DeliveryAddress);
+                            $('#NPWP').val(result.NPWP);
+                            $('#Description').val(result.Description);
                             $('#ContactNo').val(result.ContactNo);
                             $('#PIC').val(result.PIC);
                             $('#PICContactNo').val(result.PICContactNo);
@@ -244,7 +249,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
+                Id: id, Name: $("#Name").val(), Address: $("#Address").val(), DeliveryAddress: $("#DeliveryAddress").val(),
+                NPWP: $("#NPWP").val(), Description: $("#Description").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
                 ContactType: $("#ContactType").val()

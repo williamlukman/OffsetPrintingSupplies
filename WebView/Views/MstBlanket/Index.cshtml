@@ -12,7 +12,7 @@
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: Master Blanket :.">
-<div id="toolbar" class="form_toolbar">
+    <div id="toolbar" class="form_toolbar">
         <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>
         <a id="btn_add_new" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Add New</a>
         <a id="btn_edit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">Edit Data</a>
@@ -25,8 +25,8 @@
     </div>
 
 <!-- Dialog Box -->
-    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px" data-options="modal:true"  
-        title=".: Master Blanket :.">
+    <div id="form_div" class="easyui-dialog" style="text-align: left; padding:0px 0px 10px; top: 10px" data-options="modal:true"  
+        title=".: Master Blanket :." >
 
         <div id="form_toolbar" class="form_toolbar">
             <a id="form_btn_save" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Save</a>
@@ -59,13 +59,13 @@
                             <td>
                                 <label>Name</label></td>
                             <td colspan="3">
-                                <input id="Name" name="Name" type="text" size="60" maxlength="80" align="left" /></td>
+                                <input id="Name" name="Name" type="text" size="60" maxlength="200" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Description</label></td>
                             <td colspan="3">
-                                <input id="Description" name="Description" type="text" size="40" maxlength="40" align="left" /></td>
+                                <input id="Description" name="Description" type="text" size="60" maxlength="200" align="left" /></td>
                         </tr>
                         <tr id="ItemTypeRow">
                             <td>
