@@ -190,7 +190,7 @@ namespace ExcelImport
             var tax = row[8].ToString();
             var email = row[10].ToString();
             var status = row[15].ToString();
-            var obj = _contactService.GetQueryable().Where(x => x.Name == name && x.Description == desc && x.NPWP == npwp && !x.IsDeleted).FirstOrDefault();
+            var obj = _contactService.GetQueryable().Where(x => x.Name == name /*&& x.Description == desc && x.NPWP == npwp*/ && !x.IsDeleted).FirstOrDefault();
             if (obj == null)
             {
                 obj = new Contact()
@@ -202,29 +202,38 @@ namespace ExcelImport
                     DefaultPaymentTerm = defterm,
                     ContactNo = (phone == null || phone.Trim() == "") ? "-" : phone,
                     NPWP = npwp,
-                    TaxCode = (tax == null || tax.Trim() == "") ? "09" : tax,
+                    TaxCode = (tax == null || tax.Trim() == "") ? "01" : tax,
                     IsTaxable = (tax != null && tax.Trim() != ""),
                     Email = email,
                     ContactType = "CUSTOMER", //status,
+                    
                 };
                 obj = _contactService.CreateObject(obj);
-                Log(obj, sheetname, rowidx + 2);
+                Log(obj, sheetname + "Create", rowidx + 2);
+            }
+            else
+            {
+                obj.ContactType = "CUSTOMER";
+                obj.Errors = new Dictionary<string, string>();
+                obj = _contactService.UpdateObject(obj);
+                Log(obj, sheetname + "Update", rowidx + 2);
             }
         }
 
         public void DoSupplier(DataRow row, int rowidx, string sheetname)
         {
-            var desc = row[17].ToString();
+            var desc = row[8].ToString();
             var name = row[1].ToString();
             var addr = row[2].ToString();
-            var defaddr = row[3].ToString();
-            var defterm = Convert.ToInt32(GetValidNumber(row[4].ToString())); //int.Parse(row[4].ToString());
-            var phone = row[5].ToString();
-            var npwp = row[7].ToString();
-            var email = row[10].ToString();
-            var pic = row[8].ToString();
-            var picno = row[9].ToString();
-            var obj = _contactService.GetQueryable().Where(x => x.Name == name && x.Description == desc && x.NPWP == npwp && !x.IsDeleted).FirstOrDefault();
+            //var defaddr = row[3].ToString();
+            //var defterm = Convert.ToInt32(GetValidNumber(row[4].ToString())); //int.Parse(row[4].ToString());
+            var phone = row[3].ToString();
+            //var npwp = row[7].ToString();
+            var email = row[4].ToString();
+            var status = row[5].ToString();
+            var pic = row[6].ToString();
+            var picno = row[7].ToString();
+            var obj = _contactService.GetQueryable().Where(x => x.Name == name /*&& x.Description == desc*/ && !x.IsDeleted).FirstOrDefault();
             if (obj == null)
             {
                 obj = new Contact()
@@ -233,18 +242,25 @@ namespace ExcelImport
                     Description = desc, //(desc.Length > name.Length) ? name : desc,
                     Address = (addr == null || addr.Trim() == "") ? "-" : addr,
                     //DeliveryAddress = defaddr,
-                    DefaultPaymentTerm = defterm,
+                    //DefaultPaymentTerm = defterm,
                     ContactNo = (phone == null || phone.Trim() == "") ? "-" : phone,
                     PIC = pic,
                     PICContactNo = picno,
-                    NPWP = npwp,
+                    //NPWP = npwp,
                     TaxCode = "01",
                     IsTaxable = true,
                     Email = email,
-                    ContactType = "SUPPLIER",
+                    ContactType = "SUPPLIER", //status
                 };
                 obj = _contactService.CreateObject(obj);
-                Log(obj, sheetname, rowidx + 2);
+                Log(obj, sheetname + "Create", rowidx + 2);
+            }
+            else
+            {
+                obj.ContactType = "SUPPLIER";
+                obj.Errors = new Dictionary<string, string>();
+                obj = _contactService.UpdateObject(obj);
+                Log(obj, sheetname + "Update", rowidx + 2);
             }
         }
 
@@ -792,43 +808,43 @@ namespace ExcelImport
                         cmd.Dispose();
                     }
 
-                    //sheetname = "customer_baru$";
-                    //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
-                    //{
-                    //    try
-                    //    {
-                    //        count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
-                    //         Find Or Create Object
-                    //        var row = dtExcel.Tables[sheetname].Rows[i];
-                    //        var tmp = row[0].ToString() + row[1].ToString();
-                    //        if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
-                    //        DoCustomer(row, i, sheetname);
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
-                    //        continue;
-                    //    }
-                    //}
+                    sheetname = "Customer$";
+                    for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    {
+                        //try
+                        {
+                            //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                            // Find Or Create Object
+                            var row = dtExcel.Tables[sheetname].Rows[i];
+                            var tmp = row[0].ToString() + row[1].ToString();
+                            if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                            DoCustomer(row, i, sheetname);
+                        }
+                        //catch (Exception ex)
+                        //{
+                        //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                        //    continue;
+                        //}
+                    }
 
-                    //sheetname = "supplier_baru$";
-                    //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
-                    //{
-                    //    try
-                    //    {
-                    //        count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
-                    //         Find Or Create Object
-                    //        var row = dtExcel.Tables[sheetname].Rows[i];
-                    //        var tmp = row[0].ToString() + row[1].ToString();
-                    //        if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
-                    //        DoSupplier(row, i, sheetname);
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
-                    //        continue;
-                    //    }
-                    //}
+                    sheetname = "Supplier$";
+                    for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    {
+                        //try
+                        {
+                            //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                            // Find Or Create Object
+                            var row = dtExcel.Tables[sheetname].Rows[i];
+                            var tmp = row[0].ToString() + row[1].ToString();
+                            if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                            DoSupplier(row, i, sheetname);
+                        }
+                        //catch (Exception ex)
+                        //{
+                        //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                        //    continue;
+                        //}
+                    }
 
                     //sheetname = "SalesInvoiceMigration$";
                     //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
@@ -849,24 +865,24 @@ namespace ExcelImport
                     //    //}
                     //}
 
-                    sheetname = "PurchaseInvoiceMigration$";
-                    for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
-                    {
-                        //try
-                        {
-                            //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
-                            // Find Or Create Object
-                            var row = dtExcel.Tables[sheetname].Rows[i];
-                            var tmp = row[0].ToString() + row[1].ToString();
-                            if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
-                            DoPurchaseInvoiceMigration(row, i, sheetname);
-                        }
-                        //catch (Exception ex)
-                        //{
-                        //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
-                        //    continue;
-                        //}
-                    }
+                    //sheetname = "PurchaseInvoiceMigration$";
+                    //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    //{
+                    //    //try
+                    //    {
+                    //        //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                    //        // Find Or Create Object
+                    //        var row = dtExcel.Tables[sheetname].Rows[i];
+                    //        var tmp = row[0].ToString() + row[1].ToString();
+                    //        if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                    //        DoPurchaseInvoiceMigration(row, i, sheetname);
+                    //    }
+                    //    //catch (Exception ex)
+                    //    //{
+                    //    //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                    //    //    continue;
+                    //    //}
+                    //}
 
                     //oleda.Dispose();
                     //foreach (var x in data) x.Dispose();

@@ -38,9 +38,9 @@ namespace ExcelImport
 
             Console.WriteLine("Processing...");
             var conv = new ConversionFunction();
-            PopulateCOA();
+            //PopulateCOA();
             //conv.ImportDataFromExcel(@"D:\Other\20141218 TemplateZGA.xlsx");
-            conv.ImportMigrationFromExcel(@"D:\Other\20141218 hutang-piutang zentrum 3.xls");
+            conv.ImportMigrationFromExcel(@"D:\Other\CustomerSupplier.xls");
             Console.WriteLine("Done.");
             //Console.ReadLine();
 
