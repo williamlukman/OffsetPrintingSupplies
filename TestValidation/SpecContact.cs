@@ -128,7 +128,7 @@ namespace TestValidation
                     TaxCode = "01",
                 };
                 emptyaddress = d._contactService.CreateObject(emptyaddress);
-                emptyaddress.Errors.Count().should_not_be(0);
+                emptyaddress.Errors.Count().should_be(0);
             };
 
             it["withemptycontact"] = () =>
@@ -144,7 +144,7 @@ namespace TestValidation
                     TaxCode = "01",
                 };
                 emptycontact = d._contactService.CreateObject(emptycontact);
-                emptycontact.Errors.Count().should_not_be(0);
+                emptycontact.Errors.Count().should_be(0);
             };
 
             it["update_with_empty_pic"] = () =>
