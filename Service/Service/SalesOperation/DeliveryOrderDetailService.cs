@@ -138,7 +138,7 @@ namespace Service.Service
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                     }
                     _stockMutationService.DeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
-                }
+                } 
                 else
                 {
                     CustomerItem customerItem = _customerItemService.FindOrCreateObject(deliveryOrder.SalesOrder.ContactId, warehouseItem.Id);
@@ -150,8 +150,8 @@ namespace Service.Service
                     _customerStockMutationService.DeleteCustomerStockMutationForDeliveryOrder(deliveryOrderDetail, customerItem);
                 }
                 deliveryOrderDetail.COGS = 0;
-                deliveryOrderDetail = _repository.UnconfirmObject(deliveryOrderDetail);
                 _salesOrderDetailService.UnsetDeliveryComplete(salesOrderDetail, deliveryOrderDetail.Quantity, _salesOrderService);
+                deliveryOrderDetail = _repository.UnconfirmObject(deliveryOrderDetail);
             }
             return deliveryOrderDetail;
         }

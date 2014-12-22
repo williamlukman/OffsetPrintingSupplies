@@ -538,6 +538,55 @@ namespace ExcelImport
             }
         }
 
+        // TO: ADAM
+        public void UpdateRollerBuilder(DataRow row, int rowidx, string sheetname)
+        {
+            var sku = row[0].ToString();
+            var machname = row[4].ToString();
+            var mach = _machineService.GetQueryable().Where(x => x.Name == machname && !x.IsDeleted).FirstOrDefault();
+            var rd = decimal.Parse(GetValidNumber(row[6].ToString()));
+            var cd = decimal.Parse(GetValidNumber(row[7].ToString())); 
+            var rl = decimal.Parse(GetValidNumber(row[8].ToString()));
+            var wl = decimal.Parse(GetValidNumber(row[9].ToString()));
+            var tl = decimal.Parse(GetValidNumber(row[10].ToString()));
+
+            var obj = _rollerBuilderService.GetQueryable().Where(x => x.BaseSku == sku && !x.IsDeleted).FirstOrDefault();
+            if (obj != null)
+            {
+                obj.MachineId = mach == null ? obj.MachineId : mach.Id; 
+                obj.RD = rd;
+                obj.CD = cd;
+                obj.RL = rl;
+                obj.WL = wl;
+                obj.TL = tl;
+                obj.Errors = new Dictionary<string, string>();
+                obj = _rollerBuilderService.UpdateObject(obj, _machineService, _uomService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService, _blanketService, _contactService, _priceMutationService);
+                Log(obj, sheetname, rowidx + 2);
+            }
+        }
+
+        public void UpdateBlanket(DataRow row, int rowidx, string sheetname)
+        {
+            var sku = row[0].ToString();
+            var machname = row[5].ToString();
+            var mach = _machineService.GetQueryable().Where(x => x.Name == machname && !x.IsDeleted).FirstOrDefault();
+            var ac = decimal.Parse(GetValidNumber(row[6].ToString()));
+            var ar = decimal.Parse(GetValidNumber(row[7].ToString()));
+            var thickness = decimal.Parse(GetValidNumber(row[8].ToString()));
+            
+            var obj = _blanketService.GetQueryable().Where(x => x.Sku == sku && !x.IsDeleted).FirstOrDefault();
+            if (obj != null)
+            {
+                obj.MachineId = mach == null ? obj.MachineId : mach.Id;
+                obj.AC = ac;
+                obj.AR = ar;
+                obj.thickness = thickness;
+                obj.Errors = new Dictionary<string, string>();
+                obj = _blanketService.UpdateObject(obj, _blanketService, _uomService, _itemService, _itemTypeService, _contactService, _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
+                Log(obj, sheetname, rowidx + 2);
+            }
+        }
+
         public void DoBlanket(DataRow row, int rowidx, string sheetname)
         {
 
@@ -808,43 +857,43 @@ namespace ExcelImport
                         cmd.Dispose();
                     }
 
-                    sheetname = "Customer$";
-                    for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
-                    {
-                        //try
-                        {
-                            //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
-                            // Find Or Create Object
-                            var row = dtExcel.Tables[sheetname].Rows[i];
-                            var tmp = row[0].ToString() + row[1].ToString();
-                            if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
-                            DoCustomer(row, i, sheetname);
-                        }
-                        //catch (Exception ex)
-                        //{
-                        //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
-                        //    continue;
-                        //}
-                    }
+                    //sheetname = "Customer$";
+                    //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    //{
+                    //    //try
+                    //    {
+                    //        //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                    //        // Find Or Create Object
+                    //        var row = dtExcel.Tables[sheetname].Rows[i];
+                    //        var tmp = row[0].ToString() + row[1].ToString();
+                    //        if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                    //        DoCustomer(row, i, sheetname);
+                    //    }
+                    //    //catch (Exception ex)
+                    //    //{
+                    //    //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                    //    //    continue;
+                    //    //}
+                    //}
 
-                    sheetname = "Supplier$";
-                    for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
-                    {
-                        //try
-                        {
-                            //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
-                            // Find Or Create Object
-                            var row = dtExcel.Tables[sheetname].Rows[i];
-                            var tmp = row[0].ToString() + row[1].ToString();
-                            if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
-                            DoSupplier(row, i, sheetname);
-                        }
-                        //catch (Exception ex)
-                        //{
-                        //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
-                        //    continue;
-                        //}
-                    }
+                    //sheetname = "Supplier$";
+                    //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    //{
+                    //    //try
+                    //    {
+                    //        //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                    //        // Find Or Create Object
+                    //        var row = dtExcel.Tables[sheetname].Rows[i];
+                    //        var tmp = row[0].ToString() + row[1].ToString();
+                    //        if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                    //        DoSupplier(row, i, sheetname);
+                    //    }
+                    //    //catch (Exception ex)
+                    //    //{
+                    //    //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                    //    //    continue;
+                    //    //}
+                    //}
 
                     //sheetname = "SalesInvoiceMigration$";
                     //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
@@ -883,6 +932,44 @@ namespace ExcelImport
                     //    //    continue;
                     //    //}
                     //}
+
+                    sheetname = "Roller$";
+                    for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    {
+                        //try
+                        {
+                            //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                            // Find Or Create Object
+                            var row = dtExcel.Tables[sheetname].Rows[i];
+                            var tmp = row[0].ToString() + row[1].ToString();
+                            if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                            UpdateRollerBuilder(row, i, sheetname);
+                        }
+                        //catch (Exception ex)
+                        //{
+                        //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                        //    continue;
+                        //}
+                    }
+
+                    sheetname = "Blanket$";
+                    for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    {
+                        //try
+                        {
+                            //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                            // Find Or Create Object
+                            var row = dtExcel.Tables[sheetname].Rows[i];
+                            var tmp = row[0].ToString() + row[1].ToString();
+                            if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                            UpdateBlanket(row, i, sheetname);
+                        }
+                        //catch (Exception ex)
+                        //{
+                        //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                        //    continue;
+                        //}
+                    }
 
                     //oleda.Dispose();
                     //foreach (var x in data) x.Dispose();

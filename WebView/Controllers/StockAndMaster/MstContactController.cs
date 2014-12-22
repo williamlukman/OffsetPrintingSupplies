@@ -123,7 +123,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType == "Customer");
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType != "Supplier");
 
             var query = (from model in q
                          select new
@@ -195,7 +195,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType == "Supplier");
+            var q = _contactService.GetQueryable().Where(x => !x.IsDeleted && x.ContactType != "Customer");
 
             var query = (from model in q
                          select new

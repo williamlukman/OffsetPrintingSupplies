@@ -1364,7 +1364,7 @@
     <Content Include="Views\MstBlendingRecipe\Index.cshtml" />
     <Content Include="Views\BlendingWorkOrder\Index.cshtml" />
     <Content Include="Views\CustomerStockAdjustment\Index.cshtml" />
-    <Content Include="Views\MstVendor\Index.cshtml" />
+    <Content Include="Views\MstSupplier\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

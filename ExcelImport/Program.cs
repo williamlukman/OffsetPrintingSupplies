@@ -40,7 +40,8 @@ namespace ExcelImport
             var conv = new ConversionFunction();
             //PopulateCOA();
             //conv.ImportDataFromExcel(@"D:\Other\20141218 TemplateZGA.xlsx");
-            conv.ImportMigrationFromExcel(@"D:\Other\CustomerSupplier.xls");
+            //conv.ImportMigrationFromExcel(@"D:\Other\CustomerSupplier.xls");
+            conv.ImportMigrationFromExcel(@"D:\Other\20141219 pisah2 barang roller & blanket.xls");
             Console.WriteLine("Done.");
             //Console.ReadLine();
 
