@@ -317,7 +317,7 @@ namespace TestValidation
                     Name = "Roller Builder",
                     Description = "RB",
                     CompoundId = compound.Id,
-                    UoMId = d.Pcs.Id
+                    UoMId = d.Pcs.Id,
                     AdhesiveId = Adhesive.Id,
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);

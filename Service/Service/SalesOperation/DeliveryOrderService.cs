@@ -82,6 +82,16 @@ namespace Service.Service
             deliveryOrder.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(deliveryOrder, _deliveryOrderDetailService, this, _itemService, _warehouseItemService, _salesOrderDetailService, _serviceCostService, _customerItemService))
             {
+                IList<DeliveryOrderDetail> deliveryOrderDetailValidations = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+                foreach (var detail in deliveryOrderDetailValidations)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    if (!(_deliveryOrderDetailService.GetValidator().ValidConfirmObject(detail, this, _deliveryOrderDetailService, _salesOrderDetailService, _itemService, _warehouseItemService, _serviceCostService, _customerItemService)))
+                    {
+                        deliveryOrder.Errors.Add("Generic", detail.Errors.FirstOrDefault().Value);
+                        return deliveryOrder;
+                    }
+                }
                 decimal TotalCOGS = 0;
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);
                 Currency currency = _currencyService.GetObjectById(salesOrder.CurrencyId);
@@ -115,7 +125,7 @@ namespace Service.Service
                     }
                     Item item = _itemService.GetObjectById(detail.ItemId);
                     Currency itemCurrency = item.CurrencyId == null ? _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault() : _currencyService.GetObjectById(item.CurrencyId.Value);
-                    TotalCOGS += detail.COGS * _exchangeRateService.GetLatestRate(deliveryOrder.ConfirmationDate.Value, itemCurrency).Rate;
+                    TotalCOGS += detail.COGS;
                 }
                 deliveryOrder.TotalCOGS = TotalCOGS;
                 _repository.ConfirmObject(deliveryOrder);
@@ -138,6 +148,16 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(deliveryOrder, _salesInvoiceService))
             {
+                IList<DeliveryOrderDetail> deliveryOrderDetailValidations = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
+                foreach (var detail in deliveryOrderDetailValidations)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    if (!(_deliveryOrderDetailService.GetValidator().ValidUnconfirmObject(detail, _salesInvoiceDetailService)))
+                    {
+                        deliveryOrder.Errors.Add("Generic", detail.Errors.FirstOrDefault().Value);
+                        return deliveryOrder;
+                    }
+                }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForDeliveryOrder(deliveryOrder, _accountService);
                 IList<DeliveryOrderDetail> deliveryOrderDetails = _deliveryOrderDetailService.GetObjectsByDeliveryOrderId(deliveryOrder.Id);
                 foreach (var detail in deliveryOrderDetails)

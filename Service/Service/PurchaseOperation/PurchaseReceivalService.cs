@@ -91,6 +91,17 @@ namespace Service.Service
             purchaseReceival.ConfirmationDate = ConfirmationDate;
             if (_validator.ValidConfirmObject(purchaseReceival, _purchaseReceivalDetailService, _exchangeRateService, _purchaseOrderService, _currencyService))
             {
+                IList<PurchaseReceivalDetail> purchaseReceivalDetailValidations = _purchaseReceivalDetailService.GetObjectsByPurchaseReceivalId(purchaseReceival.Id);
+                foreach (var detail in purchaseReceivalDetailValidations)
+                {
+                    detail.Errors = new Dictionary<string, string>();
+                    if (!(_purchaseReceivalDetailService.GetValidator().ValidConfirmObject(detail, _purchaseReceivalDetailService, _purchaseOrderDetailService)))
+                    {
+                        purchaseReceival.Errors.Add("Generic", detail.Errors.FirstOrDefault().Value);
+                        return purchaseReceival;
+                    }
+                }
+
                 decimal TotalCOGS = 0;
                 decimal TotalAmount = 0;
                 PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseReceival.PurchaseOrderId);
@@ -113,7 +124,7 @@ namespace Service.Service
                     _purchaseReceivalDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                     Item item = _itemService.GetObjectById(detail.ItemId);
                     Currency itemCurrency = item.CurrencyId == null?  _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault() : _currencyService.GetObjectById(item.CurrencyId.Value);
-                    TotalCOGS += detail.COGS * _exchangeRateService.GetLatestRate(purchaseReceival.ConfirmationDate.Value, itemCurrency).Rate;
+                    TotalCOGS += detail.COGS;
                     TotalAmount += (purchaseOrderDetail.Price * purchaseOrderDetail.Quantity);
                 }
                 purchaseReceival.TotalCOGS = TotalCOGS;

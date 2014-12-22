@@ -207,7 +207,15 @@ namespace ExcelImport
                     Email = email,
                     ContactType = "CUSTOMER", //status,
                 };
-                obj = _contactService.CreateObject(obj);
+                if (_contactService.GetObjectByName(obj.Name) == null)
+                {
+                    obj = _contactService.CreateObject(obj);
+                }
+                else {
+                    obj = _contactService.GetObjectByName(obj.Name);
+                    obj.ContactType = "CUSTOMER";
+                    _contactService.UpdateObject(obj);
+                }
                 Log(obj, sheetname, rowidx + 2);
             }
         }
@@ -243,7 +251,16 @@ namespace ExcelImport
                     Email = email,
                     ContactType = "SUPPLIER",
                 };
-                obj = _contactService.CreateObject(obj);
+                if (_contactService.GetObjectByName(obj.Name) == null)
+                {
+                    obj = _contactService.CreateObject(obj);
+                }
+                else
+                {
+                    obj = _contactService.GetObjectByName(obj.Name);
+                    obj.ContactType = "SUPPLIER";
+                    _contactService.UpdateObject(obj);
+                }
                 Log(obj, sheetname, rowidx + 2);
             }
         }
@@ -518,6 +535,53 @@ namespace ExcelImport
                     Description = desc,
                 };
                 obj = _rollerBuilderService.CreateObject(obj, _machineService, _uomService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService, _priceMutationService);
+                Log(obj, sheetname, rowidx + 2);
+            }
+        }
+
+        // TO: ADAM
+        public void UpdateRollerBuilder(DataRow row, int rowidx, string sheetname)
+        {
+            var sku = row[0].ToString();
+            var machname = row[4].ToString();
+            var mach = _machineService.GetQueryable().Where(x => x.Name == machname && !x.IsDeleted).FirstOrDefault();
+            var rd = decimal.Parse(GetValidNumber(row[6].ToString()));
+            var cd = decimal.Parse(GetValidNumber(row[7].ToString())); 
+            var rl = decimal.Parse(GetValidNumber(row[8].ToString()));
+            var wl = decimal.Parse(GetValidNumber(row[9].ToString()));
+            var tl = decimal.Parse(GetValidNumber(row[10].ToString()));
+
+            var obj = _rollerBuilderService.GetQueryable().Where(x => x.BaseSku == sku && !x.IsDeleted).FirstOrDefault();
+            if (obj != null)
+            {
+                obj.MachineId = mach == null ? obj.MachineId : mach.Id; 
+                obj.RD = rd;
+                obj.CD = cd;
+                obj.RL = rl;
+                obj.WL = wl;
+                obj.TL = tl;
+                obj = _rollerBuilderService.UpdateObject(obj, _machineService, _uomService, _itemService, _itemTypeService, _coreBuilderService, _rollerTypeService, _warehouseItemService, _warehouseService, _blanketService, _contactService, _priceMutationService);
+                Log(obj, sheetname, rowidx + 2);
+            }
+        }
+
+        public void UpdateBlanket(DataRow row, int rowidx, string sheetname)
+        {
+            var sku = row[0].ToString();
+            var machname = row[5].ToString();
+            var mach = _machineService.GetQueryable().Where(x => x.Name == machname && !x.IsDeleted).FirstOrDefault();
+            var ac = decimal.Parse(GetValidNumber(row[6].ToString()));
+            var ar = decimal.Parse(GetValidNumber(row[7].ToString()));
+            var thickness = decimal.Parse(GetValidNumber(row[8].ToString()));
+            
+            var obj = _blanketService.GetQueryable().Where(x => x.Sku == sku && !x.IsDeleted).FirstOrDefault();
+            if (obj != null)
+            {
+                obj.MachineId = mach == null ? obj.MachineId : mach.Id;
+                obj.AC = ac;
+                obj.AR = ar;
+                obj.thickness = thickness;
+                obj = _blanketService.UpdateObject(obj, _blanketService, _uomService, _itemService, _itemTypeService, _contactService, _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
                 Log(obj, sheetname, rowidx + 2);
             }
         }
