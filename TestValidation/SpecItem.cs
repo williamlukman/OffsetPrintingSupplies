@@ -63,6 +63,8 @@ namespace TestValidation
                 d.contact = new Contact()
                 {
                     Name = "President",
+                    IsTaxable = true,
+                    TaxCode = "01",
                 };
                 d.contact = d._contactService.CreateObject(d.contact);
             }
@@ -117,7 +119,7 @@ namespace TestValidation
                     ItemId = d.item.Id,
                     Quantity = 10,
                     StockAdjustmentId = d.stockAdjustment.Id,
-                    Price = 50000
+                    Price = 50000,
                 };
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
@@ -271,6 +273,14 @@ namespace TestValidation
 
                 compound = d._itemService.CreateObject(compound, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 
+                Item Adhesive = new Item()
+                {
+                    ItemTypeId = d._itemTypeService.GetObjectByName("AdhesiveRoller").Id,
+                    Name = "Adhesive",
+                    Sku = "ADR00001",
+                    UoMId = d.Pcs.Id
+                };
+
                 d.stockAdjustment = new StockAdjustment()
                 {
                     WarehouseId = d.localWarehouse.Id,
@@ -308,6 +318,7 @@ namespace TestValidation
                     Description = "RB",
                     CompoundId = compound.Id,
                     UoMId = d.Pcs.Id
+                    AdhesiveId = Adhesive.Id,
                 };
                 d.rollerBuilder = d._rollerBuilderService.CreateObject(d.rollerBuilder, d._machineService, d._uomService, d._itemService, d._itemTypeService, d._coreBuilderService, d._rollerTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 
