@@ -22,11 +22,11 @@ namespace OffsetPrintingSupplies
             {
                 db.Configuration.LazyLoadingEnabled = true;
                 db.Configuration.ProxyCreationEnabled = true;
+                db.DeleteAllTables();
+                //DataAwalZentrum();
 
-                DataAwalZentrum();
-
-                //DataBuilder d = new DataBuilder();
-                //d.InvoiceMigration();
+                DataBuilder d = new DataBuilder();
+                d.PopulateDataNoClosing();
                 
                 Console.WriteLine("Press any key to stop...");
                 Console.ReadKey();

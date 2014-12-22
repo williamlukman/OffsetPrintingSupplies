@@ -12,7 +12,7 @@ namespace Data.Context
 {
     public class OffsetPrintingSuppliesEntities : DbContext
     { 
-        public OffsetPrintingSuppliesEntities() : base("eZengra")
+        public OffsetPrintingSuppliesEntities() : base("OffsetPrinting")
         {
            Database.SetInitializer<OffsetPrintingSuppliesEntities>(new MigrateDatabaseToLatestVersion<OffsetPrintingSuppliesEntities, Configuration>());
            //Database.SetInitializer<OffsetPrintingSuppliesEntities>(new DropCreateDatabaseIfModelChanges<OffsetPrintingSuppliesEntities>());
