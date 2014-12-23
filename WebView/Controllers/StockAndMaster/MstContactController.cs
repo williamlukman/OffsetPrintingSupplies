@@ -217,6 +217,7 @@ namespace WebView.Controllers
                              model.IsTaxable,
                              model.CreatedAt,
                              model.UpdatedAt,
+                             model.Description,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -259,6 +260,7 @@ namespace WebView.Controllers
                             model.IsTaxable,
                             model.CreatedAt,
                             model.UpdatedAt,
+                            model.Description
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

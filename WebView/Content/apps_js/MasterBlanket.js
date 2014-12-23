@@ -130,6 +130,7 @@
                     else {
                         $('#ItemTypeId').val(result.Id);
                         $('#ItemType').val(result.Name);
+                        $('#Sku').val(result.SKU);
                     }
                 }
             }

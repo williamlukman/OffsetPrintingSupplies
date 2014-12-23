@@ -25,6 +25,10 @@ namespace Core.DomainModel
         public decimal WL { get; set; }
         public decimal TL { get; set; }
 
+        public decimal GL { get; set; }
+        public decimal GrooveLength { get; set; }
+        public decimal GrooveQTY { get; set; }
+
         public bool IsJobScheduled { get; set; }
         public bool IsDelivered { get; set; }
         public bool IsRollerBuilt { get; set; }

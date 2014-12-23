@@ -18,12 +18,15 @@ namespace WebView.Controllers
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemTypeController");
         private IItemTypeService _itemTypeService;
         private IItemService _itemService;
-         
+        private IRollerBuilderService _rollerBuilderService;
+        private ICoreBuilderService _coreBuilderService;
+
         public MstItemTypeController()
         {
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
-
+            _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
+            _coreBuilderService = new CoreBuilderService(new CoreBuilderRepository(), new CoreBuilderValidator());
         }
 
 
@@ -117,9 +120,36 @@ namespace WebView.Controllers
         public dynamic GetInfoByName(string itemType)
         {
             ItemType model = new ItemType();
+            string SKU="";
+            int SkuCount;
             try
             {
                 model = _itemTypeService.GetObjectByName(itemType);
+                if (model.Name == "Roller")
+                {
+                    SkuCount = _rollerBuilderService.GetAll().Count() + 1;
+                    while (_rollerBuilderService.GetQueryable().Where(x => x.BaseSku == model.Description + SkuCount).Count() > 0)
+                    {
+                        SkuCount++;
+                    }
+                }
+                else if (model.Name == "Core")
+                {
+                    SkuCount = _coreBuilderService.GetAll().Count() + 1;
+                    while (_coreBuilderService.GetQueryable().Where(x => x.BaseSku == model.Description + SkuCount).Count() > 0)
+                    {
+                        SkuCount++;
+                    }
+                }
+                else
+                {
+                    SkuCount = _itemService.GetQueryable().Where(x => x.ItemTypeId == model.Id).Count() + 1;
+                    while (_itemService.GetObjectBySku(model.Description + SkuCount) != null)
+                    {
+                        SkuCount++;
+                    }
+                }
+                SKU = model.Description + SkuCount;
             }
             catch (Exception ex)
             {
@@ -132,6 +162,7 @@ namespace WebView.Controllers
                 model.Id,
                 model.Name,
                 model.Description,
+                SKU,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }

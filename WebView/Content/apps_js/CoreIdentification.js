@@ -468,9 +468,10 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['RIF Id', 'RollerIdentificationId', 'Material', 'CoreBuilder Id',
+        colNames: ['RIF Id', 'RollerIdentificationId', 'Roller No', 'Material', 'CoreBuilder Id',
                     'Core Sku', 'Core', 'RollerType Id', 'RollerType',
-                    'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL'
+                    'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL',
+                    'GL', 'Groove Length', 'Qty Grooves', 'Core Type'
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 40, sortable: false},
@@ -490,6 +491,10 @@
                   { name: 'rl', index: 'rl', width: 40, align: 'right', sortable: false },
                   { name: 'wl', index: 'wl', width: 40, align: 'right', sortable: false },
                   { name: 'tl', index: 'tl', width: 40, align: 'right', sortable: false },
+                  { name: 'gl', index: 'tl', width: 40, align: 'right', sortable: false },
+                  { name: 'groovelength', index: 'groovelength', width: 40, align: 'right', sortable: false },
+                  { name: 'grooveqty', index: 'grooveqty', width: 40, align: 'right', sortable: false },
+                  { name: 'coretypecase', index: 'coretypecase', width: 40, align: 'right', sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -515,7 +520,16 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isfinished: rowIsConfirmed });
 
-		          
+		          rowCoreTypeCase = $(this).getRowData(cl).coretypecase;
+		          if (rowCoreTypeCase == 'Hollow') {
+		              rowCoreTypeCase = "R";
+		          } else if (rowCoreTypeCase == 'Shaft') {
+		              rowCoreTypeCase = "Z";
+		          } else {
+		              rowCoreTypeCase = "-";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { coretypecase: rowCoreTypeCase });
+
 		      }
 		  }
     });//END GRID Detail
@@ -579,6 +593,9 @@
                             $('#RL').val(result.RL);
                             $('#WL').val(result.WL);
                             $('#TL').val(result.TL);
+                            $('#GL').val(result.GL);
+                            $('#GrooveLength').val(result.GrooveLength);
+                            $('#GrooveQTY').val(result.GrooveQTY);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -658,7 +675,8 @@
                 Id: id, DetailId: $("#DetailId").numberbox('getValue'), CoreIdentificationId: $("#id").val(), RollerNo: $("#RollerNo").val(),
                 MaterialCase: moving, CoreBuilderId: $("#CoreBuilderId").val(), CoreBuilderBaseSku: $("#CoreBuilderBaseSku").val(), RollerTypeId: $("#RollerTypeId").val(),
                 MachineId: $("#MachineId").val(), RD: $("#RD").numberbox('getValue'), CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'),
-                WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'), RepairRequestCase: repairrequestcase
+                WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'), RepairRequestCase: repairrequestcase,
+                GL: $("#GL").numberbox('getValue'), GrooveLength: $("#GrooveLength").numberbox('getValue'), GrooveQTY: $("#GrooveQTY").numberbox('getValue')
             }),
             async: false,
             cache: false,
@@ -861,7 +879,9 @@
             $('#CoreBuilderId').val(ret.id).data("kode", id);
             $('#CoreBuilderBaseSku').val(ret.sku);
             $('#CoreBuilder').val(ret.name);
-
+            if (ret.corebuildertypecase == "Hollow") { document.getElementById("CoreTypeCase").selectedIndex = 0; }
+            else if (ret.corebuildertypecase == "Shaft") { document.getElementById("CoreTypeCase").selectedIndex = 1; }
+            else { document.getElementById("CoreTypeCase").selectedIndex = 2; }
             $('#lookup_div_corebuilder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

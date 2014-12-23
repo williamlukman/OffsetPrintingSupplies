@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Roller Identification";
+    ViewBag.Title = "Roller Identification Form";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -124,7 +124,7 @@
 <!-- End Dialog Box -->
 
  <!-- Dialog Box  Item-->
-    <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px"
+    <div id="item_div" class="easyui-dialog" style="text-align: left;padding:0px 0px 10px; top: 10px"
         data-options="modal:true" title=".: Input Detail :.">
 
         <div id="item_toolbar" class="form_toolbar">
@@ -247,9 +247,43 @@
                                <input id="TL" name="TL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
                         </td>
                     </tr>
-               
+                     <tr>
+                        <td>
+                            GL
+                        </td>
+                        <td>
+                               <input id="GL" name="GL" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                            Groove Length
+                        </td>
+                        <td>
+                               <input id="GrooveLength" name="GrooveLength" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                            Qty of Grooves
+                        </td>
+                        <td>
+                               <input id="GrooveQTY" name="GrooveQTY" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="precision:2,groupSeparator:','" value="0" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Core Type
+                        </td>
+                        <td>
+                            <select id="CoreTypeCase" name="CoreTypeCase" disabled="disabled">
+                                <option value="R">R</option>
+                                <option value="Z">Z</option>
+                                <option value="N">-</option>
+                            </select>
+                        </td>
+                    </tr>               
               </table>
-          
         </div>
     </div>
 <!-- End Dialog Box Item-->
