@@ -641,7 +641,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 150 },
+                  { name: 'name', index: 'name', width: 150 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),

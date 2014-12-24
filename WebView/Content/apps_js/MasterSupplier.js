@@ -108,6 +108,7 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        document.getElementById("ContactType").selectedIndex = 0;
         document.getElementById("IsTaxable").checked = true;
         onIsTaxable();
         vStatusSaving = 0; //add data mode	
@@ -144,6 +145,7 @@
                             $('#PIC').val(result.PIC);
                             $('#PICContactNo').val(result.PICContactNo);
                             $('#Email').val(result.Email);
+                            document.getElementById("ContactType").selectedIndex = 0;
                             document.getElementById("IsTaxable").checked = result.IsTaxable;
                             onIsTaxable();
                             var e = document.getElementById("TaxCode");
@@ -238,6 +240,8 @@
 
         var e = document.getElementById("TaxCode");
         var taxcode = e.options[e.selectedIndex].value;
+        var f = document.getElementById("ContactType");
+        var contacttype = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
@@ -247,7 +251,7 @@
                 Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
-                ContactType: $("#ContactType").val()
+                ContactType: contacttype
             }),
             async: false,
             cache: false,

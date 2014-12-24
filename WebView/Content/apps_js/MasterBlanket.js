@@ -54,7 +54,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 50 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 200 },
                   { name: 'rollno', index: 'rollno', width: 70 },
                   { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 30 },
@@ -531,7 +531,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 200 },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -599,7 +599,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 200 },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -723,7 +723,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 200 },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -791,7 +791,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 200 },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
@@ -858,7 +858,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 200 },
                   { name: 'description', index: 'description', width: 100, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },

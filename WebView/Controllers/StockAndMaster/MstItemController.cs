@@ -65,7 +65,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM");
+            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new

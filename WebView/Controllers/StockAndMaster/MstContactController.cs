@@ -56,6 +56,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Name,
+                             model.NamaFakturPajak,
                              model.Address,
                              model.ContactNo,
                              model.PIC,
@@ -99,6 +100,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Name,
+                            model.NamaFakturPajak,
                             model.Address,
                             model.ContactNo,
                             model.PIC,
@@ -130,6 +132,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Name,
+                             model.NamaFakturPajak,
                              model.Address,
                              model.DeliveryAddress,
                              model.NPWP,
@@ -175,6 +178,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Name,
+                            model.NamaFakturPajak,
                             model.Address,
                             model.DeliveryAddress,
                             model.NPWP,
@@ -283,7 +287,11 @@ namespace WebView.Controllers
              {
                  model.Id,
                  model.Name,
+                 model.NamaFakturPajak,
                  model.Address,
+                 model.DeliveryAddress,
+                 model.NPWP,
+                 model.Description,
                  model.ContactNo,
                  model.PIC,
                  model.PICContactNo,
@@ -320,7 +328,11 @@ namespace WebView.Controllers
             {
                 var data = _contactService.GetObjectById(model.Id);
                 data.Name = model.Name;
+                data.NamaFakturPajak = model.NamaFakturPajak;
                 data.Address = model.Address;
+                data.DeliveryAddress = model.DeliveryAddress;
+                data.NPWP = model.NPWP;
+                data.Description = model.Description;
                 data.ContactNo = model.ContactNo;
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;

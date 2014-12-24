@@ -642,10 +642,11 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Name', 'Address', 'DeliveryAddress', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Status', 'Created At', 'Updated At', 'Description'],
+        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Status', 'Created At', 'Updated At', 'Description'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'namafaktur', index: 'namafaktur', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
                   { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
                   { name: 'npwp', index: 'npwp', width: 100 },

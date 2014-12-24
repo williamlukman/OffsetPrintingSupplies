@@ -588,14 +588,14 @@
                             $('#RollerType').val(result.RollerType);
                             $('#MachineId').val(result.MachineId);
                             $('#Machine').val(result.MachineId);
-                            $('#RD').val(result.RD);
-                            $('#CD').val(result.CD);
-                            $('#RL').val(result.RL);
-                            $('#WL').val(result.WL);
-                            $('#TL').val(result.TL);
-                            $('#GL').val(result.GL);
-                            $('#GrooveLength').val(result.GrooveLength);
-                            $('#GrooveQTY').val(result.GrooveQTY);
+                            $('#RD').numberbox('setValue', result.RD);
+                            $('#CD').numberbox('setValue', result.CD);
+                            $('#RL').numberbox('setValue', result.RL);
+                            $('#WL').numberbox('setValue', result.WL);
+                            $('#TL').numberbox('setValue', result.TL);
+                            $('#GL').numberbox('setValue', result.GL);
+                            $('#GrooveLength').numberbox('setValue', result.GrooveLength);
+                            $('#GrooveQTY').numberbox('setValue', result.GrooveQTY);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -844,7 +844,7 @@
         colNames: ['Id', 'Sku', 'Name', 'Description', 'Machine', 'Type'],
         colModel: [
                   { name: 'id', index: 'id', width: 40, align: 'right' },
-                  { name: 'sku', index: 'sku', width: 100 },
+                  { name: 'basesku', index: 'basesku', width: 100 },
                   { name: 'name', index: 'name', width: 200 },
                   { name: 'description', index: 'description', width: 70, hidden: true },
                   { name: 'machine', index: 'machine', width: 100 },
