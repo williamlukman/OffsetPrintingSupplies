@@ -49,7 +49,6 @@ namespace ExcelImport
         public IGLNonBaseCurrencyService _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
         public IReceivableService _receivableService = new ReceivableService(new ReceivableRepository(), new ReceivableValidator());
         public IPayableService _payableService = new PayableService(new PayableRepository(), new PayableValidator());
-
         public ConversionFunction()
         {
             //_companyInfoService = new CompanyInfoService(new CompanyInfoRepository(), new CompanyInfoValidator());
@@ -77,10 +76,12 @@ namespace ExcelImport
         {
             var name = row[0].ToString();
             var desc = row[1].ToString();
+            // TODO:
+            var accountid = int.Parse(row[2].ToString());
             var obj = _itemTypeService.GetQueryable().Where(x => x.Name == name && !x.IsDeleted).FirstOrDefault();
             if (obj == null)
             {
-                obj = _itemTypeService.CreateObject(name, desc);
+                obj = _itemTypeService.CreateObject(name, desc, true, _accountService.GetObjectById(accountid), _accountService);
                 Log(obj, sheetname, rowidx + 2);
             }
         }
@@ -325,7 +326,7 @@ namespace ExcelImport
                         Log(obj2det, sheetname, rowidx + 2);
                         if (!obj2det.Errors.Any())
                         {
-                            _stockAdjustmentService.ConfirmObject(obj2, date, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                            _stockAdjustmentService.ConfirmObject(obj2, date, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
                         }
                         else
                         {
@@ -397,7 +398,7 @@ namespace ExcelImport
                         Log(obj2det, sheetname, rowidx + 2);
                         if (!obj2det.Errors.Any())
                         {
-                            _stockAdjustmentService.ConfirmObject(obj2, date, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                            _stockAdjustmentService.ConfirmObject(obj2, date, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
                         }
                         else
                         {
@@ -469,7 +470,7 @@ namespace ExcelImport
                         Log(obj2det, sheetname, rowidx + 2);
                         if (!obj2det.Errors.Any())
                         {
-                            _stockAdjustmentService.ConfirmObject(obj2, date, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+                            _stockAdjustmentService.ConfirmObject(obj2, date, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
                         }
                         else
                         {

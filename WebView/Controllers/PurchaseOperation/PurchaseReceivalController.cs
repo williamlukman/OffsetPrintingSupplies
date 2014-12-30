@@ -16,8 +16,9 @@ namespace WebView.Controllers
 {
     public class PurchaseReceivalController : Controller
     {
-       private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PurchaseReceivalController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("PurchaseReceivalController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -37,6 +38,7 @@ namespace WebView.Controllers
         public PurchaseReceivalController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
@@ -483,7 +485,7 @@ namespace WebView.Controllers
             {
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.ConfirmObject(data,model.ConfirmationDate.Value,_purchaseReceivalDetailService,_purchaseOrderService,
-                        _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, 
+                        _purchaseOrderDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, 
                         _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
@@ -506,7 +508,7 @@ namespace WebView.Controllers
                 var data = _purchaseReceivalService.GetObjectById(model.Id);
                 model = _purchaseReceivalService.UnconfirmObject(data,_purchaseReceivalDetailService,_purchaseInvoiceService,
                         _purchaseInvoiceDetailService,_purchaseOrderService,_purchaseOrderDetailService,_stockMutationService,
-                        _itemService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService);
+                        _itemService,_itemTypeService,_blanketService,_warehouseItemService,_accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
             {

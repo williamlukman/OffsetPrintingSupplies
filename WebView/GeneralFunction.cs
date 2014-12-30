@@ -280,7 +280,7 @@ namespace WebView
                     beginsZero = number.StartsWith("0");
                     int numDigits = number.Length;
                     int pos = 0;//store digit grouping
-                    String place = "";//digit grouping name:hundres,thousand,etc...
+                    String place = "";//digit grouping name:hundres,thousand,etc..
 
                     switch (numDigits)
                     {
@@ -312,7 +312,7 @@ namespace WebView
                             pos = (numDigits % 10) + 1;
                             place = " BILLION ";
                             break;
-                        //add extra case options for anything above Billion...
+                        //add extra case options for anything above Billion..
 
                         default:
                             isDone = true;
@@ -320,7 +320,7 @@ namespace WebView
                     }
 
                     if (!isDone)
-                    {//if transalation is not done, continue...(Recursion comes in now!!)
+                    {//if transalation is not done, continue..(Recursion comes in now!!)
                         word = changeNumbertoWords(number.Substring(0, pos)) + place + changeNumbertoWords(number.Substring(pos));
 
                         //check for trailing zeros

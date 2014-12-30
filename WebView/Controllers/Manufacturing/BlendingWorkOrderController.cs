@@ -15,8 +15,9 @@ namespace WebView.Controllers
 {
     public class BlendingWorkOrderController : Controller
     {
-      private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("BlendingWorkOrderController");
+        private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("BlendingWorkOrderController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -32,6 +33,7 @@ namespace WebView.Controllers
         public BlendingWorkOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
@@ -317,7 +319,7 @@ namespace WebView.Controllers
             {
                 var data = _blendingWorkOrderService.GetObjectById(model.Id);
                 model = _blendingWorkOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _blendingRecipeService, _blendingRecipeDetailService,
-                            _stockMutationService,_blanketService,_itemService,_warehouseItemService,
+                            _stockMutationService,_blanketService,_itemService, _itemTypeService, _warehouseItemService,
                             _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)
@@ -340,7 +342,7 @@ namespace WebView.Controllers
 
                 var data = _blendingWorkOrderService.GetObjectById(model.Id);
                 model = _blendingWorkOrderService.UnconfirmObject(data, _blendingRecipeService, _blendingRecipeDetailService, 
-                            _stockMutationService, _blanketService, _itemService,_warehouseItemService,
+                            _stockMutationService, _blanketService, _itemService, _itemTypeService, _warehouseItemService,
                             _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)

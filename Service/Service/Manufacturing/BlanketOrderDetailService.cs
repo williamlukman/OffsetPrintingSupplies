@@ -131,14 +131,14 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail RejectObject(BlanketOrderDetail blanketOrderDetail, DateTime RejectedDate, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                               IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             blanketOrderDetail.RejectedDate = RejectedDate;
             if (_validator.ValidRejectObject(blanketOrderDetail, _blanketOrderService))
             {
                 CalculateTotalCost(blanketOrderDetail, _blanketService, _itemService);
-                _generalLedgerJournalService.CreateRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
+                _generalLedgerJournalService.CreateRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _itemTypeService, _accountService);
                 _repository.RejectObject(blanketOrderDetail);
 
                 // add blanket order reject quantity
@@ -179,12 +179,12 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail UndoRejectObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                                   IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                   IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                                    IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUndoRejectObject(blanketOrderDetail, _blanketOrderService))
             {
-                _generalLedgerJournalService.CreateUndoRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
+                _generalLedgerJournalService.CreateUndoRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _itemTypeService, _accountService);
                 blanketOrderDetail.TotalCost = 0;
                 _repository.UndoRejectObject(blanketOrderDetail);
 
@@ -227,14 +227,14 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail FinishObject(BlanketOrderDetail blanketOrderDetail, DateTime FinishedDate, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                               IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                               IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             blanketOrderDetail.FinishedDate = FinishedDate;
             if (_validator.ValidFinishObject(blanketOrderDetail, _blanketOrderService))
             {
                 CalculateTotalCost(blanketOrderDetail, _blanketService, _itemService);
-                _generalLedgerJournalService.CreateFinishedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
+                _generalLedgerJournalService.CreateFinishedJournalForBlanketOrderDetail(blanketOrderDetail, _itemTypeService, _accountService);
                 _repository.FinishObject(blanketOrderDetail);
 
                 // add blanket order quantity final
@@ -281,13 +281,17 @@ namespace Service.Service
         }
 
         public BlanketOrderDetail UnfinishObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService, IStockMutationService _stockMutationService,
-                                                 IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
+                                                 IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService,
                                                  IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUnfinishObject(blanketOrderDetail, _blanketOrderService))
             {
-                _generalLedgerJournalService.CreateUnfinishedJournalForBlanketOrderDetail(blanketOrderDetail, _accountService);
+                _generalLedgerJournalService.CreateUnfinishedJournalForBlanketOrderDetail(blanketOrderDetail, _itemTypeService, _accountService);
                 blanketOrderDetail.TotalCost = 0;
+                blanketOrderDetail.AdhesiveCost = 0;
+                blanketOrderDetail.BarCost = 0;
+                blanketOrderDetail.RollBlanketCost = 0;
+
                 _repository.UnfinishObject(blanketOrderDetail);
 
                 // deduce blanket order quantity final
@@ -348,21 +352,29 @@ namespace Service.Service
             Item Adhesive2 = _itemService.GetObjectById(Blanket.Adhesive2Id.GetValueOrDefault());
             Item RollBlanket = _itemService.GetObjectById(Blanket.RollBlanketItemId);
 
-            decimal TotalCost = RollBlanket.AvgPrice;
-            TotalCost += Adhesive != null ? (blanketOrderDetail.AdhesiveUsage * Adhesive.AvgPrice) : 0;
-            TotalCost += Adhesive2 != null ? (blanketOrderDetail.Adhesive2Usage * Adhesive2.AvgPrice) : 0;
+            decimal TotalCost = 0;
+            decimal RollBlanketCost = RollBlanket.AvgPrice;
+            decimal AdhesiveCost = 0;
+            decimal BarCost = 0;
+
+            AdhesiveCost += Adhesive != null ? (blanketOrderDetail.AdhesiveUsage * Adhesive.AvgPrice) : 0;
+            AdhesiveCost += Adhesive2 != null ? (blanketOrderDetail.Adhesive2Usage * Adhesive2.AvgPrice) : 0;
 
             if (Blanket.HasLeftBar)
             {
                 BarLeft = _itemService.GetObjectById((int)Blanket.LeftBarItemId);
-                TotalCost += BarLeft.AvgPrice;
+                BarCost += BarLeft.AvgPrice;
             }
             if (Blanket.HasRightBar)
             { 
                 BarRight = _itemService.GetObjectById((int)Blanket.RightBarItemId);
-                TotalCost += BarRight.AvgPrice;
+                BarCost += BarRight.AvgPrice;
             }
 
+            blanketOrderDetail.RollBlanketCost = RollBlanketCost;
+            blanketOrderDetail.AdhesiveCost = AdhesiveCost;
+            blanketOrderDetail.BarCost = BarCost;
+            TotalCost = RollBlanketCost + AdhesiveCost + BarCost;
             blanketOrderDetail.TotalCost = TotalCost;
             _repository.UpdateObject(blanketOrderDetail);
             return;

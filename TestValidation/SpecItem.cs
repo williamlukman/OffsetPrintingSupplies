@@ -124,7 +124,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.item.Errors.Count().should_be(0);
             };
@@ -149,7 +149,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.stockAdjustment.Errors.Count().should_not_be(0);
                 d.item.Quantity.should_be(0);
@@ -176,7 +176,7 @@ namespace TestValidation
                 d._customerStockAdjustmentDetailService.CreateObject(d.cstockAD1, d._customerStockAdjustmentService, d._itemService, d._warehouseItemService, d._customerItemService);
 
                 d._customerStockAdjustmentService.ConfirmObject(d.customerStockAdjustment, DateTime.Today, d._customerStockAdjustmentDetailService, d._customerStockMutationService,
-                                                        d._itemService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.item.Errors.Count().should_be(0);
                 d.item.CustomerQuantity.should_be(d.cstockAD1.Quantity);
@@ -203,7 +203,7 @@ namespace TestValidation
                 d._customerStockAdjustmentDetailService.CreateObject(d.cstockAD1, d._customerStockAdjustmentService, d._itemService, d._warehouseItemService, d._customerItemService);
 
                 d._customerStockAdjustmentService.ConfirmObject(d.customerStockAdjustment, DateTime.Today, d._customerStockAdjustmentDetailService, d._customerStockMutationService,
-                                                        d._itemService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._customerItemService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.customerStockAdjustment.Errors.Count().should_not_be(0);
                 d.item.CustomerQuantity.should_be(0);
@@ -299,7 +299,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.rollerBuilder = new RollerBuilder()
                 {

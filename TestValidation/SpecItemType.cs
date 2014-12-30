@@ -88,9 +88,10 @@ namespace TestValidation
                 ItemType nonameitemtype = new ItemType()
                 {
                     Name = "     ",
-                    Description = "Empty"
+                    Description = "Empty",
+                    AccountId = 1
                 };
-                nonameitemtype = d._itemTypeService.CreateObject(nonameitemtype);
+                nonameitemtype = d._itemTypeService.CreateObject(nonameitemtype, d._accountService);
                 nonameitemtype.Errors.Count().should_not_be(0);
             };
 
@@ -129,7 +130,7 @@ namespace TestValidation
                 d._stockAdjustmentDetailService.CreateObject(d.stockAD1, d._stockAdjustmentService, d._itemService, d._warehouseItemService);
 
                 d._stockAdjustmentService.ConfirmObject(d.stockAdjustment, DateTime.Today, d._stockAdjustmentDetailService, d._stockMutationService,
-                                                        d._itemService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
+                                                        d._itemService, d._itemTypeService, d._blanketService, d._warehouseItemService, d._accountService, d._generalLedgerJournalService, d._closingService);
 
                 d.typeGlue = d._itemTypeService.SoftDeleteObject(d.typeGlue, d._itemService);
                 d.typeGlue.Errors.Count().should_not_be(0);

@@ -55,6 +55,14 @@ namespace Data.Migrations
                 customerItem.WarehouseItemId = whid;
             }
 
+            int? accountid = null;
+            Account accounts = context.Accounts.FirstOrDefault();
+            if (accounts != null) { accountid = accounts.Id; }
+            foreach (var x in context.ItemTypes.Where(x => x.AccountId == null))
+            {
+                x.AccountId = accountid;
+            }
+
             //if (context.Currencys.FirstOrDefault() == null)
             //{
             //    context.Currencys.Add(

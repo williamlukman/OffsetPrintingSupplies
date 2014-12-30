@@ -44,17 +44,17 @@ namespace Service.Service
             return _repository.GetObjectByName(name);
         }
 
-        public ItemType CreateObject(string Name, string Description)
+        public ItemType CreateObject(string Name, string Description, IAccountService _accountService)
         {
             ItemType itemType = new ItemType
             {
                 Name = Name,
                 Description = Description
             };
-            return this.CreateObject(itemType);
+            return this.CreateObject(itemType, _accountService);
         }
 
-        public ItemType CreateObject(string Name, string Description, bool IsLegacy)
+        public ItemType CreateObject(string Name, string Description, bool IsLegacy, IAccountService _accountService)
         {
             ItemType itemType = new ItemType
             {
@@ -62,18 +62,30 @@ namespace Service.Service
                 Description = Description,
                 IsLegacy = IsLegacy
             };
-            return this.CreateObject(itemType);
+            return this.CreateObject(itemType, _accountService);
         }
 
-        public ItemType CreateObject(ItemType itemType)
+        public ItemType CreateObject(string Name, string Description, bool IsLegacy, Account account, IAccountService _accountService)
+        {
+            ItemType itemType = new ItemType
+            {
+                Name = Name,
+                Description = Description,
+                IsLegacy = IsLegacy,
+                AccountId = account.Id
+            };
+            return this.CreateObject(itemType, _accountService);
+        }
+
+        public ItemType CreateObject(ItemType itemType, IAccountService _accountService)
         {
             itemType.Errors = new Dictionary<String, String>();
-            return (_validator.ValidCreateObject(itemType, this) ? _repository.CreateObject(itemType) : itemType);
+            return (_validator.ValidCreateObject(itemType, this, _accountService) ? _repository.CreateObject(itemType) : itemType);
         }
 
-        public ItemType UpdateObject(ItemType itemType)
+        public ItemType UpdateObject(ItemType itemType, IAccountService _accountService)
         {
-            return (itemType = _validator.ValidUpdateObject(itemType, this) ? _repository.UpdateObject(itemType) : itemType);
+            return (itemType = _validator.ValidUpdateObject(itemType, this, _accountService) ? _repository.UpdateObject(itemType) : itemType);
         }
 
         public ItemType SoftDeleteObject(ItemType itemType, IItemService _itemService)

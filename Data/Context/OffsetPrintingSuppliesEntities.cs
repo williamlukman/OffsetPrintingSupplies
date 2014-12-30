@@ -25,8 +25,7 @@ namespace Data.Context
 
             IList<String> userroleNames = new List<String>()
                                         { "UserMenu", "UserAccount", "UserAccess" };
-            IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal",
-                                        "Account" };
+            IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal" };
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -52,7 +51,7 @@ namespace Data.Context
                                           "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "Company" };
             IList<String> financeNames = new List<String>() {
-                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate","Currency"};
+                                          "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate", "Currency", "Account" };
 
             userroleNames.ToList().ForEach(x => tableNames.Add(x));
             accountingNames.ToList().ForEach(x => tableNames.Add(x));

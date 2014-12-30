@@ -24,7 +24,7 @@ namespace ExcelImport
             TextWriter oldOut = Console.Out;
             try
             {
-                Console.WriteLine("Generating ConsoleLog.txt file....");
+                Console.WriteLine("Generating ConsoleLog.txt file..");
                 ostrm = new FileStream("./ConsoleLog.txt", FileMode.OpenOrCreate, FileAccess.Write);
                 writer = new StreamWriter(ostrm);
                 Console.SetOut(writer);
@@ -36,7 +36,7 @@ namespace ExcelImport
                 //return;
             }
 
-            Console.WriteLine("Processing...");
+            Console.WriteLine("Processing..");
             var conv = new ConversionFunction();
             //PopulateCOA();
             //conv.ImportDataFromExcel(@"D:\Other\20141218 TemplateZGA.xlsx");

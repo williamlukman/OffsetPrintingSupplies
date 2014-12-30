@@ -17,6 +17,7 @@ namespace WebView.Controllers
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("TemporaryDeliveryOrderClearanceController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -44,6 +45,7 @@ namespace WebView.Controllers
         public TemporaryDeliveryOrderClearanceController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
@@ -502,7 +504,7 @@ namespace WebView.Controllers
             {
                 var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
                 model = _temporaryDeliveryOrderClearanceService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), _temporaryDeliveryOrderClearanceDetailService,
-                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, 
+                        _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, 
                         _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)
@@ -524,7 +526,7 @@ namespace WebView.Controllers
             {
 
                 var data = _temporaryDeliveryOrderClearanceService.GetObjectById(model.Id);
-                model = _temporaryDeliveryOrderClearanceService.UnconfirmObject(data, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+                model = _temporaryDeliveryOrderClearanceService.UnconfirmObject(data, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                         _blanketService, _warehouseItemService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
             }
             catch (Exception ex)

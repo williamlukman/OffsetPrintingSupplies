@@ -20,10 +20,12 @@ namespace Core.Interface.Service
         CustomerStockAdjustment SoftDeleteObject(CustomerStockAdjustment customerStockAdjustment, ICustomerStockAdjustmentDetailService _customerStockAdjustmentDetailService);
         bool DeleteObject(int Id);
         CustomerStockAdjustment ConfirmObject(CustomerStockAdjustment customerStockAdjustment, DateTime ConfirmationDate, ICustomerStockAdjustmentDetailService _customerStockAdjustmentDetailService,
-                                             ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
+                                             ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, IItemTypeService _itemTypeService,
+                                             ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
         CustomerStockAdjustment UnconfirmObject(CustomerStockAdjustment customerStockAdjustment, ICustomerStockAdjustmentDetailService _customerStockAdjustmentDetailService,
-                                               ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
+                                               ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, IItemTypeService _itemTypeService,
+                                               ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService);
     }
 }

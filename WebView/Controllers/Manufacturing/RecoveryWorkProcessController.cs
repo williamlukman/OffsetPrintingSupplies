@@ -451,7 +451,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.FinishObject(data, model.FinishedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
-                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService, _blanketService,
+                    _coreBuilderService,_rollerBuilderService,_itemService, _itemTypeService, _warehouseItemService, _blanketService,
                     _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                     _customerStockMutationService, _customerItemService);
             }
@@ -476,7 +476,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.UnfinishObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService
-                    ,_coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService
+                    ,_coreBuilderService,_rollerBuilderService,_itemService, _itemTypeService, _warehouseItemService,_blanketService
                     ,_stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService
                     ,_customerStockMutationService, _customerItemService);
             }
@@ -500,7 +500,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.RejectObject(data,model.RejectedDate.Value,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,_coreBuilderService
-                    ,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,_stockMutationService,
+                    ,_rollerBuilderService,_itemService,_itemTypeService,_warehouseItemService,_blanketService,_stockMutationService,
                     _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
@@ -523,7 +523,7 @@ namespace WebView.Controllers
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
                 model = _recoveryOrderDetailService.UndoRejectObject(data,_coreIdentificationService,
                     _coreIdentificationDetailService,_recoveryOrderService,_recoveryAccessoryDetailService,
-                    _coreBuilderService,_rollerBuilderService,_itemService,_warehouseItemService,_blanketService,
+                    _coreBuilderService,_rollerBuilderService,_itemService, _itemTypeService, _warehouseItemService,_blanketService,
                     _stockMutationService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
