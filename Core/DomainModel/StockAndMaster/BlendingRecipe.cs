@@ -11,7 +11,7 @@ namespace Core.DomainModel
         public string Name { get; set; }
         public string Description { get; set; }
         public int TargetItemId { get; set; }
-        public int TargetQuantity { get; set; }
+        public decimal TargetQuantity { get; set; }
 
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

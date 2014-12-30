@@ -383,6 +383,8 @@ namespace WebView.Controllers
                 data.WarehouseId = model.WarehouseId;
                 data.Code = model.Code;
                 data.QuantityReceived = model.QuantityReceived;
+                data.HasDueDate = model.HasDueDate;
+                data.DueDate = model.DueDate;
                 model = _blanketOrderService.UpdateObject(data,_blanketOrderDetailService);
             }
             catch (Exception ex)

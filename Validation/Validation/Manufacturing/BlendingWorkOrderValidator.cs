@@ -59,7 +59,7 @@ namespace Validation.Validation
             IList<BlendingRecipeDetail> details = _blendingRecipeDetailService.GetObjectsByBlendingRecipeId(blendingWorkOrder.BlendingRecipeId);
 
             // itemId contains Id of the source item
-            IDictionary<int, int> ValuePairItemIdQuantity = new Dictionary<int, int>();
+            IDictionary<int, decimal> ValuePairItemIdQuantity = new Dictionary<int, decimal>();
             foreach (var detail in details)
             {
                 if (ValuePairItemIdQuantity.ContainsKey(detail.ItemId))

@@ -26,6 +26,7 @@
     function ClearData() {
         $('#Description').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
+        $('#NamaFakturPajak').val('').text('').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
         ClearErrorMessage();
@@ -38,20 +39,23 @@
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetListCustomer',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact No','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Status', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At', 'Description'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
+                  { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },
+                  { name: 'npwp', index: 'npwp', width: 100 },
                   { name: 'contact', index: 'contactno', width: 100 },
                   { name: 'pic', index: 'pic', width: 120 },
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },
                   { name: 'taxcode', index: 'taxcode', width: 50 },
                   { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
-                  { name: 'contacttype', index: 'contacttype', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'description', index: 'description', width: 250 },
         ],
         page: '1',
         pager: $('#pager'),
@@ -109,6 +113,7 @@
         ClearData();
         clearForm('#frm');
         document.getElementById("IsTaxable").checked = true;
+        document.getElementById("ContactType").selectedIndex = 1;
         onIsTaxable();
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
@@ -139,11 +144,16 @@
                             $("#form_btn_save").data('kode', id);
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
+                            $('#NamaFakturPajak').val(result.NamaFakturPajak);
                             $('#Address').val(result.Address);
+                            $('#DeliveryAddress').val(result.DeliveryAddress);
+                            $('#NPWP').val(result.NPWP);
+                            $('#Description').val(result.Description);
                             $('#ContactNo').val(result.ContactNo);
                             $('#PIC').val(result.PIC);
                             $('#PICContactNo').val(result.PICContactNo);
                             $('#Email').val(result.Email);
+                            document.getElementById("ContactType").selectedIndex = 1;
                             document.getElementById("IsTaxable").checked = result.IsTaxable;
                             onIsTaxable();
                             var e = document.getElementById("TaxCode");
@@ -238,16 +248,20 @@
 
         var e = document.getElementById("TaxCode");
         var taxcode = e.options[e.selectedIndex].value;
+        var f = document.getElementById("ContactType");
+        var contacttype = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
+                Id: id, Name: $("#Name").val(), NamaFakturPajak: $("#NamaFakturPajak").val(),
+                Address: $("#Address").val(), DeliveryAddress: $("#DeliveryAddress").val(),
+                NPWP: $("#NPWP").val(), Description: $("#Description").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
-                ContactType: $("#ContactType").val()
+                ContactType: contacttype
             }),
             async: false,
             cache: false,

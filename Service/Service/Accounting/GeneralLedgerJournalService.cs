@@ -2458,7 +2458,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount, 2)
+                    Amount = Math.Round((PreTax * purchaseInvoice.ExchangeRateAmount) - (PreTax * purchaseReceival.ExchangeRateAmount), 2)
                 };
                 debitExchangeLoss = CreateObject(debitExchangeLoss, _accountService);
                 journals.Add(debitExchangeLoss);
@@ -2472,7 +2472,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount, 2)
+                    Amount = Math.Round((PreTax * purchaseReceival.ExchangeRateAmount) - (PreTax * purchaseInvoice.ExchangeRateAmount), 2)
                 };
                 creditExchangeGain = CreateObject(creditExchangeGain, _accountService);
                 journals.Add(creditExchangeGain);
@@ -2555,7 +2555,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(PreTax * purchaseInvoice.ExchangeRateAmount - PreTax * purchaseReceival.ExchangeRateAmount, 2)
+                    Amount = Math.Round((PreTax * purchaseInvoice.ExchangeRateAmount) - (PreTax * purchaseReceival.ExchangeRateAmount), 2)
                 };
                 creditExchangeLoss = CreateObject(creditExchangeLoss, _accountService);
                 journals.Add(creditExchangeLoss);
@@ -2569,7 +2569,7 @@ namespace Service.Service
                     SourceDocumentId = purchaseInvoice.Id,
                     TransactionDate = (DateTime)purchaseInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(PreTax * purchaseReceival.ExchangeRateAmount - PreTax * purchaseInvoice.ExchangeRateAmount, 2)
+                    Amount = Math.Round((PreTax * purchaseReceival.ExchangeRateAmount) - (PreTax * purchaseInvoice.ExchangeRateAmount), 2)
                 };
                 debitExchangeGain = CreateObject(debitExchangeGain, _accountService);
                 journals.Add(debitExchangeGain);
@@ -2927,7 +2927,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = contact.IsTaxable ? (decimal) Math.Round(Tax * Rate, 2) : (decimal) Math.Round(salesInvoice.AmountReceivable / 11, 2)
+                    Amount = contact.IsTaxable ? (decimal) Math.Round(Tax * Rate, 2) : (decimal) Math.Round(salesInvoice.AmountReceivable * Rate/ 11, 2)
                 };
                 creditppnkeluaran = CreateObject(creditppnkeluaran, _accountService);
                 journals.Add(creditppnkeluaran);
@@ -2940,7 +2940,7 @@ namespace Service.Service
                 SourceDocumentId = salesInvoice.Id,
                 TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = contact.IsTaxable ? (decimal) Math.Round(PreTax * Rate, 2) : (decimal) Math.Round(salesInvoice.DPP * 10 / 11, 2)
+                Amount = contact.IsTaxable ? (decimal) Math.Round(PreTax * Rate, 2) : (decimal) Math.Round(salesInvoice.DPP * Rate * 10 / 11, 2)
             };
             creditrevenue = CreateObject(creditrevenue, _accountService);
 
@@ -3048,7 +3048,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = contact.IsTaxable ? Math.Round (Tax * Rate, 2) : Math.Round(salesInvoice.AmountReceivable / 11, 2)
+                    Amount = contact.IsTaxable ? Math.Round (Tax * Rate, 2) : Math.Round(salesInvoice.AmountReceivable * Rate/ 11, 2)
                 };
                 debitppnkeluaran = CreateObject(debitppnkeluaran, _accountService);
                 journals.Add(debitppnkeluaran);
@@ -3061,7 +3061,7 @@ namespace Service.Service
                 SourceDocumentId = salesInvoice.Id,
                 TransactionDate = salesInvoice.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = contact.IsTaxable ? Math.Round (PreTax * Rate, 2) : Math.Round(salesInvoice.AmountReceivable * 10 / 11, 2)
+                Amount = contact.IsTaxable ? Math.Round (PreTax * Rate, 2) : Math.Round(salesInvoice.AmountReceivable * Rate * 10 / 11, 2)
             };
             debitrevenue = CreateObject(debitrevenue, _accountService);
 

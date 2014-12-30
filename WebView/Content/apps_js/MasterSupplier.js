@@ -38,7 +38,7 @@
     $("#list").jqGrid({
         url: base_url + 'MstContact/GetListSupplier',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address','Contact','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address','Contact','PIC','PIC Contact','Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At', 'Description'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
@@ -51,6 +51,7 @@
                   { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'description', index: 'description', width: 250 },
         ],
         page: '1',
         pager: $('#pager'),
@@ -107,6 +108,7 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        document.getElementById("ContactType").selectedIndex = 0;
         document.getElementById("IsTaxable").checked = true;
         onIsTaxable();
         vStatusSaving = 0; //add data mode	
@@ -143,6 +145,7 @@
                             $('#PIC').val(result.PIC);
                             $('#PICContactNo').val(result.PICContactNo);
                             $('#Email').val(result.Email);
+                            document.getElementById("ContactType").selectedIndex = 0;
                             document.getElementById("IsTaxable").checked = result.IsTaxable;
                             onIsTaxable();
                             var e = document.getElementById("TaxCode");
@@ -237,6 +240,8 @@
 
         var e = document.getElementById("TaxCode");
         var taxcode = e.options[e.selectedIndex].value;
+        var f = document.getElementById("ContactType");
+        var contacttype = f.options[f.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
@@ -246,7 +251,7 @@
                 Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
-                ContactType: $("#ContactType").val()
+                ContactType: contacttype
             }),
             async: false,
             cache: false,

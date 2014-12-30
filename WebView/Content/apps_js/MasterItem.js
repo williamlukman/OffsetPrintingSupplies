@@ -130,7 +130,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
-                            $('#SKU').val(result.Sku);
+                            $('#Sku').val(result.Sku);
                             $('#Description').val(result.Description);
                             $('#ItemTypeId').val(result.ItemTypeId);
                             $('#ItemTypeName').val(result.ItemType);
@@ -238,7 +238,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice: $("#SellingPrice").numberbox('getValue'),
-                Sku: $("#SKU").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
+                Sku: $("#Sku").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
                 MinimumQuantity: $("#MinimumQuantity").numberbox('getValue'), IsTradeable: tradeable
             }),
             async: false,
@@ -333,11 +333,32 @@
 
             $('#ItemTypeId').val(ret.id).data("kode", id);
             $('#ItemTypeName').val(ret.name);
-
             $('#lookup_div_itemtype').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
+        $.ajax({
+            dataType: "json",
+            url: base_url + "MstItemType/GetInfoByName?itemType=" + $('#ItemTypeName').val(),
+            success: function (result) {
+                if (result.Id == null) {
+                    $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                }
+                else {
+                    if (JSON.stringify(result.Errors) != '{}') {
+                        var error = '';
+                        for (var key in result.Errors) {
+                            error = error + "<br>" + key + " " + result.Errors[key];
+                        }
+                        $.messager.alert('Warning', error, 'warning');
+                    }
+                    else {
+                        $('#Sku').val(result.SKU);
+                    }
+                }
+            }
+        });
+
     });
 
     

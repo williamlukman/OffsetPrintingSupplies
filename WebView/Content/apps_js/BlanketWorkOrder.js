@@ -117,6 +117,7 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#HasDueDate').removeAttr('disabled');
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDateDiv').hide();
         $('#DueDateDiv2').show();
@@ -157,7 +158,7 @@
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
-                            $('#QuantityReceived').val(result.QuantityReceived);
+                            $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
                             $('#form_btn_save').hide();
                             $('#btnContact').attr('disabled', true);
                             $('#btnWarehouse').attr('disabled', true);
@@ -209,7 +210,8 @@
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
-                            $('#QuantityReceived').val(result.QuantityReceived);
+                            $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
+                            $('#HasDueDate').removeAttr('disabled');
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
                             $('#DueDate2').val(dateEnt(result.DueDate));

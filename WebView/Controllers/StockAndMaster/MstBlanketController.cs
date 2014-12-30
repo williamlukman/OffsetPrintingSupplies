@@ -542,6 +542,7 @@ namespace WebView.Controllers
                 data.HasLeftBar = model.HasLeftBar;
                 data.LeftBarItemId = model.LeftBarItemId;
                 data.HasRightBar = model.HasRightBar;
+                data.RightBarItemId = model.RightBarItemId;
                 data.ContactId = model.ContactId;
                 data.ApplicationCase = model.ApplicationCase;
                 data.CroppingType = model.CroppingType;

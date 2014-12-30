@@ -8,6 +8,8 @@ namespace Core.DomainModel
     public partial class CoreIdentificationDetail
     {
         public int Id { get; set; }
+        public string RollerNo { get; set; }
+
         public int CoreIdentificationId { get; set; }
         public int DetailId { get; set; }
         public int MaterialCase { get; set; }
@@ -22,6 +24,10 @@ namespace Core.DomainModel
         public decimal RL { get; set; }
         public decimal WL { get; set; }
         public decimal TL { get; set; }
+
+        public decimal GL { get; set; }
+        public decimal GrooveLength { get; set; }
+        public decimal GrooveQTY { get; set; }
 
         public bool IsJobScheduled { get; set; }
         public bool IsDelivered { get; set; }

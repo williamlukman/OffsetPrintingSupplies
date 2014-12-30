@@ -173,7 +173,7 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             var q = _purchaseOrderDetailService.GetQueryable().Include("PurchaseOrder")
                                                .Include("Item").Include("UoM").Include("Contact")
-                                               .Where(x => x.PurchaseOrderId == Id);
+                                               .Where(x => x.PurchaseOrderId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -231,7 +231,7 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             var q = _purchaseReceivalDetailService.GetQueryable().Include("PurchaseReceival")
                                               .Include("PurchaseOrderDetail").Include("Item").Include("UoM").Include("Contact")
-                                              .Where(x => x.PurchaseReceivalId == Id);
+                                              .Where(x => x.PurchaseReceivalId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -280,7 +280,7 @@ namespace WebView.Controllers
             var company = _companyService.GetQueryable().FirstOrDefault();
             var q = _purchaseInvoiceDetailService.GetQueryable().Include("PurchaseInvoice").Include("PurchaseReceivalDetail")
                                                  .Include("PurchaseOrderDetail").Include("Item").Include("UoM")
-                                                 .Where(x => x.PurchaseInvoiceId == Id);
+                                                 .Where(x => x.PurchaseInvoiceId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -330,7 +330,7 @@ namespace WebView.Controllers
             //var salesOrder = _salesOrderService.GetObjectById(Id);
             var q = _virtualOrderDetailService.GetQueryable().Include("VirtualOrder")
                                               .Include("VirtualOrderDetail").Include("Item").Include("UoM").Include("Contact")
-                                              .Where(x => x.VirtualOrderId == Id);
+                                              .Where(x => x.VirtualOrderId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -391,7 +391,7 @@ namespace WebView.Controllers
             var q = _temporaryDeliveryOrderDetailService.GetQueryable().Include("TemporaryDeliveryOrder")
                                               .Include("DeliveryOrder").Include("SalesOrder").Include("Item")
                                               .Include("UoM").Include("Contact")
-                                              .Where(x => x.TemporaryDeliveryOrderId == Id);
+                                              .Where(x => x.TemporaryDeliveryOrderId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -447,7 +447,7 @@ namespace WebView.Controllers
             //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
             var q = _salesQuotationDetailService.GetQueryable().Include("SalesQuotation")
                                               .Include("SalesQuotationDetail").Include("Item").Include("UoM").Include("Contact")
-                                              .Where(x => x.SalesQuotationId == Id);
+                                              .Where(x => x.SalesQuotationId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -507,7 +507,7 @@ namespace WebView.Controllers
             //var salesOrder = _salesOrderService.GetObjectById(Id);
             var q = _salesOrderDetailService.GetQueryable().Include("SalesOrder")
                                               .Include("SalesOrderDetail").Include("Item").Include("UoM").Include("Contact")
-                                              .Where(x => x.SalesOrderId == Id);
+                                              .Where(x => x.SalesOrderId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -566,7 +566,7 @@ namespace WebView.Controllers
             //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
             var q = _deliveryOrderDetailService.GetQueryable().Include("DeliveryOrder")
                                               .Include("SalesOrderDetail").Include("Item").Include("UoM").Include("Contact")
-                                              .Where(x => x.DeliveryOrderId == Id);
+                                              .Where(x => x.DeliveryOrderId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q
@@ -616,7 +616,7 @@ namespace WebView.Controllers
             //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
             var q = _salesInvoiceDetailService.GetQueryable().Include("SalesInvoice").Include("DeliveryOrderDetail")
                                               .Include("SalesOrderDetail").Include("Item").Include("UoM").Include("Contact")
-                                              .Where(x => x.SalesInvoiceId == Id);
+                                              .Where(x => x.SalesInvoiceId == Id && !x.IsDeleted);
             string user = AuthenticationModel.GetUserName();
 
             var query = (from model in q

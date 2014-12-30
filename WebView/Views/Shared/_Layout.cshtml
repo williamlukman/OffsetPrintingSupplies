@@ -268,6 +268,8 @@
                                                {<li><a href="@Url.Action("Index", "Company")">Company</a> </li>}
                                                @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Contact, Core.Constants.Constant.MenuGroupName.Master))
                                                {<li><a href="@Url.Action("Index", "MstContact")">Contact</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Supplier, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstSupplier")">Supplier</a> </li>}
                                                @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ItemType, Core.Constants.Constant.MenuGroupName.Master))
                                                {<li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>}
                                                @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Machine, Core.Constants.Constant.MenuGroupName.Master))
@@ -323,7 +325,7 @@
                                            <li><a href="#">Roller Recovery</a>
                                              <ul>
                                                  @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerIdentification, Core.Constants.Constant.MenuGroupName.Manufacturing))
-                                                 {<li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification</a></li>}
+                                                 {<li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification Form (RIF)</a></li>}
                                                  @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerAccessoryDetail, Core.Constants.Constant.MenuGroupName.Manufacturing))
                                                  {<li><a href="@Url.Action("Index", "CoreAccessoryDetail")">Roller Accessory Detail</a></li>}
                                                  @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerWarehouseMutation, Core.Constants.Constant.MenuGroupName.Manufacturing))
@@ -370,7 +372,7 @@
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Currency, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Currency")">Currency</a> </li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ExchangeRate, Core.Constants.Constant.MenuGroupName.Transaction))
-                                                    {<li><a href="@Url.Action("Index", "ExchangeRate")">ExchangeRate</a> </li>}
+                                                    {<li><a href="@Url.Action("Index", "ExchangeRate")">Tax Rate</a> </li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a> </li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankAdjustment, Core.Constants.Constant.MenuGroupName.Transaction))

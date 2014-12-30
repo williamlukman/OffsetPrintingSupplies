@@ -712,6 +712,10 @@ namespace WebView
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
                         string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string[] split = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string actualtext = conditions[i].Substring(split[0].Length + split[1].Length + 1);
+                        string actualcut = actualtext.Trim().Substring(2, actualtext.Trim().Length - 4);
+                        string compare = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -729,7 +733,7 @@ namespace WebView
 
                         string filterValue = "";
                         if (useLike)
-                            filterValue = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
+                            filterValue = actualcut;
                         else
                             filterValue = temp[2].Trim().Substring(1, temp[2].Trim().Length - 2);
 
@@ -790,6 +794,10 @@ namespace WebView
                     if (!String.IsNullOrEmpty(conditions[i]))
                     {
                         string[] temp = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string[] split = conditions[i].TrimEnd().TrimStart().Split(' ');
+                        string actualtext = conditions[i].Substring(split[0].Length + split[1].Length + 2);
+                        string actualcut = actualtext.Trim().Substring(2, actualtext.Trim().Length - 4);
+                        string compare = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
                         // 0 : fieldName
                         // 1 : operator
                         // 2 : fieldValue
@@ -807,7 +815,7 @@ namespace WebView
 
                         string filterValue = "";
                         if (useLike)
-                            filterValue = temp[2].Trim().Substring(2, temp[2].Trim().Length - 4);
+                            filterValue = actualcut;
                         else
                             filterValue = temp[2].Trim().Substring(1, temp[2].Trim().Length - 2);
 

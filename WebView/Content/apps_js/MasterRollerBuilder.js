@@ -137,6 +137,27 @@
         clearForm('#frm');
         vStatusSaving = 0; //add data mode	
         $('#form_div').dialog('open');
+        $.ajax({
+            dataType: "json",
+            url: base_url + "MstItemType/GetInfoByName?itemType=Roller",
+            success: function (result) {
+                if (result.Id == null) {
+                    $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                }
+                else {
+                    if (JSON.stringify(result.Errors) != '{}') {
+                        var error = '';
+                        for (var key in result.Errors) {
+                            error = error + "<br>" + key + " " + result.Errors[key];
+                        }
+                        $.messager.alert('Warning', error, 'warning');
+                    }
+                    else {
+                        $('#BaseSku').val(result.SKU);
+                    }
+                }
+            }
+        });
     });
 
     $('#btn_edit').click(function () {

@@ -47,7 +47,13 @@
                             <td>
                                 <label>Name</label></td>
                             <td colspan="3">
-                                <input id="Name" name="Name" type="text" size="60" maxlength="60" align="left" /></td>
+                                <input id="Name" name="Name" type="text" size="60" maxlength="200" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Nama Faktur</label></td>
+                            <td colspan="3">
+                                <input id="NamaFakturPajak" name="NamaFakturPajak" type="text" size="60" maxlength="200" align="left" /></td>
                         </tr>
                         <tr>
                             <td>
@@ -84,13 +90,26 @@
                                 </select>
                             </td>
                         </tr>
-
                         <tr>
                             <td valign="top">
                                 <label>Address</label></td>
-                            <td colspan="3"><label>
+                            <td colspan="3">
                               <textarea name="Address" id="Address" cols="60" rows="3"></textarea>
-                            </label></td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>DeliveryAddress</label></td>
+                            <td colspan="3">
+                              <textarea name="DeliveryAddress" id="DeliveryAddress" cols="60" rows="3"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>NPWP</label></td>
+                            <td colspan="3">
+                              <input name="NPWP" id="NPWP" type="text" size="60" maxlength="60" align="left" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -115,6 +134,13 @@
                                 <label>Email</label></td>
                             <td colspan="3">
                                 <input id="Email" name="Email" type="text" size="60" maxlength="60" align="left" /></td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Description</label></td>
+                            <td colspan="3"><label>
+                              <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
+                            </label></td>
                         </tr>
                     </table>
                 @*</fieldset>*@

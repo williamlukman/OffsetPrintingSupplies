@@ -75,11 +75,13 @@ namespace WebView.Controllers
                          {
                             model.Id,
                             model.Code,
+                            model.NomorDisassembly,
                             Warehouse = model.Warehouse.Name,
                             model.IsInHouse,
                             Contact = model.Contact.Name,
                             model.Quantity,
                             model.IdentifiedDate,
+                            model.IncomingRoll,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -116,11 +118,13 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.NomorDisassembly,
                             model.Warehouse,
                             model.IsInHouse,
                             model.Contact,
                             model.Quantity,
                             model.IdentifiedDate,
+                            model.IncomingRoll,
                             model.ConfirmationDate,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -147,6 +151,7 @@ namespace WebView.Controllers
                          {
                             model.Id,
                             model.DetailId,
+                            model.RollerNo,
                             model.CoreIdentificationId,
                             MaterialCase = model.MaterialCase == 1 ? "New" : "Used",
                             model.CoreBuilderId,
@@ -162,6 +167,10 @@ namespace WebView.Controllers
                             model.RL,
                             model.WL,
                             model.TL,
+                            model.GL,
+                            model.GrooveLength,
+                            model.GrooveQTY,
+                            CoreTypeCase = model.CoreBuilder.CoreBuilderTypeCase,
                             model.IsJobScheduled,
                             model.IsRollerBuilt,
                             model.IsDelivered
@@ -198,6 +207,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.DetailId,
                             model.CoreIdentificationId,
+                            model.RollerNo,
                             model.MaterialCase,
                             model.CoreBuilderId,
                             model.CoreBuilderBaseSku,
@@ -212,6 +222,10 @@ namespace WebView.Controllers
                             model.RL,
                             model.WL,
                             model.TL,
+                            model.GL,
+                            model.GrooveLength,
+                            model.GrooveQTY,
+                            model.CoreTypeCase,
                             model.IsJobScheduled,
                             model.IsRollerBuilt,
                             model.IsDelivered
@@ -248,6 +262,8 @@ namespace WebView.Controllers
                 model.IdentifiedDate,
                 model.IsConfirmed,
                 model.ConfirmationDate,
+                model.IncomingRoll,
+                model.NomorDisassembly,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -269,6 +285,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.DetailId,
+                model.RollerNo,
                 model.CoreIdentificationId,
                 model.MaterialCase,
                 model.CoreBuilderId,
@@ -284,6 +301,10 @@ namespace WebView.Controllers
                 model.RL,
                 model.WL,
                 model.TL,
+                model.GL,
+                model.GrooveLength,
+                model.GrooveQTY,
+                CoreTypeCase = model.CoreBuilder.CoreBuilderTypeCase,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -344,6 +365,8 @@ namespace WebView.Controllers
                 data.IsInHouse = model.IsInHouse;
                 data.IdentifiedDate = model.IdentifiedDate;
                 data.Quantity = model.Quantity;
+                data.IncomingRoll = model.IncomingRoll;
+                data.NomorDisassembly = model.NomorDisassembly;
                 model = _coreIdentificationService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
@@ -410,6 +433,7 @@ namespace WebView.Controllers
             {
                 var data = _coreIdentificationDetailService.GetObjectById(model.Id);
                 data.DetailId = model.DetailId;
+                data.RollerNo = model.RollerNo;
                 data.MaterialCase = model.MaterialCase;
                 data.CoreBuilderId = model.CoreBuilderId;
                 data.RollerTypeId = model.RollerTypeId;

@@ -11,6 +11,9 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.Constants;
+using System.Web.Script.Serialization;
+using System.Data.Objects;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -62,7 +65,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM");
+            var q = _itemService.GetQueryable().Include("ItemType").Include("UoM").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
