@@ -56,6 +56,17 @@
                               <textarea name="Description" name="Description" id ="Description" cols="60" rows="3"></textarea>
                             </label></td>
                         </tr>
+                        <tr>
+                          <td width="210">Account</td>
+                          <td colspan="3"><label>   
+                            <input name="AccountId" type="text" id="AccountId" size="10" maxlength="10" disabled="disabled" />
+                            <input name="AccountCode" type="text" id="AccountCode" size="10" maxlength="10" disabled="disabled" />
+                            <input type="button" name="btncoa" id="btncoa" style="cursor: pointer;" 
+                            	class="ui-corner-all ui-state-default" value="..." />
+                            <input name="AccountName" type="text" id="AccountName" size="40" maxlength="50" disabled="disabled"/>
+                          </label></td>
+                        </tr>
+                     
                     </table>
                 @*</fieldset>*@
             </form>
@@ -63,7 +74,7 @@
     </div>
 <!-- End Dialog Box -->
 
-<!-- Dialog Box  Delete-->
+    <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -76,6 +87,20 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
+    
+    <!-- Look Up coa -->
+    <div id="lookup_div_coa" class="easyui-dialog" title="List COA" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_coa" class="grid_toolbar">
+            <a id="lookup_btn_add_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_coa" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_coa" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up coa -->
   </div>
 

@@ -73,7 +73,8 @@ namespace Service.Service
         }
 
         public CustomerStockAdjustment ConfirmObject(CustomerStockAdjustment customerStockAdjustment, DateTime ConfirmationDate, ICustomerStockAdjustmentDetailService _customerStockAdjustmentDetailService,
-                                             ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
+                                             ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, IItemTypeService _itemTypeService,
+                                             ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
                                              IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             customerStockAdjustment.ConfirmationDate = ConfirmationDate;
@@ -86,6 +87,9 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _customerStockAdjustmentDetailService.ConfirmObject(detail, ConfirmationDate, this, _customerStockMutationService, _itemService, _customerItemService, _warehouseItemService);
                     Total += detail.Quantity * detail.Price;
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                    _generalLedgerJournalService.CreateConfirmationJournalForCustomerStockAdjustmentDetail(customerStockAdjustment, itemType.AccountId.GetValueOrDefault(), detail.Quantity * detail.Price, _accountService);
                 }
                 customerStockAdjustment.Total = Total;
                 _repository.ConfirmObject(customerStockAdjustment);
@@ -95,7 +99,8 @@ namespace Service.Service
         }
 
         public CustomerStockAdjustment UnconfirmObject(CustomerStockAdjustment customerStockAdjustment, ICustomerStockAdjustmentDetailService _customerStockAdjustmentDetailService,
-                                               ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
+                                               ICustomerStockMutationService _customerStockMutationService, IItemService _itemService, IItemTypeService _itemTypeService,
+                                               ICustomerItemService _customerItemService, IWarehouseItemService _warehouseItemService,
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(customerStockAdjustment, this, _customerStockAdjustmentDetailService, _itemService, _customerItemService, _warehouseItemService, _closingService))
@@ -105,6 +110,9 @@ namespace Service.Service
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _customerStockAdjustmentDetailService.UnconfirmObject(detail, this, _customerStockMutationService, _itemService, _customerItemService, _warehouseItemService);
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                    _generalLedgerJournalService.CreateUnconfirmationJournalForCustomerStockAdjustmentDetail(customerStockAdjustment, itemType.AccountId.GetValueOrDefault(), detail.Quantity * detail.Price, _accountService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForCustomerStockAdjustment(customerStockAdjustment, _accountService);
                 customerStockAdjustment.Total = 0;

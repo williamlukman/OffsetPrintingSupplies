@@ -84,7 +84,7 @@ namespace Service.Service
 
         public PurchaseReceival ConfirmObject(PurchaseReceival purchaseReceival, DateTime ConfirmationDate, IPurchaseReceivalDetailService _purchaseReceivalDetailService,
                                               IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService, IStockMutationService _stockMutationService,
-                                              IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                              IItemService _itemService, IItemTypeService _itemTypeService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                               IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
                                               ICurrencyService _currencyService, IExchangeRateService _exchangeRateService)
         {
@@ -123,9 +123,11 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseReceivalDetailService.ConfirmObject(detail, ConfirmationDate, this, _purchaseOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService);
                     Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
                     Currency itemCurrency = item.CurrencyId == null?  _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault() : _currencyService.GetObjectById(item.CurrencyId.Value);
                     TotalCOGS += detail.COGS;
                     TotalAmount += (purchaseOrderDetail.Price * purchaseOrderDetail.Quantity);
+                    _generalLedgerJournalService.CreateConfirmationJournalForPurchaseReceivalDetail(purchaseReceival, itemType.AccountId.GetValueOrDefault(), purchaseOrderDetail.Price * purchaseOrderDetail.Quantity * purchaseReceival.ExchangeRateAmount, _accountService);
                 }
                 purchaseReceival.TotalCOGS = TotalCOGS;
                 purchaseReceival.TotalAmount = TotalAmount;
@@ -138,7 +140,8 @@ namespace Service.Service
 
         public PurchaseReceival UnconfirmObject(PurchaseReceival purchaseReceival, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IPurchaseInvoiceService _purchaseInvoiceService,
                                                 IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
-                                                IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                                IStockMutationService _stockMutationService, IItemService _itemService, IItemTypeService _itemTypeService,
+                                                IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUnconfirmObject(purchaseReceival, _purchaseInvoiceService))
@@ -150,6 +153,10 @@ namespace Service.Service
                     _purchaseReceivalDetailService.UnconfirmObject(detail, this, _purchaseOrderService, _purchaseOrderDetailService,
                                                                    _purchaseInvoiceDetailService, _stockMutationService, _itemService,
                                                                    _blanketService, _warehouseItemService);
+                    PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(detail.PurchaseOrderDetailId);
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                    _generalLedgerJournalService.CreateConfirmationJournalForPurchaseReceivalDetail(purchaseReceival, itemType.AccountId.GetValueOrDefault(), purchaseOrderDetail.Price * purchaseOrderDetail.Quantity * purchaseReceival.ExchangeRateAmount, _accountService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseReceival(purchaseReceival, _accountService);
                 purchaseReceival.TotalCOGS = 0;

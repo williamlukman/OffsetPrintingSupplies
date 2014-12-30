@@ -21,6 +21,7 @@ namespace WebView.Controllers
         private IWarehouseService _warehouseService;
         private IContactService _contactService;
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IUoMService _uomService;
         private IWarehouseItemService _warehouseItemService;
         private ICustomerStockMutationService _customerStockMutationService;
@@ -38,6 +39,7 @@ namespace WebView.Controllers
             _customerStockAdjustmentDetailService = new CustomerStockAdjustmentDetailService(new CustomerStockAdjustmentDetailRepository(), new CustomerStockAdjustmentDetailValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _uomService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _customerStockMutationService = new CustomerStockMutationService(new CustomerStockMutationRepository(), new CustomerStockMutationValidator());
@@ -368,7 +370,7 @@ namespace WebView.Controllers
             {
                 var data = _customerStockAdjustmentService.GetObjectById(model.Id);
                 model = _customerStockAdjustmentService.ConfirmObject(data, model.ConfirmationDate.GetValueOrDefault(), _customerStockAdjustmentDetailService, _customerStockMutationService,
-                                                              _itemService, _customerItemService, _warehouseItemService,
+                                                              _itemService, _itemTypeService, _customerItemService, _warehouseItemService,
                                                               _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)
@@ -390,7 +392,7 @@ namespace WebView.Controllers
             {
 
                 var data = _customerStockAdjustmentService.GetObjectById(model.Id);
-                model = _customerStockAdjustmentService.UnconfirmObject(data,_customerStockAdjustmentDetailService,_customerStockMutationService,_itemService,
+                model = _customerStockAdjustmentService.UnconfirmObject(data,_customerStockAdjustmentDetailService,_customerStockMutationService,_itemService,_itemTypeService,
                                                                 _customerItemService,_warehouseItemService,_accountService,_generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)

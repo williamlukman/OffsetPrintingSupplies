@@ -86,7 +86,7 @@ namespace TestValidation
         public IWarehouseMutationDetailService _warehouseMutationDetailService;
         public IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
 
-        public ItemType typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
+        public ItemType typeAdhesiveRoller, typeAdhesiveBlanket, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeCore, typeCompound, typeChemical,
                         typeConsumable, typeGlue, typeUnderpacking, typeRoller;
         public RollerType typeDamp, typeFoundDT, typeInkFormX, typeInkDistD, typeInkDistM, typeInkDistE,
                         typeInkDuctB, typeInkDistH, typeInkFormW, typeInkDistHQ, typeDampFormDQ, typeInkFormY;
@@ -186,19 +186,6 @@ namespace TestValidation
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
 
-            typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
-            typeBar = _itemTypeService.CreateObject("Bar", "Bar");
-            typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);
-            typeBearing = _itemTypeService.CreateObject("Bearing", "Bearing");
-            typeRollBlanket = _itemTypeService.CreateObject("RollBlanket", "RollBlanket");
-            typeChemical = _itemTypeService.CreateObject("Chemical", "Chemical");
-            typeCompound = _itemTypeService.CreateObject("Compound", "Compound");
-            typeConsumable = _itemTypeService.CreateObject("Consumable", "Consumable");
-            typeCore = _itemTypeService.CreateObject("Core", "Core", true);
-            typeGlue = _itemTypeService.CreateObject("Glue", "Glue");
-            typeUnderpacking = _itemTypeService.CreateObject("Underpacking", "Underpacking");
-            typeRoller = _itemTypeService.CreateObject("Roller", "Roller", true);
-
             typeDamp = _rollerTypeService.CreateObject("Damp", "Damp");
             typeFoundDT = _rollerTypeService.CreateObject("Found DT", "Found DT");
             typeInkFormX = _rollerTypeService.CreateObject("Ink Form X", "Ink Form X");
@@ -212,8 +199,6 @@ namespace TestValidation
             typeDampFormDQ = _rollerTypeService.CreateObject("Damp Form DQ", "Damp Form DQ");
             typeInkFormY = _rollerTypeService.CreateObject("Ink Form Y", "Ink Form Y");
 
-            if (!_accountService.GetLegacyObjects().Any())
-            {
                 Account AKTIVA1 = _accountService.CreateObject(new Account() { Code = "1", Name = "AKTIVA", Group = 1, Level = 1, ParentId = null, IsLegacy = true, IsLeaf = false, LegacyCode = "A1" }, _accountService);
                 Account AKTIVALANCAR2 = _accountService.CreateObject(new Account() { Code = "11", Name = "AKTIVA LANCAR ", Group = 1, Level = 2, ParentId = AKTIVA1.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A11" }, _accountService);
                 Account KASDANSETARAKAS3 = _accountService.CreateObject(new Account() { Code = "1101", Name = "KAS DAN SETARA KAS ", Group = 1, Level = 3, ParentId = AKTIVALANCAR2.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A1101" }, _accountService);
@@ -500,7 +485,21 @@ namespace TestValidation
                 Account PENDAPATANNONOPERASIONAL4 = _accountService.CreateObject(new Account() { Code = "710301", Name = "PENDAPATAN NON OPERASIONAL (POP)", Group = 5, Level = 4, ParentId = PENDAPATANNONOPERASIONAL3.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
                 Account LABAPENJUALANAKTIVATETAP5POP = _accountService.CreateObject(new Account() { Code = "71030001", Name = "LABA PENJUALAN AKTIVA TETAP (POP)", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                 Account LABASALELEASEBACK5 = _accountService.CreateObject(new Account() { Code = "71030002", Name = "LABA SALE & LEASE BACK", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
-            }
+
+                typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket", false, BAHANBAKUBLANKET5, _accountService);
+                typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller", false, BAHANBAKUROLLERS5, _accountService);
+                typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory", false, BAHANBAKUROLLERS5, _accountService);
+                typeBar = _itemTypeService.CreateObject("Bar", "Bar", false, BAHANBAKUBLANKET5, _accountService);
+                typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true, PERSEDPRINTINGBLANKET5, _accountService);
+                typeRollBlanket = _itemTypeService.CreateObject("RollBlanket", "RollBlanket", false, BAHANBAKUBLANKET5, _accountService);
+                typeChemical = _itemTypeService.CreateObject("Chemical", "Chemical", false, PERSEDPRINTINGCHEMICALS5, _accountService);
+                typeCompound = _itemTypeService.CreateObject("Compound", "Compound", false, BAHANBAKUROLLERS5, _accountService);
+                typeConsumable = _itemTypeService.CreateObject("Consumable", "Consumable", false, BAHANBAKUOTHER5, _accountService);
+                typeCore = _itemTypeService.CreateObject("Core", "Core", true, BAHANBAKUROLLERS5, _accountService);
+                typeGlue = _itemTypeService.CreateObject("Glue", "Glue", false, BAHANBAKUOTHER5, _accountService);
+                typeUnderpacking = _itemTypeService.CreateObject("Underpacking", "Underpacking", false, BAHANBAKUOTHER5, _accountService);
+                typeRoller = _itemTypeService.CreateObject("Roller", "Roller", true, PERSEDPRINTINGROLLERS5, _accountService);
+
 
             if (!_currencyService.GetAll().Any())
             {
@@ -586,7 +585,7 @@ namespace TestValidation
             StockAdjustmentDetail sadRollBlanket3 = new StockAdjustmentDetail() { ItemId = rollBlanket3.Id, Quantity = 100000, StockAdjustmentId = sa.Id, Price = 5000 };
             _stockAdjustmentDetailService.CreateObject(sadRollBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
+            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService,
                                                   _accountService, _generalLedgerJournalService, _closingService);
 
             contact = new Contact()
@@ -841,11 +840,11 @@ namespace TestValidation
             TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
             TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
             _purchaseReceivalService.ConfirmObject(pr1, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                       _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                       _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
             _purchaseReceivalService.ConfirmObject(pr2, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
-            _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService, 
-                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                   _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+            _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
+                                                   _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
 
             pi1 = new PurchaseInvoice()
             {

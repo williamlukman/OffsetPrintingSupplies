@@ -16,6 +16,7 @@ namespace WebView.Controllers
     public class MstItemTypeController : Controller
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemTypeController");
+        private IAccountService _accountService;
         private IItemTypeService _itemTypeService;
         private IItemService _itemService;
         private IRollerBuilderService _rollerBuilderService;
@@ -23,6 +24,7 @@ namespace WebView.Controllers
 
         public MstItemTypeController()
         {
+            _accountService = new AccountService(new AccountRepository(), new AccountValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
@@ -44,7 +46,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _itemTypeService.GetQueryable().Where(x => !x.IsDeleted);
+            var q = _itemTypeService.GetQueryable().Where(x => !x.IsDeleted).Include("Account");
 
             var query = (from model in q
                          select new
@@ -52,6 +54,9 @@ namespace WebView.Controllers
                              model.Id,
                              model.Name,
                              model.Description,
+                             model.AccountId,
+                             AccountCode = model.Account.Code,
+                             AccountName = model.Account.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -88,6 +93,9 @@ namespace WebView.Controllers
                             model.Id,
                             model.Name,
                             model.Description,
+                            model.AccountId,
+                            model.AccountCode,
+                            model.AccountName,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -113,6 +121,9 @@ namespace WebView.Controllers
                 model.Id,
                 model.Name,
                 model.Description,
+                model.AccountId,
+                AccountCode = model.Account.Code,
+                AccountName = model.Account.Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -163,6 +174,9 @@ namespace WebView.Controllers
                 model.Name,
                 model.Description,
                 SKU,
+                model.AccountId,
+                AccountCode = model.Account.Code,
+                AccountName = model.Account.Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -172,7 +186,7 @@ namespace WebView.Controllers
         {
             try
             {
-                model = _itemTypeService.CreateObject(model);
+                model = _itemTypeService.CreateObject(model, _accountService);
             }
             catch (Exception ex)
             {
@@ -194,7 +208,8 @@ namespace WebView.Controllers
                 var data = _itemTypeService.GetObjectById(model.Id);
                 data.Name = model.Name;
                 data.Description = model.Description;
-                model = _itemTypeService.UpdateObject(data);
+                data.AccountId = model.AccountId;
+                model = _itemTypeService.UpdateObject(data, _accountService);
             }
             catch (Exception ex)
             {

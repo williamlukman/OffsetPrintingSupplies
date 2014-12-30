@@ -15,6 +15,10 @@ namespace Data.Mapping
             HasMany(it => it.Items)
                 .WithRequired(i => i.ItemType)
                 .HasForeignKey(i => i.ItemTypeId);
+            HasOptional(it => it.Account)
+                .WithMany()
+                .HasForeignKey(it => it.AccountId)
+                .WillCascadeOnDelete(false);
             Ignore(it => it.Errors);
         }
     }

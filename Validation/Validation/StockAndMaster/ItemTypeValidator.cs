@@ -42,17 +42,31 @@ namespace Validation.Validation
             return itemType;
         }
 
-        public ItemType VCreateObject(ItemType itemType, IItemTypeService _itemTypeService)
+        public ItemType VHasAccount(ItemType itemType, IAccountService _accountService)
         {
-            VHasUniqueName(itemType, _itemTypeService);
+            Account account = _accountService.GetObjectById(itemType.AccountId.GetValueOrDefault());
+            if (account == null)
+            {
+                itemType.Errors.Add("AccountId", "Harus terasosiasi dengan COA");
+            }
             return itemType;
         }
 
-        public ItemType VUpdateObject(ItemType itemType, IItemTypeService _itemTypeService)
+        public ItemType VCreateObject(ItemType itemType, IItemTypeService _itemTypeService, IAccountService _accountService)
+        {
+            VHasUniqueName(itemType, _itemTypeService);
+            if (!isValid(itemType)) { return itemType; }
+            VHasAccount(itemType, _accountService);
+            return itemType;
+        }
+
+        public ItemType VUpdateObject(ItemType itemType, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             VHasUniqueName(itemType, _itemTypeService);
             if (!isValid(itemType)) { return itemType; }
             VNotALegacy(itemType);
+            if (!isValid(itemType)) { return itemType; }
+            VHasAccount(itemType, _accountService);
             return itemType;
         }
 
@@ -64,16 +78,16 @@ namespace Validation.Validation
             return itemType;
         }
 
-        public bool ValidCreateObject(ItemType itemType, IItemTypeService _itemTypeService)
+        public bool ValidCreateObject(ItemType itemType, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
-            VCreateObject(itemType, _itemTypeService);
+            VCreateObject(itemType, _itemTypeService, _accountService);
             return isValid(itemType);
         }
 
-        public bool ValidUpdateObject(ItemType itemType, IItemTypeService _itemTypeService)
+        public bool ValidUpdateObject(ItemType itemType, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             itemType.Errors.Clear();
-            VUpdateObject(itemType, _itemTypeService);
+            VUpdateObject(itemType, _itemTypeService, _accountService);
             return isValid(itemType);
         }
 

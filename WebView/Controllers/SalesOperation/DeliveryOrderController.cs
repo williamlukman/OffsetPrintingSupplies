@@ -18,6 +18,7 @@ namespace WebView.Controllers
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("DeliveryOrderController");
         private IItemService _itemService;
+        private IItemTypeService _itemTypeService;
         private IWarehouseItemService _warehouseItemService;
         private IStockMutationService _stockMutationService;
         private IBlanketService _blanketService;
@@ -571,7 +572,7 @@ namespace WebView.Controllers
             {
                 var data = _deliveryOrderService.GetObjectById(model.Id);
                 model = _deliveryOrderService.ConfirmObject(data, model.ConfirmationDate.Value, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
-                        _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                        _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                         _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             }
             catch (Exception ex)
@@ -594,7 +595,7 @@ namespace WebView.Controllers
 
                 var data = _deliveryOrderService.GetObjectById(model.Id);
                 model = _deliveryOrderService.UnconfirmObject(data, _deliveryOrderDetailService, _salesInvoiceService, _salesInvoiceDetailService,
-                        _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
+                        _salesOrderService, _salesOrderDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService,
                         _accountService, _generalLedgerJournalService, _closingService, _customerStockMutationService, _customerItemService);
             }
             catch (Exception ex)

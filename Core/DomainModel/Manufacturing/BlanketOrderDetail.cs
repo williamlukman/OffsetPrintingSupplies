@@ -16,6 +16,9 @@ namespace Core.DomainModel
         public decimal AdhesiveUsage { get; set; }
         public decimal Adhesive2Usage { get; set; }
         public decimal TotalCost { get; set; }
+        public decimal BarCost { get; set; }
+        public decimal AdhesiveCost { get; set; }
+        public decimal RollBlanketCost { get; set; }
 
         public bool IsCut { get; set; }
         public bool IsSideSealed { get; set; }

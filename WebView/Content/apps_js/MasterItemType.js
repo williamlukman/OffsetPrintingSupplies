@@ -21,17 +21,22 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    
+    $('#AccountId').hide();
+    $('#AccountCode').hide();
+    $("#lookup_div_coa").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'MstItemType/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Description', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Kode UoM', 'Acc Id', 'Acc Code', 'Acc', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 120 },
-                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'description', index: 'description', width: 60 },
+                  { name: 'accountid', index: 'accountid', width: 80, align: "center", hidden: true },
+				  { name: 'accountcode', index: 'accountcode', width: 80 },
+				  { name: 'accountname', index: 'accountname', width: 200 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -108,6 +113,9 @@
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
                             $('#Description').val(result.Description);
+                            $('#AccountId').val(result.AccountId);
+                            $('#AccountCode').val(result.AccountCode);
+                            $('#AccountName').val(result.AccountName);
                             $('#form_div').dialog('open');
                         }
                     }
@@ -179,8 +187,6 @@
 
     $("#form_btn_save").click(function () {
 
-
-
         ClearErrorMessage();
 
         var submitURL = '';
@@ -200,7 +206,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name :$("#Name").val(), Description: $("#Description").val()
+                Id: id, Name :$("#Name").val(), Description: $("#Description").val(), AccountId: $("#AccountId").val()
             }),
             async: false,
             cache: false,
@@ -245,5 +251,55 @@
         });
     }
 
-   
+    //GRID LOOKUP +++++++++++++++
+    $("#lookup_table_coa").jqGrid({
+        url: base_url + 'index.html',
+        datatype: "json",
+        colNames: ['Id', 'Account Code', 'Account Name'],
+        colModel: [
+                  { name: 'Id', index: 'Id', width: 40, hidden: true },
+				  { name: 'Code', index: 'Code', width: 80 },
+				  { name: 'Name', index: 'Name', width: 150 },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_coa'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'Code',
+        viewrecords: true,
+        sortorder: "ASC",
+        width: $("#lookup_div_coa").width() - 10,
+        height: $("#lookup_div_coa").height() - 115
+    });
+    $("#lookup_table_coa").jqGrid('navGrid', '#lookup_toolbar_coa', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    //END GRID
+
+    $('#btncoa').click(function () {
+        $("#lookup_table_coa").setGridParam({ url: base_url + 'ChartOfAccount/GetLeaves' }).trigger("reloadGrid");
+        $('#lookup_div_coa').dialog('open');
+    });
+
+    $("#lookup_btn_add_coa").click(function () {
+
+        var id = jQuery("#lookup_table_coa").jqGrid('getGridParam', 'selrow');
+
+        if (id) {
+            // vStatusSaving = 1;//edit data mode
+            var ret = jQuery("#lookup_table_coa").jqGrid('getRowData', id);
+            $('#AccountId').val(ret.Id);
+            $('#AccountCode').val(ret.Code).data('kode', id);
+            $('#AccountName').val(ret.Name);
+
+            $("#lookup_div_coa").dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $("#lookup_btn_cancel_coa").click(function () {
+        $("#lookup_div_coa").dialog('close');
+    });
+
 }); //END DOCUMENT READY

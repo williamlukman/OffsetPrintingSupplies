@@ -148,7 +148,7 @@ namespace Service.Service
 
         public RecoveryOrderDetail RejectObject(RecoveryOrderDetail recoveryOrderDetail, DateTime RejectedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             recoveryOrderDetail.RejectedDate = RejectedDate;
@@ -157,7 +157,8 @@ namespace Service.Service
                 // calculate total cost to produce the finished goods, then create general ledger with total cost                
                 CalculateTotalCost(recoveryOrderDetail, _recoveryAccessoryDetailService, _coreIdentificationDetailService, _coreIdentificationService, _coreBuilderService,
                                    this, _rollerBuilderService, _itemService);
-                _generalLedgerJournalService.CreateRejectedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
+                // accessories uncounted
+                _generalLedgerJournalService.CreateRejectedJournalForRecoveryOrderDetail(recoveryOrderDetail, _itemTypeService, _accountService);
                 _repository.RejectObject(recoveryOrderDetail);
 
                 // add recovery order quantity reject
@@ -197,14 +198,18 @@ namespace Service.Service
 
         public RecoveryOrderDetail UndoRejectObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                     IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                    IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                    IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
                                                     IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             if (_validator.ValidUndoRejectObject(recoveryOrderDetail, _recoveryOrderService))
             {
                 // undo reject general ledger with old total cost, then set total cost to 0
-                _generalLedgerJournalService.CreateUndoRejectedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
+                _generalLedgerJournalService.CreateUndoRejectedJournalForRecoveryOrderDetail(recoveryOrderDetail, _itemTypeService, _accountService);
                 recoveryOrderDetail.TotalCost = 0;
+                recoveryOrderDetail.AccessoriesCost = 0;
+                recoveryOrderDetail.CoreCost = 0;
+                recoveryOrderDetail.CompoundCost = 0;
+
                 _repository.UndoRejectObject(recoveryOrderDetail);
 
                 // deduce recovery order quantity reject
@@ -249,7 +254,7 @@ namespace Service.Service
 
         public RecoveryOrderDetail FinishObject(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedDate, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                 IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
                                                 IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IServiceCostService _serviceCostService, 
                                                 ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
@@ -262,7 +267,7 @@ namespace Service.Service
                 // calculate total cost to produce the finished goods, then create general ledger with total cost
                 CalculateTotalCost(recoveryOrderDetail, _recoveryAccessoryDetailService, _coreIdentificationDetailService, _coreIdentificationService, _coreBuilderService,
                                    this, _rollerBuilderService, _itemService);
-                _generalLedgerJournalService.CreateFinishedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
+                _generalLedgerJournalService.CreateFinishedJournalForRecoveryOrderDetail(recoveryOrderDetail, _itemTypeService, _accountService);
 
                 if (!coreIdentification.IsInHouse)
                 {
@@ -353,7 +358,7 @@ namespace Service.Service
 
         public RecoveryOrderDetail UnfinishObject(RecoveryOrderDetail recoveryOrderDetail, ICoreIdentificationService _coreIdentificationService, ICoreIdentificationDetailService _coreIdentificationDetailService,
                                                   IRecoveryOrderService _recoveryOrderService, IRecoveryAccessoryDetailService _recoveryAccessoryDetailService, ICoreBuilderService _coreBuilderService, IRollerBuilderService _rollerBuilderService,
-                                                  IItemService _itemService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
+                                                  IItemService _itemService, IItemTypeService _itemTypeService, IWarehouseItemService _warehouseItemService, IBlanketService _blanketService, IStockMutationService _stockMutationService,
                                                   IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService, IServiceCostService _serviceCostService,
                                                   ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
@@ -370,9 +375,12 @@ namespace Service.Service
                 }
 
                 // unfinish general ledger with old total cost, then set total cost to 0
-                _generalLedgerJournalService.CreateUnfinishedJournalForRecoveryOrderDetail(recoveryOrderDetail, _accountService);
+                _generalLedgerJournalService.CreateUnfinishedJournalForRecoveryOrderDetail(recoveryOrderDetail, _itemTypeService, _accountService);
                 decimal totalcost = recoveryOrderDetail.TotalCost;
                 recoveryOrderDetail.TotalCost = 0;
+                recoveryOrderDetail.AccessoriesCost = 0;
+                recoveryOrderDetail.CoreCost = 0;
+                recoveryOrderDetail.CompoundCost = 0;
 
                 // unfinish object
                 _repository.UnfinishObject(recoveryOrderDetail);
@@ -491,13 +499,17 @@ namespace Service.Service
                 AccessoriesCost += item.AvgPrice * accessory.Quantity;
             }
             decimal TotalCost = 0;
+            recoveryOrderDetail.AccessoriesCost = AccessoriesCost;
+            recoveryOrderDetail.CompoundCost = Compound.AvgPrice * recoveryOrderDetail.CompoundUsage;
             if (coreIdentification.IsInHouse)
             {
                 TotalCost = Core.AvgPrice + (Compound.AvgPrice * recoveryOrderDetail.CompoundUsage) + AccessoriesCost;
+                recoveryOrderDetail.CoreCost = Core.AvgPrice;
             }
             else
             {
                 TotalCost = (Compound.AvgPrice * recoveryOrderDetail.CompoundUsage) + AccessoriesCost;
+                recoveryOrderDetail.CoreCost = 0;
             }
             recoveryOrderDetail.TotalCost = TotalCost;
             _repository.UpdateObject(recoveryOrderDetail);

@@ -145,6 +145,7 @@
                             $('#PIC').val(result.PIC);
                             $('#PICContactNo').val(result.PICContactNo);
                             $('#Email').val(result.Email);
+                            $('#Description').val(result.Description);
                             document.getElementById("ContactType").selectedIndex = 0;
                             document.getElementById("IsTaxable").checked = result.IsTaxable;
                             onIsTaxable();
@@ -251,7 +252,7 @@
                 Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
                 ContactNo: $("#ContactNo").val(), PIC: $("#PIC").val(), PICContactNo: $("#PICContactNo").val(),
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
-                ContactType: contacttype
+                ContactType: contacttype, Description: $("#Description").val()
             }),
             async: false,
             cache: false,

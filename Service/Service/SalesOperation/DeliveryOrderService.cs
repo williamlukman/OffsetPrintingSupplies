@@ -73,7 +73,7 @@ namespace Service.Service
 
         public DeliveryOrder ConfirmObject(DeliveryOrder deliveryOrder, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                            ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IStockMutationService _stockMutationService,
-                                           IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
+                                           IItemService _itemService, IItemTypeService _itemTypeService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService,
                                            IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
                                            IServiceCostService _serviceCostService, ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService,
                                            ITemporaryDeliveryOrderService _temporaryDeliveryOrderService, ICustomerStockMutationService _customerStockMutationService, 
@@ -124,8 +124,10 @@ namespace Service.Service
                         }
                     }
                     Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
                     Currency itemCurrency = item.CurrencyId == null ? _currencyService.GetQueryable().Where(x => x.IsBase && !x.IsDeleted).FirstOrDefault() : _currencyService.GetObjectById(item.CurrencyId.Value);
                     TotalCOGS += detail.COGS;
+                    _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrderDetail(deliveryOrder, itemType.AccountId.GetValueOrDefault(), detail.COGS, _accountService);
                 }
                 deliveryOrder.TotalCOGS = TotalCOGS;
                 _repository.ConfirmObject(deliveryOrder);
@@ -142,7 +144,7 @@ namespace Service.Service
 
         public DeliveryOrder UnconfirmObject(DeliveryOrder deliveryOrder, IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesInvoiceService _salesInvoiceService,
                                              ISalesInvoiceDetailService _salesInvoiceDetailService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService,
-                                             IStockMutationService _stockMutationService, IItemService _itemService, IBlanketService _blanketService,
+                                             IStockMutationService _stockMutationService, IItemService _itemService, IItemTypeService _itemTypeService, IBlanketService _blanketService,
                                              IWarehouseItemService _warehouseItemService, IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService,
                                              IClosingService _closingService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService)
         {
@@ -166,6 +168,9 @@ namespace Service.Service
                     _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesOrderService, _salesOrderDetailService,
                                                                 _salesInvoiceDetailService, _stockMutationService,
                                                                 _itemService, _blanketService, _warehouseItemService, _customerStockMutationService, _customerItemService);
+                    Item item = _itemService.GetObjectById(detail.ItemId);
+                    ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
+                    _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrderDetail(deliveryOrder, itemType.AccountId.GetValueOrDefault(), detail.COGS, _accountService);
                 }
                 deliveryOrder.TotalCOGS = 0;
                 _repository.UnconfirmObject(deliveryOrder);

@@ -1983,6 +1983,40 @@ namespace Service.Service
         }
 
         // MASTER & STOCK
+        public GeneralLedgerJournal CreateConfirmationJournalForStockAdjustmentDetail(StockAdjustment stockAdjustment, int AccountId, decimal AvgCost, string Description, IAccountService _accountService)
+        {
+            #region Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
+                SourceDocumentId = stockAdjustment.Id,
+                TransactionDate = (DateTime) stockAdjustment.AdjustmentDate,
+                Status = AvgCost > 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(AvgCost, 2),
+                Description = description
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
+
+        public GeneralLedgerJournal CreateUnconfirmationJournalForStockAdjustmentDetail(StockAdjustment stockAdjustment, int AccountId, decimal AvgCost, IAccountService _accountService)
+        {
+            #region Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
+                SourceDocumentId = stockAdjustment.Id,
+                TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
+                Status = AvgCost > 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(AvgCost, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForStockAdjustment(StockAdjustment stockAdjustment, IAccountService _accountService)
         {
@@ -1993,17 +2027,6 @@ namespace Service.Service
 
             if (stockAdjustment.Total >= 0)
             {
-                GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
-                    SourceDocumentId = stockAdjustment.Id,
-                    TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(stockAdjustment.Total, 2)
-                };
-                debitraw = CreateObject(debitraw, _accountService);
-
                 GeneralLedgerJournal creditstockequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
@@ -2015,7 +2038,6 @@ namespace Service.Service
                 };
                 creditstockequityadjustment = CreateObject(creditstockequityadjustment, _accountService);
 
-                journals.Add(debitraw);
                 journals.Add(creditstockequityadjustment);
             }
             #endregion
@@ -2033,19 +2055,7 @@ namespace Service.Service
                 };
                 debitstockadjustmentexpense = CreateObject(debitstockadjustmentexpense, _accountService);
 
-                GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
-                    SourceDocumentId = stockAdjustment.Id,
-                    TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(Math.Abs(stockAdjustment.Total), 2)
-                };
-                creditraw = CreateObject(creditraw, _accountService);
-
                 journals.Add(debitstockadjustmentexpense);
-                journals.Add(creditraw);
             }
             #endregion
             return journals;
@@ -2061,17 +2071,6 @@ namespace Service.Service
 
             if (stockAdjustment.Total >= 0)
             {
-                GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
-                    SourceDocumentId = stockAdjustment.Id,
-                    TransactionDate = stockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(stockAdjustment.Total, 2)
-                };
-                creditraw = CreateObject(creditraw, _accountService);
-
                 GeneralLedgerJournal debitstockequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
@@ -2083,7 +2082,6 @@ namespace Service.Service
                 };
                 debitstockequityadjustment = CreateObject(debitstockequityadjustment, _accountService);
 
-                journals.Add(creditraw);
                 journals.Add(debitstockequityadjustment);
             }
             #endregion
@@ -2101,22 +2099,44 @@ namespace Service.Service
                 };
                 creditstockadjustmentexpense = CreateObject(creditstockadjustmentexpense, _accountService);
 
-                GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.StockAdjustment,
-                    SourceDocumentId = stockAdjustment.Id,
-                    TransactionDate = stockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(Math.Abs(stockAdjustment.Total), 2)
-                };
-                debitraw = CreateObject(debitraw, _accountService);
-
                 journals.Add(creditstockadjustmentexpense);
-                journals.Add(debitraw);
             }
             #endregion
             return journals;
+        }
+
+        public GeneralLedgerJournal CreateConfirmationJournalForCustomerStockAdjustmentDetail(CustomerStockAdjustment customerStockAdjustment, int AccountId, decimal AvgCost, IAccountService _accountService)
+        {
+            #region Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                SourceDocumentId = customerStockAdjustment.Id,
+                TransactionDate = (DateTime) customerStockAdjustment.AdjustmentDate,
+                Status = AvgCost > 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(AvgCost, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
+
+        public GeneralLedgerJournal CreateUnconfirmationJournalForCustomerStockAdjustmentDetail(CustomerStockAdjustment customerStockAdjustment, int AccountId, decimal AvgCost, IAccountService _accountService)
+        {
+            #region Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
+                SourceDocumentId = customerStockAdjustment.Id,
+                TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
+                Status = AvgCost > 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(AvgCost, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForCustomerStockAdjustment(CustomerStockAdjustment customerStockAdjustment, IAccountService _accountService)
@@ -2128,17 +2148,6 @@ namespace Service.Service
 
             if (customerStockAdjustment.Total >= 0)
             {
-                GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
-                    SourceDocumentId = customerStockAdjustment.Id,
-                    TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(customerStockAdjustment.Total, 2)
-                };
-                debitraw = CreateObject(debitraw, _accountService);
-
                 GeneralLedgerJournal creditstockequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
@@ -2150,7 +2159,6 @@ namespace Service.Service
                 };
                 creditstockequityadjustment = CreateObject(creditstockequityadjustment, _accountService);
 
-                journals.Add(debitraw);
                 journals.Add(creditstockequityadjustment);
             }
             #endregion
@@ -2168,19 +2176,7 @@ namespace Service.Service
                 };
                 debitstockadjustmentexpense = CreateObject(debitstockadjustmentexpense, _accountService);
 
-                GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
-                    SourceDocumentId = customerStockAdjustment.Id,
-                    TransactionDate = (DateTime)customerStockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(Math.Abs(customerStockAdjustment.Total), 2)
-                };
-                creditraw = CreateObject(creditraw, _accountService);
-
-                journals.Add(debitstockadjustmentexpense);
-                journals.Add(creditraw);
+                journals.Add(debitstockadjustmentexpense);                
             }
             #endregion
             return journals;
@@ -2196,17 +2192,6 @@ namespace Service.Service
 
             if (customerStockAdjustment.Total >= 0)
             {
-                GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
-                    SourceDocumentId = customerStockAdjustment.Id,
-                    TransactionDate = customerStockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(customerStockAdjustment.Total, 2)
-                };
-                creditraw = CreateObject(creditraw, _accountService);
-
                 GeneralLedgerJournal debitstockequityadjustment = new GeneralLedgerJournal()
                 {
                     AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.EquityAdjustment).Id,
@@ -2218,7 +2203,6 @@ namespace Service.Service
                 };
                 debitstockequityadjustment = CreateObject(debitstockequityadjustment, _accountService);
 
-                journals.Add(creditraw);
                 journals.Add(debitstockequityadjustment);
             }
             #endregion
@@ -2236,42 +2220,48 @@ namespace Service.Service
                 };
                 creditstockadjustmentexpense = CreateObject(creditstockadjustmentexpense, _accountService);
 
-                GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.CustomerStockAdjustment,
-                    SourceDocumentId = customerStockAdjustment.Id,
-                    TransactionDate = customerStockAdjustment.AdjustmentDate,
-                    Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(Math.Abs(customerStockAdjustment.Total), 2)
-                };
-                debitraw = CreateObject(debitraw, _accountService);
-
                 journals.Add(creditstockadjustmentexpense);
-                journals.Add(debitraw);
             }
             #endregion
             return journals;
         }
 
         // PURCHASE OPERATION
+        public GeneralLedgerJournal CreateConfirmationJournalForPurchaseReceivalDetail(PurchaseReceival purchaseReceival, int AccountId, decimal Total, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseReceival,
+                SourceDocumentId = purchaseReceival.Id,
+                TransactionDate = (DateTime) purchaseReceival.ReceivalDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(Total, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+        }
+
+        public GeneralLedgerJournal CreateUnconfirmationJournalForPurchaseReceivalDetail(PurchaseReceival purchaseReceival, int AccountId, decimal Total, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.PurchaseReceival,
+                SourceDocumentId = purchaseReceival.Id,
+                TransactionDate = (DateTime)purchaseReceival.ReceivalDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(Total, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+        }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForPurchaseReceival(PurchaseReceival purchaseReceival, IAccountService _accountService)
         {
             // Debit Raw, Credit GoodsPendingClearance
             #region Debit Raw, Credit GoodsPendingClearance
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PurchaseReceival,
-                SourceDocumentId = purchaseReceival.Id,
-                TransactionDate = (DateTime)purchaseReceival.ReceivalDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount, 2)
-            };
-            debitraw = CreateObject(debitraw, _accountService);
 
             GeneralLedgerJournal creditgoodsPendingclearance = new GeneralLedgerJournal()
             {
@@ -2284,7 +2274,6 @@ namespace Service.Service
             };
             creditgoodsPendingclearance = CreateObject(creditgoodsPendingclearance, _accountService);
 
-            journals.Add(debitraw);
             journals.Add(creditgoodsPendingclearance);
 
             return journals;
@@ -2297,18 +2286,6 @@ namespace Service.Service
             #region Credit Raw, Debit GoodsPendingClearance
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            DateTime UnconfirmationDate = DateTime.Now;
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.PurchaseReceival,
-                SourceDocumentId = purchaseReceival.Id,
-                TransactionDate = purchaseReceival.ReceivalDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(purchaseReceival.TotalAmount * purchaseReceival.ExchangeRateAmount, 2)
-            };
-            creditraw = CreateObject(creditraw, _accountService);
-
             GeneralLedgerJournal debitgoodsPendingclearance = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.GoodsPendingClearance).Id,
@@ -2320,7 +2297,6 @@ namespace Service.Service
             };
             debitgoodsPendingclearance = CreateObject(debitgoodsPendingclearance, _accountService);
 
-            journals.Add(creditraw);
             journals.Add(debitgoodsPendingclearance);
 
             return journals;
@@ -2579,6 +2555,35 @@ namespace Service.Service
         }
 
         // SALES OPERATION
+        public GeneralLedgerJournal CreateConfirmationJournalForDeliveryOrderDetail(DeliveryOrder deliveryOrder, int AccountId, decimal COGS, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.DeliveryOrder,
+                SourceDocumentId = deliveryOrder.Id,
+                TransactionDate = (DateTime)deliveryOrder.DeliveryDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(COGS, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+        }
+
+        public GeneralLedgerJournal CreateUnconfirmationJournalForDeliveryOrderDetail(DeliveryOrder deliveryOrder, int AccountId, decimal COGS, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.DeliveryOrder,
+                SourceDocumentId = deliveryOrder.Id,
+                TransactionDate = (DateTime)deliveryOrder.DeliveryDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(COGS, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+        }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForDeliveryOrder(DeliveryOrder deliveryOrder, IAccountService _accountService)
         {
@@ -2597,19 +2602,7 @@ namespace Service.Service
             };
             debitcogs = CreateObject(debitcogs, _accountService);
 
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.DeliveryOrder,
-                SourceDocumentId = deliveryOrder.Id,
-                TransactionDate = (DateTime)deliveryOrder.DeliveryDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(deliveryOrder.TotalCOGS, 2)
-            };
-            creditraw = CreateObject(creditraw, _accountService);
-
             journals.Add(debitcogs);
-            journals.Add(creditraw);
 
             return journals;
             #endregion
@@ -2633,22 +2626,40 @@ namespace Service.Service
             };
             creditcogs = CreateObject(creditcogs, _accountService);
 
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.DeliveryOrder,
-                SourceDocumentId = deliveryOrder.Id,
-                TransactionDate = deliveryOrder.DeliveryDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(deliveryOrder.TotalCOGS, 2)
-            };
-            debitraw = CreateObject(debitraw, _accountService);
-
             journals.Add(creditcogs);
-            journals.Add(debitraw);
 
             return journals;
             #endregion
+        }
+
+        public GeneralLedgerJournal CreateReconciliationJournalForTemporaryDeliveryOrderDetailWaste(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, int AccountId, decimal COGSWaste, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrder.Id,
+                TransactionDate = PushDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(COGSWaste, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+        }
+
+        public GeneralLedgerJournal CreateUnreconciliationJournalForTemporaryDeliveryOrderDetailWaste(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, int AccountId, decimal COGSWaste, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrder.Id,
+                TransactionDate = temporaryDeliveryOrder.PushDate.Value,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(COGSWaste, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
         }
 
         public IList<GeneralLedgerJournal> CreateReconciliationJournalForTemporaryDeliveryOrderWaste(TemporaryDeliveryOrder temporaryDeliveryOrder, DateTime PushDate, IAccountService _accountService)
@@ -2656,17 +2667,6 @@ namespace Service.Service
             // Credit Raw, Debit SampleAndTrialExpense
             #region Credit Raw , Debit SampleAndTrialExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
-                SourceDocumentId = temporaryDeliveryOrder.Id,
-                TransactionDate = PushDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(temporaryDeliveryOrder.TotalWasteCOGS, 2)
-            };
-            creditraw = CreateObject(creditraw, _accountService);
 
             GeneralLedgerJournal debitsampleandtrialexpense = new GeneralLedgerJournal()
             {
@@ -2680,7 +2680,6 @@ namespace Service.Service
             };
             debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
 
-            journals.Add(creditraw);
             journals.Add(debitsampleandtrialexpense);
             return journals;
             #endregion
@@ -2691,19 +2690,6 @@ namespace Service.Service
             // Debit Raw, Credit SampleAndTrialExpense
             #region Debit Raw , Credit SampleAndTrialExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            DateTime UnreconcileDate = DateTime.Now;
-
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
-                SourceDocumentId = temporaryDeliveryOrder.Id,
-                TransactionDate = temporaryDeliveryOrder.PushDate.Value,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount =  Math.Round(temporaryDeliveryOrder.TotalWasteCOGS, 2)
-            };
-            debitraw = CreateObject(debitraw, _accountService);
 
             GeneralLedgerJournal creditsampleandtrialexpense = new GeneralLedgerJournal()
             {
@@ -2716,10 +2702,40 @@ namespace Service.Service
             };
             creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
 
-            journals.Add(debitraw);
             journals.Add(creditsampleandtrialexpense);
             return journals;
             #endregion
+        }
+
+        public GeneralLedgerJournal CreateConfirmationJournalForTemporaryDeliveryOrderClearanceDetailWaste(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, int AccountId, decimal COGSWaste, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(COGSWaste, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+        }
+
+        public GeneralLedgerJournal CreateUnconfirmationJournalForTemporaryDeliveryOrderClearanceDetailWaste(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, int AccountId, decimal COGSWaste, IAccountService _accountService)
+        {
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
+                TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(COGSWaste, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+
+            return glj;
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForTemporaryDeliveryOrderClearanceWaste(TemporaryDeliveryOrderClearance temporaryDeliveryOrderClearance, IAccountService _accountService)
@@ -2727,17 +2743,6 @@ namespace Service.Service
             // Credit Raw (Inventory), Debit SampleAndTrialExpense (SalesExpense)
             #region Credit Raw , Debit SampleAndTrialExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
-                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
-                TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(temporaryDeliveryOrderClearance.TotalWasteCoGS, 2)
-            };
-            creditraw = CreateObject(creditraw, _accountService);
 
             GeneralLedgerJournal debitsampleandtrialexpense = new GeneralLedgerJournal()
             {
@@ -2750,7 +2755,6 @@ namespace Service.Service
             };
             debitsampleandtrialexpense = CreateObject(debitsampleandtrialexpense, _accountService);
 
-            journals.Add(creditraw);
             journals.Add(debitsampleandtrialexpense);
             return journals;
             #endregion
@@ -2761,19 +2765,6 @@ namespace Service.Service
             // Debit Raw (Inventory), Credit SampleAndTrialExpense (SalesExpense)
             #region Debit Raw , Credit SampleAndTrialExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-
-            DateTime UnconfirmDate = DateTime.Now;
-
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
-                SourceDocumentId = temporaryDeliveryOrderClearance.Id,
-                TransactionDate = temporaryDeliveryOrderClearance.ClearanceDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(temporaryDeliveryOrderClearance.TotalWasteCoGS, 2)
-            };
-            debitraw = CreateObject(debitraw, _accountService);
 
             GeneralLedgerJournal creditsampleandtrialexpense = new GeneralLedgerJournal()
             {
@@ -2786,7 +2777,6 @@ namespace Service.Service
             };
             creditsampleandtrialexpense = CreateObject(creditsampleandtrialexpense, _accountService);
 
-            journals.Add(debitraw);
             journals.Add(creditsampleandtrialexpense);
             return journals;
             #endregion
@@ -2854,6 +2844,40 @@ namespace Service.Service
             journals.Add(creditrevenue);
             #endregion
             return journals;
+        }
+
+        public GeneralLedgerJournal CreateConfirmationJournalForSalesInvoiceDetail(SalesInvoice salesInvoice, int AccountId, decimal COSRate, IAccountService _accountService)
+        {
+            #region Credit Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
+                SourceDocumentId = salesInvoice.Id,
+                TransactionDate = (DateTime)salesInvoice.InvoiceDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(COSRate, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
+
+        public GeneralLedgerJournal CreateUnconfirmationJournalForSalesInvoiceDetail(SalesInvoice salesInvoice, int AccountId, decimal COSRate, IAccountService _accountService)
+        {
+            #region Debit Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
+                SourceDocumentId = salesInvoice.Id,
+                TransactionDate = salesInvoice.InvoiceDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(COSRate, 2)
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
         }
 
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesInvoice(SalesInvoice salesInvoice, Contact contact,
@@ -2946,7 +2970,7 @@ namespace Service.Service
 
             journals.Add(creditrevenue);
             #endregion
-            #region Debit COS, Credit FinishedGoods
+            #region Debit COS
             if (salesInvoice.TotalCOS > 0)
             {
                 GeneralLedgerJournal debitCOS = new GeneralLedgerJournal()
@@ -2960,19 +2984,7 @@ namespace Service.Service
                 };
                 debitCOS = CreateObject(debitCOS, _accountService);
 
-                GeneralLedgerJournal creditFinishedGoods = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-                    SourceDocumentId = salesInvoice.Id,
-                    TransactionDate = (DateTime)salesInvoice.InvoiceDate,
-                    Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
-                };
-                creditFinishedGoods = CreateObject(creditFinishedGoods, _accountService);
-
-                journals.Add(debitCOS);
-                journals.Add(creditFinishedGoods);
+                journals.Add(debitCOS);                
             }
             #endregion
             return journals;
@@ -3068,7 +3080,7 @@ namespace Service.Service
             journals.Add(debitrevenue);
 
             #endregion
-            #region Credit COS, Debit FinishedGoods
+            #region Credit COS
             if (salesInvoice.TotalCOS > 0)
             {
                 GeneralLedgerJournal creditCOS = new GeneralLedgerJournal()
@@ -3081,111 +3093,172 @@ namespace Service.Service
                     Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
                 };
                 creditCOS = CreateObject(creditCOS, _accountService);
-
-                GeneralLedgerJournal debitFinishedGoods = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.SalesInvoice,
-                    SourceDocumentId = salesInvoice.Id,
-                    TransactionDate = salesInvoice.InvoiceDate,
-                    Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
-                };
-                debitFinishedGoods = CreateObject(debitFinishedGoods, _accountService);
-
                 journals.Add(creditCOS);
-                journals.Add(debitFinishedGoods);
             }
             #endregion
             return journals;
         }
 
         // MANUFACTURING RECOVERY
-        public IList<GeneralLedgerJournal> CreateFinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateFinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             // Credit Raw/Stock (Core, Compound, Accessories), Debit FinishedGoods/ManufacturedGoods (Roller)
             #region Credit Raw (Core, Compound, Accessories), Debit FinishedGoods (Roller)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            if (recoveryOrderDetail.AccessoriesCost > 0)
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                GeneralLedgerJournal creditaccessory = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Accessory).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                    SourceDocumentId = recoveryOrderDetail.Id,
+                    TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(recoveryOrderDetail.AccessoriesCost, 2)
+                };
+                creditaccessory = CreateObject(creditaccessory, _accountService);
+                journals.Add(creditaccessory);
+            }
+
+            if (recoveryOrderDetail.CoreCost > 0)
+            {
+                GeneralLedgerJournal creditcore = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Core).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                    SourceDocumentId = recoveryOrderDetail.Id,
+                    TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(recoveryOrderDetail.CoreCost, 2)
+                };
+                creditcore = CreateObject(creditcore, _accountService);
+                journals.Add(creditcore);
+            }
+
+            GeneralLedgerJournal creditcompound = new GeneralLedgerJournal()
+            {
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Compound).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
+                Amount = Math.Round(recoveryOrderDetail.CompoundCost, 2)
             };
-            creditraw = CreateObject(creditraw, _accountService);
-
-            GeneralLedgerJournal debitfinishedgoods = new GeneralLedgerJournal()
+            creditcompound = CreateObject(creditcompound, _accountService);
+            journals.Add(creditcompound);
+            
+            GeneralLedgerJournal debitfinishedroller = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Roller).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
                 Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
-            debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
+            debitfinishedroller = CreateObject(debitfinishedroller, _accountService);
 
-            journals.Add(creditraw);
-            journals.Add(debitfinishedgoods);
+            journals.Add(debitfinishedroller);
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnfinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUnfinishedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             // Debit Raw (Core, Compound, Accessories), Credit FinishedGoods (Roller)
             #region Debit Raw (Core, Compound, Accessories), Credit FinishedGoods (Roller)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime UnfinishedDate = DateTime.Now;
-
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            if (recoveryOrderDetail.AccessoriesCost > 0)
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                GeneralLedgerJournal debitaccessory = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Accessory).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                    SourceDocumentId = recoveryOrderDetail.Id,
+                    TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(recoveryOrderDetail.AccessoriesCost, 2)
+                };
+                debitaccessory = CreateObject(debitaccessory, _accountService);
+                journals.Add(debitaccessory);
+            }
+
+            if (recoveryOrderDetail.CoreCost > 0)
+            {
+                GeneralLedgerJournal debitcore = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Core).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                    SourceDocumentId = recoveryOrderDetail.Id,
+                    TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(recoveryOrderDetail.CoreCost, 2)
+                };
+                debitcore = CreateObject(debitcore, _accountService);
+                journals.Add(debitcore);
+            }
+
+            GeneralLedgerJournal debitcompound = new GeneralLedgerJournal()
+            {
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Compound).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
                 SourceDocumentId = recoveryOrderDetail.Id,
-                TransactionDate = recoveryOrderDetail.FinishedDate.Value,
+                TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
+                Amount = Math.Round(recoveryOrderDetail.CompoundCost, 2)
             };
-            debitraw = CreateObject(debitraw, _accountService);
+            debitcompound = CreateObject(debitcompound, _accountService);
+            journals.Add(debitcompound);
 
-            GeneralLedgerJournal creditfinishedgoods = new GeneralLedgerJournal()
+            GeneralLedgerJournal creditfinishedroller = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Roller).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
                 SourceDocumentId = recoveryOrderDetail.Id,
-                TransactionDate = recoveryOrderDetail.FinishedDate.Value,
+                TransactionDate = (DateTime)recoveryOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
             };
-            creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
+            creditfinishedroller = CreateObject(creditfinishedroller, _accountService);
 
-            journals.Add(debitraw);
-            journals.Add(creditfinishedgoods);
+            journals.Add(creditfinishedroller);
             return journals;
             #endregion
          }
 
-        public IList<GeneralLedgerJournal> CreateRejectedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateRejectedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
-            // Credit Raw (Core, Compound, Accessories), Debit RecoveryExpense
+            // Credit Raw (Core, Compound), Debit RecoveryExpense
             #region Credit Raw (Core, Compound, Accessories), Debit RecoveryExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            if (recoveryOrderDetail.CoreCost > 0)
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                GeneralLedgerJournal creditcore = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Core).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                    SourceDocumentId = recoveryOrderDetail.Id,
+                    TransactionDate = (DateTime)recoveryOrderDetail.RejectedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(recoveryOrderDetail.CoreCost, 2)
+                };
+                creditcore = CreateObject(creditcore, _accountService);
+                journals.Add(creditcore);
+            }
+
+            GeneralLedgerJournal creditcompound = new GeneralLedgerJournal()
+            {
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Compound).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
                 SourceDocumentId = recoveryOrderDetail.Id,
                 TransactionDate = (DateTime)recoveryOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
+                Amount = Math.Round(recoveryOrderDetail.CompoundCost, 2)
             };
-            creditraw = CreateObject(creditraw, _accountService);
+            creditcompound = CreateObject(creditcompound, _accountService);
+            journals.Add(creditcompound);
 
             GeneralLedgerJournal debitrecoveryexpense = new GeneralLedgerJournal()
             {
@@ -3198,29 +3271,44 @@ namespace Service.Service
             };
             debitrecoveryexpense = CreateObject(debitrecoveryexpense, _accountService);
 
-            journals.Add(creditraw);
             journals.Add(debitrecoveryexpense);
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUndoRejectedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUndoRejectedJournalForRecoveryOrderDetail(RecoveryOrderDetail recoveryOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
-                // Debit Raw (Core, Compound, Accessories), Credit RecoveryExpense
+            // Debit Raw (Core, Compound), Credit RecoveryExpense
             #region Debit Raw (Core, Compound, Accessories), Credit RecoveryExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             DateTime UndoRejectDate = DateTime.Now;
 
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            if (recoveryOrderDetail.CoreCost > 0)
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                GeneralLedgerJournal debitcore = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Core).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
+                    SourceDocumentId = recoveryOrderDetail.Id,
+                    TransactionDate = (DateTime)recoveryOrderDetail.RejectedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(recoveryOrderDetail.CoreCost, 2)
+                };
+                debitcore = CreateObject(debitcore, _accountService);
+                journals.Add(debitcore);
+            }
+
+            GeneralLedgerJournal debitcompound = new GeneralLedgerJournal()
+            {
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Compound).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.RecoveryOrderDetail,
                 SourceDocumentId = recoveryOrderDetail.Id,
-                TransactionDate = recoveryOrderDetail.RejectedDate.Value,
+                TransactionDate = (DateTime)recoveryOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(recoveryOrderDetail.TotalCost, 2)
+                Amount = Math.Round(recoveryOrderDetail.CompoundCost, 2)
             };
-            debitraw = CreateObject(debitraw, _accountService);
+            debitcompound = CreateObject(debitcompound, _accountService);
+            journals.Add(debitcompound);
 
             GeneralLedgerJournal creditrecoveryexpense = new GeneralLedgerJournal()
             {
@@ -3233,34 +3321,55 @@ namespace Service.Service
             };
             creditrecoveryexpense = CreateObject(creditrecoveryexpense, _accountService);
 
-            journals.Add(debitraw);
             journals.Add(creditrecoveryexpense);
             return journals;
             #endregion
         }
 
         // MANUFACTURING CONVERSION
+        public GeneralLedgerJournal CreateConfirmationJournalForBlendingWorkOrderDetail(BlendingWorkOrder blendingWorkOrder, int AccountId, decimal TotalCOGS, IAccountService _accountService)
+        {
+            #region Credit Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = (DateTime) blendingWorkOrder.BlendingDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(TotalCOGS, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
 
-        public IList<GeneralLedgerJournal> CreateConfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
+        public GeneralLedgerJournal CreateUnconfirmationJournalForBlendingWorkOrderDetail(BlendingWorkOrder blendingWorkOrder, int AccountId, decimal TotalCOGS, IAccountService _accountService)
+        {
+            #region Debit Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
+                SourceDocumentId = blendingWorkOrder.Id,
+                TransactionDate = (DateTime)blendingWorkOrder.BlendingDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(TotalCOGS, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, int AccountId, IAccountService _accountService, decimal TotalCost)
         {
             // Credit Raw (Source Items), Debit FinishedGoods (Chemical), Debit BlendingExpense (2%)
             #region Credit Raw (Source Items), Debit FinishedGoods (Chemical), Debit BlendingExpense (2%)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
-                SourceDocumentId = blendingWorkOrder.Id,
-                TransactionDate = blendingWorkOrder.BlendingDate,
-                Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(TotalCost, 2),
-            };
-            creditraw = CreateObject(creditraw, _accountService);
-
             GeneralLedgerJournal debitfinishedgoods = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                AccountId = AccountId,
                 SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
@@ -3280,34 +3389,21 @@ namespace Service.Service
             };
             debitproductioncost = CreateObject(debitproductioncost, _accountService);
 
-            journals.Add(creditraw);
             journals.Add(debitfinishedgoods);
             journals.Add(debitproductioncost);
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, IAccountService _accountService, decimal TotalCost)
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, int AccountId, IAccountService _accountService, decimal TotalCost)
         {
             // Debit Raw (Source Items), Credit FinishedGoods (Chemical), Credit BlendingExpense (2%)
             #region Debit Raw (Source Items), Credit FinishedGoods (Chemical), Credit BlendingExpense (2%)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime UnfinishedDate = DateTime.Now;
-
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
-            {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
-                SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
-                SourceDocumentId = blendingWorkOrder.Id,
-                TransactionDate = blendingWorkOrder.BlendingDate,
-                Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(TotalCost, 2)
-            };
-            debitraw = CreateObject(debitraw, _accountService);
-
+            
             GeneralLedgerJournal creditfinishedgoods = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                AccountId = AccountId,
                 SourceDocument = Constant.GeneralLedgerSource.BlendingWorkOrder,
                 SourceDocumentId = blendingWorkOrder.Id,
                 TransactionDate = blendingWorkOrder.BlendingDate,
@@ -3327,32 +3423,63 @@ namespace Service.Service
             };
             creditproductioncost = CreateObject(creditproductioncost, _accountService);
 
-            journals.Add(debitraw);
             journals.Add(creditfinishedgoods);
+            journals.Add(creditproductioncost);
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateFinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateFinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             // Credit Raw (RollBlanket, Bars, Adhesive), Debit FinishedGoods (Blanket)
             #region Credit Raw (RollBlanket, Bars, Adhesive), Debit FinishedGoods (Blanket)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            GeneralLedgerJournal creditrollblanket = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.RollBlanket).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
+                Amount = Math.Round(blanketOrderDetail.RollBlanketCost, 2)
             };
-            creditraw = CreateObject(creditraw, _accountService);
+            creditrollblanket = CreateObject(creditrollblanket, _accountService);
+            journals.Add(creditrollblanket);
+
+            if (blanketOrderDetail.AdhesiveCost > 0)
+            {
+                GeneralLedgerJournal creditadhesive = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.AdhesiveBlanket).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(blanketOrderDetail.AdhesiveCost, 2)
+                };
+                creditadhesive = CreateObject(creditadhesive, _accountService);
+                journals.Add(creditadhesive);
+            }
+
+            if (blanketOrderDetail.BarCost > 0)
+            {
+                GeneralLedgerJournal creditbar = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Bar).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(blanketOrderDetail.BarCost, 2)
+                };
+                creditbar = CreateObject(creditbar, _accountService);
+                journals.Add(creditbar);
+            }
 
             GeneralLedgerJournal debitfinishedgoods = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Blanket).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
@@ -3361,63 +3488,121 @@ namespace Service.Service
             };
             debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
 
-            journals.Add(creditraw);
             journals.Add(debitfinishedgoods);
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUnfinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUnfinishedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             // Debit Raw (RollBlanket, Bars, Adhesive), Credit FinishedGoods (Blanket)
             #region Debit Raw (RollBlanket, Bars, Adhesive), Credit FinishedGoods (Blanket)
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime UnfinishedDate = DateTime.Now;
-
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            GeneralLedgerJournal debitrollblanket = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.RollBlanket).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
                 SourceDocumentId = blanketOrderDetail.Id,
-                TransactionDate = blanketOrderDetail.FinishedDate.Value,
+                TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
+                Amount = Math.Round(blanketOrderDetail.RollBlanketCost, 2)
             };
-            debitraw = CreateObject(debitraw, _accountService);
+            debitrollblanket = CreateObject(debitrollblanket, _accountService);
+            journals.Add(debitrollblanket);
+
+            if (blanketOrderDetail.AdhesiveCost > 0)
+            {
+                GeneralLedgerJournal debitadhesive = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.AdhesiveBlanket).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(blanketOrderDetail.AdhesiveCost, 2)
+                };
+                debitadhesive = CreateObject(debitadhesive, _accountService);
+                journals.Add(debitadhesive);
+            }
+
+            if (blanketOrderDetail.BarCost > 0)
+            {
+                GeneralLedgerJournal debitbar = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Bar).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(blanketOrderDetail.BarCost, 2)
+                };
+                debitbar = CreateObject(debitbar, _accountService);
+                journals.Add(debitbar);
+            }
 
             GeneralLedgerJournal creditfinishedgoods = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.FinishedGoods).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Blanket).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
                 SourceDocumentId = blanketOrderDetail.Id,
-                TransactionDate = blanketOrderDetail.FinishedDate.Value,
+                TransactionDate = (DateTime)blanketOrderDetail.FinishedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
                 Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
             };
             creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
 
-            journals.Add(debitraw);
             journals.Add(creditfinishedgoods);
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateRejectedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateRejectedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             // Credit Raw (RollBlanket, Bars, Adhesive), Debit ConversionExpense
             #region Credit Raw (RollBlanket, Bars, Adhesive), Debit ConversionExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
 
-            GeneralLedgerJournal creditraw = new GeneralLedgerJournal()
+            GeneralLedgerJournal creditrollblanket = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.RollBlanket).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
                 SourceDocumentId = blanketOrderDetail.Id,
                 TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
+                Amount = Math.Round(blanketOrderDetail.RollBlanketCost, 2)
             };
-            creditraw = CreateObject(creditraw, _accountService);
+            creditrollblanket = CreateObject(creditrollblanket, _accountService);
+            journals.Add(creditrollblanket);
+
+            if (blanketOrderDetail.AdhesiveCost > 0)
+            {
+                GeneralLedgerJournal creditadhesive = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.AdhesiveBlanket).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(blanketOrderDetail.AdhesiveCost, 2)
+                };
+                creditadhesive = CreateObject(creditadhesive, _accountService);
+                journals.Add(creditadhesive);
+            }
+
+            if (blanketOrderDetail.BarCost > 0)
+            {
+                GeneralLedgerJournal creditbar = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Bar).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(blanketOrderDetail.BarCost, 2)
+                };
+                creditbar = CreateObject(creditbar, _accountService);
+                journals.Add(creditbar);
+            }
 
             GeneralLedgerJournal debitconversionexpense = new GeneralLedgerJournal()
             {
@@ -3431,29 +3616,58 @@ namespace Service.Service
             };
             debitconversionexpense = CreateObject(debitconversionexpense, _accountService);
 
-            journals.Add(creditraw);
             journals.Add(debitconversionexpense);
             return journals;
             #endregion
         }
 
-        public IList<GeneralLedgerJournal> CreateUndoRejectedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IAccountService _accountService)
+        public IList<GeneralLedgerJournal> CreateUndoRejectedJournalForBlanketOrderDetail(BlanketOrderDetail blanketOrderDetail, IItemTypeService _itemTypeService, IAccountService _accountService)
         {
             // Debit Raw (RollBlanket, Bars, Adhesive), Credit ConversionExpense
             #region Debit Raw (RollBlanket, Bars, Adhesive), Credit ConversionExpense
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
-            DateTime UndoRejectDate = DateTime.Now;
 
-            GeneralLedgerJournal debitraw = new GeneralLedgerJournal()
+            GeneralLedgerJournal debitrollblanket = new GeneralLedgerJournal()
             {
-                AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Raw).Id,
+                AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.RollBlanket).AccountId.GetValueOrDefault(),
                 SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
                 SourceDocumentId = blanketOrderDetail.Id,
-                TransactionDate = blanketOrderDetail.RejectedDate.Value,
+                TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(blanketOrderDetail.TotalCost, 2)
+                Amount = Math.Round(blanketOrderDetail.RollBlanketCost, 2)
             };
-            debitraw = CreateObject(debitraw, _accountService);
+            debitrollblanket = CreateObject(debitrollblanket, _accountService);
+            journals.Add(debitrollblanket);
+
+            if (blanketOrderDetail.AdhesiveCost > 0)
+            {
+                GeneralLedgerJournal debitadhesive = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.AdhesiveBlanket).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(blanketOrderDetail.AdhesiveCost, 2)
+                };
+                debitadhesive = CreateObject(debitadhesive, _accountService);
+                journals.Add(debitadhesive);
+            }
+
+            if (blanketOrderDetail.BarCost > 0)
+            {
+                GeneralLedgerJournal debitbar = new GeneralLedgerJournal()
+                {
+                    AccountId = _itemTypeService.GetObjectByName(Constant.ItemTypeCase.Bar).AccountId.GetValueOrDefault(),
+                    SourceDocument = Constant.GeneralLedgerSource.BlanketOrderDetail,
+                    SourceDocumentId = blanketOrderDetail.Id,
+                    TransactionDate = (DateTime)blanketOrderDetail.RejectedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(blanketOrderDetail.BarCost, 2)
+                };
+                debitbar = CreateObject(debitbar, _accountService);
+                journals.Add(debitbar);
+            }
 
             GeneralLedgerJournal creditconversionexpense = new GeneralLedgerJournal()
             {
@@ -3467,7 +3681,6 @@ namespace Service.Service
             };
             creditconversionexpense = CreateObject(creditconversionexpense, _accountService);
 
-            journals.Add(debitraw);
             journals.Add(creditconversionexpense);
             return journals;
             #endregion

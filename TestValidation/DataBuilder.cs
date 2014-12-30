@@ -300,21 +300,6 @@ namespace TestValidation
             _salesInvoiceMigrationService = new SalesInvoiceMigrationService(new SalesInvoiceMigrationRepository());
             _purchaseInvoiceMigrationService = new PurchaseInvoiceMigrationService(new PurchaseInvoiceMigrationRepository());
 
-            typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket");
-            typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller");
-            typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
-            typeBar = _itemTypeService.CreateObject("Bar", "Bar");
-            typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true);
-            typeBearing = _itemTypeService.CreateObject("Bearing", "Bearing");
-            typeRollBlanket = _itemTypeService.CreateObject("RollBlanket", "RollBlanket");
-            typeChemical = _itemTypeService.CreateObject("Chemical", "Chemical");
-            typeCompound = _itemTypeService.CreateObject("Compound", "Compound");
-            typeConsumable = _itemTypeService.CreateObject("Consumable", "Consumable");
-            typeCore = _itemTypeService.CreateObject("Core", "Core", true);
-            typeGlue = _itemTypeService.CreateObject("Glue", "Glue");
-            typeUnderpacking = _itemTypeService.CreateObject("Underpacking", "Underpacking");
-            typeRoller = _itemTypeService.CreateObject("Roller", "Roller", true);
-
             typeDamp = _rollerTypeService.CreateObject("Damp", "Damp");
             typeFoundDT = _rollerTypeService.CreateObject("Found DT", "Found DT");
             typeInkFormX = _rollerTypeService.CreateObject("Ink Form X", "Ink Form X");
@@ -334,8 +319,6 @@ namespace TestValidation
             // ^([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)$
             // REPLACE with:
             // Account $2 = _accountService.CreateObject(new Account() { Code = "$1", Name = "$3", Group = $4, Level = $5, ParentId = $7, IsLegacy = $8, IsLeaf = $9, LegacyCode = "$10" }, _accountService);
-            if (!_accountService.GetLegacyObjects().Any())
-            {
                 Account AKTIVA1 = _accountService.CreateObject(new Account() { Code = "1", Name = "AKTIVA", Group = 1, Level = 1, ParentId = null, IsLegacy = true, IsLeaf = false, LegacyCode = "A1" }, _accountService);
                 Account AKTIVALANCAR2 = _accountService.CreateObject(new Account() { Code = "11", Name = "AKTIVA LANCAR ", Group = 1, Level = 2, ParentId = AKTIVA1.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A11" }, _accountService);
                 Account KASDANSETARAKAS3 = _accountService.CreateObject(new Account() { Code = "1101", Name = "KAS DAN SETARA KAS ", Group = 1, Level = 3, ParentId = AKTIVALANCAR2.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A1101" }, _accountService);
@@ -622,7 +605,20 @@ namespace TestValidation
                 Account PENDAPATANNONOPERASIONAL4 = _accountService.CreateObject(new Account() { Code = "710301", Name = "PENDAPATAN NON OPERASIONAL (POP)", Group = 5, Level = 4, ParentId = PENDAPATANNONOPERASIONAL3.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
                 Account LABAPENJUALANAKTIVATETAP5POP = _accountService.CreateObject(new Account() { Code = "71030001", Name = "LABA PENJUALAN AKTIVA TETAP (POP)", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
                 Account LABASALELEASEBACK5 = _accountService.CreateObject(new Account() { Code = "71030002", Name = "LABA SALE & LEASE BACK", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
-            }
+
+                typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket", false, BAHANBAKUBLANKET5, _accountService);
+                typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller", false, BAHANBAKUROLLERS5, _accountService);
+                typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory", false, BAHANBAKUROLLERS5, _accountService);
+                typeBar = _itemTypeService.CreateObject("Bar", "Bar", false, BAHANBAKUBLANKET5, _accountService);
+                typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true, PERSEDPRINTINGBLANKET5, _accountService);
+                typeRollBlanket = _itemTypeService.CreateObject("RollBlanket", "RollBlanket", false, BAHANBAKUBLANKET5, _accountService);
+                typeChemical = _itemTypeService.CreateObject("Chemical", "Chemical", false, PERSEDPRINTINGCHEMICALS5, _accountService);
+                typeCompound = _itemTypeService.CreateObject("Compound", "Compound", false, BAHANBAKUROLLERS5, _accountService);
+                typeConsumable = _itemTypeService.CreateObject("Consumable", "Consumable", false, BAHANBAKUOTHER5, _accountService);
+                typeCore = _itemTypeService.CreateObject("Core", "Core", true, BAHANBAKUROLLERS5, _accountService);
+                typeGlue = _itemTypeService.CreateObject("Glue", "Glue", false, BAHANBAKUOTHER5, _accountService);
+                typeUnderpacking = _itemTypeService.CreateObject("Underpacking", "Underpacking", false, BAHANBAKUOTHER5, _accountService);
+                typeRoller = _itemTypeService.CreateObject("Roller", "Roller", true, PERSEDPRINTINGROLLERS5, _accountService);
 
             if (!_currencyService.GetAll().Any())
             {
@@ -1061,8 +1057,8 @@ namespace TestValidation
                 Price = 50000
             };
             _stockAdjustmentDetailService.CreateObject(sad5, _stockAdjustmentService, _itemService, _warehouseItemService);
- 
-            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
+
+            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService,
                                                   _accountService, _generalLedgerJournalService, _closingService);
         }
 
@@ -1461,7 +1457,7 @@ namespace TestValidation
             StockAdjustmentDetail sadRollerUsedCore4 = new StockAdjustmentDetail() { ItemId = RollerUsedCore4.Id, Quantity = 7, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadRollerUsedCore4, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
+            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService,
                                                   _accountService, _generalLedgerJournalService, _closingService);
         }
 
@@ -1876,26 +1872,26 @@ namespace TestValidation
 
             _recoveryOrderDetailService.FinishObject(recoveryODContact1, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                      _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                     _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _itemService, _itemTypeService, _warehouseItemService, _blanketService, _stockMutationService,
                                                      _accountService, _generalLedgerJournalService, _closingService, _serviceCostService, _customerStockMutationService, _customerItemService);
             _recoveryOrderDetailService.RejectObject(recoveryODContact2, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
-                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _itemTypeService,
                                                      _warehouseItemService, _blanketService, _stockMutationService,
                                                      _accountService, _generalLedgerJournalService, _closingService);
             _recoveryOrderDetailService.FinishObject(recoveryODContact3, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                        _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                       _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                       _itemService, _itemTypeService, _warehouseItemService, _blanketService, _stockMutationService,
                                                        _accountService, _generalLedgerJournalService, _closingService, _serviceCostService, _customerStockMutationService, _customerItemService);
             _recoveryOrderDetailService.FinishObject(recoveryODInHouse1, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                      _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                     _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _itemService, _itemTypeService, _warehouseItemService, _blanketService, _stockMutationService,
                                                      _accountService, _generalLedgerJournalService, _closingService, _serviceCostService, _customerStockMutationService, _customerItemService);
             _recoveryOrderDetailService.FinishObject(recoveryODInHouse2, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService,
                                                      _recoveryOrderService, _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService,
-                                                     _itemService, _warehouseItemService, _blanketService, _stockMutationService,
+                                                     _itemService, _itemTypeService, _warehouseItemService, _blanketService, _stockMutationService,
                                                      _accountService, _generalLedgerJournalService, _closingService, _serviceCostService, _customerStockMutationService, _customerItemService);
             _recoveryOrderDetailService.RejectObject(recoveryODInHouse3, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
-                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService,
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _itemTypeService,
                                                      _warehouseItemService, _blanketService, _stockMutationService,
                                                      _accountService, _generalLedgerJournalService, _closingService);
         }
@@ -2013,7 +2009,7 @@ namespace TestValidation
 
         public void PopulateRecoveryOrders3()
         {
-            _stockAdjustmentService.ConfirmObject(stockAdjustment, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, 
+            _stockAdjustmentService.ConfirmObject(stockAdjustment, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService,
                                                   _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             
             recoveryOrderContact2 = new RecoveryOrder()
@@ -2081,11 +2077,11 @@ namespace TestValidation
             _recoveryOrderDetailService.PackageObject(recoveryODContact2b);
 
             _recoveryOrderDetailService.FinishObject(recoveryODInHouse3b, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
-                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _itemTypeService, _warehouseItemService,
                                                      _blanketService, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                      _customerStockMutationService, _customerItemService);
             _recoveryOrderDetailService.FinishObject(recoveryODContact2b, DateTime.Today, _coreIdentificationService, _coreIdentificationDetailService, _recoveryOrderService,
-                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _warehouseItemService,
+                                                     _recoveryAccessoryDetailService, _coreBuilderService, _rollerBuilderService, _itemService, _itemTypeService, _warehouseItemService,
                                                      _blanketService, _stockMutationService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                      _customerStockMutationService, _customerItemService);
         }
@@ -2367,7 +2363,7 @@ namespace TestValidation
             StockAdjustmentDetail sadBlanket3 = new StockAdjustmentDetail() { ItemId = blanket3.Id, Quantity = 10, StockAdjustmentId = sa.Id, Price = 50000 };
             _stockAdjustmentDetailService.CreateObject(sadBlanket3, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService,
+            _stockAdjustmentService.ConfirmObject(sa, DateTime.Today, _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService,
                                                   _accountService, _generalLedgerJournalService, _closingService);
         }
 
@@ -2653,13 +2649,13 @@ namespace TestValidation
             TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
             TimeSpan lateDeliveryDate = new TimeSpan(2, 0, 0, 0);
             _deliveryOrderService.ConfirmObject(do1, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                                                _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                 _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             _deliveryOrderService.ConfirmObject(do2, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                                                _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                 _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
-            _deliveryOrderService.ConfirmObject(do3, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService, 
-                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+            _deliveryOrderService.ConfirmObject(do3, DateTime.Now.Subtract(receivedDate), _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
+                                                _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                 _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
 
             si1 = new SalesInvoice()
@@ -2752,13 +2748,13 @@ namespace TestValidation
         {
             _salesInvoiceService.ConfirmObject(si1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _itemTypeService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(si2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _itemTypeService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(si3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _itemTypeService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
 
             rv = new ReceiptVoucher()
             {
@@ -2966,11 +2962,11 @@ namespace TestValidation
             TimeSpan receivedDate = new TimeSpan(3, 0, 0, 0);
             TimeSpan lateReceivedDate = new TimeSpan(2, 0, 0, 0);
             _purchaseReceivalService.ConfirmObject(pr1, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                   _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
             _purchaseReceivalService.ConfirmObject(pr2, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                   _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
             _purchaseReceivalService.ConfirmObject(pr3, DateTime.Now.Subtract(receivedDate), _purchaseReceivalDetailService, _purchaseOrderService, _purchaseOrderDetailService, _stockMutationService,
-                                                   _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
+                                                   _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService);
 
             pi1 = new PurchaseInvoice()
             {
@@ -3284,13 +3280,13 @@ namespace TestValidation
             _deliveryOrderDetailService.CreateObject(deliveryOD3b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
 
             _deliveryOrderService.ConfirmObject(deliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                                                _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                 _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             _deliveryOrderService.ConfirmObject(deliveryOrder2, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                                                _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                 _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
             _deliveryOrderService.ConfirmObject(deliveryOrder3, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService, _stockMutationService,
-                                                _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
+                                                _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService,
                                                 _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService, _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
 
             salesInvoice1 = new SalesInvoice()
@@ -3376,13 +3372,13 @@ namespace TestValidation
 
             _salesInvoiceService.ConfirmObject(salesInvoice1, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _itemTypeService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(salesInvoice2, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _itemTypeService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
             _salesInvoiceService.ConfirmObject(salesInvoice3, DateTime.Today, _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService,
                                                _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService,
-                                               _serviceCostService, _rollerBuilderService, _itemService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
+                                               _serviceCostService, _rollerBuilderService, _itemService, _itemTypeService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
 
             receiptVoucher1 = new ReceiptVoucher()
             {
@@ -3696,23 +3692,23 @@ namespace TestValidation
             };
             _temporaryDeliveryOrderClearanceDetailService.CreateObject(tdocd5b, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
 
-            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc1, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc1, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                                             _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService,
                                             _closingService);
 
-            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc2, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc2, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                                             _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService,
                                             _closingService);
 
-            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc3, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc3, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                                             _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService,
                                             _closingService);
 
-            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc4, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc4, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                                             _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService,
                                             _closingService);
 
-            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc5, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            _temporaryDeliveryOrderClearanceService.ConfirmObject(tdoc5, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                                             _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService,
                                             _closingService);
 
@@ -3982,14 +3978,14 @@ namespace TestValidation
             };
             GramTDOC2Rb = _temporaryDeliveryOrderClearanceDetailService.CreateObject(GramTDOC2Rb, _temporaryDeliveryOrderClearanceService, _temporaryDeliveryOrderDetailService);
 
-            GramTDOC1R = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC1R, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            GramTDOC1R = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC1R, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                          _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
 
             /* No waste for Part Delivery Order
-            GramTDOC1W = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC1W, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            GramTDOC1W = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC1W, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                          _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
             */
-            GramTDOC2R = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC2R, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService,
+            GramTDOC2R = _temporaryDeliveryOrderClearanceService.ConfirmObject(GramTDOC2R, DateTime.Today, _temporaryDeliveryOrderClearanceDetailService, _stockMutationService, _itemService, _itemTypeService,
                          _blanketService, _warehouseItemService, _temporaryDeliveryOrderService, _temporaryDeliveryOrderDetailService, _generalLedgerJournalService, _accountService, _closingService);
 
             GramDOD1a = new DeliveryOrderDetail()
@@ -4017,7 +4013,7 @@ namespace TestValidation
             GramDOD1b = _deliveryOrderDetailService.CreateObject(GramDOD1b, _deliveryOrderService, _salesOrderDetailService, _salesOrderService, _itemService);
 
             GramDeliveryOrder1 = _deliveryOrderService.ConfirmObject(GramDeliveryOrder1, DateTime.Today, _deliveryOrderDetailService, _salesOrderService, _salesOrderDetailService,
-                                                                     _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService,
+                                                                     _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService,
                                                                      _closingService, _serviceCostService, _temporaryDeliveryOrderDetailService, _temporaryDeliveryOrderService,
                                                                      _customerStockMutationService, _customerItemService, _currencyService, _exchangeRateService);
         }

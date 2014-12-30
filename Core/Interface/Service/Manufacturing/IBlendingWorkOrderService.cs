@@ -18,11 +18,13 @@ namespace Core.Interface.Service
         BlendingWorkOrder UpdateObject(BlendingWorkOrder blendingWorkOrder, IBlendingRecipeService _blendingRecipeService, IWarehouseService _warehouseService);
         BlendingWorkOrder SoftDeleteObject(BlendingWorkOrder blendingWorkOrder);
         BlendingWorkOrder ConfirmObject(BlendingWorkOrder blendingWorkOrder, DateTime ConfirmationDate, IBlendingRecipeService _blendingRecipeService, IBlendingRecipeDetailService _blendingRecipeDetailService,
-                                               IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
-                                               IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
+                                        IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService,
+                                        IWarehouseItemService _warehouseItemService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, 
+                                        IClosingService _closingService);
         BlendingWorkOrder UnconfirmObject(BlendingWorkOrder blendingWorkOrder, IBlendingRecipeService _blendingRecipeService, IBlendingRecipeDetailService _blendingRecipeDetailService,
-                                                 IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService,
-                                                 IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, IClosingService _closingService);
+                                          IStockMutationService _stockMutationService, IBlanketService _blanketService, IItemService _itemService, IItemTypeService _itemTypeService, 
+                                          IWarehouseItemService _warehouseItemService, IGeneralLedgerJournalService _generalLedgerJournalService, IAccountService _accountService, 
+                                          IClosingService _closingService);
         BlendingWorkOrder AdjustQuantity(BlendingWorkOrder blendingWorkOrder);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(BlendingWorkOrder blendingWorkOrder);

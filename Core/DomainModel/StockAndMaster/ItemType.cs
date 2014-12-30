@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public string Name { get; set; }
         public string Description { get; set; }
         public bool IsLegacy { get; set; } // Core, Roller, Blanket are legacy items
+        public Nullable<int> AccountId { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -19,5 +20,6 @@ namespace Core.DomainModel
         public Nullable<DateTime> DeletedAt { get; set; }
         public Dictionary<string, string> Errors { get; set; }
         public virtual ICollection<Item> Items { get; set; }
+        public virtual Account Account { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace OffsetPrintingSupplies
         private Currency currencyRupiah, currencyEuro, currencyUSD, currencyCHF;
         private ExchangeRate rateIDRAwal, rateEuroAwal, rateUSDAwal, rateCHFAwal;
         private ItemType typeAdhesiveBlanket, typeAdhesiveRoller, typeAccessory, typeBar, typeBlanket, typeBearing, typeRollBlanket, typeChemical, typeCompound, typeCore, typeUnderpacking, typeRoller, typePackaging, typeATK, typeIT, typeCoreRepair, typeGAMaintenance, typeGASupply, typeProductionConsumables, typeProductionEquipment,
-                typeProductionMaintenance, typeVehicle;
+                typeProductionMaintenance, typeVehicle, typeGlue, typeConsumable;
         private RollerType typeDampDistribution, typeDampForm, typeDampFount, typeDampeMet, typeDampRoll, typeDampTrans, typeInkDist, typeInkDuct, typeInkForm, typeInkTransDist, typeInkRoll, typeDampDuct, typeImpressionRoll, typeRollPlate, typeWaterForm, typeBridgeRoll,
                 typeDampPan, typeRollOB, typePressRoll, typeDummy;
 
@@ -405,6 +405,7 @@ namespace OffsetPrintingSupplies
                 baseCompany = _companyService.CreateObject("PT Zentrum Graphics Asia", "Jl. Raya Serpong KM 7, Komplek Multiguna A1 / 1, Serpong Tangerang", "+62 21 5312 3222", "", "zga@zengra.com");
             }
 
+            /*
             typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket");
             typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller");
             typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory");
@@ -427,6 +428,7 @@ namespace OffsetPrintingSupplies
             typeProductionEquipment = _itemTypeService.CreateObject("Production Equipment", "Production Equipment");
             typeProductionMaintenance = _itemTypeService.CreateObject("Production Maintenance", "Production Maintenance");
             typeVehicle = _itemTypeService.CreateObject("Vehicle", "Vehicle");
+            */
 
             Pieces = _uomService.CreateObject("Pieces (Pcs)");
             Kilogram = _uomService.CreateObject("Kilogram (Kg)");
@@ -1610,6 +1612,7 @@ namespace OffsetPrintingSupplies
             TriasMotor = _contactService.CreateObject(new Contact() { Name = "Trias Motor", Address = "Jl.Raya Domba No.50, Duren sawit kalimalang, Jakarta Timur 13440", ContactNo = "021-8629750, fax: 021-8611214", IsTaxable = true, TaxCode = "01", Email = "", PIC = "Bpk.Soleh", PICContactNo = "", Description = "K/C Pillar Pintu Depan RH" });
             TunasMobilindoPerkasa = _contactService.CreateObject(new Contact() { Name = "Tunas Mobilindo Perkasa", Address = "Jl. Matraman Raya No. 103-105 Jakarta Timur", ContactNo = "021-8581484, fax: 021-8502412", IsTaxable = true, TaxCode = "01", Email = "ferrysudarman@yahoo.com", PIC = "Ferry Sudarman", PICContactNo = "021-92608379", Description = "Daihatsu Grandmax Minibus" });
         }
+
         public void PopulateCOA() {
             Account AKTIVA1 = _accountService.CreateObject(new Account() { Code = "1", Name = "AKTIVA", Group = 1, Level = 1, ParentId = null, IsLegacy = true, IsLeaf = false, LegacyCode = "A1" }, _accountService);
             Account AKTIVALANCAR2 = _accountService.CreateObject(new Account() { Code = "11", Name = "AKTIVA LANCAR ", Group = 1, Level = 2, ParentId = AKTIVA1.Id, IsLegacy = true, IsLeaf = false, LegacyCode = "A11" }, _accountService);
@@ -1897,6 +1900,21 @@ namespace OffsetPrintingSupplies
             Account PENDAPATANNONOPERASIONAL4 = _accountService.CreateObject(new Account() { Code = "710301", Name = "PENDAPATAN NON OPERASIONAL (POP)", Group = 5, Level = 4, ParentId = PENDAPATANNONOPERASIONAL3.Id, IsLegacy = false, IsLeaf = false, LegacyCode = "" }, _accountService);
             Account LABAPENJUALANAKTIVATETAP5POP = _accountService.CreateObject(new Account() { Code = "71030001", Name = "LABA PENJUALAN AKTIVA TETAP (POP)", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
             Account LABASALELEASEBACK5 = _accountService.CreateObject(new Account() { Code = "71030002", Name = "LABA SALE & LEASE BACK", Group = 5, Level = 5, ParentId = PENDAPATANNONOPERASIONAL4.Id, IsLegacy = false, IsLeaf = true, LegacyCode = "" }, _accountService);
+
+            typeAdhesiveBlanket = _itemTypeService.CreateObject("AdhesiveBlanket", "AdhesiveBlanket", false, BAHANBAKUBLANKET5, _accountService);
+            typeAdhesiveRoller = _itemTypeService.CreateObject("AdhesiveRoller", "AdhesiveRoller", false, BAHANBAKUROLLERS5, _accountService);
+            typeAccessory = _itemTypeService.CreateObject("Accessory", "Accessory", false, BAHANBAKUROLLERS5, _accountService);
+            typeBar = _itemTypeService.CreateObject("Bar", "Bar", false, BAHANBAKUBLANKET5, _accountService);
+            typeBlanket = _itemTypeService.CreateObject("Blanket", "Blanket", true, PERSEDPRINTINGBLANKET5, _accountService);
+            typeRollBlanket = _itemTypeService.CreateObject("RollBlanket", "RollBlanket", false, BAHANBAKUBLANKET5, _accountService);
+            typeChemical = _itemTypeService.CreateObject("Chemical", "Chemical", false, PERSEDPRINTINGCHEMICALS5, _accountService);
+            typeCompound = _itemTypeService.CreateObject("Compound", "Compound", false, BAHANBAKUROLLERS5, _accountService);
+            typeConsumable = _itemTypeService.CreateObject("Consumable", "Consumable", false, BAHANBAKUOTHER5, _accountService);
+            typeCore = _itemTypeService.CreateObject("Core", "Core", true, BAHANBAKUROLLERS5, _accountService);
+            typeGlue = _itemTypeService.CreateObject("Glue", "Glue", false, BAHANBAKUOTHER5, _accountService);
+            typeUnderpacking = _itemTypeService.CreateObject("Underpacking", "Underpacking", false, BAHANBAKUOTHER5, _accountService);
+            typeRoller = _itemTypeService.CreateObject("Roller", "Roller", true, PERSEDPRINTINGROLLERS5, _accountService);
+
         }            
         public void PopulateFinance() 
         {
@@ -3583,9 +3601,9 @@ namespace OffsetPrintingSupplies
             sadRBL41 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "RBL41", ItemId = RBL41.Id, Quantity = (decimal)1.7, Price = (decimal)48024.1, StockAdjustmentId = stockAdjustmentE16.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadRBL42 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "RBL42", ItemId = RBL42.Id, Quantity = (decimal)16.854, Price = (decimal)844008.36, StockAdjustmentId = stockAdjustmentE16.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            stockAdjustmentA1 = _stockAdjustmentService.ConfirmObject(stockAdjustmentA1, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
-            stockAdjustmentE15 = _stockAdjustmentService.ConfirmObject(stockAdjustmentE15, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
-            stockAdjustmentE16 = _stockAdjustmentService.ConfirmObject(stockAdjustmentE16, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentA1 = _stockAdjustmentService.ConfirmObject(stockAdjustmentA1, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentE15 = _stockAdjustmentService.ConfirmObject(stockAdjustmentE15, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentE16 = _stockAdjustmentService.ConfirmObject(stockAdjustmentE16, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
         }     
         public void PopulateItemSurabaya()
         {
@@ -3669,7 +3687,7 @@ namespace OffsetPrintingSupplies
             sadCHM103sby = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadCHM103sby", ItemId = CHM103.Id, Quantity = (decimal)2, Price = (decimal)12158, StockAdjustmentId = stockAdjustmentSby.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadCHM104sby = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadCHM104sby", ItemId = CHM104.Id, Quantity = (decimal)1, Price = (decimal)12158, StockAdjustmentId = stockAdjustmentSby.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            stockAdjustmentSby = _stockAdjustmentService.ConfirmObject(stockAdjustmentSby, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentSby = _stockAdjustmentService.ConfirmObject(stockAdjustmentSby, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
         }
         public void AdjustItemSemarang()
         {
@@ -3701,7 +3719,7 @@ namespace OffsetPrintingSupplies
             sadCHM65smg = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadCHM65smg", ItemId = CHM65.Id, Quantity = (decimal)125, Price = (decimal)25531.8, StockAdjustmentId = stockAdjustmentSmg.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadCHM63smg = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadCHM63smg", ItemId = CHM63.Id, Quantity = (decimal)20, Price = (decimal)25531.8, StockAdjustmentId = stockAdjustmentSmg.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            stockAdjustmentSmg = _stockAdjustmentService.ConfirmObject(stockAdjustmentSmg, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentSmg = _stockAdjustmentService.ConfirmObject(stockAdjustmentSmg, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
         }
         public void PopulateBarsForBlanket()
         {
@@ -21560,7 +21578,7 @@ namespace OffsetPrintingSupplies
             sadBLK600 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "BLK600", ItemId = BLK600.Id, Quantity = (decimal)8, Price = (decimal)828303.8, StockAdjustmentId = stockAdjustmentE15_2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadBLK601 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "BLK601", ItemId = BLK601.Id, Quantity = (decimal)20, Price = (decimal)866095.21, StockAdjustmentId = stockAdjustmentE15_2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            stockAdjustmentE15_2 = _stockAdjustmentService.ConfirmObject(stockAdjustmentE15_2, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentE15_2 = _stockAdjustmentService.ConfirmObject(stockAdjustmentE15_2, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
     
             StockAdjustment stockAdjustmentSby2 = _stockAdjustmentService.CreateObject(new StockAdjustment() { AdjustmentDate = DateTime.Today, Code = "STOCKAWAL_SBY_2_12_2014", WarehouseId = Sby.Id }, _warehouseService);
             sadBLK266sby = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadBLK266sby", ItemId = BLK266.Id, Quantity = (decimal)7, Price = (decimal)644252.42, StockAdjustmentId = stockAdjustmentSby2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
@@ -21610,7 +21628,7 @@ namespace OffsetPrintingSupplies
             sadBLK624sby = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadBLK624sby", ItemId = BLK624.Id, Quantity = (decimal)10, Price = (decimal)0, StockAdjustmentId = stockAdjustmentSby2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadBLK625sby = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadBLK625sby", ItemId = BLK625.Id, Quantity = (decimal)5, Price = (decimal)0, StockAdjustmentId = stockAdjustmentSby2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadBLK626sby = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadBLK626sby", ItemId = BLK626.Id, Quantity = (decimal)2, Price = (decimal)0, StockAdjustmentId = stockAdjustmentSby2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
-            stockAdjustmentSby2 = _stockAdjustmentService.ConfirmObject(stockAdjustmentSby2, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentSby2 = _stockAdjustmentService.ConfirmObject(stockAdjustmentSby2, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             
             StockAdjustment stockAdjustmentSmg2 = _stockAdjustmentService.CreateObject(new StockAdjustment() { AdjustmentDate = DateTime.Today, Code = "STOCKAWAL_SMG_2_12_2014", WarehouseId = Smg.Id }, _warehouseService);
 
@@ -21674,8 +21692,8 @@ namespace OffsetPrintingSupplies
             sadBLK322smg = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadBLK322smg", ItemId = BLK322.Id, Quantity = (decimal)6, Price = (decimal)723401, StockAdjustmentId = stockAdjustmentSmg2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadBLK328smg = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadBLK328smg", ItemId = BLK328.Id, Quantity = (decimal)5, Price = (decimal)436107.46, StockAdjustmentId = stockAdjustmentSmg2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadBLK653smg = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadBLK653smg", ItemId = BLK653.Id, Quantity = (decimal)5, Price = (decimal)648750.88, StockAdjustmentId = stockAdjustmentSmg2.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
-            
-            stockAdjustmentSmg2 = _stockAdjustmentService.ConfirmObject(stockAdjustmentSmg2, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+
+            stockAdjustmentSmg2 = _stockAdjustmentService.ConfirmObject(stockAdjustmentSmg2, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
         }
         public void PopulateCore()
         {
@@ -22626,7 +22644,7 @@ namespace OffsetPrintingSupplies
             sadCRE766 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadCRE766", ItemId = _coreBuilderService.GetUsedCore(CRE766.Id).Id, Quantity = (decimal)35, Price = (decimal)0, StockAdjustmentId = stockAdjustmentCoreSerpong.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadCRE767 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadCRE767", ItemId = _coreBuilderService.GetUsedCore(CRE767.Id).Id, Quantity = (decimal)47, Price = (decimal)0, StockAdjustmentId = stockAdjustmentCoreSerpong.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadCRE768 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadCRE768", ItemId = _coreBuilderService.GetUsedCore(CRE768.Id).Id, Quantity = (decimal)8, Price = (decimal)0, StockAdjustmentId = stockAdjustmentCoreSerpong.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
-            stockAdjustmentCoreSerpong = _stockAdjustmentService.ConfirmObject(stockAdjustmentCoreSerpong, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentCoreSerpong = _stockAdjustmentService.ConfirmObject(stockAdjustmentCoreSerpong, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
         }
         public void PopulateRoller()
         {            
@@ -23726,7 +23744,7 @@ namespace OffsetPrintingSupplies
             sadROL912 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadROL912", ItemId = _rollerBuilderService.GetRollerNewCore(ROL912.Id).Id, Quantity = (decimal)3, Price = (decimal)0, StockAdjustmentId = stockAdjustmentRollerSerpong.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadROL913 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadROL913", ItemId = _rollerBuilderService.GetRollerNewCore(ROL913.Id).Id, Quantity = (decimal)6, Price = (decimal)0, StockAdjustmentId = stockAdjustmentRollerSerpong.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-            stockAdjustmentRollerSerpong = _stockAdjustmentService.ConfirmObject(stockAdjustmentRollerSerpong, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentRollerSerpong = _stockAdjustmentService.ConfirmObject(stockAdjustmentRollerSerpong, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             
             StockAdjustment stockAdjustmentRollerSby = _stockAdjustmentService.CreateObject(new StockAdjustment() { AdjustmentDate = DateTime.Today, Code = "STOCKAWALROLLER_SBY_12_2014", WarehouseId = Sby.Id }, _warehouseService);
 
@@ -23736,7 +23754,7 @@ namespace OffsetPrintingSupplies
             sadROL917 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadROL917", ItemId = _rollerBuilderService.GetRollerNewCore(ROL917.Id).Id, Quantity = (decimal)1, Price = (decimal)0, StockAdjustmentId = stockAdjustmentRollerSby.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadROL918 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadROL918", ItemId = _rollerBuilderService.GetRollerNewCore(ROL918.Id).Id, Quantity = (decimal)1, Price = (decimal)0, StockAdjustmentId = stockAdjustmentRollerSby.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadROL919 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "sadROL919", ItemId = _rollerBuilderService.GetRollerNewCore(ROL919.Id).Id, Quantity = (decimal)1, Price = (decimal)0, StockAdjustmentId = stockAdjustmentRollerSby.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
-            stockAdjustmentRollerSby = _stockAdjustmentService.ConfirmObject(stockAdjustmentRollerSby, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
+            stockAdjustmentRollerSby = _stockAdjustmentService.ConfirmObject(stockAdjustmentRollerSby, new DateTime(2014, 12, 1), _stockAdjustmentDetailService, _stockMutationService, _itemService, _itemTypeService, _blanketService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
         }
         public void CreateUserMenus()
         {
