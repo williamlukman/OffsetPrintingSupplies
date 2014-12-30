@@ -576,8 +576,11 @@
                             if (result.RepairRequestCase == 1) {
                                 f.selectedIndex = 0;
                             }
-                            else {
+                            else if (result.RepairRequestCase == 2) {
                                 f.selectedIndex = 1;
+                            }
+                            else if (resut.repairrequestcase == 3) {
+                                f.selectedIndex = 2;
                             }
                             $('#CoreIdentificationId').val(result.CoreIdentificationId);
                             $('#RollerNo').val(result.RollerNo);
@@ -881,7 +884,7 @@
             $('#CoreBuilder').val(ret.name);
             if (ret.corebuildertypecase == "Hollow") { document.getElementById("CoreTypeCase").selectedIndex = 0; }
             else if (ret.corebuildertypecase == "Shaft") { document.getElementById("CoreTypeCase").selectedIndex = 1; }
-            else { document.getElementById("CoreTypeCase").selectedIndex = 2; }
+            else if (ret.corebuildertypecase == "None") { document.getElementById("CoreTypeCase").selectedIndex = 2; }
             $('#lookup_div_corebuilder').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

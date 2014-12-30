@@ -165,12 +165,12 @@ namespace Service.Service
                 foreach (var detail in deliveryOrderDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesOrderService, _salesOrderDetailService,
-                                                                _salesInvoiceDetailService, _stockMutationService,
-                                                                _itemService, _blanketService, _warehouseItemService, _customerStockMutationService, _customerItemService);
                     Item item = _itemService.GetObjectById(detail.ItemId);
                     ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
                     _generalLedgerJournalService.CreateConfirmationJournalForDeliveryOrderDetail(deliveryOrder, itemType.AccountId.GetValueOrDefault(), detail.COGS, _accountService);
+                    _deliveryOrderDetailService.UnconfirmObject(detail, this, _salesOrderService, _salesOrderDetailService,
+                                                                _salesInvoiceDetailService, _stockMutationService,
+                                                                _itemService, _blanketService, _warehouseItemService, _customerStockMutationService, _customerItemService);
                 }
                 deliveryOrder.TotalCOGS = 0;
                 _repository.UnconfirmObject(deliveryOrder);

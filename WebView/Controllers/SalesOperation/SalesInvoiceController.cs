@@ -459,8 +459,8 @@ namespace WebView.Controllers
 
                 var data = _salesInvoiceService.GetObjectById(model.Id);
                 model = _salesInvoiceService.UnconfirmObject(data, _salesInvoiceDetailService, _deliveryOrderService,
-                        _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _salesOrderService, _contactService, 
-                        _itemService, _itemTypeService, _accountService,
+                        _deliveryOrderDetailService, _receiptVoucherDetailService, _receivableService, _salesOrderService, _salesOrderDetailService, _contactService, 
+                        _itemService, _itemTypeService, _rollerBuilderService, _serviceCostService, _accountService,
                         _generalLedgerJournalService, _closingService,_exchangeRateService,_currencyService,_gLNonBaseCurrencyService);
             }
             catch (Exception ex)

@@ -125,8 +125,8 @@ namespace Service.Service
 
         public SalesInvoice UnconfirmObject(SalesInvoice salesInvoice, ISalesInvoiceDetailService _salesInvoiceDetailService, IDeliveryOrderService _deliveryOrderService,
                                             IDeliveryOrderDetailService _deliveryOrderDetailService, IReceiptVoucherDetailService _receiptVoucherDetailService,
-                                            IReceivableService _receivableService, ISalesOrderService _salesOrderService, IContactService _contactService,
-                                            IItemService _itemService, IItemTypeService _itemTypeService,
+                                            IReceivableService _receivableService, ISalesOrderService _salesOrderService, ISalesOrderDetailService _salesOrderDetailService, IContactService _contactService,
+                                            IItemService _itemService, IItemTypeService _itemTypeService, IRollerBuilderService _rollerBuilderService, IServiceCostService _serviceCostService,
                                             IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService,
                                             IExchangeRateService _exchangeRateService,ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
@@ -136,7 +136,6 @@ namespace Service.Service
                 foreach (var detail in details)
                 {
                     detail.Errors = new Dictionary<string, string>();
-                    _salesInvoiceDetailService.UnconfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService);
                     DeliveryOrderDetail deliveryOrderDetail = _deliveryOrderDetailService.GetObjectById(detail.DeliveryOrderDetailId);
                     Item item = _itemService.GetObjectById(deliveryOrderDetail.ItemId);
                     ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
@@ -144,6 +143,7 @@ namespace Service.Service
                     {
                         _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoiceDetail(salesInvoice, itemType.AccountId.GetValueOrDefault(), detail.COS * salesInvoice.ExchangeRateAmount, _accountService);
                     }
+                    _salesInvoiceDetailService.UnconfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService, _salesOrderDetailService, _serviceCostService, _rollerBuilderService, _itemService);
                 }
                 DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(salesInvoice.DeliveryOrderId);
                 SalesOrder salesOrder = _salesOrderService.GetObjectById(deliveryOrder.SalesOrderId);

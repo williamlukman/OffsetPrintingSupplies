@@ -156,7 +156,7 @@ namespace Service.Service
                     PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(detail.PurchaseOrderDetailId);
                     Item item = _itemService.GetObjectById(detail.ItemId);
                     ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
-                    _generalLedgerJournalService.CreateConfirmationJournalForPurchaseReceivalDetail(purchaseReceival, itemType.AccountId.GetValueOrDefault(), purchaseOrderDetail.Price * purchaseOrderDetail.Quantity * purchaseReceival.ExchangeRateAmount, _accountService);
+                    _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseReceivalDetail(purchaseReceival, itemType.AccountId.GetValueOrDefault(), purchaseOrderDetail.Price * purchaseOrderDetail.Quantity * purchaseReceival.ExchangeRateAmount, _accountService);
                 }
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseReceival(purchaseReceival, _accountService);
                 purchaseReceival.TotalCOGS = 0;
