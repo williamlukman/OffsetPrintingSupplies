@@ -44,6 +44,7 @@ namespace WebView.Controllers
         public DeliveryOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
+            _itemTypeService = new ItemTypeService(new ItemTypeRepository(), new ItemTypeValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(), new WarehouseItemValidator());
             _stockMutationService = new StockMutationService(new StockMutationRepository(), new StockMutationValidator());
             _blanketService = new BlanketService(new BlanketRepository(), new BlanketValidator());
