@@ -1983,7 +1983,7 @@ namespace Service.Service
         }
 
         // MASTER & STOCK
-        public GeneralLedgerJournal CreateConfirmationJournalForStockAdjustmentDetail(StockAdjustment stockAdjustment, int AccountId, decimal AvgCost, string Description, IAccountService _accountService)
+        public GeneralLedgerJournal CreateConfirmationJournalForStockAdjustmentDetail(StockAdjustment stockAdjustment, int AccountId, decimal AvgCost, IAccountService _accountService)
         {
             #region Inventory
             GeneralLedgerJournal glj = new GeneralLedgerJournal()
@@ -1993,8 +1993,7 @@ namespace Service.Service
                 SourceDocumentId = stockAdjustment.Id,
                 TransactionDate = (DateTime) stockAdjustment.AdjustmentDate,
                 Status = AvgCost > 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(AvgCost, 2),
-                Description = description
+                Amount = Math.Round(AvgCost, 2)
             };
             glj = CreateObject(glj, _accountService);
             return glj;

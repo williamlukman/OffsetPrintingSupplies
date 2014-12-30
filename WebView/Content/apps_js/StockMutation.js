@@ -34,7 +34,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
     			  { name: 'itemid', index: 'itemid', width: 35, align: "center", hidden: true},
-                  { name: 'sku', index: 'sku', width: 70 },
+                  { name: 'itemsku', index: 'itemsku', width: 70 },
 				  { name: 'name', index: 'name', width: 120 },
 				  { name: 'warehouseid', index: 'warehouseid', width: 70, hidden: true },
 				  { name: 'warehouse', index: 'warehouse', width: 150 },
