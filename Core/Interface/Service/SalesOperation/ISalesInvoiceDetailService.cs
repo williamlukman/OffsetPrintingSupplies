@@ -27,6 +27,8 @@ namespace Core.Interface.Service
         SalesInvoiceDetail ConfirmObject(SalesInvoiceDetail salesInvoiceDetail, DateTime ConfirmationDate, IDeliveryOrderDetailService _deliveryOrderDetailService,
                                                 ISalesOrderDetailService _salesOrderDetailService, IServiceCostService _serviceCostService,
                                                 IRollerBuilderService _rollerBuilderService, IItemService _itemService);
-        SalesInvoiceDetail UnconfirmObject(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderService _deliveryOrderService, IDeliveryOrderDetailService _deliveryOrderDetailService);
+        SalesInvoiceDetail UnconfirmObject(SalesInvoiceDetail salesInvoiceDetail, IDeliveryOrderService _deliveryOrderService,
+                                           IDeliveryOrderDetailService _deliveryOrderDetailService, ISalesOrderDetailService _salesOrderDetailService,
+                                           IServiceCostService _serviceCostService, IRollerBuilderService _rollerBuilderService, IItemService _itemService);
     }
 }
