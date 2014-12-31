@@ -16,19 +16,24 @@
         $("#list").setGridParam({ url: base_url + 'GeneralLedger/GetListByDate', postData: { startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
     }
 
+    function ReloadGridByAccountAndDate(AccountId, StartDate, EndDate) {
+        $("#list").setGridParam({ url: base_url + 'GeneralLedger/GetListByAccountAndDate', postData: { accountid: AccountId, startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
+    }
+
     function ClearData() {
         ClearErrorMessage();
     }
 
     $("#form_div").dialog('close');
     $("#search_div").dialog('close');
+    $("#AccountId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'GeneralLedger/GetList',
         datatype: "json",
         colNames: ['ID', 'Transaction Date', 'Status', 'Account Code', 'Account Name',
-                   'Amount', 'Source Document', 'Id'],
+                   'Amount', 'Source Document', 'Id', 'Nomor Surat', ],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
 				  { name: 'transactiondate', index: 'transactiondate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -37,7 +42,8 @@
 				  { name: 'account', index: 'account', width: 250 },
 				  { name: 'amount', index: 'amount', width: 120, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'sourcedocument', index: 'sourcedocument', width: 120 },
-                  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+				  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
         ],
         page: '1',
         pager: $('#pager'),

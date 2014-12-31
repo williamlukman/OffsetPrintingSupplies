@@ -181,7 +181,7 @@ namespace ExcelImport
 
         public void DoCustomer(DataRow row, int rowidx, string sheetname)
         {
-            var desc = row[0].ToString();
+            var uniquename = row[0].ToString();
             var name = row[1].ToString();
             var addr = row[2].ToString();
             var defaddr = row[3].ToString();
@@ -191,13 +191,13 @@ namespace ExcelImport
             var tax = row[8].ToString();
             var email = row[10].ToString();
             var status = row[15].ToString();
-            var obj = _contactService.GetQueryable().Where(x => x.Name == name && x.Description == desc && x.NPWP == npwp && !x.IsDeleted).FirstOrDefault();
+            var obj = _contactService.GetQueryable().Where(x => x.Name == name && x.NPWP == npwp && !x.IsDeleted).FirstOrDefault();
             if (obj == null)
             {
                 obj = new Contact()
                 {
                     Name = name, //(desc.Length > name.Length) ? desc : name,
-                    Description = desc, //(desc.Length > name.Length) ? name : desc,
+                    Description = "",//(desc.Length > name.Length) ? name : desc,
                     Address = (addr == null || addr.Trim() == "") ? "-" : addr,
                     DeliveryAddress = defaddr,
                     DefaultPaymentTerm = defterm,
@@ -210,6 +210,11 @@ namespace ExcelImport
                 };
                 if (_contactService.GetObjectByName(obj.Name) == null)
                 {
+                    obj = _contactService.CreateObject(obj);
+                }
+                else if (_contactService.GetObjectByName(uniquename) == null) {
+                    obj.Name = uniquename;
+                    obj.NamaFakturPajak = name;
                     obj = _contactService.CreateObject(obj);
                 }
                 else {
@@ -1102,7 +1107,7 @@ namespace ExcelImport
                     //    }
                     //}
 
-                    sheetname = "customer2$";
+                    sheetname = "Customer$";
                     for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
                     {
                         try

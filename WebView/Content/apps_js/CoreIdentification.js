@@ -471,7 +471,7 @@
         colNames: ['RIF Id', 'RollerIdentificationId', 'Roller No', 'Material', 'CoreBuilder Id',
                     'Core Sku', 'Core', 'RollerType Id', 'RollerType',
                     'Machine Id', 'Machine', 'Repair', 'RD', 'CD', 'RL', 'WL', 'TL',
-                    'GL', 'Groove Length', 'Qty Grooves', 'Core Type'
+                    'GL', 'Groove Len', 'Qty Grooves', 'Core'
         ],
         colModel: [
                   { name: 'detailid', index: 'detailid', width: 40, sortable: false},
@@ -485,16 +485,16 @@
                   { name: 'rollertypename', index: 'rollertypename', width: 70, sortable: false },
                   { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true},
                   { name: 'machinename', index: 'machinename', width: 90, sortable: false },
-                  { name: 'repairrequestcase', index: 'repairrequestcase', width: 90, sortable: false },
+                  { name: 'repairrequestcase', index: 'repairrequestcase', width: 90, sortable: false, stype: 'select', editoptions: { value: ':;1:BearingSeat;2:CentreDrill;3:None' }},
                   { name: 'rd', index: 'rd', width: 40, align: 'right', sortable: false },
                   { name: 'cd', index: 'cd', width: 40, align: 'right', sortable: false },
                   { name: 'rl', index: 'rl', width: 40, align: 'right', sortable: false },
                   { name: 'wl', index: 'wl', width: 40, align: 'right', sortable: false },
                   { name: 'tl', index: 'tl', width: 40, align: 'right', sortable: false },
                   { name: 'gl', index: 'tl', width: 40, align: 'right', sortable: false },
-                  { name: 'groovelength', index: 'groovelength', width: 40, align: 'right', sortable: false },
-                  { name: 'grooveqty', index: 'grooveqty', width: 40, align: 'right', sortable: false },
-                  { name: 'coretypecase', index: 'coretypecase', width: 40, align: 'right', sortable: false },
+                  { name: 'groovelength', index: 'groovelength', width: 65, align: 'right', sortable: false },
+                  { name: 'grooveqty', index: 'grooveqty', width: 65, align: 'right', sortable: false },
+                  { name: 'coretypecase', index: 'coretypecase', width: 30, align: 'right', sortable: false, stype: 'select', editoptions: { value: ':;R:Hollow;Z:Shaft' } },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),
@@ -530,7 +530,16 @@
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { coretypecase: rowCoreTypeCase });
 
-		      }
+		          rowRepairRequestCase = $(this).getRowData(cl).repairrequestcase;
+		          if (rowRepairRequestCase == '1') {
+		              rowRepairRequestCase = "BearingSeat";
+		          } else if (rowRepairRequestCase == '2') {
+		              rowRepairRequestCase = "CentreDrill";
+		          } else if (rowRepairRequestCase == '3') {
+		              rowRepairRequestCase = "None";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { repairrequestcase: rowRepairRequestCase });
+              }
 		  }
     });//END GRID Detail
     $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
@@ -579,9 +588,20 @@
                             else if (result.RepairRequestCase == 2) {
                                 f.selectedIndex = 1;
                             }
-                            else if (resut.repairrequestcase == 3) {
+                            else if (result.RepairRequestCase == 3) {
                                 f.selectedIndex = 2;
                             }
+                            var g = document.getElementById("CoreTypeCase");
+                            if (result.CoreTypeCase == 'Hollow') {
+                                g.selectedIndex = 0;
+                            }
+                            else if (result.CoreTypeCase == 'Shaft') {
+                                g.selectedIndex = 1;
+                            }
+                            else {
+                                g.selectedIndex = 2;
+                            }
+
                             $('#CoreIdentificationId').val(result.CoreIdentificationId);
                             $('#RollerNo').val(result.RollerNo);
                             $('#CoreBuilderId').val(result.CoreBuilderId);
@@ -666,9 +686,9 @@
             submitURL = base_url + 'CoreIdentification/InsertDetail';
         }
         var e = document.getElementById("MaterialCase");
-        var moving = e.options[e.selectedIndex].value;
+        var materialcase = e.options[e.selectedIndex].value;
         var f = document.getElementById("RepairRequestCase");
-        var repairrequestcase = f.options[f.selectedIndex].value;
+        var repairrequestcase = f.selectedIndex + 1;
 
         $.ajax({
             contentType: "application/json",
@@ -676,7 +696,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, DetailId: $("#DetailId").numberbox('getValue'), CoreIdentificationId: $("#id").val(), RollerNo: $("#RollerNo").val(),
-                MaterialCase: moving, CoreBuilderId: $("#CoreBuilderId").val(), CoreBuilderBaseSku: $("#CoreBuilderBaseSku").val(), RollerTypeId: $("#RollerTypeId").val(),
+                MaterialCase: materialcase, CoreBuilderId: $("#CoreBuilderId").val(), CoreBuilderBaseSku: $("#CoreBuilderBaseSku").val(), RollerTypeId: $("#RollerTypeId").val(),
                 MachineId: $("#MachineId").val(), RD: $("#RD").numberbox('getValue'), CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'),
                 WL: $("#WL").numberbox('getValue'), TL: $("#TL").numberbox('getValue'), RepairRequestCase: repairrequestcase,
                 GL: $("#GL").numberbox('getValue'), GrooveLength: $("#GrooveLength").numberbox('getValue'), GrooveQTY: $("#GrooveQTY").numberbox('getValue')

@@ -161,7 +161,7 @@ namespace WebView.Controllers
                             RollerType = model.RollerType.Name,
                             model.MachineId,
                             Machine = model.Machine.Name,
-                            RepairRequestCase = model.RepairRequestCase == 1 ? "BearingSeat":"CentreDrill",
+                            model.RepairRequestCase,
                             model.RD,
                             model.CD,
                             model.RL,
@@ -295,7 +295,7 @@ namespace WebView.Controllers
                 RollerType = _rollerTypeService.GetObjectById(model.RollerTypeId).Name,
                 model.MachineId,
                 Machine = _machineService.GetObjectById(model.MachineId).Name,
-                RepairRequestCase = model.RepairRequestCase == 1 ? "BearingSeat" : "CentreDrill",
+                model.RepairRequestCase,
                 model.RD,
                 model.CD,
                 model.RL,
@@ -443,6 +443,7 @@ namespace WebView.Controllers
                 data.RL = model.RL;
                 data.WL = model.WL;
                 data.TL = model.TL;
+                data.RepairRequestCase = model.RepairRequestCase;
                 model = _coreIdentificationDetailService.UpdateObject(data, _coreIdentificationService
                     ,_coreBuilderService,_rollerTypeService,_machineService, _warehouseItemService);
                 amount = _coreIdentificationService.GetObjectById(model.CoreIdentificationId).Quantity;

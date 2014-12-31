@@ -9,7 +9,7 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstItem/GetListNonLegacy', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {

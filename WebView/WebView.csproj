@@ -1366,6 +1366,7 @@
     <Content Include="Views\BlendingWorkOrder\Index.cshtml" />
     <Content Include="Views\CustomerStockAdjustment\Index.cshtml" />
     <Content Include="Views\MstSupplier\Index.cshtml" />
+    <Content Include="Views\AccountLedger\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -11,7 +11,7 @@ namespace Core.DomainModel
         
         public int SourceCashBankId { get; set; }
         public int TargetCashBankId { get; set; }
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Code { get; set; }
 
         public DateTime MutationDate { get; set; }

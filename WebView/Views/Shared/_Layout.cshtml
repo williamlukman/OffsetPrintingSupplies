@@ -326,14 +326,14 @@
                                              <ul>
                                                  @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerIdentification, Core.Constants.Constant.MenuGroupName.Manufacturing))
                                                  {<li><a href="@Url.Action("Index", "CoreIdentification")">Roller Identification Form (RIF)</a></li>}
+                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RecoveryWorkOrder, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                 {<li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Roller Collection Note (RCN)</a></li>}
                                                  @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerAccessoryDetail, Core.Constants.Constant.MenuGroupName.Manufacturing))
-                                                 {<li><a href="@Url.Action("Index", "CoreAccessoryDetail")">Roller Accessory Detail</a></li>}
+                                                 {<li><a href="@Url.Action("Index", "CoreAccessoryDetail")">Customer's Accessories</a></li>}
+                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RecoveryWorkProcess, Core.Constants.Constant.MenuGroupName.Manufacturing))
+                                                 {<li><a href="@Url.Action("Index", "RecoveryWorkProcess")">Recovery Work Chart (RWC)</a></li>}
                                                  @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerWarehouseMutation, Core.Constants.Constant.MenuGroupName.Manufacturing))
                                                  {<li><a href="@Url.Action("Index", "RollerWarehouseMutation")">Roller Warehouse Mutation</a></li>}
-                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RecoveryWorkOrder, Core.Constants.Constant.MenuGroupName.Manufacturing))
-                                                 {<li><a href="@Url.Action("Index", "RecoveryWorkOrder")">Recovery Work Order</a></li>}
-                                                 @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RecoveryWorkProcess, Core.Constants.Constant.MenuGroupName.Manufacturing))
-                                                 {<li><a href="@Url.Action("Index", "RecoveryWorkProcess")">Recovery Work Process</a></li>}
                                              </ul>
                                             </li>
                                             <li><a href="#">Chemical Blending</a>

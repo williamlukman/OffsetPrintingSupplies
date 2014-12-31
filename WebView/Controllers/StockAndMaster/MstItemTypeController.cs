@@ -103,6 +103,72 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        public dynamic GetListNonLegacy(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        {
+            // Construct where statement
+            string strWhere = GeneralFunction.ConstructWhere(filters);
+            string filter = null;
+            GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
+            if (filter == "") filter = "true";
+
+            // Get Data
+            var q = _itemTypeService.GetQueryable().Where(x => !x.IsDeleted && !x.IsLegacy).Include("Account");
+
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.Name,
+                             model.Description,
+                             model.AccountId,
+                             AccountCode = model.Account.Code,
+                             AccountName = model.Account.Name,
+                             model.CreatedAt,
+                             model.UpdatedAt,
+                         }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
+
+            var list = query.AsEnumerable();
+
+            var pageIndex = Convert.ToInt32(page) - 1;
+            var pageSize = rows;
+            var totalRecords = query.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)pageSize);
+            // default last page
+            if (totalPages > 0)
+            {
+                if (!page.HasValue)
+                {
+                    pageIndex = totalPages - 1;
+                    page = totalPages;
+                }
+            }
+
+            list = list.Skip(pageIndex * pageSize).Take(pageSize);
+
+            return Json(new
+            {
+                total = totalPages,
+                page = page,
+                records = totalRecords,
+                rows = (
+                    from model in list
+                    select new
+                    {
+                        id = model.Id,
+                        cell = new object[] {
+                            model.Id,
+                            model.Name,
+                            model.Description,
+                            model.AccountId,
+                            model.AccountCode,
+                            model.AccountName,
+                            model.CreatedAt,
+                            model.UpdatedAt,
+                      }
+                    }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         public dynamic GetInfo(int Id)
         {
             ItemType model = new ItemType();
@@ -139,7 +205,8 @@ namespace WebView.Controllers
                 if (model.Name == "Roller")
                 {
                     SkuCount = _rollerBuilderService.GetAll().Count() + 1;
-                    while (_rollerBuilderService.GetQueryable().Where(x => x.BaseSku == model.Description + SkuCount).Count() > 0)
+                    String NewSku = model.Description + SkuCount.ToString();
+                    while (_rollerBuilderService.GetQueryable().Where(x => x.BaseSku == NewSku).Count() > 0)
                     {
                         SkuCount++;
                     }
@@ -147,7 +214,8 @@ namespace WebView.Controllers
                 else if (model.Name == "Core")
                 {
                     SkuCount = _coreBuilderService.GetAll().Count() + 1;
-                    while (_coreBuilderService.GetQueryable().Where(x => x.BaseSku == model.Description + SkuCount).Count() > 0)
+                    String NewSku = model.Description + SkuCount.ToString();
+                    while (_coreBuilderService.GetQueryable().Where(x => x.BaseSku == NewSku).Count() > 0)
                     {
                         SkuCount++;
                     }
