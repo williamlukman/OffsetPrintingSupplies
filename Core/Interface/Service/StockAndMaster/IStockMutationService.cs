@@ -61,6 +61,10 @@ namespace Core.Interface.Service
          IList<StockMutation> DeleteStockMutationForBlendingWorkOrderSource(BlendingRecipeDetail blendingRecipeDetail, WarehouseItem warehouseItem);
          StockMutation CreateStockMutationForBlendingWorkOrderTarget(BlendingWorkOrder blendingWorkOrder, BlendingRecipe blendingRecipe, WarehouseItem warehouseItem);
          IList<StockMutation> DeleteStockMutationForBlendingWorkOrderTarget(BlendingRecipe blendingRecipe, WarehouseItem warehouseItem);
+         StockMutation CreateStockMutationForRepackingSource(Repacking repacking, BlendingRecipeDetail blendingRecipeDetail, WarehouseItem warehouseItem);
+         IList<StockMutation> DeleteStockMutationForRepackingSource(BlendingRecipeDetail blendingRecipeDetail, WarehouseItem warehouseItem);
+         StockMutation CreateStockMutationForRepackingTarget(Repacking repacking, BlendingRecipe blendingRecipe, WarehouseItem warehouseItem);
+         IList<StockMutation> DeleteStockMutationForRepackingTarget(BlendingRecipe blendingRecipe, WarehouseItem warehouseItem);
          IList<StockMutation> CreateStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
          IList<StockMutation> DeleteStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);
          IList<StockMutation> CreateStockMutationForWarehouseMutation(WarehouseMutationDetail WarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo);

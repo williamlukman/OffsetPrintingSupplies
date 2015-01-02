@@ -332,7 +332,6 @@
     });
 
     $("#lookup_btn_add_coa").click(function () {
-
         var id = jQuery("#lookup_table_coa").jqGrid('getGridParam', 'selrow');
 
         if (id) {

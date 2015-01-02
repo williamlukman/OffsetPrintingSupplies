@@ -42,8 +42,8 @@
                 <td style="width: 5%">
                     <a id="search_btn_submit" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">Find</a>
                 </td>
-                <td style="width: 5%">
-                    <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload</a>
+                <td style="width: 10%">
+                    <a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Show All</a>
                 </td>
             </tr>
         </table>
@@ -54,3 +54,17 @@
         <div id="pager" class="scroll" style="text-align: center;"></div>
     </div>
   </div>
+
+  <!-- Look Up parent coa -->
+  <div id="lookup_div_coa" class="easyui-dialog" title="List COA" style="padding: 0px 5px; height: 490px; width: 480px;"
+       data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_coa" class="grid_toolbar">
+            <a id="lookup_btn_add_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_coa" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_coa" class="scroll" style="text-align: center;"></div>
+  </div>
+  <!-- END Look Up parent coa -->

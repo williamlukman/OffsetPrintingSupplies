@@ -292,6 +292,8 @@
                                                     {<li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerBuilder, Core.Constants.Constant.MenuGroupName.Master))
                                                     {<li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Repacking, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "Repacking")">Repacking</a></li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.StockAdjustment, Core.Constants.Constant.MenuGroupName.Master))
                                                     {<li><a href="@Url.Action("Index", "StockAdjustment")">Stock Adjustment</a></li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.StockMutation, Core.Constants.Constant.MenuGroupName.Master))
@@ -360,7 +362,8 @@
                                                     {<li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Closing")">Closing</a></li>}
-                                                    <!--li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li-->
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidComb, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Finance</a>

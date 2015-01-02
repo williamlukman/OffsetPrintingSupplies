@@ -38,6 +38,7 @@ namespace Validation.Validation
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.RecoveryAccessoryDetail) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlanketOrderDetail) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.BlendingWorkOrder) &&
+                !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.Repacking) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.CustomerStockAdjustment) &&
                 !generalLedgerJournal.SourceDocument.Equals(Constant.GeneralLedgerSource.Closing))
             {

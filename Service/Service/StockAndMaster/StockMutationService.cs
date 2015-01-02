@@ -695,6 +695,60 @@ namespace Service.Service
             return stockMutations;
         }
 
+        public StockMutation CreateStockMutationForRepackingSource(Repacking repacking, BlendingRecipeDetail blendingRecipeDetail, WarehouseItem warehouseItem)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = blendingRecipeDetail.ItemId;
+            stockMutation.WarehouseId = repacking.WarehouseId;
+            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.Quantity = blendingRecipeDetail.Quantity;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.Repacking;
+            stockMutation.SourceDocumentId = repacking.Id;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlendingRecipeDetail;
+            stockMutation.SourceDocumentDetailId = blendingRecipeDetail.Id;
+            stockMutation.ItemCase = Constant.ItemCase.Ready;
+            stockMutation.Status = Constant.MutationStatus.Deduction;
+            stockMutation.MutationDate = repacking.ConfirmationDate.GetValueOrDefault();
+            return _repository.CreateObject(stockMutation);
+        }
+
+        public IList<StockMutation> DeleteStockMutationForRepackingSource(BlendingRecipeDetail blendingRecipeDetail, WarehouseItem warehouseItem)
+        {
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.BlendingRecipeDetail, blendingRecipeDetail.Id);
+            foreach (var stockMutation in stockMutations)
+            {
+                _repository.Delete(stockMutation);
+            }
+            return stockMutations;
+        }
+
+        public StockMutation CreateStockMutationForRepackingTarget(Repacking repacking, BlendingRecipe blendingRecipe, WarehouseItem warehouseItem)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = blendingRecipe.TargetItemId;
+            stockMutation.WarehouseId = repacking.WarehouseId;
+            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.Quantity = blendingRecipe.TargetQuantity;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.Repacking;
+            stockMutation.SourceDocumentId = repacking.Id;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlendingRecipe;
+            stockMutation.SourceDocumentDetailId = blendingRecipe.Id;
+            stockMutation.ItemCase = Constant.ItemCase.Ready;
+            stockMutation.Status = Constant.MutationStatus.Addition;
+            stockMutation.MutationDate = repacking.ConfirmationDate.GetValueOrDefault();
+            return _repository.CreateObject(stockMutation);
+        }
+
+        public IList<StockMutation> DeleteStockMutationForRepackingTarget(BlendingRecipe blendingRecipe, WarehouseItem warehouseItem)
+        {
+            IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.BlendingRecipe, blendingRecipe.Id);
+            foreach (var stockMutation in stockMutations)
+            {
+                _repository.Delete(stockMutation);
+            }
+            return stockMutations;
+        }
+
         public IList<StockMutation> CreateStockMutationForRollerWarehouseMutation(RollerWarehouseMutationDetail rollerWarehouseMutationDetail, WarehouseItem warehouseItemFrom, WarehouseItem warehouseItemTo)
         {
             IList<StockMutation> stockMutations = new List<StockMutation>();

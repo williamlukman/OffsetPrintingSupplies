@@ -23,6 +23,7 @@ namespace TestValidation
         public IBlendingRecipeService _blendingRecipeService;
         public IBlendingRecipeDetailService _blendingRecipeDetailService;
         public IBlendingWorkOrderService _blendingWorkOrderService;
+        public IRepackingService _repackingService;
         public ICashBankService _cashBankService;
         public ICashBankAdjustmentService _cashBankAdjustmentService;
         public ICashBankMutationService _cashBankMutationService;
@@ -130,6 +131,7 @@ namespace TestValidation
         public Blanket blanket1, blanket2, blanket3;
         public BlanketOrder blanketOrderContact;
         public BlendingWorkOrder blendingWorkOrder;
+        public Repacking repacking;
         public BlanketOrderDetail blanketODContact1, blanketODContact2, blanketODContact3, blanketODContact4; 
         public WarehouseMutation warehouseMutation;
         public WarehouseMutationDetail wmoDetail1, wmoDetail2, wmoDetail3, wmoDetail4, wmoDetail5, wmoDetail6,
@@ -265,6 +267,7 @@ namespace TestValidation
             _recoveryOrderDetailService = new RecoveryOrderDetailService(new RecoveryOrderDetailRepository(), new RecoveryOrderDetailValidator());
             _recoveryOrderService = new RecoveryOrderService(new RecoveryOrderRepository(), new RecoveryOrderValidator());
             _recoveryAccessoryDetailService = new RecoveryAccessoryDetailService(new RecoveryAccessoryDetailRepository(), new RecoveryAccessoryDetailValidator());
+            _repackingService = new RepackingService(new RepackingRepository(), new RepackingValidator());
             _rollerBuilderService = new RollerBuilderService(new RollerBuilderRepository(), new RollerBuilderValidator());
             _rollerTypeService = new RollerTypeService(new RollerTypeRepository(), new RollerTypeValidator());
             _rollerWarehouseMutationDetailService = new RollerWarehouseMutationDetailService(new RollerWarehouseMutationDetailRepository(), new RollerWarehouseMutationDetailValidator());
@@ -720,7 +723,9 @@ namespace TestValidation
             PopulateCoreIdentifications2();
             PopulateRollerWarehouseMutation();
             PopulateBlanketOrders();
-            PopulateBlendingWorkOrders();
+            //Blending Work Order and Repacking are tested separately to avoid quantity calculation error.
+            //PopulateBlendingWorkOrders();
+            //PopulateRepacking();
 
             // @SalesBuilder
             PopulateSalesAndDelivery();
@@ -2452,7 +2457,19 @@ namespace TestValidation
                 BlendingRecipeId = blending.Id,
                 WarehouseId = localWarehouse.Id
             };
-            _blendingWorkOrderService.CreateObject(blendingWorkOrder, _blendingRecipeService, _warehouseService);            
+            _blendingWorkOrderService.CreateObject(blendingWorkOrder, _blendingRecipeService, _warehouseService);
+        }
+
+        public void PopulateRepacking()
+        {
+            repacking = new Repacking()
+            {
+                Code = "R001",
+                RepackingDate = DateTime.Now,
+                BlendingRecipeId = blending.Id,
+                WarehouseId = localWarehouse.Id
+            };
+            _repackingService.CreateObject(repacking, _blendingRecipeService, _warehouseService);
         }
 
         public void PopulateCashBank()

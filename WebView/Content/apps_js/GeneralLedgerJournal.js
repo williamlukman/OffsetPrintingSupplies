@@ -27,6 +27,7 @@
     $("#form_div").dialog('close');
     $("#search_div").dialog('close');
     $("#AccountId").hide();
+    $("#lookup_div_coa").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -42,7 +43,7 @@
 				  { name: 'account', index: 'account', width: 250 },
 				  { name: 'amount', index: 'amount', width: 120, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'sourcedocument', index: 'sourcedocument', width: 120 },
-                  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
         ],
         page: '1',
@@ -92,13 +93,62 @@
 
     $('#search_btn_submit').click(function () {
         ClearErrorMessage();
-        ReloadGridByDate($('#StartDate').datebox('getValue'), $('#EndDate').datebox('getValue'));
+        ReloadGridByAccountAndDate($('#AccountId').val(), $('#StartDate').datebox('getValue'), $('#EndDate').datebox('getValue'));
         $("#search_div").dialog('close');
     });
 
     $('#search_btn_cancel').click(function () {
         $('#search_div').dialog('close');
     });
+
+    //GRID LOOKUP +++++++++++++++
+    $("#lookup_table_coa").jqGrid({
+        url: base_url + 'index.html',
+        datatype: "json",
+        colNames: ['Id', 'Account Code', 'Account Name'],
+        colModel: [
+                  { name: 'Id', index: 'Id', width: 40, hidden: true },
+				  { name: 'Code', index: 'Code', width: 80 },
+				  { name: 'Name', index: 'Name', width: 150 },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_coa'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'Code',
+        viewrecords: true,
+        sortorder: "ASC",
+        width: $("#lookup_div_coa").width() - 10,
+        height: $("#lookup_div_coa").height() - 115
+    });
+    $("#lookup_table_coa").jqGrid('navGrid', '#lookup_toolbar_coa', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+
+    $('#btncoa').click(function () {
+       $("#lookup_table_coa").setGridParam({ url: base_url + 'ChartOfAccount/GetLeaves' }).trigger("reloadGrid");
+       $('#lookup_div_coa').dialog('open');
+    });
+
+    $("#lookup_btn_add_coa").click(function () {
+        var id = jQuery("#lookup_table_coa").jqGrid('getGridParam', 'selrow');
+
+        if (id) {
+            var ret = jQuery("#lookup_table_coa").jqGrid('getRowData', id);
+            $('#AccountId').val(ret.Id);
+            $('#AccountCode').val(ret.Code).data('kode', id);
+            $('#AccountName').val(ret.Name);
+
+            $("#lookup_div_coa").dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $("#lookup_btn_cancel_coa").click(function () {
+        $("#lookup_div_coa").dialog('close');
+    });
+
 
     function clearForm(form) {
 

@@ -196,7 +196,7 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
-                                         model.Id,
+                            model.Id,
                             model.TransactionDate,
                             model.Status,
                             model.AccountCode,
@@ -217,9 +217,9 @@ namespace WebView.Controllers
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            if (startdate.HasValue && enddate.HasValue)
+            if (accountid.HasValue && startdate.HasValue && enddate.HasValue)
             {
-                filter = "(" + filter + ") AND TransactionDate >= @0 AND TransactionDate < @1 AND AccountId = accountid";
+                filter = "(" + filter + ") AND AccountId = @0 AND TransactionDate >= @1 AND TransactionDate < @2";
             }
 
             // Get Data
@@ -233,10 +233,10 @@ namespace WebView.Controllers
                              model.Status,
                              AccountCode = model.Account.Code,
                              Account = model.Account.Name,
-                             DebitAmount = model.Amount,
-                             CreditAmount = model.Amount,
+                             model.Amount,
                              model.SourceDocument,
-                             model.SourceDocumentId
+                             model.SourceDocumentId,
+                             model.AccountId
                          }).Where(filter, accountid.GetValueOrDefault(), startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -273,10 +273,10 @@ namespace WebView.Controllers
                             model.Status,
                             model.AccountCode,
                             model.Account,
-                            model.DebitAmount,
-                            model.CreditAmount,
+                            model.Amount,
                             model.SourceDocument,
-                            model.SourceDocumentId
+                            model.SourceDocumentId,
+                            model.AccountId
                          }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

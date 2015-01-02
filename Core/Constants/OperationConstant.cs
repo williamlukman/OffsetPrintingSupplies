@@ -42,6 +42,7 @@ namespace Core.Constants
             public static string ReceiptVoucher = "ReceiptVoucher";
             public static string RecoveryOrder = "RecoveryOrder";
             public static string RecoveryOrderDetail = "RecoveryOrderDetail";
+            public static string Repacking = "Repacking";
             public static string RetailPurchaseInvoice = "RetailPurchaseInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string RollerWarehouseMutation = "RollerWarehouseMutation";
@@ -153,6 +154,7 @@ namespace Core.Constants
             public static string CoreBuilder = "CoreBuilder";
             public static string Item = "Item";
             public static string RollerBuilder = "RollerBuilder";
+            public static string Repacking = "Repacking";
             public static string StockAdjustment = "Stock Adjustment";
             public static string StockMutation = "Stock Mutation";
             public static string CustomerStockAdjustment = "Customer's Stock Adjustment";

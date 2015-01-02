@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecRepacking.cs" />
     <Compile Include="DataBuilder.cs" />
     <Compile Include="SpecVirtualOrder.cs" />
     <Compile Include="SpecBlendingWorkOrder.cs" />

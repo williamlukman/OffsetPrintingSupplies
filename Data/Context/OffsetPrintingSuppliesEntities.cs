@@ -46,7 +46,7 @@ namespace Data.Context
                                           "VirtualOrderDetail", "VirtualOrder"};
             IList<String> stockAndMasterNames = new List<String>()
                                         { "PriceMutation", "CustomerStockMutation", "StockMutation", "CustomerItem", "WarehouseMutationDetail", "WarehouseMutation",
-                                          "ServiceCost", "RollerBuilder", "CustomerStockAdjustmentDetail", "CustomerStockAdjustment", "StockAdjustmentDetail", "StockAdjustment",
+                                          "ServiceCost", "Repacking", "RollerBuilder", "CustomerStockAdjustmentDetail", "CustomerStockAdjustment", "StockAdjustmentDetail", "StockAdjustment",
                                           "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
                                           "Item", "ItemType", "UoM", "Contact",
                                           "RollerType", "Machine", "Company" };
@@ -127,6 +127,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new RecoveryAccessoryDetailMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderMapping());
             modelBuilder.Configurations.Add(new RecoveryOrderDetailMapping());
+            modelBuilder.Configurations.Add(new RepackingMapping());
             modelBuilder.Configurations.Add(new RetailPurchaseInvoiceMapping());
             modelBuilder.Configurations.Add(new RetailPurchaseInvoiceDetailMapping());
             modelBuilder.Configurations.Add(new RetailSalesInvoiceMapping());
@@ -226,6 +227,7 @@ namespace Data.Context
         public DbSet<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
         public DbSet<RecoveryOrder> RecoveryOrders { get; set; }
         public DbSet<RecoveryOrderDetail> RecoveryOrderDetails { get; set; }
+        public DbSet<Repacking> Repackings { get; set; }
         public DbSet<RollerBuilder> RollerBuilders { get; set; }
         public DbSet<RollerType> RollerTypes { get; set; }
         public DbSet<RollerWarehouseMutationDetail> RollerWarehouseMutationDetails { get; set; }

@@ -78,6 +78,7 @@
     <Compile Include="Service\Manufacturing\BlanketOrderDetailService.cs" />
     <Compile Include="Service\Manufacturing\BlanketOrderService.cs" />
     <Compile Include="Service\Manufacturing\BlendingWorkOrderService.cs" />
+    <Compile Include="Service\Manufacturing\RepackingService.cs" />
     <Compile Include="Service\Manufacturing\CoreAccessoryDetailService.cs" />
     <Compile Include="Service\Finance\PayableService.cs" />
     <Compile Include="Service\Finance\PaymentRequestService.cs" />

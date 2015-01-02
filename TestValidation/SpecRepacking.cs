@@ -14,7 +14,7 @@ using Validation.Validation;
 namespace TestValidation
 {
 
-    public class SpecBlendingWorkOrder: nspec
+    public class SpecRepacking: nspec
     {
         DataBuilder d;
         
@@ -26,7 +26,7 @@ namespace TestValidation
                 db.DeleteAllTables();
                 d = new DataBuilder();
                 d.PopulateDataNoClosing();
-                d.PopulateBlendingWorkOrders();
+                d.PopulateRepacking();
             }
         }
 
@@ -43,40 +43,40 @@ namespace TestValidation
                 d.blendingDet1.Errors.Count().should_be(0);
                 d.blendingDet2.Errors.Count().should_be(0);
                 d.blendingDet3.Errors.Count().should_be(0);
-                d.blendingWorkOrder.Errors.Count().should_be(0);
+                d.repacking.Errors.Count().should_be(0);
             };
 
             it["deletes_blendingworkorder"] = () =>
             {
-                d.blendingWorkOrder = d._blendingWorkOrderService.SoftDeleteObject(d.blendingWorkOrder);
-                d.blendingWorkOrder.Errors.Count().should_be(0);
+                d.repacking = d._repackingService.SoftDeleteObject(d.repacking);
+                d.repacking.Errors.Count().should_be(0);
             };
 
             it["confirms_blendingworkorder"] = () =>
             {
-                d.blendingWorkOrder = d._blendingWorkOrderService.ConfirmObject(d.blendingWorkOrder, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
+                d.repacking = d._repackingService.ConfirmObject(d.repacking, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
                                                         d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
-                d.blendingWorkOrder.IsConfirmed.should_be(true);
-                d.blendingWorkOrder.Errors.Count().should_be(0);
+                d.repacking.IsConfirmed.should_be(true);
+                d.repacking.Errors.Count().should_be(0);
                 
-                d.itemBlending.Quantity.should_be(d.sadBlendingItem1.Quantity + d.blending.TargetQuantity);
-                d.itemBlendingDet1.Quantity.should_be(d.sadBlendingItem2.Quantity - d.blendingDet1.Quantity);
-                d.itemBlendingDet2.Quantity.should_be(d.sadBlendingItem3.Quantity - d.blendingDet2.Quantity);
-                d.itemBlendingDet3.Quantity.should_be(d.sadBlendingItem4.Quantity - d.blendingDet3.Quantity);
-                
-                d.itemBlending.AvgPrice.should_be(((d.sadBlendingItem1.Quantity * d.sadBlendingItem1.Price) + (d.blendingDet1.Quantity * d.sadBlendingItem2.Price + d.blendingDet2.Quantity * d.sadBlendingItem3.Price + d.blendingDet3.Quantity * d.sadBlendingItem4.Price)) / (d.sadBlendingItem1.Quantity + d.blending.TargetQuantity));
+                d.itemBlending.Quantity.should_be(d.itemBlending.Quantity + d.blending.TargetQuantity);
+                d.itemBlendingDet1.Quantity.should_be(d.itemBlendingDet1.Quantity - d.blendingDet1.Quantity);
+                d.itemBlendingDet2.Quantity.should_be(d.itemBlendingDet2.Quantity - d.blendingDet2.Quantity);
+                d.itemBlendingDet3.Quantity.should_be(d.itemBlendingDet3.Quantity - d.blendingDet3.Quantity);
+
+                d.itemBlending.AvgPrice.should_be(((d.itemBlending.Quantity * d.sadBlendingItem1.Price) + ((d.blendingDet1.Quantity * d.sadBlendingItem2.Price) + (d.blendingDet2.Quantity * d.sadBlendingItem3.Price) + (d.blendingDet3.Quantity * d.sadBlendingItem4.Price))) / (d.sadBlendingItem1.Quantity + d.blending.TargetQuantity));
             };
 
             it["unconfirms_blendingworkorder"] = () =>
             {
-                d.blendingWorkOrder = d._blendingWorkOrderService.ConfirmObject(d.blendingWorkOrder, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
+                d.repacking = d._repackingService.ConfirmObject(d.repacking, DateTime.Today, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
                                                         d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
-                d.blendingWorkOrder.IsConfirmed.should_be(true);
-                d.blendingWorkOrder.Errors.Count().should_be(0);
-                d.blendingWorkOrder = d._blendingWorkOrderService.UnconfirmObject(d.blendingWorkOrder, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
+                d.repacking.IsConfirmed.should_be(true);
+                d.repacking.Errors.Count().should_be(0);
+                d.repacking = d._repackingService.UnconfirmObject(d.repacking, d._blendingRecipeService, d._blendingRecipeDetailService, d._stockMutationService,
                                                     d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
-                d.blendingWorkOrder.IsConfirmed.should_be(false);
-                d.blendingWorkOrder.Errors.Count().should_be(0);
+                d.repacking.IsConfirmed.should_be(false);
+                d.repacking.Errors.Count().should_be(0);
 
                 d.itemBlending.Quantity.should_be(d.sadBlendingItem1.Quantity);
                 d.itemBlendingDet1.Quantity.should_be(d.sadBlendingItem2.Quantity);

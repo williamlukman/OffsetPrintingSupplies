@@ -103,7 +103,7 @@ namespace Service.Service
                     ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
                     if (detail.COS > 0)
                     {
-                        _generalLedgerJournalService.CreateConfirmationJournalForSalesInvoiceDetail(salesInvoice, itemType.AccountId.GetValueOrDefault(), detail.COS * salesInvoice.ExchangeRateAmount, _accountService);
+                        _generalLedgerJournalService.CreateConfirmationJournalForSalesInvoiceDetail(salesInvoice, itemType.AccountId.GetValueOrDefault(), detail.COS, _accountService);
                     }
                 }
                 // add all amount into amountreceivable
@@ -141,7 +141,7 @@ namespace Service.Service
                     ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
                     if (detail.COS > 0)
                     {
-                        _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoiceDetail(salesInvoice, itemType.AccountId.GetValueOrDefault(), detail.COS * salesInvoice.ExchangeRateAmount, _accountService);
+                        _generalLedgerJournalService.CreateUnconfirmationJournalForSalesInvoiceDetail(salesInvoice, itemType.AccountId.GetValueOrDefault(), detail.COS, _accountService);
                     }
                     _salesInvoiceDetailService.UnconfirmObject(detail, _deliveryOrderService, _deliveryOrderDetailService, _salesOrderDetailService, _serviceCostService, _rollerBuilderService, _itemService);
                 }

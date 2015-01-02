@@ -116,5 +116,9 @@ namespace Core.Interface.Service
         GeneralLedgerJournal CreateUnconfirmationJournalForBlendingWorkOrderDetail(BlendingWorkOrder blendingWorkOrder, int AccountId, decimal TotalCOGS, IAccountService _accountService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, int AccountId, IAccountService _accountService, decimal TotalCost);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForBlendingWorkOrder(BlendingWorkOrder blendingWorkOrder, int AccountId, IAccountService _accountService, decimal TotalCost);
+        GeneralLedgerJournal CreateConfirmationJournalForRepackingDetail(Repacking repacking, int AccountId, decimal TotalCOGS, IAccountService _accountService);
+        GeneralLedgerJournal CreateUnconfirmationJournalForRepackingDetail(Repacking repacking, int AccountId, decimal TotalCOGS, IAccountService _accountService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForRepacking(Repacking repacking, int AccountId, IAccountService _accountService, decimal TotalCost);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForRepacking(Repacking repacking, int AccountId, IAccountService _accountService, decimal TotalCost);
     }
 }

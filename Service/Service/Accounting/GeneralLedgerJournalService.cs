@@ -2979,7 +2979,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = (DateTime)salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
+                    Amount = Math.Round(salesInvoice.TotalCOS, 2)
                 };
                 debitCOS = CreateObject(debitCOS, _accountService);
 
@@ -3089,7 +3089,7 @@ namespace Service.Service
                     SourceDocumentId = salesInvoice.Id,
                     TransactionDate = salesInvoice.InvoiceDate,
                     Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(salesInvoice.TotalCOS * Rate, 2)
+                    Amount = Math.Round(salesInvoice.TotalCOS, 2)
                 };
                 creditCOS = CreateObject(creditCOS, _accountService);
                 journals.Add(creditCOS);
@@ -3681,6 +3681,84 @@ namespace Service.Service
             creditconversionexpense = CreateObject(creditconversionexpense, _accountService);
 
             journals.Add(creditconversionexpense);
+            return journals;
+            #endregion
+        }
+
+        public GeneralLedgerJournal CreateConfirmationJournalForRepackingDetail(Repacking repacking, int AccountId, decimal TotalCOGS, IAccountService _accountService)
+        {
+            #region Credit Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.Repacking,
+                SourceDocumentId = repacking.Id,
+                TransactionDate = (DateTime)repacking.RepackingDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(TotalCOGS, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
+
+        public GeneralLedgerJournal CreateUnconfirmationJournalForRepackingDetail(Repacking repacking, int AccountId, decimal TotalCOGS, IAccountService _accountService)
+        {
+            #region Debit Inventory
+            GeneralLedgerJournal glj = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.Repacking,
+                SourceDocumentId = repacking.Id,
+                TransactionDate = (DateTime)repacking.RepackingDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(TotalCOGS, 2),
+            };
+            glj = CreateObject(glj, _accountService);
+            return glj;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForRepacking(Repacking repacking, int AccountId, IAccountService _accountService, decimal TotalCost)
+        {
+            // Credit Raw (Source Items), Debit FinishedGoods (Chemical), Debit BlendingExpense (2%)
+            #region Credit Raw (Source Items), Debit FinishedGoods (Chemical), Debit BlendingExpense (2%)
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal debitfinishedgoods = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.Repacking,
+                SourceDocumentId = repacking.Id,
+                TransactionDate = repacking.RepackingDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(TotalCost, 2),
+            };
+            debitfinishedgoods = CreateObject(debitfinishedgoods, _accountService);
+
+            journals.Add(debitfinishedgoods);
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForRepacking(Repacking repacking, int AccountId, IAccountService _accountService, decimal TotalCost)
+        {
+            // Debit Raw (Source Items), Credit FinishedGoods (Chemical), Credit BlendingExpense (2%)
+            #region Debit Raw (Source Items), Credit FinishedGoods (Chemical), Credit BlendingExpense (2%)
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+
+            GeneralLedgerJournal creditfinishedgoods = new GeneralLedgerJournal()
+            {
+                AccountId = AccountId,
+                SourceDocument = Constant.GeneralLedgerSource.Repacking,
+                SourceDocumentId = repacking.Id,
+                TransactionDate = repacking.RepackingDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(TotalCost, 2)
+            };
+            creditfinishedgoods = CreateObject(creditfinishedgoods, _accountService);
+
+            journals.Add(creditfinishedgoods);
             return journals;
             #endregion
         }

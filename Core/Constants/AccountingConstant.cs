@@ -31,6 +31,7 @@ namespace Core.Constants
             public static string PurchaseReceival = "PurchaseReceival";
             public static string PurchaseInvoice = "PurchaseInvoice";
             public static string PurchaseInvoiceMigration = "PurchaseInvoiceMigration";
+            public static string Repacking = "Repacking";
             public static string StockAdjustment = "StockAdjustment";
             public static string CustomerStockAdjustment = "CustomerStockAdjustment";
             public static string ReceiptVoucher = "ReceiptVoucher";
