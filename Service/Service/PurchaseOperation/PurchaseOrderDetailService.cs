@@ -114,7 +114,7 @@ namespace Service.Service
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail SetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity)
+        public PurchaseOrderDetail SetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, decimal Quantity)
         {
             purchaseOrderDetail.PendingReceivalQuantity -= Quantity;
             if (purchaseOrderDetail.PendingReceivalQuantity == 0) { purchaseOrderDetail.IsAllReceived = true; }
@@ -122,7 +122,7 @@ namespace Service.Service
             return purchaseOrderDetail;
         }
 
-        public PurchaseOrderDetail UnsetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, int Quantity, IPurchaseOrderService _purchaseOrderService)
+        public PurchaseOrderDetail UnsetReceivalComplete(PurchaseOrderDetail purchaseOrderDetail, decimal Quantity, IPurchaseOrderService _purchaseOrderService)
         {
             PurchaseOrder purchaseOrder = _purchaseOrderService.GetObjectById(purchaseOrderDetail.PurchaseOrderId);
             _purchaseOrderService.UnsetReceivalComplete(purchaseOrder);

@@ -39,9 +39,9 @@ namespace Core.Interface.Service
         Item AdjustCustomerQuantity(Item item, decimal quantity);
         //Item AdjustCustomerVirtual(Item item, int quantity);
         Item AdjustQuantity(Item item, decimal quantity);
-        Item AdjustPendingReceival(Item item, int quantity);
-        Item AdjustPendingDelivery(Item item, int quantity);
-        Item AdjustVirtual(Item item, int quantity);
+        Item AdjustPendingReceival(Item item, decimal quantity);
+        Item AdjustPendingDelivery(Item item, decimal quantity);
+        Item AdjustVirtual(Item item, decimal quantity);
         decimal CalculateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice);
         decimal CalculateAndUpdateAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice);
         decimal CalculateCustomerAvgPrice(Item item, decimal addedQuantity, decimal addedAvgPrice);

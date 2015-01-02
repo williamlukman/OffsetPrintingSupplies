@@ -403,6 +403,12 @@
             data: JSON.stringify({
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
+            async: false,
+            cache: false,
+            timeout: 30000,
+            error: function () {
+                return false;
+            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

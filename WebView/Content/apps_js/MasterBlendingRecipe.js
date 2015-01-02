@@ -649,7 +649,7 @@
 
     // -------------------------------------------------------Look Up TargetItem-------------------------------------------------------
     $('#btnTargetItem').click(function () {
-        var lookUpURL = base_url + 'MstItem/GetListChemical';
+        var lookUpURL = base_url + 'MstItem/GetList';
         var lookupGrid = $('#lookup_table_item');
         lookupGrid.setGridParam({
             url: lookUpURL

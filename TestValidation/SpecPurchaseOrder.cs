@@ -49,8 +49,8 @@ namespace NSpec
 
         public Currency currencyIDR;
 
-        int Quantity1;
-        int Quantity2;
+        decimal Quantity1;
+        decimal Quantity2;
 
         void before_each()
         {
@@ -624,10 +624,10 @@ namespace NSpec
 
                     it["should increase pending receival in item"] = () =>
                     {
-                        int diff_1 = item1.PendingReceival - Quantity1;
+                        decimal diff_1 = item1.PendingReceival - Quantity1;
                         diff_1.should_be(poDetail1.Quantity);
 
-                        int diff_2 = item2.PendingReceival - Quantity2;
+                        decimal diff_2 = item2.PendingReceival - Quantity2;
                         diff_2.should_be(poDetail2.Quantity);
                     };
 

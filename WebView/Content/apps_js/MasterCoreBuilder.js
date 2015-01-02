@@ -35,7 +35,7 @@
         datatype: "json",
         colNames: ['ID', 'Base Sku', 'Name', 'Description', 'Machine', 'Type',
                     'Used Sku', 'QTY', 'UoM',
-                    'New Sku', 'QTY', 'UoM', 'Created At', 'Updated At'],
+                    'New Sku', 'QTY', 'UoM', 'CD', 'TL', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'basesku', index: 'basesku', width: 60 },
@@ -49,6 +49,8 @@
                   { name: 'skunewcore', index: 'skunewcore', width: 75 },
                   { name: 'newcorequantity', index: 'newcorequantity', width: 30, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 30 },
+                  { name: 'cd', index: 'cd', width: 30 },
+                  { name: 'tl', index: 'tl', width: 30 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -140,6 +142,8 @@
                             $('#Description').val(result.Description);
                             $('#MachineId').val(result.MachineId);
                             $('#Machine').val(result.Machine);
+                            $('#CD').numberbox('setValue', result.CD);
+                            $('#TL').numberbox('setValue', result.TL);
                             $('#UsedCoreQuantity').numberbox('setValue', (result.UsedCoreQuantity));
                             $('#NewCoreQuantity').numberbox('setValue', (result.NewCoreQuantity));
                             document.getElementById("CoreBuilderTypeCase").value = result.CoreBuilderTypeCase;
@@ -235,7 +239,7 @@
                 Id: id, BaseSku: $("#BaseSku").val(), SkuUsedCore: $("#BaseSku").val() + "U",
                 SkuNewCore: $("#BaseSku").val() + "N", UoMId: $("#UoMId").val(), Name: $("#Name").val(),
                 MachineId: $("MachineId").val(), Description: $("#Description").val(), MachineId: $("#MachineId").val(),
-                CoreBuilderTypeCase: corebuildertypecase
+                CoreBuilderTypeCase: corebuildertypecase, CD: $("#CD").numberbox('getValue'), TL: $("#TL").numberbox('getValue')
             }),
             async: false,
             cache: false,

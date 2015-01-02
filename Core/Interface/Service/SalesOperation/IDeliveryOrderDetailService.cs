@@ -30,7 +30,7 @@ namespace Core.Interface.Service
         DeliveryOrderDetail UnconfirmObject(DeliveryOrderDetail deliveryOrderDetail, IDeliveryOrderService _deliveryOrderService, ISalesOrderService _salesOrderService,
                                             ISalesOrderDetailService _salesOrderDetailService, ISalesInvoiceDetailService _salesInvoiceDetailService, IStockMutationService _stockMutationService,
                                             IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService, ICustomerStockMutationService _customerStockMutationService, ICustomerItemService _customerItemService);
-        DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity);
-        DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity, IDeliveryOrderService _deliveryOrderService);
+        DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, decimal Quantity);
+        DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, decimal Quantity, IDeliveryOrderService _deliveryOrderService);
     }
 }

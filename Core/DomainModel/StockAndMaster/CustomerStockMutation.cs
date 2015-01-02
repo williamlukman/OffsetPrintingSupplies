@@ -21,7 +21,7 @@ namespace Core.DomainModel
         public int SourceDocumentDetailId { get; set; }
 
         public DateTime MutationDate { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         
         public bool IsDeleted { get; set; }
         public Nullable<DateTime> DeletedAt { get; set; }

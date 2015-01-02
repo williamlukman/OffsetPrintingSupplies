@@ -22,13 +22,13 @@ namespace Core.DomainModel
 
         public int UoMId { get; set; }
         public decimal Quantity { get; set; }
-        public int PendingDelivery { get; set; }
-        public int PendingReceival { get; set; }
-        public int Virtual { get; set; }
-        public int MinimumQuantity { get; set; }
+        public decimal PendingDelivery { get; set; }
+        public decimal PendingReceival { get; set; }
+        public decimal Virtual { get; set; }
+        public decimal MinimumQuantity { get; set; }
 
-        public int CustomerQuantity { get; set; }
-        public int CustomerVirtual { get; set; } // unused ?
+        public decimal CustomerQuantity { get; set; }
+        public decimal CustomerVirtual { get; set; } // unused ?
 
         public decimal SellingPrice { get; set; }
         public Nullable<int> CurrencyId { get; set; }

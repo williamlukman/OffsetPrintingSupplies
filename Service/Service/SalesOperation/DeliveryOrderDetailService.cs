@@ -156,7 +156,7 @@ namespace Service.Service
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity)
+        public DeliveryOrderDetail InvoiceObject(DeliveryOrderDetail deliveryOrderDetail, decimal Quantity)
         {
             deliveryOrderDetail.PendingInvoicedQuantity -= Quantity;
             if (deliveryOrderDetail.PendingInvoicedQuantity == 0) { deliveryOrderDetail.IsAllInvoiced = true; }
@@ -164,7 +164,7 @@ namespace Service.Service
             return deliveryOrderDetail;
         }
 
-        public DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, int Quantity, IDeliveryOrderService _deliveryOrderService)
+        public DeliveryOrderDetail UndoInvoiceObject(DeliveryOrderDetail deliveryOrderDetail, decimal Quantity, IDeliveryOrderService _deliveryOrderService)
         {
             DeliveryOrder deliveryOrder = _deliveryOrderService.GetObjectById(deliveryOrderDetail.DeliveryOrderId);
             _deliveryOrderService.UnsetInvoiceComplete(deliveryOrder);

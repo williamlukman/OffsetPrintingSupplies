@@ -335,13 +335,12 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
 
-                if (!_closingService.DeleteObject(model.Id, _accountService, _validCombService,_vCNonBaseCurrencyService))
+                var data = _closingService.GetObjectById(model.Id);
+                model = _closingService.DeleteObject(data, _accountService, _validCombService, _vCNonBaseCurrencyService);
+                return Json(new
                 {
-                    return Json(new
-                    {
-                        model.Errors
-                    }, JsonRequestBehavior.AllowGet);
-                };
+                    model.Errors
+                }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

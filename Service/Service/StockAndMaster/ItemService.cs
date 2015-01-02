@@ -237,19 +237,19 @@ namespace Service.Service
             return (item = _validator.ValidAdjustQuantity(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item AdjustPendingReceival(Item item, int quantity)
+        public Item AdjustPendingReceival(Item item, decimal quantity)
         {
             item.PendingReceival += quantity;
             return (item = _validator.ValidAdjustPendingReceival(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item AdjustPendingDelivery(Item item, int quantity)
+        public Item AdjustPendingDelivery(Item item, decimal quantity)
         {
             item.PendingDelivery += quantity;
             return (item = _validator.ValidAdjustPendingDelivery(item) ? _repository.UpdateObject(item) : item);
         }
 
-        public Item AdjustVirtual(Item item, int quantity)
+        public Item AdjustVirtual(Item item, decimal quantity)
         {
             item.Virtual += quantity;
             return (item = _validator.ValidAdjustVirtual(item) ? _repository.UpdateObject(item) : item);

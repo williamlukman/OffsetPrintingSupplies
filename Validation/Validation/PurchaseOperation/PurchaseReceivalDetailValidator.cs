@@ -101,7 +101,7 @@ namespace Validation.Validation
             PurchaseOrderDetail purchaseOrderDetail = _purchaseOrderDetailService.GetObjectById(purchaseReceivalDetail.PurchaseOrderDetailId);
             IList<PurchaseReceivalDetail> details = _purchaseReceivalDetailService.GetObjectsByPurchaseOrderDetailId(purchaseReceivalDetail.PurchaseOrderDetailId);
 
-            int totalReceivalQuantity = 0;
+            decimal totalReceivalQuantity = 0;
             foreach (var detail in details)
             {
                 if (!detail.IsConfirmed)
@@ -112,7 +112,7 @@ namespace Validation.Validation
             if (CaseCreate) { totalReceivalQuantity += purchaseReceivalDetail.Quantity; }
             if (totalReceivalQuantity > purchaseOrderDetail.PendingReceivalQuantity)
             {
-                int maxquantity = purchaseOrderDetail.PendingReceivalQuantity - totalReceivalQuantity + purchaseReceivalDetail.Quantity;
+                decimal maxquantity = purchaseOrderDetail.PendingReceivalQuantity - totalReceivalQuantity + purchaseReceivalDetail.Quantity;
                 purchaseReceivalDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
             }
             return purchaseReceivalDetail;

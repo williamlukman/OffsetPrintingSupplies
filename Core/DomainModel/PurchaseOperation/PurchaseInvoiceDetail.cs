@@ -11,7 +11,7 @@ namespace Core.DomainModel
         public int PurchaseInvoiceId { get; set; }
         public int PurchaseReceivalDetailId { get; set; }
         public string Code { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public decimal Amount { get; set; }
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }

@@ -12,8 +12,8 @@ namespace Core.DomainModel
         //public int ItemId { get; set; }
         public Nullable<int> WarehouseItemId { get; set; }
 
-        public int Quantity { get; set; } // Qty per contact per item per warehouse
-        public int Virtual { get; set; } // unused ? (virtualorder can only sell company's item)
+        public decimal Quantity { get; set; } // Qty per contact per item per warehouse
+        public decimal Virtual { get; set; } // unused ? (virtualorder can only sell company's item)
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

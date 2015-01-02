@@ -96,7 +96,7 @@ namespace Service.Service
             return (customerItem = _validator.ValidDeleteObject(customerItem) ? _repository.SoftDeleteObject(customerItem) : customerItem);
         }
 
-        public CustomerItem AdjustQuantity(CustomerItem customerItem, int quantity)
+        public CustomerItem AdjustQuantity(CustomerItem customerItem, decimal quantity)
         {
             customerItem.Quantity += quantity;
             if (_validator.ValidAdjustQuantity(customerItem)) 

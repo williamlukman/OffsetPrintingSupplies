@@ -34,7 +34,7 @@ namespace Core.Interface.Service
                                                IPurchaseOrderService _purchaseOrderService, IPurchaseOrderDetailService _purchaseOrderDetailService,
                                                IPurchaseInvoiceDetailService _purchaseInvoiceDetailService, IStockMutationService _stockMutationService,
                                                IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService);
-        PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity);
-        PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity, IPurchaseReceivalService _purchaseReceivalService);
+        PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, decimal Quantity);
+        PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, decimal Quantity, IPurchaseReceivalService _purchaseReceivalService);
     }
 }

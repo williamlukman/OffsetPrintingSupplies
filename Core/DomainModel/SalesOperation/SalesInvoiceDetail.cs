@@ -11,7 +11,7 @@ namespace Core.DomainModel
         public int SalesInvoiceId { get; set; }
         public int DeliveryOrderDetailId { get; set; }
         public string Code { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public decimal COS { get; set; }
         public decimal Amount { get; set; }
         public bool IsConfirmed { get; set; }

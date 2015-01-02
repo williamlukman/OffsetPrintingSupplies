@@ -13,9 +13,9 @@ namespace Core.DomainModel
         public string OrderCode { get; set; }
         public int DeliveryOrderId { get; set; }
         public int ItemId { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public bool IsAllInvoiced { get; set; }
-        public int PendingInvoicedQuantity { get; set; }
+        public decimal PendingInvoicedQuantity { get; set; }
         public int SalesOrderDetailId { get; set; }
 
         public decimal COGS { get; set; }

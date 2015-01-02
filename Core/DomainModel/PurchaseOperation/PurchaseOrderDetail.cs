@@ -12,9 +12,9 @@ namespace Core.DomainModel
         public int PurchaseOrderId { get; set; }
         public int ItemId { get; set; }
 
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public bool IsAllReceived { get; set; }
-        public int PendingReceivalQuantity { get; set; }
+        public decimal PendingReceivalQuantity { get; set; }
         public decimal Price { get; set; }
 
         public bool IsConfirmed { get; set; }

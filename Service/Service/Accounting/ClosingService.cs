@@ -107,8 +107,9 @@ namespace Service.Service
                     decimal totalAmountLast = 0;
                     if (lastClosing != null)
                     {
-                        totalAmountLast = _validCombService.GetQueryable().
-                            Where(x => x.ClosingId == lastClosing.Id && x.AccountId == leaf.Id).FirstOrDefault().Amount;
+                        ValidComb LastValidComb = _validCombService.GetQueryable().
+                            Where(x => x.ClosingId == lastClosing.Id && x.AccountId == leaf.Id).FirstOrDefault();
+                        totalAmountLast = LastValidComb == null ? 0 : LastValidComb.Amount;
                     }
                     foreach(var ledger in ledgers)
                     {
@@ -758,21 +759,20 @@ namespace Service.Service
             return _repository.OpenObject(closing);
         }
 
-        public bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService)
+        public Closing DeleteObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService)
         {
-            Closing closing = GetObjectById(Id);
-            if (_validator.ValidCloseObject(closing, this))
+            if (_validator.ValidDeleteObject(closing))
             {
                 IList<Account> allAccounts = _accountService.GetAll();
                 foreach (var account in allAccounts)
                 {
-                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, Id);
+                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
                     _validCombService.DeleteObject(validComb.Id);
                     _vCNonBaseCurrencyService.DeleteObject(validComb.Id);
                 }
-                return _repository.DeleteObject(Id);
+                _repository.DeleteObject(closing.Id);
             }
-            return false;
+            return closing;
         }
 
         public bool IsDateClosed(DateTime DateToCheck)

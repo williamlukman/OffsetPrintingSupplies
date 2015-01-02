@@ -47,8 +47,8 @@ namespace TestValidation
         IGeneralLedgerJournalService _generalLedgerJournalService;
         ICurrencyService _currencyService;
 
-        int Quantity1;
-        int Quantity2;
+        decimal Quantity1;
+        decimal Quantity2;
 
         public Currency currencyIDR;
 
@@ -648,10 +648,10 @@ namespace TestValidation
                         Item NewItem1 = _itemService.GetObjectById(item_batiktulis.Id);
                         Item NewItem2 = _itemService.GetObjectById(item_sepatubola.Id);
 
-                        int diff_1 = NewItem1.PendingDelivery - Quantity1;
+                        decimal diff_1 = NewItem1.PendingDelivery - Quantity1;
                         diff_1.should_be(salesOrderDetail1.Quantity);
 
-                        int diff_2 = NewItem2.PendingDelivery - Quantity2;
+                        decimal diff_2 = NewItem2.PendingDelivery - Quantity2;
                         diff_2.should_be(salesOrderDetail2.Quantity);
                     };
                 };

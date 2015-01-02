@@ -12,7 +12,7 @@ namespace Core.DomainModel
         public int SalesQuotationId { get; set; }
         public int ItemId { get; set; }
 
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public decimal RRP { get; set; }
         public decimal QuotationPrice { get; set; }
 

@@ -109,7 +109,7 @@ namespace Service.Service
             return virtualOrderDetail;
         }
 
-        public VirtualOrderDetail SetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, int Quantity)
+        public VirtualOrderDetail SetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, decimal Quantity)
         {
             virtualOrderDetail.PendingDeliveryQuantity -= Quantity;
             if (virtualOrderDetail.PendingDeliveryQuantity == 0) { virtualOrderDetail.IsAllDelivered = true; }
@@ -117,7 +117,7 @@ namespace Service.Service
             return virtualOrderDetail;
         }
 
-        public VirtualOrderDetail UnsetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, int Quantity, IVirtualOrderService _virtualOrderService)
+        public VirtualOrderDetail UnsetDeliveryComplete(VirtualOrderDetail virtualOrderDetail, decimal Quantity, IVirtualOrderService _virtualOrderService)
         {
             VirtualOrder virtualOrder = _virtualOrderService.GetObjectById(virtualOrderDetail.VirtualOrderId);
             _virtualOrderService.UnsetDeliveryComplete(virtualOrder);

@@ -11,13 +11,13 @@ namespace Core.DomainModel
         public string Code { get; set; }
         public int TemporaryDeliveryOrderClearanceId { get; set; }
         //public int ItemId { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         //public bool IsReconciled { get; set; }
         //public bool IsAllCompleted { get; set; }
         public decimal WasteCoGS { get; set; }
         public decimal SellingPrice { get; set; }
-        //public int WasteQuantity { get; set; }
-        //public int ReturnQuantity { get; set; }
+        //public decimal WasteQuantity { get; set; }
+        //public decimal ReturnQuantity { get; set; }
         //public Nullable<int> SalesOrderDetailId { get; set; }
         //public Nullable<int> VirtualOrderDetailId { get; set; }
         public Nullable<int> TemporaryDeliveryOrderDetailId { get; set; }

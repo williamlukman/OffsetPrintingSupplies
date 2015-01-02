@@ -21,7 +21,7 @@ namespace Core.Interface.Service
             IVCNonBaseCurrencyService _vCNonBaseCurrencyService,ICashBankService _cashBankService);
         Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService, IGeneralLedgerJournalService _generalLedgerJournalService
             , IExchangeRateClosingService _exchangeRateClosingService);
-        bool DeleteObject(int Id, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService);
+        Closing DeleteObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService);
         bool IsDateClosed(DateTime DateToCheck);
     }
 }

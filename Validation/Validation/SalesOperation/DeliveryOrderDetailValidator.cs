@@ -93,7 +93,7 @@ namespace Validation.Validation
 
             if (deliveryOrderDetail.OrderType != Constant.OrderTypeCase.PartDeliveryOrder)
             {
-                int totalDeliveryQuantity = 0;
+                decimal totalDeliveryQuantity = 0;
                 foreach (var detail in details)
                 {
                     if (!detail.IsConfirmed)
@@ -104,7 +104,7 @@ namespace Validation.Validation
                 if (CaseCreate) { totalDeliveryQuantity += deliveryOrderDetail.Quantity; }
                 if (totalDeliveryQuantity > salesOrderDetail.PendingDeliveryQuantity)
                 {
-                    int maxquantity = salesOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + deliveryOrderDetail.Quantity;
+                    decimal maxquantity = salesOrderDetail.PendingDeliveryQuantity - totalDeliveryQuantity + deliveryOrderDetail.Quantity;
                     deliveryOrderDetail.Errors.Add("Generic", "Quantity maximum adalah " + maxquantity);
                 }
             }

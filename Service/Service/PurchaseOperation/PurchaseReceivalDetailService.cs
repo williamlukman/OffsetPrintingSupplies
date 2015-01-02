@@ -146,7 +146,7 @@ namespace Service.Service
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity)
+        public PurchaseReceivalDetail InvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, decimal Quantity)
         {
             purchaseReceivalDetail.PendingInvoicedQuantity -= Quantity;
             if (purchaseReceivalDetail.PendingInvoicedQuantity == 0) { purchaseReceivalDetail.IsAllInvoiced = true; }
@@ -154,7 +154,7 @@ namespace Service.Service
             return purchaseReceivalDetail;
         }
 
-        public PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, int Quantity, IPurchaseReceivalService _purchaseReceivalService)
+        public PurchaseReceivalDetail UndoInvoiceObject(PurchaseReceivalDetail purchaseReceivalDetail, decimal Quantity, IPurchaseReceivalService _purchaseReceivalService)
         {
             PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
             _purchaseReceivalService.UnsetInvoiceComplete(purchaseReceival);
