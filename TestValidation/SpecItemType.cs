@@ -30,7 +30,7 @@ namespace TestValidation
 
                 d.Pcs = new UoM()
                 {
-                    Name = "Pcs"
+                    Name = "Pcs",
                 };
                 d._uomService.CreateObject(d.Pcs);
 
@@ -72,7 +72,6 @@ namespace TestValidation
             it["validates_itemtypes"] = () =>
             {
                 d.typeAccessory.Errors.Count().should_be(0);
-                d.typeBearing.Errors.Count().should_be(0);
                 d.typeRollBlanket.Errors.Count().should_be(0);
                 d.typeCore.Errors.Count().should_be(0);
                 d.typeConsumable.Errors.Count().should_be(0);

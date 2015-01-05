@@ -58,11 +58,11 @@ namespace TestValidation
                                                         d._blanketService, d._itemService, d._itemTypeService, d._warehouseItemService, d._generalLedgerJournalService, d._accountService, d._closingService);
                 d.repacking.IsConfirmed.should_be(true);
                 d.repacking.Errors.Count().should_be(0);
-                
-                d.itemBlending.Quantity.should_be(d.itemBlending.Quantity + d.blending.TargetQuantity);
-                d.itemBlendingDet1.Quantity.should_be(d.itemBlendingDet1.Quantity - d.blendingDet1.Quantity);
-                d.itemBlendingDet2.Quantity.should_be(d.itemBlendingDet2.Quantity - d.blendingDet2.Quantity);
-                d.itemBlendingDet3.Quantity.should_be(d.itemBlendingDet3.Quantity - d.blendingDet3.Quantity);
+
+                d.itemBlending.Quantity.should_be(d.sadBlendingItem1.Quantity + d.blending.TargetQuantity);
+                d.itemBlendingDet1.Quantity.should_be(d.sadBlendingItem2.Quantity - d.blendingDet1.Quantity);
+                d.itemBlendingDet2.Quantity.should_be(d.sadBlendingItem3.Quantity - d.blendingDet2.Quantity);
+                d.itemBlendingDet3.Quantity.should_be(d.sadBlendingItem4.Quantity - d.blendingDet3.Quantity);
 
                 d.itemBlending.AvgPrice.should_be(((d.itemBlending.Quantity * d.sadBlendingItem1.Price) + ((d.blendingDet1.Quantity * d.sadBlendingItem2.Price) + (d.blendingDet2.Quantity * d.sadBlendingItem3.Price) + (d.blendingDet3.Quantity * d.sadBlendingItem4.Price))) / (d.sadBlendingItem1.Quantity + d.blending.TargetQuantity));
             };

@@ -691,7 +691,8 @@ namespace TestValidation
             {
                 SalesDate = DateTime.Today.Subtract(purchaseDate),
                 ContactId = contact.Id,
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "SO1",
             };
             _salesOrderService.CreateObject(so1, _contactService);
 
@@ -699,7 +700,8 @@ namespace TestValidation
             {
                 SalesDate = DateTime.Today.Subtract(purchaseDate),
                 ContactId = contact.Id,
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "SO2",
             };
             _salesOrderService.CreateObject(so2, _contactService);
 
@@ -755,7 +757,8 @@ namespace TestValidation
             {
                 SalesOrderId = so1.Id,
                 DeliveryDate = DateTime.Now.Subtract(receivedDate),
-                WarehouseId = localWarehouse.Id
+                WarehouseId = localWarehouse.Id,
+                NomorSurat = "SO1",
             };
             _deliveryOrderService.CreateObject(do1, _salesOrderService, _warehouseService);
 
@@ -763,7 +766,8 @@ namespace TestValidation
             {
                 SalesOrderId = so2.Id,
                 DeliveryDate = DateTime.Now.Subtract(receivedDate),
-                WarehouseId = localWarehouse.Id
+                WarehouseId = localWarehouse.Id,
+                NomorSurat = "SO1",
             };
             _deliveryOrderService.CreateObject(do2, _salesOrderService, _warehouseService);
 
@@ -807,7 +811,8 @@ namespace TestValidation
             {
                 SalesOrderId = so1.Id,
                 DeliveryDate = DateTime.Now.Subtract(lateDeliveryDate),
-                WarehouseId = localWarehouse.Id
+                WarehouseId = localWarehouse.Id,
+                NomorSurat = "SO1b",
             };
             _deliveryOrderService.CreateObject(do3, _salesOrderService, _warehouseService);
 
@@ -853,7 +858,8 @@ namespace TestValidation
                 Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14),
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "DO1",
             };
             si1 = _salesInvoiceService.CreateObject(si1, _deliveryOrderService);
 
@@ -861,7 +867,7 @@ namespace TestValidation
             {
                 SalesInvoiceId = si1.Id,
                 DeliveryOrderDetailId = do1a.Id,
-                Quantity = do1a.Quantity
+                Quantity = do1a.Quantity,
             };
             si1a = _salesInvoiceDetailService.CreateObject(si1a, _salesInvoiceService, _salesOrderDetailService, _deliveryOrderDetailService);
 
@@ -881,7 +887,8 @@ namespace TestValidation
                 Tax = 10,
                 Discount = 5,
                 DueDate = DateTime.Today.AddDays(14),
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "DO2",
             };
             si2 = _salesInvoiceService.CreateObject(si2, _deliveryOrderService);
 
@@ -909,7 +916,8 @@ namespace TestValidation
                 Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14),
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "DO3"
             };
             si3 = _salesInvoiceService.CreateObject(si3, _deliveryOrderService);
 

@@ -49,7 +49,8 @@ namespace Service.Service
             ItemType itemType = new ItemType
             {
                 Name = Name,
-                Description = Description
+                Description = Description,
+                IsLegacy = false
             };
             return this.CreateObject(itemType, _accountService);
         }

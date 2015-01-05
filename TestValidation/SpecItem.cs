@@ -65,6 +65,7 @@ namespace TestValidation
                     Name = "President",
                     IsTaxable = true,
                     TaxCode = "01",
+                    ContactType = "CUSTOMER"
                 };
                 d.contact = d._contactService.CreateObject(d.contact);
             }
@@ -280,6 +281,7 @@ namespace TestValidation
                     Sku = "ADR00001",
                     UoMId = d.Pcs.Id
                 };
+                Adhesive = d._itemService.CreateObject(Adhesive, d._uomService, d._itemTypeService, d._warehouseItemService, d._warehouseService, d._priceMutationService);
 
                 d.stockAdjustment = new StockAdjustment()
                 {

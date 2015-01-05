@@ -95,6 +95,7 @@ namespace Service.Service
                 foreach (var detail in purchaseReceivalDetailValidations)
                 {
                     detail.Errors = new Dictionary<string, string>();
+                    detail.ConfirmationDate = ConfirmationDate;
                     if (!(_purchaseReceivalDetailService.GetValidator().ValidConfirmObject(detail, _purchaseReceivalDetailService, _purchaseOrderDetailService)))
                     {
                         purchaseReceival.Errors.Add("Generic", detail.Errors.FirstOrDefault().Value);

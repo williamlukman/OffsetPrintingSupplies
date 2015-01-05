@@ -262,6 +262,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Accounting\ChartOfAccountController.cs" />
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
+    <Compile Include="Controllers\Accounting\GeneralLedgerSaldoController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
     <Compile Include="Controllers\Finance\ExchangeRateController.cs" />
@@ -345,6 +346,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\GeneralLedgerJournalSaldo.js" />
     <Content Include="Content\apps_js\Repacking.js" />
     <Content Include="Content\apps_js\MasterSupplier.js" />
     <Content Include="Content\apps_js\CustomerStockAdjustment.js" />
@@ -1370,6 +1372,7 @@
     <Content Include="Views\MstSupplier\Index.cshtml" />
     <Content Include="Views\AccountLedger\Index.cshtml" />
     <Content Include="Views\Repacking\Index.cshtml" />
+    <Content Include="Views\GeneralLedgerSaldo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -392,7 +392,7 @@ namespace NSpec
                 };
                 contact = contactService.CreateObject(contact);
 
-                type = _itemTypeService.CreateObject("Item", "Item", true, BAHANBAKUOTHER5, _accountService);
+                type = _itemTypeService.CreateObject("Item", "Item", false, BAHANBAKUOTHER5, _accountService);
 
                 warehouse = new Warehouse()
                 {

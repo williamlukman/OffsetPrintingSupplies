@@ -358,69 +358,71 @@
                                                     {<li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedger, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Memorial, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedgerSaldo, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "GeneralLedgerSaldo")">General Ledger (Saldo)</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Memorial, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Closing")">Closing</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidComb, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidComb, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Finance</a>
                                                 <ul>
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PaymentRequest, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PaymentRequest, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "PaymentRequest")">Payment Request</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBank, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBank, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "MstCashBank")">Cash Bank</a> </li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Currency, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Currency, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Currency")">Currency</a> </li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ExchangeRate, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ExchangeRate, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "ExchangeRate")">Tax Rate</a> </li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashMutation, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "CashMutation")">Cash Mutation</a> </li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankAdjustment, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankAdjustment, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "CashBankAdjustment")">CashBank Adjustment</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.CashBankMutation, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "CashBankMutation")">CashBank Mutation</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Payable, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Payable, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Payable")">Payable</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PaymentVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "PaymentVoucher")">Payment Voucher</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseDownPayment, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseDownPayment, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "PurchaseDownPayment")">Purchase DP</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Receivable, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Receivable, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Receivable")">Receivable</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ReceiptVoucher, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "ReceiptVoucher")">Receipt Voucher</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesDownPayment, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesDownPayment, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "SalesDownPayment")">Sales DP</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Purchase</a>
                                                 <ul>
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseOrder, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "PurchaseOrder")">Purchase Order</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseReceival, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "PurchaseReceival")">Purchase Receival</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.PurchaseInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "PurchaseInvoice")">Purchase Invoice</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Sales</a>
                                                 <ul>
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesQuotation, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesQuotation, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "SalesQuotation")">Sales Quotation</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesOrder, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "SalesOrder")">Sales Order</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.DeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.DeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "DeliveryOrder")">Delivery Order</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.VirtualOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.VirtualOrder, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "VirtualOrder")">Virtual Order</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TemporaryDeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TemporaryDeliveryOrder, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "TemporaryDeliveryOrder")">Temporary Delivery Order</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TemporaryDeliveryOrderClearance, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.TemporaryDeliveryOrderClearance, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "TemporaryDeliveryOrderClearance")">Temporary Delivery Order Clearance</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SalesInvoice, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "SalesInvoice")">Sales Invoice</a></li>}
                                                 </ul>
                                             </li>
@@ -430,9 +432,9 @@
                                         <ul>
                                             <li><a href="#">Finance Report</a>
                                                 <ul>
-													@if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.IncomeStatement, Core.Constants.Constant.MenuGroupName.Report))
-                                                    {<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BalanceSheet, Core.Constants.Constant.MenuGroupName.Report))
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.IncomeStatement, Core.Constants.Constant.MenuGroupName.Report))
+             {<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BalanceSheet, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>}
                                                 </ul>
                                             </li>
@@ -440,7 +442,7 @@
                                     </li>
                                     <li id="menu-item-51"><a href="#">Setting</a>
                                         <ul>
-                                            @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting))
+                                            @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.User, Core.Constants.Constant.MenuGroupName.Setting))
                                             {<li><a href="@Url.Action("Index", "User")">User</a></li>}
                                             @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.UserAccessRight, Core.Constants.Constant.MenuGroupName.Setting))
                                             {<li><a href="@Url.Action("Index", "UserAccess")">User Access Right</a></li>}

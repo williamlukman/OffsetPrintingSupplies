@@ -418,7 +418,7 @@ namespace TestValidation
                 };
                 contact = _contactService.CreateObject(contact);
 
-                type = _itemTypeService.CreateObject("Item", "Item", true, BAHANBAKUOTHER5, _accountService);
+                type = _itemTypeService.CreateObject("Item", "Item", false, BAHANBAKUOTHER5, _accountService);
 
                 warehouse = new Warehouse()
                 {
@@ -599,7 +599,8 @@ namespace TestValidation
                     {
                         WarehouseId = warehouse.Id,
                         SalesOrderId = salesOrder1.Id,
-                        DeliveryDate = new DateTime(2000, 1, 1)
+                        DeliveryDate = new DateTime(2000, 1, 1),
+                        NomorSurat = "1"
                     };
                     _deliveryOrderService.CreateObject(deliveryOrder1, _salesOrderService, _warehouseService);
 
@@ -607,7 +608,8 @@ namespace TestValidation
                     {
                         WarehouseId = warehouse.Id,
                         SalesOrderId = salesOrder2.Id,
-                        DeliveryDate = new DateTime(2014, 5, 5)
+                        DeliveryDate = new DateTime(2014, 5, 5),
+                        NomorSurat = "2",
                     };
                     _deliveryOrderService.CreateObject(deliveryOrder2, _salesOrderService, _warehouseService);
 
@@ -615,7 +617,8 @@ namespace TestValidation
                     {
                         WarehouseId = warehouse.Id,
                         SalesOrderId = salesOrder1.Id,
-                        DeliveryDate = new DateTime(2014, 5, 5)
+                        DeliveryDate = new DateTime(2014, 5, 5),
+                        NomorSurat = "3",
                     };
                     _deliveryOrderService.CreateObject(deliveryOrder3, _salesOrderService, _warehouseService);
 

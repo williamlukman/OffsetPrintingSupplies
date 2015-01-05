@@ -501,13 +501,17 @@ namespace TestValidation
                 typeRoller = _itemTypeService.CreateObject("Roller", "Roller", true, PERSEDPRINTINGROLLERS5, _accountService);
 
 
-            if (!_currencyService.GetAll().Any())
-            {
-                currencyIDR = new Currency();
-                currencyIDR.IsBase = true;
-                currencyIDR.Name = "IDR";
-                currencyIDR = _currencyService.CreateObject(currencyIDR, _accountService);
-            }
+                if (!_currencyService.GetAll().Any())
+                {
+                    currencyIDR = new Currency();
+                    currencyIDR.IsBase = true;
+                    currencyIDR.Name = "IDR";
+                    currencyIDR = _currencyService.CreateObject(currencyIDR, _accountService);
+                }
+                else
+                {
+                    currencyIDR = _currencyService.GetObjectByName("IDR");
+                }
         }
 
         public void PopulateData()
@@ -596,7 +600,8 @@ namespace TestValidation
                 PIC = "Mr. President",
                 PICContactNo = "021 3863777",
                 Email = "random@ri.gov.au",
-                TaxCode = "01"
+                TaxCode = "01",
+                ContactType = "CUSTOMER"
             };
             contact = _contactService.CreateObject(contact);
 
@@ -695,7 +700,8 @@ namespace TestValidation
             {
                 PurchaseDate = DateTime.Today.Subtract(purchaseDate),
                 ContactId = contact.Id,
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "PO1",
             };
             _purchaseOrderService.CreateObject(po1, _contactService);
 
@@ -703,7 +709,8 @@ namespace TestValidation
             {
                 PurchaseDate = DateTime.Today.Subtract(purchaseDate),
                 ContactId = contact.Id,
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "PO2",
             };
             _purchaseOrderService.CreateObject(po2, _contactService);
 
@@ -759,7 +766,8 @@ namespace TestValidation
             {
                 PurchaseOrderId = po1.Id,
                 ReceivalDate = DateTime.Now.Subtract(receivedDate),
-                WarehouseId = localWarehouse.Id
+                WarehouseId = localWarehouse.Id,
+                NomorSurat = "PR1",
             };
             _purchaseReceivalService.CreateObject(pr1, _purchaseOrderService, _warehouseService);
 
@@ -767,7 +775,8 @@ namespace TestValidation
             {
                 PurchaseOrderId = po2.Id,
                 ReceivalDate = DateTime.Now.Subtract(receivedDate),
-                WarehouseId = localWarehouse.Id
+                WarehouseId = localWarehouse.Id,
+                NomorSurat = "PR2"
             };
             _purchaseReceivalService.CreateObject(pr2, _purchaseOrderService, _warehouseService);
 
@@ -811,7 +820,8 @@ namespace TestValidation
             {
                 PurchaseOrderId = po1.Id,
                 ReceivalDate = DateTime.Now.Subtract(lateReceivedDate),
-                WarehouseId = localWarehouse.Id
+                WarehouseId = localWarehouse.Id,
+                NomorSurat = "PR3",
             };
             _purchaseReceivalService.CreateObject(pr3, _purchaseOrderService, _warehouseService);
 
@@ -854,7 +864,8 @@ namespace TestValidation
                 Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14),
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "PI1",
             };
             pi1 = _purchaseInvoiceService.CreateObject(pi1, _purchaseReceivalService);
 
@@ -882,7 +893,8 @@ namespace TestValidation
                 Tax = 10,
                 Discount = 5,
                 DueDate = DateTime.Today.AddDays(14),
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "PI2",
             };
             pi2 = _purchaseInvoiceService.CreateObject(pi2, _purchaseReceivalService);
 
@@ -910,7 +922,8 @@ namespace TestValidation
                 Tax = 10,
                 Discount = 0,
                 DueDate = DateTime.Today.AddDays(14),
-                CurrencyId = currencyIDR.Id
+                CurrencyId = currencyIDR.Id,
+                NomorSurat = "PI3",
             };
             pi3 = _purchaseInvoiceService.CreateObject(pi3, _purchaseReceivalService);
 
@@ -948,7 +961,7 @@ namespace TestValidation
                 PaymentDate = DateTime.Today.AddDays(14),
                 IsGBCH = true,
                 DueDate = DateTime.Today.AddDays(14),
-                RateToIDR = 1
+                RateToIDR = 1,
             };
             _paymentVoucherService.CreateObject(pv, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService, _currencyService);
 

@@ -86,6 +86,7 @@ namespace Service.Service
                 foreach (var detail in deliveryOrderDetailValidations)
                 {
                     detail.Errors = new Dictionary<string, string>();
+                    detail.ConfirmationDate = ConfirmationDate;
                     if (!(_deliveryOrderDetailService.GetValidator().ValidConfirmObject(detail, this, _deliveryOrderDetailService, _salesOrderDetailService, _itemService, _warehouseItemService, _serviceCostService, _customerItemService)))
                     {
                         deliveryOrder.Errors.Add("Generic", detail.Errors.FirstOrDefault().Value);

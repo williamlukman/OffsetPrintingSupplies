@@ -391,7 +391,7 @@ namespace TestValidation
                 };
                 contact = _contactService.CreateObject(contact);
 
-                type = _itemTypeService.CreateObject("Item", "Item", true, BAHANBAKUOTHER5, _accountService);
+                type = _itemTypeService.CreateObject("Item", "Item", false, BAHANBAKUOTHER5, _accountService);
 
                 warehouse = new Warehouse()
                 {
@@ -492,7 +492,8 @@ namespace TestValidation
                     {
                         ContactId = contact.Id,
                         SalesDate = DateTime.Now,
-                        CurrencyId = currencyIDR.Id
+                        CurrencyId = currencyIDR.Id,
+                        NomorSurat = "SO1",
                     };
                     salesOrder = _salesOrderService.CreateObject(salesOrder, _contactService);
                 };

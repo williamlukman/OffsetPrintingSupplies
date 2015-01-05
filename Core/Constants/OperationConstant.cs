@@ -199,6 +199,7 @@ namespace Core.Constants
             public static string Account = "Account";
             public static string Closing = "Closing";
             public static string GeneralLedger = "General Ledger";
+            public static string GeneralLedgerSaldo = "General Ledger Saldo";
             public static string ValidComb = "Valid Comb";
             public static string BalanceSheet = "Balance Sheet";
             public static string IncomeStatement = "Income Statement";
