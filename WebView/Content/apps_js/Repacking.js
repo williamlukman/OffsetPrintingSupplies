@@ -27,7 +27,7 @@
         colNames: ['ID', 'Code', 'BlendingRecipe Id', 'BlendingRecipe',
                    'Target Sku', 'Target Item', 'Target QTY', 'UoM',
                    'Warehouse ID', 'Warehouse', 'Description',
-                   'Confirmation Date', 'Repacking Date', 'Created At', 'Updated At'],
+                   'Confirmation Date', 'Conversion Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
 				  { name: 'code', index: 'code', width: 80 },

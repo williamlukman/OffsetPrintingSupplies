@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebView.Controllers.MstItemController
+@{
     ViewBag.Title = "Master Item";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -108,6 +109,24 @@
                                 <label>SellingPrice</label></td>
                             <td colspan="3">
                                 <input id="SellingPrice" name="SellingPrice" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Currency </label></td>
+                            <td>
+                                <select id="CurrencyId">
+                                    @foreach (var item in Model._currencyService.GetAll())
+                                    {
+                                        <option value ="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>PriceList</label></td>
+                            <td colspan="3">
+                                <input id="PriceList" name="PriceList" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:',',precision:2" value="0"  />
                         </tr>
                         <tr>
                             <td>

@@ -21,9 +21,9 @@ namespace Validation.Validation
             else
             {
                 ItemType itemType = _itemTypeService.GetObjectById(item.ItemTypeId);
-                if (itemType == null || itemType.Name != Constant.ItemTypeCase.Chemical)
+                if (itemType == null)
                 {
-                    blendingRecipe.Errors.Add("TargetItemId", "Item Type Harus berupa Chemical");
+                    blendingRecipe.Errors.Add("TargetItemId", "Item Type harus ada");
                 }
             }
             return blendingRecipe;

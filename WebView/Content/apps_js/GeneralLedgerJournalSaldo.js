@@ -17,6 +17,14 @@
     }
 
     function ReloadGridByAccountAndDate(AccountId, StartDate, EndDate) {
+        $.ajax({
+            dataType: "json",
+            url: base_url + "GeneralLedger/GetInfoSaldo?AccountId=" + AccountId + "&StartDate=" + StartDate + "&EndDate=" + EndDate,
+            success: function (result) {
+                $("#SaldoAwal").val(result.saldoawal);
+                $("#SaldoAkhir").val(result.saldoakhir);
+            }
+        });
         $("#list").setGridParam({ url: base_url + 'GeneralLedger/GetListByAccountAndDate', postData: { accountid: AccountId, startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
     }
 
@@ -34,14 +42,15 @@
         url: base_url + 'GeneralLedger/GetList',
         datatype: "json",
         colNames: ['ID', 'Transaction Date', 'Status', 'Account Code', 'Account Name',
-                   'Amount', 'Source Document', 'Id', 'Nomor Surat', ],
+                   'Credit', 'Debit', 'Source Document', 'Id', 'Nomor Surat', ],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
 				  { name: 'transactiondate', index: 'transactiondate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'status', index: 'status', width: 70, stype: 'select', editoptions: { value: ':;1:Debit;2:Credit' } },
 				  { name: 'accountcode', index: 'accountcode', width: 120 },
 				  { name: 'account', index: 'account', width: 250 },
-				  { name: 'amount', index: 'amount', width: 120, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+				  { name: 'creditamount', index: 'creditamount', width: 120, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'debitamount', index: 'debitamount', width: 120, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'sourcedocument', index: 'sourcedocument', width: 120 },
                   { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },

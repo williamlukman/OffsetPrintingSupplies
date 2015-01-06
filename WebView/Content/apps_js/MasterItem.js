@@ -9,9 +9,9 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItem/GetListNonLegacy', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
-
+    
     function ClearData() {
         $('#Description').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
@@ -33,12 +33,12 @@
         datatype: "json",
         colNames: ['ID', 'Sku', 'Name', 
                     'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual', "Cust's QTY",
-                    'UoM', 'Selling Price', 'AvgPrice', "Cust's AvgPrice",
+                    'UoM', 'Selling Price', 'Currency Id', 'Currency', 'Price List', 'AvgPrice', "Cust's AvgPrice",
                     'Description', 'Item Type', 'Tradeable', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 240 },
+				  { name: 'name', index: 'name', width: 480 },
                   { name: 'quantity', index: 'quantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
@@ -47,6 +47,9 @@
                   { name: 'customerquantity', index: 'customerquantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 70 },
                   { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+    			  { name: 'currencyid', index: 'currencyid', width: 35, align: "center", hidden: true },
+                  { name: 'currency', index: 'currency', width: 70 },
+                  { name: 'pricelist', index: 'pricelist', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'customeravgprice', index: 'customeravgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'description', index: 'description', width: 100 },
@@ -63,7 +66,6 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "ASC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -146,9 +148,11 @@
                             $('#Quantity').numberbox('setValue', (result.Quantity));
                             $('#MinimumQuantity').numberbox('setValue', (result.MinimumQuantity));
                             $('#SellingPrice').numberbox('setValue', (result.SellingPrice));
+                            $('#PriceList').numberbox('setValue', (result.PriceList));
                             $('#PendingDelivery').numberbox('setValue', (result.PendingDelivery));
                             $('#PendingReceival').numberbox('setValue', (result.PendingReceival));
                             $('#form_div').dialog('open');
+                            $('#CurrencyId').val(result.CurrencyId);
                         }
                     }
                 }
@@ -222,7 +226,12 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstItem/Update';
+            if ($("#ItemTypeName").val() == 'Blanket' || $("#ItemTypeName").val() == 'Roller' || $("#ItemTypeName").val() == 'Core') {
+                submitURL = base_url + 'MstItem/UpdatePrice';
+            }
+            else {
+                submitURL = base_url + 'MstItem/Update';
+            }
         }
             // Insert
         else {
@@ -232,12 +241,16 @@
         var f = document.getElementById("IsTradeable");
         var tradeable = f.options[f.selectedIndex].value;
 
+        var g = document.getElementById("CurrencyId");
+        var currency = g.options[g.selectedIndex].value;
+        
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice: $("#SellingPrice").numberbox('getValue'),
+                PriceList: $("#PriceList").numberbox('getValue'), CurrencyId: currency,
                 Sku: $("#Sku").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
                 MinimumQuantity: $("#MinimumQuantity").numberbox('getValue'), IsTradeable: tradeable
             }),

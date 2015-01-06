@@ -31,6 +31,7 @@ namespace Core.DomainModel
         public decimal CustomerVirtual { get; set; } // unused ?
 
         public decimal SellingPrice { get; set; }
+        public decimal PriceList { get; set; }
         public Nullable<int> CurrencyId { get; set; }
         public int PriceMutationId { get; set; }
         public decimal AvgPrice { get; set; }

@@ -130,7 +130,6 @@ namespace Service.Service
             {
                 _blanketService.UpdateObject(blanket, _blanketService, _uomService, this, _itemTypeService, _contactService,
                                              _machineService, _warehouseItemService, _warehouseService, _priceMutationService);
-                return blanket;
             }
 
             if(_validator.ValidUpdateLegacyObject(item, _uomService, this, _itemTypeService)) 
@@ -145,6 +144,11 @@ namespace Service.Service
                     _priceMutationService.DeactivateObject(oldpriceMutation, priceMutationTimeStamp);
                 }
                 item = _repository.UpdateObject(item);
+            }
+
+            if (blanket != null)
+            {
+                return blanket;
             }
             return item;
         }
@@ -190,7 +194,6 @@ namespace Service.Service
                 _blanketService.SoftDeleteObject(blanket, _itemTypeService, _warehouseItemService, _priceMutationService,
                                                  _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService,
                                                  _stockMutationService, _blanketOrderDetailService);
-                return blanket;
             }
 
             if (_validator.ValidDeleteLegacyObject(item, _stockMutationService, _itemTypeService, _warehouseItemService, _purchaseOrderDetailService, _stockAdjustmentDetailService, _salesOrderDetailService))
@@ -215,6 +218,10 @@ namespace Service.Service
                 {
                     _priceMutationService.DeactivateObject(priceMutation, item.DeletedAt);
                 }
+            }
+            if (blanket != null)
+            {
+                return blanket;
             }
             return item;
         }

@@ -45,7 +45,8 @@ namespace WebView.Controllers
         private IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
         private IBlanketOrderDetailService _blanketOrderDetailService;
         private IBlendingWorkOrderService _blendingWorkOrderService;
-     
+        private IValidCombService _validCombService;
+
         public GeneralLedgerController()
         {
             _accountService = new AccountService(new AccountRepository(), new AccountValidator());
@@ -59,7 +60,7 @@ namespace WebView.Controllers
             _purchaseDownPaymentService = new PurchaseDownPaymentService(new PurchaseDownPaymentRepository(), new PurchaseDownPaymentValidator());
             _purchaseDownPaymentAllocationService = new PurchaseDownPaymentAllocationService(new PurchaseDownPaymentAllocationRepository(), new PurchaseDownPaymentAllocationValidator());
             _purchaseAllowanceService = new PurchaseAllowanceService(new PurchaseAllowanceRepository(), new PurchaseAllowanceValidator());
-
+            _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
         }
 
         public ActionResult Index()
@@ -91,7 +92,8 @@ namespace WebView.Controllers
                             model.Status,
                             AccountCode = model.Account.Code,
                             Account = model.Account.Name,
-                            model.Amount,
+                            CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
+                            DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                             model.SourceDocument,
                             model.SourceDocumentId
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -130,7 +132,8 @@ namespace WebView.Controllers
                             model.Status,
                             model.AccountCode,
                             model.Account,
-                            model.Amount,
+                            model.CreditAmount,
+                            model.DebitAmount,
                             model.SourceDocument,
                             model.SourceDocumentId
                       }
@@ -162,7 +165,8 @@ namespace WebView.Controllers
                              model.Status,
                              AccountCode = model.Account.Code,
                              Account = model.Account.Name,
-                             model.Amount,
+                             CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
+                             DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                              model.SourceDocument,
                              model.SourceDocumentId
                          }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
@@ -201,11 +205,76 @@ namespace WebView.Controllers
                             model.Status,
                             model.AccountCode,
                             model.Account,
-                            model.Amount,
+                            model.CreditAmount,
+                            model.DebitAmount,
                             model.SourceDocument,
                             model.SourceDocumentId
                          }
                     }).ToArray()
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetInfoSaldo(int AccountId, DateTime StartDate, DateTime EndDate)
+        {
+            string filter = "AccountId = @0 AND TransactionDate >= @1 AND TransactionDate < @2";
+
+            var debit = _generalLedgerJournalService.GetQueryable().Include("Account").GroupBy(glj => glj.Account)
+                                                .Select(g => new { TotalDebit = g.Sum(glj => glj.Amount) })
+                                                .Where(filter + " AND STATUS = 1");
+            var credit = _generalLedgerJournalService.GetQueryable().Include("Account").GroupBy(glj => glj.Account)
+                                                .Select(g => new { TotalDebit = g.Sum(glj => glj.Amount) })
+                                                .Where(filter + " AND STATUS = 2");
+            var q = _generalLedgerJournalService.GetQueryable().Include("Account");
+
+            /*
+            var results = (from ssi in fooList
+                           // here I choose each field I want to group by
+                           group ssi by new { ssi.Code, ssi.StatusId } into g
+                           select new { AgencyCode = g.Key.Code, Status = g.Key.StatusId, Count = g.Count() }).ToList();
+            */
+            var query = (from model in q
+                         select new
+                         {
+                             model.Id,
+                             model.TransactionDate,
+                             model.Status,
+                             AccountCode = model.Account.Code,
+                             Account = model.Account.Name,
+                             CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
+                             DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
+                             model.SourceDocument,
+                             model.SourceDocumentId,
+                             model.AccountId
+                         }).Where(filter, AccountId, StartDate, EndDate.AddDays(1));
+
+            var list = query.AsEnumerable();
+
+            // (Debit) Asset, (Credit) Liability, Equity
+            var journal = list.ElementAtOrDefault(0);
+            Account account = (journal == null) ? null : _accountService.GetObjectById(list.ElementAtOrDefault(0).AccountId);
+            Closing closing = _closingService.GetObjectByPeriodAndYear(StartDate.AddDays(-1).Month, StartDate.AddDays(-1).Year);
+            ValidComb validComb = (closing == null) ? null : _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+            decimal saldoawal = (validComb == null) ? 0 : validComb.Amount;
+            decimal saldoakhir = saldoawal;
+
+            foreach (var model in list)
+            {
+                if (account.Group == Constant.AccountGroup.Asset)
+                {
+                    saldoakhir += model.DebitAmount;
+                    saldoakhir -= model.CreditAmount;
+                }
+                else if (account.Group == Constant.AccountGroup.Liability || account.Group == Constant.AccountGroup.Equity)
+                {
+                    saldoakhir += model.CreditAmount;
+                    saldoakhir -= model.DebitAmount;
+                }
+            }
+
+            return Json(new
+            {
+                SaldoAwal = saldoawal,
+                saldoakhir = saldoakhir,
             }, JsonRequestBehavior.AllowGet);
         }
 
@@ -233,7 +302,8 @@ namespace WebView.Controllers
                              model.Status,
                              AccountCode = model.Account.Code,
                              Account = model.Account.Name,
-                             model.Amount,
+                             CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
+                             DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                              model.SourceDocument,
                              model.SourceDocumentId,
                              model.AccountId
@@ -256,7 +326,7 @@ namespace WebView.Controllers
             }
 
             list = list.Skip(pageIndex * pageSize).Take(pageSize);
-
+            
             return Json(new
             {
                 total = totalPages,
@@ -273,7 +343,8 @@ namespace WebView.Controllers
                             model.Status,
                             model.AccountCode,
                             model.Account,
-                            model.Amount,
+                            model.CreditAmount,
+                            model.DebitAmount,
                             model.SourceDocument,
                             model.SourceDocumentId,
                             model.AccountId
