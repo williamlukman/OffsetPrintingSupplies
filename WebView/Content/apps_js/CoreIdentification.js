@@ -132,6 +132,7 @@
         $('#btnWarehouse').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#IsInHouse').removeAttr('disabled');
+        $('#Quantity').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#IdentifiedDateDiv').show();
         $('#IdentifiedDateDiv2').hide();

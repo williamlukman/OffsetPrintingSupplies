@@ -204,28 +204,32 @@ namespace WebView.Controllers
                 model = _itemTypeService.GetObjectByName(itemType);
                 if (model.Name == "Roller")
                 {
-                    SkuCount = _rollerBuilderService.GetAll().Count() + 1;
+                    SkuCount = _rollerBuilderService.GetQueryable().Count() + 1;
                     String NewSku = model.Description + SkuCount.ToString();
                     while (_rollerBuilderService.GetQueryable().Where(x => x.BaseSku == NewSku).Count() > 0)
                     {
                         SkuCount++;
+                        NewSku = model.Description + SkuCount.ToString();
                     }
                 }
                 else if (model.Name == "Core")
                 {
-                    SkuCount = _coreBuilderService.GetAll().Count() + 1;
+                    SkuCount = _coreBuilderService.GetQueryable().Count() + 1;
                     String NewSku = model.Description + SkuCount.ToString();
                     while (_coreBuilderService.GetQueryable().Where(x => x.BaseSku == NewSku).Count() > 0)
                     {
                         SkuCount++;
+                        NewSku = model.Description + SkuCount.ToString();
                     }
                 }
                 else
                 {
                     SkuCount = _itemService.GetQueryable().Where(x => x.ItemTypeId == model.Id).Count() + 1;
-                    while (_itemService.GetObjectBySku(model.Description + SkuCount) != null)
+                    String NewSku = model.Description + SkuCount.ToString();
+                    while (_itemService.GetObjectBySku(NewSku) != null)
                     {
                         SkuCount++;
+                        NewSku = model.Description + SkuCount.ToString();
                     }
                 }
                 SKU = model.Description + SkuCount;

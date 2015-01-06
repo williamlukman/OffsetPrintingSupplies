@@ -3099,7 +3099,6 @@ namespace OffsetPrintingSupplies
             sadBAR256 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "BAR256", ItemId = BAR256.Id, Quantity = (decimal)50, Price = (decimal)0, StockAdjustmentId = stockAdjustmentE16.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadBAR257 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "BAR257", ItemId = BAR257.Id, Quantity = (decimal)69, Price = (decimal)0, StockAdjustmentId = stockAdjustmentE16.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
 
-
             sadCMP1 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "CMP1", ItemId = CMP1.Id, Quantity = (decimal)3239.8, Price = (decimal)90961.62, StockAdjustmentId = stockAdjustmentA1.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadCMP2 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "CMP2", ItemId = CMP2.Id, Quantity = (decimal)1411.2, Price = (decimal)84897.51, StockAdjustmentId = stockAdjustmentA1.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
             sadCMP3 = _stockAdjustmentDetailService.CreateObject(new StockAdjustmentDetail() { Code = "CMP3", ItemId = CMP3.Id, Quantity = (decimal)666.6, Price = (decimal)80349.43, StockAdjustmentId = stockAdjustmentA1.Id }, _stockAdjustmentService, _itemService, _warehouseItemService);
