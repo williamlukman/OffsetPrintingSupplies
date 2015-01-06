@@ -95,7 +95,9 @@ namespace WebView.Controllers
                             CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
                             DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                             model.SourceDocument,
-                            model.SourceDocumentId
+                            model.SourceDocumentId,
+                            NomorSurat = model.SourceDocumentId,
+                            model.AccountId,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -135,7 +137,9 @@ namespace WebView.Controllers
                             model.CreditAmount,
                             model.DebitAmount,
                             model.SourceDocument,
-                            model.SourceDocumentId
+                            model.SourceDocumentId,
+                            model.NomorSurat,
+                            model.AccountId
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -168,7 +172,9 @@ namespace WebView.Controllers
                              CreditAmount = model.Status == Constant.GeneralLedgerStatus.Credit ? model.Amount : 0,
                              DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                              model.SourceDocument,
-                             model.SourceDocumentId
+                             model.SourceDocumentId,
+                             NomorSurat = model.SourceDocumentId,
+                             model.AccountId,
                          }).Where(filter, startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -208,7 +214,9 @@ namespace WebView.Controllers
                             model.CreditAmount,
                             model.DebitAmount,
                             model.SourceDocument,
-                            model.SourceDocumentId
+                            model.SourceDocumentId,
+                            model.NomorSurat,
+                            model.AccountId
                          }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -218,12 +226,12 @@ namespace WebView.Controllers
         {
             string filter = "AccountId = @0 AND TransactionDate >= @1 AND TransactionDate < @2";
 
-            var debit = _generalLedgerJournalService.GetQueryable().Include("Account").GroupBy(glj => glj.Account)
-                                                .Select(g => new { TotalDebit = g.Sum(glj => glj.Amount) })
-                                                .Where(filter + " AND STATUS = 1");
-            var credit = _generalLedgerJournalService.GetQueryable().Include("Account").GroupBy(glj => glj.Account)
-                                                .Select(g => new { TotalDebit = g.Sum(glj => glj.Amount) })
-                                                .Where(filter + " AND STATUS = 2");
+            //var debit = _generalLedgerJournalService.GetQueryable().Include("Account").GroupBy(glj => glj.Account)
+            //                                    .Select(g => new { TotalDebit = g.Sum(glj => glj.Amount) })
+            //                                    .Where(filter + " AND STATUS = 1");
+            //var credit = _generalLedgerJournalService.GetQueryable().Include("Account").GroupBy(glj => glj.Account)
+            //                                    .Select(g => new { TotalDebit = g.Sum(glj => glj.Amount) })
+            //                                    .Where(filter + " AND STATUS = 2");
             var q = _generalLedgerJournalService.GetQueryable().Include("Account");
 
             /*
@@ -244,6 +252,7 @@ namespace WebView.Controllers
                              DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                              model.SourceDocument,
                              model.SourceDocumentId,
+                             NomorSurat = model.SourceDocumentId,
                              model.AccountId
                          }).Where(filter, AccountId, StartDate, EndDate.AddDays(1));
 
@@ -306,6 +315,7 @@ namespace WebView.Controllers
                              DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                              model.SourceDocument,
                              model.SourceDocumentId,
+                             NomorSurat = model.SourceDocumentId,
                              model.AccountId
                          }).Where(filter, accountid.GetValueOrDefault(), startdate.GetValueOrDefault().Date, enddate.GetValueOrDefault().AddDays(1).Date).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -347,6 +357,7 @@ namespace WebView.Controllers
                             model.DebitAmount,
                             model.SourceDocument,
                             model.SourceDocumentId,
+                            model.NomorSurat,
                             model.AccountId
                          }
                     }).ToArray()

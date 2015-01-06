@@ -21,8 +21,8 @@
             dataType: "json",
             url: base_url + "GeneralLedger/GetInfoSaldo?AccountId=" + AccountId + "&StartDate=" + StartDate + "&EndDate=" + EndDate,
             success: function (result) {
-                $("#SaldoAwal").val(result.saldoawal);
-                $("#SaldoAkhir").val(result.saldoakhir);
+                $("#SaldoAwal").numberbox('setValue', result.saldoawal);
+                $("#SaldoAkhir").numberbox('setValue', result.saldoakhir);
             }
         });
         $("#list").setGridParam({ url: base_url + 'GeneralLedger/GetListByAccountAndDate', postData: { accountid: AccountId, startdate: StartDate, enddate: EndDate } }).trigger("reloadGrid");
@@ -42,7 +42,7 @@
         url: base_url + 'GeneralLedger/GetList',
         datatype: "json",
         colNames: ['ID', 'Transaction Date', 'Status', 'Account Code', 'Account Name',
-                   'Credit', 'Debit', 'Source Document', 'Id', 'Nomor Surat', ],
+                   'Credit', 'Debit', 'Source Document', 'Id', 'Nomor Surat', 'Account Id'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
 				  { name: 'transactiondate', index: 'transactiondate', search: false, width: 120, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -54,6 +54,7 @@
                   { name: 'sourcedocument', index: 'sourcedocument', width: 120 },
                   { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
 				  { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
+                  { name: 'accountid', index: 'accountid', width: 35, hidden: true }
         ],
         page: '1',
         pager: $('#pager'),
