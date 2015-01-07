@@ -25,7 +25,9 @@ namespace Data.Context
 
             IList<String> userroleNames = new List<String>()
                                         { "UserMenu", "UserAccount", "UserAccess" };
-            IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", "PaymentRequest", "MemorialDetail", "Memorial", "ValidComb", "Closing", "GeneralLedgerJournal" };
+            IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", 
+                                           "PaymentRequest", "ReceiptRequestDetail", "ReceiptRequest", "MemorialDetail", "Memorial", 
+                                           "ValidComb", "Closing", "GeneralLedgerJournal" };
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -122,6 +124,8 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new PurchaseReceivalMapping());
             modelBuilder.Configurations.Add(new PurchaseReceivalDetailMapping());
             modelBuilder.Configurations.Add(new ReceivableMapping());
+            modelBuilder.Configurations.Add(new ReceiptRequestMapping());
+            modelBuilder.Configurations.Add(new ReceiptRequestDetailMapping());
             modelBuilder.Configurations.Add(new ReceiptVoucherDetailMapping());
             modelBuilder.Configurations.Add(new ReceiptVoucherMapping());
             modelBuilder.Configurations.Add(new RecoveryAccessoryDetailMapping());
@@ -207,6 +211,7 @@ namespace Data.Context
         public DbSet<MemorialDetail> MemorialDetails { get; set; }
         public DbSet<Payable> Payables { get; set; }
         public DbSet<PaymentRequest> PaymentRequests { get; set; }
+        public DbSet<PaymentRequestDetail> PaymentRequestDetails { get; set; }
         public DbSet<PaymentVoucherDetail> PaymentVoucherDetails { get; set; }
         public DbSet<PaymentVoucher> PaymentVouchers { get; set; }
         public DbSet<PurchaseDownPaymentAllocationDetail> PurchaseDownPaymentAllocationDetails { get; set; }
@@ -222,6 +227,8 @@ namespace Data.Context
         public DbSet<PurchaseReceivalDetail> PurchaseReceivalDetails { get; set; }
         public DbSet<PurchaseReceival> PurchaseReceivals { get; set; }
         public DbSet<Receivable> Receivables { get; set; }
+        public DbSet<ReceiptRequest> ReceiptRequests { get; set; }
+        public DbSet<ReceiptRequestDetail> ReceiptRequestDetails { get; set; }
         public DbSet<ReceiptVoucherDetail> ReceiptVoucherDetails { get; set; }
         public DbSet<ReceiptVoucher> ReceiptVouchers { get; set; }
         public DbSet<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }

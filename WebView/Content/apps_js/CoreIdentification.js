@@ -538,6 +538,8 @@
 		              rowRepairRequestCase = "CentreDrill";
 		          } else if (rowRepairRequestCase == '3') {
 		              rowRepairRequestCase = "None";
+		          } else if (rowRepairRequestCase == '4') {
+		              rowRepairRequestCase = "Both";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { repairrequestcase: rowRepairRequestCase });
               }
@@ -591,6 +593,9 @@
                             }
                             else if (result.RepairRequestCase == 3) {
                                 f.selectedIndex = 2;
+                            }
+                            else if (result.RepairRequestCase == 4) {
+                                f.selectedIndex = 3;
                             }
                             var g = document.getElementById("CoreTypeCase");
                             if (result.CoreTypeCase == 'Hollow') {

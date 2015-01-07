@@ -356,10 +356,8 @@
                                                     {<li><a href="@Url.Action("Index", "SalesDownPaymentAllocation")">Sales DP Allocation</a></li>}
 	    											@if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Account, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "ChartOfAccount")">Chart Of Account</a></li>}
-                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedger, Core.Constants.Constant.MenuGroupName.Transaction))
-                                                    {<li><a href="@Url.Action("Index", "GeneralLedger")">General Ledger</a></li>}
-                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedgerSaldo, Core.Constants.Constant.MenuGroupName.Transaction))
-                                                    {<li><a href="@Url.Action("Index", "GeneralLedgerSaldo")">General Ledger (Saldo)</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedger, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "GeneralLedgerSaldo")">General Ledger</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Memorial, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "Memorial")">Memorial</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Closing, Core.Constants.Constant.MenuGroupName.Transaction))

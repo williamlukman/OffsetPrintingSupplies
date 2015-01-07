@@ -63,7 +63,7 @@ namespace WebView.Controllers
 
         public ActionResult Index()
         {
-            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedgerSaldo, Core.Constants.Constant.MenuGroupName.Report))
+            if (!AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.GeneralLedger, Core.Constants.Constant.MenuGroupName.Report))
             {
                 return Content("You are not allowed to View this Page.");
             }

@@ -34,6 +34,7 @@ namespace Core.Constants
             public static string Repacking = "Repacking";
             public static string StockAdjustment = "StockAdjustment";
             public static string CustomerStockAdjustment = "CustomerStockAdjustment";
+            public static string ReceiptRequest = "ReceiptRequest";
             public static string ReceiptVoucher = "ReceiptVoucher";
             //public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string DeliveryOrder = "DeliveryOrder";

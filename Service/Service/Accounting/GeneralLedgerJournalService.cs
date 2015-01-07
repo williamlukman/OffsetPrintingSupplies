@@ -1612,6 +1612,109 @@ namespace Service.Service
             return journals;
         }
 
+        public IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptRequest(ReceiptRequest receiptRequest,
+                                   IReceiptRequestDetailService _receiptRequestDetailService, IAccountService _accountService,
+                                   IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
+        {
+            // Debit AccountReceivable, Credit User Input
+            #region Debit AccountReceivable, Credit User Input
+
+            IList<ReceiptRequestDetail> details = _receiptRequestDetailService.GetObjectsByReceiptRequestId(receiptRequest.Id);
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency receiptRequestCurrency = _currencyService.GetObjectById(receiptRequest.CurrencyId);
+            GeneralLedgerJournal debitAccountReceivable = new GeneralLedgerJournal()
+            {
+                AccountId = receiptRequest.AccountReceivableId,
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptRequest,
+                SourceDocumentId = receiptRequest.Id,
+                TransactionDate = (DateTime)receiptRequest.RequestedDate,
+                Status = Constant.GeneralLedgerStatus.Debit,
+                Amount = Math.Round(receiptRequest.Amount * receiptRequest.ExchangeRateAmount, 2)
+            };
+            debitAccountReceivable = CreateObject(debitAccountReceivable, _accountService);
+            journals.Add(debitAccountReceivable);
+
+            if (receiptRequestCurrency.IsBase == false)
+            {
+                GLNonBaseCurrency debitAccountReceivable2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = debitAccountReceivable.Id,
+                    CurrencyId = receiptRequest.CurrencyId,
+                    Amount = receiptRequest.Amount,
+                };
+                debitAccountReceivable2 = _gLNonBaseCurrencyService.CreateObject(debitAccountReceivable2, _accountService);
+            }
+
+            foreach (var receiptRequestDetail in details)
+            {
+                GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                {
+                    AccountId = receiptRequestDetail.AccountId,
+                    SourceDocument = Constant.GeneralLedgerSource.ReceiptRequest,
+                    SourceDocumentId = receiptRequest.Id,
+                    TransactionDate = (DateTime)receiptRequest.RequestedDate,
+                    Status = Constant.GeneralLedgerStatus.Credit,
+                    Amount = Math.Round(receiptRequestDetail.Amount * receiptRequest.ExchangeRateAmount, 2)
+                };
+                journal = CreateObject(journal, _accountService);
+                journals.Add(journal);
+            }
+
+            return journals;
+            #endregion
+        }
+
+        public IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptRequest(ReceiptRequest receiptRequest, IReceiptRequestDetailService _receiptRequestDetailService,
+                                           IAccountService _accountService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService)
+        {
+            // Credit AccountReceivable, Debit User Input
+            #region Credit AccountReceivable, Debit User Input
+            IList<ReceiptRequestDetail> details = _receiptRequestDetailService.GetObjectsByReceiptRequestId(receiptRequest.Id);
+            IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
+            Currency receiptRequestCurrency = _currencyService.GetObjectById(receiptRequest.CurrencyId);
+
+            GeneralLedgerJournal creditAccountReceivable = new GeneralLedgerJournal()
+            {
+                AccountId = receiptRequest.AccountReceivableId,
+                SourceDocument = Constant.GeneralLedgerSource.ReceiptRequest,
+                SourceDocumentId = receiptRequest.Id,
+                TransactionDate = receiptRequest.RequestedDate,
+                Status = Constant.GeneralLedgerStatus.Credit,
+                Amount = Math.Round(receiptRequest.Amount * receiptRequest.ExchangeRateAmount, 2)
+            };
+            creditAccountReceivable = CreateObject(creditAccountReceivable, _accountService);
+            journals.Add(creditAccountReceivable);
+
+            if (receiptRequestCurrency.IsBase == false)
+            {
+                GLNonBaseCurrency creditAccountReceivable2 = new GLNonBaseCurrency()
+                {
+                    GeneralLedgerJournalId = creditAccountReceivable.Id,
+                    CurrencyId = receiptRequest.CurrencyId,
+                    Amount = receiptRequest.Amount,
+                };
+                creditAccountReceivable2 = _gLNonBaseCurrencyService.CreateObject(creditAccountReceivable2, _accountService);
+            }
+
+            foreach (var receiptRequestDetail in details)
+            {
+                GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                {
+                    AccountId = receiptRequestDetail.AccountId,
+                    SourceDocument = Constant.GeneralLedgerSource.ReceiptRequest,
+                    SourceDocumentId = receiptRequest.Id,
+                    TransactionDate = receiptRequest.RequestedDate,
+                    Status = Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(receiptRequestDetail.Amount * receiptRequest.ExchangeRateAmount, 2)
+                };
+                journal = CreateObject(journal, _accountService);
+                journals.Add(journal);
+            }
+
+            return journals;
+            #endregion
+        }
+
         public IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, IAccountService _accountService,
                                            ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService)
         {

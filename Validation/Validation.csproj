@@ -51,6 +51,8 @@
     <Compile Include="Validation\Finance\CashMutationValidator.cs" />
     <Compile Include="Validation\Finance\CashBankAdjustmentValidator.cs" />
     <Compile Include="Validation\Finance\CashBankMutationValidator.cs" />
+    <Compile Include="Validation\Finance\ReceiptRequestDetailValidator.cs" />
+    <Compile Include="Validation\Finance\ReceiptRequestValidator.cs" />
     <Compile Include="Validation\Finance\ExchangeRateValidator.cs" />
     <Compile Include="Validation\Finance\CurrencyValidator.cs" />
     <Compile Include="Validation\Finance\SalesDownPaymentAllocationDetailValidator.cs" />

@@ -3,17 +3,17 @@
 		vMainGrid,
 		vCode;
 
-    
+
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'StockAdjustment/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'ReceiptRequest/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'StockAdjustment/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'ReceiptRequest/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -23,7 +23,6 @@
     }
 
     function clearForm(form) {
-
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case
@@ -37,31 +36,36 @@
                 $(this).numberbox('clear');
         });
     }
-    
+
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
-    $("#lookup_div_item").dialog('close');
-    $("#lookup_div_warehouse").dialog('close');
+    $("#lookup_div_contact").dialog('close');
+    $('#lookup_div_account').dialog('close');
+    $('#lookup_div_accountReceivable').dialog('close');
     $("#delete_confirm_div").dialog('close');
-    $("#WarehouseId").hide();
-    $("#ItemId").hide();
+    $("#AccountId").hide();
+    $("#Contact").attr('disabled', true);
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'StockAdjustment/GetList',
+        url: base_url + 'ReceiptRequest/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Warehouse Name', 'Description', 'AdjustmentDate',
-                    'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Description', 'Amount',
+                   'Is Confirmed', 'Confirmation Date', 'Requested Date', 'Due Date', 'Created At', 'Updated At'],
         colModel: [
-    			  { name: 'id', index: 'id', width: 50, align: "center" },
-                  { name: 'code', index: 'code', width: 80 },
-                  { name: 'warehousename', index: 'warehousename', width: 150 },
+    			  { name: 'id', index: 'id', width: 80, align: "center" },
+                  { name: 'code', index: 'code', width: 100 },
+				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
+                  { name: 'contact', index: 'contact', width: 100 },
                   { name: 'description', index: 'description', width: 200 },
-                  { name: 'adjustmentdate', index: 'adjustmentdate', width: 90, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 0, prefix: "", suffix: "", defaultValue: '0.00' } },
+                  { name: 'isconfirmed', index: 'isconfirmed', width: 100, stype: 'select', editoptions: { value: ':All;true:Yes;false:No' }, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'requesteddate', index: 'requesteddate', width: 110, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'duedate', index: 'duedate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
         page: '1',
         pager: $('#pager'),
@@ -81,19 +85,20 @@
 		          var cl = ids[i];
 		          rowIsConfirmed = $(this).getRowData(cl).isconfirmed;
 		          if (rowIsConfirmed == 'true') {
-		              rowIsConfirmed = "YES";
+		              rowIsConfirmed = "YES, " + $(this).getRowData(cl).confirmationdate;
 		          } else {
 		              rowIsConfirmed = "NO";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { isconfirmed: rowIsConfirmed });
+
 		      }
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
-   
+
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -107,16 +112,19 @@
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
-        $('#AdjustmentDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
-        $('#btnWarehouse').removeAttr('disabled');
-        $('#Description').removeAttr('disabled');
+        $('#RequestedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#btnContact').removeAttr('disabled');
+        $('#btnAccountReceivable').removeAttr('disabled');
         $('#tabledetail_div').hide();
-        $('#AdjustmentDateDiv').show();
-        $('#AdjustmentDateDiv2').hide();
+        $('#RequestedDateDiv').show();
+        $('#RequestedDateDiv2').hide();
+        $('#Currency').text('').data("kode", '');
+        $('#DueDateDiv').show();
+        $('#DueDateDiv2').hide();
         $('#form_btn_save').show();
         $('#form_div').dialog('open');
     });
-
 
     $('#btn_add_detail').click(function () {
         ClearData();
@@ -125,7 +133,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfo?Id=" + id,
+                url: base_url + "ReceiptRequest/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -142,17 +150,25 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
+                            $('#ContactId').val(result.ContactId);
+                            $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
-                            $('#Code').val(result.Code);
-                            $('#AdjustmentDate').datebox('setValue', dateEnt(result.AdjustmentDate));
-                            $('#AdjustmentDate2').val(dateEnt(result.AdjustmentDate));
-                            $('#AdjustmentDateDiv2').show();
-                            $('#AdjustmentDateDiv').hide();
+                            $('#AccountReceivableId').val(result.AccountReceivableId);
+                            $('#AccountReceivable').val(result.AccountReceivable);
+                            $('#Currency').text(result.currency).data("kode",result.currencyId);
+                            $('#TotalAmount').numberbox('setValue', result.Amount);
+                            $('#RequestedDate').datebox('setValue', dateEnt(result.RequestedDate));
+                            $('#RequestedDate2').val(dateEnt(result.RequestedDate));
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#RequestedDateDiv').hide();
+                            $('#RequestedDateDiv2').show();
+                            $('#DueDateDiv').hide();
+                            $('#DueDateDiv2').show();
                             $('#form_btn_save').hide();
-                            $('#btnWarehouse').attr('disabled', true);
-                            $('#Description').attr('disabled', true);
+                            $('#btnAccountReceivable').attr('disabled', true);;
+                            $('#btnContact').attr('disabled', true);;
+
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -164,8 +180,6 @@
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-       
-       
 
     $('#btn_edit').click(function () {
         ClearData();
@@ -174,7 +188,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfo?Id=" + id,
+                url: base_url + "ReceiptRequest/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -191,16 +205,26 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
-                            $('#WarehouseId').val(result.WarehouseId);
-                            $('#Warehouse').val(result.Warehouse);
+                            $('#ContactId').val(result.ContactId);
+                            $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
-                            $('#Code').val(result.Code);
-                            $('#AdjustmentDate').datebox('setValue', dateEnt(result.AdjustmentDate));
-                            $('#btnWarehouse').removeAttr('disabled');
-                            $('#Description').removeAttr('disabled');
+                            $('#TotalAmount').numberbox('setValue', result.Amount);
+                            $('#RequestedDate').datebox('setValue', dateEnt(result.RequestedDate));
+                            $('#RequestedDate2').val(dateEnt(result.RequestedDate));
+                            $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
+                            $('#DueDate2').val(dateEnt(result.DueDate));
+                            $('#AccountReceivableId').val(result.AccountReceivableId);
+                            $('#AccountReceivable').val(result.AccountReceivable);
+                            $('#Currency').text(result.currency).data("kode", result.currencyId);
+                            $('#TotalAmount').numberbox('setValue', result.Amount);
+                            $('#RequestedDateDiv').show();
+                            $('#RequestedDateDiv2').hide();
+                            $('#DueDateDiv').show();
+                            $('#DueDateDiv2').hide();
+                            $('#form_btn_save').hide();
+                            $('#btnContact').removeAttr('disabled');
+                            $('#btnAccountReceivable').removeAttr('disabled');
                             $('#tabledetail_div').hide();
-                            $('#AdjustmentDateDiv').show();
-                            $('#AdjustmentDateDiv2').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
@@ -217,13 +241,15 @@
         if (id) {
             var ret = jQuery("#list").jqGrid('getRowData', id);
             $('#ConfirmationDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+            $('#confirmAmount').numberbox('setValue', ret.amount);
+            $('#confirmCode').val(ret.code);
             $('#idconfirm').val(ret.id);
             $("#confirm_div").dialog("open");
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
     });
-    
+
     $('#btn_unconfirm').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
@@ -231,7 +257,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to unconfirm record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "StockAdjustment/Unconfirm",
+                        url: base_url + "ReceiptRequest/Unconfirm",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -265,7 +291,7 @@
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
         $.ajax({
-            url: base_url + "StockAdjustment/Confirm",
+            url: base_url + "ReceiptRequest/Confirm",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -295,7 +321,7 @@
         $('#confirm_div').dialog('close');
     });
 
-   
+
 
     $('#btn_del').click(function () {
         clearForm("#frm");
@@ -318,7 +344,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "StockAdjustment/Delete",
+            url: base_url + "ReceiptRequest/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -356,27 +382,30 @@
 
         var submitURL = '';
         var id = $("#id").val();
-        if ($('#AdjustmentDate').datebox('getValue') == "")
-        {
-            return $($('#AdjustmentDate').addClass('errormessage').before('<span class="errormessage">**' + "Adjustment Date Belum Terisi" + '</span>'));
+        if ($('#RequestedDate').datebox('getValue') == "") {
+            return $($('#RequestedDate').addClass('errormessage').before('<span class="errormessage">**' + "Requested Date Belum Terisi" + '</span>'));
 
         }
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'StockAdjustment/Update';
+            submitURL = base_url + 'ReceiptRequest/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'StockAdjustment/Insert';
+            submitURL = base_url + 'ReceiptRequest/Insert';
         }
+
+        //var e = document.getElementById("IsTax");
+        //var moving = e.options[e.selectedIndex].value;
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, WarehouseId: $("#WarehouseId").val(), AdjustmentDate: $('#AdjustmentDate').datebox('getValue'),
-                Description: $("#Description").val()
+                Id: id, ContactId: $("#ContactId").val(), Description: $("#Description").val(),
+                RequestedDate: $('#RequestedDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
+                CurrencyId: $('#Currency').data("kode"), AccountReceivableId: $("#AccountReceivableId").val()
             }),
             async: false,
             cache: false,
@@ -404,26 +433,26 @@
         });
     });
 
+
     //GRID Detail+++++++++++++++
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Sku', 'Name', 'Adj QTY', 'UoM', 'Price'
+        colNames: ['Code', 'Account Id', 'Account Code', 'Account', 'Status', 'Amount'
         ],
         colModel: [
-                  { name: 'id', index: 'id', width: 40, sortable: false, hidden: true },
-                  { name: 'code', index: 'code', width: 80, sortable: false },
-				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'uom', index: 'uom', width: 80, sortable: false },
-                  { name: 'price', index: 'price', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'accountid', index: 'accountid', width: 130, sortable: false, hidden: true },
+                  { name: 'accountcode', index: 'accountcode', width: 80, sortable: false },
+                  { name: 'account', index: 'account', width: 150, sortable: false },
+                  { name: 'status', index: 'status', width: 40, sortable: false },
+                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
         ],
-        page: '1',
-        pager: $('#pagerdetail'),
+        //page: '1',
+        //pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'id',
+        sortname: 'Code',
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
@@ -432,15 +461,29 @@
         height: $(window).height() - 500,
         gridComplete:
 		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowStatus = $(this).getRowData(cl).status;
+		          if (rowStatus == 1) {
+		              rowStatus = "Debit";
+		          } else {
+		              rowStatus = "Credit";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { status: rowStatus });
+		      }
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false })
-                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
+    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
         $('#item_div').dialog('open');
+        $('#Amount').numberbox('clear');
+
+
     });
 
     $('#btn_edit_detail').click(function () {
@@ -450,7 +493,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "StockAdjustment/GetInfoDetail?Id=" + id,
+                url: base_url + "ReceiptRequest/GetInfoDetail?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -465,10 +508,18 @@
                         }
                         else {
                             $("#item_btn_submit").data('kode', result.Id);
-                            $('#ItemId').val(result.ItemId);
-                            $('#Item').val(result.Item);
-                            $('#Quantity').numberbox('setValue',result.Quantity);
-                            $('#Price').numberbox('setValue',result.Price);
+                            $('#AccountId').val(result.AccountId);
+                            $('#Account').val(result.Account);
+                            $('#Amount').numberbox('setValue',result.Amount);
+                            var e = document.getElementById("Status");
+                            if (result.Status == 1) {
+                                e.selectedIndex = 0;
+                            }
+                            else if (result.Status == 2) {
+                                e.selectedIndex = 1;
+                            }
+                            $('#Description').val(result.Description);
+                            $('#ReceiptRequestDetailId').val(result.Id);
                             $('#item_div').dialog('open');
                         }
                     }
@@ -486,7 +537,7 @@
             $.messager.confirm('Confirm', 'Are you sure you want to delete record?', function (r) {
                 if (r) {
                     $.ajax({
-                        url: base_url + "StockAdjustment/DeleteDetail",
+                        url: base_url + "ReceiptRequest/DeleteDetail",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({
@@ -506,6 +557,7 @@
                             }
                             else {
                                 ReloadGridDetail();
+                                $('#TotalAmount').numberbox('setValue', result.totalAmount);
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -525,23 +577,26 @@
 
         var submitURL = '';
         var id = $("#item_btn_submit").data('kode');
-       
+
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'StockAdjustment/UpdateDetail';
+            submitURL = base_url + 'ReceiptRequest/UpdateDetail';
         }
             // Insert
         else {
-            submitURL = base_url + 'StockAdjustment/InsertDetail';
+            submitURL = base_url + 'ReceiptRequest/InsertDetail';
         }
+
+        var e = document.getElementById("Status");
+        var status = e.selectedIndex + 1;
 
         $.ajax({
             contentType: "application/json",
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, StockAdjustmentId: $("#id").val(), ItemId: $("#ItemId").val(),
-                Quantity: $("#Quantity").numberbox('getValue'), Price: $("#Price").numberbox('getValue')
+                Id: id, ReceiptRequestId: $("#id").val(), AccountId: $("#AccountId").val(), Status: status,
+                Amount: $("#Amount").numberbox('getValue'),
             }),
             async: false,
             cache: false,
@@ -562,13 +617,14 @@
                     }
                 }
                 else {
+                    ReloadGrid();
                     ReloadGridDetail();
+                    $('#TotalAmount').numberbox('setValue',result.totalAmount);
                     $("#item_div").dialog('close')
                 }
             }
         });
     });
-
 
     // item_btn_cancel
     $('#item_btn_cancel').click(function () {
@@ -577,91 +633,31 @@
     });
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
-    // -------------------------------------------------------Look Up warehouse-------------------------------------------------------
-    $('#btnWarehouse').click(function () {
-        var lookUpURL = base_url + 'MstWarehouse/GetList';
-        var lookupGrid = $('#lookup_table_warehouse');
+    // -------------------------------------------------------Look Up accountReceivable-------------------------------------------------------
+    $('#btnAccountReceivable').click(function () {
+        var lookUpURL = base_url + 'ChartOfAccount/GetAccountReceivable';
+        var lookupGrid = $('#lookup_table_accountReceivable');
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
-        $('#lookup_div_warehouse').dialog('open');
+        $('#lookup_div_accountReceivable').dialog('open');
     });
 
-    jQuery("#lookup_table_warehouse").jqGrid({
+    jQuery("#lookup_table_accountReceivable").jqGrid({
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Code', 'Name'],
+        colNames: ['Id', 'AccountReceivable Code', 'AccountReceivable Name', 'Currency','CurrencyId'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                   { name: 'code', index: 'code', width: 80 },
-                  { name: 'name', index: 'name', width: 200 }],
-        page: '1',
-        pager: $('#lookup_pager_warehouse'),
-        rowNum: 20,
-        rowList: [20, 30, 60],
-        sortname: 'id',
-        viewrecords: true,
-        scrollrows: true,
-        shrinkToFit: false,
-        sortorder: "ASC",
-        width: $("#lookup_div_warehouse").width() - 10,
-        height: $("#lookup_div_warehouse").height() - 110,
-    });
-    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+				  { name: 'Id', index: 'Id', width: 40, hidden: true },
+				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+				  { name: 'name', index: 'name', width: 250 },
+                  { name: 'currency', index: 'currency', width: 80 },
+                  { name: 'currencyId', index: 'currencyId', width: 80 },
 
-    // Cancel or CLose
-    $('#lookup_btn_cancel_warehouse').click(function () {
-        $('#lookup_div_warehouse').dialog('close');
-    });
-
-    // ADD or Select Data
-    $('#lookup_btn_add_warehouse').click(function () {
-        var id = jQuery("#lookup_table_warehouse").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            var ret = jQuery("#lookup_table_warehouse").jqGrid('getRowData', id);
-
-            $('#WarehouseId').val(ret.id).data("kode", id);
-            $('#Warehouse').val(ret.name);
-
-            $('#lookup_div_warehouse').dialog('close');
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        };
-    });
-
-
-    // ---------------------------------------------End Lookup warehouse----------------------------------------------------------------
-
-    // -------------------------------------------------------Look Up item-------------------------------------------------------
-    $('#btnItem').click(function () {
-        var lookUpURL = base_url + 'MstItem/GetList';
-        var lookupGrid = $('#lookup_table_item');
-        lookupGrid.setGridParam({
-            url: lookUpURL
-        }).trigger("reloadGrid");
-        $('#lookup_div_item').dialog('open');
-    });
-
-    jQuery("#lookup_table_item").jqGrid({
-        url: base_url,
-        datatype: "json",
-        mtype: 'GET',
-        colNames: ['ID', 'Sku', 'Name', 'QTY', 'PendReceival', 'PendDelivery', 'Minimum', 'Virtual', 'UoM'],
-        colModel: [
-    			  { name: 'id', index: 'id', width: 35, align: "center" },
-                  { name: 'sku', index: 'sku', width: 70 },
-				  { name: 'name', index: 'name', width: 240 },
-                  { name: 'quantity', index: 'quantity', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                  { name: 'minimum', index: 'minimum', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
-                  { name: 'uom', index: 'uom', width: 40 },
         ],
         page: '1',
-        pager: $('#lookup_pager_item'),
+        pager: $('#lookup_pager_accountReceivable'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -669,34 +665,159 @@
         scrollrows: true,
         shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_item").width() - 10,
-        height: $("#lookup_div_item").height() - 110,
+        width: $("#lookup_div_accountReceivable").width() - 10,
+        height: $("#lookup_div_accountReceivable").height() - 110,
     });
-    $("#lookup_table_item").jqGrid('navGrid', '#lookup_toolbar_item', { del: false, add: false, edit: false, search: false })
+    $("#lookup_table_accountReceivable").jqGrid('navGrid', '#lookup_toolbar_accountReceivable', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     // Cancel or CLose
-    $('#lookup_btn_cancel_item').click(function () {
-        $('#lookup_div_item').dialog('close');
+    $('#lookup_btn_cancel_accountReceivable').click(function () {
+        $('#lookup_div_accountReceivable').dialog('close');
     });
 
     // ADD or Select Data
-    $('#lookup_btn_add_item').click(function () {
-        var id = jQuery("#lookup_table_item").jqGrid('getGridParam', 'selrow');
+    $('#lookup_btn_add_accountReceivable').click(function () {
+        var id = jQuery("#lookup_table_accountReceivable").jqGrid('getGridParam', 'selrow');
         if (id) {
-            var ret = jQuery("#lookup_table_item").jqGrid('getRowData', id);
+            var ret = jQuery("#lookup_table_accountReceivable").jqGrid('getRowData', id);
 
-            $('#ItemId').val(ret.id).data("kode", id);
-            $('#Item').val(ret.name);
+            $('#AccountReceivableId').val(ret.Id).data("kode", id);
+            $('#AccountReceivable').val(ret.name);
+            $('#lookup_div_accountReceivable').dialog('close');
+            $('#Currency').text(ret.currency).data("kode", ret.currencyId);
 
-            $('#lookup_div_item').dialog('close');
+
+
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         };
     });
 
 
-    // ---------------------------------------------End Lookup item----------------------------------------------------------------
+    // ---------------------------------------------End Lookup accountReceivable----------------------------------------------------------------
 
+
+    // -------------------------------------------------------Look Up account-------------------------------------------------------
+    $('#btnAccount').click(function () {
+        var lookUpURL = base_url + 'ChartOfAccount/GetLeaves';
+        var lookupGrid = $('#lookup_table_account');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_account').dialog('open');
+    });
+
+    jQuery("#lookup_table_account").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Account Code', 'Account Name', 'Group', 'Level', 'Parent Code', 'Parent Name', 'Legacy', 'CashBank', 'Legacy Code'],
+        colModel: [
+				  { name: 'Id', index: 'Id', width: 40, hidden: true },
+				  { name: 'Code', index: 'Code', width: 80, classes: "grid-col" },
+				  { name: 'name', index: 'name', width: 250 },
+                  { name: 'group', index: 'group', width: 90 },
+                  { name: 'level', index: 'level', width: 50 },
+                  { name: 'parentcode', index: 'parentid', width: 80, classes: "grid-col" },
+                  { name: 'parent', index: 'parent', width: 80 },
+                  { name: 'islegacy', index: 'islegacy', width: 40, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'iscashbank', index: 'iscashbank', width: 60, stype: 'select', editoptions: { value: ':;true:Y;false:N' } },
+                  { name: 'legacycode', index: 'legacycode', width: 80, hidden: true },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_account'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_account").width() - 10,
+        height: $("#lookup_div_account").height() - 110,
+    });
+    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_account').click(function () {
+        $('#lookup_div_account').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_account').click(function () {
+        var id = jQuery("#lookup_table_account").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_account").jqGrid('getRowData', id);
+
+            $('#AccountId').val(ret.Id).data("kode", id);
+            $('#Account').val(ret.name);
+            $('#lookup_div_account').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup account----------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up Contact-------------------------------------------------------
+    $('#btnContact').click(function () {
+        var lookUpURL = base_url + 'MstContact/GetListSupplier';
+        var lookupGrid = $('#lookup_table_contact');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_contact').dialog('open');
+    });
+
+    jQuery("#lookup_table_contact").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['ID', 'Name'
+        ],
+        colModel: [
+    			  { name: 'id', index: 'id', width: 80, align: "center" },
+                  { name: 'name', index: 'name', width: 150 },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_contact'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_contact").width() - 10,
+        height: $("#lookup_div_contact").height() - 110,
+    });
+    $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_contact').click(function () {
+        $('#lookup_div_contact').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_contact').click(function () {
+        var id = jQuery("#lookup_table_contact").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
+
+            $('#ContactId').val(ret.id).data("kode", id);
+            $('#Contact').val(ret.name);
+
+            $('#lookup_div_contact').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup Contact----------------------------------------------------------------
 
 }); //END DOCUMENT READY

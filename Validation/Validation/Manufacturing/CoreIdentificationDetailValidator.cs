@@ -103,9 +103,11 @@ namespace Validation.Validation
         {
             if (coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.BearingSeat &&
                 coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.CentreDrill &&
-                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.None)
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.None &&
+                coreIdentificationDetail.RepairRequestCase != Core.Constants.Constant.RepairRequestCase.Both
+                )
             {
-                coreIdentificationDetail.Errors.Add("Generic", "Hanya dapat diisi dengan 1 untuk Bearing Seat atau 2 untuk CentreDrill atau 3 None");
+                coreIdentificationDetail.Errors.Add("Generic", "Hanya dapat diisi dengan Bearing Seat, CentreDrill, None, atau Both");
             }
             return coreIdentificationDetail;
         }

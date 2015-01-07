@@ -43,9 +43,15 @@ namespace WebView.Controllers
         private ISalesInvoiceMigrationService _salesInvoiceMigrationService;
         private IRecoveryOrderDetailService _recoveryOrderDetailService;
         private IRecoveryAccessoryDetailService _recoveryAccessoryDetailService;
+        private IBlanketOrderService _blanketOrderService;
         private IBlanketOrderDetailService _blanketOrderDetailService;
         private IBlendingWorkOrderService _blendingWorkOrderService;
         private IValidCombService _validCombService;
+
+        private IRepackingService _repackingService;
+        private IStockAdjustmentService _stockAdjustmentService;
+        private ICustomerStockAdjustmentService _customerStockAdjustmentService;
+        private IReceiptRequestService _receiptRequestService;
 
         public GeneralLedgerController()
         {
@@ -61,6 +67,25 @@ namespace WebView.Controllers
             _purchaseDownPaymentAllocationService = new PurchaseDownPaymentAllocationService(new PurchaseDownPaymentAllocationRepository(), new PurchaseDownPaymentAllocationValidator());
             _purchaseAllowanceService = new PurchaseAllowanceService(new PurchaseAllowanceRepository(), new PurchaseAllowanceValidator());
             _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
+            _purchaseReceivalService = new PurchaseReceivalService(new PurchaseReceivalRepository(), new PurchaseReceivalValidator());
+            _purchaseInvoiceService = new PurchaseInvoiceService(new PurchaseInvoiceRepository(), new PurchaseInvoiceValidator());
+            _purchaseInvoiceMigrationService = new PurchaseInvoiceMigrationService(new PurchaseInvoiceMigrationRepository());
+            _receiptVoucherService = new ReceiptVoucherService(new ReceiptVoucherRepository(), new ReceiptVoucherValidator());
+            _deliveryOrderService = new DeliveryOrderService(new DeliveryOrderRepository(), new DeliveryOrderValidator());
+            _salesDownPaymentService = new SalesDownPaymentService(new SalesDownPaymentRepository(), new SalesDownPaymentValidator());
+            _salesDownPaymentAllocationService = new SalesDownPaymentAllocationService(new SalesDownPaymentAllocationRepository(), new SalesDownPaymentAllocationValidator());
+            _salesAllowanceService = new SalesAllowanceService(new SalesAllowanceRepository(), new SalesAllowanceValidator());
+            _salesInvoiceService = new SalesInvoiceService(new SalesInvoiceRepository(), new SalesInvoiceValidator());
+            _salesInvoiceMigrationService = new SalesInvoiceMigrationService(new SalesInvoiceMigrationRepository());
+            _recoveryOrderDetailService = new RecoveryOrderDetailService(new RecoveryOrderDetailRepository(), new RecoveryOrderDetailValidator());
+            _recoveryAccessoryDetailService = new RecoveryAccessoryDetailService(new RecoveryAccessoryDetailRepository(), new RecoveryAccessoryDetailValidator());
+            _blanketOrderService = new BlanketOrderService(new BlanketOrderRepository(), new BlanketOrderValidator());
+            _blanketOrderDetailService = new BlanketOrderDetailService(new BlanketOrderDetailRepository(), new BlanketOrderDetailValidator());
+            _blendingWorkOrderService = new BlendingWorkOrderService(new BlendingWorkOrderRepository(), new BlendingWorkOrderValidator());
+            _repackingService = new RepackingService(new RepackingRepository(), new RepackingValidator());
+            _stockAdjustmentService = new StockAdjustmentService(new StockAdjustmentRepository(), new StockAdjustmentValidator());
+            _customerStockAdjustmentService = new CustomerStockAdjustmentService(new CustomerStockAdjustmentRepository(), new CustomerStockAdjustmentValidator());
+            _receiptRequestService = new ReceiptRequestService(new ReceiptRequestRepository(), new ReceiptRequestValidator());
         }
 
         public ActionResult Index()
@@ -96,10 +121,12 @@ namespace WebView.Controllers
                             DebitAmount = model.Status == Constant.GeneralLedgerStatus.Debit ? model.Amount : 0,
                             model.SourceDocument,
                             model.SourceDocumentId,
-                            NomorSurat = model.SourceDocumentId,
+                            NomorSurat = model.SourceDocumentId,                                                                                        
                             model.AccountId,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
+//             (model.SourceDocument == Constant.GeneralLedgerSource.BlanketOrderDetail) ? _blanketOrderDetailService.get .GetObjectById(model.SourceDocumentId).Code :
+//                                         (model.SourceDocument == Constant.GeneralLedgerSource.StockAdjustment) ? _stockAdjustmentService.GetObjectById(model.SourceDocumentId).Code :
             var list = query.AsEnumerable();
 
             var pageIndex = Convert.ToInt32(page) - 1;

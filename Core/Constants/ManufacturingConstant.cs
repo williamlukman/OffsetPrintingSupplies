@@ -43,6 +43,7 @@ namespace Core.Constants
             public static int BearingSeat = 1;
             public static int CentreDrill = 2;
             public static int None = 3;
+            public static int Both = 4;
         }
     }
 }

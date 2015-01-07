@@ -52,6 +52,10 @@ namespace Core.Interface.Service
                                     IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
         IList<GeneralLedgerJournal> CreateUnReconcileJournalForReceiptVoucher(ReceiptVoucher receiptVoucher, CashBank cashBank, IAccountService _accountService,
                                     IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
+        IList<GeneralLedgerJournal> CreateConfirmationJournalForReceiptRequest(ReceiptRequest receiptRequest, IReceiptRequestDetailService _receiptRequestDetailService, IAccountService _accountService,
+                                    IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
+        IList<GeneralLedgerJournal> CreateUnconfirmationJournalForReceiptRequest(ReceiptRequest receiptRequest, IReceiptRequestDetailService _receiptRequestDetailService, IAccountService _accountService,
+                                    IGLNonBaseCurrencyService _gLNonBaseCurrencyService, ICurrencyService _currencyService);
         IList<GeneralLedgerJournal> CreateConfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, IAccountService _accountService,
                                     ICurrencyService _currencyService, IGLNonBaseCurrencyService _glNonBaseCurrencyService);
         IList<GeneralLedgerJournal> CreateUnconfirmationJournalForSalesDownPayment(SalesDownPayment salesDownPayment, IAccountService _accountService,

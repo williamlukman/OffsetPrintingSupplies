@@ -278,6 +278,7 @@
     <Compile Include="Controllers\Accounting\GeneralLedgerSaldoController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
+    <Compile Include="Controllers\Finance\ReceiptRequestController.cs" />
     <Compile Include="Controllers\Finance\ExchangeRateController.cs" />
     <Compile Include="Controllers\Finance\CurrencyController.cs" />
     <Compile Include="Controllers\Finance\SalesDownPaymentAllocationController.cs" />
@@ -359,6 +360,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReceiptRequest.js" />
     <Content Include="Content\apps_js\GeneralLedgerJournalSaldo.js" />
     <Content Include="Content\apps_js\Repacking.js" />
     <Content Include="Content\apps_js\MasterSupplier.js" />
@@ -1193,10 +1195,7 @@
     <Content Include="Reports\General\VirtualOrder.ttx" />
     <Content Include="Reports\General\TemporaryDeliveryOrder.ttx" />
     <Content Include="Reports\General\TemporaryDeliveryOrder.rpt" />
-    <Content Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </Content>
+    <None Include="Properties\PublishProfiles\ZengraBuilder.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
     <Content Include="Scripts\collapsiblePanel.js" />
@@ -1380,6 +1379,7 @@
     <Content Include="Views\Repacking\Index.cshtml" />
     <Content Include="Views\GeneralLedgerSaldo\Index.cshtml" />
     <Content Include="Web.config" />
+    <Content Include="Views\ReceiptRequest\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

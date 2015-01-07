@@ -100,6 +100,7 @@ namespace Core.Constants
 
         public class ReceivableSource
         {
+            public static string ReceiptRequest = "ReceiptRequest";
             public static string SalesInvoice = "SalesInvoice";
             public static string RetailSalesInvoice = "RetailSalesInvoice";
             public static string PurchaseDownPayment = "PurchaseDownPayment";
@@ -145,6 +146,7 @@ namespace Core.Constants
             public static string PurchaseDownPayment = "Purchase Down Payment";
             public static string PurchaseDPAllocation = "Purchase DP Allocation";
             public static string PurchaseAllowance = "Purchase Allowance";
+            public static string ReceiptRequest = "Receipt Request";
             public static string SalesAllowance = "Sales Allowance";
             public static string SalesDownPayment = "Sales Down Payment";
             public static string SalesDPAllocation = "Sales DP Allocation";
@@ -199,7 +201,6 @@ namespace Core.Constants
             public static string Account = "Account";
             public static string Closing = "Closing";
             public static string GeneralLedger = "General Ledger";
-            public static string GeneralLedgerSaldo = "General Ledger Saldo";
             public static string ValidComb = "Valid Comb";
             public static string BalanceSheet = "Balance Sheet";
             public static string IncomeStatement = "Income Statement";
