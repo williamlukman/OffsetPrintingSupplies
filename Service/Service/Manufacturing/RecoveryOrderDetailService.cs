@@ -109,7 +109,7 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidStripAndGlueObject(recoveryOrderDetail) ? _repository.StripAndGlueObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, int CompoundUsage, IRecoveryOrderService _recoveryOrderService,
+        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, decimal CompoundUsage, IRecoveryOrderService _recoveryOrderService,
                                               IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryOrderDetail.CompoundUsage = CompoundUsage;

@@ -457,7 +457,7 @@
         colModel: [
                   { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 100, sortable: false, hidden: true },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
+                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 400, sortable: false },
 				  { name: 'coretypecase', index: 'coretypecase', width: 70, sortable: false },
                   { name: 'compoundusage', index: 'compoundusage', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isrejected', index: 'isrejected', width: 100, sortable: false, hidden: true },
@@ -791,7 +791,7 @@
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 70, sortable: false },
-                  { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
+                  { name: 'corebuildername', index: 'corebuildername', width: 400, sortable: false },
                   { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false, hidden: true },
                   { name: 'rollertypename', index: 'rollertypename', width: 70, sortable: false },
                   { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true },

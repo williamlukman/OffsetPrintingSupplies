@@ -481,7 +481,7 @@
                   { name: 'materialcase', index: 'materialcase', width: 60, sortable: false },
                   { name: 'corebuilderid', index: 'corebuilderid', width: 80, sortable: false, hidden: true },
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 70, sortable: false },
-                  { name: 'corebuildername', index: 'corebuildername', width: 80, sortable: false },
+                  { name: 'corebuildername', index: 'corebuildername', width: 400, sortable: false },
                   { name: 'rollertypeid', index: 'rollertypeid', width: 80, sortable: false, hidden: true },
                   { name: 'rollertypename', index: 'rollertypename', width: 70, sortable: false },
                   { name: 'machineid', index: 'machineid', width: 80, sortable: false, hidden: true},
@@ -616,7 +616,7 @@
                             $('#RollerTypeId').val(result.RollerTypeId);
                             $('#RollerType').val(result.RollerType);
                             $('#MachineId').val(result.MachineId);
-                            $('#Machine').val(result.MachineId);
+                            $('#Machine').val(result.Machine);
                             $('#RD').numberbox('setValue', result.RD);
                             $('#CD').numberbox('setValue', result.CD);
                             $('#RL').numberbox('setValue', result.RL);
