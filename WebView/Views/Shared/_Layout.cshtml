@@ -431,9 +431,20 @@
                                             <li><a href="#">Finance Report</a>
                                                 <ul>
 													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.IncomeStatement, Core.Constants.Constant.MenuGroupName.Report))
-             {<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>}
+                                                    {<li><a href="@Url.Action("IncomeStatement", "FinanceReport")">Income Statement</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.BalanceSheet, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("BalanceSheet", "FinanceReport")">Balance Sheet</a></li>}
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Sales Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerGroupSalesQuarterly", "Report")">Customer Group Sales Quarterly</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesQuarterly", "Report")">Customer Sales Quarterly</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("CustomerSalesQuarterlyComparison", "Report")">Customer Sales Quarterly Comparison</a></li>}
+
                                                 </ul>
                                             </li>
                                         </ul>

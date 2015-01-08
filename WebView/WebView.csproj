@@ -360,6 +360,9 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesQuarterlyComparison.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesQuarterly.js" />
+    <Content Include="Content\apps_js\ReportCustomerGroupSalesQuarterly.js" />
     <Content Include="Content\apps_js\ReceiptRequest.js" />
     <Content Include="Content\apps_js\GeneralLedgerJournalSaldo.js" />
     <Content Include="Content\apps_js\Repacking.js" />
@@ -1380,6 +1383,9 @@
     <Content Include="Views\GeneralLedgerSaldo\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\ReceiptRequest\Index.cshtml" />
+    <Content Include="Views\Report\CustomerGroupSalesQuarterly.cshtml" />
+    <Content Include="Views\Report\CustomerSalesQuarterly.cshtml" />
+    <Content Include="Views\Report\CustomerSalesQuarterlyComparison.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
