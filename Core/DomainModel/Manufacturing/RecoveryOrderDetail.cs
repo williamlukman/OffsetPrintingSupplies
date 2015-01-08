@@ -17,7 +17,7 @@ namespace Core.DomainModel
         public decimal CoreCost { get; set; }
         public decimal CompoundCost { get; set; }
 
-        public int CompoundUsage { get; set; }
+        public decimal CompoundUsage { get; set; }
 
         public string CoreTypeCase { get; set; }
         public bool IsDisassembled { get; set; }

@@ -31,7 +31,7 @@ namespace Core.Interface.Service
 
         RecoveryOrderDetail DisassembleObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService);
         RecoveryOrderDetail StripAndGlueObject(RecoveryOrderDetail recoveryOrderDetail);
-        RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, int CompoundUsage, IRecoveryOrderService _recoveryOrderService,
+        RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, decimal CompoundUsage, IRecoveryOrderService _recoveryOrderService,
                                        IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         RecoveryOrderDetail VulcanizeObject(RecoveryOrderDetail recoveryOrderDetail);
         RecoveryOrderDetail FaceOffObject(RecoveryOrderDetail recoveryOrderDetail);

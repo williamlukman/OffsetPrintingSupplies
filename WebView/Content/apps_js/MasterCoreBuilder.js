@@ -39,7 +39,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'basesku', index: 'basesku', width: 60 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 300 },
                   { name: 'description', index: 'description', width: 70 },
                   { name: 'machine', index: 'machine', width: 100 },
                   { name: 'corebuildertypecase', index: 'corebuildertypecase', width: 60 },
