@@ -858,12 +858,43 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Id', 'Name'],
+        colNames: ['ID', 'Base Sku', 'Name', 'RollerType', 'RD', 'CD', 'RL', 'WL', 'TL',
+                   'Used Sku', 'QTY', 'UoM', 'New Sku', 'QTY', 'UoM', 
+                   'Machine', 'Compound', 'Adhesive','Core Sku', 'Core', 'Description',
+                   'Crown', 'Size', 'Groove', 'W', 'D', 'P', 'Chamfer',
+                   'Created At', 'Updated At'],
         colModel: [
-                  { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }
+    			  { name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'basesku', index: 'basesku', width: 60 },
+				  { name: 'name', index: 'name', width: 400 },
+                  { name: 'rollertypename', index: 'rollertypename', width: 75 },
+                  { name: 'rd', index: 'rd', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'cd', index: 'cd', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'rl', index: 'rl', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'wt', index: 'wt', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'tl', index: 'tl', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'skurollerusedcore', index: 'skurollerusedcore', width: 70 },
+                  { name: 'rollerusedcorequantity', index: 'rollerusedcorequantity', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 30 },
+                  { name: 'skurollernewcore', index: 'skurollernewcore', width: 70 },
+                  { name: 'rollernewcorequantity', index: 'rollernewcorequantity', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 30 },
+                  { name: 'machinename', index: 'machinename', width: 100 },
+                  { name: 'compoundname', index: 'compoundname', width: 100 },
+                  { name: 'adhesivename', index: 'adhesivename', width: 100 },
+                  { name: 'coresku', index: 'coresku', width: 60 },
+                  { name: 'corebuildername', index: 'corebuildername', width: 80 },
+                  { name: 'description', index: 'description', width: 80, hidden: true },
+                  { name: 'iscrowning', index: 'iscrowning', width: 48, align: 'right' },
+                  { name: 'crowningsize', index: 'crowningsize', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'isgrooving', index: 'isgrooving', width: 48, align: 'right' },
+                  { name: 'groovingwidth', index: 'groovingwidth', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'groovingdepth', index: 'groovingdepth', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'groovingposition', index: 'groovingposition', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'ischamfer', index: 'ischamfer', width: 48, align: 'right' },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
-
         page: '1',
         pager: $('#lookup_pager_rollerbuilder'),
         rowNum: 20,
@@ -875,7 +906,38 @@
         sortorder: "ASC",
         width: $("#lookup_div_rollerbuilder").width() - 10,
         height: $("#lookup_div_rollerbuilder").height() - 110,
-    });
+        gridComplete:
+		  function () {
+		      var ids = $(this).jqGrid('getDataIDs');
+		      for (var i = 0; i < ids.length; i++) {
+		          var cl = ids[i];
+		          rowCrowning = $(this).getRowData(cl).iscrowning;
+		          if (rowCrowning == 'true') {
+		              rowCrowning = "Y";
+		          } else {
+		              rowCrowning = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { iscrowning: rowCrowning });
+
+		          rowGrooving = $(this).getRowData(cl).isgrooving;
+		          if (rowGrooving == 'true') {
+		              rowGrooving = "Y";
+		          } else {
+		              rowGrooving = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { isgrooving: rowGrooving });
+
+		          rowChamfer = $(this).getRowData(cl).ischamfer;
+		          if (rowChamfer == 'true') {
+		              rowChamfer = "Y";
+		          } else {
+		              rowChamfer = "N";
+		          }
+		          $(this).jqGrid('setRowData', ids[i], { ischamfer: rowChamfer });
+		      }
+		  }
+    });//END GRID
+
     $("#lookup_table_rollerbuilder").jqGrid('navGrid', '#lookup_toolbar_rollerbuilder', { del: false, add: false, edit: false, search: false })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 

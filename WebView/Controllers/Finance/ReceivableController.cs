@@ -33,6 +33,13 @@ namespace WebView.Controllers
             return View();
         }
 
+        /*
+        public dynamic GetSum()
+        {
+            "SELECT SUM(Amount) FROM Receivable WHERE CurrencyId = 1 GROUP BY ContactId HAVING ContactId = 255"
+        }
+        */
+
         public dynamic GetList(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
         {
             // Construct where statement
@@ -55,6 +62,7 @@ namespace WebView.Controllers
                              model.ReceivableSourceId,
                              model.Amount,
                              currency = model.Currency.Name,
+                             model.Rate,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.DueDate,
@@ -99,6 +107,7 @@ namespace WebView.Controllers
                             receivable.ReceivableSourceId,
                             receivable.Amount,
                             receivable.currency,
+                            receivable.Rate,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,
                             receivable.DueDate,
@@ -131,6 +140,8 @@ namespace WebView.Controllers
                              model.ReceivableSource,
                              model.ReceivableSourceId,
                              model.Amount,
+                             currency = model.Currency.Name,
+                             model.Rate,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.DueDate,
@@ -174,6 +185,8 @@ namespace WebView.Controllers
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,
+                            receivable.currency,
+                            receivable.Rate,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,
                             receivable.DueDate,
@@ -205,6 +218,8 @@ namespace WebView.Controllers
                              model.ReceivableSource,
                              model.ReceivableSourceId,
                              model.Amount,
+                             currency = model.Currency.Name,
+                             model.Rate,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.DueDate,
@@ -248,6 +263,8 @@ namespace WebView.Controllers
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,
+                            receivable.currency,
+                            receivable.Rate,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,
                             receivable.DueDate,
@@ -279,6 +296,8 @@ namespace WebView.Controllers
                              model.ReceivableSource,
                              model.ReceivableSourceId,
                              model.Amount,
+                             currency = model.Currency.Name,
+                             model.Rate,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              model.DueDate,
@@ -322,6 +341,8 @@ namespace WebView.Controllers
                             receivable.ReceivableSource,
                             receivable.ReceivableSourceId,
                             receivable.Amount,
+                            receivable.currency,
+                            receivable.Rate,
                             receivable.RemainingAmount,
                             receivable.PendingClearanceAmount,
                             receivable.DueDate,
@@ -352,13 +373,14 @@ namespace WebView.Controllers
                              Contact = model.Contact.Name,
                              model.ReceivableSource,
                              model.ReceivableSourceId,
-                             model.DueDate,
                              model.Amount,
                              currency = model.Currency.Name,
+                             model.Rate,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             model.DueDate,
+                             model.CompletionDate,
                              model.CreatedAt,
-                             model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -390,18 +412,20 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            model.Id,
                             model.Code,
                             model.ContactId,
                             model.Contact,
                             model.ReceivableSource,
                             model.ReceivableSourceId,
-                            model.DueDate,
                             model.Amount,
                             model.currency,
+                            model.Rate,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
+                            model.DueDate,
+                            model.CompletionDate,
                             model.CreatedAt,
-                            model.UpdatedAt,
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);

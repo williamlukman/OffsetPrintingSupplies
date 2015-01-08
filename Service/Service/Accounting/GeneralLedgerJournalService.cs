@@ -2912,7 +2912,7 @@ namespace Service.Service
                     CurrencyId = salesInvoiceMigration.CurrencyId,
                     Amount = salesInvoiceMigration.AmountReceivable,
                 };
-                debitaccountreceivable2 = _gLNonBaseCurrencyService.CreateObject(debitaccountreceivable2, _accountService);
+                   debitaccountreceivable2 = _gLNonBaseCurrencyService.CreateObject(debitaccountreceivable2, _accountService);
             }
 
             journals.Add(debitaccountreceivable);
