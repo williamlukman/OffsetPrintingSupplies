@@ -653,5 +653,214 @@ namespace WebView.Controllers
             return File(stream, "application/pdf");
         }
         #endregion
+
+        #region CustomerGroupSalesQuarterly
+        public ActionResult CustomerGroupSalesQuarterly()
+        {
+            return View();
+        }
+
+        public ActionResult ReportCustomerGroupSalesQuarterly(DateTime startQ1Date, DateTime endQ1Date, DateTime startQ2Date, DateTime endQ2Date, DateTime startQ3Date, DateTime endQ3Date, DateTime startQ4Date, DateTime endQ4Date)
+        {
+            DateTime endQ1 = endQ1Date.Date.AddDays(1);
+            DateTime endQ2 = endQ2Date.Date.AddDays(1);
+            DateTime endQ3 = endQ3Date.Date.AddDays(1);
+            DateTime endQ4 = endQ4Date.Date.AddDays(1);
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _salesInvoiceDetailService.GetQueryable().Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                              .Where(x => !x.IsDeleted && (
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ1Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ1) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ2Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ2) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ3Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ3) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ4Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ4)
+                                                    ));
+            string user = AuthenticationModel.GetUserName();
+
+            var query = q.GroupBy(m => new
+            {
+                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak,
+                //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+            }).Select(g => new
+            {
+                CustomerGroup = g.Key.CustomerGroup, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                Currency = g.Key.Currency, //(g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                //SalesDate = g.Key.SalesDate,
+                AmountQ1 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ1Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ1)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable)??0,
+                AmountQ2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ2Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ2)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable)??0,
+                AmountQ3 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ3Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ3)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable)??0,
+                AmountQ4 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ4Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ4)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable)??0,
+            }).ToList();
+                
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/CustomerGroupSalesQuarterlyReportByValue.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Setting subreport data source
+            //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("AsOfDate", DateTime.Today);
+            rd.SetParameterValue("Q1", startQ1Date.ToString("MMM") + "'" + startQ1Date.ToString("yy") + "-" + endQ1Date.ToString("MMM") + "'" + endQ1Date.ToString("yy"));
+            rd.SetParameterValue("Q2", startQ2Date.ToString("MMM") + "'" + startQ2Date.ToString("yy") + "-" + endQ2Date.ToString("MMM") + "'" + endQ2Date.ToString("yy"));
+            rd.SetParameterValue("Q3", startQ3Date.ToString("MMM") + "'" + startQ3Date.ToString("yy") + "-" + endQ3Date.ToString("MMM") + "'" + endQ3Date.ToString("yy"));
+            rd.SetParameterValue("Q4", startQ4Date.ToString("MMM") + "'" + startQ4Date.ToString("yy") + "-" + endQ4Date.ToString("MMM") + "'" + endQ4Date.ToString("yy"));
+            rd.SetParameterValue("startQ1", startQ1Date.Date); //monthYear.ToString("MMMM yyyy", ci)
+            rd.SetParameterValue("endQ1", endQ1.Date);
+            rd.SetParameterValue("startQ2", startQ2Date.Date);
+            rd.SetParameterValue("endQ2", endQ2.Date);
+            rd.SetParameterValue("startQ3", startQ3Date.Date);
+            rd.SetParameterValue("endQ3", endQ3.Date);
+            rd.SetParameterValue("startQ4", startQ4Date.Date);
+            rd.SetParameterValue("endQ4", endQ4.Date);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region CustomerSalesQuarterly
+        public ActionResult CustomerSalesQuarterly()
+        {
+            return View();
+        }
+
+        public ActionResult ReportCustomerSalesQuarterly(DateTime startQ1Date, DateTime endQ1Date, DateTime startQ2Date, DateTime endQ2Date, DateTime startQ3Date, DateTime endQ3Date, DateTime startQ4Date, DateTime endQ4Date)
+        {
+            DateTime endQ1 = endQ1Date.Date.AddDays(1);
+            DateTime endQ2 = endQ2Date.Date.AddDays(1);
+            DateTime endQ3 = endQ3Date.Date.AddDays(1);
+            DateTime endQ4 = endQ4Date.Date.AddDays(1);
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _salesInvoiceDetailService.GetQueryable().Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                              .Where(x => !x.IsDeleted && (
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ1Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ1) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ2Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ2) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ3Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ3) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ4Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ4)
+                                                    ));
+            string user = AuthenticationModel.GetUserName();
+
+            var query = q.GroupBy(m => new
+            {
+                CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+            }).Select(g => new
+            {
+                CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                Currency = g.Key.Currency, //(g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                //SalesDate = g.Key.SalesDate,
+                AmountQ1 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ1Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ1)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
+                AmountQ2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ2Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ2)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
+                AmountQ3 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ3Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ3)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
+                AmountQ4 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ4Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ4)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
+            }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/CustomerSalesQuarterlyReportByValue.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Setting subreport data source
+            //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("AsOfDate", DateTime.Today);
+            rd.SetParameterValue("Q1", startQ1Date.ToString("MMM") + "'" + startQ1Date.ToString("yy") + "-" + endQ1Date.ToString("MMM") + "'" + endQ1Date.ToString("yy"));
+            rd.SetParameterValue("Q2", startQ2Date.ToString("MMM") + "'" + startQ2Date.ToString("yy") + "-" + endQ2Date.ToString("MMM") + "'" + endQ2Date.ToString("yy"));
+            rd.SetParameterValue("Q3", startQ3Date.ToString("MMM") + "'" + startQ3Date.ToString("yy") + "-" + endQ3Date.ToString("MMM") + "'" + endQ3Date.ToString("yy"));
+            rd.SetParameterValue("Q4", startQ4Date.ToString("MMM") + "'" + startQ4Date.ToString("yy") + "-" + endQ4Date.ToString("MMM") + "'" + endQ4Date.ToString("yy"));
+            rd.SetParameterValue("startQ1", startQ1Date.Date); //monthYear.ToString("MMMM yyyy", ci)
+            rd.SetParameterValue("endQ1", endQ1.Date);
+            rd.SetParameterValue("startQ2", startQ2Date.Date);
+            rd.SetParameterValue("endQ2", endQ2.Date);
+            rd.SetParameterValue("startQ3", startQ3Date.Date);
+            rd.SetParameterValue("endQ3", endQ3.Date);
+            rd.SetParameterValue("startQ4", startQ4Date.Date);
+            rd.SetParameterValue("endQ4", endQ4.Date);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region CustomerSalesQuarterlyComparison
+        public ActionResult CustomerSalesQuarterlyComparison()
+        {
+            return View();
+        }
+
+        public ActionResult ReportCustomerSalesQuarterlyComparison(DateTime startQ1Date, DateTime endQ1Date, DateTime startQ2Date, DateTime endQ2Date, DateTime startQ3Date, DateTime endQ3Date, DateTime startQ4Date, DateTime endQ4Date)
+        {
+            DateTime endQ1 = endQ1Date.Date.AddDays(1);
+            DateTime endQ2 = endQ2Date.Date.AddDays(1);
+            DateTime endQ3 = endQ3Date.Date.AddDays(1);
+            DateTime endQ4 = endQ4Date.Date.AddDays(1);
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _salesInvoiceDetailService.GetQueryable().Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                              .Where(x => !x.IsDeleted && (
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ1Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ1) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ2Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ2) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ3Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ3) ||
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ4Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ4)
+                                                    ));
+            string user = AuthenticationModel.GetUserName();
+
+            var query = q.GroupBy(m => new
+            {
+                CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+            }).Select(g => new
+            {
+                CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                Currency = g.Key.Currency, //(g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                //SalesDate = g.Key.SalesDate,
+                AmountQ1 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ1Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ1)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
+                AmountQ2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ2Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ2)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
+            }).ToList();
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/CustomerSalesQuarterlyReportComparisonByValue.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Setting subreport data source
+            //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("AsOfDate", DateTime.Today);
+            rd.SetParameterValue("Q1", startQ1Date.ToString("dd MMM yy") + " - " + endQ1Date.ToString("dd MMM yy"));
+            rd.SetParameterValue("Q2", startQ2Date.ToString("dd MMM yy") + " - " + endQ2Date.ToString("dd MMM yy"));
+            rd.SetParameterValue("startQ1", startQ1Date.Date); //monthYear.ToString("MMMM yyyy", ci)
+            rd.SetParameterValue("endQ1", endQ1.Date);
+            rd.SetParameterValue("startQ2", startQ2Date.Date);
+            rd.SetParameterValue("endQ2", endQ2.Date);
+            rd.SetParameterValue("startQ3", startQ3Date.Date);
+            rd.SetParameterValue("endQ3", endQ3.Date);
+            rd.SetParameterValue("startQ4", startQ4Date.Date);
+            rd.SetParameterValue("endQ4", endQ4.Date);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
     }
 }

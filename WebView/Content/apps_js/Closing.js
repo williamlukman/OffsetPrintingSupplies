@@ -102,7 +102,7 @@
             success: function (result) {
                 if (result.query != null) {
                     createContainerTable();
-                    var tbody = $('#list_containerSE');
+                    var tbody = $('#list_exchangerateclosing');
                     for (var i = 1; i <= result.query.length; i++) {
                         var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
                         $("<td>").addClass("tableCell").text(result.query[i-1].Id).appendTo(trow);
@@ -111,8 +111,8 @@
                             .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>')
                             .appendTo(trow);
                         trow.appendTo(tbody);
-                        $('#list_containerSE tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>');
-                        $('#list_containerSE tr:last td:eq(2)').find('#TotalAmount').numberbox();
+                        $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>');
+                        $('#list_exchangerateclosing tr:last td:eq(2)').find('#TotalAmount').numberbox();
                     }
                 }
             }
@@ -163,7 +163,7 @@
                             $('#IsYear').attr('disabled', true);
                             $('#form_div').dialog('open');
                             createContainerTable();
-                            var tbody = $('#list_containerSE');
+                            var tbody = $('#list_exchangerateclosing');
                             for (var i = 1; i <= result.exchangeRateClosings.length; i++) {
                                 var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
                                 $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].CurrencyId).appendTo(trow);
@@ -171,8 +171,8 @@
                                 $("<td>").addClass("tableCell")
                                 .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate+ ' disabled="disabled""/>')
                                 .appendTo(trow);
-                                $('#list_containerSE tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate + ' disabled="disabled""/>');
-                                $('#list_containerSE tr:last td:eq(2)').find('#TotalAmount').numberbox();
+                                $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate + ' disabled="disabled""/>');
+                                $('#list_exchangerateclosing tr:last td:eq(2)').find('#TotalAmount').numberbox();
                                 trow.appendTo(tbody);
                             }
                         }
@@ -185,10 +185,10 @@
     });
 
     function createContainerTable() {
-        var tbody = $('#list_containerSE');
+        var tbody = $('#list_exchangerateclosing');
         if (tbody == null || tbody.length < 1) return;
         // Clear 
-        $("#list_containerSE tr.tableRow").each(function () {
+        $("#list_exchangerateclosing tr.tableRow").each(function () {
             $(this).remove();
         });
 
@@ -248,7 +248,7 @@
         var id = $("#form_btn_save").data('kode');
         var exchangerateclosingContainer = [];
         var exchangerateclosingContainerIdx = 0;
-        $('#list_exchangerateclosing').each(function () {
+        $('#list_exchangerateclosing tr').each(function () {
             if (exchangerateclosingContainerIdx > 0) {
                 obj = {};
                 obj['CurrencyId'] = $.trim($(this).find('td:eq(0)').text());
