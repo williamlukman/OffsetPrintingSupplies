@@ -36,6 +36,11 @@ namespace Service.Service
             _repository.CreateObject(salesInvoiceMigration);
             _generalLedgerJournalService.CreateJournalForSalesInvoiceMigration(salesInvoiceMigration, _accountService, _currencyService, _gLNonBaseCurrencyService);
             Receivable receivable = _receivableService.CreateObject(salesInvoiceMigration.ContactId, Constant.ReceivableSource.SalesInvoiceMigration, salesInvoiceMigration.Id, salesInvoiceMigration.CurrencyId, salesInvoiceMigration.AmountReceivable, salesInvoiceMigration.Rate);
+            Currency baseCurrency = _currencyService.GetQueryable().Where(x => x.IsBase).FirstOrDefault();
+            if (salesInvoiceMigration.CurrencyId != baseCurrency.Id && salesInvoiceMigration.Tax > 0)
+            {
+                Receivable TaxReceivableForNonBaseCurrency = _receivableService.CreateObject(salesInvoiceMigration.ContactId, Constant.ReceivableSource.SalesInvoiceMigration, salesInvoiceMigration.Id, baseCurrency.Id, salesInvoiceMigration.Tax, 1);
+            }
             return salesInvoiceMigration;
         }
     }
