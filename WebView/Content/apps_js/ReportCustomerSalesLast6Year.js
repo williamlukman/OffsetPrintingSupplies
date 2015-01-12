@@ -45,6 +45,7 @@
     $("#list").jqGrid({
         //url: base_url + 'MstContact/GetListCustomer',
         datatype: "local",
+        ignoreCase: true,
         colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Created At', 'Updated At', 'Description'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
@@ -58,9 +59,9 @@
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },
                   { name: 'taxcode', index: 'taxcode', width: 50 },
-                  { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
+                  { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, formatter:'select', stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'description', index: 'description', width: 250 },
         ],
         page: '1',
@@ -81,13 +82,13 @@
 		      var ids = $(this).jqGrid('getDataIDs');
 		      for (var i = 0; i < ids.length; i++) {
 		          var cl = ids[i];
-		          rowIsTaxable = $(this).getRowData(cl).istaxable;
-		          if (rowIsTaxable == 'true') {
-		              rowIsTaxable = "YES"; // + $(this).getRowData(cl).taxcode;
-		          } else {
-		              rowIsTaxable = "NO";
-		          }
-		          $(this).jqGrid('setRowData', ids[i], { istaxable: rowIsTaxable });
+		          //rowIsTaxable = $(this).getRowData(cl).istaxable;
+		          //if (rowIsTaxable == 'true') {
+		          //    rowIsTaxable = "YES"; // + $(this).getRowData(cl).taxcode;
+		          //} else {
+		          //    rowIsTaxable = "NO";
+		          //}
+		          //$(this).jqGrid('setRowData', ids[i], { istaxable: rowIsTaxable });
 
 		      }
 		  }
@@ -174,7 +175,7 @@
                   { name: 'istaxable', index: 'istaxable', width: 80, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' }, hidden: true },
                   { name: 'contacttype', index: 'contacttype', width: 100, hidden: true },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
                   { name: 'description', index: 'description', width: 250 },
         ],
         page: '1',

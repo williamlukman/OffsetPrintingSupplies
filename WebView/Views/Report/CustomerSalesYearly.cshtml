@@ -36,7 +36,7 @@
                                 </select>
                              </td>
                         </tr>
-                        <tr>
+                        <tr hidden>
                             <td>
                                 <label>Month 1</label></td>
                              <td>
@@ -51,51 +51,7 @@
                                 </select>
                              </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <label>Month 2</label></td>
-                             <td>
-                                <select name="M2" id="M2">
-                                @{
-                                //var months = (new System.Globalization.CultureInfo("en-US")).DateTimeFormat.MonthGenitiveNames;    
-                                for (int i = 0; i < 12; i++)
-                                {
-                                    <option value="@(i+1)">@months[i]</option>
-                                }
-                                }
-                                </select>
-                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Month 3</label></td>
-                             <td>
-                                <select name="M3" id="M3">
-                                @{
-                                //var months = (new System.Globalization.CultureInfo("en-US")).DateTimeFormat.MonthGenitiveNames;    
-                                for (int i = 0; i < 12; i++)
-                                {
-                                    <option value="@(i+1)">@months[i]</option>
-                                }
-                                }
-                                </select>
-                             </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Month 4</label></td>
-                             <td>
-                                <select name="M4" id="M4">
-                                @{
-                                //var months = (new System.Globalization.CultureInfo("en-US")).DateTimeFormat.MonthGenitiveNames;    
-                                for (int i = 0; i < 12; i++)
-                                {
-                                    <option value="@(i+1)">@months[i]</option>
-                                }
-                                }
-                                </select>
-                             </td>
-                        </tr>
+                        
                         <tr><td></td></tr>
                          
                     </table>

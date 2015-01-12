@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <IncludeIisSettings>true</IncludeIisSettings>
     <PublishDatabases>false</PublishDatabases>
+    <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -360,6 +361,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesByItem.js" />
     <Content Include="Content\apps_js\ReportCustomerSalesYearly.js" />
     <Content Include="Content\apps_js\ReportSortedCustomerSalesLast6Year.js" />
     <Content Include="Content\apps_js\ReportCustomerSalesLast6Year.js" />
@@ -1396,6 +1398,7 @@
     <Content Include="Views\Report\CustomerSalesLast6Year.cshtml" />
     <Content Include="Views\Report\SortedCustomerSalesLast6Year.cshtml" />
     <Content Include="Views\Report\CustomerSalesYearly.cshtml" />
+    <Content Include="Views\Report\CustomerSalesByItem.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
