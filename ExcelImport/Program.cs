@@ -39,8 +39,8 @@ namespace ExcelImport
             Console.WriteLine("Processing..");
             var conv = new ConversionFunction();
             //PopulateCOA();
-            conv.ImportDataFromExcel(@"D:\SSD\CustomerSupplier.xls");
-            //conv.ImportMigrationFromExcel(@"D:\Other\20141218 hutang-piutang zentrum 3.xls");
+            //conv.ImportDataFromExcel(@"D:\SSD\CustomerSupplier.xls");
+            conv.ImportMigrationFromExcel(@"D:\Other\20141218 sisa piutang zentrum 5.xls");
             Console.WriteLine("Done.");
             //Console.ReadLine();
 
