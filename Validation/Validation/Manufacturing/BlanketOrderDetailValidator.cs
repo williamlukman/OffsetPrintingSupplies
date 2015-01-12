@@ -313,7 +313,7 @@ namespace Validation.Validation
 
         public BlanketOrderDetail VDeleteObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService)
         {
-            VHasNotBeenCut(blanketOrderDetail);
+            VHasNotBeenFinished(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenRejected(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }

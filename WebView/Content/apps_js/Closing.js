@@ -16,11 +16,11 @@
         ClearErrorMessage();
     }
 
-    $("#form_div").dialog('close');
-    $("#delete_confirm_div").dialog('close');
-    $("#close_confirm_div").dialog('close');
-    $("#open_confirm_div").dialog('close');
-    $("#search_div").dialog('close');
+    //$("#form_div").dialog('close');
+    //$("#delete_confirm_div").dialog('close');
+    //$("#close_confirm_div").dialog('close');
+    //$("#open_confirm_div").dialog('close');
+    //$("#search_div").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

@@ -9,6 +9,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public int ParseCode { get; set; }
         public string Name { get; set; }
 
         public int Group { get; set; }

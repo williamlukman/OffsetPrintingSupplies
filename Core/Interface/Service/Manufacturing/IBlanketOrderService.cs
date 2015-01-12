@@ -21,6 +21,7 @@ namespace Core.Interface.Service
         BlanketOrder ConfirmObject(BlanketOrder blanketOrder, DateTime ConfirmationDate, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BlanketOrder UnconfirmObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BlanketOrder CompleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
+        BlanketOrder UndoCompleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService);
         BlanketOrder AdjustQuantity(BlanketOrder blanketOrder);
         bool DeleteObject(int Id);
         bool IsCodeDuplicated(BlanketOrder blanketOrder);
