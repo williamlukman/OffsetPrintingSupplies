@@ -6,7 +6,7 @@ Discount	Number
 ItemType	String	100
 ItemName	String	255	
 UoM	String	100	
-SalesDate	Date	
+SalesDate	DateTime	
 Quantity	Number	
 Amount	Number		
 AmountY1	Number		
