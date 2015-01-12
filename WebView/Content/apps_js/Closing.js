@@ -16,11 +16,11 @@
         ClearErrorMessage();
     }
 
-    //$("#form_div").dialog('close');
-    //$("#delete_confirm_div").dialog('close');
-    //$("#close_confirm_div").dialog('close');
-    //$("#open_confirm_div").dialog('close');
-    //$("#search_div").dialog('close');
+    $("#form_div").dialog('close');
+    $("#delete_confirm_div").dialog('close');
+    $("#close_confirm_div").dialog('close');
+    $("#open_confirm_div").dialog('close');
+    $("#search_div").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -108,10 +108,10 @@
                         $("<td>").addClass("tableCell").text(result.query[i-1].Id).appendTo(trow);
                         $("<td>").addClass("tableCell").text(result.query[i - 1].Name).appendTo(trow);
                         $("<td>").addClass("tableCell")
-                            .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>')
+                            .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value="0""/>')
                             .appendTo(trow);
                         trow.appendTo(tbody);
-                        $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value="0""/>');
+                        $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value="0""/>');
                         $('#list_exchangerateclosing tr:last td:eq(2)').find('#TotalAmount').numberbox();
                     }
                 }
@@ -169,9 +169,9 @@
                                 $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].CurrencyId).appendTo(trow);
                                 $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].Name).appendTo(trow);
                                 $("<td>").addClass("tableCell")
-                                .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate+ ' disabled="disabled""/>')
+                                .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value=' + result.exchangeRateClosings[i - 1].Rate+ ' disabled="disabled""/>')
                                 .appendTo(trow);
-                                $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\'" value=' + result.exchangeRateClosings[i - 1].Rate + ' disabled="disabled""/>');
+                                $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value=' + result.exchangeRateClosings[i - 1].Rate + ' disabled="disabled""/>');
                                 $('#list_exchangerateclosing tr:last td:eq(2)').find('#TotalAmount').numberbox();
                                 trow.appendTo(tbody);
                             }

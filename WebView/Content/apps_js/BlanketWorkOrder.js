@@ -1,19 +1,20 @@
 ﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
-		vCode;
-
+		vCode,
+        currentpage = 'last',
+		currentpagedetail = 'first' ;
 
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
-    function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'BlanketWorkOrder/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+    function ReloadGrid(setpage) {
+        $("#list").setGridParam({ url: base_url + 'BlanketWorkOrder/GetList', postData: { filters: null }, page: setpage }).trigger("reloadGrid");
     }
 
-    function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'BlanketWorkOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+    function ReloadGridDetail(setpagedetail) {
+        $("#listdetail").setGridParam({ url: base_url + 'BlanketWorkOrder/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: setpagedetail }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -65,7 +66,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 50 },
-	              { name: 'contactname', index: 'contactname', width: 130 },
+	              { name: 'contact', index: 'contact', width: 130 },
                   { name: 'warehouse', index: 'warehouse', width: 100 },
                   { name: 'quantityreceived', index: 'quantityreceived', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quantityfinal', index: 'quantityfinal', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
@@ -73,9 +74,9 @@
                   { name: 'duedate', index: 'duedate', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
-        page: '1',
+        page: currentpage,
         pager: $('#pager'),
         rowNum: 20,
         rowList: [20, 30, 60],
@@ -83,7 +84,7 @@
         viewrecords: true,
         scrollrows: true,
         shrinkToFit: false,
-        sortorder: "DESC",
+        sortorder: "ASC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:
@@ -107,7 +108,7 @@
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
-        ReloadGrid();
+        ReloadGrid('first');
     });
 
     $('#btn_print').click(function () {
@@ -171,7 +172,7 @@
                             $('#DueDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#tabledetail_div').show();
-                            ReloadGridDetail();
+                            ReloadGridDetail('first');
                             $('#form_div').dialog('open');
                         }
                     }
@@ -287,7 +288,7 @@
                                 }
                             }
                             else {
-                                ReloadGrid();
+                                ReloadGrid($('#list').getGridParam('page'));
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -321,7 +322,7 @@
                     }
                 }
                 else {
-                    ReloadGrid();
+                    ReloadGrid($('#list').getGridParam('page'));
                     $("#confirm_div").dialog('close');
                 }
             }
@@ -351,7 +352,6 @@
     });
 
     $('#delete_confirm_btn_submit').click(function () {
-
         $.ajax({
             url: base_url + "BlanketWorkOrder/Delete",
             type: "POST",
@@ -373,7 +373,7 @@
                     $("#delete_confirm_div").dialog('close');
                 }
                 else {
-                    ReloadGrid();
+                    ReloadGrid($('#list').getGridParam('page'));
                     $("#delete_confirm_div").dialog('close');
                 }
             }
@@ -391,13 +391,16 @@
 
         var submitURL = '';
         var id = $("#id").val();
+
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
             submitURL = base_url + 'BlanketWorkOrder/Update';
+            currentpage = $('#list').getGridParam('page');
         }
             // Insert
         else {
             submitURL = base_url + 'BlanketWorkOrder/Insert';
+            currentpage = 'first';
         }
 
         var duedate = (document.getElementById("HasDueDate").checked) ? $('#DueDate').datebox('getValue') : null;
@@ -431,7 +434,7 @@
                     }
                 }
                 else {
-                    ReloadGrid();
+                    ReloadGrid(currentpage);
                     $("#form_div").dialog('close')
                 }
             }
@@ -459,8 +462,8 @@
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: currentpagedetail,
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -474,7 +477,7 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
     jQuery("#listdetail").jqGrid('setGroupHeaders', {
         useColSpanStyle: false,
@@ -560,7 +563,7 @@
                                 }
                             }
                             else {
-                                ReloadGridDetail();
+                                ReloadGridDetail('first');
                                 $("#delete_confirm_div").dialog('close');
                             }
                         }
@@ -585,10 +588,12 @@
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
             submitURL = base_url + 'BlanketWorkOrder/UpdateDetail';
+            currentpagedetail = $('#listdetail').getGridParam('page');
         }
             // Insert
         else {
             submitURL = base_url + 'BlanketWorkOrder/InsertDetail';
+            currentpagedetail = 'first';
         }
 
         $.ajax({
@@ -617,7 +622,7 @@
                     }
                 }
                 else {
-                    ReloadGridDetail();
+                    ReloadGridDetail(currentpagedetail);
                     $("#item_div").dialog('close')
                 }
             }

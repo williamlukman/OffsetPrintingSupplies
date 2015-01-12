@@ -1,15 +1,15 @@
 ﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
-		vCode;
+		vCode,
+		currentpage = '1';
    
-
     function ClearErrorMessage() {
         $('span[class=errormessage]').text('').remove();
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { }, page: currentpage }).trigger("reloadGrid");
     }
     
     function ClearData() {
@@ -56,9 +56,9 @@
                   { name: 'itemtype', index: 'itemtype', width: 70 },
 				  { name: 'istradeable', index: 'istradeable', width: 40, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
 			      { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-				  { name: 'updateat', index: 'updateat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
-        page: '1',
+        page: currentpage,
         pager: $('#pager'),
         rowNum: 20,
         rowList: [20, 30, 60],
@@ -94,7 +94,10 @@
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
-        ReloadGrid();
+        $('input[id*="gs_"]').val("");
+        $('select[id*="gs_"]').val("ALL");
+        currentpage = '1';
+        $("#list").setGridParam({ url: base_url + 'MstItem/GetList', postData: { "filters": "" }, page: currentpage }).trigger("reloadGrid");
     });
 
     $('#btn_print').click(function () {
@@ -204,6 +207,7 @@
                     $("#delete_confirm_div").dialog('close');
                 }
                 else {
+                    currentpage = $('#list').getGridParam('page');
                     ReloadGrid();
                     $("#delete_confirm_div").dialog('close');
                 }
@@ -226,6 +230,7 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
+            currentpage = $('#list').getGridParam('page')
             if ($("#ItemTypeName").val() == 'Blanket' || $("#ItemTypeName").val() == 'Roller' || $("#ItemTypeName").val() == 'Core') {
                 submitURL = base_url + 'MstItem/UpdatePrice';
             }
@@ -235,6 +240,7 @@
         }
             // Insert
         else {
+            currentpage = '1';
             submitURL = base_url + 'MstItem/Insert';
         }
 
