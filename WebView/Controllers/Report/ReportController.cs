@@ -14,6 +14,8 @@ using System.Data.Entity;
 using Core.DomainModel;
 using Core.Constants;
 using Newtonsoft.Json;
+using System.Data.Objects.SqlClient;
+using System.Data.Objects;
 
 namespace WebView.Controllers
 {
@@ -150,6 +152,11 @@ namespace WebView.Controllers
                              cogs = model.AvgPrice * model.Quantity,
                          }).Where(filter).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -208,6 +215,11 @@ namespace WebView.Controllers
                              Description = "",
                          }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -257,6 +269,11 @@ namespace WebView.Controllers
                              Description = "",
                          }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -305,6 +322,11 @@ namespace WebView.Controllers
                              User = user,
                              Description = model.PurchaseInvoice.Description,
                          }).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
 
             var rd = new ReportDocument();
 
@@ -366,6 +388,11 @@ namespace WebView.Controllers
                              Description = "",
                          }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -422,6 +449,11 @@ namespace WebView.Controllers
                              User = user,
                              Description = "",
                          }).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
 
             var rd = new ReportDocument();
 
@@ -483,6 +515,11 @@ namespace WebView.Controllers
                              Description = "",
                          }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -542,6 +579,11 @@ namespace WebView.Controllers
                              Description = "",
                          }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -592,6 +634,11 @@ namespace WebView.Controllers
                              Description = "",
                          }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -641,6 +688,11 @@ namespace WebView.Controllers
                              User = user,
                              Description = model.SalesInvoice.Description,
                          }).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
 
             var rd = new ReportDocument();
 
@@ -693,6 +745,11 @@ namespace WebView.Controllers
                 AmountQ3 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ3Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ3)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable)??0,
                 AmountQ4 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ4Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ4)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable)??0,
             }).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
                 
             var rd = new ReportDocument();
 
@@ -765,6 +822,11 @@ namespace WebView.Controllers
                 AmountQ4 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ4Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ4)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
             }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -830,6 +892,11 @@ namespace WebView.Controllers
                 AmountQ2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startQ2Date && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endQ2)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
             }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -890,6 +957,11 @@ namespace WebView.Controllers
                 AmountY2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y2)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Quantity) ?? 0,
             }).OrderBy(x => x.CustomerName).ThenBy(x => x.ItemType).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -906,6 +978,70 @@ namespace WebView.Controllers
             rd.SetParameterValue("AsOfDate", DateTime.Today);
             rd.SetParameterValue("Y1", "Year " + Y1.ToString());
             rd.SetParameterValue("Y2", "Year " + Y2.ToString());
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
+        #region CustomerSalesByItem
+        public ActionResult CustomerSalesByItem()
+        {
+            return View();
+        }
+
+        public ActionResult ReportCustomerSalesByItem(DateTime startDate, DateTime endDate, int ContactId = 0)
+        {
+            DateTime endDay = endDate.AddDays(1);
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _salesInvoiceDetailService.GetQueryable().Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                              .Where(x => !x.IsDeleted && x.SalesInvoice.DeliveryOrder.SalesOrder.ContactId == ContactId && (
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startDate && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endDay)
+                                                    ));
+            string user = AuthenticationModel.GetUserName();
+
+            var query = q.GroupBy(m => new
+            {
+                CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                ItemName = m.DeliveryOrderDetail.SalesOrderDetail.Item.Name,
+                UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
+                SalesDate = EntityFunctions.TruncateTime(m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate)??DateTime.MinValue,
+                Price = m.DeliveryOrderDetail.SalesOrderDetail.Price,
+            }).Select(g => new
+            {
+                CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                Currency = g.Key.Currency,
+                ItemName = g.Key.ItemName,
+                UoM = g.Key.UoM,
+                SalesDate = g.Key.SalesDate,
+                Price = g.Key.Price,
+                Quantity = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Quantity) ?? 0,
+                Discount = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || g.Key.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount) ?? 0, //.Sum(x => (Decimal?)(x.SalesInvoice.Discount * g.Key.Price)/100.0m) ?? 0,
+            }).OrderBy(x => x.ItemName).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            rd.Load(Server.MapPath("~/") + "Reports/General/CustomerSalesReportByItem.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Setting subreport data source
+            //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("AsOfDate", DateTime.Today);
+            rd.SetParameterValue("startDate", startDate);
+            rd.SetParameterValue("endDate", endDay);
 
             var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             return File(stream, "application/pdf");
@@ -954,6 +1090,11 @@ namespace WebView.Controllers
                 AmountM3Y2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y2 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Month == M3)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
                 AmountM4Y2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y2 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Month == M4)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
             }).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
 
             var rd = new ReportDocument();
 
@@ -1028,6 +1169,11 @@ namespace WebView.Controllers
                 AmountY6 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y6)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
             }).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -1096,6 +1242,11 @@ namespace WebView.Controllers
                 AmountY6 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y6)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
             }).AsEnumerable().Where(x => clist.Contains(x.ContactId)).OrderBy(x => x.CustomerName).ToList();
 
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
             var rd = new ReportDocument();
 
             //Loading Report
@@ -1163,6 +1314,11 @@ namespace WebView.Controllers
                 AmountY5 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y5)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
                 AmountY6 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y6)).Sum(x => (Decimal?)x.SalesInvoice.AmountReceivable) ?? 0,
             }).AsEnumerable().OrderByDescending(x => (x.AmountY1 + x.AmountY2 + x.AmountY3 + x.AmountY4 + x.AmountY5 + x.AmountY6)).ThenByDescending(x => x.AmountY6).ToList(); //.Where(x => clist.Contains(x.ContactId)).ToList();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
 
             var rd = new ReportDocument();
 
