@@ -192,6 +192,7 @@ namespace Service.Service
                 BlanketOrder blanketOrder = _blanketOrderService.GetObjectById(blanketOrderDetail.BlanketOrderId);
                 blanketOrder.QuantityRejected -= 1;
                 _blanketOrderService.AdjustQuantity(blanketOrder);
+                _blanketOrderService.UndoCompleteObject(blanketOrder, this, _blanketService, _itemService, _warehouseItemService);
 
                 // reverse stock mutation of RejectObject
                 Blanket blanket = _blanketService.GetObjectById(blanketOrderDetail.BlanketId);
@@ -298,6 +299,7 @@ namespace Service.Service
                 BlanketOrder blanketOrder = _blanketOrderService.GetObjectById(blanketOrderDetail.BlanketOrderId);
                 blanketOrder.QuantityFinal -= 1;
                 _blanketOrderService.AdjustQuantity(blanketOrder);
+                _blanketOrderService.UndoCompleteObject(blanketOrder, this, _blanketService, _itemService, _warehouseItemService);
 
                 // reverse stock mutation
                 Blanket blanket = _blanketService.GetObjectById(blanketOrderDetail.BlanketId);

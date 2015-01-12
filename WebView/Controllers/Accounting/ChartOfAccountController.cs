@@ -11,6 +11,7 @@ using Validation.Validation;
 using System.Linq.Dynamic;
 using System.Data.Entity;
 using Core.Constants;
+using System.Text.RegularExpressions;
 
 namespace WebView.Controllers
 {
@@ -74,6 +75,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                              model.Group,
                              model.Level,
@@ -118,6 +120,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                              model.Group,
                              model.Level,
@@ -150,6 +153,7 @@ namespace WebView.Controllers
                           {
                               model.Id,
                               model.Code,
+                              model.ParseCode,
                               model.Name,
                               ParentCode = newaccount.Code,
                           }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -185,6 +189,7 @@ namespace WebView.Controllers
                          cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                              currency = _currencyService.GetObjectById(int.Parse(model.Code.Substring(model.ParentCode.Length))).Name,
                              currencyId = _currencyService.GetObjectById(int.Parse(model.Code.Substring(model.ParentCode.Length))).Id                      }
@@ -210,6 +215,7 @@ namespace WebView.Controllers
                           {
                               model.Id,
                               model.Code,
+                              model.ParseCode,
                               model.Name,
                               model.Group,
                               model.Level,
@@ -254,6 +260,7 @@ namespace WebView.Controllers
                          cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                              model.Group,
                              model.Level,
@@ -282,6 +289,7 @@ namespace WebView.Controllers
                           {
                               model.Id,
                               model.Code,
+                              model.ParseCode,
                               model.Name,
                           }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -317,6 +325,7 @@ namespace WebView.Controllers
                          cell = new object[] {
                              model.Id,
                              model.Code,
+                             model.ParseCode,
                              model.Name,
                       }
                      }).ToArray()
@@ -346,6 +355,7 @@ namespace WebView.Controllers
              {
                  model.Id,
                  model.Code,
+                 model.ParseCode,
                  model.Name,
                  model.Group,
                  model.Level,

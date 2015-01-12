@@ -105,6 +105,15 @@ namespace Service.Service
             return blanketOrder;
         }
 
+        public BlanketOrder UndoCompleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketService _blanketService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
+        {
+            if (_validator.ValidUndoCompleteObject(blanketOrder, _blanketOrderDetailService))
+            {
+                _repository.UndoCompleteObject(blanketOrder);
+            }
+            return blanketOrder;
+        }
+
         public BlanketOrder AdjustQuantity(BlanketOrder blanketOrder)
         {
             return (blanketOrder = _validator.ValidAdjustQuantity(blanketOrder) ? _repository.AdjustQuantity(blanketOrder) : blanketOrder);

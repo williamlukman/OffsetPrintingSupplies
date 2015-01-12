@@ -414,7 +414,7 @@
                   { name: 'id', index: 'id', width: 40, sortable: false, hidden: true },
                   { name: 'code', index: 'code', width: 80, sortable: false },
 				  { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
+                  { name: 'item', index: 'item', width: 480, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'uom', index: 'uom', width: 80, sortable: false },
                   { name: 'price', index: 'price', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },

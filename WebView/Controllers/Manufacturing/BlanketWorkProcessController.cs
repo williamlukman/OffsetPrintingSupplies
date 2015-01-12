@@ -62,7 +62,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _blanketOrderDetailService.GetQueryable().Include("Blanket").Include("BlanketOrder")
-                                              .Include("Item").Where(x => !x.IsDeleted);
+                                              .Include("Item").Where(x => !x.IsDeleted && x.BlanketOrder.IsConfirmed);
 
             var query = (from model in q
                          select new

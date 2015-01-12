@@ -400,7 +400,7 @@ namespace Validation.Validation
         public RecoveryOrderDetail VDeleteObject(RecoveryOrderDetail recoveryOrderDetail, IRecoveryOrderService _recoveryOrderService,
                                                  IRecoveryAccessoryDetailService _recoveryAccessoryDetailService)
         {
-            VHasNotBeenDisassembled(recoveryOrderDetail);
+            VHasNotBeenFinished(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }
             VHasNotBeenRejected(recoveryOrderDetail);
             if (!isValid(recoveryOrderDetail)) { return recoveryOrderDetail; }

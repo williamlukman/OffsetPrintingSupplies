@@ -15,6 +15,7 @@ namespace Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
     using Core.DomainModel;
+    using System.Text.RegularExpressions;
 
     internal sealed class Configuration : DbMigrationsConfiguration<OffsetPrintingSuppliesEntities>
     {
@@ -23,6 +24,15 @@ namespace Data.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
+        }
+
+        public string GetValidNumber(string str)
+        {
+            Regex re = new Regex(@"([\d|\.]+)");
+            Match result = re.Match(str);
+            string ret = result.Groups[1].Value;
+            if (ret == null || ret.Trim() == "") ret = "0";
+            return ret;
         }
 
         protected override void Seed(Data.Context.OffsetPrintingSuppliesEntities context)
@@ -61,6 +71,11 @@ namespace Data.Migrations
             foreach (var x in context.ItemTypes.Where(x => x.AccountId == null))
             {
                 x.AccountId = accountid;
+            }
+
+            foreach (var account in context.Accounts.Where(x => x.ParseCode == 0))
+            {
+                account.ParseCode = int.Parse(GetValidNumber(account.Code));
             }
 
             //if (context.Currencys.FirstOrDefault() == null)

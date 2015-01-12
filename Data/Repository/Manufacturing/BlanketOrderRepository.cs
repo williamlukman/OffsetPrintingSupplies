@@ -94,6 +94,14 @@ namespace Data.Repository
             return blanketOrder;
         }
 
+        public BlanketOrder UndoCompleteObject(BlanketOrder blanketOrder)
+        {
+            blanketOrder.IsCompleted = false;
+            blanketOrder.UpdatedAt = DateTime.Now;
+            Update(blanketOrder);
+            return blanketOrder;
+        }
+
         public BlanketOrder AdjustQuantity(BlanketOrder blanketOrder)
         {
             return UpdateObject(blanketOrder);
