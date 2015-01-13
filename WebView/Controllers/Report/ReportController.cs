@@ -1571,6 +1571,81 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region DiscountByDate
+        public ActionResult DiscountByDate()
+        {
+            return View();
+        }
+
+        public ActionResult ReportDiscountByDate(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.DeliveryOrderDetails.Include(x => x.SalesOrderDetail)
+                                                  .Where(x => !x.IsDeleted && (
+                                                            (x.SalesOrderDetail.SalesOrder.SalesDate >= startDate && x.SalesOrderDetail.SalesOrder.SalesDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    CustomerName = m.SalesOrderDetail.SalesOrder.Contact.Name,
+                    Code = m.DeliveryOrder.NomorSurat,
+                    //Currency = (m.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesOrder.Currency.Name,
+                    SalesDate = m.SalesOrderDetail.SalesOrder.SalesDate,
+                    Item = m.Item,
+                    Rate = db.ExchangeRates.Where(x => x.CurrencyId == m.SalesOrderDetail.SalesOrder.CurrencyId && m.SalesOrderDetail.SalesOrder.SalesDate >= x.ExRateDate && !x.IsDeleted).OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate,//m.SalesOrder.ExchangeRateAmount,
+                    RatePL = (decimal?)db.ExchangeRates.Where(x => x.CurrencyId == (m.Item.CurrencyId??0) && m.SalesOrderDetail.SalesOrder.SalesDate >= x.ExRateDate && !x.IsDeleted).OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate??0,
+                    AmountIDR = (m.SalesOrderDetail.SalesOrder.Currency.Name == "Rupiah") ? m.SalesOrderDetail.Price : 0,
+                    AmountUSD = (m.SalesOrderDetail.SalesOrder.Currency.Name == "USD") ? m.SalesOrderDetail.Price : 0,
+                    AmountEUR = (m.SalesOrderDetail.SalesOrder.Currency.Name == "EUR") ? m.SalesOrderDetail.Price : 0,
+                    Quantity = m.Quantity,
+                    //Rate = db.ExchangeRates.Where(x => x.CurrencyId == m.SalesOrder.CurrencyId && m.SalesOrder.SalesDate >= x.ExRateDate && !x.IsDeleted).OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate,//m.SalesOrder.ExchangeRateAmount,
+                }).Select(g => new
+                {
+                    CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Code = g.Key.Code,
+                    SalesDate = g.Key.SalesDate,
+                    Price = g.Key.Item.PriceList*g.Key.RatePL,
+                    Amount = g.Key.Rate*((g.Key.AmountEUR != 0)?g.Key.AmountEUR:(g.Key.AmountUSD != 0)?g.Key.AmountUSD:g.Key.AmountIDR),
+                    ItemName = g.Key.Item.Name,
+                    Quantity = g.Key.Quantity,
+                    AmountUSD = g.Key.AmountUSD,
+                    AmountEUR = g.Key.AmountEUR,
+                    AmountIDR = g.Key.AmountIDR,
+                }).OrderBy(x => x.SalesDate).ThenBy(x => x.Code).ThenBy(x => x.CustomerName).ThenBy(x => x.ItemName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/DiscountReportByDate.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
 
     }
 }

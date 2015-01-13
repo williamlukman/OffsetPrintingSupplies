@@ -458,6 +458,8 @@
                                                     {<li><a href="@Url.Action("SortedCustomerSalesLast6Year", "Report")">Sorted Customer Sales Last 6 Years</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("SalesOrderDailyByDate", "Report")">Sales Order Daily</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("DiscountByDate", "Report")">Discount</a></li>}
                                                     
                                                 </ul>
                                             </li>
