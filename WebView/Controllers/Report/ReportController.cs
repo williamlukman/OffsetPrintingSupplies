@@ -1423,5 +1423,75 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region ItemSalesYearlyByQuantity
+        public ActionResult ItemSalesYearlyByQuantity()
+        {
+            return View();
+        }
+
+        public ActionResult ReportItemSalesYearlyByQuantity(int Y3)
+        {
+            int Y2 = Y3 - 1;
+            int Y1 = Y2 - 1;
+            var company = _companyService.GetQueryable().FirstOrDefault();
+            //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+            var q = _salesInvoiceDetailService.GetQueryable().Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                              .Where(x => !x.IsDeleted && (
+                                                        (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year >= Y1 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year <= Y3)
+                                                    ));
+            string user = AuthenticationModel.GetUserName();
+
+            var query = q.GroupBy(m => new
+            {
+                CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                ItemName = m.DeliveryOrderDetail.SalesOrderDetail.Item.Name,
+                ItemType = m.DeliveryOrderDetail.SalesOrderDetail.Item.ItemType.Name,
+                SKU = m.DeliveryOrderDetail.SalesOrderDetail.Item.Sku,
+                UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
+                //SalesDate = EntityFunctions.TruncateTime(m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate) ?? DateTime.MinValue,
+            }).Select(g => new
+            {
+                CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                Currency = g.Key.Currency,
+                ItemName = g.Key.ItemName,
+                ItemType = g.Key.ItemType,
+                SKU = g.Key.SKU,
+                UoM = g.Key.UoM,
+                //SalesDate = g.Key.SalesDate,
+                AmountY1 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y1)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Quantity) ?? 0,
+                AmountY2 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y2)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Quantity) ?? 0,
+                AmountY3 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y3)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Quantity) ?? 0,
+            }).AsEnumerable();
+
+            if (!query.Any())
+            {
+                return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+            }
+
+            var rd = new ReportDocument();
+
+            //Loading Report
+            query = query.OrderBy(x => x.ItemType).ToList();
+            rd.Load(Server.MapPath("~/") + "Reports/General/ItemSalesYearlyReportByQuantity.rpt");
+
+            // Setting report data source
+            rd.SetDataSource(query);
+
+            // Setting subreport data source
+            //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+            // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+            rd.SetParameterValue("CompanyName", company.Name);
+            rd.SetParameterValue("AsOfDate", DateTime.Today);
+            rd.SetParameterValue("Y1", Y1.ToString());
+            rd.SetParameterValue("Y2", Y2.ToString());
+            rd.SetParameterValue("Y3", Y3.ToString());
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            return File(stream, "application/pdf");
+        }
+        #endregion
+
     }
 }

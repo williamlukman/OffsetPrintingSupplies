@@ -361,6 +361,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReportItemSalesYearlyByQuantity.js" />
     <Content Include="Content\apps_js\ReportItemSalesYearlyByValue.js" />
     <Content Include="Content\apps_js\ReportCustomerSalesByItem.js" />
     <Content Include="Content\apps_js\ReportCustomerSalesYearly.js" />
@@ -1401,6 +1402,7 @@
     <Content Include="Views\Report\CustomerSalesYearly.cshtml" />
     <Content Include="Views\Report\CustomerSalesByItem.cshtml" />
     <Content Include="Views\Report\ItemSalesYearlyByValue.cshtml" />
+    <Content Include="Views\Report\ItemSalesYearlyByQuantity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
