@@ -349,7 +349,6 @@
     </Compile>
     <Compile Include="Models\AuthenticationModel.cs" />
     <Compile Include="Models\ConfigurationModels.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\apps_js\BalanceSheet.js" />
@@ -361,6 +360,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReportSalesOrderDailyByDate.js" />
     <Content Include="Content\apps_js\ReportItemSalesYearlyByQuantity.js" />
     <Content Include="Content\apps_js\ReportItemSalesYearlyByValue.js" />
     <Content Include="Content\apps_js\ReportCustomerSalesByItem.js" />
@@ -1207,6 +1207,7 @@
     <Content Include="Reports\General\VirtualOrder.ttx" />
     <Content Include="Reports\General\TemporaryDeliveryOrder.ttx" />
     <Content Include="Reports\General\TemporaryDeliveryOrder.rpt" />
+    <None Include="Properties\PublishProfiles\eZengra.pubxml" />
     <None Include="Properties\PublishProfiles\ZengraBuilder.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
@@ -1403,6 +1404,7 @@
     <Content Include="Views\Report\CustomerSalesByItem.cshtml" />
     <Content Include="Views\Report\ItemSalesYearlyByValue.cshtml" />
     <Content Include="Views\Report\ItemSalesYearlyByQuantity.cshtml" />
+    <Content Include="Views\Report\SalesOrderDailyByDate.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

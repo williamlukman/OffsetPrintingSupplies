@@ -16,6 +16,7 @@ using Core.Constants;
 using Newtonsoft.Json;
 using System.Data.Objects.SqlClient;
 using System.Data.Objects;
+using Data.Context;
 
 namespace WebView.Controllers
 {
@@ -1492,6 +1493,84 @@ namespace WebView.Controllers
             return File(stream, "application/pdf");
         }
         #endregion
+
+        #region SalesOrderDailyByDate
+        public ActionResult SalesOrderDailyByDate()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesOrderDailyByDate(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesOrderDetails.Include(x => x.SalesOrder)
+                                                  .Where(x => !x.IsDeleted && (
+                                                            (x.SalesOrder.SalesDate >= startDate && x.SalesOrder.SalesDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    CustomerName = m.SalesOrder.Contact.Name,
+                    Currency = (m.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesOrder.Currency.Name,
+                    ItemName = m.Item.Name,
+                    SKU = m.Item.Sku,
+                    UoM = m.Item.UoM.Name,
+                    SalesDate = m.SalesOrder.SalesDate,
+                    Price = m.Price, //.Item.PriceList,
+                    Rate = db.ExchangeRates.Where(x => x.CurrencyId == m.SalesOrder.CurrencyId && m.SalesOrder.SalesDate >= x.ExRateDate && !x.IsDeleted).OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate,//m.SalesOrder.ExchangeRateAmount,
+                    Discount = 0m, //100m - (m.Price/m.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || m.SalesOrder.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount)*100m,
+                    //Amount = m.DeliveryOrderDetail.SalesOrderDetail.Quantity * m.DeliveryOrderDetail.SalesOrderDetail.Price,
+                    Status = m.SalesOrder.IsDeliveryCompleted ? "Sent" : "Queue",
+                }).Select(g => new
+                {
+                    CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    Currency = g.Key.Currency,
+                    ItemName = g.Key.ItemName,
+                    SKU = g.Key.SKU,
+                    UoM = g.Key.UoM,
+                    SalesDate = g.Key.SalesDate,
+                    Price = g.Key.Price,
+                    Rate = g.Key.Rate,
+                    Status = g.Key.Status,
+                    //Amount = g.Key.Amount,
+                    Shipped = g.Where(x => (x.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.Quantity - x.PendingDeliveryQuantity) ?? 0,
+                    Quantity = g.Where(x => (x.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Discount = g.Key.Discount, //g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || g.Key.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount) ?? 0, //.Sum(x => (Decimal?)(x.SalesInvoice.Discount * g.Key.Price)/100.0m) ?? 0,
+                }).OrderBy(x => x.SalesDate).ThenBy(x => x.CustomerName).ThenBy(x => x.ItemName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/SalesOrderDailyReportByDate.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
 
     }
 }
