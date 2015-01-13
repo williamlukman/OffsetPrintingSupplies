@@ -72,7 +72,7 @@
     });
 
     $('#btn_search').click(function () {
-        ReloadGridClosing()
+        ReloadGrid()
         $("#search_div").dialog("open");
     });
 

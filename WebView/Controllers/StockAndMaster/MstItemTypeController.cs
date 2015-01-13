@@ -55,7 +55,7 @@ namespace WebView.Controllers
                              model.Name,
                              model.Description,
                              model.AccountId,
-                             AccountCode = model.Account.Code,
+                             AccountCode = model.Account.ParseCode,
                              AccountName = model.Account.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -121,7 +121,7 @@ namespace WebView.Controllers
                              model.Name,
                              model.Description,
                              model.AccountId,
-                             AccountCode = model.Account.Code,
+                             AccountCode = model.Account.ParseCode,
                              AccountName = model.Account.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -247,7 +247,7 @@ namespace WebView.Controllers
                 model.Description,
                 SKU,
                 model.AccountId,
-                AccountCode = model.Account.Code,
+                AccountCode = model.Account.ParseCode,
                 AccountName = model.Account.Name,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
