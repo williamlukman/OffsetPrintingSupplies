@@ -1444,20 +1444,20 @@ namespace WebView.Controllers
 
             var query = q.GroupBy(m => new
             {
-                CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
-                Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
-                ItemName = m.DeliveryOrderDetail.SalesOrderDetail.Item.Name,
+                //CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                //Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                //ItemName = m.DeliveryOrderDetail.SalesOrderDetail.Item.Name,
                 ItemType = m.DeliveryOrderDetail.SalesOrderDetail.Item.ItemType.Name,
-                SKU = m.DeliveryOrderDetail.SalesOrderDetail.Item.Sku,
+                //SKU = m.DeliveryOrderDetail.SalesOrderDetail.Item.Sku,
                 UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
                 //SalesDate = EntityFunctions.TruncateTime(m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate) ?? DateTime.MinValue,
             }).Select(g => new
             {
-                CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
-                Currency = g.Key.Currency,
-                ItemName = g.Key.ItemName,
+                //CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                //Currency = g.Key.Currency,
+                //ItemName = g.Key.ItemName,
                 ItemType = g.Key.ItemType,
-                SKU = g.Key.SKU,
+                //SKU = g.Key.SKU,
                 UoM = g.Key.UoM,
                 //SalesDate = g.Key.SalesDate,
                 AmountY1 = g.Where(x => (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate.Year == Y1)).Sum(x => (Decimal?)x.DeliveryOrderDetail.SalesOrderDetail.Quantity) ?? 0,
