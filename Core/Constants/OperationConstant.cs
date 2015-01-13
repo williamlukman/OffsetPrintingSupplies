@@ -16,6 +16,7 @@ namespace Core.Constants
             public static string PageViewNotAllowed = "You are not allowed to View this Page. <br/> <a href='/Authentication/Logout'>[Logout]</a>";
             public static string PagePrintNotAllowed = "You are not allowed to Print this Page. <br/> <a href='/Authentication/Logout'>[Logout]</a>";
             public static string ErrorPageHasNoClosingDate = "No report has been produced for this closing date.";
+            public static string ErrorPageRecordNotFound = "No record has been found.";
         }
         #endregion
 

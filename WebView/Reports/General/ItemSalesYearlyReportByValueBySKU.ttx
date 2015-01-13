@@ -1,0 +1,15 @@
+CustomerName	String	255	
+CustomerGroup	String	255	
+Currency	String	100
+Price	Number
+Discount	Number
+ItemType	String	100
+ItemName	String	255	
+SKU	String	100
+UoM	String	100	
+SalesDate	DateTime	
+Quantity	Number	
+Amount	Number		
+AmountY1	Number		
+AmountY2	Number
+AmountY3	Number

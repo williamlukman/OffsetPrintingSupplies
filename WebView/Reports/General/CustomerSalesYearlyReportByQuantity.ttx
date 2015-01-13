@@ -1,0 +1,9 @@
+CustomerName	String	255	
+CustomerGroup	String	255	
+Currency	String	100
+ItemType	String	100	
+UoM	String	100	
+SalesDate	Date		
+Amount	Number		
+AmountY1	Number		
+AmountY2	Number

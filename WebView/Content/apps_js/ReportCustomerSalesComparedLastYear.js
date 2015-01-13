@@ -29,7 +29,7 @@
     });
 
     $('#btn_print').click(function () {
-        window.open(base_url + 'Report/ReportCustomerSalesQuarterlyComparison?startQ1Date=' + $('#StartQ1Date').datebox('getValue') + '&endQ1Date=' + $('#EndQ1Date').datebox('getValue') + '&startQ2Date=' + $('#StartQ2Date').datebox('getValue') + '&endQ2Date=' + $('#EndQ2Date').datebox('getValue'));
+        window.open(base_url + 'Report/ReportCustomerSalesComparedLastYear?Y2=' + $('#Y2').val() + '&M1=' + $('#M1').val() + '&M2=' + $('#M2').val() + '&M3=' + $('#M3').val() + '&M4=' + $('#M4').val());
     });
 
 

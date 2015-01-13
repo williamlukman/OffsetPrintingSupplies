@@ -748,8 +748,9 @@ namespace ExcelImport
             var contactname = row[2].ToString();
             var contactid = int.Parse(GetValidNumber(row[3].ToString()));
             var contact = _contactService.GetQueryable().Where(x => x.Name == contactname && !x.IsDeleted).FirstOrDefault();
+            if (contactid <= 0) contactid = (contact != null)?contact.Id:0;
             var invdate = row[4].ToString();
-            DateTime date = new DateTime(2014, 11, 30);
+            DateTime date = new DateTime(2014, 11, 30); // default date if invdate is not vaid
             if (!DateTime.TryParse(invdate, System.Globalization.CultureInfo.CreateSpecificCulture("en-US"), System.Globalization.DateTimeStyles.None, out date)) date = new DateTime(2014, 11, 30); //DateTime.ParseExact(invdate, "d/M/yy", CultureInfo.InvariantCulture, DateTimeStyles.None);
             var amount = decimal.Parse(GetValidNumber(row[5].ToString()));
             var dpp = decimal.Parse(GetValidNumber(row[6].ToString()));
@@ -765,7 +766,7 @@ namespace ExcelImport
             if (obj == null)
             {
                 if (curr == null) throw new Exception("Invalid Currency");
-                if (contact == null && contactid>1) throw new Exception("Invalid Contact");
+                if (contact == null && contactid > 1) throw new Exception("Invalid Contact");
                 obj = new SalesInvoiceMigration()
                 {
                     NomorSurat = nosurat,
@@ -779,6 +780,10 @@ namespace ExcelImport
                 };
                 obj = _salesInvoiceMigrationService.CreateObject(obj, _generalLedgerJournalService, _accountService, _gLNonBaseCurrencyService, _currencyService, _receivableService);
                 Log(obj, sheetname, rowidx + 2);
+            }
+            else
+            {
+                Console.WriteLine(sheetname + " : NomorSurat sudah ada (" + nosurat + ")");
             }
         }
 
@@ -900,26 +905,7 @@ namespace ExcelImport
                     //    }
                     //}
 
-                    //sheetname = "SalesInvoiceMigration$";
-                    //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
-                    //{
-                    //    //try
-                    //    {
-                    //        //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
-                    //        // Find Or Create Object
-                    //        var row = dtExcel.Tables[sheetname].Rows[i];
-                    //        var tmp = row[0].ToString() + row[1].ToString();
-                    //        if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
-                    //        DoSalesInvoiceMigration(row, i, sheetname);
-                    //    }
-                    //    //catch (Exception ex)
-                    //    //{
-                    //    //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
-                    //    //    continue;
-                    //    //}
-                    //}
-
-                    sheetname = "PurchaseInvoiceMigration$";
+                    sheetname = "SalesInvoiceMigration$";
                     for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
                     {
                         //try
@@ -929,7 +915,7 @@ namespace ExcelImport
                             var row = dtExcel.Tables[sheetname].Rows[i];
                             var tmp = row[0].ToString() + row[1].ToString();
                             if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
-                            DoPurchaseInvoiceMigration(row, i, sheetname);
+                            DoSalesInvoiceMigration(row, i, sheetname);
                         }
                         //catch (Exception ex)
                         //{
@@ -937,6 +923,25 @@ namespace ExcelImport
                         //    continue;
                         //}
                     }
+
+                    //sheetname = "PurchaseInvoiceMigration$";
+                    //for (int i = 0; i < dtExcel.Tables[sheetname].Rows.Count; i++)
+                    //{
+                    //    //try
+                    //    {
+                    //        //count += conLinq.Database.ExecuteSqlCommand("insert into [Sheet1$] values(" + dtExcel.Rows[i][0] + "," + dtExcel.Rows[i][1] + ",'" + dtExcel.Rows[i][2] + "'," + dtExcel.Rows[i][3] + ")");
+                    //        // Find Or Create Object
+                    //        var row = dtExcel.Tables[sheetname].Rows[i];
+                    //        var tmp = row[0].ToString() + row[1].ToString();
+                    //        if (tmp == null || tmp.Trim() == "") continue; // skip if the 1st 2 column is empty
+                    //        DoPurchaseInvoiceMigration(row, i, sheetname);
+                    //    }
+                    //    //catch (Exception ex)
+                    //    //{
+                    //    //    Console.WriteLine(sheetname + " Row:" + (i + 2) + " Exception:" + ex.Message);
+                    //    //    continue;
+                    //    //}
+                    //}
 
                     //oleda.Dispose();
                     //foreach (var x in data) x.Dispose();

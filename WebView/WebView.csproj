@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
     <IncludeIisSettings>true</IncludeIisSettings>
     <PublishDatabases>false</PublishDatabases>
+    <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -360,6 +361,13 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReportItemSalesYearlyByValue.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesByItem.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesYearly.js" />
+    <Content Include="Content\apps_js\ReportSortedCustomerSalesLast6Year.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesLast6Year.js" />
+    <Content Include="Content\apps_js\ReportCustomerGroupSalesLast6Year.js" />
+    <Content Include="Content\apps_js\ReportCustomerSalesComparedLastYear.js" />
     <Content Include="Content\apps_js\ReportCustomerSalesQuarterlyComparison.js" />
     <Content Include="Content\apps_js\ReportCustomerSalesQuarterly.js" />
     <Content Include="Content\apps_js\ReportCustomerGroupSalesQuarterly.js" />
@@ -1386,6 +1394,13 @@
     <Content Include="Views\Report\CustomerGroupSalesQuarterly.cshtml" />
     <Content Include="Views\Report\CustomerSalesQuarterly.cshtml" />
     <Content Include="Views\Report\CustomerSalesQuarterlyComparison.cshtml" />
+    <Content Include="Views\Report\CustomerSalesComparedLastYear.cshtml" />
+    <Content Include="Views\Report\CustomerGroupSalesLast6Year.cshtml" />
+    <Content Include="Views\Report\CustomerSalesLast6Year.cshtml" />
+    <Content Include="Views\Report\SortedCustomerSalesLast6Year.cshtml" />
+    <Content Include="Views\Report\CustomerSalesYearly.cshtml" />
+    <Content Include="Views\Report\CustomerSalesByItem.cshtml" />
+    <Content Include="Views\Report\ItemSalesYearlyByValue.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

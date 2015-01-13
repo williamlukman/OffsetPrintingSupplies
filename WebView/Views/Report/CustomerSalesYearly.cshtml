@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Customer Sales Yearly Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/reportcustomersalesyearly.js")"></script>
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: Customer Sales Yearly Report :.">
+<div id="toolbar" class="form_toolbar">
+        @*<a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>*@
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+    </div>
+
+<!-- Dialog Box -->
+
+        <div style="overflow: auto">
+            <form id="frm">
+                @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
+                    <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
+                        
+                        <tr>
+                            <td width="80">
+                                <label>Year</label></td>
+                             <td >
+                                <select name="Y2" id="Y2">
+                                @for (int i = DateTime.Today.Year; i > DateTime.Today.Year - 10; i--)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                                </select>
+                             </td>
+                        </tr>
+                        <tr hidden>
+                            <td>
+                                <label>Month 1</label></td>
+                             <td>
+                                <select name="M1" id="M1">
+                                @{
+                                var months = (new System.Globalization.CultureInfo("en-US")).DateTimeFormat.MonthGenitiveNames;    
+                                for (int i = 0; i < 12; i++)
+                                {
+                                    <option value="@(i+1)">@months[i]</option>
+                                }
+                                }
+                                </select>
+                             </td>
+                        </tr>
+                        
+                        <tr><td></td></tr>
+                         
+                    </table>
+                @*</fieldset>*@
+            </form>
+    </div>
+<!-- End Dialog Box -->
+
+ 
+
+  </div>
+
