@@ -211,16 +211,16 @@ namespace Service.Service
                                 };
                                 debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
 
-                                GeneralLedgerJournal debitCashBank = new GeneralLedgerJournal()
+                                GeneralLedgerJournal creditCashBank = new GeneralLedgerJournal()
                                 {
                                     AccountId = nonBaseAccount.Id,
                                     SourceDocument = Constant.GeneralLedgerSource.Closing,
                                     SourceDocumentId = closing.Id,
                                     TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Debit,
+                                    Status = Constant.GeneralLedgerStatus.Credit,
                                     Amount = validComb.Amount - totalCurrencyAmountInLedger
                                 };
-                                debitCashBank = _generalLedgerJournalService.CreateObject(debitCashBank, _accountService);
+                                creditCashBank = _generalLedgerJournalService.CreateObject(creditCashBank, _accountService);
                                 #endregion
                             }
                             else if (totalCurrencyAmountInLedger > validComb.Amount)
