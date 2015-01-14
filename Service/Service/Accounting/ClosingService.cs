@@ -552,8 +552,6 @@ namespace Service.Service
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
                         creditNetEarning += vcClosingEntries.Amount;
                     }
-                    vcClosingEntries.Amount = 0;
-                    _validCombService.UpdateObject(vcClosingEntries, _accountService, this);
                 }
                 Account netEarningAccount = _accountService.GetQueryable().Where(x => x.LegacyCode == Constant.AccountLegacyCode.NetEarning && !x.IsDeleted).FirstOrDefault();
                 GeneralLedgerJournal netEarningJournal = new GeneralLedgerJournal()
