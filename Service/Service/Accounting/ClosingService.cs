@@ -518,6 +518,59 @@ namespace Service.Service
                 }
                 #endregion
 
+                #region ClosingEntries: Net Earning
+                IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense).ToList();
+                decimal creditNetEarning = 0;
+                foreach(var account in IncomeStatementAccounts)
+                {
+                    ValidComb vcClosingEntries = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+                    if (account.Group == Constant.AccountGroup.Expense)
+                    {
+                        GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                        {
+                            AccountId = account.Id,
+                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                            SourceDocumentId = closing.Id,
+                            TransactionDate = (DateTime) EndDate,
+                            Status = Constant.GeneralLedgerStatus.Credit,
+                            Amount = Math.Round(vcClosingEntries.Amount, 2)
+                        };
+                        journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
+                        creditNetEarning -= vcClosingEntries.Amount;
+                    }
+                    else if (account.Group == Constant.AccountGroup.Revenue)
+                    {
+                        GeneralLedgerJournal journal = new GeneralLedgerJournal()
+                        {
+                            AccountId = account.Id,
+                            SourceDocument = Constant.GeneralLedgerSource.Closing,
+                            SourceDocumentId = closing.Id,
+                            TransactionDate = (DateTime) EndDate,
+                            Status = Constant.GeneralLedgerStatus.Debit,
+                            Amount = Math.Round(vcClosingEntries.Amount, 2)
+                        };
+                        journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
+                        creditNetEarning += vcClosingEntries.Amount;
+                    }
+                    vcClosingEntries.Amount = 0;
+                    _validCombService.UpdateObject(vcClosingEntries, _accountService, this);
+                }
+                Account netEarningAccount = _accountService.GetQueryable().Where(x => x.LegacyCode == Constant.AccountLegacyCode.NetEarning && !x.IsDeleted).FirstOrDefault();
+                GeneralLedgerJournal netEarningJournal = new GeneralLedgerJournal()
+                {
+                    AccountId = netEarningAccount.Id,
+                    SourceDocument = Constant.GeneralLedgerSource.Closing,
+                    SourceDocumentId = closing.Id,
+                    TransactionDate = (DateTime)EndDate,
+                    Status = creditNetEarning > 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                    Amount = Math.Round(Math.Abs(creditNetEarning), 2)
+                };
+                netEarningJournal = _generalLedgerJournalService.CreateObject(netEarningJournal, _accountService);
+                ValidComb vcNetEarning = _validCombService.FindOrCreateObjectByAccountAndClosing(netEarningAccount.Id, closing.Id);
+                vcNetEarning.Amount += creditNetEarning;
+                _validCombService.UpdateObject(vcNetEarning, _accountService, this);
+                #endregion
+
                 #region Fill Valid Comb Non Leaves
                 var groupNodeAccounts = _accountService.GetQueryable().Where(x => !x.IsLeaf && !x.IsDeleted).OrderByDescending(x => x.Level).ToList();
                 foreach (var groupNode in groupNodeAccounts)
