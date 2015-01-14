@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Item Sales Yearly Report by Value";
+    ViewBag.Title = "Item Sales Yearly Report by Quantity";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,10 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/reportitemsalesyearlybyvalue.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/reportitemsalesyearlybyquantity.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
-    title=".: Item Sales Yearly Report by Value :.">
+    title=".: Item Sales Yearly Report by Quantity :.">
 <div id="toolbar" class="form_toolbar">
         @*<a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>*@
         <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
