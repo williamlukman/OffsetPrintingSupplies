@@ -78,6 +78,11 @@ namespace Data.Migrations
                 account.ParseCode = int.Parse(GetValidNumber(account.Code));
             }
 
+            foreach (var account in context.Accounts.Where(x => x.Name.Contains("Payable") || x.Name.Contains("Receivable")))
+            {
+                account.IsPayableReceivable = true;
+            }
+
             //if (context.Currencys.FirstOrDefault() == null)
             //{
             //    context.Currencys.Add(

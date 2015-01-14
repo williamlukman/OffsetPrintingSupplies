@@ -101,7 +101,6 @@
             url: base_url + "Currency/GetListNonBase?",
             success: function (result) {
                 if (result.query != null) {
-                    createContainerTable();
                     var tbody = $('#list_exchangerateclosing');
                     for (var i = 1; i <= result.query.length; i++) {
                         var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
@@ -164,15 +163,13 @@
                             $('#form_div').dialog('open');
                             createContainerTable();
                             var tbody = $('#list_exchangerateclosing');
-                            for (var i = 1; i <= result.exchangeRateClosings.length; i++) {
+                            for (var i = 0; i < result.exchangeRateClosings.length; i++) {
                                 var trow = $("<tr>").addClass("tableRow").addClass('ui-widget-content');
-                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].CurrencyId).appendTo(trow);
-                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i - 1].Name).appendTo(trow);
+                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i].CurrencyId).appendTo(trow);
+                                $("<td>").addClass("tableCell").text(result.exchangeRateClosings[i].Name).appendTo(trow);
                                 $("<td>").addClass("tableCell")
-                                .append('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value=' + result.exchangeRateClosings[i - 1].Rate+ ' disabled="disabled""/>')
+                                .append('<input id="TotalAmount' + (i) + '" name="TotalAmount' + (i) + '" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value=' + result.exchangeRateClosings[i].Rate+ ' disabled="disabled""/>')
                                 .appendTo(trow);
-                                $('#list_exchangerateclosing tr:last td:eq(2)').html('<input id="TotalAmount" name="TotalAmount" type="text" size="15" maxlength="20" class="textright easyui-numberbox" data-options="groupSeparator:\',\',precision:2" value=' + result.exchangeRateClosings[i - 1].Rate + ' disabled="disabled""/>');
-                                $('#list_exchangerateclosing tr:last td:eq(2)').find('#TotalAmount').numberbox();
                                 trow.appendTo(tbody);
                             }
                         }
@@ -430,7 +427,7 @@
     });
 
     function clearForm(form) {
-
+        createContainerTable();
         $(':input', form).each(function () {
             var type = this.type;
             var tag = this.tagName.toLowerCase(); // normalize case

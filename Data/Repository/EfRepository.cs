@@ -67,7 +67,6 @@ namespace Data.Repository
             DbSet.Remove(t);
 
             return Context.SaveChanges();
-
         }
 
         public int Delete(System.Linq.Expressions.Expression<Func<T, bool>> predicate)

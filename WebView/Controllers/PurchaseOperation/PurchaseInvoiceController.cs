@@ -203,7 +203,6 @@ namespace WebView.Controllers
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
         }
-
       
         public dynamic GetInfo(int Id)
         {

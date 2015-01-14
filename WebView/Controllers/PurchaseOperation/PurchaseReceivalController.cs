@@ -144,7 +144,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseReceivalService.GetQueryable().Where(x => x.IsConfirmed && !x.IsDeleted);
+            var q = _purchaseReceivalService.GetQueryable().Where(x => x.IsConfirmed && !x.IsDeleted && !x.IsInvoiceCompleted);
 
             var query = (from model in q
                          select new
@@ -249,6 +249,7 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
+                             model.PurchaseOrderDetail.PendingReceivalQuantity,
                              Price = model.PurchaseOrderDetail.Price,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -289,6 +290,7 @@ namespace WebView.Controllers
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
+                            model.PendingReceivalQuantity,
                             model.Price,
                       }
                     }).ToArray()

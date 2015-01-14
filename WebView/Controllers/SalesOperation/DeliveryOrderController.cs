@@ -335,6 +335,7 @@ namespace WebView.Controllers
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
                              model.Quantity,
+                             model.SalesOrderDetail.PendingDeliveryQuantity,
                              Price = model.SalesOrderDetail.Price,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
@@ -375,6 +376,7 @@ namespace WebView.Controllers
                             model.ItemSku,
                             model.Item,
                             model.Quantity,
+                            model.PendingDeliveryQuantity,
                             model.Price,
                       }
                     }).ToArray()

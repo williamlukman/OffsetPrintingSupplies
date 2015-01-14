@@ -18,6 +18,7 @@ namespace Core.DomainModel
         public bool IsLegacy { get; set; }
         public bool IsLeaf { get; set; }
         public bool IsCashBankAccount { get; set; }
+        public bool IsPayableReceivable { get; set; }
 
         public string LegacyCode { get; set; }
 

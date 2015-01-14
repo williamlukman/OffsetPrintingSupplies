@@ -295,12 +295,13 @@ namespace WebView.Controllers
 
             foreach (var model in list)
             {
-                if (account.Group == Constant.AccountGroup.Asset)
+                if (account.Group == Constant.AccountGroup.Asset || account.Group == Constant.AccountGroup.Expense)
                 {
                     saldoakhir += model.DebitAmount;
                     saldoakhir -= model.CreditAmount;
                 }
-                else if (account.Group == Constant.AccountGroup.Liability || account.Group == Constant.AccountGroup.Equity)
+                else if (account.Group == Constant.AccountGroup.Liability || account.Group == Constant.AccountGroup.Equity
+                      || account.Group == Constant.AccountGroup.Revenue)
                 {
                     saldoakhir += model.CreditAmount;
                     saldoakhir -= model.DebitAmount;

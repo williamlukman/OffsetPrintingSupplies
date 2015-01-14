@@ -432,7 +432,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Sales Order Detail Id', 'SOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Price'
+        colNames: ['Id', 'Code', 'Sales Order Detail Id', 'SOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'PendDlv QTY', 'Price'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 40, sortable: false },
@@ -441,8 +441,9 @@
                   { name: 'salesorderdetailcode', index: 'salesorderdetailcode', width: 70, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'pendingdeliveryquantity', index: 'pendingdeliveryquantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
         ],
         //page: '1',
@@ -690,7 +691,7 @@
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 480, sortable: false },
                   { name: 'type', index: 'type', width: 70, sortable: false, hidden: true },
                   { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
                   { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
