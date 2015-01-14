@@ -519,12 +519,12 @@ namespace Service.Service
                 #endregion
 
                 #region ClosingEntries: Net Earning
-                IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense).ToList();
+                IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense && x.IsLeaf).ToList();
                 decimal creditNetEarning = 0;
                 foreach(var account in IncomeStatementAccounts)
                 {
                     ValidComb vcClosingEntries = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
-                    if (account.Group == Constant.AccountGroup.Expense)
+                    if (account.Group == Constant.AccountGroup.Expense && vcClosingEntries.Amount > 0)
                     {
                         GeneralLedgerJournal journal = new GeneralLedgerJournal()
                         {
@@ -538,7 +538,7 @@ namespace Service.Service
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
                         creditNetEarning -= vcClosingEntries.Amount;
                     }
-                    else if (account.Group == Constant.AccountGroup.Revenue)
+                    else if (account.Group == Constant.AccountGroup.Revenue && vcClosingEntries.Amount > 0)
                     {
                         GeneralLedgerJournal journal = new GeneralLedgerJournal()
                         {
