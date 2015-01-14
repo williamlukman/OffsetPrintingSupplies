@@ -1209,7 +1209,6 @@
     <Content Include="Reports\General\TemporaryDeliveryOrder.ttx" />
     <Content Include="Reports\General\TemporaryDeliveryOrder.rpt" />
     <None Include="Properties\PublishProfiles\eZengra.pubxml" />
-    <None Include="Properties\PublishProfiles\ZengraBuilder.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Reports\General\zentrum_logo.gif" />
     <Content Include="Scripts\collapsiblePanel.js" />
@@ -1416,7 +1415,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
