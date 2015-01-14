@@ -180,7 +180,8 @@ namespace Service.Service
 
                             foreach(var glNonBaseJournal in glNonBaseJournals)
                             {
-                                if (glNonBaseJournal.GeneralLedgerJournal.Status == Constant.GeneralLedgerStatus.Debit &&
+                                GeneralLedgerJournal glj = _generalLedgerJournalService.GetObjectById(glNonBaseJournal.GeneralLedgerJournalId);
+                                if (glj.Status == Constant.GeneralLedgerStatus.Debit &&
                                     nonBaseAccount.Group == Constant.AccountGroup.Asset)
                                 {
                                     totalCurrencyAmountInLedger += glNonBaseJournal.Amount;
@@ -192,7 +193,7 @@ namespace Service.Service
                                     totalAmountForVCnonBAse -= glNonBaseJournal.Amount;
                                 }
                             }
-                            totalCurrencyAmountInLedger = totalCurrencyAmountInLedger * exRate.Rate;
+                            totalCurrencyAmountInLedger = Math.Round(Math.Round(totalCurrencyAmountInLedger, 2) * exRate.Rate, 2);
                             ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(nonBaseAccount.Id, closing.Id);
                             VCNonBaseCurrency vcNonBaseCurrency = _vCNonBaseCurrencyService.CreateObject(new VCNonBaseCurrency() { ValidCombId = validComb.Id, Amount = totalAmountForVCnonBAse, CreatedAt = DateTime.Now }, _accountService, this);
 
@@ -211,16 +212,16 @@ namespace Service.Service
                                 };
                                 debitExchangeLoss = _generalLedgerJournalService.CreateObject(debitExchangeLoss, _accountService);
 
-                                GeneralLedgerJournal debitCashBank = new GeneralLedgerJournal()
+                                GeneralLedgerJournal creditCashBank = new GeneralLedgerJournal()
                                 {
                                     AccountId = nonBaseAccount.Id,
                                     SourceDocument = Constant.GeneralLedgerSource.Closing,
                                     SourceDocumentId = closing.Id,
                                     TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Debit,
+                                    Status = Constant.GeneralLedgerStatus.Credit,
                                     Amount = validComb.Amount - totalCurrencyAmountInLedger
                                 };
-                                debitCashBank = _generalLedgerJournalService.CreateObject(debitCashBank, _accountService);
+                                creditCashBank = _generalLedgerJournalService.CreateObject(creditCashBank, _accountService);
                                 #endregion
                             }
                             else if (totalCurrencyAmountInLedger > validComb.Amount)
@@ -304,7 +305,7 @@ namespace Service.Service
                                     totalAmountForVCnonBAse -= glNonBaseJournal.Amount;
                                 }
                             }
-                            totalCurrencyAmountInLedger = totalCurrencyAmountInLedger * exRate.Rate;
+                            totalCurrencyAmountInLedger = Math.Round(Math.Round(totalCurrencyAmountInLedger, 2) * exRate.Rate, 2);
                             ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(nonBaseAccount.Id, closing.Id);
                             VCNonBaseCurrency vcNonBaseCurrency = _vCNonBaseCurrencyService.CreateObject(new VCNonBaseCurrency() { ValidCombId = validComb.Id, Amount = totalAmountForVCnonBAse, CreatedAt = DateTime.Now }, _accountService, this);
 
@@ -478,7 +479,7 @@ namespace Service.Service
                                 totalAmountForVCnonBAse -= glNonBaseJournal.Amount;
                             }
                         }
-                        totalCurrencyAmountInLedger = totalCurrencyAmountInLedger * exRate.Rate;
+                        totalCurrencyAmountInLedger = Math.Round(Math.Round(totalCurrencyAmountInLedger , 2) * exRate.Rate, 2);
                         #endregion
                     }
                 }
@@ -519,12 +520,12 @@ namespace Service.Service
                 #endregion
 
                 #region ClosingEntries: Net Earning
-                IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense).ToList();
+                IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense && x.IsLeaf && !x.IsDeleted).ToList();
                 decimal creditNetEarning = 0;
                 foreach(var account in IncomeStatementAccounts)
                 {
                     ValidComb vcClosingEntries = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
-                    if (account.Group == Constant.AccountGroup.Expense)
+                    if (account.Group == Constant.AccountGroup.Expense && vcClosingEntries.Amount != 0)
                     {
                         GeneralLedgerJournal journal = new GeneralLedgerJournal()
                         {
@@ -532,13 +533,15 @@ namespace Service.Service
                             SourceDocument = Constant.GeneralLedgerSource.Closing,
                             SourceDocumentId = closing.Id,
                             TransactionDate = (DateTime) EndDate,
-                            Status = Constant.GeneralLedgerStatus.Credit,
-                            Amount = Math.Round(vcClosingEntries.Amount, 2)
+                            Status = vcClosingEntries.Amount > 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                            Amount = Math.Round(Math.Abs(vcClosingEntries.Amount), 2)
                         };
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
-                        creditNetEarning -= vcClosingEntries.Amount;
+                        creditNetEarning = vcClosingEntries.Amount > 0 ? creditNetEarning - vcClosingEntries.Amount : creditNetEarning + vcClosingEntries.Amount;
+                        vcClosingEntries.Amount = 0;
+                        _validCombService.UpdateObject(vcClosingEntries, _accountService, this);
                     }
-                    else if (account.Group == Constant.AccountGroup.Revenue)
+                    else if (account.Group == Constant.AccountGroup.Revenue && vcClosingEntries.Amount != 0)
                     {
                         GeneralLedgerJournal journal = new GeneralLedgerJournal()
                         {
@@ -546,15 +549,16 @@ namespace Service.Service
                             SourceDocument = Constant.GeneralLedgerSource.Closing,
                             SourceDocumentId = closing.Id,
                             TransactionDate = (DateTime) EndDate,
-                            Status = Constant.GeneralLedgerStatus.Debit,
-                            Amount = Math.Round(vcClosingEntries.Amount, 2)
+                            Status = vcClosingEntries.Amount > 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
+                            Amount = Math.Round(Math.Abs(vcClosingEntries.Amount), 2)
                         };
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
                         creditNetEarning += vcClosingEntries.Amount;
+                        vcClosingEntries.Amount = 0;
+                        _validCombService.UpdateObject(vcClosingEntries, _accountService, this);
                     }
-                    vcClosingEntries.Amount = 0;
-                    _validCombService.UpdateObject(vcClosingEntries, _accountService, this);
                 }
+
                 Account netEarningAccount = _accountService.GetQueryable().Where(x => x.LegacyCode == Constant.AccountLegacyCode.NetEarning && !x.IsDeleted).FirstOrDefault();
                 GeneralLedgerJournal netEarningJournal = new GeneralLedgerJournal()
                 {
@@ -612,93 +616,51 @@ namespace Service.Service
                     }
                 }
 
+                var closingAccountIds = _generalLedgerJournalService.GetQueryable().Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing && x.SourceDocumentId == closing.Id)
+                                                    .GroupBy(x => new { x.AccountId }).Select(x => x.Key.AccountId).ToList();
+
                 string[] AccountList = { 
                                      Constant.AccountLegacyCode.AccountPayable,
                                      Constant.AccountLegacyCode.AccountReceivable,
                                      Constant.AccountLegacyCode.GBCHPayable,
                                      Constant.AccountLegacyCode.GBCHReceivable,
                                      Constant.AccountLegacyCode.CashBank,
-                                     Constant.AccountLegacyCode.ExchangeGain,
-                                     Constant.AccountLegacyCode.ExchangeLoss
                                  };
-                 
 
-                IList<ExchangeRateClosing> exRates = _exchangeRateClosingService.GetQueryable().Where(x => x.ClosingId == closing.Id).ToList();
-
-                foreach (var exRate in exRates)
+                foreach (var closingAccount in closingAccountIds)
                 {
-                    foreach (var account in AccountList)
+                    Account acc = _accountService.GetObjectById(closingAccount);
+                    List<GeneralLedgerJournal> GL = new List<GeneralLedgerJournal>();
+                    GL = _generalLedgerJournalService.GetQueryable()
+                        .Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing
+                            && x.SourceDocumentId == closing.Id && x.AccountId == acc.Id).ToList();
+
+                    if (acc != null && !acc.IsDeleted)
                     {
-                        Account acc = new Account(); 
-                        List<GeneralLedgerJournal> GL = new List<GeneralLedgerJournal>();
-                        if (account == Constant.AccountLegacyCode.ExchangeGain || account == Constant.AccountLegacyCode.ExchangeLoss)
+                        decimal amountDebit = 0;
+                        decimal amountCredit = 0;
+                        foreach (var ledger in GL)
                         {
-                            acc = _accountService.GetObjectByLegacyCode(account);
-                             GL = _generalLedgerJournalService.GetQueryable()
-                                 .Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing
-                                     && x.SourceDocumentId == closing.Id && x.Account.Code == acc.Code
-                                     ).ToList();
+                            amountDebit += ledger.Status == Constant.GeneralLedgerStatus.Debit ? ledger.Amount : 0;
+                            amountCredit += ledger.Status == Constant.GeneralLedgerStatus.Credit ? ledger.Amount : 0;
                         }
-                        else
-                        {
-                            acc = _accountService.GetObjectByLegacyCode(account + exRate.CurrencyId);
-                            if (acc != null)
-                            {
-                                GL = _generalLedgerJournalService.GetQueryable()
-                               .Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing
-                                   && x.SourceDocumentId == closing.Id && x.Account.Code == acc.Code
-                                   ).ToList();
-                            }
-                        }
-                        if (acc != null)
-                        {
-                            decimal amountDebet = 0;
-                            decimal amountCredit = 0;
-                            foreach (var ledger in GL)
-                            {
-                                if (ledger.Status == Constant.GeneralLedgerStatus.Debit)
-                                {
-                                    amountDebet += ledger.Amount;
-                                }
-                                else
-                                {
-                                    amountCredit += ledger.Amount;
-                                }
-                            }
-                            if (amountDebet > amountCredit)
-                            {
-                                GeneralLedgerJournal creditAccount = new GeneralLedgerJournal()
-                                {
-                                    AccountId = acc.Id,
-                                    SourceDocument = Constant.GeneralLedgerSource.Closing,
-                                    SourceDocumentId = closing.Id,
-                                    TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Credit,
-                                    Amount = amountDebet - amountCredit
 
-                                };
-                                creditAccount = _generalLedgerJournalService.CreateObject(creditAccount, _accountService);
-                            }
-                            else if (amountCredit > amountDebet)
+                        if (amountDebit != amountCredit)
+                        {
+                            GeneralLedgerJournal journal = new GeneralLedgerJournal()
                             {
-                                GeneralLedgerJournal debitAccount = new GeneralLedgerJournal()
-                                {
-                                    AccountId = acc.Id,
-                                    SourceDocument = Constant.GeneralLedgerSource.Closing,
-                                    SourceDocumentId = closing.Id,
-                                    TransactionDate = (DateTime)closing.EndDatePeriod,
-                                    Status = Constant.GeneralLedgerStatus.Debit,
-                                    Amount = amountCredit - amountDebet
-
-                                };
-                                debitAccount = _generalLedgerJournalService.CreateObject(debitAccount, _accountService);
-                            }
+                                AccountId = acc.Id,
+                                SourceDocument = Constant.GeneralLedgerSource.Closing,
+                                SourceDocumentId = closing.Id,
+                                TransactionDate = (DateTime)closing.EndDatePeriod,
+                                Status = amountDebit > amountCredit ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
+                                Amount = amountDebit > amountCredit ? amountDebit - amountCredit : amountCredit - amountDebit
+                            };
+                            journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
                         }
                     }
                 }
             }
-
-
             return _repository.OpenObject(closing);
         }
 
