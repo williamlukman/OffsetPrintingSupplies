@@ -24,7 +24,7 @@ namespace Core.Interface.Service
         BlanketOrderDetail CutObject(BlanketOrderDetail blanketOrderDetail, IBlanketOrderService _blanketOrderService);
         BlanketOrderDetail SideSealObject(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail PrepareObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
-        BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, decimal AdhesiveUsage, decimal Adhesive2Usage, IBlanketService _blanketService);
+        BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, decimal RollBlanketUsage, IBlanketService _blanketService);
         BlanketOrderDetail MountObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail HeatPressObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);
         BlanketOrderDetail PullOffTestObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService);

@@ -336,7 +336,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _closingService.GetObjectById(model.Id);
-                model = _closingService.DeleteObject(data, _accountService, _validCombService, _vCNonBaseCurrencyService);
+                model = _closingService.DeleteObject(data, _accountService, _validCombService, _vCNonBaseCurrencyService, _generalLedgerJournalService);
                 return Json(new
                 {
                     model.Errors

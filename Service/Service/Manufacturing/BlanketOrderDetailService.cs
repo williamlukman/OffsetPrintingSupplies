@@ -94,10 +94,9 @@ namespace Service.Service
             return (blanketOrderDetail = _validator.ValidPrepareObject(blanketOrderDetail, _blanketService) ? _repository.PrepareObject(blanketOrderDetail) : blanketOrderDetail);
         }
 
-        public BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, decimal AdhesiveUsage, decimal Adhesive2Usage, IBlanketService _blanketService)
+        public BlanketOrderDetail ApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, decimal RollBlanketUsage, IBlanketService _blanketService)
         {
-            blanketOrderDetail.AdhesiveUsage = AdhesiveUsage;
-            blanketOrderDetail.Adhesive2Usage = Adhesive2Usage;
+            blanketOrderDetail.RollBlanketUsage = RollBlanketUsage;
             if (_validator.ValidApplyTapeAdhesiveToObject(blanketOrderDetail, _blanketService))
             {
                 _repository.ApplyTapeAdhesiveToObject(blanketOrderDetail);
@@ -350,17 +349,12 @@ namespace Service.Service
         {
             Item BarLeft, BarRight;
             Blanket Blanket = _blanketService.GetObjectById(blanketOrderDetail.BlanketId);
-            Item Adhesive = _itemService.GetObjectById(Blanket.AdhesiveId.GetValueOrDefault());
-            Item Adhesive2 = _itemService.GetObjectById(Blanket.Adhesive2Id.GetValueOrDefault());
             Item RollBlanket = _itemService.GetObjectById(Blanket.RollBlanketItemId);
 
             decimal TotalCost = 0;
-            decimal RollBlanketCost = RollBlanket.AvgPrice;
+            decimal RollBlanketCost = blanketOrderDetail.RollBlanketUsage * RollBlanket.AvgPrice;
             decimal AdhesiveCost = 0;
             decimal BarCost = 0;
-
-            AdhesiveCost += Adhesive != null ? (blanketOrderDetail.AdhesiveUsage * Adhesive.AvgPrice) : 0;
-            AdhesiveCost += Adhesive2 != null ? (blanketOrderDetail.Adhesive2Usage * Adhesive2.AvgPrice) : 0;
 
             if (Blanket.HasLeftBar)
             {

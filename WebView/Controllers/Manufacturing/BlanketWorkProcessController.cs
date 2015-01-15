@@ -83,8 +83,7 @@ namespace WebView.Controllers
                              model.IsSideSealed,
                              model.IsBarPrepared,
                              model.IsAdhesiveTapeApplied,
-                             model.AdhesiveUsage,
-                             model.Adhesive2Usage,
+                             model.RollBlanketUsage,
                              model.IsBarMounted,
                              model.IsBarHeatPressed,
                              model.IsBarPullOffTested,
@@ -143,8 +142,7 @@ namespace WebView.Controllers
                             model.IsSideSealed,
                             model.IsBarPrepared,
                             model.IsAdhesiveTapeApplied,
-                            model.AdhesiveUsage,
-                            model.Adhesive2Usage,
+                            model.RollBlanketUsage,
                             model.IsBarMounted,
                             model.IsBarHeatPressed,
                             model.IsBarPullOffTested,
@@ -196,8 +194,7 @@ namespace WebView.Controllers
                 model.IsSideSealed,
                 model.IsBarPrepared,
                 model.IsAdhesiveTapeApplied,
-                model.AdhesiveUsage,
-                model.Adhesive2Usage,
+                model.RollBlanketUsage,
                 model.IsBarMounted,
                 model.IsBarHeatPressed,
                 model.IsBarPullOffTested,
@@ -218,8 +215,7 @@ namespace WebView.Controllers
         {
             var models = new BlanketOrderDetail();
             models.Errors = new Dictionary<string, string>();
-            decimal usage = model.AdhesiveUsage;
-            decimal usage2 = model.Adhesive2Usage;
+            decimal usage = model.RollBlanketUsage;
             try
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
@@ -229,7 +225,7 @@ namespace WebView.Controllers
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsBarPrepared && !data.IsBarPrepared) { models = _blanketOrderDetailService.PrepareObject(data, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsAdhesiveTapeApplied && !data.IsAdhesiveTapeApplied) { models = _blanketOrderDetailService.ApplyTapeAdhesiveToObject(data, model.AdhesiveUsage, model.Adhesive2Usage, _blanketService); }
+                if (model.IsAdhesiveTapeApplied && !data.IsAdhesiveTapeApplied) { models = _blanketOrderDetailService.ApplyTapeAdhesiveToObject(data, model.RollBlanketUsage, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsBarMounted && !data.IsBarMounted) { models = _blanketOrderDetailService.MountObject(data, _blanketService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }

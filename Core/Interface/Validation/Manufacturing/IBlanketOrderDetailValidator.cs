@@ -14,7 +14,7 @@ namespace Core.Interface.Validation
         BlanketOrderDetail VHasBeenCut(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenSideSealed(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenBarPrepared(BlanketOrderDetail blanketOrderDetail);
-        BlanketOrderDetail VHasAdhesiveAmount(BlanketOrderDetail blanketOrderDetail);
+        BlanketOrderDetail VHasRollBlanketAmount(BlanketOrderDetail blanketOrderDetail);
 
         BlanketOrderDetail VHasBeenAdhesiveTapeApplied(BlanketOrderDetail blanketOrderDetail);
         BlanketOrderDetail VHasBeenBarMounted(BlanketOrderDetail blanketOrderDetail);

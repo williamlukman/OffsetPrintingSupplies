@@ -49,7 +49,7 @@
         datatype: "json",
         colNames: ['ID','Blanket Order ID', 'Code', 'Blanket Id', 'Sku','Name','Sku','Name', 'Sku', 'Name',
                    'Sku', 'Name','C', 'SS', 'BP',
-                   'ATA','Adhesive QTY', 'Adhesive2 QTY', 'BM', 'BHP', 'BPOT',
+                   'ATA','Roll Blanket QTY', 'BM', 'BHP', 'BPOT',
                    'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
         ],
         colModel: [
@@ -69,8 +69,7 @@
                   { name: 'issidesealed', index: 'issidesealed', width: 30, sortable: false },
                   { name: 'isbarprepared', index: 'isbarprepared', width: 30, sortable: false },
                   { name: 'isadhesivetapeapplied', index: 'isadhesivetapeapplied', width: 30, sortable: false },
-                  { name: 'adhesiveusage', index: 'adhesiveusage', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'adhesive2usage', index: 'adhesive2usage', align: 'right', width: 85, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'rollblanketusage', index: 'rollblanketusage', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isbarmounted', index: 'isbarmounted', width: 30, sortable: false },
                   { name: 'isbarheatpressed', index: 'isbarheatpressed', width: 30, sortable: false },
                   { name: 'isbarpullofftested', index: 'isbarpullofftested', width: 30, sortable: false },
@@ -233,8 +232,7 @@
                             $('#LeftBar').val(result.LeftBar);
                             $('#RightBarSku').val(result.RightBarSku);
                             $('#RightBar').val(result.RightBar);
-                            $('#AdhesiveUsage').val(result.AdhesiveUsage);
-                            $('#Adhesive2Usage').val(result.Adhesive2Usage);
+                            $('#RollBlanketUsage').val(result.RollBlanketUsage);
                             document.getElementById("iscut").checked = result.IsCut;
                             document.getElementById("issidesealed").checked = result.IsSideSealed;
                             document.getElementById("isbarprepared").checked = result.IsBarPrepared;
@@ -249,12 +247,10 @@
                             if (!result.HasBar || result.IsBarPrepared) { $('#isbarprepared').attr('disabled', true); } else { $('#isbarprepared').removeAttr('disabled'); }
                             if (result.IsAdhesiveTapeApplied) {
                                 $('#isadhesivetapeapplied').attr('disabled', true);
-                                $('#AdhesiveUsage').attr('disabled', true);
-                                $('#Adhesive2Usage').attr('disabled', true);
+                                $('#RollBlanketUsage').attr('disabled', true);
                             } else {
                                 $('#isadhesivetapeapplied').removeAttr('disabled');
-                                $('#AdhesiveUsage').removeAttr('disabled');
-                                $('#Adhesive2Usage').removeAttr('disabled');
+                                $('#RollBlanketUsage').removeAttr('disabled');
                             }
                             if (!result.HasBar || result.IsBarMounted) { $('#isbarmounted').attr('disabled', true); } else { $('#isbarmounted').removeAttr('disabled'); }
                             if (!result.HasBar || result.IsBarHeatPressed) { $('#isbarheatpressed').attr('disabled', true); } else { $('#isbarheatpressed').removeAttr('disabled'); }
@@ -292,7 +288,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, AdhesiveUsage: $('#AdhesiveUsage').numberbox('getValue'), Adhesive2Usage: $('#Adhesive2Usage').numberbox('getValue'),
+                Id: id, RollBlanketUsage: $('#RollBlanketUsage').numberbox('getValue'),
                 IsCut: document.getElementById("iscut").checked, IsSideSealed: document.getElementById("issidesealed").checked,
                 IsBarPrepared: document.getElementById("isbarprepared").checked, IsAdhesiveTapeApplied: document.getElementById("isadhesivetapeapplied").checked,
                 IsBarMounted: document.getElementById("isbarmounted").checked, IsBarHeatPressed: document.getElementById("isbarheatpressed").checked,
