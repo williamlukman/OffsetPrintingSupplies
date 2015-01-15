@@ -63,11 +63,11 @@ namespace Validation.Validation
             return blanketOrderDetail;
         }
 
-        public BlanketOrderDetail VHasAdhesiveAmount(BlanketOrderDetail blanketOrderDetail)
+        public BlanketOrderDetail VHasRollBlanketAmount(BlanketOrderDetail blanketOrderDetail)
         {
-            if (blanketOrderDetail.AdhesiveUsage <= 0)
+            if (blanketOrderDetail.RollBlanketUsage <= 0)
             {
-                blanketOrderDetail.Errors.Add("Generic", "Adhesive Amount belum diisi");
+                blanketOrderDetail.Errors.Add("Generic", "Roll Blanket Amount belum diisi");
             }
             return blanketOrderDetail;
         }
@@ -356,7 +356,7 @@ namespace Validation.Validation
 
         public BlanketOrderDetail VApplyTapeAdhesiveToObject(BlanketOrderDetail blanketOrderDetail, IBlanketService _blanketService)
         {
-            VHasAdhesiveAmount(blanketOrderDetail);
+            VHasRollBlanketAmount(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenAdhesiveTapeApplied(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }

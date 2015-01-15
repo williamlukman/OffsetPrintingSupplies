@@ -620,7 +620,7 @@ namespace Service.Service
             stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
-            stockMutation.Quantity = 1;
+            stockMutation.Quantity = blanketOrderDetail.RollBlanketUsage;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.BlanketOrder;
             stockMutation.SourceDocumentId = blanketOrderDetail.BlanketOrderId;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlanketOrderDetail;

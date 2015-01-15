@@ -99,7 +99,7 @@ namespace Service.Service
                     IList<GeneralLedgerJournal> ledgers = _generalLedgerJournalService.GetQueryable()
                                                           .Where(x => x.AccountId == leaf.Id && 
                                                                  x.TransactionDate >= closing.BeginningPeriod && 
-                                                                 x.TransactionDate < EndDate && x.SourceDocument != Constant.GeneralLedgerSource.Closing)
+                                                                 x.TransactionDate < EndDate)
                                                           .ToList();
                   
                     decimal totalAmountInLedgers = 0;
@@ -110,7 +110,9 @@ namespace Service.Service
                             Where(x => x.ClosingId == lastClosing.Id && x.AccountId == leaf.Id &&
                                   (x.Account.Group == Constant.AccountGroup.Asset ||
                                    x.Account.Group == Constant.AccountGroup.Liability ||
-                                   x.Account.Group == Constant.AccountGroup.Equity)).FirstOrDefault();
+                                   x.Account.Group == Constant.AccountGroup.Equity ||
+                                   x.Account.Group == Constant.AccountGroup.Liability ||
+                                   x.Account.Group == Constant.AccountGroup.Expense)).FirstOrDefault();
                         totalAmountLast = LastValidComb == null ? 0 : LastValidComb.Amount;
                     }
 
@@ -141,7 +143,7 @@ namespace Service.Service
                 }
                 #endregion
 
-                #region Count ValidComb for non base currency
+                #region Count Exchange Gain and Loss for non base currency
                 var ledgerNonBaseCurrency = (from model in _gLNonBaseCurrencyService.GetQueryable().Where(x =>
                                                            x.GeneralLedgerJournal.TransactionDate >= closing.BeginningPeriod &&
                                                            x.GeneralLedgerJournal.TransactionDate < EndDate)
@@ -187,10 +189,17 @@ namespace Service.Service
                                     totalCurrencyAmountInLedger += glNonBaseJournal.Amount;
                                     totalAmountForVCnonBAse += glNonBaseJournal.Amount;
                                 }
-                                else
+                                else if (glj.Status == Constant.GeneralLedgerStatus.Credit &&
+                                    nonBaseAccount.Group == Constant.AccountGroup.Asset)
                                 {
                                     totalCurrencyAmountInLedger -= glNonBaseJournal.Amount;
                                     totalAmountForVCnonBAse -= glNonBaseJournal.Amount;
+                                }
+                                else
+                                {
+                                    var a = glj.Status;
+                                    var b = nonBaseAccount.Group;
+                                    var c = glNonBaseJournal.Amount;
                                 }
                             }
                             totalCurrencyAmountInLedger = Math.Round(Math.Round(totalCurrencyAmountInLedger, 2) * exRate.Rate, 2);
@@ -246,7 +255,6 @@ namespace Service.Service
                                     TransactionDate = (DateTime)closing.EndDatePeriod,
                                     Status = Constant.GeneralLedgerStatus.Debit,
                                     Amount = totalCurrencyAmountInLedger - validComb.Amount
-
                                 };
                                 debitCashBank = _generalLedgerJournalService.CreateObject(debitCashBank, _accountService);
                                 #endregion
@@ -254,6 +262,9 @@ namespace Service.Service
                             else
                             {
                                 // No Gain No Loss
+                                var a = exRate.Rate;
+                                var b = totalCurrencyAmountInLedger;
+                                var c = validComb.Amount;
                             }
                             #endregion
                         }
@@ -371,6 +382,9 @@ namespace Service.Service
                                 else
                                 {
                                     // No Gain No Loss
+                                    var a = nonBaseAccount.Name;
+                                    var b = validComb.Amount;
+                                    var c = totalCurrencyAmountInLedger;
                                 }
                             }
                             else if (validComb.Amount < totalCurrencyAmountInLedger)
@@ -446,50 +460,21 @@ namespace Service.Service
                     else
                     {
                         #region Non Cash Bank / Non AP / Non AR / AP & non Closing Year / AR & non Closing Year
-                        ExchangeRateClosing exRate = _exchangeRateClosingService.GetQueryable().Where(x => x.ClosingId == closing.Id && x.CurrencyId == glNonBaseJournals.FirstOrDefault().CurrencyId).FirstOrDefault();
-
-                        if (lastClosing != null)
-                        {
-                            var lastValid = _vCNonBaseCurrencyService.GetQueryable()
-                                .Where(x => x.ValidComb.AccountId == nonBaseAccount.Id && x.ValidComb.ClosingId == lastClosing.Id)
-                                .FirstOrDefault();
-                            if (lastValid != null)
-                            {
-                                totalCurrencyAmountInLedger += lastValid.Amount;
-                                totalAmountForVCnonBAse += lastValid.Amount;
-                            }
-                        }
-
-                        foreach(var glNonBaseJournal in glNonBaseJournals)
-                        {
-                            if ((glNonBaseJournal.GeneralLedgerJournal.Status == Constant.GeneralLedgerStatus.Debit &&
-                                    (nonBaseAccount.Group == Constant.AccountGroup.Asset ||
-                                    nonBaseAccount.Group == Constant.AccountGroup.Expense)) ||
-                                (glNonBaseJournal.GeneralLedgerJournal.Status == Constant.GeneralLedgerStatus.Credit &&
-                                    (nonBaseAccount.Group == Constant.AccountGroup.Liability ||
-                                    nonBaseAccount.Group == Constant.AccountGroup.Equity ||
-                                    nonBaseAccount.Group == Constant.AccountGroup.Revenue)))
-                            {
-                                totalCurrencyAmountInLedger += glNonBaseJournal.Amount;
-                                totalAmountForVCnonBAse += glNonBaseJournal.Amount;
-                            }
-                            else
-                            {
-                                totalCurrencyAmountInLedger -= glNonBaseJournal.Amount;
-                                totalAmountForVCnonBAse -= glNonBaseJournal.Amount;
-                            }
-                        }
-                        totalCurrencyAmountInLedger = Math.Round(Math.Round(totalCurrencyAmountInLedger , 2) * exRate.Rate, 2);
+                        var a = nonBaseAccount.Name;
                         #endregion
                     }
                 }
                 #endregion
 
-                #region Count Valid Comb for Exchange Gain & Loss
-                foreach(var exchangeAccount in _accountService.GetQueryable().Where(x => x.LegacyCode == Constant.AccountLegacyCode.ExchangeGain || x.LegacyCode == Constant.AccountLegacyCode.ExchangeLoss).ToList())
+                #region Recount Valid Comb for nonbase currency
+                IList<Account> changedAccounts = _accountService.GetQueryable().Where(x => x.LegacyCode == Constant.AccountLegacyCode.ExchangeGain || 
+                                                                                           x.LegacyCode == Constant.AccountLegacyCode.ExchangeLoss ||
+                                                                                           x.IsCashBankAccount ||
+                                                                                           (x.IsPayableReceivable && closing.IsYear)).ToList();
+                foreach(var changedAccount in changedAccounts)
                 {
                     IList<GeneralLedgerJournal> ledgers = _generalLedgerJournalService.GetQueryable()
-                                                            .Where(x => x.AccountId == exchangeAccount.Id &&
+                                                            .Where(x => x.AccountId == changedAccount.Id &&
                                                                     x.TransactionDate >= closing.BeginningPeriod &&
                                                                     x.TransactionDate < EndDate &&
                                                                     x.SourceDocument == Constant.GeneralLedgerSource.Closing)
@@ -499,12 +484,12 @@ namespace Service.Service
                     foreach (var ledger in ledgers)
                     {
                         if ((ledger.Status == Constant.GeneralLedgerStatus.Debit &&
-                            (exchangeAccount.Group == Constant.AccountGroup.Asset ||
-                                exchangeAccount.Group == Constant.AccountGroup.Expense)) ||
+                            (changedAccount.Group == Constant.AccountGroup.Asset ||
+                                changedAccount.Group == Constant.AccountGroup.Expense)) ||
                             (ledger.Status == Constant.GeneralLedgerStatus.Credit &&
-                            (exchangeAccount.Group == Constant.AccountGroup.Liability ||
-                                exchangeAccount.Group == Constant.AccountGroup.Equity ||
-                                exchangeAccount.Group == Constant.AccountGroup.Revenue)))
+                            (changedAccount.Group == Constant.AccountGroup.Liability ||
+                                changedAccount.Group == Constant.AccountGroup.Equity ||
+                                changedAccount.Group == Constant.AccountGroup.Revenue)))
                         {
                             totalAmountInLedgers += ledger.Amount;
                         }
@@ -513,7 +498,7 @@ namespace Service.Service
                             totalAmountInLedgers -= ledger.Amount;
                         }
                     }
-                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(exchangeAccount.Id, closing.Id);
+                    ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(changedAccount.Id, closing.Id);
                     validComb.Amount += totalAmountInLedgers;
                     _validCombService.UpdateObject(validComb, _accountService, this);
                 }
@@ -619,14 +604,6 @@ namespace Service.Service
                 var closingAccountIds = _generalLedgerJournalService.GetQueryable().Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing && x.SourceDocumentId == closing.Id)
                                                     .GroupBy(x => new { x.AccountId }).Select(x => x.Key.AccountId).ToList();
 
-                string[] AccountList = { 
-                                     Constant.AccountLegacyCode.AccountPayable,
-                                     Constant.AccountLegacyCode.AccountReceivable,
-                                     Constant.AccountLegacyCode.GBCHPayable,
-                                     Constant.AccountLegacyCode.GBCHReceivable,
-                                     Constant.AccountLegacyCode.CashBank,
-                                 };
-
                 foreach (var closingAccount in closingAccountIds)
                 {
                     Account acc = _accountService.GetObjectById(closingAccount);
@@ -664,7 +641,7 @@ namespace Service.Service
             return _repository.OpenObject(closing);
         }
 
-        public Closing DeleteObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService)
+        public Closing DeleteObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService, IGeneralLedgerJournalService _generalLedgerJournalService)
         {
             if (_validator.ValidDeleteObject(closing))
             {
@@ -679,6 +656,12 @@ namespace Service.Service
                     _validCombService.DeleteObject(validComb.Id);
                 }
                 _repository.DeleteObject(closing.Id);
+
+                IList<GeneralLedgerJournal> allClosingLedgers = _generalLedgerJournalService.GetQueryable().Where(x => x.SourceDocument == Constant.GeneralLedgerSource.Closing && x.SourceDocumentId == closing.Id).ToList();
+                foreach (var closingLedger in allClosingLedgers)
+                {
+                    _generalLedgerJournalService.DeleteObject(closingLedger.Id);
+                }
             }
             return closing;
         }
