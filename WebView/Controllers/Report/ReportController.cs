@@ -1736,6 +1736,81 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region VulcanBlanketSales
+        public ActionResult VulcanBlanketSales()
+        {
+            return View();
+        }
+
+        public ActionResult ReportVulcanBlanketSales(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesOrderDetails.Include(x => x.SalesOrder)
+                                                  .Where(x => !x.IsDeleted && x.SalesOrder.IsConfirmed && 
+                                                            x.Item.ItemType.Name == Constant.ItemTypeCase.Blanket &&
+                                                            x.Item.Name.ToLower().Contains("vulcan") && (
+                                                            (x.SalesOrder.SalesDate >= startDate && x.SalesOrder.SalesDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    CustomerName = m.SalesOrder.Contact.Name,
+                    //Currency = (m.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesOrder.Currency.Name,
+                    ItemName = m.Item.Name,
+                    //SKU = m.Item.Sku,
+                    //UoM = m.Item.UoM.Name,
+                    SalesDate = m.SalesOrder.SalesDate,
+                    Code = m.SalesOrder.NomorSurat,
+                    AC = db.Blankets.Where(x => x.Id == m.ItemId).FirstOrDefault().AC,
+                    AR = db.Blankets.Where(x => x.Id == m.ItemId).FirstOrDefault().AR,
+                    //Price = m.Price, //.Item.PriceList,
+                    //Amount = m.DeliveryOrderDetail.SalesOrderDetail.Quantity * m.DeliveryOrderDetail.SalesOrderDetail.Price,
+                }).Select(g => new
+                {
+                    CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    ItemName = g.Key.ItemName,
+                    //UoM = g.Key.UoM,
+                    Code = g.Key.Code,
+                    SalesDate = g.Key.SalesDate,
+                    AC = g.Key.AC,
+                    AR = g.Key.AR,
+                    Quantity = g.Where(x => (x.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                }).OrderBy(x => x.SalesDate).ThenBy(x => x.Code).ThenBy(x => x.CustomerName).ThenBy(x => x.ItemName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/VulcanBlanketSalesReport.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+
 
     }
 }

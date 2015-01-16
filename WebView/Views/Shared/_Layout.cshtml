@@ -469,6 +469,8 @@
                                                     {<li><a href="@Url.Action("ItemSalesYearlyByValue", "Report")">Item Sales Yearly by Value</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("ItemSalesYearlyByQuantity", "Report")">Item Sales Yearly by Quantity</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("VulcanBlanketSales", "Report")">Vulcan Blanket Sales</a></li>}
 
                                                 </ul>
                                             </li>
