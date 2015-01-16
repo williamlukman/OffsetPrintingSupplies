@@ -435,7 +435,7 @@ namespace Validation.Validation
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenFinished(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenPackaged(blanketOrderDetail);
+            VHasBeenQCAndMarked(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenRejected(blanketOrderDetail);
             return blanketOrderDetail;

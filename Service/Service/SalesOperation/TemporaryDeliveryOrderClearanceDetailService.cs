@@ -117,7 +117,6 @@ namespace Service.Service
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingDelivery -= temporaryDeliveryOrderClearanceDetail.Quantity;
-                    //item.Quantity -= temporaryDeliveryOrderClearanceDetail.Quantity;
                     //item.Virtual -= stockMutation.Quantity;
                     _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
@@ -147,7 +146,6 @@ namespace Service.Service
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingDelivery += temporaryDeliveryOrderClearanceDetail.Quantity;
-                    //item.Quantity += temporaryDeliveryOrderClearanceDetail.Quantity;
                     //item.Virtual += stockMutation.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }

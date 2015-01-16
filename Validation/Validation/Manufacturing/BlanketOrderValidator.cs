@@ -223,6 +223,12 @@ namespace Validation.Validation
             return blanketOrder;
         }
 
+        public BlanketOrder VUpdateAfterConfirmObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketOrderService _blanketOrderService)
+        {
+            VCreateObject(blanketOrder, _blanketOrderService);
+            return blanketOrder;
+        }
+
         public BlanketOrder VDeleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
         {
             VHasNotBeenConfirmed(blanketOrder);
@@ -298,6 +304,13 @@ namespace Validation.Validation
         {
             blanketOrder.Errors.Clear();
             VUpdateObject(blanketOrder, _blanketOrderDetailService, _blanketOrderService);
+            return isValid(blanketOrder);
+        }
+
+        public bool ValidUpdateAfterConfirmObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService, IBlanketOrderService _blanketOrderService)
+        {
+            blanketOrder.Errors.Clear();
+            VUpdateAfterConfirmObject(blanketOrder, _blanketOrderDetailService, _blanketOrderService);
             return isValid(blanketOrder);
         }
 

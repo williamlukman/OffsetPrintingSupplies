@@ -669,8 +669,8 @@
         width: $("#lookup_div_accountReceivable").width() - 10,
         height: $("#lookup_div_accountReceivable").height() - 110,
     });
-    $("#lookup_table_accountReceivable").jqGrid('navGrid', '#lookup_toolbar_accountReceivable', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_accountReceivable").jqGrid('navGrid', '#lookup_toolbar_accountReceivable', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_accountReceivable').click(function () {
@@ -738,8 +738,8 @@
         width: $("#lookup_div_account").width() - 10,
         height: $("#lookup_div_account").height() - 110,
     });
-    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_account").jqGrid('navGrid', '#lookup_toolbar_account', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_account').click(function () {

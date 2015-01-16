@@ -96,9 +96,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
-
 
 
     //TOOL BAR BUTTON
@@ -452,7 +451,7 @@
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
         //page: '1',
-        //pager: $('#pagerdetail'),
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -477,8 +476,8 @@
 		      //}
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: true })
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();

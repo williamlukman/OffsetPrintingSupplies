@@ -572,6 +572,7 @@ namespace WebView.Controllers
                 var data = _virtualOrderDetailService.GetObjectById(model.Id);
                 data.ItemId = model.ItemId;
                 data.Quantity = model.Quantity;
+                data.PendingDeliveryQuantity = model.PendingDeliveryQuantity;
                 data.Price = model.Price;
                 model = _virtualOrderDetailService.UpdateObject(data, _virtualOrderService, _itemService);
             }

@@ -42,7 +42,7 @@
               }
 
         });//END GRID
-        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list").jqGrid('setFrozenColumns');
     //    $("#list").setGridParam({ url: base_url + 'MstWarehouse/GetList', page: '1' }).trigger("reloadGrid");
 
@@ -92,7 +92,7 @@
               }
 
         });//END GRID
-        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
         jQuery("#list").jqGrid('setFrozenColumns');
     }
 
@@ -128,7 +128,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
     }
 
     // itemwarehouse
@@ -162,7 +162,7 @@
               }
 
         });//END GRID Detail
-        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+        $("#list_detail").jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
     }
 
 
@@ -218,8 +218,8 @@
     //      }
 
     //});//END GRID
-    //$("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //// .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    //$("#list").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: true });
+    //// .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -253,7 +253,7 @@
 
     //GRID Detail+++++++++++++++
    
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // -------------------------------------------------------Look Up contact-------------------------------------------------------
     $('#btnContact').click(function () {
@@ -286,7 +286,7 @@
         height: $("#lookup_div_contact").height() - 110,
     });
     $("#lookup_table_contact").jqGrid('navGrid', '#lookup_toolbar_contact', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_contact').click(function () {

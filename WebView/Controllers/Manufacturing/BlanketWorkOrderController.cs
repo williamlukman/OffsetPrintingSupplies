@@ -68,6 +68,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.ProductionNo,
                              Contact = model.Contact.Name,
                              Warehouse = model.Warehouse.Name,
                              model.QuantityReceived,
@@ -110,6 +111,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.ProductionNo,
                             model.Contact,
                             model.Warehouse,
                             model.QuantityReceived,
@@ -140,6 +142,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             model.ProductionNo,
                              Contact = model.Contact.Name,
                              Warehouse = model.Warehouse.Name,
                              model.QuantityReceived,
@@ -182,6 +185,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.ProductionNo,
                             model.Contact,
                             model.Warehouse,
                             model.QuantityReceived,
@@ -290,6 +294,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                model.ProductionNo,
                 model.ContactId,
                 Contact = _contactService.GetObjectById(model.ContactId).Name,
                 model.WarehouseId,
@@ -298,6 +303,7 @@ namespace WebView.Controllers
                 model.QuantityReceived,
                 model.HasDueDate,
                 model.DueDate,
+                model.IsConfirmed,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -316,12 +322,13 @@ namespace WebView.Controllers
                 model.Errors.Add("Generic", "Error : " + ex);
             }
 
+
             return Json(new
             {
                 model.Id,
                 BlanketSku = _blanketService.GetObjectById(model.BlanketId).Sku,
                 Blanket = _blanketService.GetObjectById(model.BlanketId).Name,
-                RollBlanketSku = _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
+                RollBlanketSku = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
                 RollBlanket = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Name,
                 BlanketLeftBarSku = _blanketService.GetObjectById(model.BlanketId).HasLeftBar ?
                                     _blanketService.GetLeftBarItem(_blanketService.GetObjectById(model.BlanketId)).Sku : "",
@@ -381,13 +388,18 @@ namespace WebView.Controllers
             try
             {
                 var data = _blanketOrderService.GetObjectById(model.Id);
-                data.ContactId = model.ContactId;
-                data.WarehouseId = model.WarehouseId;
+                if (!data.IsConfirmed)
+                {
+                    data.ContactId = model.ContactId;
+                    data.WarehouseId = model.WarehouseId;
+                    data.QuantityReceived = model.QuantityReceived;
+                }
                 data.Code = model.Code;
-                data.QuantityReceived = model.QuantityReceived;
+                data.ProductionNo = model.ProductionNo;
                 data.HasDueDate = model.HasDueDate;
                 data.DueDate = model.DueDate;
-                model = _blanketOrderService.UpdateObject(data,_blanketOrderDetailService);
+                model = data.IsConfirmed ? _blanketOrderService.UpdateAfterConfirmObject(data,_blanketOrderDetailService) :
+                                           _blanketOrderService.UpdateObject(data,_blanketOrderDetailService);
             }
             catch (Exception ex)
             {

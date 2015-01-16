@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
         public int WarehouseId { get; set; }
         public string Code { get; set; }
+        public string ProductionNo { get; set; }
 
         public int QuantityReceived { get; set; }
         public int QuantityRejected { get; set; }

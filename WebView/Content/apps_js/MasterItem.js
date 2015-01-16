@@ -89,8 +89,8 @@
                 }
             }
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -336,8 +336,8 @@
         width: $("#lookup_div_itemtype").width() - 10,
         height: $("#lookup_div_itemtype").height() - 110,
     });
-    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_itemtype').click(function () {
@@ -413,8 +413,8 @@
         width: $("#lookup_div_uom").width() - 10,
         height: $("#lookup_div_uom").height() - 110,
     });
-    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_uom").jqGrid('navGrid', '#lookup_toolbar_uom', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_uom').click(function () {

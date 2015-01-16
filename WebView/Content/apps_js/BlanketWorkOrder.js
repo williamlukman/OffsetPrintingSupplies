@@ -60,13 +60,14 @@
     $("#list").jqGrid({
         url: base_url + 'BlanketWorkOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
+        colNames: ['ID', 'Order No.', 'Production No', 'Contact', 'Warehouse', 'QTY', 'QTY Finished',
                     'QTY Rejected', 'Due Date', 'Confirmation Date', 'Created At', 'Updated At'
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
-                  { name: 'code', index: 'code', width: 50 },
-	              { name: 'contact', index: 'contact', width: 130 },
+                  { name: 'code', index: 'code', width: 75 },
+                  { name: 'productionno', index: 'productionno', width: 75 },
+	              { name: 'contact', index: 'contact', width: 200 },
                   { name: 'warehouse', index: 'warehouse', width: 100 },
                   { name: 'quantityreceived', index: 'quantityreceived', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quantityfinal', index: 'quantityfinal', align: 'right', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
@@ -103,8 +104,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -125,6 +126,7 @@
         $('#btnContact').removeAttr('disabled');
         $('#btnWarehouse').removeAttr('disabled');
         $('#Code').removeAttr('disabled');
+        $('#ProductionNo').removeAttr('disabled');
         $('#QuantityReceived').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#form_btn_save').show();
@@ -164,6 +166,7 @@
                             $('#btnContact').attr('disabled', true);
                             $('#btnWarehouse').attr('disabled', true);
                             $('#Code').attr('disabled', true);
+                            $('#ProductionNo').attr('disabled', true);
                             $('#QuantityReceived').attr('disabled', true);
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#HasDueDate').attr('disabled', true);
@@ -207,11 +210,14 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#ProductionNo').val(result.ProductionNo);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#WarehouseId').val(result.WarehouseId);
                             $('#Warehouse').val(result.Warehouse);
                             $('#QuantityReceived').numberbox('setValue', result.QuantityReceived);
+                            $('#Code').removeAttr('disabled');
+                            $('#ProductionNo').removeAttr('disabled');
                             $('#HasDueDate').removeAttr('disabled');
                             document.getElementById("HasDueDate").checked = result.HasDueDate;
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -224,13 +230,19 @@
                                 $('#DueDateDiv').hide();
                                 $('#DueDateDiv2').show();
                             }
-                            $('#btnContact').removeAttr('disabled');
-                            $('#btnWarehouse').removeAttr('disabled');
-                            $('#Code').removeAttr('disabled');
-                            $('#QuantityReceived').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
+                            if (result.IsConfirmed) {
+                                $('#btnContact').attr('disabled', true);
+                                $('#btnWarehouse').attr('disabled', true);
+                                $('#QuantityReceived').attr('disabled', true);
+                            }
+                            else {
+                                $('#btnContact').removeAttr('disabled');
+                                $('#btnWarehouse').removeAttr('disabled');
+                                $('#QuantityReceived').removeAttr('disabled');
+                            }
                         }
                     }
                 }
@@ -412,7 +424,7 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(),
                 WarehouseId: $("#WarehouseId").val(), Code: $("#Code").val(),
-                QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
+                ProductionNo: $("#ProductionNo").val(), QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
                 DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked
             }),
             async: false,
@@ -451,13 +463,13 @@
         ],
         colModel: [
                   { name: 'blanketsku', align: 'right', index: 'blanketsku', width: 50, sortable: false },
-                  { name: 'blanketname', index: 'blanketname', width: 70, sortable: false },
+                  { name: 'blanketname', index: 'blanketname', width: 300, sortable: false },
                   { name: 'rollBlanketsku', align:'right', index: 'rollBlanketsku', width: 50, sortable: false },
-                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 70, sortable: false },
+                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 200, sortable: false },
                   { name: 'leftbarsku', align: 'right', index: 'leftbarsku', width: 50, sortable: false },
-                  { name: 'leftbarname', index: 'leftbarname', width: 70, sortable: false },
+                  { name: 'leftbarname', index: 'leftbarname', width: 200, sortable: false },
                   { name: 'rightbarsku', align: 'right', index: 'rightbarsku', width: 50, sortable: false },
-                  { name: 'rightbarname', index: 'rightbarname', width: 70, sortable: false },
+                  { name: 'rightbarname', index: 'rightbarname', width: 200, sortable: false },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 
@@ -771,13 +783,13 @@
         colModel: [
                   { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 50 },
-				  { name: 'name', index: 'name', width: 100 },
+				  { name: 'name', index: 'name', width: 400 },
                   { name: 'rollBlanketsku', index: 'rollBlanketsku', width: 50 },
-				  { name: 'rollBlanketname', index: 'rollBlanketname', width: 100 },
+				  { name: 'rollBlanketname', index: 'rollBlanketname', width: 300 },
                   { name: 'leftbarsku', index: 'leftbarsku', width: 50 },
-				  { name: 'leftbarname', index: 'leftbarname', width: 100 },
+				  { name: 'leftbarname', index: 'leftbarname', width: 200 },
                   { name: 'rightbarsku', index: 'rightbarsku', width: 50 },
-				  { name: 'rightbarname', index: 'rightbarname', width: 100 },
+				  { name: 'rightbarname', index: 'rightbarname', width: 200 },
 
         ],
         page: '1',
@@ -792,8 +804,8 @@
         width: $("#lookup_div_blanket").width() - 10,
         height: $("#lookup_div_blanket").height() - 110,
     });
-    $("#lookup_table_blanket").jqGrid('navGrid', '#lookup_toolbar_blanket', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_blanket").jqGrid('navGrid', '#lookup_toolbar_blanket', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_blanket').click(function () {

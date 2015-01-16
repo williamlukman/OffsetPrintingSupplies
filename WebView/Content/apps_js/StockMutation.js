@@ -29,7 +29,7 @@
         datatype: "json",
         colNames: ['ID', 'Item Id', 'Item Sku', 'Name',
                    'Warehouse Id', 'Warehouse', 'Warehouse Item Id',
-                   'Ready', 'PendReceival', 'PendDelivery', 'UoM', 'Source', 'Id', 'Detail Source', 'Detail Id',
+                   'Ready', 'PendReceival', 'PendDelivery', 'Virtual', 'UoM', 'Source', 'Id', 'Detail Source', 'Detail Id',
                    'Created At', 'Mutation Date'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
@@ -42,6 +42,7 @@
                   { name: 'ready', index: 'quantity', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 40 },
 				  { name: 'sourcedocumenttype', index: 'sourcedocumenttype', width: 140, align: 'right' },
 				  { name: 'sourcedocumentid', index: 'sourcedocumentid', width: 55 },

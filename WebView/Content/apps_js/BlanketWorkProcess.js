@@ -47,24 +47,25 @@
     $("#list").jqGrid({
         url: base_url + 'BlanketWorkProcess/GetList',
         datatype: "json",
-        colNames: ['ID','Blanket Order ID', 'Code', 'Blanket Id', 'Sku','Name','Sku','Name', 'Sku', 'Name',
-                   'Sku', 'Name','C', 'SS', 'BP',
+        colNames: ['ID','Blanket Order ID', 'Code', 'Production No', 'Blanket Id', 'Sku','Blanket Name','Sku','Roll Name', 'Sku', 'Bar 1 Name',
+                   'Sku', 'Bar 2 Name','C', 'SS', 'BP',
                    'ATA','Roll Blanket QTY', 'BM', 'BHP', 'BPOT',
                    'QC&M', 'P', 'Rej', 'Rejected Date', 'Fin' ,'Finished Date'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 50, align: "center" },
     			  { name: 'blanketorderid', index: 'blanketorderid', width: 80, align: 'center', hidden: true },
-                  { name: 'blanketordercode', index: 'blanketorderid', width: 50, align: 'center'},
+                  { name: 'blanketordercode', index: 'blanketordercode', width: 50, align: 'center', hidden: true },
+                  { name: 'blanketorderproductionno', index: 'blanketorderproductionno', width: 75, align: 'center' },
                   { name: 'blanketid', index: 'blanketid', width: 100, sortable: false, hidden: true },
                   { name: 'sku', index: 'sku', width: 50, sortable: false, align: 'right' },
-                  { name: 'blanketname', index: 'blanketname', width: 100, sortable: false },
+                  { name: 'blanketname', index: 'blanketname', width: 300, sortable: false },
                   { name: 'rollBlanketsku', index: 'rollBlanketsku', width: 50, align: 'right', sortable: false },
-                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 100, sortable: false },
+                  { name: 'rollBlanketname', index: 'rollBlanketname', width: 200, sortable: false },
                   { name: 'leftbarsku', index: 'leftbarsku', width: 50, align: 'right', sortable: false },
-                  { name: 'lefbarname', index: 'lefbarname', width: 100, sortable: false },
+                  { name: 'lefbarname', index: 'lefbarname', width: 200, sortable: false },
                   { name: 'rightbarsku', index: 'rightbarsku', width: 50, align: 'right', sortable: false },
-                  { name: 'rightbarname', index: 'rightbarname', width: 100, sortable: false },
+                  { name: 'rightbarname', index: 'rightbarname', width: 200, sortable: false },
                   { name: 'iscut', index: 'iscut', width: 30, sortable: false },
                   { name: 'issidesealed', index: 'issidesealed', width: 30, sortable: false },
                   { name: 'isbarprepared', index: 'isbarprepared', width: 30, sortable: false },
@@ -188,8 +189,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

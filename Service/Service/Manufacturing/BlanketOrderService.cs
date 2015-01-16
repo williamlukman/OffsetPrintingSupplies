@@ -61,6 +61,11 @@ namespace Service.Service
             return (blanketOrder = _validator.ValidUpdateObject(blanketOrder, _blanketOrderDetailService, this) ? _repository.UpdateObject(blanketOrder) : blanketOrder);
         }
 
+        public BlanketOrder UpdateAfterConfirmObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
+        {
+            return (blanketOrder = _validator.ValidUpdateAfterConfirmObject(blanketOrder, _blanketOrderDetailService, this) ? _repository.UpdateObject(blanketOrder) : blanketOrder);
+        }
+
         public BlanketOrder SoftDeleteObject(BlanketOrder blanketOrder, IBlanketOrderDetailService _blanketOrderDetailService)
         {
             if (_validator.ValidDeleteObject(blanketOrder, _blanketOrderDetailService))

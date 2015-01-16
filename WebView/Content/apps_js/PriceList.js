@@ -76,8 +76,8 @@
                 }
             }
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -225,8 +225,8 @@
         width: $("#lookup_div_pricemutation").width() - 10,
         height: $("#lookup_div_pricemutation").height() - 110,
     });
-    $("#lookup_table_pricemutation").jqGrid('navGrid', '#lookup_toolbar_pricemutation', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_pricemutation").jqGrid('navGrid', '#lookup_toolbar_pricemutation', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_pricemutation').click(function () {

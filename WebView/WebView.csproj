@@ -1391,7 +1391,9 @@
     <Content Include="Views\AccountLedger\Index.cshtml" />
     <Content Include="Views\Repacking\Index.cshtml" />
     <Content Include="Views\GeneralLedgerSaldo\Index.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\ReceiptRequest\Index.cshtml" />
     <Content Include="Views\Report\CustomerGroupSalesQuarterly.cshtml" />
     <Content Include="Views\Report\CustomerSalesQuarterly.cshtml" />
