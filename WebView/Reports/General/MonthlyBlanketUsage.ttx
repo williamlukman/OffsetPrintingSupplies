@@ -11,6 +11,7 @@ Status	String	100
 SalesMonth	String	100
 SalesMonthCode	String	100
 SalesDate	DateTime	
+ProcessDate	DateTime
 Quantity	Number	
 Rate	Number
 Shipped	Number
