@@ -478,6 +478,8 @@
                                                 <ul>
 													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Blanket, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("MonthlyBlanketUsage", "Report")">Monthly Blanket Usage</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerBuilder, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("MonthlyRollerCompoundUsage", "Report")">Monthly Roller Compound Usage</a></li>}
 
                                                 </ul>
                                             </li>
