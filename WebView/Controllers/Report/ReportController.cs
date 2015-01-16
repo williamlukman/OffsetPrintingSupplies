@@ -1647,5 +1647,95 @@ namespace WebView.Controllers
         #endregion
 
 
+        #region MonthlyBlanketUsage
+        public ActionResult MonthlyBlanketUsage()
+        {
+            return View();
+        }
+
+        public ActionResult ReportMonthlyBlanketUsage(int Y1)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.BlanketOrderDetails.Include(x => x.BlanketOrder).Include(x => x.Blanket)
+                                                  .Where(x => !x.IsDeleted && !x.BlanketOrder.IsDeleted && (x.IsFinished || x.IsRejected) && (
+                                                            (x.BlanketOrder.ConfirmationDate.Value.Year == Y1)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    //CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                    //Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                    ItemType = m.Blanket.RollBlanketItem.Name,
+                    //SKU = m.DeliveryOrderDetail.SalesOrderDetail.Item.Sku,
+                    UoM = m.Blanket.RollBlanketItem.UoM.Name,
+                    //SalesDate = EntityFunctions.TruncateTime(m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate) ?? DateTime.MinValue,
+                }).Select(g => new
+                {
+                    //CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //Currency = g.Key.Currency,
+                    //ItemName = g.Key.ItemName,
+                    ItemType = g.Key.ItemType,
+                    //SKU = g.Key.SKU,
+                    UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    Amount1 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 1)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount2 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 2)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount3 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 3)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount4 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 4)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount5 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 5)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount6 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 6)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount7 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 7)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount8 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 8)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount9 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 9)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount10 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 10)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount11 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 11)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                    Amount12 = g.Where(x => (x.BlanketOrder.ConfirmationDate.Value.Month == 12)).Sum(x => (Decimal?)((x.BlanketOrder.QuantityFinal + x.BlanketOrder.QuantityRejected) * x.Blanket.AC * x.Blanket.AR)) ?? 0,
+                }).AsEnumerable();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                query = query.OrderBy(x => x.ItemType).ToList();
+                rd.Load(Server.MapPath("~/") + "Reports/General/MonthlyBlanketUsage.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("Y1", Y1.ToString());
+                rd.SetParameterValue("M1", new DateTime(Y1, 1, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M2", new DateTime(Y1, 2, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M3", new DateTime(Y1, 3, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M4", new DateTime(Y1, 4, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M5", new DateTime(Y1, 5, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M6", new DateTime(Y1, 6, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M7", new DateTime(Y1, 7, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M8", new DateTime(Y1, 8, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M9", new DateTime(Y1, 9, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M10", new DateTime(Y1, 10, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M11", new DateTime(Y1, 11, 1).ToString("MM-yy"));
+                rd.SetParameterValue("M12", new DateTime(Y1, 12, 1).ToString("MM-yy"));
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+
     }
 }

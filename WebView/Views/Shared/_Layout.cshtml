@@ -472,6 +472,13 @@
 
                                                 </ul>
                                             </li>
+                                            <li><a href="#">Manufacturing Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Blanket, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("MonthlyBlanketUsage", "Report")">Monthly Blanket Usage</a></li>}
+
+                                                </ul>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li id="menu-item-51"><a href="#">Setting</a>

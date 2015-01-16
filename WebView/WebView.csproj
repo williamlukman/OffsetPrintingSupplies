@@ -360,6 +360,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReportMonthlyBlanketUsage.js" />
     <Content Include="Content\apps_js\ReportDiscountByDate.js" />
     <Content Include="Content\apps_js\ReportSalesOrderDailyByDate.js" />
     <Content Include="Content\apps_js\ReportItemSalesYearlyByQuantity.js" />
@@ -1391,7 +1392,9 @@
     <Content Include="Views\AccountLedger\Index.cshtml" />
     <Content Include="Views\Repacking\Index.cshtml" />
     <Content Include="Views\GeneralLedgerSaldo\Index.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\ReceiptRequest\Index.cshtml" />
     <Content Include="Views\Report\CustomerGroupSalesQuarterly.cshtml" />
     <Content Include="Views\Report\CustomerSalesQuarterly.cshtml" />
@@ -1406,6 +1409,7 @@
     <Content Include="Views\Report\ItemSalesYearlyByQuantity.cshtml" />
     <Content Include="Views\Report\SalesOrderDailyByDate.cshtml" />
     <Content Include="Views\Report\DiscountByDate.cshtml" />
+    <Content Include="Views\Report\MonthlyBlanketUsage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
