@@ -28,11 +28,11 @@ namespace Validation.Validation
             CoreIdentification coreIdentification = _coreIdentificationService.GetObjectById(recoveryOrder.CoreIdentificationId);
             if (coreIdentification == null)
             {
-                recoveryOrder.Errors.Add("CoreIdentificationId", "Tidak terasosiasi dengan core identification");
+                recoveryOrder.Errors.Add("Generic", "Tidak terasosiasi dengan core identification");
             }
             else if (!coreIdentification.IsConfirmed)
             {
-                recoveryOrder.Errors.Add("CoreIdentifcationId", "Belum dikonfirmasi");
+                recoveryOrder.Errors.Add("Generic", "RIF belum dikonfirmasi");
             }
             return recoveryOrder;
         }

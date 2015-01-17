@@ -59,7 +59,7 @@
     $("#list").jqGrid({
         url: base_url + 'RecoveryWorkOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'CoreIdentification Id', 'Warehouse Id',
+        colNames: ['ID', 'Code', 'CoreIdentification Id', 'No. Diss', 'Warehouse Id',
                     'Warehouse Code', 'Warehouse Name', 'QTY Rcv', 'QTY Final',
                     'QTY Rjct', 'Due Date', 'Is Confirmed', 'Confirmation Date', 'Is Completed', 'Created At', 'Updated At'
         ],
@@ -67,6 +67,7 @@
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'coreidentificationid', index: 'coreidentificationid', width: 100, hidden: true },
+                  { name: 'nomordisassembly', index: 'nomordisassembly', width: 100 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousecode', index: 'warehousecode', width: 100, hidden: true },
                   { name: 'warehouse', index: 'warehouse', width: 160 },
