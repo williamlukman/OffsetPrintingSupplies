@@ -8,6 +8,7 @@ namespace Core.DomainModel
     public partial class Contact
     {
         public int Id { get; set; }
+        public Nullable<int> ContactGroupId { get; set; }
 
         public string Name { get; set; }
         public string NamaFakturPajak { get; set; }
@@ -38,5 +39,7 @@ namespace Core.DomainModel
         public ICollection<PurchaseOrder> PurchaseOrders { get; set; }
         public ICollection<VirtualOrder> VirtualOrders { get; set; }
         public ICollection<SalesQuotation> SalesQuotations { get; set; }
+        public ICollection<ContactDetail> ContactDetails { get; set; }
+        public ContactGroup ContactGroup { get; set; }
     }
 }

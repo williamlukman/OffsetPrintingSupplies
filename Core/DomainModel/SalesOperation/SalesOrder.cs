@@ -15,6 +15,7 @@ namespace Core.DomainModel
         public DateTime SalesDate { get; set; }
         public string NomorSurat { get; set; }
         public int CurrencyId { get; set; }
+        public Nullable<int> EmployeeId { get; set; }
 
         public bool IsConfirmed { get; set; }
         public Nullable<DateTime> ConfirmationDate { get; set; }
@@ -28,6 +29,7 @@ namespace Core.DomainModel
         public virtual ICollection<SalesOrderDetail> SalesOrderDetails { get; set; }
         public virtual Currency Currency { get; set; }
         public virtual Contact Contact { get; set; }
+        public virtual Employee Employee { get; set; }
         public Dictionary<String, String> Errors { get; set; }
     }
 }

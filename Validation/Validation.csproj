@@ -95,6 +95,9 @@
     <Compile Include="Validation\StockAndMaster\CompoundValidator.cs" />
     <Compile Include="Validation\StockAndMaster\BlendingRecipeValidator.cs" />
     <Compile Include="Validation\StockAndMaster\BlendingRecipeDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ContactDetailValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\ContactGroupValidator.cs" />
+    <Compile Include="Validation\StockAndMaster\EmployeeValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerStockAdjustmentValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerStockAdjustmentDetailValidator.cs" />
     <Compile Include="Validation\StockAndMaster\CustomerStockMutationValidator.cs" />

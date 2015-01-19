@@ -130,6 +130,10 @@ namespace Core.Constants
         {
             public static string CompanyInfo = "Company Info";
             public static string Contact = "Contact";
+            public static string ContactGroup = "Contact Group";
+            public static string ContactDetail = "Contact Detail";
+            public static string SupplierDetail = "Supplier Detail";
+            public static string Employee = "Employee";
             public static string Supplier = "Supplier";
             public static string ItemType = "ItemType";
             public static string UoM = "UoM";
