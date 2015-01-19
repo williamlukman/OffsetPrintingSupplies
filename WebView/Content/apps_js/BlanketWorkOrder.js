@@ -20,6 +20,7 @@
     function ClearData() {
         $('#form_btn_save').data('kode', '');
         $('#item_btn_submit').data('kode', '');
+        $('#copy_btn_submit').data('kode', '');
         ClearErrorMessage();
     }
 
@@ -49,6 +50,7 @@
     $("#delete_confirm_div").dialog('close');
     $("#rejected_div").dialog('close');
     $("#finished_div").dialog('close');
+    $("#copy_div").dialog('close');
     $("#ContactId").hide();
     $("#WarehouseId").hide();
     $("#BlanketSku").hide();
@@ -457,11 +459,12 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Sku', 'Name', 'Sku', 'Nama',
+        colNames: ['Id', 'Sku', 'Name', 'Sku', 'Nama',
                    'Sku', 'Name', 'Sku', 'Nama',
                    'Rejected Date' ,'Finished Date' 
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'blanketsku', align: 'right', index: 'blanketsku', width: 50, sortable: false },
                   { name: 'blanketname', index: 'blanketname', width: 300, sortable: false },
                   { name: 'rollBlanketsku', align:'right', index: 'rollBlanketsku', width: 50, sortable: false },
@@ -585,6 +588,81 @@
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
         }
+    });
+
+    $('#btn_copy_detail').click(function () {
+        ClearData();
+        clearForm("#copy_div");
+        var id = jQuery("#listdetail").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "BlanketWorkOrder/GetInfoDetail?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#copy_btn_submit").data('kode', result.BlanketOrderId);
+                            $("#skucopy").val(result.BlanketSku);
+                            $('#BlanketSku').val(result.BlanketSku).data('kode', result.BlanketId);
+                            $('#Blanket').val(result.Blanket);
+                            $('#RollBlanketSku').val(result.RollBlanketSku);
+                            $('#RollBlanket').val(result.RollBlanket);
+                            $('#BlanketLeftBarSku').val(result.BlanketLeftBarSku);
+                            $('#BlanketLeftBar').val(result.BlanketLeftBar);
+                            $('#BlanketRightBarSku').val(result.BlanketRightBarSku);
+                            $('#BlanketRightBar').val(result.BlanketRightBar);
+                            $('#copy_div').dialog('open');
+                        }
+                    }
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
+    $('#copy_btn_cancel').click(function () {
+        $('#copy_btn_cancel').val('');
+        $("#copy_div").dialog('close');
+    });
+
+    $('#copy_btn_submit').click(function () {
+        $.ajax({
+            url: base_url + "BlanketWorkOrder/CopyDetail",
+            contentType: "application/json",
+            type: 'POST',
+            data: JSON.stringify({
+                BlanketId: $("#BlanketSku").data('kode'), BlanketOrderId: $("#copy_btn_submit").data('kode'),
+                TotalCopy: $("#TotalCopy").numberbox('getValue')
+            }),
+            success: function (result) {
+                if (JSON.stringify(result.Errors) != '{}') {
+                    for (var key in result.Errors) {
+                        if (key != null && key != undefined && key != 'Generic') {
+                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
+                        }
+                        else {
+                            $.messager.alert('Warning', result.Errors[key], 'warning');
+                        }
+                    }
+                }
+                else {
+                    ReloadGridDetail('last');
+                    $("#copy_div").dialog('close')
+                }
+            }
+        });
     });
 
     //--------------------------------------------------------Dialog Item-------------------------------------------------------------

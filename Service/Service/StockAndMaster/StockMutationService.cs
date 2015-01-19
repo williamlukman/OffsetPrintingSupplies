@@ -614,13 +614,13 @@ namespace Service.Service
             return stockMutations;
         }
 
-        public StockMutation CreateStockMutationForBlanketOrder(BlanketOrderDetail blanketOrderDetail, DateTime FinishedOrRejectedDate, WarehouseItem warehouseItem, bool CaseAddition)
+        public StockMutation CreateStockMutationForBlanketOrder(BlanketOrderDetail blanketOrderDetail, decimal Usage, DateTime FinishedOrRejectedDate, WarehouseItem warehouseItem, bool CaseAddition)
         {
             StockMutation stockMutation = new StockMutation();
             stockMutation.ItemId = warehouseItem.ItemId;
             stockMutation.WarehouseId = warehouseItem.WarehouseId;
             stockMutation.WarehouseItemId = warehouseItem.Id;
-            stockMutation.Quantity = blanketOrderDetail.RollBlanketUsage;
+            stockMutation.Quantity = Usage;
             stockMutation.SourceDocumentType = Constant.SourceDocumentType.BlanketOrder;
             stockMutation.SourceDocumentId = blanketOrderDetail.BlanketOrderId;
             stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.BlanketOrderDetail;

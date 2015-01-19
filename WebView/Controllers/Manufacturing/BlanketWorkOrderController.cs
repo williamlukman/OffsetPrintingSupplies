@@ -261,6 +261,7 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                             model.Id,
                              model.BlanketSku,
                              model.Blanket,
                              model.RollBlanketItemSku,
@@ -326,6 +327,8 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Id,
+                model.BlanketOrderId,
+                model.BlanketId,
                 BlanketSku = _blanketService.GetObjectById(model.BlanketId).Sku,
                 Blanket = _blanketService.GetObjectById(model.BlanketId).Name,
                 RollBlanketSku = _blanketService.GetRollBlanketItem(_blanketService.GetObjectById(model.BlanketId)).Sku,
@@ -379,6 +382,33 @@ namespace WebView.Controllers
             return Json(new
             {
                 model.Errors
+            });
+        }
+
+        public dynamic CopyDetail(int BlanketId, int BlanketOrderId, int TotalCopy)
+        {
+            IDictionary<string, string> Errors = new Dictionary<string, string>();
+            try
+            {
+                for (int i = 0; i < TotalCopy; i++)
+                {
+                    BlanketOrderDetail model = new BlanketOrderDetail { BlanketId = BlanketId, BlanketOrderId = BlanketOrderId };
+                    model = _blanketOrderDetailService.CreateObject(model, _blanketOrderService, _blanketService);
+                    if (model.Errors.Any() && !Errors.Any())
+                    {
+                        Errors.Add("Generic", model.Errors.ElementAtOrDefault(0).Value);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LOG.Error("Insert Failed", ex);
+                if (!Errors.Any()) { Errors.Add("Generic", "Error : " + ex); }
+            }
+
+            return Json(new
+            {
+                Errors
             });
         }
 

@@ -134,7 +134,7 @@ namespace Service.Service
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             blanketOrderDetail.RejectedDate = RejectedDate;
-            if (_validator.ValidRejectObject(blanketOrderDetail, _blanketOrderService))
+            if (_validator.ValidRejectObject(blanketOrderDetail, _blanketOrderService, _blanketService, _itemService, _warehouseItemService))
             {
                 CalculateTotalCost(blanketOrderDetail, _blanketService, _itemService);
                 _generalLedgerJournalService.CreateRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _itemTypeService, _accountService);
@@ -158,20 +158,20 @@ namespace Service.Service
                 {
                     Item leftbar = _blanketService.GetLeftBarItem(blanket);
                     WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, leftbar.Id);
-                    StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, RejectedDate, warehouseLeftBar, CaseAddition);
+                    StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, 1, RejectedDate, warehouseLeftBar, CaseAddition);
                     _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _blanketService, _warehouseItemService);
                 }
                 if (blanket.HasRightBar)
                 {
                     Item rightbar = _blanketService.GetRightBarItem(blanket);
                     WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, rightbar.Id);
-                    StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, RejectedDate, warehouseRightBar, CaseAddition);
+                    StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, 1, RejectedDate, warehouseRightBar, CaseAddition);
                     _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _blanketService, _warehouseItemService);
                 }
 
                 // deduce rollBlanket quantity
                 WarehouseItem warehouseRollBlanket = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, blanket.RollBlanketItemId);
-                StockMutation stockMutationRollBlanket = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, RejectedDate, warehouseRollBlanket, CaseAddition);
+                StockMutation stockMutationRollBlanket = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, blanketOrderDetail.RollBlanketUsage, RejectedDate, warehouseRollBlanket, CaseAddition);
                 _stockMutationService.StockMutateObject(stockMutationRollBlanket, _itemService, _blanketService, _warehouseItemService);
             }
             return blanketOrderDetail;
@@ -231,7 +231,7 @@ namespace Service.Service
                                                IAccountService _accountService, IGeneralLedgerJournalService _generalLedgerJournalService, IClosingService _closingService)
         {
             blanketOrderDetail.FinishedDate = FinishedDate;
-            if (_validator.ValidFinishObject(blanketOrderDetail, _blanketOrderService))
+            if (_validator.ValidFinishObject(blanketOrderDetail, _blanketOrderService, _blanketService, _itemService, _warehouseItemService))
             {
                 CalculateTotalCost(blanketOrderDetail, _blanketService, _itemService);
                 _generalLedgerJournalService.CreateFinishedJournalForBlanketOrderDetail(blanketOrderDetail, _itemTypeService, _accountService);
@@ -253,7 +253,7 @@ namespace Service.Service
                 // add blanket quantity
                 Blanket blanket = _blanketService.GetObjectById(blanketOrderDetail.BlanketId);
                 WarehouseItem warehouseBlanket = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, blanket.Id);
-                StockMutation stockMutation = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, FinishedDate, warehouseBlanket, CaseAdditionBlanket);
+                StockMutation stockMutation = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, 1, FinishedDate, warehouseBlanket, CaseAdditionBlanket);
                 _stockMutationService.StockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
 
                 // deduce bars quantity
@@ -261,20 +261,20 @@ namespace Service.Service
                 {
                     Item leftbar = _blanketService.GetLeftBarItem(blanket);
                     WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, leftbar.Id);
-                    StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, FinishedDate, warehouseLeftBar, CaseAdditionElse);
+                    StockMutation stockMutationLeftBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, 1, FinishedDate, warehouseLeftBar, CaseAdditionElse);
                     _stockMutationService.StockMutateObject(stockMutationLeftBar, _itemService, _blanketService, _warehouseItemService);
                 }
                 if (blanket.HasRightBar)
                 {
                     Item rightbar = _blanketService.GetRightBarItem(blanket);
                     WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, rightbar.Id);
-                    StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, FinishedDate, warehouseRightBar, CaseAdditionElse);
+                    StockMutation stockMutationRightBar = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, 1, FinishedDate, warehouseRightBar, CaseAdditionElse);
                     _stockMutationService.StockMutateObject(stockMutationRightBar, _itemService, _blanketService, _warehouseItemService);
                 }
 
                 // deduce rollBlanket quantity
                 WarehouseItem warehouseRollBlanket = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, blanket.RollBlanketItemId);
-                StockMutation stockMutationRollBlanket = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, FinishedDate, warehouseRollBlanket, CaseAdditionElse);
+                StockMutation stockMutationRollBlanket = _stockMutationService.CreateStockMutationForBlanketOrder(blanketOrderDetail, blanketOrderDetail.RollBlanketUsage, FinishedDate, warehouseRollBlanket, CaseAdditionElse);
                 _stockMutationService.StockMutateObject(stockMutationRollBlanket, _itemService, _blanketService, _warehouseItemService);
             }
             return blanketOrderDetail;
