@@ -111,6 +111,7 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(salesAllowance, _salesAllowanceDetailService, _cashBankService, _closingService))
             {
+                DateTime ConfirmationDate = salesAllowance.ConfirmationDate.GetValueOrDefault();
                 IList<SalesAllowanceDetail> details = _salesAllowanceDetailService.GetObjectsBySalesAllowanceId(salesAllowance.Id);
                 foreach (var detail in details)
                 {

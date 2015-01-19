@@ -703,7 +703,10 @@
 		              rowOrderType = "Trial";
 		          } else if (rowOrderType == '1') {
 		              rowOrderType = "Sample";
-		          } else {
+		          } else if (rowOrderType == '2') {
+		              rowOrderType = "Consignment";
+		          }
+                  else {
 		              rowOrderType = "Part Delivery";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { ordertype: rowOrderType });

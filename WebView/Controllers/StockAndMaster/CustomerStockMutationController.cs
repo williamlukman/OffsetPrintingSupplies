@@ -69,6 +69,8 @@ namespace WebView.Controllers
                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
                             PendingDelivery = model.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                            Virtual = model.ItemCase == Core.Constants.Constant.ItemCase.Virtual ?
+                                (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
                             UoM = model.Item.UoM.Name,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
@@ -119,6 +121,7 @@ namespace WebView.Controllers
                             model.Ready,
                             model.PendingReceival,
                             model.PendingDelivery,
+                            model.Virtual,
                             model.UoM,
                             model.SourceDocumentType,
                             model.SourceDocumentId,
@@ -160,6 +163,8 @@ namespace WebView.Controllers
                              PendingReceival = model.ItemCase == Core.Constants.Constant.ItemCase.PendingReceival ?
                                  (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
                              PendingDelivery = model.ItemCase == Core.Constants.Constant.ItemCase.PendingDelivery ?
+                                 (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
+                             Virtual = model.ItemCase == Core.Constants.Constant.ItemCase.Virtual ?
                                  (model.Status == Core.Constants.Constant.MutationStatus.Addition ? model.Quantity : model.Quantity * (-1)) : 0,
                              UoM = model.Item.UoM.Name,
                              model.SourceDocumentType,
@@ -212,6 +217,7 @@ namespace WebView.Controllers
                             model.Ready,
                             model.PendingReceival,
                             model.PendingDelivery,
+                            model.Virtual,
                             model.UoM,
                             model.SourceDocumentType,
                             model.SourceDocumentId,

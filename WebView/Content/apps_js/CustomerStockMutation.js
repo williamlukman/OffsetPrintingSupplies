@@ -29,7 +29,7 @@
         datatype: "json",
         colNames: ['ID', 'Item Id', 'Item Sku', 'Name',
                    'Warehouse Id', 'Warehouse', 'Warehouse Item Id', 'Contact Id', 'Contact',
-                   'Ready', 'PendReceival', 'PendDelivery', 'UoM', 'Source', 'Id', 'Detail Source', 'Detail Id',
+                   'Ready', 'PendReceival', 'PendDelivery', 'Virtual', 'UoM', 'Source', 'Id', 'Detail Source', 'Detail Id',
                    'Created At', 'Mutation Date'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
@@ -44,6 +44,7 @@
                   { name: 'quantity', index: 'quantity', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingreceival', index: 'pendingreceival', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingdelivery', index: 'pendingdelivery', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'virtual', index: 'virtual', width: 75, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'uom', index: 'uom', width: 40 },
 				  { name: 'source', index: 'source', width: 140, align: 'right' },
 				  { name: 'sourceid', index: 'sourceid', width: 55 },
@@ -68,8 +69,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {

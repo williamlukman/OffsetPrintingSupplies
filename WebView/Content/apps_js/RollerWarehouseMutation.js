@@ -105,8 +105,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
 
 
@@ -629,8 +629,8 @@
         width: $("#lookup_div_warehouseto").width() - 10,
         height: $("#lookup_div_warehouseto").height() - 110,
     });
-    $("#lookup_table_warehouseto").jqGrid('navGrid', '#lookup_toolbar_warehouseto', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehouseto").jqGrid('navGrid', '#lookup_toolbar_warehouseto', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehouseto').click(function () {
@@ -687,8 +687,8 @@
         width: $("#lookup_div_warehousefrom").width() - 10,
         height: $("#lookup_div_warehousefrom").height() - 110,
     });
-    $("#lookup_table_warehousefrom").jqGrid('navGrid', '#lookup_toolbar_warehousefrom', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehousefrom").jqGrid('navGrid', '#lookup_toolbar_warehousefrom', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehousefrom').click(function () {
@@ -744,8 +744,8 @@
         width: $("#lookup_div_recoveryworkorder").width() - 10,
         height: $("#lookup_div_recoveryworkorder").height() - 110,
     });
-    $("#lookup_table_recoveryworkorder").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorder', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_recoveryworkorder").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorder', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_recoveryworkorder').click(function () {
@@ -806,8 +806,8 @@
         width: $("#lookup_div_recoveryworkorderdetail").width() - 10,
         height: $("#lookup_div_recoveryworkorderdetail").height() - 110,
     });
-    $("#lookup_table_recoveryworkorderdetail").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorderdetail', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_recoveryworkorderdetail").jqGrid('navGrid', '#lookup_toolbar_recoveryworkorderdetail', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_recoveryworkorderdetail').click(function () {

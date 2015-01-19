@@ -93,14 +93,14 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(memorial, _memorialDetailService, _closingService))
             {
+                _generalLedgerJournalService.CreateUnconfirmationJournalForMemorial(memorial, _memorialDetailService, _accountService);
+                _repository.UnconfirmObject(memorial);
                 IList<MemorialDetail> memorialDetails = _memorialDetailService.GetObjectsByMemorialId(memorial.Id);
                 foreach (var detail in memorialDetails)
                 {
                     detail.Errors = new Dictionary<string, string>();
                     _memorialDetailService.UnconfirmObject(detail, this);
                 }
-                _repository.UnconfirmObject(memorial);
-                _generalLedgerJournalService.CreateUnconfirmationJournalForMemorial(memorial, _memorialDetailService, _accountService);
             }
             return memorial;
         }

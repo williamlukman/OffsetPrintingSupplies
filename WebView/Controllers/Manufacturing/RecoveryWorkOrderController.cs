@@ -75,6 +75,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.CoreIdentificationId,
+                             model.CoreIdentification.NomorDisassembly,
                              WarehouseId = model.CoreIdentification.WarehouseId,
                              WarehouseCode = model.CoreIdentification.Warehouse.Code,
                              Warehouse = model.CoreIdentification.Warehouse.Name,
@@ -123,6 +124,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.CoreIdentificationId,
+                            model.NomorDisassembly,
                             model.WarehouseId,
                             model.WarehouseCode,
                             model.Warehouse,
@@ -157,6 +159,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Code,
                              model.CoreIdentificationId,
+                             model.CoreIdentification.NomorDisassembly,
                              WarehouseId = model.CoreIdentification.WarehouseId,
                              WarehouseCode = model.CoreIdentification.Warehouse.Code,
                              Warehouse = model.CoreIdentification.Warehouse.Name,
@@ -204,6 +207,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Code,
                             model.CoreIdentificationId,
+                            model.NomorDisassembly,
                             model.WarehouseId,
                             model.WarehouseCode,
                             model.Warehouse,
@@ -403,6 +407,7 @@ namespace WebView.Controllers
                 model.Code,
                 model.WarehouseId,
                 model.CoreIdentificationId,
+                model.CoreIdentification.NomorDisassembly,
                 CoreIdentification =_coreIdentificationService.GetObjectById(model.CoreIdentificationId).Code,
                 WarehouseCode = _warehouseService.GetObjectById(model.WarehouseId).Code,
                 Warehouse = _warehouseService.GetObjectById(model.WarehouseId).Name,
@@ -522,7 +527,7 @@ namespace WebView.Controllers
             try
             {
                 var data = _recoveryOrderService.GetObjectById(model.Id);
-                model = _recoveryOrderService.SoftDeleteObject(model,_recoveryOrderDetailService,_recoveryAccessoryDetailService);
+                model = _recoveryOrderService.SoftDeleteObject(data,_recoveryOrderDetailService,_recoveryAccessoryDetailService);
             }
             catch (Exception ex)
             {

@@ -59,7 +59,7 @@
     $("#list").jqGrid({
         url: base_url + 'RecoveryWorkOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'CoreIdentification Id', 'Warehouse Id',
+        colNames: ['ID', 'Code', 'CoreIdentification Id', 'No. Diss', 'Warehouse Id',
                     'Warehouse Code', 'Warehouse Name', 'QTY Rcv', 'QTY Final',
                     'QTY Rjct', 'Due Date', 'Is Confirmed', 'Confirmation Date', 'Is Completed', 'Created At', 'Updated At'
         ],
@@ -67,6 +67,7 @@
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
 				  { name: 'coreidentificationid', index: 'coreidentificationid', width: 100, hidden: true },
+                  { name: 'nomordisassembly', index: 'nomordisassembly', width: 100 },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousecode', index: 'warehousecode', width: 100, hidden: true },
                   { name: 'warehouse', index: 'warehouse', width: 160 },
@@ -107,8 +108,8 @@
 		  }
 
     });//END GRID
-    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list").jqGrid('navGrid', '#toolbar_cont', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //TOOL BAR BUTTON
     $('#btn_reload').click(function () {
@@ -670,8 +671,8 @@
         width: $("#lookup_div_warehouse").width() - 10,
         height: $("#lookup_div_warehouse").height() - 110,
     });
-    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_warehouse").jqGrid('navGrid', '#lookup_toolbar_warehouse', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_warehouse').click(function () {
@@ -740,8 +741,8 @@
         width: $("#lookup_div_coreidentification").width() - 10,
         height: $("#lookup_div_coreidentification").height() - 110,
     });
-    $("#lookup_table_coreidentification").jqGrid('navGrid', '#lookup_toolbar_coreidentification', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_coreidentification").jqGrid('navGrid', '#lookup_toolbar_coreidentification', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_coreidentification').click(function () {
@@ -815,8 +816,8 @@
         width: $("#lookup_div_coreidentificationdetail").width() - 10,
         height: $("#lookup_div_coreidentificationdetail").height() - 110,
     });
-    $("#lookup_table_coreidentificationdetail").jqGrid('navGrid', '#lookup_toolbar_coreidentificationdetail', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_coreidentificationdetail").jqGrid('navGrid', '#lookup_toolbar_coreidentificationdetail', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_coreidentificationdetail').click(function () {
@@ -938,8 +939,8 @@
 		  }
     });//END GRID
 
-    $("#lookup_table_rollerbuilder").jqGrid('navGrid', '#lookup_toolbar_rollerbuilder', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_rollerbuilder").jqGrid('navGrid', '#lookup_toolbar_rollerbuilder', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     // Cancel or CLose
     $('#lookup_btn_cancel_rollerbuilder').click(function () {

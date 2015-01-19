@@ -123,9 +123,9 @@ namespace Service.Service
                     detail.Errors = new Dictionary<string, string>();
                     _purchaseDownPaymentAllocationDetailService.UnconfirmObject(detail, this, _purchaseDownPaymentService, _payableService, _receivableService);
                 }
-                _repository.UnconfirmObject(purchaseDownPaymentAllocation);
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseDownPaymentAllocation(purchaseDownPaymentAllocation, _accountService, _purchaseDownPaymentService, _purchaseDownPaymentAllocationDetailService,
                                              _payableService, _receivableService);
+                _repository.UnconfirmObject(purchaseDownPaymentAllocation);
             }
             return purchaseDownPaymentAllocation;
         }

@@ -97,8 +97,8 @@
     }
       
 });
-    $("#list_mstcoa").jqGrid('navGrid', '#toolbar_coa', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#list_mstcoa").jqGrid('navGrid', '#toolbar_coa', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //GRID LOOKUP +++++++++++++++
     $("#lookup_table_coa").jqGrid({
@@ -121,8 +121,8 @@
         width: $("#lookup_div_coa").width() - 10,
         height: $("#lookup_div_coa").height() - 115
     });
-    $("#lookup_table_coa").jqGrid('navGrid', '#lookup_toolbar_coa', { del: false, add: false, edit: false, search: false })
-           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#lookup_table_coa").jqGrid('navGrid', '#lookup_toolbar_coa', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
     //END GRID
 
