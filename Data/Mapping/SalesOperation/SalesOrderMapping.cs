@@ -22,6 +22,9 @@ namespace Data.Mapping
             HasMany(so => so.SalesOrderDetails)
                 .WithRequired(sod => sod.SalesOrder)
                 .HasForeignKey(sod => sod.SalesOrderId);
+            HasOptional(so => so.Employee)
+                .WithMany(e => e.SalesOrders)
+                .HasForeignKey(so => so.EmployeeId);
             Ignore(so => so.Errors);
         }
     }

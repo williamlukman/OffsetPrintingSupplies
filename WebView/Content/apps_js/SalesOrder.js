@@ -42,16 +42,18 @@
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
+    $("#lookup_div_employee").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ContactId").hide();
+    $("#EmployeeId").hide();
     $("#ItemId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
         url: base_url + 'SalesOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency','SalesDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Marketing Id', 'Marketing', 'Currency','SalesDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
@@ -59,6 +61,8 @@
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contact', index: 'contact', width: 150 },
+				  { name: 'employeeid', index: 'employeeid', width: 100, hidden: true },
+                  { name: 'employee', index: 'employee', width: 150 },
                   { name: 'currency', index: 'currency', width: 150 },
                   { name: 'salesdate', index: 'salesdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
@@ -130,6 +134,7 @@
         $('#SalesDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#CurrencyId').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
+        $('#btnEmployee').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#SalesDateDiv').show();
@@ -166,6 +171,8 @@
                             $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#EmployeeId').val(result.EmployeeId);
+                            $('#Employee').val(result.Employee);
                             $('#CurrencyId').val(result.CurrencyId);
                             $('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
                             $('#SalesDate2').val(dateEnt(result.SalesDate));
@@ -174,6 +181,7 @@
                             $('#form_btn_save').hide();
                             $('#CurrencyId').attr('disabled', true);
                             $('#btnContact').attr('disabled', true);
+                            $('#btnEmployee').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
@@ -214,10 +222,13 @@
                             $('#NomorSurat').val(result.NomorSurat);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
+                            $('#EmployeeId').val(result.EmployeeId);
+                            $('#Employee').val(result.Employee);
                             $('#SalesDate').datebox('setValue', dateEnt(result.SalesDate));
                             $('#CurrencyId').val(result.CurrencyId);
                             $('#CurrencyId').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
+                            $('#btnEmployee').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#SalesDateDiv2').hide();
@@ -395,7 +406,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ContactId: $("#ContactId").val(), SalesDate: $('#SalesDate').datebox('getValue'),
+                Id: id, ContactId: $("#ContactId").val(), EmployeeId: $("#EmployeeId").val(), SalesDate: $('#SalesDate').datebox('getValue'),
                 NomorSurat: $("#NomorSurat").val(), CurrencyId: currency
             }),
             async: false,
@@ -692,6 +703,67 @@
 
 
     // ---------------------------------------------End Lookup contact----------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up employee-------------------------------------------------------
+    $('#btnEmployee').click(function () {
+        var lookUpURL = base_url + 'Employee/GetList';
+        var lookupGrid = $('#lookup_table_employee');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_employee').dialog('open');
+    });
+
+    jQuery("#lookup_table_employee").jqGrid({
+        url: base_url + 'Employee/GetList',
+        datatype: "json",
+        colNames: ['ID', 'Name', 'Contact No', 'Email', 'Address', 'Description', 'Created At', 'Updated At'],
+        colModel: [
+    			  { name: 'id', index: 'id', width: 60, align: "center" },
+				  { name: 'name', index: 'name', width: 180 },
+                  { name: 'contact', index: 'contactno', width: 100 },
+                  { name: 'email', index: 'email', width: 150 },
+                  { name: 'address', index: 'address', width: 250 },
+                  { name: 'description', index: 'description', width: 250 },
+                  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_employee'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_employee").width() - 10,
+        height: $("#lookup_div_employee").height() - 110,
+    });
+    $("#lookup_table_employee").jqGrid('navGrid', '#lookup_toolbar_employee', { del: false, add: false, edit: false, search: false })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_employee').click(function () {
+        $('#lookup_div_employee').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_employee').click(function () {
+        var id = jQuery("#lookup_table_employee").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_employee").jqGrid('getRowData', id);
+
+            $('#EmployeeId').val(ret.id).data("kode", id);
+            $('#Employee').val(ret.name);
+
+            $('#lookup_div_employee').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+    // ---------------------------------------------End Lookup employee----------------------------------------------------------------
 
     // -------------------------------------------------------Look Up item-------------------------------------------------------
     $('#btnItem').click(function () {

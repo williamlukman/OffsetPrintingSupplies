@@ -83,6 +83,36 @@ namespace Data.Migrations
                 account.IsPayableReceivable = true;
             }
 
+            int? employeeid = null;
+            Employee e = context.Employees.Where(x => !x.IsDeleted).FirstOrDefault();
+            if (e != null) { employeeid = e.Id; }
+            else
+            {
+                context.Employees.Add(new Employee() { Name = "Dummy Marketing", CreatedAt = DateTime.Now });
+                context.SaveChanges();
+                e = context.Employees.FirstOrDefault();
+                employeeid = e.Id;
+            }
+            foreach (var x in context.SalesOrders.Where(x => x.EmployeeId == null))
+            {
+                x.EmployeeId = employeeid;
+            }
+
+            int? contactgroupid = null;
+            ContactGroup cg = context.ContactGroups.Where(x => !x.IsDeleted).FirstOrDefault();
+            if (cg != null) { contactgroupid = cg.Id; }
+            else
+            {
+                context.ContactGroups.AddOrUpdate(new ContactGroup() { Name = "Dummy Contact Group", CreatedAt = DateTime.Now });
+                context.SaveChanges();
+                cg = context.ContactGroups.FirstOrDefault();
+                contactgroupid = cg.Id;
+            }
+            foreach (var x in context.Contacts.Where(x => x.ContactGroupId == null))
+            {
+                x.ContactGroupId = contactgroupid;
+            }
+
             //if (context.Currencys.FirstOrDefault() == null)
             //{
             //    context.Currencys.Add(
