@@ -1901,6 +1901,105 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region DailyByQuantity
+        public ActionResult DailyByQuantity()
+        {
+            return View();
+        }
+
+        public ActionResult ReportDailyByQuantity(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                //DateTime firstMonday = new DateTime(startDate.Year, startDate.Month, 1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesOrderDetails.Include(x => x.SalesOrder)
+                                                  .Where(x => !x.IsDeleted && (
+                                                            (x.SalesOrder.SalesDate >= startDate && x.SalesOrder.SalesDate < endDay) && (
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Roller) ||
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Blanket) ||
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical) ||
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Underpacking)
+                                                        ))).ToList();
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    //CustomerName = m.SalesOrder.Contact.Name,
+                    //Currency = (m.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesOrder.Currency.Name,
+                    //ItemType = m.Item.ItemType.Name,
+                    //SKU = m.Item.Sku,
+                    //UoM = m.Item.UoM.Name,
+                    Day = m.SalesOrder.SalesDate.DayOfWeek.ToString(),
+                    Week = m.SalesOrder.SalesDate.GetWeekOfMonth(),
+                    CurDate = m.SalesOrder.SalesDate,
+                    //Price = m.Price, //.Item.PriceList,
+                    //Rate = db.ExchangeRates.Where(x => x.CurrencyId == m.SalesOrder.CurrencyId && m.SalesOrder.SalesDate >= x.ExRateDate && !x.IsDeleted).OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate,//m.SalesOrder.ExchangeRateAmount,
+                    //Discount = 0m, //100m - (m.Price/m.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || m.SalesOrder.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount)*100m,
+                    //Amount = m.DeliveryOrderDetail.SalesOrderDetail.Quantity * m.DeliveryOrderDetail.SalesOrderDetail.Price,
+                }).Select(g => new
+                {
+                    //CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //Currency = g.Key.Currency,
+                    //ItemType = g.Key.ItemType,
+                    //SKU = g.Key.SKU,
+                    //UoM = g.Key.UoM,
+                    Day = g.Key.Day,
+                    Week = g.Key.Week,
+                    CurDate = g.Key.CurDate,
+                    //Price = g.Key.Price,
+                    //Rate = g.Key.Rate,
+                    //Amount = g.Key.Amount,
+                    Amount1 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Roller)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount2 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Blanket)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount3 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Description.ToLower().Contains("fount"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount4 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Name.ToLower().Contains("wash"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount5 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Name.Contains("IPA"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount6 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && (!x.Item.Name.Contains("IPA") && !x.Item.Name.ToLower().Contains("wash") && !x.Item.Name.ToLower().Contains("wash") && !x.Item.Description.ToLower().Contains("fount")))).Sum(x => (Decimal?)x.Price * db.ExchangeRates.Where(y => y.CurrencyId == x.SalesOrder.CurrencyId && x.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate) ?? 0, ////x.SalesOrder.ExchangeRateAmount,
+                    Amount7 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Description.ToLower().Contains("powder"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount8 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Underpacking)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                }).ToList();//.OrderBy(x => x.CurDate).ToList();
+
+                for (DateTime curDay = startDate; curDay < endDay; curDay = curDay.AddDays(1))
+                {
+                    if ((curDay.DayOfWeek != DayOfWeek.Saturday && curDay.DayOfWeek != DayOfWeek.Sunday) && (query.Where(x => x.CurDate.Date == curDay.Date).FirstOrDefault() == null))
+                    {
+                        query.Add(new { Day = curDay.DayOfWeek.ToString(), Week = curDay.GetWeekOfMonth(), CurDate = curDay, Amount1 = 0m, Amount2 = 0m, Amount3 = 0m, Amount4 = 0m, Amount5 = 0m, Amount6 = 0m, Amount7 = 0m, Amount8 = 0m });
+                    }
+                }
+
+                query = query.OrderBy(x => x.CurDate).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/DailyReportByQuantity.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
 
 
     }

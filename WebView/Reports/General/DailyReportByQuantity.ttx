@@ -1,0 +1,15 @@
+CustomerName	String	255	
+CustomerGroup	String	255	
+Currency	String	100	
+CurDate	DateTime		
+Day	String	100
+Week	Number
+Amount	Number		
+Amount1	Number		
+Amount2	Number
+Amount3	Number
+Amount4	Number
+Amount5	Number
+Amount6	Number
+Amount7	Number
+Amount8	Number

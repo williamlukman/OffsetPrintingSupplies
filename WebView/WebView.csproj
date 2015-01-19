@@ -360,6 +360,7 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ReportDailyByQuantity.js" />
     <Content Include="Content\apps_js\ReportMonthlyRollerCompoundUsage.js" />
     <Content Include="Content\apps_js\ReportVulcanBlanketSales.js" />
     <Content Include="Content\apps_js\ReportMonthlyBlanketUsage.js" />
@@ -1414,6 +1415,7 @@
     <Content Include="Views\Report\MonthlyBlanketUsage.cshtml" />
     <Content Include="Views\Report\VulcanBlanketSales.cshtml" />
     <Content Include="Views\Report\MonthlyRollerCompoundUsage.cshtml" />
+    <Content Include="Views\Report\DailyByQuantity.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
