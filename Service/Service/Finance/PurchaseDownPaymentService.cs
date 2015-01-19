@@ -149,8 +149,8 @@ namespace Service.Service
                 _payableService.DeleteObject((int)purchaseDownPayment.PayableId);
                 purchaseDownPayment.PayableId = null;
 
-                _repository.UnconfirmObject(purchaseDownPayment);
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPurchaseDownPayment(purchaseDownPayment, _accountService, _currencyService, _gLNonBaseCurrencyService);
+                _repository.UnconfirmObject(purchaseDownPayment);
             }
             return purchaseDownPayment;
         }

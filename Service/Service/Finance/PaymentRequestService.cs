@@ -124,11 +124,11 @@ namespace Service.Service
         {
             if (_validator.ValidUnconfirmObject(paymentRequest, _paymentRequestDetailService, _closingService))
             {
-                _repository.UnconfirmObject(paymentRequest);
                 Payable payable = _payableService.GetObjectBySource(Constant.PayableSource.PaymentRequest, paymentRequest.Id);
                 _payableService.DeleteObject(payable.Id);
                 _generalLedgerJournalService.CreateUnconfirmationJournalForPaymentRequest(paymentRequest, _paymentRequestDetailService, _accountService,
                                              _gLNonBaseCurrencyService, _currencyService);
+                _repository.UnconfirmObject(paymentRequest);
             }
             return paymentRequest;
         }
