@@ -35,6 +35,7 @@
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#lookup_div_contactgroup").dialog('close');
+    $("#ContactGroupId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({

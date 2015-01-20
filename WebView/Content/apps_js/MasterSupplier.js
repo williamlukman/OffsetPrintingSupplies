@@ -34,6 +34,7 @@
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#lookup_div_contactgroup").dialog('close');
+    $("#ContactGroupId").hide();
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
@@ -48,7 +49,7 @@
                   { name: 'deliveryaddress', index: 'deliveryaddress', width: 250, hidden: true },
                   { name: 'description', index: 'description', width: 250 },
                   { name: 'npwp', index: 'npwp', width: 100, hidden: true },
-                  { name: 'contactno', index: 'contactno', width: 100 },
+                  { name: 'contactno', index: 'contactno', width: 150 },
                   { name: 'pic', index: 'pic', width: 120 },
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },
