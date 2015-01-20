@@ -48,7 +48,7 @@
                   { name: 'deliveryaddress', index: 'deliveryaddress', width: 250, hidden: true },
                   { name: 'description', index: 'description', width: 250 },
                   { name: 'npwp', index: 'npwp', width: 100, hidden: true },
-                  { name: 'contact', index: 'contactno', width: 100 },
+                  { name: 'contactno', index: 'contactno', width: 100 },
                   { name: 'pic', index: 'pic', width: 120 },
                   { name: 'piccontact', index: 'piccontactno', width: 100 },
                   { name: 'email', index: 'email', width: 150 },

@@ -281,6 +281,7 @@ namespace WebView.Controllers
                             model.Address,
                             model.DeliveryAddress,
                             model.Description,
+                            model.NPWP,
                             model.ContactNo,
                             model.PIC,
                             model.PICContactNo,
