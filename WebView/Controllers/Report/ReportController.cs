@@ -733,7 +733,7 @@ namespace WebView.Controllers
 
             var query = q.GroupBy(m => new
             {
-                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak,
+                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.ContactGroup.Name, //.NamaFakturPajak,
                 //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
                 Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
             }).Select(g => new
@@ -1153,7 +1153,7 @@ namespace WebView.Controllers
 
             var query = q.GroupBy(m => new
             {
-                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak,
+                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.ContactGroup.Name, //.NamaFakturPajak,
                 //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
                 Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
             }).Select(g => new
