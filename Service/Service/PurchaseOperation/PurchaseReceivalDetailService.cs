@@ -97,7 +97,7 @@ namespace Service.Service
                                                     IItemService _itemService, IBlanketService _blanketService, IWarehouseItemService _warehouseItemService)
         {
             purchaseReceivalDetail.ConfirmationDate = ConfirmationDate;
-            if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService))
+            if (_validator.ValidConfirmObject(purchaseReceivalDetail, this, _purchaseOrderDetailService, _itemService))
             {
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);

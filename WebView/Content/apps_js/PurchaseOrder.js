@@ -51,7 +51,7 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency', 'PurchaseDate',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Currency', 'Description', 'PurchaseDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
@@ -60,6 +60,7 @@
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
                   { name: 'contactname', index: 'contactname', width: 150 },
                   { name: 'currency', index: 'currency', width: 150 },
+                  { name: 'description', index: 'description', width: 150 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -132,6 +133,7 @@
         $('#CurrencyId').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
+        $('#Description').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#PurchaseDateDiv').show();
         $('#PurchaseDateDiv2').hide();
@@ -167,6 +169,7 @@
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#CurrencyId').val(result.CurrencyId);
+                            $('#Description').val(result.Description);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
                             $('#PurchaseDate2').val(dateEnt(result.PurchaseDate));
                             $('#PurchaseDateDiv2').show();
@@ -175,6 +178,7 @@
                             $('#CurrencyId').attr('disabled', true);
                             $('#btnContact').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
+                            $('#Description').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -216,9 +220,11 @@
                             $('#Contact').val(result.Contact);
                             $('#PurchaseDate').datebox('setValue', dateEnt(result.PurchaseDate));
                             $('#CurrencyId').val(result.CurrencyId);
+                            $('#Description').val(result.Description);
                             $('#CurrencyId').removeAttr('disabled');
                             $('#btnContact').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
+                            $('#Description').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#PurchaseDateDiv2').hide();
                             $('#PurchaseDateDiv').show();
@@ -397,7 +403,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), PurchaseDate: $('#PurchaseDate').datebox('getValue'),
-                NomorSurat: $('#NomorSurat').val(), CurrencyId : currency
+                NomorSurat: $('#NomorSurat').val(), CurrencyId : currency, Description: $("#Description").val()
             }),
             async: false,
             cache: false,
@@ -441,8 +447,8 @@
                   { name: 'pendingquantity', index: 'pendingquantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',

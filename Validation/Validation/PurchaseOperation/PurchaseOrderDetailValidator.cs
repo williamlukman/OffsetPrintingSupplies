@@ -52,9 +52,9 @@ namespace Validation.Validation
 
         public PurchaseOrderDetail VNonNegativePrice(PurchaseOrderDetail purchaseOrderDetail)
         {
-            if (purchaseOrderDetail.Price <= 0)
+            if (purchaseOrderDetail.Price < 0)
             {
-                purchaseOrderDetail.Errors.Add("Price", "Tidak boleh kurang dari atau sama dengan 0");
+                purchaseOrderDetail.Errors.Add("Price", "Tidak boleh kurang dari 0");
             }
             return purchaseOrderDetail;
         }
