@@ -123,7 +123,7 @@
 
             $(document).ready(function () {
                 $('#mega-1, .mega-menu').dcVerticalMegaMenu({
-                    rowItems: '4',
+                    rowItems: '6',
                     speed: 'fast',
                     effect: 'slide',
                     direction: 'right'
@@ -468,6 +468,13 @@
                                                     {<li><a href="@Url.Action("SalesOrderDailyByDate", "Report")">Sales Order Daily</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("DiscountByDate", "Report")">Discount</a></li>}
+                                                    
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Sales Personnel Report</a>
+                                                <ul>
+													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SalesPersonnelYearly", "Report")">Sales Personnel Yearly by Value</a></li>}
                                                     
                                                 </ul>
                                             </li>

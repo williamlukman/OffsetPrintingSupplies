@@ -50,6 +50,7 @@ namespace WebView.Controllers
         private IVirtualOrderService _virtualOrderService;
         private ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
         private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
+        private IEmployeeService _employeeService;
 
         public class ModelProfitLoss
         {
@@ -107,6 +108,7 @@ namespace WebView.Controllers
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
             _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
             _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
+            _employeeService = new EmployeeService(new EmployeeRepository(), new EmployeeValidator());
         }
 
         #region Item
@@ -1894,6 +1896,73 @@ namespace WebView.Controllers
                 rd.SetParameterValue("AsOfDate", DateTime.Today);
                 rd.SetParameterValue("startDate", startDate);
                 rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region SalesPersonnelYearly
+        public ActionResult SalesPersonnelYearly()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesPersonnelYearly(DateTime startDate, DateTime endDate, int EmployeeId = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.Date.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                var employee = _employeeService.GetObjectById(EmployeeId);
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesInvoices.Include(x => x.SalesInvoiceDetails).Include(x => x.DeliveryOrder)
+                                                  .Where(x => !x.IsDeleted && x.DeliveryOrder.SalesOrder.EmployeeId == EmployeeId && (
+                                                            (x.DeliveryOrder.SalesOrder.SalesDate >= startDate && x.DeliveryOrder.SalesOrder.SalesDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    CustomerName = m.DeliveryOrder.SalesOrder.Contact.Name,
+                    Currency = (m.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.DeliveryOrder.SalesOrder.Currency.Name,
+                    //ItemType = m.DeliveryOrderDetail.SalesOrderDetail.Item.ItemType.Name,
+                    //UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
+                    //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                }).Select(g => new
+                {
+                    CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //ItemType = g.Key.ItemType,
+                    //UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    Currency = g.Key.Currency,
+                    Amount1 = g.Sum(x => (Decimal?)x.AmountReceivable) ?? 0,
+                    Amount2 = g.Sum(x => (Decimal?)db.Receivables.Where(y => !y.IsDeleted && y.ReceivableSource == Constant.ReceivableSource.SalesInvoice && y.ReceivableSourceId == x.Id).FirstOrDefault().RemainingAmount) ?? 0,
+                }).OrderBy(x => x.Currency).ThenBy(x => x.CustomerName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/SalesPersonnelYearlyByValue.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate.Date);
+                rd.SetParameterValue("endDate", endDay.Date);
+                rd.SetParameterValue("Personnel", employee.Name);
 
                 var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 return File(stream, "application/pdf");
