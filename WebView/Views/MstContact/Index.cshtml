@@ -79,17 +79,6 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr class="hide-row">
-                            <td>
-                                <label>Tipe</label>
-                            </td>
-                            <td colspan="3">
-                                <select id="ContactType">
-                                    <option value="Supplier">Supplier</option>
-                                    <option value="Customer" selected="selected">Customer</option>
-                                </select>
-                            </td>
-                        </tr>
                         <tr>
                             <td valign="top">
                                 <label>Address</label></td>
@@ -103,6 +92,13 @@
                             <td colspan="3">
                               <textarea name="DeliveryAddress" id="DeliveryAddress" cols="60" rows="3"></textarea>
                             </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Description</label></td>
+                            <td colspan="3"><label>
+                              <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
+                            </label></td>
                         </tr>
                         <tr>
                             <td valign="top">
@@ -136,20 +132,33 @@
                                 <input id="Email" name="Email" type="text" size="60" maxlength="60" align="left" /></td>
                         </tr>
                         <tr>
-                            <td valign="top">
-                                <label>Description</label></td>
-                            <td colspan="3"><label>
-                              <textarea name="Description" id="Description" cols="60" rows="3"></textarea>
-                            </label></td>
+                            <td>
+                                <label>Contact Group</label></td>
+                            <td>
+                                <input id="ContactGroupId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                                <input id="btnContactGroup" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                                <input id="ContactGroup" name="ContactGroupId" type="text" size="46" maxlength="40" class="editable upper" disabled="disabled" />
+                            </td>
+                        </tr>
+                        <tr class="hide-row">
+                            <td>
+                                <label>Tipe</label>
+                            </td>
+                            <td colspan="3">
+                                <select id="ContactType">
+                                    <option value="Supplier">Supplier</option>
+                                    <option value="Customer" selected="selected">Customer</option>
+                                </select>
+                            </td>
                         </tr>
                     </table>
                 @*</fieldset>*@
             </form>
         </div>
     </div>
-<!-- End Dialog Box -->
+    <!-- End Dialog Box -->
 
-<!-- Dialog Box  Delete-->
+    <!-- Dialog Box  Delete-->
     <div id="delete_confirm_div" class="easyui-dialog" style="text-align: left; height: 130px; width: 300px;"
         data-options="modal:true" title=".: Confirmation :.">
 
@@ -162,7 +171,21 @@
             <input id="delete_confirm_id" type="hidden" />
         </div>
     </div>
-<!-- End Dialog Box Delete-->
+    <!-- End Dialog Box Delete-->
+
+    <!-- Look Up contactgroup -->
+    <div id="lookup_div_contactgroup" class="easyui-dialog" title="List Contact" style="padding: 0px 5px; height: 490px; width: 480px;"
+        data-options="iconCls:'icon-tip',modal:true">
+
+        <div id="lookup_toolbar_contactgroup" class="grid_toolbar">
+            <a id="lookup_btn_add_contactgroup" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_contactgroup" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        </div>
+
+        <table id="lookup_table_contactgroup" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_contactgroup" class="scroll" style="text-align: center;"></div>
+    </div>
+    <!-- END Look Up contactgroup -->
 
   </div>
 

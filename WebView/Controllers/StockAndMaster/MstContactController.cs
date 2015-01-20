@@ -23,6 +23,7 @@ namespace WebView.Controllers
         private ISalesOrderService _salesOrderService;
         private ISalesQuotationService _salesQuotationService;
         private IVirtualOrderService _virtualOrderService;
+        private IContactGroupService _contactGroupService;
 
         public MstContactController()
         {
@@ -33,6 +34,7 @@ namespace WebView.Controllers
             _salesOrderService = new SalesOrderService(new SalesOrderRepository(),new SalesOrderValidator());
             _salesQuotationService = new SalesQuotationService(new SalesQuotationRepository(), new SalesQuotationValidator());
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
+            _contactGroupService = new ContactGroupService(new ContactGroupRepository(), new ContactGroupValidator());
         }
 
         public ActionResult Index()
@@ -58,12 +60,16 @@ namespace WebView.Controllers
                              model.Name,
                              model.NamaFakturPajak,
                              model.Address,
+                             model.DeliveryAddress,
+                             model.Description,
                              model.ContactNo,
                              model.PIC,
                              model.PICContactNo,
                              model.Email,
                              model.TaxCode,
                              model.IsTaxable,
+                             model.ContactGroupId,
+                             ContactGroup = model.ContactGroup.Name,
                              model.ContactType,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -102,12 +108,16 @@ namespace WebView.Controllers
                             model.Name,
                             model.NamaFakturPajak,
                             model.Address,
+                            model.DeliveryAddress,
+                            model.Description,
                             model.ContactNo,
                             model.PIC,
                             model.PICContactNo,
                             model.Email,
                             model.TaxCode,
                             model.IsTaxable,
+                            model.ContactGroupId,
+                            model.ContactGroup,
                             model.ContactType,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -135,6 +145,7 @@ namespace WebView.Controllers
                              model.NamaFakturPajak,
                              model.Address,
                              model.DeliveryAddress,
+                             model.Description,
                              model.NPWP,
                              model.ContactNo,
                              model.PIC,
@@ -142,9 +153,11 @@ namespace WebView.Controllers
                              model.Email,
                              model.TaxCode,
                              model.IsTaxable,
+                             model.ContactGroupId,
+                             ContactGroup = model.ContactGroup.Name,
+                             model.ContactType,
                              model.CreatedAt,
                              model.UpdatedAt,
-                             model.Description
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -181,6 +194,7 @@ namespace WebView.Controllers
                             model.NamaFakturPajak,
                             model.Address,
                             model.DeliveryAddress,
+                            model.Description,
                             model.NPWP,
                             model.ContactNo,
                             model.PIC,
@@ -188,9 +202,11 @@ namespace WebView.Controllers
                             model.Email,
                             model.TaxCode,
                             model.IsTaxable,
+                            model.ContactGroupId,
+                            model.ContactGroup,
+                            model.ContactType,
                             model.CreatedAt,
                             model.UpdatedAt,
-                            model.Description
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -212,16 +228,22 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Name,
+                             model.NamaFakturPajak,
                              model.Address,
+                             model.DeliveryAddress,
+                             model.Description,
+                             model.NPWP,
                              model.ContactNo,
                              model.PIC,
                              model.PICContactNo,
                              model.Email,
                              model.TaxCode,
                              model.IsTaxable,
+                             model.ContactGroupId,
+                             ContactGroup = model.ContactGroup.Name,
+                             model.ContactType,
                              model.CreatedAt,
-                             model.UpdatedAt,
-                             model.Description,
+                             model.UpdatedAt
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -255,16 +277,21 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Name,
+                            model.NamaFakturPajak,
                             model.Address,
+                            model.DeliveryAddress,
+                            model.Description,
                             model.ContactNo,
                             model.PIC,
                             model.PICContactNo,
                             model.Email,
                             model.TaxCode,
                             model.IsTaxable,
+                            model.ContactGroupId,
+                            model.ContactGroup,
+                            model.ContactType,
                             model.CreatedAt,
                             model.UpdatedAt,
-                            model.Description
                       }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
@@ -290,14 +317,17 @@ namespace WebView.Controllers
                  model.NamaFakturPajak,
                  model.Address,
                  model.DeliveryAddress,
-                 model.NPWP,
                  model.Description,
+                 model.NPWP,
                  model.ContactNo,
                  model.PIC,
                  model.PICContactNo,
                  model.Email,
                  model.TaxCode,
                  model.IsTaxable,
+                 model.ContactGroupId,
+                 ContactGroup = _contactGroupService.GetObjectById(model.ContactGroupId.GetValueOrDefault()).Name,
+                 model.ContactType,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -331,14 +361,15 @@ namespace WebView.Controllers
                 data.NamaFakturPajak = model.NamaFakturPajak;
                 data.Address = model.Address;
                 data.DeliveryAddress = model.DeliveryAddress;
-                data.NPWP = model.NPWP;
                 data.Description = model.Description;
+                data.NPWP = model.NPWP;
                 data.ContactNo = model.ContactNo;
                 data.PIC = model.PIC;
                 data.PICContactNo = model.PICContactNo;
                 data.Email = model.Email;
                 data.TaxCode = model.TaxCode;
                 data.IsTaxable = model.IsTaxable;
+                data.ContactGroupId = model.ContactGroupId;
                 model = _contactService.UpdateObject(data);
             }
             catch (Exception ex)
