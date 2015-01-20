@@ -103,6 +103,7 @@
     <Compile Include="Mapping\StockAndMaster\BlendingRecipeDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\ContactGroupMapping.cs" />
+    <Compile Include="Mapping\StockAndMaster\SubTypeMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\EmployeeMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CustomerStockAdjustmentDetailMapping.cs" />
     <Compile Include="Mapping\StockAndMaster\CustomerStockAdjustmentMapping.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Repository\StockAndMaster\BlendingRecipeRepository.cs" />
     <Compile Include="Repository\StockAndMaster\BlendingRecipeDetailRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ContactGroupRepository.cs" />
+    <Compile Include="Repository\StockAndMaster\SubTypeRepository.cs" />
     <Compile Include="Repository\StockAndMaster\EmployeeRepository.cs" />
     <Compile Include="Repository\StockAndMaster\ContactDetailRepository.cs" />
     <Compile Include="Repository\StockAndMaster\CustomerStockAdjustmentDetailRepository.cs" />

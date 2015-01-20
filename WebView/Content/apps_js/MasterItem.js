@@ -323,7 +323,7 @@
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
                   { name: 'name', index: 'name', width: 200 },
-                  { name: 'address', index: 'address', width: 200 }],
+                  { name: 'description', index: 'description', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_itemtype'),
         rowNum: 20,
@@ -438,5 +438,61 @@
 
 
     // ---------------------------------------------End Lookup uom----------------------------------------------------------------
+
+    // -------------------------------------------------------Look Up subtype-------------------------------------------------------
+    $('#btnSubType').click(function () {
+        var lookUpURL = base_url + 'MstSubType/GetList';
+        var lookupGrid = $('#lookup_table_subtype');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_subtype').dialog('open');
+    });
+
+    jQuery("#lookup_table_subtype").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['Id', 'Name'],
+        colModel: [
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 }],
+        page: '1',
+        pager: $('#lookup_pager_subtype'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_subtype").width() - 10,
+        height: $("#lookup_div_subtype").height() - 110,
+    });
+    $("#lookup_table_subtype").jqGrid('navGrid', '#lookup_toolbar_subtype', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_subtype').click(function () {
+        $('#lookup_div_subtype').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_subtype').click(function () {
+        var id = jQuery("#lookup_table_subtype").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_subtype").jqGrid('getRowData', id);
+
+            $('#SubTypeId').val(ret.id).data("kode", id);
+            $('#SubTypeName').val(ret.name);
+
+            $('#lookup_div_subtype').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+
+    // ---------------------------------------------End Lookup subtype----------------------------------------------------------------
 
 }); //END DOCUMENT READY

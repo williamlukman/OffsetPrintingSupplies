@@ -8,11 +8,10 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'MstItemType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'MstSubType/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
     }
 
     function ClearData() {
-        $('#Description').val('').text('').removeClass('errormessage');
         $('#Name').val('').text('').removeClass('errormessage');
         $('#form_btn_save').data('kode', '');
 
@@ -21,23 +20,19 @@
 
     $("#form_div").dialog('close');
     $("#delete_confirm_div").dialog('close');
-    $('#AccountId').hide();
-    $('#AccountCode').hide();
-    $("#lookup_div_coa").dialog('close');
+    $('#ItemTypeId').hide();
+    $("#lookup_div_itemtype").dialog('close');
 
     //GRID +++++++++++++++
     $("#list").jqGrid({
-        url: base_url + 'MstItemType/GetList',
+        url: base_url + 'MstSubType/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Size', 'Kode UoM', 'Acc Id', 'Acc Code', 'Acc', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Item Type Id', 'Item Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 120 },
-                  { name: 'size', index: 'size', width: 100 },
-                  { name: 'description', index: 'description', width: 60 },
-                  { name: 'accountid', index: 'accountid', width: 80, align: "center", hidden: true },
-				  { name: 'accountcode', index: 'accountcode', width: 80 },
-				  { name: 'accountname', index: 'accountname', width: 200 },
+                  { name: 'itemtypeid', index: 'itemtypeid', width: 80, align: "center", hidden: true },
+				  { name: 'itemtype', index: 'itemtype', width: 200 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -96,7 +91,7 @@
             vStatusSaving = 1;//edit data mode
             $.ajax({
                 dataType: "json",
-                url: base_url + "MstItemType/GetInfo?Id=" + id,
+                url: base_url + "MstSubType/GetInfo?Id=" + id,
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -113,11 +108,8 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
-                            $('#Description').val(result.Description);
-                            $('#Size').val(result.Size);
-                            $('#AccountId').val(result.AccountId);
-                            $('#AccountCode').val(result.AccountCode);
-                            $('#AccountName').val(result.AccountName);
+                            $('#ItemTypeId').val(result.ItemTypeId);
+                            $('#ItemType').val(result.ItemType);
                             $('#form_div').dialog('open');
                         }
                     }
@@ -154,7 +146,7 @@
     $('#delete_confirm_btn_submit').click(function () {
 
         $.ajax({
-            url: base_url + "MstItemType/Delete",
+            url: base_url + "MstSubType/Delete",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -196,11 +188,11 @@
 
         // Update
         if (id != undefined && id != '' && !isNaN(id) && id > 0) {
-            submitURL = base_url + 'MstItemType/Update';
+            submitURL = base_url + 'MstSubType/Update';
         }
             // Insert
         else {
-            submitURL = base_url + 'MstItemType/Insert';
+            submitURL = base_url + 'MstSubType/Insert';
         }
 
         $.ajax({
@@ -208,7 +200,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name :$("#Name").val(), Description: $("#Description").val(), AccountId: $("#AccountId").val(), Size: $("#Size").val()
+                Id: id, Name :$("#Name").val(), ItemTypeId: $("#ItemTypeId").val()
             }),
             async: false,
             cache: false,
@@ -253,56 +245,61 @@
         });
     }
 
-    //GRID LOOKUP +++++++++++++++
-    $("#lookup_table_coa").jqGrid({
-        url: base_url + 'index.html',
+    // -------------------------------------------------------Look Up Itemtype-------------------------------------------------------
+    $('#btnItemType').click(function () {
+
+        var lookUpURL = base_url + 'MstItemType/GetList';
+        var lookupGrid = $('#lookup_table_itemtype');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_itemtype').dialog('open');
+    });
+
+    $("#lookup_table_itemtype").jqGrid({
+        url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Account Code', 'Account Code', 'Account Name'],
+        mtype: 'GET',
+        colNames: ['Id', 'Name', 'Description'],
         colModel: [
-                  { name: 'Id', index: 'Id', width: 40, hidden: true },
-				  { name: 'Code', index: 'Code', width: 80, hidden: true },
-                  { name: 'parsecode', index: 'parsecode', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: "", defaultValue: '0' } },
-				  { name: 'Name', index: 'Name', width: 150 },
-        ],
+                  { name: 'id', index: 'id', width: 80, align: 'right' },
+                  { name: 'name', index: 'name', width: 200 },
+                  { name: 'description', index: 'description', width: 200 }],
         page: '1',
-        pager: $('#lookup_pager_coa'),
+        pager: $('#lookup_pager_itemtype'),
         rowNum: 20,
         rowList: [20, 30, 60],
-        sortname: 'Code',
+        sortname: 'id',
         viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
         sortorder: "ASC",
-        width: $("#lookup_div_coa").width() - 10,
-        height: $("#lookup_div_coa").height() - 115
+        width: $("#lookup_div_itemtype").width() - 10,
+        height: $("#lookup_div_itemtype").height() - 110,
     });
-    $("#lookup_table_coa").jqGrid('navGrid', '#lookup_toolbar_coa', { del: false, add: false, edit: false, search: true })
+    $("#lookup_table_itemtype").jqGrid('navGrid', '#lookup_toolbar_itemtype', { del: false, add: false, edit: false, search: true })
            .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
 
-    //END GRID
-
-    $('#btncoa').click(function () {
-        $("#lookup_table_coa").setGridParam({ url: base_url + 'ChartOfAccount/GetLeaves' }).trigger("reloadGrid");
-        $('#lookup_div_coa').dialog('open');
+    // Cancel or CLose
+    $('#lookup_btn_cancel_itemtype').click(function () {
+        $('#lookup_div_itemtype').dialog('close');
     });
 
-    $("#lookup_btn_add_coa").click(function () {
-
-        var id = jQuery("#lookup_table_coa").jqGrid('getGridParam', 'selrow');
-
+    // ADD or Select Data
+    $('#lookup_btn_add_itemtype').click(function () {
+        var id = jQuery("#lookup_table_itemtype").jqGrid('getGridParam', 'selrow');
         if (id) {
-            // vStatusSaving = 1;//edit data mode
-            var ret = jQuery("#lookup_table_coa").jqGrid('getRowData', id);
-            $('#AccountId').val(ret.Id);
-            $('#AccountCode').val(ret.Code).data('kode', id);
-            $('#AccountName').val(ret.Name);
+            var ret = jQuery("#lookup_table_itemtype").jqGrid('getRowData', id);
 
-            $("#lookup_div_coa").dialog('close');
+            $('#ItemTypeId').val(ret.id).data("kode", id);
+            $('#ItemType').val(ret.name);
+            $('#lookup_div_itemtype').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
+        };
     });
 
-    $("#lookup_btn_cancel_coa").click(function () {
-        $("#lookup_div_coa").dialog('close');
-    });
+
+    // ---------------------------------------------End Lookup ItemType----------------------------------------------------------------
 
 }); //END DOCUMENT READY

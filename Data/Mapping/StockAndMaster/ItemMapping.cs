@@ -16,6 +16,9 @@ namespace Data.Mapping
             HasRequired(i => i.ItemType)
                 .WithMany(it => it.Items)
                 .HasForeignKey(i => i.ItemTypeId);
+            HasOptional(i => i.SubType)
+                .WithMany(st => st.Items)
+                .HasForeignKey(i => i.SubTypeId);
             HasMany(i => i.RecoveryAccessoryDetails)
                 .WithRequired(rad => rad.Item)
                 .HasForeignKey(rad => rad.ItemId);

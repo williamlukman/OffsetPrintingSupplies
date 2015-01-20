@@ -38,6 +38,11 @@ namespace Data.Repository
             return FindAll(x => x.ItemTypeId == ItemTypeId && !x.IsDeleted).ToList();
         }
 
+        public IList<Item> GetObjectsBySubTypeId(int SubTypeId)
+        {
+            return FindAll(x => x.SubTypeId == SubTypeId && !x.IsDeleted).ToList();
+        }
+
         public IList<Item> GetObjectsByUoMId(int UoMId)
         {
             return FindAll(x => x.UoMId == UoMId && !x.IsDeleted).ToList();

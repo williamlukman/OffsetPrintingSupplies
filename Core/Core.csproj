@@ -100,6 +100,7 @@
     <Compile Include="DomainModel\StockAndMaster\BlendingRecipeDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ContactDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\ContactGroup.cs" />
+    <Compile Include="DomainModel\StockAndMaster\SubType.cs" />
     <Compile Include="DomainModel\StockAndMaster\Employee.cs" />
     <Compile Include="DomainModel\StockAndMaster\CustomerStockAdjustmentDetail.cs" />
     <Compile Include="DomainModel\StockAndMaster\CustomerStockAdjustment.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Interface\Repository\SalesOperation\ITemporaryDeliveryOrderRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderDetailRepository.cs" />
     <Compile Include="Interface\Repository\SalesOperation\IVirtualOrderRepository.cs" />
+    <Compile Include="Interface\Repository\StockAndMaster\ISubTypeRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IContactGroupRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IEmployeeRepository.cs" />
     <Compile Include="Interface\Repository\StockAndMaster\IContactDetailRepository.cs" />
@@ -305,6 +307,7 @@
     <Compile Include="Interface\Service\SalesOperation\ITemporaryDeliveryOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderService.cs" />
     <Compile Include="Interface\Service\SalesOperation\IVirtualOrderDetailService.cs" />
+    <Compile Include="Interface\Service\StockAndMaster\ISubTypeService.cs.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IContactGroupService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IContactDetailService.cs" />
     <Compile Include="Interface\Service\StockAndMaster\IEmployeeService.cs" />
@@ -408,6 +411,7 @@
     <Compile Include="Interface\Validation\SalesOperation\ITemporaryDeliveryOrderValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderDetailValidator.cs" />
     <Compile Include="Interface\Validation\SalesOperation\IVirtualOrderValidator.cs" />
+    <Compile Include="Interface\Validation\StockAndMaster\ISubTypeValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IContactGroupValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IEmployeeValidator.cs" />
     <Compile Include="Interface\Validation\StockAndMaster\IContactDetailValidator.cs" />

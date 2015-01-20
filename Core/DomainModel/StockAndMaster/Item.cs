@@ -14,6 +14,7 @@ namespace Core.DomainModel
     {
         public int Id { get; set; }
         public int ItemTypeId { get; set; }
+        public Nullable<int> SubTypeId { get; set; }
         public string Sku { get; set; }
 
         public string Name { get; set; }
@@ -48,6 +49,7 @@ namespace Core.DomainModel
         public Dictionary<string, string> Errors { get; set; }
         public virtual UoM UoM { get; set; }
         public virtual ItemType ItemType { get; set; }
+        public virtual SubType SubType { get; set; }
         public virtual ICollection<RecoveryAccessoryDetail> RecoveryAccessoryDetails { get; set; }
         public virtual ICollection<WarehouseItem> WarehouseItems { get; set; }
         //public virtual ICollection<CustomerItem> CustomerItems { get; set; }

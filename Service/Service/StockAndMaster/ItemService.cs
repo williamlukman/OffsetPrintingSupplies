@@ -58,6 +58,11 @@ namespace Service.Service
             return _repository.GetObjectsByItemTypeId(ItemTypeId);
         }
 
+        public IList<Item> GetObjectsBySubTypeId(int SubTypeId)
+        {
+            return _repository.GetObjectsBySubTypeId(SubTypeId);
+        }
+
         public IList<Item> GetObjectsByUoMId(int UoMId)
         {
             return _repository.GetObjectsByUoMId(UoMId);
