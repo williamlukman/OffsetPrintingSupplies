@@ -108,6 +108,7 @@
     <Compile Include="Service\StockAndMaster\BlendingRecipeDetailService.cs" />
     <Compile Include="Service\StockAndMaster\ContactDetailService.cs" />
     <Compile Include="Service\StockAndMaster\ContactGroupService.cs" />
+    <Compile Include="Service\StockAndMaster\SubTypeService.cs" />
     <Compile Include="Service\StockAndMaster\EmployeeService.cs" />
     <Compile Include="Service\StockAndMaster\CustomerStockAdjustmentService.cs" />
     <Compile Include="Service\StockAndMaster\CustomerStockAdjustmentDetailService.cs" />

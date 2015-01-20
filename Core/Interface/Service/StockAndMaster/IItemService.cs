@@ -18,6 +18,7 @@ namespace Core.Interface.Service
         IList<Item> GetAll();
         IList<Item> GetAllAccessories(IItemService _itemService, IItemTypeService _itemTypeService);
         IList<Item> GetObjectsByItemTypeId(int ItemTypeId);
+        IList<Item> GetObjectsBySubTypeId(int SubTypeId);
         IList<Item> GetObjectsByUoMId(int UoMId);
         Item GetObjectById(int Id);
         Item GetObjectBySku(string Sku);

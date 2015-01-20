@@ -280,6 +280,8 @@
                                                {<li><a href="@Url.Action("Index", "MstSupplier")">Supplier</a> </li>}
                                                @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ItemType, Core.Constants.Constant.MenuGroupName.Master))
                                                {<li><a href="@Url.Action("Index", "MstItemType")">ItemType</a> </li>}
+                                               @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.SubType, Core.Constants.Constant.MenuGroupName.Master))
+                                               {<li><a href="@Url.Action("Index", "MstSubType")">SubType</a> </li>}
                                                @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Machine, Core.Constants.Constant.MenuGroupName.Master))
                                                {<li><a href="@Url.Action("Index", "MstMachine")">Machine</a> </li>}
                                                @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerType, Core.Constants.Constant.MenuGroupName.Master))

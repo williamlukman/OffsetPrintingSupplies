@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Master Item Type";
+    ViewBag.Title = "Master Sub Type";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,7 +8,7 @@
 
 @section Scripts {
     <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/masteritemtype.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/mastersubtype.js")"></script>
 }
 <div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
     title=".: @ViewBag.Title :.">
@@ -51,26 +51,12 @@
                         </tr>
                         <tr>
                             <td>
-                                <label>Size</label></td>
+                                <label>Item Type</label></td>
                             <td colspan="3">
-                                <input id="Size" name ="Size"type="text" size="30" maxlength="30" align="left" /></td>
-                        </tr>
-                        <tr>
-                            <td valign="top">
-                                <label>Description</label></td>
-                            <td colspan="3"><label>
-                              <textarea name="Description" name="Description" id ="Description" cols="60" rows="3"></textarea>
-                            </label></td>
-                        </tr>
-                        <tr>
-                          <td width="210">Account</td>
-                          <td colspan="3"><label>   
-                            <input name="AccountId" type="text" id="AccountId" size="10" maxlength="10" disabled="disabled" />
-                            <input name="AccountCode" type="text" id="AccountCode" size="10" maxlength="10" disabled="disabled" />
-                            <input type="button" name="btncoa" id="btncoa" style="cursor: pointer;" 
-                            	class="ui-corner-all ui-state-default" value="..." />
-                            <input name="AccountName" type="text" id="AccountName" size="40" maxlength="50" disabled="disabled"/>
-                          </label></td>
+                               <input id="ItemTypeId"  class="textright" type="text" size="10" maxlength="7" disabled="disabled" />
+                               <input id="btnItemType" name="buttonactivated" type="button" style="cursor: pointer;" class="ui-corner-all ui-state-default" value=".." />
+                               <input id="ItemType" name="ItemTypeId" type="text" size="56" maxlength="50" class="editable upper" disabled="disabled" />
+                            </td>
                         </tr>
                      
                     </table>
@@ -95,18 +81,18 @@
     </div>
     <!-- End Dialog Box Delete-->
     
-    <!-- Look Up coa -->
-    <div id="lookup_div_coa" class="easyui-dialog" title="List COA" style="padding: 0px 5px; height: 490px; width: 480px;"
+    <!-- Look Up ItemType -->
+    <div id="lookup_div_itemtype" class="easyui-dialog" title="List Item Type" style="padding: 0px 5px; height: 490px; width: 480px;"
         data-options="iconCls:'icon-tip',modal:true">
 
-        <div id="lookup_toolbar_coa" class="grid_toolbar">
-            <a id="lookup_btn_add_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
-            <a id="lookup_btn_cancel_coa" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
+        <div id="lookup_toolbar_itemtype" class="grid_toolbar">
+            <a id="lookup_btn_add_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">Select Data</a>
+            <a id="lookup_btn_cancel_itemtype" href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">Close Window</a>
         </div>
 
-        <table id="lookup_table_coa" class="scroll" cellpadding="0" cellspacing="0"></table>
-        <div id="lookup_pager_coa" class="scroll" style="text-align: center;"></div>
+        <table id="lookup_table_itemtype" class="scroll" cellpadding="0" cellspacing="0"></table>
+        <div id="lookup_pager_itemtype" class="scroll" style="text-align: center;"></div>
     </div>
-    <!-- END Look Up coa -->
+    <!-- END Look Up Item Type -->
   </div>
 

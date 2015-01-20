@@ -66,6 +66,7 @@ namespace WebView.Controllers
                              model.ContactId,
                              Contact = model.Contact.Name,
                              currency = model.Currency.Name,
+                             model.Description,
                              model.PurchaseDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
@@ -108,6 +109,7 @@ namespace WebView.Controllers
                             model.ContactId,
                             model.Contact,
                             model.currency,
+                            model.Description,
                             model.PurchaseDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
@@ -139,6 +141,7 @@ namespace WebView.Controllers
                              model.ContactId,
                              Contact = model.Contact.Name,
                              model.PurchaseDate,
+                             model.Description,
                              model.IsConfirmed,
                              model.ConfirmationDate,
                              model.CreatedAt,
@@ -180,6 +183,7 @@ namespace WebView.Controllers
                             model.ContactId,
                             model.Contact,
                             model.PurchaseDate,
+                            model.Description,
                             model.IsConfirmed,
                             model.ConfirmationDate,
                             model.CreatedAt,
@@ -357,6 +361,7 @@ namespace WebView.Controllers
                 data.PurchaseDate = model.PurchaseDate;
                 data.NomorSurat = model.NomorSurat;
                 data.CurrencyId = model.CurrencyId;
+                data.Description = model.Description;
                 model = _purchaseOrderService.UpdateObject(data,_contactService);
             }
             catch (Exception ex)

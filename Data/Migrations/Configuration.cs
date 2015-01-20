@@ -113,6 +113,11 @@ namespace Data.Migrations
                 x.ContactGroupId = contactgroupid;
             }
 
+            foreach(var x in context.ItemTypes.Where(x => x.Size == null))
+            {
+                x.Size = 0;
+            }
+
             //if (context.Currencys.FirstOrDefault() == null)
             //{
             //    context.Currencys.Add(

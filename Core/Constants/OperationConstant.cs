@@ -136,6 +136,7 @@ namespace Core.Constants
             public static string Employee = "Employee";
             public static string Supplier = "Supplier";
             public static string ItemType = "ItemType";
+            public static string SubType = "SubType";
             public static string UoM = "UoM";
             public static string Machine = "Machine";
             public static string RollerType = "Roller Type";

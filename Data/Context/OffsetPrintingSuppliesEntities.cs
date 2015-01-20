@@ -50,7 +50,7 @@ namespace Data.Context
                                         { "PriceMutation", "CustomerStockMutation", "StockMutation", "CustomerItem", "WarehouseMutationDetail", "WarehouseMutation",
                                           "ServiceCost", "Repacking", "RollerBuilder", "CustomerStockAdjustmentDetail", "CustomerStockAdjustment", "StockAdjustmentDetail", "StockAdjustment",
                                           "WarehouseItem", "Warehouse", "Compound", "BlendingRecipeDetail", "BlendingRecipe", "Blanket", "CoreBuilder",
-                                          "Item", "ItemType", "UoM", "ContactDetail", "Employee", "Contact", "ContactGroup", "RollerType", "Machine", "Company" };
+                                          "Item", "SubType", "ItemType", "UoM", "ContactDetail", "Employee", "Contact", "ContactGroup", "RollerType", "Machine", "Company" };
             IList<String> financeNames = new List<String>() {
                                           "CashMutation", "CashBankAdjustment", "CashBankMutation", "CashBank" ,"ExchangeRate", "Currency", "Account" };
 
@@ -158,6 +158,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new StockAdjustmentMapping());
             modelBuilder.Configurations.Add(new StockAdjustmentDetailMapping());
             modelBuilder.Configurations.Add(new StockMutationMapping());
+            modelBuilder.Configurations.Add(new SubTypeMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderDetailMapping());
             modelBuilder.Configurations.Add(new TemporaryDeliveryOrderClearanceMapping());
@@ -260,6 +261,7 @@ namespace Data.Context
         public DbSet<StockAdjustment> StockAdjustments { get; set; }
         public DbSet<StockAdjustmentDetail> StockAdjustmentDetails { get; set; }
         public DbSet<StockMutation> StockMutations { get; set; }
+        public DbSet<SubType> SubTypes { get; set; }
         public DbSet<TemporaryDeliveryOrder> TemporaryDeliveryOrders { get; set; }
         public DbSet<TemporaryDeliveryOrderDetail> TemporaryDeliveryOrderDetails { get; set; }
         public DbSet<TemporaryDeliveryOrderClearance> TemporaryDeliveryOrderClearances { get; set; }
