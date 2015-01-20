@@ -361,6 +361,7 @@ namespace WebView.Controllers
                 data.PurchaseDate = model.PurchaseDate;
                 data.NomorSurat = model.NomorSurat;
                 data.CurrencyId = model.CurrencyId;
+                data.Description = model.Description;
                 model = _purchaseOrderService.UpdateObject(data,_contactService);
             }
             catch (Exception ex)
