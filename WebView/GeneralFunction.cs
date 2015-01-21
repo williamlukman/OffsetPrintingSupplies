@@ -8,9 +8,25 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace WebView
 {
+    static class DateTimeExtensions
+    {
+        static int GetWeekOfYear(this DateTime time)
+        {
+            return _gc.GetWeekOfYear(time, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
+        }
+
+        static GregorianCalendar _gc = new GregorianCalendar();
+        public static int GetWeekOfMonth(this DateTime time)
+        {
+            DateTime first = new DateTime(time.Year, time.Month, 1);
+            return time.GetWeekOfYear() - first.GetWeekOfYear() + 1;
+        }
+    }
+
     public static class GeneralFunction
     {
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("GeneralFunction");
@@ -859,5 +875,8 @@ namespace WebView
                 LOG.Error("", ex);
             }
         }
+
+        
+
     }
 }

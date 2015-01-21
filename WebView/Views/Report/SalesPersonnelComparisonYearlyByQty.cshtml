@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Sales Personnel Comparison Yearly Report by Quantity";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Head {
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/tools.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Content/apps_js/reportsalespersonnelcomparisonyearlybyqty.js")"></script>
+}
+<div id="ua_panel" class="easyui-panel" style="text-align: left;" data-options="modal:true" 
+    title=".: Sales Personnel Comparison Yearly Report by Quantity :.">
+<div id="toolbar" class="form_toolbar">
+        @*<a id="btn_reload" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'">Reload Data</a>*@
+        <a id="btn_print" href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-print'">Print Data</a>
+    </div>
+
+<!-- Dialog Box -->
+
+        <div style="overflow: auto">
+            <form id="frm">
+                @*<fieldset class="ui-widget-content ui-corner-all input_form_div">*@
+                    <table width="100%" border="0" cellpadding="1" cellspacing="1" class="input_form_tbl">
+                        
+                        <tr>
+                            <td width="120">
+                                <label>Periode 1: Start Date</label></td>
+                             <td width="200">
+                             <div id="Start1DateDiv"><input id="Start1Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="StartDateDiv2"><input id="StartDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                             <td width="70">
+                                <label>End Date</label></td>
+                             <td>
+                             <div id="End1DateDiv"><input id="End1Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="EndDateDiv2"><input id="EndDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                        </tr>
+                        <tr>
+                            <td width="80">
+                                <label>Periode 2: Start Date</label></td>
+                             <td width="200">
+                             <div id="Start2DateDiv"><input id="Start2Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="StartDateDiv2"><input id="StartDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                             <td width="70">
+                                <label>End Date</label></td>
+                             <td>
+                             <div id="End2DateDiv"><input id="End2Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="EndDateDiv2"><input id="EndDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                        </tr>
+                        <tr>
+                            <td width="80">
+                                <label>Periode 3: Start Date</label></td>
+                             <td width="200">
+                             <div id="Start3DateDiv"><input id="Start3Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="StartDateDiv2"><input id="StartDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                             <td width="70">
+                                <label>End Date</label></td>
+                             <td>
+                             <div id="End3DateDiv"><input id="End3Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="EndDateDiv2"><input id="EndDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                        </tr>
+                        <tr hidden>
+                            <td width="80">
+                                <label>Periode 4: Start Date</label></td>
+                             <td width="200">
+                             <div id="Start4DateDiv"><input id="Start4Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="StartDateDiv2"><input id="StartDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                             <td width="70">
+                                <label>End Date</label></td>
+                             <td>
+                             <div id="End4DateDiv"><input id="End4Date" class="easyui-datebox" title="mm/dd/yyyy" type="text" size="10" value="@DateTime.Today.ToString("MM/dd/yyyy")"/>
+                            </div>
+                             @*<div id="EndDateDiv2"><input id="EndDate2" type="text" size="10" disabled="disabled"/></div>*@
+                             </td>
+                        </tr>
+                        <tr><td></td></tr>
+                         
+                    </table>
+                @*</fieldset>*@
+            </form>
+    </div>
+<!-- End Dialog Box -->
+
+ 
+
+  </div>
+

@@ -50,6 +50,7 @@ namespace WebView.Controllers
         private IVirtualOrderService _virtualOrderService;
         private ITemporaryDeliveryOrderDetailService _temporaryDeliveryOrderDetailService;
         private ITemporaryDeliveryOrderService _temporaryDeliveryOrderService;
+        private IEmployeeService _employeeService;
 
         public class ModelProfitLoss
         {
@@ -107,6 +108,7 @@ namespace WebView.Controllers
             _virtualOrderService = new VirtualOrderService(new VirtualOrderRepository(), new VirtualOrderValidator());
             _temporaryDeliveryOrderDetailService = new TemporaryDeliveryOrderDetailService(new TemporaryDeliveryOrderDetailRepository(), new TemporaryDeliveryOrderDetailValidator());
             _temporaryDeliveryOrderService = new TemporaryDeliveryOrderService(new TemporaryDeliveryOrderRepository(), new TemporaryDeliveryOrderValidator());
+            _employeeService = new EmployeeService(new EmployeeRepository(), new EmployeeValidator());
         }
 
         #region Item
@@ -733,7 +735,7 @@ namespace WebView.Controllers
 
             var query = q.GroupBy(m => new
             {
-                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak,
+                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.ContactGroup.Name, //.NamaFakturPajak,
                 //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
                 Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
             }).Select(g => new
@@ -1153,7 +1155,7 @@ namespace WebView.Controllers
 
             var query = q.GroupBy(m => new
             {
-                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak,
+                CustomerGroup = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.ContactGroup.Name, //.NamaFakturPajak,
                 //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
                 Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
             }).Select(g => new
@@ -1645,6 +1647,599 @@ namespace WebView.Controllers
             }
         }
         #endregion
+
+
+        #region MonthlyRollerCompoundUsage
+        public ActionResult MonthlyRollerCompoundUsage()
+        {
+            return View();
+        }
+
+        public ActionResult ReportMonthlyRollerCompoundUsage(int Y1)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.RecoveryOrderDetails.Include(x => x.RecoveryOrder).Include(x => x.RollerBuilder)
+                                                  .Where(x => !x.IsDeleted && !x.RecoveryOrder.IsDeleted && (
+                                                            (x.IsRejected && x.RejectedDate.Value.Year == Y1) || (x.IsFinished && x.FinishedDate.Value.Year == Y1)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    //CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                    //Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                    ItemType = m.RollerBuilder.Compound.Name,
+                    //SKU = m.DeliveryOrderDetail.SalesOrderDetail.Item.Sku,
+                    UoM = m.RollerBuilder.Compound.UoM.Name,
+                    //ProcessDate = (m.IsRejected ? m.RejectedDate.Value : m.FinishedDate.Value)
+                    //SalesDate = EntityFunctions.TruncateTime(m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate) ?? DateTime.MinValue,
+                }).Select(g => new
+                {
+                    //CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //Currency = g.Key.Currency,
+                    //ItemName = g.Key.ItemName,
+                    ItemType = g.Key.ItemType,
+                    //SKU = g.Key.SKU,
+                    UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    //ProcessDate = g.Key.ProcessDate,
+                    Amount1 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 1) || (x.IsFinished && x.FinishedDate.Value.Month == 1)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount2 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 2) || (x.IsFinished && x.FinishedDate.Value.Month == 2)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount3 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 3) || (x.IsFinished && x.FinishedDate.Value.Month == 3)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount4 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 4) || (x.IsFinished && x.FinishedDate.Value.Month == 4)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount5 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 5) || (x.IsFinished && x.FinishedDate.Value.Month == 5)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount6 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 6) || (x.IsFinished && x.FinishedDate.Value.Month == 6)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount7 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 7) || (x.IsFinished && x.FinishedDate.Value.Month == 7)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount8 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 8) || (x.IsFinished && x.FinishedDate.Value.Month == 8)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount9 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 9) || (x.IsFinished && x.FinishedDate.Value.Month == 9)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount10 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 10) || (x.IsFinished && x.FinishedDate.Value.Month == 10)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount11 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 11) || (x.IsFinished && x.FinishedDate.Value.Month == 11)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                    Amount12 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 12) || (x.IsFinished && x.FinishedDate.Value.Month == 12)).Sum(x => (Decimal?)x.CompoundUsage) ?? 0,
+                }).AsEnumerable();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                query = query.OrderBy(x => x.ItemType).ToList();
+                rd.Load(Server.MapPath("~/") + "Reports/General/MonthlyRollerCompoundUsage.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("Y1", Y1.ToString());
+                rd.SetParameterValue("M1", new DateTime(Y1, 1, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M2", new DateTime(Y1, 2, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M3", new DateTime(Y1, 3, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M4", new DateTime(Y1, 4, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M5", new DateTime(Y1, 5, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M6", new DateTime(Y1, 6, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M7", new DateTime(Y1, 7, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M8", new DateTime(Y1, 8, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M9", new DateTime(Y1, 9, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M10", new DateTime(Y1, 10, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M11", new DateTime(Y1, 11, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M12", new DateTime(Y1, 12, 1).ToString("MMM-yy"));
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region MonthlyBlanketUsage
+        public ActionResult MonthlyBlanketUsage()
+        {
+            return View();
+        }
+
+        public ActionResult ReportMonthlyBlanketUsage(int Y1)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.BlanketOrderDetails.Include(x => x.BlanketOrder).Include(x => x.Blanket)
+                                                  .Where(x => !x.IsDeleted && !x.BlanketOrder.IsDeleted && (
+                                                            (x.IsRejected && x.RejectedDate.Value.Year == Y1) || (x.IsFinished && x.FinishedDate.Value.Year == Y1)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    //CustomerName = m.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name,
+                    //Currency = (m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name,
+                    ItemType = m.Blanket.RollBlanketItem.Name,
+                    //SKU = m.DeliveryOrderDetail.SalesOrderDetail.Item.Sku,
+                    UoM = m.Blanket.RollBlanketItem.UoM.Name,
+                    //SalesDate = EntityFunctions.TruncateTime(m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate) ?? DateTime.MinValue,
+                }).Select(g => new
+                {
+                    //CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //Currency = g.Key.Currency,
+                    //ItemName = g.Key.ItemName,
+                    ItemType = g.Key.ItemType,
+                    //SKU = g.Key.SKU,
+                    UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    Amount1 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 1) || (x.IsFinished && x.FinishedDate.Value.Month == 1)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0, // (x.RollBlanketUsage * x.Blanket.AC * x.Blanket.AR)
+                    Amount2 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 2) || (x.IsFinished && x.FinishedDate.Value.Month == 2)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount3 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 3) || (x.IsFinished && x.FinishedDate.Value.Month == 3)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount4 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 4) || (x.IsFinished && x.FinishedDate.Value.Month == 4)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount5 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 5) || (x.IsFinished && x.FinishedDate.Value.Month == 5)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount6 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 6) || (x.IsFinished && x.FinishedDate.Value.Month == 6)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount7 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 7) || (x.IsFinished && x.FinishedDate.Value.Month == 7)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount8 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 8) || (x.IsFinished && x.FinishedDate.Value.Month == 8)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount9 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 9) || (x.IsFinished && x.FinishedDate.Value.Month == 9)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount10 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 10) || (x.IsFinished && x.FinishedDate.Value.Month == 10)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount11 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 11) || (x.IsFinished && x.FinishedDate.Value.Month == 11)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                    Amount12 = g.Where(x => (x.IsRejected && x.RejectedDate.Value.Month == 12) || (x.IsFinished && x.FinishedDate.Value.Month == 12)).Sum(x => (Decimal?)x.RollBlanketUsage) ?? 0,
+                }).AsEnumerable();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                query = query.OrderBy(x => x.ItemType).ToList();
+                rd.Load(Server.MapPath("~/") + "Reports/General/MonthlyBlanketUsage.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("Y1", Y1.ToString());
+                rd.SetParameterValue("M1", new DateTime(Y1, 1, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M2", new DateTime(Y1, 2, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M3", new DateTime(Y1, 3, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M4", new DateTime(Y1, 4, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M5", new DateTime(Y1, 5, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M6", new DateTime(Y1, 6, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M7", new DateTime(Y1, 7, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M8", new DateTime(Y1, 8, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M9", new DateTime(Y1, 9, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M10", new DateTime(Y1, 10, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M11", new DateTime(Y1, 11, 1).ToString("MMM-yy"));
+                rd.SetParameterValue("M12", new DateTime(Y1, 12, 1).ToString("MMM-yy"));
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region VulcanBlanketSales
+        public ActionResult VulcanBlanketSales()
+        {
+            return View();
+        }
+
+        public ActionResult ReportVulcanBlanketSales(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesOrderDetails.Include(x => x.SalesOrder)
+                                                  .Where(x => !x.IsDeleted && x.SalesOrder.IsConfirmed && 
+                                                            x.Item.ItemType.Name == Constant.ItemTypeCase.Blanket &&
+                                                            x.Item.Name.ToLower().Contains("vulcan") && (
+                                                            (x.SalesOrder.SalesDate >= startDate && x.SalesOrder.SalesDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    CustomerName = m.SalesOrder.Contact.Name,
+                    //Currency = (m.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesOrder.Currency.Name,
+                    ItemName = m.Item.Name,
+                    //SKU = m.Item.Sku,
+                    //UoM = m.Item.UoM.Name,
+                    SalesDate = m.SalesOrder.SalesDate,
+                    Code = m.SalesOrder.NomorSurat,
+                    AC = db.Blankets.Where(x => x.Id == m.ItemId).FirstOrDefault().AC,
+                    AR = db.Blankets.Where(x => x.Id == m.ItemId).FirstOrDefault().AR,
+                    //Price = m.Price, //.Item.PriceList,
+                    //Amount = m.DeliveryOrderDetail.SalesOrderDetail.Quantity * m.DeliveryOrderDetail.SalesOrderDetail.Price,
+                }).Select(g => new
+                {
+                    CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    ItemName = g.Key.ItemName,
+                    //UoM = g.Key.UoM,
+                    Code = g.Key.Code,
+                    SalesDate = g.Key.SalesDate,
+                    AC = g.Key.AC,
+                    AR = g.Key.AR,
+                    Quantity = g.Where(x => (x.SalesOrder.SalesDate == g.Key.SalesDate)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                }).OrderBy(x => x.SalesDate).ThenBy(x => x.Code).ThenBy(x => x.CustomerName).ThenBy(x => x.ItemName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/VulcanBlanketSalesReport.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region SalesPersonnelYearly
+        public ActionResult SalesPersonnelYearly()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesPersonnelYearly(DateTime startDate, DateTime endDate, int EmployeeId = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.Date.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                var employee = _employeeService.GetObjectById(EmployeeId);
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesInvoices.Include(x => x.SalesInvoiceDetails).Include(x => x.DeliveryOrder)
+                                                  .Where(x => !x.IsDeleted && x.DeliveryOrder.SalesOrder.EmployeeId == EmployeeId && (
+                                                            (x.DeliveryOrder.SalesOrder.SalesDate >= startDate && x.DeliveryOrder.SalesOrder.SalesDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    CustomerName = m.DeliveryOrder.SalesOrder.Contact.Name,
+                    Currency = (m.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.DeliveryOrder.SalesOrder.Currency.Name,
+                    //ItemType = m.DeliveryOrderDetail.SalesOrderDetail.Item.ItemType.Name,
+                    //UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
+                    //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                }).Select(g => new
+                {
+                    CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //ItemType = g.Key.ItemType,
+                    //UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    Currency = g.Key.Currency,
+                    Amount1 = g.Sum(x => (Decimal?)x.AmountReceivable) ?? 0,
+                    Amount2 = g.Sum(x => (Decimal?)db.Receivables.Where(y => !y.IsDeleted && y.ReceivableSource == Constant.ReceivableSource.SalesInvoice && y.ReceivableSourceId == x.Id).FirstOrDefault().RemainingAmount) ?? 0,
+                }).OrderBy(x => x.Currency).ThenBy(x => x.CustomerName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/SalesPersonnelYearlyByValue.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate.Date);
+                rd.SetParameterValue("endDate", endDay.Date);
+                rd.SetParameterValue("Personnel", employee.Name);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region SalesPersonnelComparisonYearlyByValue
+        public ActionResult SalesPersonnelComparisonYearlyByValue()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesPersonnelComparisonYearlyByValue(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.Date.AddDays(1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesInvoices.Include(x => x.SalesInvoiceDetails).Include(x => x.DeliveryOrder)
+                                                  .Where(x => !x.IsDeleted && (
+                                                            (x.DeliveryOrder.SalesOrder.SalesDate >= startDate && x.DeliveryOrder.SalesOrder.SalesDate < endDay)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    PersonnelName = m.DeliveryOrder.SalesOrder.Employee.Name,
+                    Currency = (m.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.DeliveryOrder.SalesOrder.Currency.Name,
+                    //ItemType = m.DeliveryOrderDetail.SalesOrderDetail.Item.ItemType.Name,
+                    //UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
+                    //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                }).Select(g => new
+                {
+                    PersonnelName = g.Key.PersonnelName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //ItemType = g.Key.ItemType,
+                    //UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    Currency = g.Key.Currency,
+                    Amount1 = g.Sum(x => (Decimal?)x.AmountReceivable) ?? 0,
+                    Amount2 = g.Sum(x => (Decimal?)db.Receivables.Where(y => !y.IsDeleted && y.ReceivableSource == Constant.ReceivableSource.SalesInvoice && y.ReceivableSourceId == x.Id).FirstOrDefault().RemainingAmount) ?? 0,
+                }).OrderBy(x => x.Currency).ThenBy(x => x.PersonnelName).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/SalesPersonnelComparisonYearlyByValue.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate.Date);
+                rd.SetParameterValue("endDate", endDay.Date);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region SalesPersonnelComparisonYearlyByQty
+        public ActionResult SalesPersonnelComparisonYearlyByQty()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesPersonnelComparisonYearlyByQty(DateTime start1Date, DateTime end1Date, DateTime start2Date, DateTime end2Date, DateTime start3Date, DateTime end3Date)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime startP1, endP1, startP2, endP2, startP3, endP3;
+                string P1, P2, P3;
+                if (start1Date.Month == end1Date.Month && start1Date.Year == end1Date.Year)
+                {
+                    startP1 = new DateTime(start1Date.Year, start1Date.Month, 1);
+                    endP1 = startP1.AddMonths(1);//.AddDays(-1);
+                    P1 = startP1.ToString("MMM-yy");
+                }
+                else
+                {
+                    startP1 = new DateTime(start1Date.Year, 1, 1);
+                    endP1 = new DateTime(start1Date.Year + 1, 1, 1);//.AddDays(-1);
+                    P1 = "Year " + startP1.ToString("yyyy");
+                }
+                if (start2Date.Month == end2Date.Month && start2Date.Year == end2Date.Year)
+                {
+                    startP2 = new DateTime(start2Date.Year, start2Date.Month, 1);
+                    endP2 = startP2.AddMonths(1);//.AddDays(-1);
+                    P2 = startP2.ToString("MMM-yy");
+                }
+                else
+                {
+                    startP2 = new DateTime(start2Date.Year, 1, 1);
+                    endP2 = new DateTime(start2Date.Year + 1, 1, 1);//.AddDays(-1);
+                    P2 = "Year " + startP2.ToString("yyyy");
+                } 
+                if (start3Date.Month == end3Date.Month && start3Date.Year == end3Date.Year)
+                {
+                    startP3 = new DateTime(start3Date.Year, start3Date.Month, 1);
+                    endP3 = startP3.AddMonths(1);//.AddDays(-1);
+                    P3 = startP3.ToString("MMM-yy");
+                }
+                else
+                {
+                    startP3 = new DateTime(start3Date.Year, 1, 1);
+                    endP3 = new DateTime(start3Date.Year + 1, 1, 1);//.AddDays(-1);
+                    P3 = "Year " + startP3.ToString("yyyy");
+                }
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesInvoiceDetails.Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                                  .Where(x => !x.IsDeleted && !x.SalesInvoice.IsDeleted && (
+                                                            (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP1 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP1) ||
+                                                            (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP2 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP2) ||
+                                                            (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP3 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP3)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    PersonnelName = m.SalesInvoice.DeliveryOrder.SalesOrder.Employee.Name,
+                    //Currency = (m.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.DeliveryOrder.SalesOrder.Currency.Name,
+                    ItemType = m.DeliveryOrderDetail.SalesOrderDetail.Item.ItemType.Name,
+                    UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
+                    //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                }).Select(g => new
+                {
+                    PersonnelName = g.Key.PersonnelName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    ItemType = g.Key.ItemType,
+                    UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    //Currency = g.Key.Currency,
+                    Amount1 = g.Where(x => x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP1 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP1).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount2 = g.Where(x => x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP2 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP2).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount3 = g.Where(x => x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP3 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP3).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                }).OrderBy(x => x.PersonnelName).ThenBy(x => x.ItemType).ThenBy(x => x.UoM).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/SalesPersonnelComparisonYearlyByQty.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("P1", P1);
+                rd.SetParameterValue("P2", P2);
+                rd.SetParameterValue("P3", P3);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region DailyByQuantity
+        public ActionResult DailyByQuantity()
+        {
+            return View();
+        }
+
+        public ActionResult ReportDailyByQuantity(DateTime startDate, DateTime endDate)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime endDay = endDate.AddDays(1);
+                //DateTime firstMonday = new DateTime(startDate.Year, startDate.Month, 1);
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesOrderDetails.Include(x => x.SalesOrder)
+                                                  .Where(x => !x.IsDeleted && (
+                                                            (x.SalesOrder.SalesDate >= startDate && x.SalesOrder.SalesDate < endDay) && (
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Roller) ||
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Blanket) ||
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical) ||
+                                                            (x.Item.ItemType.Name == Constant.ItemTypeCase.Underpacking)
+                                                        ))).ToList();
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    //CustomerName = m.SalesOrder.Contact.Name,
+                    //Currency = (m.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.SalesOrder.Currency.Name,
+                    //ItemType = m.Item.ItemType.Name,
+                    //SKU = m.Item.Sku,
+                    //UoM = m.Item.UoM.Name,
+                    Day = m.SalesOrder.SalesDate.DayOfWeek.ToString(),
+                    Week = m.SalesOrder.SalesDate.GetWeekOfMonth(),
+                    CurDate = m.SalesOrder.SalesDate,
+                    //Price = m.Price, //.Item.PriceList,
+                    //Rate = db.ExchangeRates.Where(x => x.CurrencyId == m.SalesOrder.CurrencyId && m.SalesOrder.SalesDate >= x.ExRateDate && !x.IsDeleted).OrderByDescending(x => x.ExRateDate).FirstOrDefault().Rate,//m.SalesOrder.ExchangeRateAmount,
+                    //Discount = 0m, //100m - (m.Price/m.Item.PriceMutations.Where(y => (y.DeactivatedAt == null || m.SalesOrder.SalesDate < y.DeactivatedAt.Value)).OrderByDescending(y => y.DeactivatedAt.Value).FirstOrDefault().Amount)*100m,
+                    //Amount = m.DeliveryOrderDetail.SalesOrderDetail.Quantity * m.DeliveryOrderDetail.SalesOrderDetail.Price,
+                }).Select(g => new
+                {
+                    //CustomerName = g.Key.CustomerName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    //Currency = g.Key.Currency,
+                    //ItemType = g.Key.ItemType,
+                    //SKU = g.Key.SKU,
+                    //UoM = g.Key.UoM,
+                    Day = g.Key.Day,
+                    Week = g.Key.Week,
+                    CurDate = g.Key.CurDate,
+                    //Price = g.Key.Price,
+                    //Rate = g.Key.Rate,
+                    //Amount = g.Key.Amount,
+                    Amount1 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Roller)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount2 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Blanket)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount3 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Description.ToLower().Contains("fount"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount4 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Name.ToLower().Contains("wash"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount5 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Name.Contains("IPA"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount6 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && (!x.Item.Name.Contains("IPA") && !x.Item.Name.ToLower().Contains("wash") && !x.Item.Name.ToLower().Contains("wash") && !x.Item.Description.ToLower().Contains("fount")))).Sum(x => (Decimal?)x.Quantity * x.Price * db.ExchangeRates.Where(y => y.CurrencyId == x.SalesOrder.CurrencyId && x.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate) ?? 0, ////x.SalesOrder.ExchangeRateAmount,
+                    Amount7 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Chemical && x.Item.Description.ToLower().Contains("powder"))).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount8 = g.Where(x => (x.SalesOrder.SalesDate == g.Key.CurDate && x.Item.ItemType.Name == Constant.ItemTypeCase.Underpacking)).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                }).ToList();//.OrderBy(x => x.CurDate).ToList();
+
+                for (DateTime curDay = startDate; curDay < endDay; curDay = curDay.AddDays(1))
+                {
+                    if ((curDay.DayOfWeek != DayOfWeek.Saturday && curDay.DayOfWeek != DayOfWeek.Sunday) && (query.Where(x => x.CurDate.Date == curDay.Date).FirstOrDefault() == null))
+                    {
+                        query.Add(new { Day = curDay.DayOfWeek.ToString(), Week = curDay.GetWeekOfMonth(), CurDate = curDay, Amount1 = 0m, Amount2 = 0m, Amount3 = 0m, Amount4 = 0m, Amount5 = 0m, Amount6 = 0m, Amount7 = 0m, Amount8 = 0m });
+                    }
+                }
+
+                query = query.OrderBy(x => x.CurDate).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/DailyReportByQuantity.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("startDate", startDate);
+                rd.SetParameterValue("endDate", endDay);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
 
 
     }
