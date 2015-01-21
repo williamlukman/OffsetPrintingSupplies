@@ -286,10 +286,9 @@ namespace WebView.Controllers
             var list = query.AsEnumerable();
 
             // (Debit) Asset, (Credit) Liability, Equity
-            var journal = list.ElementAtOrDefault(0);
-            Account account = (journal == null) ? null : _accountService.GetObjectById(list.ElementAtOrDefault(0).AccountId);
+            Account account = _accountService.GetObjectById(AccountId);
             Closing closing = _closingService.GetObjectByPeriodAndYear(StartDate.AddDays(-1).Month, StartDate.AddDays(-1).Year);
-            ValidComb validComb = (closing == null) ? null : _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+            ValidComb validComb = (closing == null || account == null) ? null : _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
             decimal saldoawal = (validComb == null) ? 0 : validComb.Amount;
             decimal saldoakhir = saldoawal;
 
@@ -310,7 +309,7 @@ namespace WebView.Controllers
 
             return Json(new
             {
-                SaldoAwal = saldoawal,
+                saldoawal = saldoawal,
                 saldoakhir = saldoakhir,
             }, JsonRequestBehavior.AllowGet);
         }

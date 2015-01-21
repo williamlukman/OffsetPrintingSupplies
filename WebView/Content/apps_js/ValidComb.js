@@ -30,7 +30,7 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
 				  { name: 'code', index: 'code', width: 80 },
-				  { name: 'name', index: 'name', width: 150 },
+				  { name: 'name', index: 'name', width: 200 },
 				  { name: 'period', index: 'period', width: 60 },
 				  { name: 'yearperiod', index: 'yearperiod', width: 60 },
                   { name: 'beginningperiod', index: 'beginningperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },

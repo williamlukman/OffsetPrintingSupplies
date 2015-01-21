@@ -43,7 +43,11 @@ namespace Core.Constants
             public static int BearingSeat = 1;
             public static int CentreDrill = 2;
             public static int None = 3;
-            public static int Both = 4;
+            public static int BearingSeatAndCentreDrill = 4;
+            public static int RepairCorosive = 5;
+            public static int BearingSeatAndRepairCorosive = 6;
+            public static int CentreDrillAndRepairCorosive = 7;
+            public static int All = 8;
         }
     }
 }

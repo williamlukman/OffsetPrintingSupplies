@@ -67,7 +67,7 @@
                   { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 40, sortable: false, hidden: true },
                   { name: 'rollerbuildersku', index: 'rollerbuildersku', width: 60, sortable: false },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 100, sortable: false },
+                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 300, sortable: false },
 				  { name: 'coretypecase', index: 'coretypecase', width: 40, sortable: false },
                   { name: 'isdisassembled', index: 'isdisassembled', width: 30, sortable: false },
                   { name: 'isstrippedandglued', index: 'isstrippedandglued', width: 30, sortable: false },

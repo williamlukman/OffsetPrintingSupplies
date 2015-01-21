@@ -161,6 +161,7 @@ namespace Core.Constants
             public static string BlendingRecipe = "Blending Recipe";
             public static string CoreBuilder = "CoreBuilder";
             public static string Item = "Item";
+            public static string ItemAvgPrice = "Item Avg Price";
             public static string RollerBuilder = "RollerBuilder";
             public static string Repacking = "Repacking";
             public static string StockAdjustment = "Stock Adjustment";

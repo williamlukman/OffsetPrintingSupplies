@@ -533,19 +533,27 @@
 
 		          rowRepairRequestCase = $(this).getRowData(cl).repairrequestcase;
 		          if (rowRepairRequestCase == '1') {
-		              rowRepairRequestCase = "BearingSeat";
+		              rowRepairRequestCase = "BS";
 		          } else if (rowRepairRequestCase == '2') {
-		              rowRepairRequestCase = "CentreDrill";
+		              rowRepairRequestCase = "CD";
 		          } else if (rowRepairRequestCase == '3') {
-		              rowRepairRequestCase = "None";
+		              rowRepairRequestCase = "-";
 		          } else if (rowRepairRequestCase == '4') {
-		              rowRepairRequestCase = "Both";
+		              rowRepairRequestCase = "BS & CD";
+		          } else if (rowRepairRequestCase == '5') {
+		              rowRepairRequestCase = "CR";
+		          } else if (rowRepairRequestCase == '6') {
+		              rowRepairRequestCase = "BS & CR";
+		          } else if (rowRepairRequestCase == '7') {
+		              rowRepairRequestCase = "CD & CR";
+		          } else if (rowRepairRequestCase == '8') {
+		              rowRepairRequestCase = "BS & CD & CR";
 		          }
 		          $(this).jqGrid('setRowData', ids[i], { repairrequestcase: rowRepairRequestCase });
               }
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
@@ -585,18 +593,8 @@
                                 e.selectedIndex = 1;
                             }
                             var f = document.getElementById("RepairRequestCase");
-                            if (result.RepairRequestCase == 1) {
-                                f.selectedIndex = 0;
-                            }
-                            else if (result.RepairRequestCase == 2) {
-                                f.selectedIndex = 1;
-                            }
-                            else if (result.RepairRequestCase == 3) {
-                                f.selectedIndex = 2;
-                            }
-                            else if (result.RepairRequestCase == 4) {
-                                f.selectedIndex = 3;
-                            }
+                            f.selectedIndex = result.RepairRequestCase - 1;
+
                             var g = document.getElementById("CoreTypeCase");
                             if (result.CoreTypeCase == 'Hollow') {
                                 g.selectedIndex = 0;

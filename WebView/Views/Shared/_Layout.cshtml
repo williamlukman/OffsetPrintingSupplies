@@ -300,6 +300,8 @@
                                                     {<li><a href="@Url.Action("Index", "MstCoreBuilder")">CoreBuilder</a> </li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Item, Core.Constants.Constant.MenuGroupName.Master))
                                                     {<li><a href="@Url.Action("Index", "MstItem")">Item </a> </li>}
+                                                    @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ItemAvgPrice, Core.Constants.Constant.MenuGroupName.Master))
+                                                    {<li><a href="@Url.Action("Index", "MstItemAvgPrice")">Item Avg Price</a> </li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.RollerBuilder, Core.Constants.Constant.MenuGroupName.Master))
                                                     {<li><a href="@Url.Action("Index", "MstRollerBuilder")">RollerBuilder</a> </li>}
                                                     @if(WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Repacking, Core.Constants.Constant.MenuGroupName.Master))
