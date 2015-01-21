@@ -36,7 +36,7 @@
         //for (var i = 0; i < datas.length; i++) {
         //    idarray.push(datas[i].id);
         //}
-        window.open(base_url + 'Report/ReportSalesPersonnelComparisonYearly?startDate=' + $('#StartDate').datebox('getValue') + '&endDate=' + $('#EndDate').datebox('getValue')); //JSON.stringify(idarray)
+        window.open(base_url + 'Report/ReportSalesPersonnelComparisonYearlyByValue?startDate=' + $('#StartDate').datebox('getValue') + '&endDate=' + $('#EndDate').datebox('getValue')); //JSON.stringify(idarray)
     });
 
     $("#lookup_div_contact").dialog('close');
