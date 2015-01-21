@@ -29,11 +29,10 @@
     $("#list").jqGrid({
         url: base_url + 'MstItemType/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Size', 'Kode UoM', 'Acc Id', 'Acc Code', 'Acc', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Kode UoM', 'Acc Id', 'Acc Code', 'Acc', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 120 },
-                  { name: 'size', index: 'size', width: 100 },
                   { name: 'description', index: 'description', width: 60 },
                   { name: 'accountid', index: 'accountid', width: 80, align: "center", hidden: true },
 				  { name: 'accountcode', index: 'accountcode', width: 80 },
@@ -114,7 +113,6 @@
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
                             $('#Description').val(result.Description);
-                            $('#Size').val(result.Size);
                             $('#AccountId').val(result.AccountId);
                             $('#AccountCode').val(result.AccountCode);
                             $('#AccountName').val(result.AccountName);
@@ -208,7 +206,7 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name :$("#Name").val(), Description: $("#Description").val(), AccountId: $("#AccountId").val(), Size: $("#Size").val()
+                Id: id, Name :$("#Name").val(), Description: $("#Description").val(), AccountId: $("#AccountId").val()
             }),
             async: false,
             cache: false,

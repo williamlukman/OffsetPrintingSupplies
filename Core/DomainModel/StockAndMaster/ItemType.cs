@@ -13,7 +13,6 @@ namespace Core.DomainModel
         public string Description { get; set; }
         public bool IsLegacy { get; set; } // Core, Roller, Blanket are legacy items
         public Nullable<int> AccountId { get; set; }
-        public int Size { get; set; }
 
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }

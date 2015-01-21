@@ -113,9 +113,9 @@ namespace Data.Migrations
                 x.ContactGroupId = contactgroupid;
             }
 
-            foreach(var x in context.ItemTypes.Where(x => x.Size == null))
+            foreach(var x in context.UoMs.Where(x => x.Size == null))
             {
-                x.Size = 0;
+                x.Size = 1;
             }
 
             //if (context.Currencys.FirstOrDefault() == null)

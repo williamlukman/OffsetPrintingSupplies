@@ -309,6 +309,7 @@
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
     <Compile Include="Controllers\StockAndMaster\ContactDetailController.cs" />
     <Compile Include="Controllers\StockAndMaster\ContactGroupController.cs" />
+    <Compile Include="Controllers\StockAndMaster\MstItemAvgPriceController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstSubTypeController.cs" />
     <Compile Include="Controllers\StockAndMaster\SupplierDetailController.cs" />
     <Compile Include="Controllers\StockAndMaster\EmployeeController.cs" />
@@ -366,6 +367,7 @@
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
     <Content Include="Content\apps_js\ContactGroup.js" />
+    <Content Include="Content\apps_js\MasterItemAvgPrice.js" />
     <Content Include="Content\apps_js\MasterSubType.js" />
     <Content Include="Content\apps_js\SupplierDetail.js" />
     <Content Include="Content\apps_js\Employee.js" />
@@ -1438,6 +1440,7 @@
     <Content Include="Views\Report\SalesPersonnelYearly.cshtml" />
     <Content Include="Views\Report\SalesPersonnelComparisonYearlyByValue.cshtml" />
     <Content Include="Views\Report\SalesPersonnelComparisonYearlyByQty.cshtml" />
+    <Content Include="Views\MstItemAvgPrice\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

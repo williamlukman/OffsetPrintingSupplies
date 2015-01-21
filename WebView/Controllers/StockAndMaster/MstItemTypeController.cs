@@ -281,7 +281,6 @@ namespace WebView.Controllers
                 data.Name = model.Name;
                 data.Description = model.Description;
                 data.AccountId = model.AccountId;
-                data.Size = model.Size;
                 model = _itemTypeService.UpdateObject(data, _accountService);
             }
             catch (Exception ex)
