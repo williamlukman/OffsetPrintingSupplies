@@ -307,6 +307,11 @@
     <Compile Include="Controllers\Finance\ReceivableController.cs" />
     <Compile Include="Controllers\Finance\PayableController.cs" />
     <Compile Include="Controllers\StockAndMaster\CompanyController.cs" />
+    <Compile Include="Controllers\StockAndMaster\ContactDetailController.cs" />
+    <Compile Include="Controllers\StockAndMaster\ContactGroupController.cs" />
+    <Compile Include="Controllers\StockAndMaster\MstSubTypeController.cs" />
+    <Compile Include="Controllers\StockAndMaster\SupplierDetailController.cs" />
+    <Compile Include="Controllers\StockAndMaster\EmployeeController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstSupplierController.cs" />
     <Compile Include="Controllers\StockAndMaster\CustomerStockAdjustmentController.cs" />
     <Compile Include="Controllers\StockAndMaster\MstBlendingRecipeController.cs" />
@@ -360,6 +365,11 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
+    <Content Include="Content\apps_js\ContactGroup.js" />
+    <Content Include="Content\apps_js\MasterSubType.js" />
+    <Content Include="Content\apps_js\SupplierDetail.js" />
+    <Content Include="Content\apps_js\Employee.js" />
+    <Content Include="Content\apps_js\ContactDetail.js" />
     <Content Include="Content\apps_js\ReportDiscountByDate.js" />
     <Content Include="Content\apps_js\ReportSalesOrderDailyByDate.js" />
     <Content Include="Content\apps_js\ReportItemSalesYearlyByQuantity.js" />
@@ -626,6 +636,7 @@
     <Content Include="Content\easyui\icons\cancel.png" />
     <Content Include="Content\easyui\icons\chart-up-color.png" />
     <Content Include="Content\easyui\icons\chart.png" />
+    <Content Include="Content\easyui\icons\copy.png" />
     <Content Include="Content\easyui\icons\cut.png" />
     <Content Include="Content\easyui\icons\edit_add.png" />
     <Content Include="Content\easyui\icons\edit_remove.png" />
@@ -1408,6 +1419,11 @@
     <Content Include="Views\Report\ItemSalesYearlyByQuantity.cshtml" />
     <Content Include="Views\Report\SalesOrderDailyByDate.cshtml" />
     <Content Include="Views\Report\DiscountByDate.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\ContactDetail\Index.cshtml" />
+    <Content Include="Views\SupplierDetail\Index.cshtml" />
+    <Content Include="Views\ContactGroup\Index.cshtml" />
+    <Content Include="Views\MstSubType\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
