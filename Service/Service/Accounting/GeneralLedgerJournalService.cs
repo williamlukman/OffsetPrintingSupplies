@@ -2408,8 +2408,8 @@ namespace Service.Service
         public IList<GeneralLedgerJournal> CreateJournalForPurchaseInvoiceMigration(PurchaseInvoiceMigration purchaseInvoiceMigration,
                                            IAccountService _accountService, ICurrencyService _currencyService, IGLNonBaseCurrencyService _gLNonBaseCurrencyService)
         {
-            // Debit GoodsPendingClearance, Credit AccountPayable, Debit PPNMASUKAN
-            #region Debit GoodsPendingClearance, Debit PPNMASUKAN, Credit AccountPayable
+            // Debit GoodsPendingClearance, Credit AccountPayable
+            #region Debit GoodsPendingClearance, Credit AccountPayable
 
             IList<GeneralLedgerJournal> journals = new List<GeneralLedgerJournal>();
             Currency purchaseInvoiceMigrationCurrency = _currencyService.GetObjectById(purchaseInvoiceMigration.CurrencyId);
@@ -2441,25 +2441,11 @@ namespace Service.Service
                 SourceDocumentId = purchaseInvoiceMigration.Id,
                 TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(purchaseInvoiceMigration.DPP * purchaseInvoiceMigration.Rate, 2)
+                Amount = Math.Round(purchaseInvoiceMigration.AmountPayable * purchaseInvoiceMigration.Rate, 2)
             };
             debitGoodsPendingClearance = CreateObject(debitGoodsPendingClearance, _accountService);
             journals.Add(debitGoodsPendingClearance);
 
-            if (purchaseInvoiceMigration.Tax > 0)
-            {
-                GeneralLedgerJournal debitPPNMASUKAN = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNMASUKAN).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.PurchaseInvoiceMigration,
-                    SourceDocumentId = purchaseInvoiceMigration.Id,
-                    TransactionDate = (DateTime)purchaseInvoiceMigration.InvoiceDate,
-                    Status = Constant.GeneralLedgerStatus.Debit,
-                    Amount = Math.Round(purchaseInvoiceMigration.Tax, 2)
-                };
-                debitPPNMASUKAN = CreateObject(debitPPNMASUKAN, _accountService);
-                journals.Add(debitPPNMASUKAN);
-            }
             #endregion
             return journals;
         }
@@ -2917,21 +2903,6 @@ namespace Service.Service
 
             journals.Add(debitaccountreceivable);
 
-            if (salesInvoiceMigration.Tax > 0)
-            {
-                GeneralLedgerJournal creditppnkeluaran = new GeneralLedgerJournal()
-                {
-                    AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.PPNKELUARAN).Id,
-                    SourceDocument = Constant.GeneralLedgerSource.SalesInvoiceMigration,
-                    SourceDocumentId = salesInvoiceMigration.Id,
-                    TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
-                    Status = Constant.GeneralLedgerStatus.Credit,
-                    Amount = Math.Round(salesInvoiceMigration.Tax, 2)
-                };
-                creditppnkeluaran = CreateObject(creditppnkeluaran, _accountService);
-                journals.Add(creditppnkeluaran);
-            }
-
             GeneralLedgerJournal creditrevenue = new GeneralLedgerJournal()
             {
                 AccountId = _accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id,
@@ -2939,7 +2910,7 @@ namespace Service.Service
                 SourceDocumentId = salesInvoiceMigration.Id,
                 TransactionDate = (DateTime)salesInvoiceMigration.InvoiceDate,
                 Status = Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(salesInvoiceMigration.DPP * Rate, 2)
+                Amount = Math.Round(salesInvoiceMigration.AmountReceivable * Rate, 2)
             };
             creditrevenue = CreateObject(creditrevenue, _accountService);
 
