@@ -360,7 +360,8 @@
     <Content Include="Content\apps_js\Closing.js" />
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
-    <Content Include="Content\apps_js\ReportSalesPersonnelComparisonYearly.js" />
+    <Content Include="Content\apps_js\ReportSalesPersonnelComparisonYearlyByQty.js" />
+    <Content Include="Content\apps_js\ReportSalesPersonnelComparisonYearlyByValue.js" />
     <Content Include="Content\apps_js\ReportSalesPersonnelYearly.js" />
     <Content Include="Content\apps_js\ReportDailyByQuantity.js" />
     <Content Include="Content\apps_js\ReportMonthlyRollerCompoundUsage.js" />
@@ -1419,7 +1420,8 @@
     <Content Include="Views\Report\MonthlyRollerCompoundUsage.cshtml" />
     <Content Include="Views\Report\DailyByQuantity.cshtml" />
     <Content Include="Views\Report\SalesPersonnelYearly.cshtml" />
-    <Content Include="Views\Report\SalesPersonnelComparisonYearly.cshtml" />
+    <Content Include="Views\Report\SalesPersonnelComparisonYearlyByValue.cshtml" />
+    <Content Include="Views\Report\SalesPersonnelComparisonYearlyByQty.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

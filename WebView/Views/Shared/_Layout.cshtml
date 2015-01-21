@@ -478,7 +478,9 @@
 													@if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
                                                     {<li><a href="@Url.Action("SalesPersonnelYearly", "Report")">Sales Personnel Yearly by Value</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
-                                                    {<li><a href="@Url.Action("SalesPersonnelComparisonYearly", "Report")">Sales Personnel Comparison Yearly by Value</a></li>}
+                                                    {<li><a href="@Url.Action("SalesPersonnelComparisonYearlyByValue", "Report")">Sales Personnel Comparison Yearly by Value</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.Sales, Core.Constants.Constant.MenuGroupName.Report))
+                                                    {<li><a href="@Url.Action("SalesPersonnelComparisonYearlyByQty", "Report")">Sales Personnel Comparison Yearly by Quantity</a></li>}
 
                                                 </ul>
                                             </li>

@@ -1970,13 +1970,13 @@ namespace WebView.Controllers
         }
         #endregion
 
-        #region SalesPersonnelComparisonYearly
-        public ActionResult SalesPersonnelComparisonYearly()
+        #region SalesPersonnelComparisonYearlyByValue
+        public ActionResult SalesPersonnelComparisonYearlyByValue()
         {
             return View();
         }
 
-        public ActionResult ReportSalesPersonnelComparisonYearly(DateTime startDate, DateTime endDate)
+        public ActionResult ReportSalesPersonnelComparisonYearlyByValue(DateTime startDate, DateTime endDate)
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {
@@ -2028,6 +2028,112 @@ namespace WebView.Controllers
                 rd.SetParameterValue("AsOfDate", DateTime.Today);
                 rd.SetParameterValue("startDate", startDate.Date);
                 rd.SetParameterValue("endDate", endDay.Date);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region SalesPersonnelComparisonYearlyByQty
+        public ActionResult SalesPersonnelComparisonYearlyByQty()
+        {
+            return View();
+        }
+
+        public ActionResult ReportSalesPersonnelComparisonYearlyByQty(DateTime start1Date, DateTime end1Date, DateTime start2Date, DateTime end2Date, DateTime start3Date, DateTime end3Date)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                DateTime startP1, endP1, startP2, endP2, startP3, endP3;
+                string P1, P2, P3;
+                if (start1Date.Month == end1Date.Month && start1Date.Year == end1Date.Year)
+                {
+                    startP1 = new DateTime(start1Date.Year, start1Date.Month, 1);
+                    endP1 = startP1.AddMonths(1);//.AddDays(-1);
+                    P1 = startP1.ToString("MMM-yy");
+                }
+                else
+                {
+                    startP1 = new DateTime(start1Date.Year, 1, 1);
+                    endP1 = new DateTime(start1Date.Year + 1, 1, 1);//.AddDays(-1);
+                    P1 = "Year " + startP1.ToString("yyyy");
+                }
+                if (start2Date.Month == end2Date.Month && start2Date.Year == end2Date.Year)
+                {
+                    startP2 = new DateTime(start2Date.Year, start2Date.Month, 1);
+                    endP2 = startP2.AddMonths(1);//.AddDays(-1);
+                    P2 = startP2.ToString("MMM-yy");
+                }
+                else
+                {
+                    startP2 = new DateTime(start2Date.Year, 1, 1);
+                    endP2 = new DateTime(start2Date.Year + 1, 1, 1);//.AddDays(-1);
+                    P2 = "Year " + startP2.ToString("yyyy");
+                } 
+                if (start3Date.Month == end3Date.Month && start3Date.Year == end3Date.Year)
+                {
+                    startP3 = new DateTime(start3Date.Year, start3Date.Month, 1);
+                    endP3 = startP3.AddMonths(1);//.AddDays(-1);
+                    P3 = startP3.ToString("MMM-yy");
+                }
+                else
+                {
+                    startP3 = new DateTime(start3Date.Year, 1, 1);
+                    endP3 = new DateTime(start3Date.Year + 1, 1, 1);//.AddDays(-1);
+                    P3 = "Year " + startP3.ToString("yyyy");
+                }
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                //var salesInvoice = _salesInvoiceService.GetObjectById(Id);
+                var q = db.SalesInvoiceDetails.Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                                  .Where(x => !x.IsDeleted && !x.SalesInvoice.IsDeleted && (
+                                                            (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP1 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP1) ||
+                                                            (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP2 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP2) ||
+                                                            (x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP3 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP3)
+                                                        ));
+                string user = AuthenticationModel.GetUserName();
+
+                var query = q.GroupBy(m => new
+                {
+                    PersonnelName = m.SalesInvoice.DeliveryOrder.SalesOrder.Employee.Name,
+                    //Currency = (m.DeliveryOrder.SalesOrder.Currency.Name == "Rupiah") ? "IDR" : m.DeliveryOrder.SalesOrder.Currency.Name,
+                    ItemType = m.DeliveryOrderDetail.SalesOrderDetail.Item.ItemType.Name,
+                    UoM = m.DeliveryOrderDetail.SalesOrderDetail.Item.UoM.Name,
+                    //SalesDate = m.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate,
+                }).Select(g => new
+                {
+                    PersonnelName = g.Key.PersonnelName, //g.FirstOrDefault().SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak, //g.Key.CustomerGroup,
+                    ItemType = g.Key.ItemType,
+                    UoM = g.Key.UoM,
+                    //SalesDate = g.Key.SalesDate,
+                    //Currency = g.Key.Currency,
+                    Amount1 = g.Where(x => x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP1 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP1).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount2 = g.Where(x => x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP2 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP2).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                    Amount3 = g.Where(x => x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= startP3 && x.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate < endP3).Sum(x => (Decimal?)x.Quantity) ?? 0,
+                }).OrderBy(x => x.PersonnelName).ThenBy(x => x.ItemType).ThenBy(x => x.UoM).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/General/SalesPersonnelComparisonYearlyByQty.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["subreport.rpt"].SetDataSource(q2);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("AsOfDate", DateTime.Today);
+                rd.SetParameterValue("P1", P1);
+                rd.SetParameterValue("P2", P2);
+                rd.SetParameterValue("P3", P3);
 
                 var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 return File(stream, "application/pdf");
