@@ -26,7 +26,7 @@ namespace WebView.Controllers
         private IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         private IPurchaseReceivalService _purchaseReceivalService;
         public ICurrencyService _currencyService;
-
+        
         public PurchaseOrderController()
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
@@ -309,6 +309,7 @@ namespace WebView.Controllers
                 Item = _itemService.GetObjectById(model.ItemId).Name,
                 model.Quantity,
                 model.Price,
+                model.PurchaseOrder.IsConfirmed,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -426,7 +427,7 @@ namespace WebView.Controllers
                 data.Quantity = model.Quantity;
                 data.PendingReceivalQuantity = model.Quantity;
                 data.Price = model.Price;
-                model = _purchaseOrderDetailService.UpdateObject(data,_purchaseOrderService,_itemService);
+                model = _purchaseOrderDetailService.UpdateObject(data,_purchaseOrderService,_itemService, _purchaseReceivalService, _purchaseReceivalDetailService);
             }
             catch (Exception ex)
             {

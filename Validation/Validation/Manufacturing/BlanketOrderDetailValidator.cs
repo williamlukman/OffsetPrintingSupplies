@@ -449,9 +449,9 @@ namespace Validation.Validation
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenFinished(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
-            VHasBeenQCAndMarked(blanketOrderDetail);
-            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VHasNotBeenRejected(blanketOrderDetail);
+            if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
+            VHasRollBlanketAmount(blanketOrderDetail);
             if (!isValid(blanketOrderDetail)) { return blanketOrderDetail; }
             VRollBlanketIsInStock(blanketOrderDetail, _blanketService, _blanketOrderService, _itemService, _warehouseItemService);
             return blanketOrderDetail;

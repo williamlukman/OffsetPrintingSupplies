@@ -185,6 +185,7 @@ namespace Service.Service
             {
                 _generalLedgerJournalService.CreateUndoRejectedJournalForBlanketOrderDetail(blanketOrderDetail, _itemTypeService, _accountService);
                 blanketOrderDetail.TotalCost = 0;
+                blanketOrderDetail.RollBlanketUsage = 0;
                 _repository.UndoRejectObject(blanketOrderDetail);
 
                 // deduce blanket order reject quantity
@@ -199,7 +200,7 @@ namespace Service.Service
                 {
                     Item leftbar = _blanketService.GetLeftBarItem(blanket);
                     WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, leftbar.Id);
-                    IList<StockMutation> stockMutationLeftBars = _stockMutationService.DeleteStockMutationForBlanketOrder(blanketOrderDetail, warehouseLeftBar);
+                    IList<StockMutation> stockMutationLeftBars = _stockMutationService.GetStockMutationForBlanketOrder(blanketOrderDetail, warehouseLeftBar);
                     foreach (var stockMutationLeftBar in stockMutationLeftBars)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _blanketService, _warehouseItemService);
@@ -209,7 +210,7 @@ namespace Service.Service
                 {
                     Item rightbar = _blanketService.GetRightBarItem(blanket);
                     WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, rightbar.Id);
-                    IList<StockMutation> stockMutationRightBars = _stockMutationService.DeleteStockMutationForBlanketOrder(blanketOrderDetail, warehouseRightBar);
+                    IList<StockMutation> stockMutationRightBars = _stockMutationService.GetStockMutationForBlanketOrder(blanketOrderDetail, warehouseRightBar);
                     foreach (var stockMutationRightBar in stockMutationRightBars)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _blanketService, _warehouseItemService);
@@ -217,7 +218,7 @@ namespace Service.Service
                 }
 
                 WarehouseItem warehouseRollBlanket = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, blanket.RollBlanketItemId);
-                IList<StockMutation> stockMutationRollBlankets = _stockMutationService.DeleteStockMutationForBlanketOrder(blanketOrderDetail, warehouseRollBlanket);
+                IList<StockMutation> stockMutationRollBlankets = _stockMutationService.GetStockMutationForBlanketOrder(blanketOrderDetail, warehouseRollBlanket);
                 foreach (var stockMutationRollBlanket in stockMutationRollBlankets)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationRollBlanket, _itemService, _blanketService, _warehouseItemService);
@@ -291,6 +292,7 @@ namespace Service.Service
                 blanketOrderDetail.AdhesiveCost = 0;
                 blanketOrderDetail.BarCost = 0;
                 blanketOrderDetail.RollBlanketCost = 0;
+                blanketOrderDetail.RollBlanketUsage = 0;
 
                 _repository.UnfinishObject(blanketOrderDetail);
 
@@ -303,7 +305,7 @@ namespace Service.Service
                 // reverse stock mutation
                 Blanket blanket = _blanketService.GetObjectById(blanketOrderDetail.BlanketId);
                 WarehouseItem warehouseBlanket = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, blanket.Id);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForBlanketOrder(blanketOrderDetail, warehouseBlanket);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForBlanketOrder(blanketOrderDetail, warehouseBlanket);
                 foreach (var stockMutation in stockMutations)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
@@ -313,7 +315,7 @@ namespace Service.Service
                 {
                     Item leftbar = _blanketService.GetLeftBarItem(blanket);
                     WarehouseItem warehouseLeftBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, leftbar.Id);
-                    IList<StockMutation> stockMutationLeftBars = _stockMutationService.DeleteStockMutationForBlanketOrder(blanketOrderDetail, warehouseLeftBar);
+                    IList<StockMutation> stockMutationLeftBars = _stockMutationService.GetStockMutationForBlanketOrder(blanketOrderDetail, warehouseLeftBar);
                     foreach (var stockMutationLeftBar in stockMutationLeftBars)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutationLeftBar, _itemService, _blanketService, _warehouseItemService);
@@ -323,7 +325,7 @@ namespace Service.Service
                 {
                     Item rightbar = _blanketService.GetRightBarItem(blanket);
                     WarehouseItem warehouseRightBar = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, rightbar.Id);
-                    IList<StockMutation> stockMutationRightBars = _stockMutationService.DeleteStockMutationForBlanketOrder(blanketOrderDetail, warehouseRightBar);
+                    IList<StockMutation> stockMutationRightBars = _stockMutationService.GetStockMutationForBlanketOrder(blanketOrderDetail, warehouseRightBar);
                     foreach (var stockMutationRightBar in stockMutationRightBars)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutationRightBar, _itemService, _blanketService, _warehouseItemService);
@@ -331,7 +333,7 @@ namespace Service.Service
                 }
 
                 WarehouseItem warehouseRollBlanket = _warehouseItemService.FindOrCreateObject(blanketOrder.WarehouseId, blanket.RollBlanketItemId);
-                IList<StockMutation> stockMutationRollBlankets = _stockMutationService.DeleteStockMutationForBlanketOrder(blanketOrderDetail, warehouseRollBlanket);
+                IList<StockMutation> stockMutationRollBlankets = _stockMutationService.GetStockMutationForBlanketOrder(blanketOrderDetail, warehouseRollBlanket);
                 foreach (var stockMutationRollBlanket in stockMutationRollBlankets)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationRollBlanket, _itemService, _blanketService, _warehouseItemService);

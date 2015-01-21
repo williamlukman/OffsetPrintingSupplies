@@ -214,53 +214,12 @@ namespace WebView.Controllers
         }
 
         [HttpPost]
-        public dynamic ProgressDetail(BlanketOrderDetail model)
-        {
-            var models = new BlanketOrderDetail();
-            models.Errors = new Dictionary<string, string>();
-            decimal usage = model.RollBlanketUsage;
-            try
-            {
-                var data = _blanketOrderDetailService.GetObjectById(model.Id);
-                if (model.IsCut && !data.IsCut) { models = _blanketOrderDetailService.CutObject(data, _blanketOrderService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsSideSealed && !data.IsSideSealed) { models = _blanketOrderDetailService.SideSealObject(data); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarPrepared && !data.IsBarPrepared) { models = _blanketOrderDetailService.PrepareObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsAdhesiveTapeApplied && !data.IsAdhesiveTapeApplied) { models = _blanketOrderDetailService.ApplyTapeAdhesiveToObject(data, model.RollBlanketUsage, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarMounted && !data.IsBarMounted) { models = _blanketOrderDetailService.MountObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarHeatPressed && !data.IsBarHeatPressed) { models = _blanketOrderDetailService.HeatPressObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsBarPullOffTested && !data.IsBarPullOffTested) { models = _blanketOrderDetailService.PullOffTestObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsQCAndMarked && !data.IsQCAndMarked) { models = _blanketOrderDetailService.QCAndMarkObject(data, _blanketService); }
-                if (models.Errors.Any()) { return Json(new { models.Errors }); }
-                if (model.IsPackaged  && !data.IsPackaged) { models = _blanketOrderDetailService.PackageObject(data); }
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("Update Failed", ex);
-                models.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                models.Errors
-            });
-        }
-
-
-       
-
-        [HttpPost]
         public dynamic Finish(BlanketOrderDetail model)
         {
             try
             {
                 var data = _blanketOrderDetailService.GetObjectById(model.Id);
+                data.RollBlanketUsage = model.RollBlanketUsage;
                 model = _blanketOrderDetailService.FinishObject(data, model.FinishedDate.Value, _blanketOrderService, _stockMutationService
                     , _blanketService, _itemService, _itemTypeService, _warehouseItemService, _accountService, _generalLedgerJournalService, _closingService);
             }

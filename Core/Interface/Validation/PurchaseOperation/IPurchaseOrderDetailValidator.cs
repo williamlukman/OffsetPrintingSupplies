@@ -11,6 +11,7 @@ namespace Core.Interface.Validation
     {
         PurchaseOrderDetail VHasPurchaseOrder(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService);
         PurchaseOrderDetail VPurchaseOrderHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService);
+        PurchaseOrderDetail VPurchaseReceivalHasNotBeenConfirmed(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseOrderDetail VHasItem(PurchaseOrderDetail purchaseOrderDetail, IItemService _itemService);
         PurchaseOrderDetail VNonZeroNorNegativeQuantity(PurchaseOrderDetail purchaseOrderDetail);
         PurchaseOrderDetail VNonNegativePrice(PurchaseOrderDetail purchaseOrderDetail);
@@ -21,12 +22,14 @@ namespace Core.Interface.Validation
         PurchaseOrderDetail VHasNoPurchaseReceivalDetail(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseOrderDetail VHasConfirmationDate(PurchaseOrderDetail purchaseOrderDetail);
         PurchaseOrderDetail VCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
-        PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
+        PurchaseOrderDetail VUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService,
+                                          IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         PurchaseOrderDetail VDeleteObject(PurchaseOrderDetail purchaseOrderDetail);
         PurchaseOrderDetail VConfirmObject(PurchaseOrderDetail purchaseOrderDetail);
         PurchaseOrderDetail VUnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);
         bool ValidCreateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
-        bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService);
+        bool ValidUpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderDetailService _purchaseOrderDetailService, IPurchaseOrderService _purchaseOrderService, IItemService _itemService,
+                               IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService);
         bool ValidDeleteObject(PurchaseOrderDetail purchaseOrderDetail);
         bool ValidConfirmObject(PurchaseOrderDetail purchaseOrderDetail);
         bool ValidUnconfirmObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseReceivalDetailService _purchaseReceivalDetailService, IItemService _itemService);

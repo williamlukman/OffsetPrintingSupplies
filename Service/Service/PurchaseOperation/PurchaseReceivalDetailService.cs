@@ -129,7 +129,7 @@ namespace Service.Service
                 PurchaseReceival purchaseReceival = _purchaseReceivalService.GetObjectById(purchaseReceivalDetail.PurchaseReceivalId);
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(purchaseReceival.WarehouseId, purchaseReceivalDetail.ItemId);
                 Item item = _itemService.GetObjectById(purchaseReceivalDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForPurchaseReceival(purchaseReceivalDetail, warehouseItem);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingReceival += purchaseReceivalDetail.Quantity;

@@ -64,9 +64,10 @@ namespace Service.Service
             }
         }
 
-        public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService)
+        public PurchaseOrderDetail UpdateObject(PurchaseOrderDetail purchaseOrderDetail, IPurchaseOrderService _purchaseOrderService, IItemService _itemService,
+                                                IPurchaseReceivalService _purchaseReceivalService, IPurchaseReceivalDetailService _purchaseReceivalDetailService)
         {
-            return (_validator.ValidUpdateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService) ?
+            return (_validator.ValidUpdateObject(purchaseOrderDetail, this, _purchaseOrderService, _itemService, _purchaseReceivalService, _purchaseReceivalDetailService) ?
                      _repository.UpdateObject(purchaseOrderDetail) : purchaseOrderDetail);
         }
 
@@ -104,7 +105,7 @@ namespace Service.Service
             {
                 purchaseOrderDetail = _repository.UnconfirmObject(purchaseOrderDetail);
                 Item item = _itemService.GetObjectById(purchaseOrderDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForPurchaseOrder(purchaseOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForPurchaseOrder(purchaseOrderDetail, item);
                 foreach (var stockMutation in stockMutations)
                 {
                     //item.PendingReceival -= purchaseOrderDetail.Quantity;

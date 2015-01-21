@@ -99,7 +99,7 @@ namespace Service.Service
             {
                 virtualOrderDetail = _repository.UnconfirmObject(virtualOrderDetail);
                 Item item = _itemService.GetObjectById(virtualOrderDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForVirtualOrder(virtualOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForVirtualOrder(virtualOrderDetail, item);
                 foreach (var stockMutation in stockMutations)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

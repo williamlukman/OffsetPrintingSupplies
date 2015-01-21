@@ -182,6 +182,15 @@ namespace Data.Repository
 
         public BlanketOrderDetail FinishObject(BlanketOrderDetail blanketOrderDetail)
         {
+            blanketOrderDetail.IsCut = true;
+            blanketOrderDetail.IsSideSealed = true;
+            blanketOrderDetail.IsAdhesiveTapeApplied = true;
+            blanketOrderDetail.IsBarPrepared = true;
+            blanketOrderDetail.IsBarMounted = true;
+            blanketOrderDetail.IsBarHeatPressed = true;
+            blanketOrderDetail.IsBarPullOffTested = true;
+            blanketOrderDetail.IsQCAndMarked = true;
+            blanketOrderDetail.IsPackaged = true;
             blanketOrderDetail.IsFinished = true;
             Update(blanketOrderDetail);
             return blanketOrderDetail;
@@ -189,6 +198,15 @@ namespace Data.Repository
 
         public BlanketOrderDetail UnfinishObject(BlanketOrderDetail blanketOrderDetail)
         {
+            blanketOrderDetail.IsCut = false;
+            blanketOrderDetail.IsSideSealed = false;
+            blanketOrderDetail.IsBarPrepared = false;
+            blanketOrderDetail.IsAdhesiveTapeApplied = false;
+            blanketOrderDetail.IsBarMounted = false;
+            blanketOrderDetail.IsBarHeatPressed = false;
+            blanketOrderDetail.IsBarPullOffTested = false;
+            blanketOrderDetail.IsQCAndMarked = false;
+            blanketOrderDetail.IsPackaged = false;
             blanketOrderDetail.IsFinished = false;
             blanketOrderDetail.FinishedDate = null;
             UpdateObject(blanketOrderDetail);

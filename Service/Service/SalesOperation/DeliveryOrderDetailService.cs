@@ -137,7 +137,7 @@ namespace Service.Service
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                     }
-                    _stockMutationService.DeleteStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
+                    _stockMutationService.GetStockMutationForDeliveryOrder(deliveryOrderDetail, warehouseItem);
                 } 
                 else
                 {

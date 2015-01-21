@@ -22,6 +22,7 @@ namespace WebView.Controllers
         private readonly static log4net.ILog LOG = log4net.LogManager.GetLogger("ItemController");
         private IItemService _itemService;
         private IItemTypeService _itemTypeService;
+        private ISubTypeService _subTypeService;
         private IUoMService _uoMService;
         private IWarehouseItemService _warehouseItemService;
         private IWarehouseService _warehouseService;
@@ -39,6 +40,7 @@ namespace WebView.Controllers
         {
             _itemService = new ItemService(new ItemRepository(), new ItemValidator());
             _itemTypeService = new ItemTypeService(new ItemTypeRepository(),new ItemTypeValidator());
+            _subTypeService = new SubTypeService(new SubTypeRepository(), new SubTypeValidator());
             _uoMService = new UoMService(new UoMRepository(), new UoMValidator());
             _warehouseItemService = new WarehouseItemService(new WarehouseItemRepository(),new WarehouseItemValidator());
             _warehouseService = new WarehouseService(new WarehouseRepository(), new WarehouseValidator());
@@ -92,6 +94,8 @@ namespace WebView.Controllers
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
+                             model.SubTypeId,
+                             SubType = model.SubType.Name,
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -144,6 +148,7 @@ namespace WebView.Controllers
                             model.CustomerAvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.IsTradeable,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -186,6 +191,8 @@ namespace WebView.Controllers
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
+                             model.SubTypeId,
+                             SubType = model.SubType.Name,
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -238,6 +245,7 @@ namespace WebView.Controllers
                             model.CustomerAvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.IsTradeable,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -278,6 +286,8 @@ namespace WebView.Controllers
                              model.Description,
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
+                             model.SubTypeId,
+                             SubType = model.SubType.Name,
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -328,6 +338,7 @@ namespace WebView.Controllers
                             model.AvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.IsTradeable,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -438,6 +449,7 @@ namespace WebView.Controllers
                              model.AvgPrice,
                              model.Description,
                              ItemType = model.ItemType.Name,
+                             SubType = model.SubType.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -486,6 +498,7 @@ namespace WebView.Controllers
                             model.AvgPrice,
                             model.Description,
                             model.ItemType,
+                            model.SubType,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -516,6 +529,8 @@ namespace WebView.Controllers
                 UoM = _uoMService.GetObjectById(model.UoMId).Name,
                 model.ItemTypeId,
                 ItemType = _itemTypeService.GetObjectById(model.ItemTypeId).Name,
+                model.SubTypeId,
+                SubType = model.SubTypeId != null ? _subTypeService.GetObjectById(model.SubTypeId.GetValueOrDefault()).Name : "",
                 model.Quantity,
                 model.SellingPrice,
                 model.CurrencyId,
@@ -561,6 +576,7 @@ namespace WebView.Controllers
                 data.Description = model.Description;
                 data.UoMId = model.UoMId;
                 data.ItemTypeId = model.ItemTypeId;
+                data.SubTypeId = model.SubTypeId;
                 data.SellingPrice = model.SellingPrice;
                 data.CurrencyId = model.CurrencyId;
                 data.PriceList = model.PriceList;

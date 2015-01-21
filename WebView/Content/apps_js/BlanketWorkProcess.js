@@ -233,7 +233,7 @@
                             $('#LeftBar').val(result.LeftBar);
                             $('#RightBarSku').val(result.RightBarSku);
                             $('#RightBar').val(result.RightBar);
-                            $('#RollBlanketUsage').val(result.RollBlanketUsage);
+                            $('#ViewRollBlanketUsage').val(result.RollBlanketUsage);
                             document.getElementById("iscut").checked = result.IsCut;
                             document.getElementById("issidesealed").checked = result.IsSideSealed;
                             document.getElementById("isbarprepared").checked = result.IsBarPrepared;
@@ -243,22 +243,6 @@
                             document.getElementById("isbarpullofftested").checked = result.IsBarPullOffTested;
                             document.getElementById("isqcandmarked").checked = result.IsQCAndMarked;
                             document.getElementById("ispackaged").checked = result.IsPackaged;
-                            if (result.IsCut) { $('#iscut').attr('disabled', true); } else { $('#iscut').removeAttr('disabled'); }
-                            if (result.IsSideSealed) { $('#issidesealed').attr('disabled', true); } else { $('#issidesealed').removeAttr('disabled'); }
-                            if (!result.HasBar || result.IsBarPrepared) { $('#isbarprepared').attr('disabled', true); } else { $('#isbarprepared').removeAttr('disabled'); }
-                            if (result.IsAdhesiveTapeApplied) {
-                                $('#isadhesivetapeapplied').attr('disabled', true);
-                                $('#RollBlanketUsage').attr('disabled', true);
-                            } else {
-                                $('#isadhesivetapeapplied').removeAttr('disabled');
-                                $('#RollBlanketUsage').removeAttr('disabled');
-                            }
-                            if (!result.HasBar || result.IsBarMounted) { $('#isbarmounted').attr('disabled', true); } else { $('#isbarmounted').removeAttr('disabled'); }
-                            if (!result.HasBar || result.IsBarHeatPressed) { $('#isbarheatpressed').attr('disabled', true); } else { $('#isbarheatpressed').removeAttr('disabled'); }
-                            if (!result.HasBar || result.IsBarPullOffTested) { $('#isbarpullofftested').attr('disabled', true); } else { $('#isbarpullofftested').removeAttr('disabled'); }
-                            if (result.IsQCAndMarked) { $('#isqcandmarked').attr('disabled', true); } else { $('#isqcandmarked').removeAttr('disabled'); }
-                            if (result.IsPackaged) { $('#ispackaged').attr('disabled', true); } else { $('#ispackaged').removeAttr('disabled'); }
-                            $('#form_btn_save').show();
                             $('#form_div').dialog('open');
                         }
                     }
@@ -269,59 +253,10 @@
         }
     });
 
- 
-
     $('#form_btn_cancel').click(function () {
         clearForm('#frm');
         $("#form_div").dialog('close');
     });
-
-    $("#form_btn_save").click(function () {
-
-        ClearErrorMessage();
-
-        var submitURL = '';
-        var id = $("#id").val();
-        submitURL = base_url + 'BlanketWorkProcess/ProgressDetail';
-
-        $.ajax({
-            contentType: "application/json",
-            type: 'POST',
-            url: submitURL,
-            data: JSON.stringify({
-                Id: id, RollBlanketUsage: $('#RollBlanketUsage').numberbox('getValue'),
-                IsCut: document.getElementById("iscut").checked, IsSideSealed: document.getElementById("issidesealed").checked,
-                IsBarPrepared: document.getElementById("isbarprepared").checked, IsAdhesiveTapeApplied: document.getElementById("isadhesivetapeapplied").checked,
-                IsBarMounted: document.getElementById("isbarmounted").checked, IsBarHeatPressed: document.getElementById("isbarheatpressed").checked,
-                IsBarPullOffTested: document.getElementById("isbarpullofftested").checked, IsQCAndMarked: document.getElementById("isqcandmarked").checked,
-                IsPackaged: document.getElementById("ispackaged").checked
-            }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
-            success: function (result) {
-                if (JSON.stringify(result.Errors) != '{}') {
-                    for (var key in result.Errors) {
-                        if (key != null && key != undefined && key != 'Generic') {
-                            $('input[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                            $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
-                        }
-                        else {
-                            $.messager.alert('Warning', result.Errors[key], 'warning');
-                        }
-                    }
-                }
-                else {
-                    ReloadGrid();
-                    $("#form_div").dialog('close')
-                }
-            }
-        });
-    });
-
 
     $('#btn_finish').click(function () {
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
@@ -379,7 +314,7 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'),
+                Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'), RollBlanketUsage: $('#RollBlanketUsageFinish').numberbox('getValue')
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
@@ -461,7 +396,7 @@
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({
-                Id: $('#idrejected').val(), RejectedDate: $('#rejectedDate').datebox('getValue'),
+                Id: $('#idrejected').val(), RejectedDate: $('#rejectedDate').datebox('getValue'), RollBlanketUsage: $('#RollBlanketUsageReject').numberbox('getValue')
             }),
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {

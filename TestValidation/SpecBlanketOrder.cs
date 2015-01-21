@@ -114,7 +114,7 @@ namespace TestValidation
                     {
                         d._blanketOrderDetailService.SideSealObject(d.blanketODContact1);
                         d._blanketOrderDetailService.PrepareObject(d.blanketODContact1, d._blanketService);
-                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact1, 180, 180, d._blanketService);
+                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact1, 180, d._blanketService);
                         d._blanketOrderDetailService.MountObject(d.blanketODContact1, d._blanketService);
                         d._blanketOrderDetailService.HeatPressObject(d.blanketODContact1, d._blanketService);
                         d._blanketOrderDetailService.PullOffTestObject(d.blanketODContact1, d._blanketService);
@@ -123,7 +123,7 @@ namespace TestValidation
 
                         d._blanketOrderDetailService.SideSealObject(d.blanketODContact2);
                         d._blanketOrderDetailService.PrepareObject(d.blanketODContact2, d._blanketService);
-                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact2, 180, 180, d._blanketService);
+                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact2, 180, d._blanketService);
                         d._blanketOrderDetailService.MountObject(d.blanketODContact2, d._blanketService);
                         d._blanketOrderDetailService.HeatPressObject(d.blanketODContact2, d._blanketService);
                         d._blanketOrderDetailService.PullOffTestObject(d.blanketODContact2, d._blanketService);
@@ -132,7 +132,7 @@ namespace TestValidation
 
                         d._blanketOrderDetailService.SideSealObject(d.blanketODContact3);
                         d._blanketOrderDetailService.PrepareObject(d.blanketODContact3, d._blanketService);
-                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact3, 180, 180, d._blanketService);
+                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact3, 180, d._blanketService);
                         d._blanketOrderDetailService.MountObject(d.blanketODContact3, d._blanketService);
                         d._blanketOrderDetailService.HeatPressObject(d.blanketODContact3, d._blanketService);
                         d._blanketOrderDetailService.PullOffTestObject(d.blanketODContact3, d._blanketService);
@@ -141,7 +141,7 @@ namespace TestValidation
 
                         d._blanketOrderDetailService.SideSealObject(d.blanketODContact4);
                         d._blanketOrderDetailService.PrepareObject(d.blanketODContact4, d._blanketService);
-                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact4, 180, 180, d._blanketService);
+                        d._blanketOrderDetailService.ApplyTapeAdhesiveToObject(d.blanketODContact4, 180, d._blanketService);
                         d._blanketOrderDetailService.MountObject(d.blanketODContact4, d._blanketService);
                         d._blanketOrderDetailService.HeatPressObject(d.blanketODContact4, d._blanketService);
                         d._blanketOrderDetailService.PullOffTestObject(d.blanketODContact4, d._blanketService);

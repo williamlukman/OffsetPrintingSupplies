@@ -99,7 +99,7 @@ namespace Service.Service
             {
                 salesOrderDetail = _repository.UnconfirmObject(salesOrderDetail);
                 Item item = _itemService.GetObjectById(salesOrderDetail.ItemId);
-                IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForSalesOrder(salesOrderDetail, item);
+                IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForSalesOrder(salesOrderDetail, item);
                 foreach (var stockMutation in stockMutations)
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

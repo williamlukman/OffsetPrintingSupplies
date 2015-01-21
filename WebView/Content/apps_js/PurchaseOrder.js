@@ -58,7 +58,7 @@
                   { name: 'code', index: 'code', width: 80 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150 },
+                  { name: 'contact', index: 'contact', width: 150 },
                   { name: 'currency', index: 'currency', width: 150 },
                   { name: 'description', index: 'description', width: 150 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -468,6 +468,8 @@
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#item_div');
+        $('#btnItem').removeAttr('disabled');
+        $('#Quantity').removeAttr('disabled');
         $('#item_div').dialog('open');
     });
 
@@ -496,7 +498,15 @@
                             $('#ItemId').val(result.ItemId);
                             $('#Item').val(result.Item);
                             $('#Quantity').numberbox('setValue',result.Quantity);
-                            $('#Price').numberbox('setValue',result.Price);
+                            $('#Price').numberbox('setValue', result.Price);
+                            if (result.IsConfirmed) {
+                                $('#btnItem').attr('disabled', true);
+                                $('#Quantity').attr('disabled', true);
+                            }
+                            else {
+                                $('#btnItem').removeAttr('disabled');
+                                $('#Quantity').removeAttr('disabled');
+                            }
                             $('#item_div').dialog('open');
                         }
                     }

@@ -30,6 +30,8 @@ namespace NSpec
         IContactService contactService;
         IPurchaseOrderService poService;
         IPurchaseOrderDetailService poDetailService;
+        IPurchaseReceivalService _purchaseReceivalService;
+        IPurchaseReceivalDetailService _purchaseReceivalDetailService;
         IStockMutationService stockMutationService;
         IUoMService _uomService;
         IBlanketService _blanketService;
@@ -567,7 +569,7 @@ namespace NSpec
                             it["should not be valid when updating PO Detail 2 item to the same item as POD1"] = () =>
                             {
                                 poDetail2.ItemId = item1.Id;
-                                poDetailService.UpdateObject(poDetail2, poService, itemService);
+                                poDetailService.UpdateObject(poDetail2, poService, itemService, _purchaseReceivalService, _purchaseReceivalDetailService);
                                 poDetail2.Errors.Count().should_not_be(0);
                             };
                         };

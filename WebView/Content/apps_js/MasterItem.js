@@ -23,8 +23,10 @@
     $("#form_div").dialog('close');
     $("#lookup_div_itemtype").dialog('close');
     $("#lookup_div_uom").dialog('close');
+    $("#lookup_div_subtype").dialog('close');
     $("#delete_confirm_div").dialog('close');
     $("#ItemTypeId").hide();
+    $("#SubTypeId").hide();
     $("#UoMId").hide();
 
     //GRID +++++++++++++++
@@ -34,7 +36,7 @@
         colNames: ['ID', 'Sku', 'Name', 
                     'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual', "Cust's QTY",
                     'UoM', 'Selling Price', 'Currency Id', 'Currency', 'Price List', 'AvgPrice', "Cust's AvgPrice",
-                    'Description', 'Item Type', 'Tradeable', 'Created At', 'Updated At'],
+                    'Description', 'Item Type', 'Sub Type', 'Tradeable', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
@@ -54,6 +56,7 @@
                   { name: 'customeravgprice', index: 'customeravgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'description', index: 'description', width: 100 },
                   { name: 'itemtype', index: 'itemtype', width: 70 },
+                  { name: 'subtype', index: 'subtype', width: 70 },
 				  { name: 'istradeable', index: 'istradeable', width: 40, boolean: { defaultValue: 'false' }, stype: 'select', editoptions: { value: ':;true:Yes;false:No' } },
 			      { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -255,9 +258,9 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SellingPrice: $("#SellingPrice").numberbox('getValue'),
-                PriceList: $("#PriceList").numberbox('getValue'), CurrencyId: currency,
-                Sku: $("#Sku").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
+                Id: id, Name: $("#Name").val(), ItemTypeId: $("#ItemTypeId").val(), SubTypeId: $("#SubTypeId").val(),
+                SellingPrice: $("#SellingPrice").numberbox('getValue'), PriceList: $("#PriceList").numberbox('getValue'),
+                CurrencyId: currency, Sku: $("#Sku").val(), Description: $("#Description").val(), UoMId: $("#UoMId").val(),
                 MinimumQuantity: $("#MinimumQuantity").numberbox('getValue'), IsTradeable: tradeable
             }),
             async: false,

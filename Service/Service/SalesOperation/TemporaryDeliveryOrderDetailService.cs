@@ -226,7 +226,7 @@ namespace Service.Service
                 WarehouseItem warehouseItem = _warehouseItemService.FindOrCreateObject(temporaryDeliveryOrder.WarehouseId, temporaryDeliveryOrderDetail.ItemId);
                 if (temporaryDeliveryOrderDetail.WasteQuantity > 0)
                 {
-                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrderWaste(temporaryDeliveryOrderDetail, warehouseItem);
+                    IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForTemporaryDeliveryOrderWaste(temporaryDeliveryOrderDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
@@ -234,7 +234,7 @@ namespace Service.Service
                 }
                 if (temporaryDeliveryOrderDetail.RestockQuantity > 0)
                 {
-                    IList<StockMutation> stockMutations = _stockMutationService.DeleteStockMutationForTemporaryDeliveryOrderRestock(temporaryDeliveryOrderDetail, warehouseItem);
+                    IList<StockMutation> stockMutations = _stockMutationService.GetStockMutationForTemporaryDeliveryOrderRestock(temporaryDeliveryOrderDetail, warehouseItem);
                     foreach (var stockMutation in stockMutations)
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);

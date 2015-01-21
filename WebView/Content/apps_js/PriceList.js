@@ -34,7 +34,7 @@
         colNames: ['ID', 'Sku', 'Name', 
                     'Ready', 'PendReceival', 'PendDelivery', 'MIN', 'Virtual',
                     'UoM', 'Selling Price', 'AvgPrice',
-                    'Description', 'Item Type', 'Created At', 'Updated At'],
+                    'Description', 'Item Type', 'Sub Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'sku', index: 'sku', width: 70 },
@@ -48,7 +48,8 @@
                   { name: 'sellingprice', index: 'sellingprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'avgprice', index: 'avgprice', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
                   { name: 'description', index: 'description', width: 70 },
-                  { name: 'itemtypename', index: 'itemtypename', width: 70 },
+                  { name: 'itemtype', index: 'itemtype', width: 70 },
+                  { name: 'subtype', index: 'subtype', width: 70 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
