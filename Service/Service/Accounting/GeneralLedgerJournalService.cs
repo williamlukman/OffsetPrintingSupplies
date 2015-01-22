@@ -2096,7 +2096,7 @@ namespace Service.Service
                 SourceDocumentId = stockAdjustment.Id,
                 TransactionDate = (DateTime) stockAdjustment.AdjustmentDate,
                 Status = AvgCost > 0 ? Constant.GeneralLedgerStatus.Debit : Constant.GeneralLedgerStatus.Credit,
-                Amount = Math.Round(AvgCost, 2)
+                Amount = Math.Round(Math.Abs(AvgCost), 2)
             };
             glj = CreateObject(glj, _accountService);
             return glj;
@@ -2113,7 +2113,7 @@ namespace Service.Service
                 SourceDocumentId = stockAdjustment.Id,
                 TransactionDate = (DateTime)stockAdjustment.AdjustmentDate,
                 Status = AvgCost > 0 ? Constant.GeneralLedgerStatus.Credit : Constant.GeneralLedgerStatus.Debit,
-                Amount = Math.Round(AvgCost, 2),
+                Amount = Math.Round(Math.Abs(AvgCost), 2),
             };
             glj = CreateObject(glj, _accountService);
             return glj;

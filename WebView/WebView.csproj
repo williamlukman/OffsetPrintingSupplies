@@ -1491,7 +1491,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>52383</DevelopmentServerPort>
+          <DevelopmentServerPort>1958</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61688/</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
