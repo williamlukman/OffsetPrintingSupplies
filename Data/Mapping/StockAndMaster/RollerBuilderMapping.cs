@@ -33,6 +33,10 @@ namespace Data.Mapping
                 .WithMany()
                 .HasForeignKey(rb => rb.RollerUsedCoreItemId)
                 .WillCascadeOnDelete(false);
+            HasRequired(rb => rb.Compound)
+                .WithMany()
+                .HasForeignKey(rb => rb.CompoundId)
+                .WillCascadeOnDelete(false);
             Ignore(rb => rb.Errors);
         }
     }

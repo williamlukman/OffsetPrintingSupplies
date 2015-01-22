@@ -149,7 +149,6 @@ namespace Service.Service
                     //item.Virtual += stockMutation.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutations);
 
                 // update TDO Detail to keep track wasted/return quantity
                 if (temporaryDeliveryOrderClearance.IsWaste)

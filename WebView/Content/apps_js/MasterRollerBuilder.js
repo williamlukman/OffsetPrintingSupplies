@@ -32,6 +32,7 @@
     $("#MachineId").hide();
     $("#RollerTypeId").hide();
     $("#CompoundId").hide();
+    $("#CompoundUnderLayerId").hide();
     $("#AdhesiveId").hide();
     $("#UoMId").hide();
     $("#CoreBuilderId").hide();
@@ -43,13 +44,13 @@
         datatype: "json",
         colNames: ['ID', 'Base Sku', 'Name', 'RollerType', 'RD', 'CD', 'RL', 'WL', 'TL',
                    'Used Sku', 'QTY', 'UoM', 'New Sku', 'QTY', 'UoM', 
-                   'Machine', 'Compound', 'Adhesive','Core Sku', 'Core', 'Description',
+                   'Machine', 'Compound', 'Compound Under Layer', 'Adhesive','Core Sku', 'Core', 'Description',
                    'Crown', 'Size', 'Groove', 'W', 'D', 'P', 'Chamfer',
                    'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center" },
                   { name: 'basesku', index: 'basesku', width: 60 },
-				  { name: 'name', index: 'name', width: 300 },
+				  { name: 'name', index: 'name', width: 400 },
                   { name: 'rollertypename', index: 'rollertypename', width: 75 },
                   { name: 'rd', index: 'rd', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'cd', index: 'cd', align: 'right', width: 30, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
@@ -64,6 +65,7 @@
                   { name: 'uom', index: 'uom', width: 30 },
                   { name: 'machine', index: 'machine', width: 200 },
                   { name: 'compound', index: 'compound', width: 300 },
+                  { name: 'compoundunderlayer', index: 'compoundunderlayer', width: 300 },
                   { name: 'adhesive', index: 'adhesive', width: 300 },
                   { name: 'corebuilderbasesku', index: 'corebuilderbasesku', width: 60 },
                   { name: 'corebuilder', index: 'corebuilde', width: 80 },
@@ -196,6 +198,8 @@
                             $('#RollerType').val(result.RollerType);
                             $('#CompoundId').val(result.CompoundId);
                             $('#Compound').val(result.Compound);
+                            $('#CompoundUnderLayerId').val(result.CompoundUnderLayerId);
+                            $('#CompoundUnderLayer').val(result.CompoundUnderLayer);
                             $('#AdhesiveId').val(result.AdhesiveId);
                             $('#Adhesive').val(result.Adhesive);
                             $('#CoreBuilderId').val(result.CoreBuilderId);
@@ -320,8 +324,8 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, MachineId: $("#MachineId").val(), RollerTypeId: $("#RollerTypeId").val(),
-                CompoundId: $("#CompoundId").val(), AdhesiveId: $("#AdhesiveId").val(), UoMId: $("#UoMId").val(), CoreBuilderId: $("#CoreBuilderId").val(),
+                Id: id, MachineId: $("#MachineId").val(), RollerTypeId: $("#RollerTypeId").val(), CompoundId: $("#CompoundId").val(),
+                CompoundUnderLayerId: $("#CompoundUnderLayerId").val(), AdhesiveId: $("#AdhesiveId").val(), UoMId: $("#UoMId").val(), CoreBuilderId: $("#CoreBuilderId").val(),
                 BaseSku: $("#BaseSku").val(), SkuRollerUsedCore: $("#BaseSku").val() + "U", SkuRollerNewCore: $("#BaseSku").val() + "N",
                 Name: $("#Name").val(), Description: $("#Description").val(), RD: $("#RD").numberbox('getValue'),
                 CD: $("#CD").numberbox('getValue'), RL: $("#RL").numberbox('getValue'), WL: $("#WL").numberbox('getValue'),

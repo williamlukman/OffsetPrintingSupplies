@@ -45,7 +45,9 @@
     $("#form_div").dialog('close');
     $("#item_div").dialog('close');
     $("#lookup_div_item").dialog('close');
+    $("#lookup_div_compoundunderlayer").dialog('close');
     $("#delete_confirm_div").dialog('close');
+    $("#CompoundUnderLayerId").hide();
     $("#ItemId").hide();
     $("#ItemSku").hide();
 
@@ -54,8 +56,9 @@
         url: base_url + 'RecoveryWorkProcess/GetList',
         datatype: "json",
         colNames: ['RO Id', 'CoreIdentificationDetailId', 'RIFD Id', 'Material',
-                    'RollerBuilder Id', 'Roller Sku', 'Roller Name', 'Type', 
-                   'D', 'S&G', 'W', 'Compound QTY',
+                    'RollerBuilder Id', 'Roller Sku', 'Roller Name', 'Type', 'Core', 'Compound', 'Compound QTY',
+                    'Under Layer', 'Under Layer QTY',
+                   'D', 'S&G', 'W',
                    'V', 'FO', 'CG', 'CNCG',
                    'P&QC','P',
                    'Rejected Date', 'Finished Date'
@@ -66,13 +69,17 @@
                   { name: 'rifdid', index: 'rollerbuilderid', width: 40, sortable: false } ,
                   { name: 'materialcase', index: 'materialcase', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 40, sortable: false, hidden: true },
-                  { name: 'rollerbuildersku', index: 'rollerbuildersku', width: 60, sortable: false },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 300, sortable: false },
+                  { name: 'rollerbuilderbasesku', index: 'rollerbuilderbasesku', width: 60, sortable: false },
+                  { name: 'rollerbuilder', index: 'rollerbuilder', width: 450, sortable: false },
 				  { name: 'coretypecase', index: 'coretypecase', width: 40, sortable: false },
+				  { name: 'corebuilder', index: 'corebuilder', width: 200, sortable: false },
+				  { name: 'compound', index: 'compound', width: 200, sortable: false },
+                  { name: 'compoundusage', index: 'compoundusage', width: 90, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+				  { name: 'compoundunderlayer', index: 'compoundunderlayer', width: 200, sortable: false },
+				  { name: 'compoundunderlayerusage', index: 'compoundunderlayerusage', width: 90, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isdisassembled', index: 'isdisassembled', width: 30, sortable: false },
                   { name: 'isstrippedandglued', index: 'isstrippedandglued', width: 30, sortable: false },
                   { name: 'iswrapped', index: 'iswrapped', width: 30, sortable: false },
-                  { name: 'compoundusage', index: 'compoundusage', width: 90, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isvulcanized', index: 'isvulcanized', width: 30, sortable: false },
                   { name: 'isfacedoff', index: 'isfacedoff', width: 30, sortable: false },
                   { name: 'isconventionalgrinded', index: 'isconventionalgrinded', width: 30, sortable: false },
@@ -227,10 +234,14 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#RecoveryOrderId').val(result.RecoveryOrderId);
-                            $('#RollerBuilderSku').val(result.RollerBuilderSku);
+                            $('#RollerBuilderBaseSku').val(result.RollerBuilderBaseSku);
                             $('#RollerBuilder').val(result.RollerBuilder);
                             $('#CoreTypeCase').val(result.CoreTypeCase);
+                            $('#Compound').val(result.Compound);
                             $('#CompoundUsage').numberbox('setValue', result.CompoundUsage);
+                            $('#CompoundUnderLayerId').val(result.CompoundUnderLayerId);
+                            $('#CompoundUnderLayer').val(result.CompoundUnderLayer);
+                            $('#CompoundUnderLayerUsage').numberbox('setValue', result.CompoundUnderLayerUsage);
                             document.getElementById("IsDisassembled").checked = result.IsDisassembled;
                             document.getElementById("IsStrippedAndGlued").checked = result.IsStrippedAndGlued;
                             document.getElementById("IsWrapped").checked = result.IsWrapped;
@@ -242,7 +253,7 @@
                             document.getElementById("IsPackaged").checked = result.IsPackaged;
                             if (result.IsDisassembled) { $('#IsDisassembled').attr('disabled', true); } else { $('#IsDisassembled').removeAttr('disabled'); }
                             if (result.IsStrippedAndGlued) { $('#IsStrippedAndGlued').attr('disabled', true); } else { $('#IsStrippedAndGlued').removeAttr('disabled'); }
-                            if (result.IsWrapped) { $('#IsWrapped').attr('disabled', true); $("#CompoundUsage").attr('disabled', true); } else { $('#IsWrapped').removeAttr('disabled'); }
+                            if (result.IsWrapped) { $('#IsWrapped').attr('disabled', true); } else { $('#IsWrapped').removeAttr('disabled'); }
                             if (result.IsVulcanized) { $('#IsVulcanized').attr('disabled', true); } else { $('#IsVulcanized').removeAttr('disabled'); }
                             if (result.IsFacedOff) { $('#IsFacedOff').attr('disabled', true); } else { $('#IsFacedOff').removeAttr('disabled'); }
                             if (result.IsConventionalGrinded) { $('#IsConventionalGrinded').attr('disabled', true); } else { $('#IsConventionalGrinded').removeAttr('disabled'); }
@@ -252,47 +263,6 @@
                             $('#process_div').show();
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
-                            $('#form_div').dialog('open');
-                        }
-                    }
-                }
-            });
-        } else {
-            $.messager.alert('Information', 'Please Select Data...!!', 'info');
-        }
-    });
-
-    $('#btn_add_detail').click(function () {
-        ClearData();
-        clearForm('#frm');
-        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
-        if (id) {
-            $.ajax({
-                dataType: "json",
-                url: base_url + "RecoveryWorkProcess/GetInfo?Id=" + id,
-                success: function (result) {
-                    if (result.Id == null) {
-                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
-                    }
-                    else {
-                        if (JSON.stringify(result.Errors) != '{}') {
-                            var error = '';
-                            for (var key in result.Errors) {
-                                error = error + "<br>" + key + " " + result.Errors[key];
-                            }
-                            $.messager.alert('Warning', error, 'warning');
-                        }
-                        else {
-                            $("#form_btn_save").data('kode', result.Id);
-                            $('#id').val(result.Id);
-                            $('#RecoveryOrderId').val(result.RecoveryOrderId);
-                            $('#RollerBuilderSku').val(result.RollerBuilderSku);
-                            $('#RollerBuilder').val(result.RollerBuilder);
-                            $('#CoreTypeCase').val(result.CoreTypeCase);
-                            $('#process_div').hide();
-                            $('#tabledetail_div').show();
-                            $('#form_btn_save').hide();
-                            ReloadGridDetail();
                             $('#form_div').dialog('open');
                         }
                     }
@@ -504,6 +474,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, CompoundUsage: $("#CompoundUsage").numberbox('getValue'),
+                CompoundUnderLayerId: $("#CompoundUnderLayerId").val(),
+                CompoundUnderLayerUsage: $("#CompoundUnderLayerUsage").numberbox('getValue'),
                 IsDisassembled: document.getElementById("IsDisassembled").checked,
                 IsStrippedAndGlued: document.getElementById("IsStrippedAndGlued").checked,
                 IsWrapped: document.getElementById("IsWrapped").checked,
@@ -870,8 +842,6 @@
     });
 
     
-
-    
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
     // -------------------------------------------------------Look Up item-------------------------------------------------------
@@ -935,9 +905,79 @@
         };
     });
 
-
     // ---------------------------------------------End Lookup item----------------------------------------------------------------
-
-
    
+    // -------------------------------------------------------Look Up compoundunderlayer-------------------------------------------------------
+    $('#btnCompoundUnderLayer').click(function () {
+        var lookUpURL = base_url + 'MstRollerBuilder/GetListCompound';
+        var lookupGrid = $('#lookup_table_compoundunderlayer');
+        lookupGrid.setGridParam({
+            url: lookUpURL
+        }).trigger("reloadGrid");
+        $('#lookup_div_compoundunderlayer').dialog('open');
+    });
+
+    $('#btn_removeUnderLayer').click(function () {
+        $('#CompoundUnderLayerId').val('');
+        $('#CompoundUnderLayer').val('');
+        $('#CompoundUnderLayerUsage').numberbox('setValue', 0);
+    });
+
+    jQuery("#lookup_table_compoundunderlayer").jqGrid({
+        url: base_url,
+        datatype: "json",
+        mtype: 'GET',
+        colNames: ['ID', 'SKU', 'Name',
+                     'Description', 'Quantity', 'Pending Receival', 'Pending Delivery',
+                     'UoM Id', 'UoM', 'Created At', 'Updated At'],
+        colModel: [
+    			  { name: 'id', index: 'id', width: 50, align: "center" },
+                  { name: 'sku', index: 'sku', width: 70 },
+				  { name: 'name', index: 'name', width: 300 },
+                  { name: 'description', index: 'description', width: 100, hidden: true },
+                  { name: 'quantity', index: 'quantity', width: 80, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'pendingreceival', index: 'pendingreceival', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'pendingdelivery', index: 'pendingdelivery', width: 105, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, hidden: true },
+                  { name: 'uomid', index: 'uomid', width: 80, hidden: true },
+                  { name: 'uom', index: 'uom', width: 60 },
+				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, hidden: true },
+        ],
+        page: '1',
+        pager: $('#lookup_pager_compoundunderlayer'),
+        rowNum: 20,
+        rowList: [20, 30, 60],
+        sortname: 'id',
+        viewrecords: true,
+        scrollrows: true,
+        shrinkToFit: false,
+        sortorder: "ASC",
+        width: $("#lookup_div_compoundunderlayer").width() - 10,
+        height: $("#lookup_div_compoundunderlayer").height() - 110,
+    });
+    $("#lookup_table_compoundunderlayer").jqGrid('navGrid', '#lookup_toolbar_compoundunderlayer', { del: false, add: false, edit: false, search: true })
+           .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: true });
+
+    // Cancel or CLose
+    $('#lookup_btn_cancel_compoundunderlayer').click(function () {
+        $('#lookup_div_compoundunderlayer').dialog('close');
+    });
+
+    // ADD or Select Data
+    $('#lookup_btn_add_compoundunderlayer').click(function () {
+        var id = jQuery("#lookup_table_compoundunderlayer").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            var ret = jQuery("#lookup_table_compoundunderlayer").jqGrid('getRowData', id);
+
+            $('#CompoundUnderLayerId').val(ret.id).data("kode", id);
+            $('#CompoundUnderLayer').val(ret.name);
+
+            $('#lookup_div_compoundunderlayer').dialog('close');
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        };
+    });
+
+    // ---------------------------------------------End Lookup compoundunderlayer----------------------------------------------------------------
+
 }); //END DOCUMENT READY

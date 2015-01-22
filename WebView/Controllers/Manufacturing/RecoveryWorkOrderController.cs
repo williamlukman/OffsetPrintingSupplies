@@ -233,7 +233,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _recoveryOrderDetailService.GetQueryable().Include("RollerBuilder")
+            var q = _recoveryOrderDetailService.GetQueryable().Include("RollerBuilder").Include("CoreBuilder").Include("Compound")
                                                .Where(x => x.RecoveryOrderId == id && !x.IsDeleted);
 
             var query = (from model in q
@@ -242,9 +242,14 @@ namespace WebView.Controllers
                              model.Id,
                              model.CoreIdentificationDetailId,
                              model.RollerBuilderId,
+                             RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
                              RollerBuilder = model.RollerBuilder.Name,
                              model.CoreTypeCase,
+                             CoreBuilder = model.CoreIdentificationDetail.CoreBuilder.Name,
+                             Compound = model.RollerBuilder.Compound.Name,
                              model.CompoundUsage,
+                             CompoundUnderLayer = model.CompoundUnderLayerId != null ? model.CompoundUnderLayer.Name : "",
+                             model.CompoundUnderLayerUsage,
                              model.IsRejected,
                              model.RejectedDate,
                              model.IsFinished,
@@ -282,9 +287,14 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.CoreIdentificationDetailId,
                             model.RollerBuilderId,
+                            model.RollerBuilderBaseSku,
                             model.RollerBuilder,
                             model.CoreTypeCase,
+                            model.CoreBuilder,
+                            model.Compound,
                             model.CompoundUsage,
+                            model.CompoundUnderLayer,
+                            model.CompoundUnderLayerUsage,
                             model.IsRejected,
                             model.RejectedDate,
                             model.IsFinished,
@@ -304,6 +314,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _recoveryOrderDetailService.GetQueryable().Include("CoreIdentificationDetail").Include("RollerBuilder")
+                                               .Include("CoreBuilder").Include("Compound")
                                                .Where(x => x.RecoveryOrderId == id && x.IsFinished && !x.CoreIdentificationDetail.IsDelivered && !x.IsDeleted);
 
             var query = (from model in q
@@ -317,10 +328,14 @@ namespace WebView.Controllers
                             RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
                             RollerBuilder = model.RollerBuilder.Name,
                             model.CoreTypeCase,
+                            CoreBuilder = model.CoreIdentificationDetail.CoreBuilder.Name,
+                            Compound = model.RollerBuilder.Compound.Name,
+                            model.CompoundUsage,
+                            CompoundUnderLayer = model.CompoundUnderLayerId != null ? model.CompoundUnderLayer.Name : "",
+                            model.CompoundUnderLayerUsage,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
-                            model.CompoundUsage,
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
@@ -369,10 +384,14 @@ namespace WebView.Controllers
                             model.RollerBuilderId,
                             model.RollerBuilder,
                             model.CoreTypeCase,
+                            model.CoreBuilder,
+                            model.Compound,
+                            model.CompoundUsage,
+                            model.CompoundUnderLayer,
+                            model.CompoundUnderLayerUsage,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
-                            model.CompoundUsage,
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
@@ -441,6 +460,11 @@ namespace WebView.Controllers
                                    model.CoreIdentificationDetailId).CoreBuilderId).Name,
                 model.RollerBuilderId,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                Compound = _itemService.GetObjectById(_rollerBuilderService.GetObjectById(model.RollerBuilderId).CompoundId).Name,
+                model.CompoundUsage,
+                CompoundUnderLayer = model.CompoundUnderLayerId != null ? 
+                                     _itemService.GetObjectById(model.CompoundUnderLayerId.GetValueOrDefault()).Name : "",
+                model.CompoundUnderLayerUsage,
                 model.CoreTypeCase,
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
@@ -632,9 +656,5 @@ namespace WebView.Controllers
                 model.Errors
             });
         }
-
-     
-      
-
     }
 }

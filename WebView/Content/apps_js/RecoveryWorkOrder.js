@@ -452,23 +452,27 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['RIF Id', 'RollerBuilder Id', 'Roller', 'Core Type',
-                   'Compound', 'IsRejected', 'Rejected Date', 'Is Finished', 'Finished Date'
+        colNames: ['RIF Id', 'RollerBuilder Id', 'Sku Roller', 'Roller', 'Core Type',
+                   'Core', 'Compound', 'QTY', 'Compound Under Layer', 'QTY', 'IsRejected', 'Rejected Date', 'Is Finished', 'Finished Date'
         ],
         colModel: [
                   { name: 'coreidentificationdetailid', index: 'coreidentificationdetailid', width: 50, sortable: false },
                   { name: 'rollerbuilderid', index: 'rollerbuilderid', width: 100, sortable: false, hidden: true },
-                  { name: 'rollerbuildername', index: 'rollerbuildername', width: 400, sortable: false },
+                  { name: 'rollerbuilderbasesku', index: 'rollerbuilderbasesku', width: 60, sortable: false },
+                  { name: 'rollerbuilder', index: 'rollerbuilder', width: 400, sortable: false },
 				  { name: 'coretypecase', index: 'coretypecase', width: 70, sortable: false },
+                  { name: 'corebuilder', index: 'corebuilder', width: 300, sortable: false },
+                  { name: 'compound', index: 'compound', width: 150, sortable: false },
                   { name: 'compoundusage', index: 'compoundusage', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'compoundunderlayer', index: 'compoundunderlayer', width: 150, sortable: false },
+                  { name: 'compoundunderlayerusage', index: 'compoundunderlayerusage', width: 70, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isrejected', index: 'isrejected', width: 100, sortable: false, hidden: true },
                   { name: 'rejecteddate', index: 'rejecteddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isfinished', index: 'isfinished', width: 100, sortable: false, hidden: true },
                   { name: 'finisheddate', index: 'finisheddate', sortable: false, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
-
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'coreidentificationdetailid',
@@ -482,7 +486,7 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {

@@ -109,10 +109,11 @@ namespace Service.Service
             return (recoveryOrderDetail = _validator.ValidStripAndGlueObject(recoveryOrderDetail) ? _repository.StripAndGlueObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
-        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, decimal CompoundUsage, IRecoveryOrderService _recoveryOrderService,
+        public RecoveryOrderDetail WrapObject(RecoveryOrderDetail recoveryOrderDetail, decimal CompoundUsage, decimal CompoundUnderLayerUsage, IRecoveryOrderService _recoveryOrderService,
                                               IRollerBuilderService _rollerBuilderService, IItemService _itemService, IWarehouseItemService _warehouseItemService)
         {
             recoveryOrderDetail.CompoundUsage = CompoundUsage;
+            recoveryOrderDetail.CompoundUnderLayerUsage = CompoundUnderLayerUsage;
             return (recoveryOrderDetail = _validator.ValidWrapObject(recoveryOrderDetail, _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService) ? _repository.WrapObject(recoveryOrderDetail) : recoveryOrderDetail);
         }
 
@@ -180,6 +181,15 @@ namespace Service.Service
                 StockMutation stockMutationCompound = _stockMutationService.CreateStockMutationForRecoveryOrderCompound(recoveryOrderDetail, RejectedDate, warehouseCompound, CaseAddition);
                 _stockMutationService.StockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
 
+                // deduce compound under layer
+                if (recoveryOrderDetail.CompoundUnderLayerId != null)
+                {
+                    Item compoundUnderLayer = _itemService.GetObjectById(recoveryOrderDetail.CompoundUnderLayerId.GetValueOrDefault());
+                    WarehouseItem warehouseCompoundUnderLayer = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compoundUnderLayer.Id);
+                    StockMutation stockMutationCompoundUnderLayer = _stockMutationService.CreateStockMutationForRecoveryOrderCompoundUnderLayer(recoveryOrderDetail, RejectedDate, warehouseCompoundUnderLayer, CaseAddition);
+                    _stockMutationService.StockMutateObject(stockMutationCompoundUnderLayer, _itemService, _blanketService, _warehouseItemService);
+                }
+
                 // deduce core
                 CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
                 _coreIdentificationDetailService.UnsetJobScheduled(coreIdentificationDetail, _recoveryOrderService, this);
@@ -229,7 +239,18 @@ namespace Service.Service
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutationCompounds);
+
+                // reverse stock mutate compound under layer
+                if (recoveryOrderDetail.CompoundUnderLayerId != null)
+                {
+                    Item compoundUnderLayer = _itemService.GetObjectById(recoveryOrderDetail.CompoundUnderLayerId.GetValueOrDefault());
+                    WarehouseItem warehouseCompoundUnderLayer = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compoundUnderLayer.Id);
+                    IList<StockMutation> stockMutationCompoundUnderLayers = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseCompoundUnderLayer.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
+                    foreach (var stockMutationCompoundUnderLayer in stockMutationCompoundUnderLayers)
+                    {
+                        _stockMutationService.ReverseStockMutateObject(stockMutationCompoundUnderLayer, _itemService, _blanketService, _warehouseItemService);
+                    }
+                }
 
                 // reverse stock mutate core
                 CoreIdentificationDetail coreIdentificationDetail = _coreIdentificationDetailService.GetObjectById(recoveryOrderDetail.CoreIdentificationDetailId);
@@ -245,7 +266,6 @@ namespace Service.Service
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutationCores);
 
                 // accesories uncounted
             }
@@ -297,6 +317,15 @@ namespace Service.Service
                 WarehouseItem warehouseCompound = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compound.Id);
                 StockMutation stockMutationCompound = _stockMutationService.CreateStockMutationForRecoveryOrderCompound(recoveryOrderDetail, FinishedDate, warehouseCompound, CaseAdditionCompound);
                 _stockMutationService.StockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
+
+                // deduce compound under layer
+                if (recoveryOrderDetail.CompoundUnderLayerId != null)
+                {
+                    Item compoundUnderLayer = _itemService.GetObjectById(recoveryOrderDetail.CompoundUnderLayerId.GetValueOrDefault());
+                    WarehouseItem warehouseCompoundUnderLayer = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compoundUnderLayer.Id);
+                    StockMutation stockMutationCompoundUnderLayer = _stockMutationService.CreateStockMutationForRecoveryOrderCompoundUnderLayer(recoveryOrderDetail, FinishedDate, warehouseCompoundUnderLayer, CaseAdditionCompound);
+                    _stockMutationService.StockMutateObject(stockMutationCompoundUnderLayer, _itemService, _blanketService, _warehouseItemService);
+                }
 
                 _coreIdentificationDetailService.UnsetJobScheduled(coreIdentificationDetail, _recoveryOrderService, this);
                 _coreIdentificationDetailService.BuildRoller(coreIdentificationDetail);
@@ -400,8 +429,19 @@ namespace Service.Service
                 {
                     _stockMutationService.ReverseStockMutateObject(stockMutationCompound, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutationCompounds);
-                
+
+                // reverse stock mutate compound under layer
+                if (recoveryOrderDetail.CompoundUnderLayerId != null)
+                {
+                    Item compoundUnderLayer = _itemService.GetObjectById(recoveryOrderDetail.CompoundUnderLayerId.GetValueOrDefault());
+                    WarehouseItem warehouseCompoundUnderLayer = _warehouseItemService.FindOrCreateObject(recoveryOrder.WarehouseId, compoundUnderLayer.Id);
+                    IList<StockMutation> stockMutationCompoundUnderLayers = _stockMutationService.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseCompoundUnderLayer.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);
+                    foreach (var stockMutationCompoundUnderLayer in stockMutationCompoundUnderLayers)
+                    {
+                        _stockMutationService.ReverseStockMutateObject(stockMutationCompoundUnderLayer, _itemService, _blanketService, _warehouseItemService);
+                    }
+                }
+
                 // reverse stock mutate core
                 _coreIdentificationDetailService.SetJobScheduled(coreIdentificationDetail, _recoveryOrderService, this);
 
@@ -416,7 +456,6 @@ namespace Service.Service
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutationCore, _itemService, _blanketService, _warehouseItemService);
                     }
-                    _stockMutationService.DeleteStockMutations(stockMutationCores);
                 }
                 else
                 {
@@ -426,7 +465,6 @@ namespace Service.Service
                     {
                         _customerStockMutationService.ReverseStockMutateObject(customerStockMutationCore, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
-                    _customerStockMutationService.DeleteCustomerStockMutations(customerStockMutationCores);
                 }
 
                 // reverse stock mutate roller
@@ -442,7 +480,6 @@ namespace Service.Service
                         _itemService.CalculateAndUpdateAvgPrice(roller, (-1) * stockMutationRoller.Quantity, totalcost);
                         _stockMutationService.ReverseStockMutateObject(stockMutationRoller, _itemService, _blanketService, _warehouseItemService);
                     }
-                    _stockMutationService.DeleteStockMutations(stockMutationRollers);
                 }
                 else
                 {
@@ -454,7 +491,6 @@ namespace Service.Service
                         _itemService.CalculateAndUpdateCustomerAvgPrice(roller, (-1) * customerStockMutationRoller.Quantity, totalcost);
                         _customerStockMutationService.ReverseStockMutateObject(customerStockMutationRoller, coreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
-                    _customerStockMutationService.DeleteCustomerStockMutations(customerStockMutationRollers);
                 }
 
                 // reverse stock mutate accessories
@@ -470,7 +506,6 @@ namespace Service.Service
                         {
                             _stockMutationService.ReverseStockMutateObject(stockMutationAccessory, _itemService, _blanketService, _warehouseItemService);
                         }
-                        _stockMutationService.DeleteStockMutations(stockMutationAccessories);
                     }
                 }
             }
@@ -491,6 +526,7 @@ namespace Service.Service
             RollerBuilder rollerBuilder = _rollerBuilderService.GetObjectById(recoveryOrderDetail.RollerBuilderId);
             Item Core = _coreIdentificationDetailService.GetCore(coreIdentificationDetail, _coreBuilderService);
             Item Compound = _itemService.GetObjectById(rollerBuilder.CompoundId);
+
             IList<RecoveryAccessoryDetail> Accessories = _recoveryAccessoryDetailService.GetObjectsByRecoveryOrderDetailId(recoveryOrderDetail.Id);
             decimal AccessoriesCost = 0;
             foreach (var accessory in Accessories)
@@ -501,6 +537,13 @@ namespace Service.Service
             decimal TotalCost = 0;
             recoveryOrderDetail.AccessoriesCost = AccessoriesCost;
             recoveryOrderDetail.CompoundCost = Compound.AvgPrice * recoveryOrderDetail.CompoundUsage;
+
+            if (recoveryOrderDetail.CompoundUnderLayerId != null)
+            {
+                Item CompoundUnderLayer = _itemService.GetObjectById(recoveryOrderDetail.CompoundUnderLayerId.GetValueOrDefault());
+                recoveryOrderDetail.CompoundCost += CompoundUnderLayer.AvgPrice * recoveryOrderDetail.CompoundUnderLayerUsage;
+            }
+
             if (coreIdentification.IsInHouse)
             {
                 TotalCost = Core.AvgPrice + (Compound.AvgPrice * recoveryOrderDetail.CompoundUsage) + AccessoriesCost;

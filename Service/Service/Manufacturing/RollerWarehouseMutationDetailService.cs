@@ -172,7 +172,6 @@ namespace Service.Service
                     {
                         _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                     }
-                    _stockMutationService.DeleteStockMutations(stockMutations);
                 }
                 else
                 {
@@ -187,7 +186,6 @@ namespace Service.Service
                     {
                         _customerStockMutationService.ReverseStockMutateObject(customerStockMutation, rollerWarehouseMutation.RecoveryOrder.CoreIdentification.IsInHouse, _itemService, _customerItemService, _warehouseItemService);
                     }
-                    _customerStockMutationService.DeleteCustomerStockMutations(customerStockMutations);
                 }
             }
             return rollerWarehouseMutationDetail;

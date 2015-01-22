@@ -154,7 +154,6 @@ namespace Service.Service
                     //item.Quantity += temporaryDeliveryOrderDetail.Quantity;
                     _stockMutationService.ReverseStockMutateObject(stockMutation, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutations);
 
                 if (temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.SampleOrder ||
                     temporaryDeliveryOrder.OrderType == Core.Constants.Constant.OrderTypeCase.TrialOrder ||

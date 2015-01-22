@@ -133,7 +133,6 @@ namespace Service.Service
                     {
                         _stockMutationService.ReverseStockMutateObject(x, _itemService, _blanketService, _warehouseItemService);
                     }
-                    _stockMutationService.DeleteStockMutations(stockMutations);
                     _generalLedgerJournalService.CreateUnconfirmationJournalForBlendingWorkOrderDetail(blendingWorkOrder, itemTypeDet.AccountId.GetValueOrDefault(), detail.Quantity * itemdet.AvgPrice, _accountService);
                 }
 
@@ -150,7 +149,6 @@ namespace Service.Service
                 {
                     _stockMutationService.ReverseStockMutateObject(x, _itemService, _blanketService, _warehouseItemService);
                 }
-                _stockMutationService.DeleteStockMutations(stockMutations);
 
                 // post GL (debit raw, credit finishedgoods)
                 _generalLedgerJournalService.CreateUnconfirmationJournalForBlendingWorkOrder(blendingWorkOrder, itemType.AccountId.GetValueOrDefault(), _accountService, TotalCost);

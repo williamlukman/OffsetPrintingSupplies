@@ -712,6 +712,8 @@ namespace Service.Service
                 //{
                 //    _itemService.AdjustCustomerVirtual(item, Quantity);
                 //}
+
+                _repository.Delete(customerStockMutation);
             }
         }
 

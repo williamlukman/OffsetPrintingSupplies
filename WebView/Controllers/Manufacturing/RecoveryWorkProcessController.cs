@@ -94,10 +94,14 @@ namespace WebView.Controllers
                             RollerBuilderBaseSku = model.RollerBuilder.BaseSku,
                             RollerBuilder = model.RollerBuilder.Name,
                             model.CoreTypeCase,
+                            CoreBuilder = model.RollerBuilder.CoreBuilder.Name,
+                            Compound = model.RollerBuilder.Compound.Name,
+                            model.CompoundUsage,
+                            CompoundUnderLayer = model.CompoundUnderLayerId != null ? model.CompoundUnderLayer.Name : "",
+                            model.CompoundUnderLayerUsage,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
-                            model.CompoundUsage,
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
@@ -148,10 +152,14 @@ namespace WebView.Controllers
                             model.RollerBuilderBaseSku,
                             model.RollerBuilder,
                             model.CoreTypeCase,
+                            model.CoreBuilder,
+                            model.Compound,
+                            model.CompoundUsage,
+                            model.CompoundUnderLayer,
+                            model.CompoundUnderLayerUsage,
                             model.IsDisassembled,
                             model.IsStrippedAndGlued,
                             model.IsWrapped,
-                            model.CompoundUsage,
                             model.IsVulcanized,
                             model.IsFacedOff,
                             model.IsConventionalGrinded,
@@ -249,13 +257,18 @@ namespace WebView.Controllers
                 model.CoreIdentificationDetailId,
                 MaterialCase = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).MaterialCase == Core.Constants.Constant.MaterialCase.New ? "New" : "Used", 
                 model.RollerBuilderId,
-                RollerBuilderSku = _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
+                RollerBuilderBaseSku = _rollerBuilderService.GetObjectById(model.RollerBuilderId).BaseSku,
                 RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
+                CoreBuilder = _coreBuilderService.GetObjectById(_coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).CoreBuilderId).Name,
+                Compound = _itemService.GetObjectById(_rollerBuilderService.GetObjectById(model.RollerBuilderId).CompoundId).Name,
+                model.CompoundUsage,
+                model.CompoundUnderLayerId,
+                CompoundUnderLayer = model.CompoundUnderLayerId != null ? _itemService.GetObjectById(model.CompoundUnderLayerId.GetValueOrDefault()).Name : "",
+                model.CompoundUnderLayerUsage,
                 model.CoreTypeCase,
                 model.IsDisassembled,
                 model.IsStrippedAndGlued,
                 model.IsWrapped,
-                model.CompoundUsage,
                 model.IsVulcanized,
                 model.IsFacedOff,
                 model.IsConventionalGrinded,
@@ -266,43 +279,6 @@ namespace WebView.Controllers
                 model.FinishedDate,
                 model.CreatedAt,
                 model.UpdatedAt,
-                model.Errors
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-        public dynamic GetInfoDetail(int Id)
-        {
-            RecoveryOrderDetail model = new RecoveryOrderDetail();
-            try
-            {
-                model = _recoveryOrderDetailService.GetObjectById(Id);
-            
-            }
-            catch (Exception ex)
-            {
-                LOG.Error("GetInfo", ex);
-                model.Errors.Add("Generic", "Error : " + ex);
-            }
-
-            return Json(new
-            {
-                model.Id,
-                model.CoreIdentificationDetailId,
-                DetailId = _coreIdentificationDetailService.GetObjectById(model.CoreIdentificationDetailId).DetailId,
-                CoreBuilderName = _coreBuilderService.GetObjectById(_coreIdentificationDetailService.GetObjectById(
-                                   model.CoreIdentificationDetailId).CoreBuilderId).Name,
-                model.RollerBuilderId,
-                RollerBuilder = _rollerBuilderService.GetObjectById(model.RollerBuilderId).Name,
-                model.CoreTypeCase,
-                model.IsDisassembled,
-                model.IsStrippedAndGlued,
-                model.IsWrapped,
-                model.IsVulcanized,
-                model.IsFacedOff,
-                model.IsConventionalGrinded,
-                model.IsCNCGrinded,
-                model.IsPolishedAndQC,
-                model.IsPackaged,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -330,8 +306,6 @@ namespace WebView.Controllers
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
-
-       
 
         [HttpPost]
         public dynamic InsertAccessory(RecoveryAccessoryDetail model)
@@ -406,14 +380,23 @@ namespace WebView.Controllers
             try
             {
                 var data = _recoveryOrderDetailService.GetObjectById(model.Id);
+                if (data.CompoundUnderLayerId != model.CompoundUnderLayerId || 
+                    data.CompoundUsage != model.CompoundUsage ||
+                    data.CompoundUnderLayerUsage != model.CompoundUnderLayerUsage)
+                {
+                    data.CompoundUnderLayerId = model.CompoundUnderLayerId;
+                    data.CompoundUnderLayerUsage = model.CompoundUnderLayerUsage;
+                    data.CompoundUsage = model.CompoundUsage;
+                    models = _recoveryOrderDetailService.UpdateObject(data, _recoveryOrderService, _coreIdentificationDetailService, _rollerBuilderService);
+                }
                 if (model.IsDisassembled && !data.IsDisassembled) { models = _recoveryOrderDetailService.DisassembleObject(data, _recoveryOrderService); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsStrippedAndGlued && !data.IsStrippedAndGlued) { models = _recoveryOrderDetailService.StripAndGlueObject(data); }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsWrapped && !data.IsWrapped)
                 {
-                    models = _recoveryOrderDetailService.WrapObject(data, model.CompoundUsage,
-                                                            _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
+                    models = _recoveryOrderDetailService.WrapObject(data, model.CompoundUsage, model.CompoundUnderLayerUsage,
+                                                                    _recoveryOrderService, _rollerBuilderService, _itemService, _warehouseItemService);
                 }
                 if (models.Errors.Any()) { return Json(new { models.Errors }); }
                 if (model.IsVulcanized && !data.IsVulcanized) { models = _recoveryOrderDetailService.VulcanizeObject(data); }

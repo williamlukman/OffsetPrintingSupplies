@@ -525,6 +525,23 @@ namespace Service.Service
             return _repository.CreateObject(stockMutation);
         }
 
+        public StockMutation CreateStockMutationForRecoveryOrderCompoundUnderLayer(RecoveryOrderDetail recoveryOrderDetail, DateTime FinishedOrRejectedDate, WarehouseItem warehouseItem, bool CaseAddition)
+        {
+            StockMutation stockMutation = new StockMutation();
+            stockMutation.ItemId = warehouseItem.ItemId;
+            stockMutation.WarehouseId = warehouseItem.WarehouseId;
+            stockMutation.WarehouseItemId = warehouseItem.Id;
+            stockMutation.Quantity = recoveryOrderDetail.CompoundUnderLayerUsage;
+            stockMutation.SourceDocumentType = Constant.SourceDocumentType.RecoveryOrder;
+            stockMutation.SourceDocumentId = recoveryOrderDetail.RecoveryOrderId;
+            stockMutation.SourceDocumentDetailType = Constant.SourceDocumentDetailType.RecoveryOrderDetail;
+            stockMutation.SourceDocumentDetailId = recoveryOrderDetail.Id;
+            stockMutation.ItemCase = Constant.ItemCase.Ready;
+            stockMutation.Status = CaseAddition ? Constant.MutationStatus.Addition : Constant.MutationStatus.Deduction;
+            stockMutation.MutationDate = FinishedOrRejectedDate;
+            return _repository.CreateObject(stockMutation);
+        }
+
         public IList<StockMutation> GetStockMutationForRecoveryOrder(RecoveryOrderDetail recoveryOrderDetail, WarehouseItem warehouseItem)
         {
             IList<StockMutation> stockMutations = _repository.GetObjectsBySourceDocumentDetailForWarehouseItem(warehouseItem.Id, Constant.SourceDocumentDetailType.RecoveryOrderDetail, recoveryOrderDetail.Id);

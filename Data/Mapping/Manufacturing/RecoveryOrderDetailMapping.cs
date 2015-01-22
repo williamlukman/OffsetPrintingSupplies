@@ -26,6 +26,10 @@ namespace Data.Mapping
             HasMany(rod => rod.RecoveryAccessoryDetails)
                 .WithRequired(rad => rad.RecoveryOrderDetail)
                 .HasForeignKey(rad => rad.RecoveryOrderDetailId);
+            HasOptional(rod => rod.CompoundUnderLayer)
+                .WithMany()
+                .HasForeignKey(rb => rb.CompoundUnderLayerId)
+                .WillCascadeOnDelete(false);
             Ignore(rod => rod.Errors);
         }
     }

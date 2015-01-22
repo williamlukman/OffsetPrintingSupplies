@@ -95,7 +95,7 @@ namespace WebView.Controllers
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
                              model.SubTypeId,
-                             SubType = model.SubType.Name,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -192,7 +192,7 @@ namespace WebView.Controllers
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
                              model.SubTypeId,
-                             SubType = model.SubType.Name,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -287,7 +287,7 @@ namespace WebView.Controllers
                              model.ItemTypeId,
                              ItemType = model.ItemType.Name,
                              model.SubTypeId,
-                             SubType = model.SubType.Name,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.IsTradeable,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -449,7 +449,7 @@ namespace WebView.Controllers
                              model.AvgPrice,
                              model.Description,
                              ItemType = model.ItemType.Name,
-                             SubType = model.SubType.Name,
+                             SubType = model.SubTypeId != null ? model.SubType.Name : "",
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
