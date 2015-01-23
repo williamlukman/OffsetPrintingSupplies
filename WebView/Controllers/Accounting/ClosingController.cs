@@ -227,7 +227,7 @@ namespace WebView.Controllers
                     }, JsonRequestBehavior.AllowGet);
                 }
                 if (exchangeRateClosing == null) exchangeRateClosing = new List<ExchangeRateClosing>();
-                model = _closingService.CreateObject(model,exchangeRateClosing, _accountService, _validCombService,_exchangeRateClosingService);
+                model = _closingService.CreateObject(model,exchangeRateClosing, _accountService, _validCombService, _validCombIncomeStatementService, _exchangeRateClosingService);
             }
             catch (Exception ex)
             {
