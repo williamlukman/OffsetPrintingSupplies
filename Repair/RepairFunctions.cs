@@ -1488,14 +1488,15 @@ namespace Repair
                                         db.Entry(det).State = EntityState.Modified;
                                         db.SaveChanges();
                                     }
-
                                     obj.IsConfirmed = false;
                                     obj.IsDeleted = false;
                                     obj.Errors = new Dictionary<string, string>();
                                     var payable = db.Payables.Where(x => !x.IsDeleted && x.PayableSource == Constant.PayableSource.PurchaseInvoice && x.PayableSourceId == obj.Id).OrderByDescending(x => x.Id).FirstOrDefault();
                                     var id = payable.Id;
                                     var tbl = payable.GetType().Name.Split('_')[0];
-                                    db.Payables.Remove(payable);
+                                    //db.Payables.Remove(payable);
+                                    //db.SaveChanges();
+                                    _payableService.DeleteObject(payable.Id);
                                     db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", tbl, id - 1));
                                     _purchaseInvoiceService.ConfirmObject(obj, obj.ConfirmationDate.GetValueOrDefault(), _purchaseInvoiceDetailService, _purchaseOrderService, _purchaseReceivalService, _purchaseReceivalDetailService, _payableService, _accountService, _generalLedgerJournalService, _closingService, _currencyService, _exchangeRateService, _gLNonBaseCurrencyService);
                                     Log(obj.Errors, obj.GetType().Name.Split('_')[0], obj.Code, obj.Id, obj.Id);
@@ -1875,14 +1876,15 @@ namespace Repair
                                         db.Entry(det).State = EntityState.Modified;
                                         db.SaveChanges();
                                     }
-
                                     obj.IsConfirmed = false;
                                     obj.IsDeleted = false;
                                     obj.Errors = new Dictionary<string, string>();
                                     var receivable = db.Receivables.Where(x => !x.IsDeleted && x.ReceivableSource == Constant.ReceivableSource.SalesInvoice && x.ReceivableSourceId == obj.Id).OrderByDescending(x => x.Id).FirstOrDefault();
                                     var id = receivable.Id;
                                     var tbl = receivable.GetType().Name.Split('_')[0];
-                                    db.Receivables.Remove(receivable);
+                                    //db.Receivables.Remove(receivable);
+                                    //db.SaveChanges();
+                                    _receivableService.DeleteObject(receivable.Id);
                                     db.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT ({0}, RESEED, {1});", tbl, id - 1));
                                     _salesInvoiceService.ConfirmObject(obj, obj.ConfirmationDate.GetValueOrDefault(), _salesInvoiceDetailService, _salesOrderService, _salesOrderDetailService, _deliveryOrderService, _deliveryOrderDetailService, _receivableService, _accountService, _generalLedgerJournalService, _closingService, _serviceCostService, _rollerBuilderService, _itemService, _itemTypeService, _contactService, _exchangeRateService, _currencyService, _gLNonBaseCurrencyService);
                                     Log(obj.Errors, obj.GetType().Name.Split('_')[0], obj.Code, obj.Id, obj.Id);
@@ -2142,8 +2144,16 @@ namespace Repair
                     {
                         DateTime confirmdate = rec.ConfirmationDate ?? rec.DeliveryDate;
                         trans.Add(confirmdate.AddMilliseconds(rec.Id + 170000), new sourceid() { source = rec.GetType().Name.Split('_')[0], id = rec.Id });
+
+                        foreach (var det in db.DeliveryOrderDetails.Where(x => !x.IsDeleted && x.DeliveryOrderId == rec.Id).ToList())
+                        {
+                            var sod = det.SalesOrderDetail;
+                            sod.PendingDeliveryQuantity = sod.Quantity;
+                            db.Entry(sod).State = EntityState.Modified;
+                        }
                     }
                 }
+                db.SaveChanges();
 
                 // SalesInvoice
                 foreach (var rec in db.SalesInvoices.Where(x => !x.IsDeleted).ToList())
