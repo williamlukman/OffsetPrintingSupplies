@@ -42,6 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validation\Accounting\AccountValidator.cs" />
     <Compile Include="Validation\Accounting\ClosingValidator.cs" />
+    <Compile Include="Validation\Accounting\ValidCombIncomeStatementValidator.cs" />
     <Compile Include="Validation\Accounting\GLNonBaseCurrencyValidator.cs" />
     <Compile Include="Validation\Accounting\VCNonBaseCurrencyValidator.cs" />
     <Compile Include="Validation\Accounting\ExchangeRateClosingValidator.cs" />

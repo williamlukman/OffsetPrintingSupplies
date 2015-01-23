@@ -276,6 +276,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Accounting\ChartOfAccountController.cs" />
     <Compile Include="Controllers\Accounting\ClosingController.cs" />
+    <Compile Include="Controllers\Accounting\ValidCombIncomeStatementController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerSaldoController.cs" />
     <Compile Include="Controllers\Accounting\GeneralLedgerController.cs" />
     <Compile Include="Controllers\Accounting\ValidCombController.cs" />
@@ -367,6 +368,7 @@
     <Content Include="Content\apps_js\Company.js" />
     <Content Include="Content\apps_js\BlendingWorkOrder.js" />
     <Content Include="Content\apps_js\ContactGroup.js" />
+    <Content Include="Content\apps_js\ValidCombIncomeStatement.js" />
     <Content Include="Content\apps_js\MasterItemAvgPrice.js" />
     <Content Include="Content\apps_js\MasterSubType.js" />
     <Content Include="Content\apps_js\SupplierDetail.js" />
@@ -1441,6 +1443,7 @@
     <Content Include="Views\Report\SalesPersonnelComparisonYearlyByValue.cshtml" />
     <Content Include="Views\Report\SalesPersonnelComparisonYearlyByQty.cshtml" />
     <Content Include="Views\MstItemAvgPrice\Index.cshtml" />
+    <Content Include="Views\ValidCombIncomeStatement\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

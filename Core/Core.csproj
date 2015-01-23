@@ -47,6 +47,7 @@
     <Compile Include="Constants\ManufacturingConstant.cs" />
     <Compile Include="DomainModel\Accounting\Account.cs" />
     <Compile Include="DomainModel\Accounting\Closing.cs" />
+    <Compile Include="DomainModel\Accounting\ValidCombIncomeStatement.cs" />
     <Compile Include="DomainModel\Accounting\VCNonBaseCurrency.cs" />
     <Compile Include="DomainModel\Accounting\GLNonBaseCurrency.cs" />
     <Compile Include="DomainModel\Accounting\ExchangeRateClosing.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="DomainModel\UserRole\UserAccess.cs" />
     <Compile Include="DomainModel\UserRole\UserAccount.cs" />
     <Compile Include="DomainModel\UserRole\UserMenu.cs" />
+    <Compile Include="Interface\Repository\Accounting\IValidCombIncomeStatementRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IVCNonBaseCurrencyRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IGLNonBaseCurrencyRepository.cs" />
     <Compile Include="Interface\Repository\Accounting\IExchangeRateClosingRepository.cs" />
@@ -258,6 +260,7 @@
     <Compile Include="Interface\Repository\UserRole\IUserAccessRepository.cs" />
     <Compile Include="Interface\Repository\UserRole\IUserAccountRepository.cs" />
     <Compile Include="Interface\Repository\UserRole\IUserMenuRepository.cs" />
+    <Compile Include="Interface\Service\Accounting\IValidCombIncomeStatementService.cs" />
     <Compile Include="Interface\Service\Accounting\IGLNonBaseCurrencyService.cs" />
     <Compile Include="Interface\Service\Accounting\IVCNonBaseCurrencyService.cs" />
     <Compile Include="Interface\Service\Accounting\IExchangeRateClosingService.cs" />
@@ -364,6 +367,7 @@
     <Compile Include="Interface\Service\UserRole\IUserAccessService.cs" />
     <Compile Include="Interface\Service\UserRole\IUserAccountService.cs" />
     <Compile Include="Interface\Service\UserRole\IUserMenuService.cs" />
+    <Compile Include="Interface\Validation\Accounting\IValidCombIncomeStatementValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IGLNonBaseCurrencyValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IVCNonBaseCurrencyValidator.cs" />
     <Compile Include="Interface\Validation\Accounting\IExchangeRateClosingValidator.cs" />

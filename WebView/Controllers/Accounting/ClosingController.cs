@@ -21,6 +21,7 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private IGeneralLedgerJournalService _generalLedgerJournalService;
         private IValidCombService _validCombService;
+        private IValidCombIncomeStatementService _validCombIncomeStatementService;
         public ICurrencyService _currencyService ;
         private IExchangeRateClosingService _exchangeRateClosingService;
         private IGLNonBaseCurrencyService _gLNonBaseCurrencyService;
@@ -32,6 +33,7 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _generalLedgerJournalService = new GeneralLedgerJournalService(new GeneralLedgerJournalRepository(), new GeneralLedgerJournalValidator());
             _validCombService = new ValidCombService(new ValidCombRepository(), new ValidCombValidator());
+            _validCombIncomeStatementService = new ValidCombIncomeStatementService(new ValidCombIncomeStatementRepository(), new ValidCombIncomeStatementValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateClosingService = new ExchangeRateClosingService(new ExchangeRateClosingRepository(), new ExchangeRateClosingValidator());
             _gLNonBaseCurrencyService = new GLNonBaseCurrencyService(new GLNonBaseCurrencyRepository(), new GLNonBaseCurrencyValidator());
@@ -263,7 +265,7 @@ namespace WebView.Controllers
 
                 var data = _closingService.GetObjectById(model.Id);
                 data.ClosedAt = model.ClosedAt;
-                model = _closingService.CloseObject(data, _accountService, _generalLedgerJournalService, _validCombService,_gLNonBaseCurrencyService,_exchangeRateClosingService,_vCNonBaseCurrencyService,_cashBankService);
+                model = _closingService.CloseObject(data, _accountService, _generalLedgerJournalService, _validCombService, _validCombIncomeStatementService, _gLNonBaseCurrencyService,_exchangeRateClosingService,_vCNonBaseCurrencyService,_cashBankService);
             }
             catch (Exception ex)
             {
@@ -300,7 +302,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _closingService.GetObjectById(model.Id);
-                model = _closingService.OpenObject(data, _accountService, _validCombService,_vCNonBaseCurrencyService,_generalLedgerJournalService,_exchangeRateClosingService);
+                model = _closingService.OpenObject(data, _accountService, _validCombService, _validCombIncomeStatementService, _vCNonBaseCurrencyService, _generalLedgerJournalService, _exchangeRateClosingService);
             }
             catch (Exception ex)
             {
@@ -336,7 +338,7 @@ namespace WebView.Controllers
                 }
 
                 var data = _closingService.GetObjectById(model.Id);
-                model = _closingService.DeleteObject(data, _accountService, _validCombService, _vCNonBaseCurrencyService, _generalLedgerJournalService);
+                model = _closingService.DeleteObject(data, _accountService, _validCombService, _validCombIncomeStatementService, _vCNonBaseCurrencyService, _generalLedgerJournalService);
                 return Json(new
                 {
                     model.Errors

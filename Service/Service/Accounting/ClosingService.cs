@@ -48,7 +48,7 @@ namespace Service.Service
             return _repository.GetObjectByPeriodAndYear(Period, YearPeriod);
         }
 
-        public Closing CreateObject(Closing closing, IList<ExchangeRateClosing> exchangeRateClosing ,IAccountService _accountService, IValidCombService _validCombService,IExchangeRateClosingService _exchangeRateClosingService)
+        public Closing CreateObject(Closing closing, IList<ExchangeRateClosing> exchangeRateClosing ,IAccountService _accountService, IValidCombService _validCombService, IExchangeRateClosingService _exchangeRateClosingService)
         {
             closing.Errors = new Dictionary<String, String>();
             // Create all ValidComb
@@ -82,9 +82,9 @@ namespace Service.Service
         }
 
         public Closing CloseObject(Closing closing, IAccountService _accountService,
-                                   IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService,
-            IGLNonBaseCurrencyService _gLNonBaseCurrencyService,IExchangeRateClosingService _exchangeRateClosingService,
-            IVCNonBaseCurrencyService _vCNonBaseCurrencyService,ICashBankService _cashBankService)
+                                   IGeneralLedgerJournalService _generalLedgerJournalService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService,
+                                   IGLNonBaseCurrencyService _gLNonBaseCurrencyService,IExchangeRateClosingService _exchangeRateClosingService,
+                                   IVCNonBaseCurrencyService _vCNonBaseCurrencyService,ICashBankService _cashBankService)
         {
             if (_validator.ValidCloseObject(closing, this))
             {
@@ -505,11 +505,12 @@ namespace Service.Service
                 #endregion
 
                 #region ClosingEntries: Net Earning
-                IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense && x.IsLeaf && !x.IsDeleted).ToList();
+                IList<Account> IncomeStatementAccounts = _accountService.GetQueryable().Where(x => (x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense) && x.IsLeaf && !x.IsDeleted).ToList();
                 decimal creditNetEarning = 0;
                 foreach(var account in IncomeStatementAccounts)
                 {
                     ValidComb vcClosingEntries = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+                    ValidCombIncomeStatement validCombIncomeStatement = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
                     if (account.Group == Constant.AccountGroup.Expense && vcClosingEntries.Amount != 0)
                     {
                         GeneralLedgerJournal journal = new GeneralLedgerJournal()
@@ -523,6 +524,8 @@ namespace Service.Service
                         };
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
                         creditNetEarning = vcClosingEntries.Amount > 0 ? creditNetEarning - vcClosingEntries.Amount : creditNetEarning + vcClosingEntries.Amount;
+                        validCombIncomeStatement.Amount = vcClosingEntries.Amount;
+                        _validCombIncomeStatementService.UpdateObject(validCombIncomeStatement, _accountService, this);
                         vcClosingEntries.Amount = 0;
                         _validCombService.UpdateObject(vcClosingEntries, _accountService, this);
                     }
@@ -539,6 +542,8 @@ namespace Service.Service
                         };
                         journal = _generalLedgerJournalService.CreateObject(journal, _accountService);
                         creditNetEarning += vcClosingEntries.Amount;
+                        validCombIncomeStatement.Amount = vcClosingEntries.Amount;
+                        _validCombIncomeStatementService.UpdateObject(validCombIncomeStatement, _accountService, this);
                         vcClosingEntries.Amount = 0;
                         _validCombService.UpdateObject(vcClosingEntries, _accountService, this);
                     }
@@ -568,6 +573,14 @@ namespace Service.Service
                 }
                 #endregion
 
+                #region Fill Valid Comb Income Statement Non Leaves
+                var groupNodeAccountIncomeStatement = _accountService.GetQueryable().Where(x => !x.IsLeaf && !x.IsDeleted && (x.Group == Constant.AccountGroup.Revenue || x.Group == Constant.AccountGroup.Expense)).OrderByDescending(x => x.Level).ToList();
+                foreach (var groupNode in groupNodeAccountIncomeStatement)
+                {
+                    FillValidCombIncomeStatement(groupNode, closing, _accountService, _validCombIncomeStatementService);
+                }
+                #endregion
+
                 _repository.CloseObject(closing);
             }
             return closing;
@@ -579,15 +592,27 @@ namespace Service.Service
             _validCombService.CalculateTotalAmount(validComb, _accountService, this);
         }
 
-        public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService,
-            IVCNonBaseCurrencyService _vCNonBaseCurrencyService,IGeneralLedgerJournalService _generalLedgerJournalService
-            ,IExchangeRateClosingService _exchangeRateClosingService)
+        private void FillValidCombIncomeStatement(Account nodeAccount, Closing closing, IAccountService _accountService, IValidCombIncomeStatementService _validCombIncomeStatementService)
+        {
+            ValidCombIncomeStatement validCombIncomeStatement = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(nodeAccount.Id, closing.Id);
+            _validCombIncomeStatementService.CalculateTotalAmount(validCombIncomeStatement, _accountService, this);
+        }
+
+        public Closing OpenObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService,
+                                  IVCNonBaseCurrencyService _vCNonBaseCurrencyService,IGeneralLedgerJournalService _generalLedgerJournalService,
+                                  IExchangeRateClosingService _exchangeRateClosingService)
         {
             if (_validator.ValidOpenObject(closing))
             {
                 IList<Account> allAccounts = _accountService.GetAll();
                 foreach (var account in allAccounts)
                 {
+                    if (account.Group == Constant.AccountGroup.Revenue || account.Group == Constant.AccountGroup.Expense)
+                    {
+                        ValidCombIncomeStatement validCombIncomeStatement = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+                        validCombIncomeStatement.Amount = 0;
+                        _validCombIncomeStatementService.UpdateObject(validCombIncomeStatement, _accountService, this);
+                    }
                     ValidComb validComb = _validCombService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
                     validComb.Amount = 0;
                     _validCombService.UpdateObject(validComb, _accountService, this);
@@ -641,7 +666,7 @@ namespace Service.Service
             return _repository.OpenObject(closing);
         }
 
-        public Closing DeleteObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService, IGeneralLedgerJournalService _generalLedgerJournalService)
+        public Closing DeleteObject(Closing closing, IAccountService _accountService, IValidCombService _validCombService, IValidCombIncomeStatementService _validCombIncomeStatementService, IVCNonBaseCurrencyService _vCNonBaseCurrencyService, IGeneralLedgerJournalService _generalLedgerJournalService)
         {
             if (_validator.ValidDeleteObject(closing))
             {
@@ -653,6 +678,8 @@ namespace Service.Service
                     {
                         _vCNonBaseCurrencyService.DeleteObject(vcnonbase.Id);
                     }
+                    ValidCombIncomeStatement validCombIncomeStatement = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(account.Id, closing.Id);
+                    _validCombIncomeStatementService.DeleteObject(validCombIncomeStatement.Id);
                     _validCombService.DeleteObject(validComb.Id);
                 }
                 _repository.DeleteObject(closing.Id);
