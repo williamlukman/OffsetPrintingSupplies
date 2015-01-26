@@ -340,6 +340,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "ReceiptVoucher/Confirm",
             type: "POST",
@@ -348,6 +349,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -574,20 +576,21 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'Description'
+        colNames: ['Id', 'Code', 'Currency', 'Receivable Id', 'Receivable Code', 'Amount Paid','Rate','Actual Amount', 'Description'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'currency', index: 'currency', width: 80, sortable: false },
                   { name: 'receivableid', index: 'receivableid', width: 130, sortable: false, hidden: true },
                   { name: 'receivable', index: 'receivable', width: 110, sortable: false },
                   { name: 'amountpaid', index: 'amountpaid', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
-                  { name: 'rate', index: 'rate', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
                   { name: 'description', index: 'description', width: 180, sortable: false }
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -602,8 +605,8 @@
 		  }
     });//END GRID Detail
 
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail1', { del: false, add: false, edit: false, search: false })
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -784,7 +787,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'code', index: 'code', width: 150 },
+                  { name: 'name', index: 'name', width: 250 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),
@@ -813,7 +816,7 @@
             var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
             $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
+            $('#Contact').val(ret.name);
             $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -899,19 +902,19 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Receivable Source', 'Id',
-                    'Due Date', 'Total', 'Currency','Remaining', 'PendClearance'
+                    'Due Date', 'Total', 'Remaining', 'PendClearance', 'Currency'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
                   { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 150, sortable: false, hidden: true },
-                  { name: 'receivablesource', index: 'receivablesource', width: 100, sortable: false },
+                  { name: 'contact', index: 'contact', width: 250, sortable: false },
+                  { name: 'receivablesource', index: 'receivablesource', width: 180, sortable: false },
                   { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_receivable'),

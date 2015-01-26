@@ -58,9 +58,9 @@
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
                   { name: 'versionno', index: 'versionno', width: 40 },
-                  { name: 'nomorsurat', index: 'nomorsurat', width: 80 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 100 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contact', index: 'contact', width: 150 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'quotationdate', index: 'quotationdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalquotedamount', index: 'totalquotedamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'totalrrpamount', index: 'totalrrpamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
@@ -315,6 +315,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "SalesQuotation/Confirm",
             type: "POST",
@@ -323,6 +324,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -537,13 +539,13 @@
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 300, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quotationprice', index: 'quotationprice', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'rrp', index: 'rrp', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -557,8 +559,8 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false })
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -718,7 +720,7 @@
         colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
-				  { name: 'name', index: 'name', width: 180 },
+				  { name: 'name', index: 'name', width: 300 },
                   { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
                   { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },

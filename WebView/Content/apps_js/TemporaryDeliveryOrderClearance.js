@@ -308,6 +308,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "TemporaryDeliveryOrderClearance/Confirm",
             type: "POST",
@@ -316,6 +317,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -664,11 +666,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
                     'Is Confirmed', 'Confirmation Date', 'Reconciled', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
                   { name: 'ordertype', index: 'ordertype', width: 70 },
 				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },

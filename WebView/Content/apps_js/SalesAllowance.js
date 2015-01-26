@@ -328,6 +328,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "SalesAllowance/Confirm",
             type: "POST",
@@ -336,6 +337,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -745,7 +747,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'name', index: 'name', width: 150 },
+                  { name: 'name', index: 'name', width: 250 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),
@@ -774,7 +776,7 @@
             var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
             $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
+            $('#Contact').val(ret.name);
             $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');

@@ -66,7 +66,7 @@
         shrinkToFit: false,
         sortorder: "DESC",
         width: $("#toolbar").width(),
-        height: $(window).height() - 240,
+        height: $(window).height() - 250,
         gridComplete:
 		  function () {
 		      var ids = $(this).jqGrid('getDataIDs');

@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'StockAdjustment/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'StockAdjustment/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'StockAdjustment/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'StockAdjustment/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -264,6 +264,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        Clickable($('#confirm_btn_submit'), false);
         $.ajax({
             url: base_url + "StockAdjustment/Confirm",
             type: "POST",
@@ -272,6 +273,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                Clickable($('#confirm_btn_submit'), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {

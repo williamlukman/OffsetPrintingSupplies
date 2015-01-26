@@ -20,12 +20,18 @@ namespace WebView.Controllers
         private IPayableService _payableService;
         private IContactService _contactService;
         private IPriceMutationService _priceMutationService;
+        private IPaymentRequestService _paymentRequestService;
+        private IPurchaseDownPaymentService _purchaseDownPaymentService;
+        private IPurchaseInvoiceMigrationService _purchaseInvoiceMigrationService;
 
         public PayableController()
         {
             _payableService = new PayableService(new PayableRepository(), new PayableValidator());
             _contactService = new ContactService(new ContactRepository(), new ContactValidator());
             _priceMutationService = new PriceMutationService(new PriceMutationRepository(), new PriceMutationValidator());
+            _paymentRequestService = new PaymentRequestService(new PaymentRequestRepository(), new PaymentRequestValidator());
+            _purchaseDownPaymentService = new PurchaseDownPaymentService(new PurchaseDownPaymentRepository(), new PurchaseDownPaymentValidator());
+            _purchaseInvoiceMigrationService = new PurchaseInvoiceMigrationService(new PurchaseInvoiceMigrationRepository());
         }
 
         public ActionResult Index()
@@ -41,7 +47,6 @@ namespace WebView.Controllers
             GeneralFunction.ConstructWhereInLinq(strWhere, out filter);
             if (filter == "") filter = "true";
 
-            // Get Data
            var q = _payableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
@@ -53,9 +58,12 @@ namespace WebView.Controllers
                              Contact = model.Contact.Name,
                              model.PayableSource,
                              model.PayableSourceId,
+                             PayableNo = (model.PayableSource == Constant.PayableSource.PurchaseInvoiceMigration) ? _purchaseInvoiceMigrationService.GetQueryable().Where(x => x.Id == model.PayableSourceId && !x.IsDeleted).FirstOrDefault().NomorSurat : "",
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.DueDate,
                              model.CompletionDate,
                              model.CreatedAt,
@@ -96,9 +104,12 @@ namespace WebView.Controllers
                             payable.Contact,
                             payable.PayableSource,
                             payable.PayableSourceId,
+                            payable.PayableNo,
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,
@@ -131,6 +142,8 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.DueDate,
                              model.CompletionDate,
                              model.CreatedAt,
@@ -174,6 +187,8 @@ namespace WebView.Controllers
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,
@@ -204,9 +219,10 @@ namespace WebView.Controllers
                              model.PayableSourceId,
                              model.DueDate,
                              model.Amount,
-                             currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.CompletionDate,
                              model.CreatedAt,
                              model.UpdatedAt
@@ -248,9 +264,10 @@ namespace WebView.Controllers
                             payable.PayableSourceId,
                             payable.DueDate,
                             payable.Amount,
-                            payable.currency,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.CompletionDate,
                             payable.CreatedAt,
                             payable.UpdatedAt,
@@ -282,6 +299,8 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.DueDate,
                              model.CompletionDate,
                              model.CreatedAt,
@@ -325,6 +344,8 @@ namespace WebView.Controllers
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,
@@ -356,6 +377,8 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.DueDate,
                              model.CompletionDate,
                              model.CreatedAt,
@@ -399,6 +422,8 @@ namespace WebView.Controllers
                             payable.Amount,
                             payable.RemainingAmount,
                             payable.PendingClearanceAmount,
+                            payable.Currency,
+                            payable.Rate,
                             payable.DueDate,
                             payable.CompletionDate,
                             payable.CreatedAt,

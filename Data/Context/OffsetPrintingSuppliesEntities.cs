@@ -27,7 +27,7 @@ namespace Data.Context
                                         { "UserMenu", "UserAccount", "UserAccess" };
             IList<String> accountingNames = new List<String>() { "VCNonBaseCurrency", "GLNonBaseCurrency", "PaymentRequestDetail", 
                                            "PaymentRequest", "ReceiptRequestDetail", "ReceiptRequest", "MemorialDetail", "Memorial", 
-                                           "ValidComb", "Closing", "GeneralLedgerJournal" };
+                                           "ValidCombIncomeStatement", "ValidComb", "Closing", "GeneralLedgerJournal" };
             IList<String> manufacturingNames = new List<String>()
                                         { "RollerWarehouseMutationDetail", "RollerWarehouseMutation",
                                           "RecoveryAccessoryDetail", "RecoveryOrderDetail", "RecoveryOrder",
@@ -168,6 +168,7 @@ namespace Data.Context
             modelBuilder.Configurations.Add(new UserMenuMapping());
             modelBuilder.Configurations.Add(new UserAccessMapping());
             modelBuilder.Configurations.Add(new ValidCombMapping());
+            modelBuilder.Configurations.Add(new ValidCombIncomeStatementMapping());
             modelBuilder.Configurations.Add(new VirtualOrderMapping());
             modelBuilder.Configurations.Add(new VirtualOrderDetailMapping());
             modelBuilder.Configurations.Add(new WarehouseMapping());
@@ -271,6 +272,7 @@ namespace Data.Context
         public DbSet<UserMenu> UserMenus { get; set; }
         public DbSet<UserAccess> UserAccesses { get; set; }
         public DbSet<ValidComb> ValidCombs { get; set; }
+        public DbSet<ValidCombIncomeStatement> ValidCombIncomeStatements { get; set; }
         public DbSet<VirtualOrder> VirtualOrders { get; set; }
         public DbSet<VirtualOrderDetail> VirtualOrderDetails { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }

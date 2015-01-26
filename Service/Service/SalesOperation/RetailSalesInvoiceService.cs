@@ -111,7 +111,7 @@ namespace Service.Service
         }
 
         public RetailSalesInvoice PaidObject(RetailSalesInvoice retailSalesInvoice, ICashBankService _cashBankService, IReceivableService _receivableService, 
-                                             IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, IContactService _contactService)
+                                             IReceiptVoucherService _receiptVoucherService, IReceiptVoucherDetailService _receiptVoucherDetailService, IContactService _contactService, ICurrencyService _currencyService)
         {
             if (_validator.ValidPaidObject(retailSalesInvoice, _cashBankService, _receiptVoucherService))
             {
@@ -125,7 +125,7 @@ namespace Service.Service
                 {
                     ReceiptVoucher receiptVoucher = _receiptVoucherService.CreateObject(retailSalesInvoice.CashBankId, retailSalesInvoice.ContactId, DateTime.Now, retailSalesInvoice.Total, 
                                                                             retailSalesInvoice.IsGBCH, (DateTime)retailSalesInvoice.DueDate, retailSalesInvoice.IsBank, _receiptVoucherDetailService, 
-                                                                            _receivableService, _contactService, _cashBankService ); 
+                                                                            _receivableService, _contactService, _cashBankService, _currencyService ); 
                     retailSalesInvoice = _repository.PaidObject(retailSalesInvoice);
                 }
             }

@@ -89,9 +89,11 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.SalesOrder.Contact.Name,
                              model.NomorSurat,
                              model.SalesOrderId,
                              SalesOrderCode = model.SalesOrder.Code,
+                             NomorSuratSO = model.SalesOrder.NomorSurat,
                              model.WarehouseId,
                              Warehouse = model.Warehouse.Name,
                              model.DeliveryDate,
@@ -132,6 +134,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.SalesOrderId,
                             model.SalesOrderCode,
@@ -164,6 +167,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.SalesOrder.Contact.Name,
                              model.NomorSurat,
                              model.SalesOrderId,
                              SalesOrderCode = model.SalesOrder.Code,
@@ -220,6 +224,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.SalesOrderId,
                             model.SalesOrderCode,

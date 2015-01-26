@@ -376,6 +376,8 @@
                                                     {<li><a href="@Url.Action("Index", "Closing")">Closing</a></li>}
                                                     @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidComb, Core.Constants.Constant.MenuGroupName.Transaction))
                                                     {<li><a href="@Url.Action("Index", "ValidComb")">Valid Combination</a></li>}
+                                                    @if (WebView.AuthenticationModel.IsAllowed("View", Core.Constants.Constant.MenuName.ValidCombIncomeStatement, Core.Constants.Constant.MenuGroupName.Transaction))
+                                                    {<li><a href="@Url.Action("Index", "ValidCombIncomeStatement")">Valid Combination Income Statement</a></li>}
                                                 </ul>
                                             </li>
                                             <li><a href="#">Finance</a>

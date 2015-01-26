@@ -73,13 +73,15 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _salesInvoiceService.GetQueryable().Where(x => !x.IsDeleted);
+            var q = _salesInvoiceService.GetQueryable().Include("DeliveryOrder").Include("SalesOrder").Include("Contact")
+                                        .Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.DeliveryOrder.SalesOrder.Contact.Name,
                              model.NomorSurat,
                              model.DeliveryOrderId,
                              DeliveryOrderCode = model.DeliveryOrder.Code,
@@ -87,7 +89,7 @@ namespace WebView.Controllers
                              model.Description,
                              model.Discount,
                              model.Tax,
-                             currency = model.Currency.Name,
+                             Currency = model.Currency.Name,
                              model.ExchangeRateAmount,
                              model.InvoiceDate,
                              model.DueDate,
@@ -129,13 +131,14 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.DeliveryOrderId,
                             model.DeliveryOrderCode,
                             model.Description,
                             model.Discount,
                             model.Tax,
-                            model.currency,
+                            model.Currency,
                             model.ExchangeRateAmount,
                             model.InvoiceDate,
                             model.DueDate,

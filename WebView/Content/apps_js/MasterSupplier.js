@@ -266,12 +266,6 @@
                 Email: $("#Email").val(), TaxCode: taxcode, IsTaxable: document.getElementById("IsTaxable").checked ? 'true' : 'false',
                 ContactType: contacttype, Description: $("#Description").val(), ContactGroupId: $("#ContactGroupId").val()
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

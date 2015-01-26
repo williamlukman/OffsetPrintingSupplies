@@ -148,3 +148,11 @@ function split(val) {
 function extractLast(term) {
     return split(term).pop();
 }
+
+function ClickableButton(btnObject, isEnabled) {
+    if (isEnabled) {
+        btnObject.removeClass('ui-state-disabled disabled');
+    } else {
+        btnObject.addClass('ui-state-disabled disabled');
+    }
+}

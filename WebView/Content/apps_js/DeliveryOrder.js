@@ -53,14 +53,15 @@
     $("#list").jqGrid({
         url: base_url + 'DeliveryOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'SalesOrder Id', 'SO', 'Warehouse Id', 'Warehouse', 'DeliveryDate',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'SalesOrder Id', 'SO Code', 'Warehouse Id', 'Warehouse', 'DeliveryDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'contact', index: 'contact', width: 300 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'salesorderid', index: 'salesorderid', width: 100, hidden: true },
-                  { name: 'salesorder', index: 'salesorder', width: 70 },
+                  { name: 'salesorder', index: 'salesorder', width: 70, hidden: true },
                   { name: 'warehouseid', index: 'warehouseid', width: 100, hidden: true },
                   { name: 'warehousename', index: 'warehousename', width: 130 },
                   { name: 'deliverydate', index: 'deliverydate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -289,6 +290,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "DeliveryOrder/Confirm",
             type: "POST",
@@ -297,6 +299,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -624,9 +627,9 @@
         colModel: [
     			  { name: 'id', index: 'id', width: 40, align: "center" },
                   { name: 'code', index: 'code', width: 60, hidden: true },
-                  { name: 'nomorsurat', index: 'nomorsurat', width: 80 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contactname', index: 'contactname', width: 130 },
+                  { name: 'contactname', index: 'contactname', width: 300 },
                   { name: 'salesdate', index: 'salesdate', width: 90, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

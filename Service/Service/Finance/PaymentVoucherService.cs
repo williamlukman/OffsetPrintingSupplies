@@ -57,10 +57,18 @@ namespace Service.Service
         {
             paymentVoucher.Errors = new Dictionary<String, String>();
             CashBank cashBank = _cashBankService.GetObjectById(paymentVoucher.CashBankId);
-            Currency currency = _currencyService.GetObjectById(cashBank.CurrencyId);
-            if (currency.IsBase == true)
+            if (cashBank == null)
             {
-                paymentVoucher.RateToIDR = 1;
+                paymentVoucher.Errors.Add("CashBankId", "Harus diisi");
+                return paymentVoucher;
+            }
+            else
+            {
+                Currency currency = _currencyService.GetObjectById(cashBank.CurrencyId);
+                if (currency.IsBase == true)
+                {
+                    paymentVoucher.RateToIDR = 1;
+                }
             }
             return (_validator.ValidCreateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService) ?
                     _repository.CreateObject(paymentVoucher) : paymentVoucher);

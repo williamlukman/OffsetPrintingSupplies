@@ -131,6 +131,7 @@ namespace Core.Constants
             public static string PPNMASUKAN = "A1107";
 
             public static string Expense = "X2";
+            public static string COGSExpense = "X21E";
             public static string COGS = "X21";
             public static string COS = "X22"; //
             public static string OperationalExpense = "X23"; //

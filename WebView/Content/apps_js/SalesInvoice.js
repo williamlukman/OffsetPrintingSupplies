@@ -52,12 +52,13 @@
     $("#list").jqGrid({
         url: base_url + 'SalesInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Delivery Order Id', 'DO', 'Description', 'Disc(%)', 'Tax(%)','Currency',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'Delivery Order Id', 'DO', 'Description', 'Disc(%)', 'Tax(%)','Currency',
                    'Rate','Invoice Date', 'Due Date', 'Amount',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
-                  { name: 'code', index: 'code', width: 50 },
+                  { name: 'code', index: 'code', width: 80 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'deliveryorderid', index: 'deliveryorderid', width: 100, hidden: true },
                   { name: 'deliveryorder', index: 'deliveryorder', width: 70 },
@@ -325,6 +326,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "SalesInvoice/Confirm",
             type: "POST",
@@ -333,6 +335,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -470,7 +473,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Delivery Order Id', 'DOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount'
+        colNames: ['Id', 'Code', 'Delivery Order Id', 'DOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount (Quantity * Price)'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },
@@ -479,12 +482,12 @@
                   { name: 'deliveryorderdetailcode', index: 'deliveryorderdetailcode', width: 70, sortable: false },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 300, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
+                  { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'Code',
@@ -659,11 +662,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Nomor Surat DO', 'SalesOrder Id', 'SalesOrder Code', 'Nomor Surat SO', 'Delivery Date', 'Warehouse Id', 'Warehouse Name',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat DO', 'SalesOrder Id', 'SalesOrder Code', 'Nomor Surat SO', 'Delivery Date', 'Warehouse Id', 'Warehouse Name',
                    'CurrencyId','Currency','Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
                   { name: 'code', index: 'code', width: 50, hidden: true },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'salesorderid', index: 'salesorderid', width: 100, hidden: true },
                   { name: 'salesorder', index: 'salesorder', width: 85, hidden: true },

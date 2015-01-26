@@ -36,7 +36,6 @@
                   { name: 'beginningperiod', index: 'beginningperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
                   { name: 'enddateperiod', index: 'enddateperiod', width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: "Y-m-d", newformat: "M d, Y" } },
                   { name: 'amount', index: 'amount', width: 100, formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
-
         ],
         page: '1',
         pager: $('#pager'),
@@ -46,7 +45,7 @@
         scrollrows: true,
         viewrecords: true,
         shrinkToFit: false,
-        sortorder: "DESC",
+        sortorder: "ASC",
         width: $("#toolbar").width(),
         height: $(window).height() - 200,
         gridComplete:

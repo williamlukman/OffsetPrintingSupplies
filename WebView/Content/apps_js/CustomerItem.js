@@ -272,7 +272,7 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 250 }],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,
