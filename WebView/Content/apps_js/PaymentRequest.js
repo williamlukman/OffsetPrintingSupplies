@@ -636,6 +636,7 @@
     //--------------------------------------------------------END Dialog Item-------------------------------------------------------------
 
     // -------------------------------------------------------Look Up accountPayable-------------------------------------------------------
+
     $('#btnAccountPayable').click(function () {
         var lookUpURL = base_url + 'ChartOfAccount/GetAccountPayable';
         var lookupGrid = $('#lookup_table_accountPayable');

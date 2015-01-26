@@ -28,7 +28,7 @@
         url: base_url + 'Payable/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact',
-                   'Source', 'Id', 'No', 'Amount', 'Remaining', 'PendingClearance', 'Currency', 'Rate',
+                   'Source', 'Id','Amount', 'Remaining', 'PendingClearance', 'Currency', 'Rate',
                    'Due Date', 'Completion Date', 'Created At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center", hidden: true },
@@ -37,7 +37,6 @@
                   { name: 'contact', index: 'contact', width: 150 },
 				  { name: 'payablesource', index: 'payablesource', width: 150, align: 'right' },
 				  { name: 'payablesourceid', index: 'payablesourceid', width: 55 },
-                  { name: 'payableno', index: 'payableno', width: 80 },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
