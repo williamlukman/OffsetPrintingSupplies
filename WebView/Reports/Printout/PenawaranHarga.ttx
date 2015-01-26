@@ -1,0 +1,27 @@
+Tgl	String	255
+NoSurat	String	255	
+Hal	String	255
+HalDesc	String	255	
+Name	String	255
+ContactName	String	255	
+ContactAddr	String	255	
+ContactPerson	String	255	
+ContactCC	Memo	500	
+Personnel	String	255	
+RollNo	String	255
+JenisRoll	String	255
+Compound	String	255
+Jml	Number
+HargaSatuan	Number
+Currency	String	255
+NamaProduk	String	255
+Kode	String	255
+Kemasan	String	255
+ItemType	String	255
+Tipe	String	255
+Mesin	String	255
+Ukuran	String	255
+TipeBar	String	255
+Ketebalan	String	255
+Grouping	String	255
+Catatan	String	2048

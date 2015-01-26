@@ -41,6 +41,7 @@
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
+    $("#print_form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
@@ -53,7 +54,7 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Version No', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Quotation Date',
                     'Total Amount', 'Total RRP', 'Disc', '% Disc',
-                    'Is Confirmed', 'Confirmation Date', 'Approved', 'Rejected', 'Created At', 'Updated At'],
+                    'Is Confirmed', 'Confirmation Date', 'Approved', 'Rejected', 'Catatan', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
@@ -70,6 +71,7 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isapproved', index: 'isapproved', width: 60 },
                   { name: 'isrejected', index: 'isrejected', width: 60 },
+                  { name: 'catatan', index: 'catatan', width: 200 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -136,11 +138,17 @@
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
-                    else if (result.ConfirmationDate == null) {
-                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
-                    }
+                    //else if (result.ConfirmationDate == null) {
+                    //    $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    //}
                     else {
-                        window.open(base_url + "Report/ReportSalesQuotation?Id=" + id);
+                        //window.open(base_url + 'Report/ReportSalesQuotation?Id=' + id);
+                        $('#print_id').val(result.Id);
+                        $('#print_Code').val(result.Code);
+                        $('#print_VersionNo').val(result.VersionNo);
+                        $('#print_NomorSurat').val(result.NomorSurat);
+                        $('#print_by').val("EMAIL");
+                        $("#print_form_div").dialog('open');
                     }
                 }
             });
@@ -153,6 +161,7 @@
         $('#btnContact').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
         $('#VersionNo').removeAttr('disabled');
+        $('#Catatan').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#QuotationDateDiv').show();
         $('#QuotationDateDiv2').hide();
@@ -187,6 +196,7 @@
                             $('#Code').val(result.Code);
                             $('#VersionNo').val(result.VersionNo);
                             $('#NomorSurat').val(result.NomorSurat);
+                            $('#Catatan').val(result.Catatan);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#TotalQuotationAmount').val(result.TotalQuotationAmount);
@@ -201,6 +211,7 @@
                             $('#btnContact').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
                             $('#VersionNo').attr('disabled', true);
+                            $('#Catatan').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -239,6 +250,7 @@
                             $('#Code').val(result.Code);
                             $('#VersionNo').val(result.VersionNo);
                             $('#NomorSurat').val(result.NomorSurat);
+                            $('#Catatan').val(result.Catatan);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#QuotationDate').datebox('setValue', dateEnt(result.QuotationDate));
@@ -249,6 +261,7 @@
                             $('#btnContact').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
                             $('#VersionNo').removeAttr('disabled');
+                            $('#Catatan').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#QuotationDateDiv2').show();
                             $('#QuotationDateDiv').hide();
@@ -344,6 +357,15 @@
 
     $('#confirm_btn_cancel').click(function () {
         $('#confirm_div').dialog('close');
+    });
+
+    $('#print_btn_submit').click(function () {
+        window.open(base_url + 'Report/ReportPenawaranHarga?Id=' + $('#print_id').val() + '&By=' + $('#print_by').val() + '&ContactPerson=' + Base64.encode($('#print_contactperson').val()));
+        $('#print_form_div').dialog('close');
+    });
+
+    $('#print_btn_cancel').click(function () {
+        $('#print_form_div').dialog('close');
     });
 
     $('#btn_del').click(function () {
@@ -498,7 +520,8 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), VersionNo: $("#VersionNo").val(),
-                QuotationDate: $('#QuotationDate').datebox('getValue'), NomorSurat: $("#NomorSurat").val()
+                QuotationDate: $('#QuotationDate').datebox('getValue'), NomorSurat: $("#NomorSurat").val(),
+                Catatan: $("#Catatan").val()
             }),
             async: false,
             cache: false,

@@ -267,7 +267,7 @@
                 BeginningPeriod: $('#BeginningPeriod').datebox('getValue'), IsYear: isyear,
                 EndDatePeriod: $('#EndDatePeriod').datebox('getValue'), exchangeRateClosing: exchangerateclosingContainer
             }),
-            async: false,
+            async: true,
             cache: false,
             timeout: 30000,
             error: function () {

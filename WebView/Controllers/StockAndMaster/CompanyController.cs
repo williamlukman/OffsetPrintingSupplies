@@ -50,6 +50,7 @@ namespace WebView.Controllers
                              model.Id,
                              model.Name,
                              model.Address,
+                             model.City,
                              model.ContactNo,
                              model.Email,
                              model.Logo,
@@ -89,6 +90,7 @@ namespace WebView.Controllers
                             model.Id,
                             model.Name,
                             model.Address,
+                            model.City,
                             model.ContactNo,
                             model.Email,
                             model.Logo,
@@ -124,6 +126,7 @@ namespace WebView.Controllers
                  model.Id,
                  model.Name,
                  model.Address,
+                 model.City,
                  model.ContactNo,
                  model.Logo,
                  model.Email,
@@ -155,6 +158,7 @@ namespace WebView.Controllers
                  model.Id,
                  model.Name,
                  model.Address,
+                 model.City,
                  model.ContactNo,
                  model.Logo,
                  model.Email,
@@ -220,6 +224,7 @@ namespace WebView.Controllers
                 data.ContactNo = model.ContactNo;
                 data.Logo = model.Logo;
                 data.Email = model.Email;
+                data.City = model.City;
                 model = _companyService.UpdateObject(data);
             }
             catch (Exception ex)

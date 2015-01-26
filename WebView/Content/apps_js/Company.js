@@ -27,11 +27,12 @@
     $("#list").jqGrid({
         url: base_url + 'Company/GetList',
         datatype: "json",
-        colNames: ['ID', 'Name', 'Address', 'Contact No', 'Email', 'Logo', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Name', 'Address', 'City', 'Contact No', 'Email', 'Logo', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
 				  { name: 'name', index: 'name', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
+                  { name: 'city', index: 'city', width: 100 },
                   { name: 'contactno', index: 'contactno', width: 180 },
                   { name: 'email', index: 'email', width: 180 },
                   { name: 'logo', index: 'logo', width: 180 },
@@ -111,6 +112,7 @@
                             $('#id').val(result.Id);
                             $('#Name').val(result.Name);
                             $('#Address').val(result.Address);
+                            $('#City').val(result.City);
                             $('#ContactNo').val(result.ContactNo);
                             $('#Logo').val(result.Logo);
                             $('#Email').val(result.Email);
@@ -203,7 +205,7 @@
             data: JSON.stringify({
                 Id: id, Name: $("#Name").val(), Address: $("#Address").val(),
                 ContactNo: $("#ContactNo").val(), Logo: $("#Logo").val(), 
-                Email: $("#Email").val(), 
+                Email: $("#Email").val(), City: $("#City").val()
             }),
             async: false,
             cache: false,

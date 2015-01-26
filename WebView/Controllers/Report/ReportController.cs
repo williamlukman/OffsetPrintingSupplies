@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using System.Data.Objects.SqlClient;
 using System.Data.Objects;
 using Data.Context;
+using System.Globalization;
+using System.Text;
 
 namespace WebView.Controllers
 {
@@ -2240,6 +2242,70 @@ namespace WebView.Controllers
         }
         #endregion
 
+        #region PenawaranHarga
+        public ActionResult PenawaranHarga()
+        {
+            return View();
+        }
+
+        public ActionResult ReportPenawaranHarga(string By = "", string ContactPerson = "", int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+                var q = db.SalesQuotationDetails.Include(x => x.SalesQuotation).Include(x => x.Item)
+                                                              .Where(x => !x.IsDeleted && !x.SalesQuotation.IsDeleted && x.SalesQuotationId == Id).ToList();
+
+
+                var query = q.Select(g => new
+                {
+                    NamaProduk = g.Item.Name, 
+                    ItemType = g.Item.ItemType.Name,
+                    UoM = g.Item.UoM.Name,
+                    //SalesDate = g.Key.SalesDate,
+                    Jml = g.Quantity,
+                    HargaSatuan = g.QuotationPrice,
+                    Currency = (g.Item.Currency != null ? g.Item.Currency.Name : "Rupiah"),
+                    Catatan = g.SalesQuotation.Catatan,// ?? "",
+                    Tgl = company.City + (g.SalesQuotation.IsConfirmed ? g.SalesQuotation.ConfirmationDate.GetValueOrDefault() : g.SalesQuotation.QuotationDate).ToString(", d MMMM yyyy", new CultureInfo("id-ID")),
+                    NoSurat = g.SalesQuotation.NomorSurat,
+                    ContactName = g.SalesQuotation.Contact.Name,
+                    ContactAddr = g.SalesQuotation.Contact.DeliveryAddress,
+                    ContactPerson = ContactNames, //g.SalesQuotation.Contact.ContactDetails.FirstOrDefault().Name,
+                    Personnel = user,
+                    Hal = g.SalesQuotation.IsConfirmed ? "Konfirmasi Harga" : "Penawaran Harga",
+                    HalDesc = "Perkenankan kami menyampaikan " + (g.SalesQuotation.IsConfirmed ? "konfirmasi harga" : "penawaran harga") + " untuk produk berikut :",
+                }).OrderBy(x => x.NamaProduk).ToList(); //.AsEnumerable();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/PenawaranHarga.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                rd.Subreports["PHSimple"].SetDataSource(query);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("Tgl", DateTime.Today);
+                rd.SetParameterValue("By", "BY " + By);
+                rd.SetParameterValue("CompanyAddr", company.Address);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
 
 
     }

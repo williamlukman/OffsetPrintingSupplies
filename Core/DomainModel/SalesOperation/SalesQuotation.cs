@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public string Code { get; set; }
         public string VersionNo { get; set; }
         public string NomorSurat { get; set; }
+        public string Catatan { get; set; }
 
         public int ContactId { get; set; }
         public DateTime QuotationDate { get; set; }

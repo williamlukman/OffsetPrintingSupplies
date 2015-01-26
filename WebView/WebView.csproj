@@ -1453,6 +1453,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Reports\Printout\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

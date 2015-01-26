@@ -69,6 +69,7 @@ namespace WebView.Controllers
                              model.ConfirmationDate,
                              model.IsApproved,
                              model.IsRejected,
+                             model.Catatan,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -117,6 +118,7 @@ namespace WebView.Controllers
                             model.ConfirmationDate,
                             model.IsApproved,
                             model.IsRejected,
+                            model.Catatan,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -300,6 +302,7 @@ namespace WebView.Controllers
                 model.CostSaved,
                 model.PercentageSaved,
                 ConfirmationDate = model.ConfirmationDate,
+                model.Catatan,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -378,6 +381,7 @@ namespace WebView.Controllers
                 data.QuotationDate = model.QuotationDate;
                 data.VersionNo = model.VersionNo;
                 data.NomorSurat = model.NomorSurat;
+                data.Catatan = model.Catatan;
                 model = _salesQuotationService.UpdateObject(data, _contactService);
             }
             catch (Exception ex)
