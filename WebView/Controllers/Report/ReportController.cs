@@ -2248,7 +2248,7 @@ namespace WebView.Controllers
             return View();
         }
 
-        public ActionResult ReportPenawaranHarga(string By = "", string ContactPerson = "", int Id = 0)
+        public ActionResult PrintoutPenawaranHarga(string By = "", string ContactPerson = "", int Id = 0)
         {
             using (var db = new OffsetPrintingSuppliesEntities())
             {
@@ -2300,6 +2300,75 @@ namespace WebView.Controllers
                 rd.SetParameterValue("Tgl", DateTime.Today);
                 rd.SetParameterValue("By", "BY " + By);
                 rd.SetParameterValue("CompanyAddr", company.Address);
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region RollerCollectionNote
+        public ActionResult RollerCollectionNote()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutRollerCollectionNote(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+                var q = db.RecoveryOrderDetails.Include(x => x.RecoveryOrder).Include(x => x.RollerBuilder).Include(x => x.CoreIdentificationDetail).Include(x => x.CompoundUnderLayer).Include(x => x.RecoveryAccessoryDetails)
+                                                              .Where(x => !x.IsDeleted && !x.RecoveryOrder.IsDeleted && x.RecoveryOrderId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.GroupBy(m => new
+                {
+                    RollSKu = m.RollerBuilder.BaseSku,
+                }).Select(g => new
+                {
+                    NoIdent = string.Join(",",g.Select(i => i.CoreIdentificationDetailId.ToString())),
+                    Qty = g.Count(),
+                    Pos = "",
+                    RD = g.FirstOrDefault().RollerBuilder.RD.ToString(),
+                    CD = g.FirstOrDefault().RollerBuilder.CD.ToString(),
+                    RL = g.FirstOrDefault().RollerBuilder.RL.ToString(),
+                    WL = g.FirstOrDefault().RollerBuilder.WL.ToString(),
+                    TL = g.FirstOrDefault().RollerBuilder.TL.ToString(),
+                    Compound = g.FirstOrDefault().RollerBuilder.Compound.Name,
+                    Acc = string.Join(",", g.Select(i => (i.RecoveryAccessoryDetails.Where(y => !y.IsDeleted).Count() > 0) ? "Y" : "N")),
+                    RollerType = g.FirstOrDefault().RollerBuilder.Name,
+                    ItemNo = g.FirstOrDefault().RollerBuilder.RollerNewCoreItem.Sku,
+                    Comment = g.FirstOrDefault().RollerBuilder.Description,
+                }).ToList(); //.AsEnumerable();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/RCN.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["PHSimple"].SetDataSource(query);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("CompanyName", company.Name);
+                rd.SetParameterValue("Tgl", DateTime.Today);
+                rd.SetParameterValue("POno", obj.RecoveryOrder.Code);
+                rd.SetParameterValue("Personnel", user);
+                rd.SetParameterValue("Customer", obj.CoreIdentificationDetail.CoreIdentification.Contact.Name);
+                rd.SetParameterValue("ContactPerson", ""); //obj.CoreIdentificationDetail.CoreIdentification.Contact.ContactDetails.FirstOrDefault().Name
+                rd.SetParameterValue("Addr", obj.CoreIdentificationDetail.CoreIdentification.Contact.DeliveryAddress);
 
                 var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 return File(stream, "application/pdf");

@@ -360,7 +360,7 @@
     });
 
     $('#print_btn_submit').click(function () {
-        window.open(base_url + 'Report/ReportPenawaranHarga?Id=' + $('#print_id').val() + '&By=' + $('#print_by').val() + '&ContactPerson=' + Base64.encode($('#print_contactperson').val()));
+        window.open(base_url + 'Report/PrintoutPenawaranHarga?Id=' + $('#print_id').val() + '&By=' + $('#print_by').val() + '&ContactPerson=' + Base64.encode($('#print_contactperson').val()));
         $('#print_form_div').dialog('close');
     });
 
