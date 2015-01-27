@@ -894,7 +894,7 @@
 
     // -------------------------------------------------------Look Up payable-------------------------------------------------------
     $('#btnPayable').click(function () {
-        var lookUpURL = base_url + 'PaymentVoucher/GetListPayableNonDP';
+        var lookUpURL = base_url + 'PaymentVoucher/GetListPayableNonDP?contactid=' + $("#ContactId").val();
         var lookupGrid = $('#lookup_table_payable');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -906,8 +906,8 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id',
-                    'Due Date', 'Total', 'Remaining', 'PendClearance', 'Currency'
+        colNames: ['Code', 'Contact Id', 'Contact', 'Due Date', 'Total', 'Remaining',
+                    'PendClearance', 'Currency', 'Payable Source', 'Id'
                   ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },

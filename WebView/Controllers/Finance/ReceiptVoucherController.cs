@@ -234,7 +234,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListReceivableNonDP(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetListReceivableNonDP(string _search, long nd, int rows, int? page, string sidx, string sord, int contactid, string filters = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -245,7 +245,7 @@ namespace WebView.Controllers
             // Get Data
             //var q = _receivableService.GetQueryable().Include("Contact").Include("Currency").Where(x => !x.IsDeleted && x.RemainingAmount > 0 &&
             //                           x.ReceivableSource != Constant.ReceivableSource.PurchaseDownPayment);
-            var q = _receivableService.GetQueryable().Where(x => !x.IsDeleted && x.RemainingAmount > 0 &&
+            var q = _receivableService.GetQueryable().Where(x => !x.IsDeleted && x.RemainingAmount > 0 && x.ContactId == contactid &&
                                        x.ReceivableSource != Constant.ReceivableSource.PurchaseDownPayment);
 
             var query = (from model in q
@@ -255,14 +255,14 @@ namespace WebView.Controllers
                              model.Code,
                              model.ContactId,
                              Contact = model.Contact.Name,
-                             model.ReceivableSource,
-                             model.ReceivableSourceId,
                              model.DueDate,
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              Currency = model.Currency.Name,
                              model.Rate,
+                             model.ReceivableSource,
+                             model.ReceivableSourceId,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -299,14 +299,14 @@ namespace WebView.Controllers
                             model.Code,
                             model.ContactId,
                             model.Contact,
-                            model.ReceivableSource,
-                            model.ReceivableSourceId,
                             model.DueDate,
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
                             model.Currency,
                             model.Rate,
+                            model.ReceivableSource,
+                            model.ReceivableSourceId,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
