@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
 		vCode;
@@ -54,14 +54,14 @@
         datatype: "json",
         colNames: ['ID', 'Code', 'Version No', 'Nomor Surat', 'Contact Id', 'Contact Name', 'Quotation Date',
                     'Total Amount', 'Total RRP', 'Disc', '% Disc',
-                    'Is Confirmed', 'Confirmation Date', 'Approved', 'Rejected', 'Catatan', 'Created At', 'Updated At'],
+                    'Is Confirmed', 'Confirmation Date', 'Approved', 'Rejected', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
                   { name: 'code', index: 'code', width: 80 },
                   { name: 'versionno', index: 'versionno', width: 40 },
-                  { name: 'nomorsurat', index: 'nomorsurat', width: 80 },
+                  { name: 'nomorsurat', index: 'nomorsurat', width: 100 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contact', index: 'contact', width: 150 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'quotationdate', index: 'quotationdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'totalquotedamount', index: 'totalquotedamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'totalrrpamount', index: 'totalrrpamount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
@@ -71,7 +71,6 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isapproved', index: 'isapproved', width: 60 },
                   { name: 'isrejected', index: 'isrejected', width: 60 },
-                  { name: 'catatan', index: 'catatan', width: 200 },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -138,11 +137,11 @@
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
-                    //else if (result.ConfirmationDate == null) {
-                    //    $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
-                    //}
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
                     else {
-                        //window.open(base_url + 'Report/ReportSalesQuotation?Id=' + id);
+                        //window.open(base_url + "Report/ReportSalesQuotation?Id=" + id);
                         $('#print_id').val(result.Id);
                         $('#print_Code').val(result.Code);
                         $('#print_VersionNo').val(result.VersionNo);
@@ -161,7 +160,6 @@
         $('#btnContact').removeAttr('disabled');
         $('#NomorSurat').removeAttr('disabled');
         $('#VersionNo').removeAttr('disabled');
-        $('#Catatan').removeAttr('disabled');
         $('#tabledetail_div').hide();
         $('#QuotationDateDiv').show();
         $('#QuotationDateDiv2').hide();
@@ -196,7 +194,6 @@
                             $('#Code').val(result.Code);
                             $('#VersionNo').val(result.VersionNo);
                             $('#NomorSurat').val(result.NomorSurat);
-                            $('#Catatan').val(result.Catatan);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#TotalQuotationAmount').val(result.TotalQuotationAmount);
@@ -211,7 +208,6 @@
                             $('#btnContact').attr('disabled', true);
                             $('#NomorSurat').attr('disabled', true);
                             $('#VersionNo').attr('disabled', true);
-                            $('#Catatan').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -250,7 +246,6 @@
                             $('#Code').val(result.Code);
                             $('#VersionNo').val(result.VersionNo);
                             $('#NomorSurat').val(result.NomorSurat);
-                            $('#Catatan').val(result.Catatan);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#QuotationDate').datebox('setValue', dateEnt(result.QuotationDate));
@@ -261,7 +256,6 @@
                             $('#btnContact').removeAttr('disabled');
                             $('#NomorSurat').removeAttr('disabled');
                             $('#VersionNo').removeAttr('disabled');
-                            $('#Catatan').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#QuotationDateDiv2').show();
                             $('#QuotationDateDiv').hide();
@@ -328,6 +322,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "SalesQuotation/Confirm",
             type: "POST",
@@ -336,6 +331,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -520,8 +516,7 @@
             url: submitURL,
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), VersionNo: $("#VersionNo").val(),
-                QuotationDate: $('#QuotationDate').datebox('getValue'), NomorSurat: $("#NomorSurat").val(),
-                Catatan: $("#Catatan").val()
+                QuotationDate: $('#QuotationDate').datebox('getValue'), NomorSurat: $("#NomorSurat").val()
             }),
             async: false,
             cache: false,
@@ -560,13 +555,13 @@
                   { name: 'code', index: 'code', width: 70, sortable: false, align: 'center' },
 				  { name: 'itemid', index: 'itemid', width: 100, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 70, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 300, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'quotationprice', index: 'quotationprice', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
                   { name: 'rrp', index: 'rrp', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } },
         ],
-        //page: '1',
-        //pager: $('#pagerdetail'),
+        page: '1',
+        pager: $('#pagerdetail'),
         rowNum: 20,
         rowList: [20, 30, 60],
         sortname: 'id',
@@ -580,8 +575,8 @@
 		  function () {
 		  }
     });//END GRID Detail
-    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false });
-    //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
+    $("#listdetail").jqGrid('navGrid', '#pagerdetail', { del: false, add: false, edit: false, search: false })
+                    .jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
     $('#btn_add_new_detail').click(function () {
         ClearData();
@@ -741,7 +736,7 @@
         colNames: ['ID', 'Name', 'Faktur', 'Address', 'DeliveryAddress', 'Description', 'NPWP', 'Contact No', 'PIC', 'PIC Contact', 'Email', 'Tax Code', 'Taxable', 'Contact Group Id', 'Contact Group', 'Contact Type', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 60, align: "center" },
-				  { name: 'name', index: 'name', width: 180 },
+				  { name: 'name', index: 'name', width: 300 },
                   { name: 'namafakturpajak', index: 'namafakturpajak', width: 180 },
                   { name: 'address', index: 'address', width: 250 },
                   { name: 'deliveryaddress', index: 'deliveryaddress', width: 250 },

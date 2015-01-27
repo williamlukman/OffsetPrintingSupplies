@@ -181,6 +181,8 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -223,6 +225,8 @@ namespace WebView.Controllers
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
+                            model.Currency,
+                            model.Rate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -255,9 +259,10 @@ namespace WebView.Controllers
                              model.ReceivableSourceId,
                              model.DueDate,
                              model.Amount,
-                             currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
+                             model.Rate,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -298,9 +303,10 @@ namespace WebView.Controllers
                             model.ReceivableSourceId,
                             model.DueDate,
                             model.Amount,
-                            model.currency,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
+                            model.Currency,
+                            model.Rate,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -324,6 +330,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Currency = model.Receivable.Currency.Name,
                              model.ReceivableId,
                              ReceivableCode = model.Receivable.Code,
                              model.AmountPaid,
@@ -363,6 +370,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Currency,
                             model.ReceivableId,
                             model.ReceivableCode,
                             model.AmountPaid,
@@ -396,7 +404,7 @@ namespace WebView.Controllers
                 Contact = model.Contact.Name,
                 model.CashBankId,
                 CashBank = model.CashBank.Name,
-                currency = model.CashBank.Currency.Name,
+                Currency = model.CashBank.Currency.Name,
                 model.ReceiptDate,
                 model.RateToIDR,
                 model.IsGBCH,
@@ -441,7 +449,7 @@ namespace WebView.Controllers
             try
             {
                 model = _receiptVoucherService.CreateObject(model,_receiptVoucherDetailService,_receivableService
-                    ,_contactService,_cashBankService);
+                    ,_contactService,_cashBankService, _currencyService);
             }
             catch (Exception ex)
             {

@@ -316,6 +316,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "BlanketWorkOrder/Confirm",
             type: "POST",
@@ -324,6 +325,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -429,12 +431,6 @@
                 ProductionNo: $("#ProductionNo").val(), QuantityReceived: $('#QuantityReceived').numberbox('getValue'),
                 DueDate: duedate, HasDueDate: document.getElementById("HasDueDate").checked
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -693,12 +689,6 @@
             data: JSON.stringify({
                 Id: id, BlanketId: $("#BlanketSku").data('kode'), BlanketOrderId: $("#id").val(),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -802,7 +792,7 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 250 }],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,

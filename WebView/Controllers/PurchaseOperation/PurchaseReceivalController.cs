@@ -34,6 +34,7 @@ namespace WebView.Controllers
         private IClosingService _closingService;
         private ICurrencyService _currencyService;
         private IExchangeRateService _exchangeRateService;
+        private IContactService _contactService;
         
         public PurchaseReceivalController()
         {
@@ -54,6 +55,7 @@ namespace WebView.Controllers
             _closingService = new ClosingService(new ClosingRepository(), new ClosingValidator());
             _currencyService = new CurrencyService(new CurrencyRepository(), new CurrencyValidator());
             _exchangeRateService = new ExchangeRateService(new ExchangeRateRepository(), new ExchangeRateValidator());
+            _contactService = new ContactService(new ContactRepository(), new ContactValidator());
         }
 
         public ActionResult Index()
@@ -70,13 +72,14 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseReceivalService.GetQueryable().Include("PurchaseOrder").Include("Warehouse").Where(x => !x.IsDeleted);
+            var q = _purchaseReceivalService.GetQueryable().Include("PurchaseOrder").Include("Warehouse").Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.PurchaseOrder.Contact.Name,
                              model.NomorSurat,
                              model.PurchaseOrderId,
                              PurchaseOrderCode = model.PurchaseOrder.Code,
@@ -120,6 +123,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.PurchaseOrderId,
                             model.PurchaseOrderCode,
@@ -151,6 +155,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.PurchaseOrder.Contact.Name,
                              model.NomorSurat,
                              model.PurchaseOrderId,
                              PurchaseOrderCode = model.PurchaseOrder.Code,
@@ -207,6 +212,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.PurchaseOrderId,
                             model.PurchaseOrderCode,
@@ -314,6 +320,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                Contact = _contactService.GetObjectById(_purchaseOrderService.GetObjectById(model.PurchaseOrderId).ContactId).Name,
                 model.NomorSurat,
                 model.PurchaseOrderId,
                 PurchaseOrder = _purchaseOrderService.GetObjectById(model.PurchaseOrderId).Code,

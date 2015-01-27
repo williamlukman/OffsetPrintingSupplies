@@ -339,6 +339,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PaymentVoucher/Confirm",
             type: "POST",
@@ -347,6 +348,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -579,10 +581,12 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Payable Id', 'Payable Code', 'Amount Paid', 'Rate', 'Actual Amount', 'Description'
+        colNames: ['Id', 'Code', 'Currency', 'Payable Id', 'Payable Code', 'Amount Paid', 'Rate', 'Actual Amount', 'Description'
         ],
         colModel: [
+                  { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
+                  { name: 'currency', index: 'currency', width: 70, sortable: false },
                   { name: 'payableid', index: 'payableid', width: 130, sortable: false, hidden: true },
                   { name: 'payable', index: 'payable', width: 90, sortable: false },
                   { name: 'amountpaid', index: 'amountpaid', width: 180, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' }, sortable: false },
@@ -788,7 +792,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'name', index: 'name', width: 150 },
+                  { name: 'name', index: 'name', width: 250 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),
@@ -903,19 +907,19 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id',
-                    'Due Date', 'Total', 'Currency','Remaining', 'PendClearance'
+                    'Due Date', 'Total', 'Remaining', 'PendClearance', 'Currency'
                   ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
                   { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true},
-                  { name: 'contactname', index: 'contactname', width: 150, sortable: false, hidden: true },
-                  { name: 'payablesource', index: 'payablesource', width: 100, sortable: false },
+                  { name: 'contact', index: 'contact', width: 150, sortable: false },
+                  { name: 'payablesource', index: 'payablesource', width: 180, sortable: false },
                   { name: 'payablesourceid', index: 'payablesourceid', width: 40, align: 'right', sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
         ],
         page: '1',
         pager: $('#lookup_pager_payable'),

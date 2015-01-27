@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
 		vCode;
@@ -207,12 +207,6 @@
                 ContactNo: $("#ContactNo").val(), Logo: $("#Logo").val(), 
                 Email: $("#Email").val(), City: $("#City").val()
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -249,6 +243,4 @@
         });
     }
 
-
-    
 }); //END DOCUMENT READY

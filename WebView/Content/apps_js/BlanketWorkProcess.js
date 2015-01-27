@@ -309,6 +309,7 @@
 
     $('#finished_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#finished_btn_submit"), false);
         $.ajax({
             url: base_url + "BlanketWorkProcess/Finish",
             type: "POST",
@@ -317,6 +318,7 @@
                 Id: $('#idfinished').val(), FinishedDate: $('#FinishedDate').datebox('getValue'), RollBlanketUsage: $('#RollBlanketUsageFinish').numberbox('getValue')
             }),
             success: function (result) {
+                ClickableButton($("#finished_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -456,12 +458,6 @@
                 Id: id, BlanketId: $("#BlanketId").val(), IsBarRequired: isbar, HasLeftBar: hasleft,
                 HasRightBar: hasright, BlanketOrderId: $("#id").val()
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

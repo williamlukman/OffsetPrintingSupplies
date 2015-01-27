@@ -54,11 +54,12 @@
     $("#list").jqGrid({
         url: base_url + 'TemporaryDeliveryOrder/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'Type', 'Order Id', 'Order Code', 'Warehouse Id', 'Warehouse', 'Delivery Date',
                     'Is Confirmed', 'Confirmation Date', 'Reconciled', 'Is Pushed', 'Push Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 60 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
                   { name: 'ordertype', index: 'ordertype', width: 70 },
 				  { name: 'orderid', index: 'orderid', width: 100, hidden: true },
@@ -319,6 +320,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "TemporaryDeliveryOrder/Confirm",
             type: "POST",
@@ -327,6 +329,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -534,14 +537,14 @@
                   { name: 'id', index: 'id', width: 40, sortable: false },
                   { name: 'code', index: 'code', width: 70, sortable: false },
                   { name: 'orderdetailid', index: 'orderdetailid', width: 100, sortable: false, hidden: true },
-                  { name: 'orderdetailcode', index: 'orderdetailcode', width: 70, sortable: false },
+                  { name: 'orderdetailcode', index: 'orderdetailcode', width: 70, sortable: false, hidden: true },
                   { name: 'itemid', index: 'itemid', width: 80, sortable: false, hidden: true },
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 130, sortable: false },
+                  { name: 'itemname', index: 'itemname', width: 300, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'restockquantity', index: 'restockquantity', width: 50, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'wastequantity', index: 'wastequantity', width: 40, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'price', index: 'price', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false, hidden: true },
         ],
         page: '1',
         pager: $('#pagerdetail'),
@@ -703,6 +706,7 @@
     $("#item_btn_submit").click(function () {
 
         ClearErrorMessage();
+        ClickableButton($("#item_btn_submit"), false);
 
         var submitURL = '';
         var id = $("#item_btn_submit").data('kode');
@@ -748,6 +752,7 @@
                 return false;
             },
             success: function (result) {
+                ClickableButton($("#item_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {

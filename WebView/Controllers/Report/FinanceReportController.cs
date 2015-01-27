@@ -87,8 +87,9 @@ namespace WebView.Controllers
             if (closing == null) { return Content(Constant.ControllerOutput.ErrorPageHasNoClosingDate); }
 
             ValidCombIncomeStatement Revenue = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Revenue).Id, closing.Id);
-            ValidCombIncomeStatement COGS = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGS).Id, closing.Id);
-            ValidCombIncomeStatement SellingGeneralAndAdministrationExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.ManufacturingExpense).Id, closing.Id);
+            ValidCombIncomeStatement COGSExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.COGSExpense).Id, closing.Id);
+            ValidCombIncomeStatement SellingGeneralAndAdministrationExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.SellingGeneralAndAdministrationExpense).Id, closing.Id);
+            ValidCombIncomeStatement NonOperationalExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.NonOperationalExpense).Id, closing.Id);
             ValidCombIncomeStatement DepreciationExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.DepreciationExpense).Id, closing.Id);
             ValidCombIncomeStatement AmortizationExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.Amortization).Id, closing.Id);
             ValidCombIncomeStatement InterestExpense = _validCombIncomeStatementService.FindOrCreateObjectByAccountAndClosing(_accountService.GetObjectByLegacyCode(Constant.AccountLegacyCode.InterestExpense).Id, closing.Id);
@@ -101,8 +102,8 @@ namespace WebView.Controllers
                 BeginningDate = closing.BeginningPeriod.Date,
                 EndDate = closing.EndDatePeriod.Date,
                 Revenue = Revenue.Amount,
-                COGS = COGS.Amount,
-                OperationalExpenses = SellingGeneralAndAdministrationExpense.Amount,
+                COGS = COGSExpense.Amount,
+                OperationalExpenses = SellingGeneralAndAdministrationExpense.Amount + NonOperationalExpense.Amount,
                 InterestEarning = InterestExpense.Amount,
                 Depreciation = DepreciationExpense.Amount,
                 Amortization = AmortizationExpense.Amount,
@@ -143,7 +144,10 @@ namespace WebView.Controllers
             if (closing == null) { return Content(Constant.ControllerOutput.ErrorPageHasNoClosingDate); }
 
             var balanceValidComb = _validCombService.GetQueryable().Include("Account").Include("Closing")
-                                                    .Where(x => x.ClosingId == closing.Id & 
+                                                    .Where(x => x.ClosingId == closing.Id && 
+                                                           (x.Account.Group == Constant.AccountGroup.Asset ||
+                                                            x.Account.Group == Constant.AccountGroup.Liability ||
+                                                            x.Account.Group == Constant.AccountGroup.Equity) && 
                                                            (x.Account.Level == 2 || (x.Account.Level == 1 && x.Account.IsLeaf)));
 
             List<ModelBalanceSheet> query = new List<ModelBalanceSheet>();

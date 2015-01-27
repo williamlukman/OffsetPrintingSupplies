@@ -267,12 +267,6 @@
                 BeginningPeriod: $('#BeginningPeriod').datebox('getValue'), IsYear: isyear,
                 EndDatePeriod: $('#EndDatePeriod').datebox('getValue'), exchangeRateClosing: exchangerateclosingContainer
             }),
-            async: true,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -300,11 +294,13 @@
 
     $("#close_confirm_btn_submit").click(function () {
         ClearErrorMessage();
+        ClickableButton($("#close_confirm_btn_submit"), false);
 
         var submitURL = '';
         var id = $("#idclose").val();
 
         submitURL = base_url + 'Closing/Close';
+        $("#close_confirm_div").dialog('close');
 
         $.ajax({
             contentType: "application/json",
@@ -313,13 +309,8 @@
             data: JSON.stringify({
                 Id: id, ClosedAt: $('#ClosedAt').datebox('getValue')
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
+                ClickableButton($("#close_confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -327,6 +318,7 @@
                             $('textarea[name=' + key + ']').addClass('errormessage').after('<span class="errormessage">**' + result.Errors[key] + '</span>');
                         }
                         else {
+                            $("#close_confirm_div").dialog('open');
                             $.messager.alert('Warning', result.Errors[key], 'warning');
                         }
                     }
@@ -345,13 +337,13 @@
     });
 
     $("#open_confirm_btn_submit").click(function () {
-
         ClearErrorMessage();
-
+        ClickableButton($("#open_confirm_btn_submit"), false);
         var submitURL = '';
         var id = $("#open_confirm_btn_submit").data('Id');
 
         submitURL = base_url + 'Closing/Open';
+        $("#open_confirm_div").dialog('close');
 
         $.ajax({
             contentType: "application/json",
@@ -360,13 +352,8 @@
             data: JSON.stringify({
                 Id: id
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
+                ClickableButton($("#open_confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -375,6 +362,7 @@
                         }
                         else {
                             $.messager.alert('Warning', result.Errors[key], 'warning');
+                            $("#open_confirm_div").dialog('open');
                         }
                     }
                 }
@@ -392,7 +380,7 @@
     });
 
     $('#delete_confirm_btn_submit').click(function () {
-
+        ClickableButton($('#delete_confirm_btn_submit'), false);
         $.ajax({
             url: base_url + "Closing/Delete",
             type: "POST",
@@ -400,13 +388,8 @@
             data: JSON.stringify({
                 Id: $('#delete_confirm_btn_submit').data('Id'),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
+                ClickableButton($('#delete_confirm_btn_submit'), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {

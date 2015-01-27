@@ -183,6 +183,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "BlendingWorkOrder/Confirm",
             type: "POST",
@@ -191,6 +192,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -293,9 +295,6 @@
                 WarehouseId: $("#WarehouseId").val(), BlendingRecipeId: $("#BlendingRecipeId").val(),
                 BlendingDate: $('#BlendingDate').datebox('getValue'),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

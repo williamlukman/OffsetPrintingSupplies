@@ -52,12 +52,13 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseInvoice/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax(%)',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'PurchaseReceipt Id', 'PR', 'Description', 'Disc(%)', 'Tax(%)',
                    'Invoice Date','Due Date', 'Amount',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'purchasereceiptid', index: 'purchasereceiptid', width: 100, hidden: true },
                   { name: 'purchasereceipt', index: 'purchasereceipt', width: 70 },
@@ -321,6 +322,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PurchaseInvoice/Confirm",
             type: "POST",
@@ -329,6 +331,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -655,11 +658,12 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseOrder Id', 'PO Code', 'Nomor Surat PO', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'PurchaseOrder Id', 'PO Code', 'Nomor Surat PO', 'Warehouse Id', 'Warehouse Name', 'Receival Date',
                    'CurrencyId','Currency','Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At', 'Tax (%)'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center", hidden: true },
                   { name: 'code', index: 'code', width: 80, hidden: true },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100, hidden: true },
                   { name: 'purchaseordercode', index: 'purchaseordercode', width: 80, hidden: true },

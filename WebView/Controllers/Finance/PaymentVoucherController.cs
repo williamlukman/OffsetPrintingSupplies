@@ -173,6 +173,7 @@ namespace WebView.Controllers
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -215,6 +216,7 @@ namespace WebView.Controllers
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
+                            model.Currency,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -245,9 +247,9 @@ namespace WebView.Controllers
                              model.PayableSourceId,
                              model.DueDate,
                              model.Amount,
-                             Currency = model.Currency.Name,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
+                             Currency = model.Currency.Name,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -288,9 +290,9 @@ namespace WebView.Controllers
                             model.PayableSourceId,
                             model.DueDate,
                             model.Amount,
-                            model.Currency,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
+                            model.Currency,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -315,6 +317,7 @@ namespace WebView.Controllers
                          {
                             model.Id,
                             model.Code,
+                            Currency = model.Payable.Currency.Name,
                             model.PayableId,
                             PayableCode = model.Payable.Code,
                             model.AmountPaid,
@@ -353,7 +356,9 @@ namespace WebView.Controllers
                     {
                         id = model.Id,
                         cell = new object[] {
+                            model.Id,
                             model.Code,
+                            model.Currency,
                             model.PayableId,
                             model.PayableCode,
                             model.Amount,
@@ -419,7 +424,7 @@ namespace WebView.Controllers
                 model.Rate,
                 model.Amount,
                 Remaining = model.Payable.RemainingAmount,
-                currency = model.Payable.Currency.Name,
+                Currency = model.Payable.Currency.Name,
                 model.Description,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);

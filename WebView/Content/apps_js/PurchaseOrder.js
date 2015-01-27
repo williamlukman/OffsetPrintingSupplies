@@ -59,8 +59,8 @@
                   { name: 'code', index: 'code', width: 80 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 120 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contact', index: 'contact', width: 150 },
-                  { name: 'currency', index: 'currency', width: 150 },
+                  { name: 'contact', index: 'contact', width: 250 },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'description', index: 'description', width: 150 },
                   { name: 'purchasedate', index: 'purchasedate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
@@ -297,6 +297,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PurchaseOrder/Confirm",
             type: "POST",
@@ -305,6 +306,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -645,7 +647,7 @@
         colNames: ['Id', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'name', index: 'name', width: 200 }],
+                  { name: 'name', index: 'name', width: 250 }],
         page: '1',
         pager: $('#lookup_pager_contact'),
         rowNum: 20,

@@ -299,6 +299,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "SalesDownPaymentAllocation/Confirm",
             type: "POST",
@@ -307,6 +308,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
@@ -641,7 +643,7 @@
         ],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
-                  { name: 'name', index: 'name', width: 150 },
+                  { name: 'name', index: 'name', width: 250 },
         ],
         page: '1',
         pager: $('#lookup_pager_contact'),
@@ -670,7 +672,7 @@
             var ret = jQuery("#lookup_table_contact").jqGrid('getRowData', id);
 
             $('#ContactId').val(ret.id).data("kode", id);
-            $('#Contact').val(ret.code);
+            $('#Contact').val(ret.name);
             $('#lookup_div_contact').dialog('close');
         } else {
             $.messager.alert('Information', 'Please Select Data...!!', 'info');
@@ -695,7 +697,7 @@
         datatype: "json",
         mtype: 'GET',
         colNames: ['Code', 'Contact Id', 'Contact', 'Payable Source', 'Id',
-                   'Due Date', 'Total', 'Currency', 'Remaining', 'PendClearance'
+                   'Due Date', 'Total', 'Remaining', 'PendClearance', 'Currency', 'Rate', 
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
@@ -705,9 +707,10 @@
                   { name: 'payablesourceid', index: 'payablesourceid', width: 40, align: 'right', sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'rate', index: 'rate', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
         ],
         page: '1',
         pager: $('#lookup_pager_payable'),
@@ -761,8 +764,8 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact', 'Source', 'Id', 'Amount', 'Currency', 'Rate',
-                   'Remaining', 'PendingClearance', 'Due Date', 'Completion Date', 'Created At'],
+        colNames: ['ID', 'Code', 'Contact Id', 'Contact', 'Source', 'Id', 'Amount',
+                   'Remaining', 'PendingClearance', 'Currency', 'Rate', 'Due Date', 'Completion Date', 'Created At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center", hidden: true },
 				  { name: 'code', index: 'code', width: 70 },
@@ -771,10 +774,10 @@
 				  { name: 'receivablesource', index: 'receivablesource', width: 120, align: 'right' },
 				  { name: 'receivablesourceid', index: 'receivablesourceid', width: 55 },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
-                  { name: 'currency', index: 'currency', width: 100 },
-                  { name: 'rate', index: 'rate', width: 100 },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', width: 100, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'rate', index: 'rate', width: 100 },
 				  { name: 'duedate', index: 'duedate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'completiondate', index: 'completiondate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },

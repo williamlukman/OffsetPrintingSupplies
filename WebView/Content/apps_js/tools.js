@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
 * Format date as a string
 * @param date - a date object (usually "new Date();")
 * @param format - a string format, eg. "DD-MM-YYYY"
@@ -147,6 +147,14 @@ function split(val) {
 }
 function extractLast(term) {
     return split(term).pop();
+}
+
+function ClickableButton(btnObject, isEnabled) {
+    if (isEnabled) {
+        btnObject.removeClass('ui-state-disabled disabled');
+    } else {
+        btnObject.addClass('ui-state-disabled disabled');
+    }
 }
 
 // Create Base64 Object

@@ -298,12 +298,6 @@
             data: JSON.stringify({
                 Id: id, ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'), CoreIdentificationDetailId: $("#id").val()
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

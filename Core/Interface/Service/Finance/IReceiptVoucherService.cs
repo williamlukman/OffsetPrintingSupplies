@@ -16,10 +16,10 @@ namespace Core.Interface.Service
         IList<ReceiptVoucher> GetObjectsByCashBankId(int cashBankId);
         IList<ReceiptVoucher> GetObjectsByContactId(int contactId);
         ReceiptVoucher CreateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                    IContactService _contactService, ICashBankService _cashBankService);
+                                    IContactService _contactService, ICashBankService _cashBankService, ICurrencyService _currencyService);
         ReceiptVoucher CreateObject(int cashBankId, int contactId, DateTime receiptDate, decimal totalAmount, bool IsGBCH, DateTime DueDate, bool IsBank,
                                     IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
-                                    IContactService _contactService, ICashBankService _cashBankService);
+                                    IContactService _contactService, ICashBankService _cashBankService, ICurrencyService _currencyService);
         ReceiptVoucher UpdateAmount(ReceiptVoucher receiptVoucher);
         ReceiptVoucher UpdateObject(ReceiptVoucher receiptVoucher, IReceiptVoucherDetailService _receiptVoucherDetailService, IReceivableService _receivableService,
                                     IContactService _contactService, ICashBankService _cashBankService);

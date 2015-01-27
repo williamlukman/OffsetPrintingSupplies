@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿﻿$(document).ready(function () {
     var vStatusSaving,//Status Saving data if its new or edit
 		vMainGrid,
 		vCode;
@@ -61,10 +61,10 @@
                   { name: 'code', index: 'code', width: 80 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'contactid', index: 'contactid', width: 100, hidden: true },
-                  { name: 'contact', index: 'contact', width: 150 },
+                  { name: 'contact', index: 'contact', width: 200 },
 				  { name: 'employeeid', index: 'employeeid', width: 100, hidden: true },
                   { name: 'employee', index: 'employee', width: 150 },
-                  { name: 'currency', index: 'currency', width: 150 },
+                  { name: 'currency', index: 'currency', width: 100 },
                   { name: 'salesdate', index: 'salesdate', width: 100, search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden: true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
@@ -118,9 +118,9 @@
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
                     }
-                    //else if (result.ConfirmationDate == null) {
-                    //    $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
-                    //}
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
                     else {
                         //window.open(base_url + "Report/ReportSalesOrder?Id=" + id);
                         $('#print_id').val(result.Id);
@@ -302,6 +302,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "SalesOrder/Confirm",
             type: "POST",
@@ -310,6 +311,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {

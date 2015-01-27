@@ -84,13 +84,15 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _temporaryDeliveryOrderService.GetQueryable().Include("VirtualOrder").Include("Warehouse")
-                                                                 .Include("DeliveryOrder").Where(x => !x.IsDeleted);
+                                                                 .Include("DeliveryOrder").Include("SalesOrder").Include("Contact")
+                                                                 .Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrder.SalesOrder.Contact.Name : model.VirtualOrder.Contact.Name,
                              model.NomorSurat,
                              model.OrderType,
                              model.VirtualOrderId,
@@ -142,6 +144,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.OrderType,
                             model.OrderId,
@@ -171,6 +174,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _temporaryDeliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse")
+                                                  .Include("VirtualOrder").Include("Contact").Include("DeliveryOrder")
                                                   .Where(x => !x.IsDeleted && x.IsConfirmed);
 
             var query = (from model in q
@@ -178,6 +182,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Contact = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrder.SalesOrder.Contact.Name : model.VirtualOrder.Contact.Name,
                              model.NomorSurat,
                              model.OrderType,
                              model.VirtualOrderId,
@@ -227,6 +232,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.OrderType,
                             model.OrderId,
@@ -254,6 +260,7 @@ namespace WebView.Controllers
 
             // Get Data
             var q = _temporaryDeliveryOrderService.GetQueryable().Include("SalesOrder").Include("Warehouse")
+                                                  .Include("VirtualOrder").Include("Contact").Include("DeliveryOrder")
                                                   .Where(x => !x.IsDeleted && x.IsConfirmed && x.OrderType != Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder);
 
             var query = (from model in q
@@ -261,6 +268,7 @@ namespace WebView.Controllers
                          {
                              model.Id,
                              model.Code,
+                             Contact = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrder.SalesOrder.Contact.Name : model.VirtualOrder.Contact.Name,
                              model.NomorSurat,
                              model.OrderType,
                              model.VirtualOrderId,
@@ -423,6 +431,7 @@ namespace WebView.Controllers
             {
                 model.Id,
                 model.Code,
+                Contact = (model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder) ? model.DeliveryOrder.SalesOrder.Contact.Name : model.VirtualOrder.Contact.Name,
                 model.NomorSurat,
                 model.OrderType,
                 OrderId = model.OrderType == Core.Constants.Constant.OrderTypeCase.PartDeliveryOrder ?

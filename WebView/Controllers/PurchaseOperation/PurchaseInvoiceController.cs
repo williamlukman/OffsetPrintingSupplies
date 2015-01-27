@@ -65,13 +65,14 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _purchaseInvoiceService.GetQueryable().Include("PurchaseReceival").Where(x => !x.IsDeleted);
+            var q = _purchaseInvoiceService.GetQueryable().Include("PurchaseReceival").Include("PurchaseOrder").Include("Contact").Where(x => !x.IsDeleted);
 
             var query = (from model in q
                          select new
                          {
                              model.Id,
                              model.Code,
+                             Contact = model.PurchaseReceival.PurchaseOrder.Contact.Name,
                              model.NomorSurat,
                              model.PurchaseReceivalId,
                              PurchaseReceivalCode = model.PurchaseReceival.Code,
@@ -118,6 +119,7 @@ namespace WebView.Controllers
                         cell = new object[] {
                             model.Id,
                             model.Code,
+                            model.Contact,
                             model.NomorSurat,
                             model.PurchaseReceivalId,
                             model.PurchaseReceivalCode,

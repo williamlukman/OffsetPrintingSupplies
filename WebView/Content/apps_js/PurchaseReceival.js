@@ -53,11 +53,12 @@
     $("#list").jqGrid({
         url: base_url + 'PurchaseReceival/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Nomor Surat', 'PurchaseOrder Id', 'PO','Warehouse Id','Warehouse', 'ReceivalDate',
+        colNames: ['ID', 'Code', 'Contact', 'Nomor Surat', 'PurchaseOrder Id', 'PO','Warehouse Id','Warehouse', 'ReceivalDate',
                     'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
+                  { name: 'contact', index: 'contact', width: 200 },
                   { name: 'nomorsurat', index: 'nomorsurat', width: 140 },
 				  { name: 'purchaseorderid', index: 'purchaseorderid', width: 100, hidden: true },
                   { name: 'purchaseorder', index: 'purchaseorder', width: 70 },
@@ -293,6 +294,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
+        ClickableButton($("#confirm_btn_submit"), false);
         $.ajax({
             url: base_url + "PurchaseReceival/Confirm",
             type: "POST",
@@ -301,6 +303,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
+                ClickableButton($("#confirm_btn_submit"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {
