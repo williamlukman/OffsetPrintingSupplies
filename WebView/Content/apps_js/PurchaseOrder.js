@@ -41,6 +41,7 @@
     $("#item_div").dialog('close');
     $("#confirm_div").dialog('close');
     $("#form_div").dialog('close');
+    $("#print_form_div").dialog('close');
     $("#lookup_div_item").dialog('close');
     $("#lookup_div_contact").dialog('close');
     $("#delete_confirm_div").dialog('close');
@@ -119,7 +120,12 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportPurchaseOrder?Id=" + id);
+                        //window.open(base_url + "Report/ReportPurchaseOrder?Id=" + id);
+                        $('#print_id').val(result.Id);
+                        $('#print_Code').val(result.Code);
+                        $('#print_NomorSurat').val(result.NomorSurat);
+                        $('#print_CurrencyId').val(result.CurrencyId);
+                        $("#print_form_div").dialog('open');
                     }
                 }
             });
@@ -322,7 +328,14 @@
         $('#confirm_div').dialog('close');
     });
 
+    $('#print_btn_submit').click(function () {
+        window.open(base_url + 'Report/PrintoutPurchaseOrderConfirm?Id=' + $('#print_id').val() + '&Rate1=' + $('#print_Rate1').val() + '&Rate2=' + $('#print_Rate2').val() + '&Rate=' + $('#print_Rate').val());
+        $('#print_form_div').dialog('close');
+    });
 
+    $('#print_btn_cancel').click(function () {
+        $('#print_form_div').dialog('close');
+    });
 
     $('#btn_del').click(function () {
         clearForm("#frm");
