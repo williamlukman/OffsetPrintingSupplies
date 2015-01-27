@@ -282,12 +282,6 @@
                 Id: id, CashBankId: $("#CashBankId").val(), AdjustmentDate: $('#AdjustmentDate').datebox('getValue'),
                 Amount: $("#Amount").numberbox('getValue')
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

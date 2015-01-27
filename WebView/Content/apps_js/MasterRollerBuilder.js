@@ -330,12 +330,6 @@
                 GroovingWidth: $("#GroovingWidth").numberbox('getValue'), GroovingDepth: $("#GroovingDepth").numberbox('getValue'),
                 GroovingPosition: $("#GroovingPosition").numberbox('getValue'), IsChamfer: document.getElementById("ischamfer").checked,
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -445,7 +439,7 @@
         colNames: ['Id', 'Code', 'Name'],
         colModel: [
                   { name: 'id', index: 'id', width: 80, align: 'right' },
-                  { name: 'code', index: 'code', width: 80 },
+                  { name: 'code', index: 'code', width: 80, hidden: true },
                   { name: 'name', index: 'name', width: 200 }],
         page: '1',
         pager: $('#lookup_pager_machine'),

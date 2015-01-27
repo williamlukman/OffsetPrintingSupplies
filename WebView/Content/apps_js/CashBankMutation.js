@@ -296,12 +296,6 @@
                 Id: id, SourceCashBankId: $("#SourceCashBankId").val(), TargetCashBankId: $("#TargetCashBankId").val(),
                 Amount: $("#Amount").numberbox('getValue'), MutationDate: $('#MutationDate').datebox('getValue')
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

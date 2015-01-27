@@ -264,7 +264,7 @@
 
     $('#confirm_btn_submit').click(function () {
         ClearErrorMessage();
-        Clickable($('#confirm_btn_submit'), false);
+        ClickableButton($('#confirm_btn_submit'), false);
         $.ajax({
             url: base_url + "StockAdjustment/Confirm",
             type: "POST",
@@ -273,7 +273,7 @@
                 Id: $('#idconfirm').val(), ConfirmationDate: $('#ConfirmationDate').datebox('getValue'),
             }),
             success: function (result) {
-                Clickable($('#confirm_btn_submit'), true);
+                ClickableButton($('#confirm_btn_submit'), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {

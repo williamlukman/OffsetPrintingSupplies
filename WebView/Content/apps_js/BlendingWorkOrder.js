@@ -295,9 +295,6 @@
                 WarehouseId: $("#WarehouseId").val(), BlendingRecipeId: $("#BlendingRecipeId").val(),
                 BlendingDate: $('#BlendingDate').datebox('getValue'),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

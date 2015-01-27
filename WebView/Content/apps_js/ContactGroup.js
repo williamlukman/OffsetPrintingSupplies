@@ -199,12 +199,6 @@
             data: JSON.stringify({
                 Id: id, Name :$("#Name").val(), Description: $("#Description").val()
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}')
                 {
