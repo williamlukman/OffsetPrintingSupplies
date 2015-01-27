@@ -119,7 +119,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportDeliveryOrder?Id=" + id);
+                        window.open(base_url + "Report/PrintoutDeliveryOrderConfirm?Id=" + id);
                     }
                 }
             });

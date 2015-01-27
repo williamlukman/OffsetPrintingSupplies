@@ -15,6 +15,7 @@ namespace Core.DomainModel
         public string NomorSurat { get; set; }
         public decimal ExchangeRateAmount { get; set; }
         public Nullable<int> ExchangeRateId { get; set; }
+        public string Remark { get; set; }
 
         public decimal TotalCOGS { get; set; }
         public bool IsConfirmed { get; set; }
