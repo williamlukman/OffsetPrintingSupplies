@@ -27,13 +27,14 @@
     $("#list").jqGrid({
         url: base_url + 'Payable/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Contact Id', 'Contact',
+        colNames: ['ID', 'Code', 'Nomor Surat', 'Contact Id', 'Contact',
                    'Source', 'Id','Amount', 'Remaining', 'PendingClearance', 'Currency', 'Rate',
                    'Due Date', 'Completion Date', 'Created At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 35, align: "center", hidden: true },
 				  { name: 'code', index: 'code', width: 70 },
-                  { name: 'contactid', index: 'contactid', width: 40, hidden: true},
+				  { name: 'nomorsurat', index: 'nomorsurat', width: 70 },
+                  { name: 'contactid', index: 'contactid', width: 40, hidden: true },
                   { name: 'contact', index: 'contact', width: 150 },
 				  { name: 'payablesource', index: 'payablesource', width: 150, align: 'right' },
 				  { name: 'payablesourceid', index: 'payablesourceid', width: 55 },

@@ -48,8 +48,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
            var q = _payableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted);
-
-            var query = (from model in q
+           var query = (from model in q
                          select new
                          {
                              model.Id,

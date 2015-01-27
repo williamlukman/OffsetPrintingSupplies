@@ -889,7 +889,7 @@
 
     // -------------------------------------------------------Look Up receivable-------------------------------------------------------
     $('#btnReceivable').click(function () {
-        var lookUpURL = base_url + 'ReceiptVoucher/GetListReceivableNonDP';
+        var lookUpURL = base_url + 'ReceiptVoucher/GetListReceivableNonDP?contactid=' + $("#ContactId").val();
         var lookupGrid = $('#lookup_table_receivable');
         lookupGrid.setGridParam({
             url: lookUpURL
@@ -901,20 +901,20 @@
         url: base_url,
         datatype: "json",
         mtype: 'GET',
-        colNames: ['Code', 'Contact Id', 'Contact', 'Receivable Source', 'Id',
-                    'Due Date', 'Total', 'Remaining', 'PendClearance', 'Currency'
+        colNames: ['Code', 'Contact Id', 'Contact', 'Due Date', 'Total',
+                    'Remaining', 'PendClearance', 'Currency', 'Receivable Source', 'Id'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 55, sortable: false },
                   { name: 'contactid', index: 'contactid', width: 100, sortable: false, hidden: true },
                   { name: 'contact', index: 'contact', width: 250, sortable: false },
-                  { name: 'receivablesource', index: 'receivablesource', width: 180, sortable: false },
-                  { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
                   { name: 'duedate', index: 'duedate', search: false, width: 70, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' }, sortable: false },
                   { name: 'amount', index: 'amount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'remainingamount', index: 'remainingamount', width: 80, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'pendingclearanceamount', index: 'pendingclearanceamount', align: 'right', width: 0, formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'currency', index: 'currency', width: 100 },
+                  { name: 'receivablesource', index: 'receivablesource', width: 180, sortable: false },
+                  { name: 'receivablesourceid', index: 'receivablesourceid', width: 40, align: 'right', sortable: false },
         ],
         page: '1',
         pager: $('#lookup_pager_receivable'),

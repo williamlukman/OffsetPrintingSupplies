@@ -224,7 +224,7 @@ namespace WebView.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetListPayableNonDP(string _search, long nd, int rows, int? page, string sidx, string sord, string filters = "")
+        public dynamic GetListPayableNonDP(string _search, long nd, int rows, int? page, string sidx, string sord, int contactid, string filters = "")
         {
             // Construct where statement
             string strWhere = GeneralFunction.ConstructWhere(filters);
@@ -233,7 +233,7 @@ namespace WebView.Controllers
             if (filter == "") filter = "true";
 
             // Get Data
-            var q = _payableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted && x.RemainingAmount > 0 &&
+            var q = _payableService.GetQueryable().Include("Contact").Where(x => !x.IsDeleted && x.ContactId == contactid && x.RemainingAmount > 0 &&
                                                    x.PayableSource != Constant.PayableSource.SalesDownPayment);
 
             var query = (from model in q
@@ -243,13 +243,13 @@ namespace WebView.Controllers
                              model.Code,
                              model.ContactId,
                              Contact = model.Contact.Name,
-                             model.PayableSource,
-                             model.PayableSourceId,
                              model.DueDate,
                              model.Amount,
                              model.RemainingAmount,
                              model.PendingClearanceAmount,
                              Currency = model.Currency.Name,
+                             model.PayableSource,
+                             model.PayableSourceId,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -286,13 +286,13 @@ namespace WebView.Controllers
                             model.Code,
                             model.ContactId,
                             model.Contact,
-                            model.PayableSource,
-                            model.PayableSourceId,
                             model.DueDate,
                             model.Amount,
                             model.RemainingAmount,
                             model.PendingClearanceAmount,
                             model.Currency,
+                            model.PayableSource,
+                            model.PayableSourceId,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
