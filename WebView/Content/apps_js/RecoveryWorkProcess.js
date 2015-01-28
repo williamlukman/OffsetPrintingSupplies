@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'RecoveryWorkProcess/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'RecoveryWorkProcess/GetList', /*postData: { filters: null }, page: 'first'*/ }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'RecoveryWorkProcess/GetListAccessory?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'RecoveryWorkProcess/GetListAccessory?Id=' + $("#id").val(), /*postData: { filters: null }, page: 'first'*/ }).trigger("reloadGrid");
     }
 
 
@@ -213,6 +213,8 @@
     $('#btn_process').click(function () {
         ClearData();
         clearForm('#frm');
+        $('#form_btn_save').show();
+        $('#process_div').show();
         var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         if (id) {
             $.ajax({
@@ -466,6 +468,7 @@
 
         var submitURL = '';
         var id = $("#id").val();
+        //var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
         // Update
       
             submitURL = base_url + 'RecoveryWorkProcess/ProgressDetail';
@@ -488,12 +491,12 @@
                 IsPolishedAndQC: document.getElementById("IsPolishedAndQC").checked,
                 IsPackaged: document.getElementById("IsPackaged").checked,
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -518,12 +521,14 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['ItemId', 'ItemName', 'Quantity', 
-        ],
+        colNames: ['Item ID', 'Sku', 'Name', 'QTY', 'UoM'],
         colModel: [
-                  { name: 'itemid', index: 'itemid', width: 100, sortable: false },
-                  { name: 'itemname', index: 'itemname', width: 100, sortable: false },
-                  { name: 'quantity', index: 'quantity', width: 100, formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
+    			  //{ name: 'id', index: 'id', width: 35, align: "center" },
+                  { name: 'itemid', index: 'itemid', width: 60 },
+                  { name: 'itemsku', index: 'itemsku', width: 80 },
+				  { name: 'item', index: 'item', width: 200 },
+                  { name: 'quantity', index: 'quantity', width: 80, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' } },
+                  { name: 'uom', index: 'uom', width: 60 },
         ],
         //page: '1',
         //pager: $('#pageraccessory'),
@@ -543,9 +548,74 @@
     $("#listdetail").jqGrid('navGrid', '#pageraccessory', { del: false, add: false, edit: false, search: false });
     //.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false });
 
+    $('#btn_add_new').click(function () {
+        ClearData();
+        clearForm('#accessory_div');
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "RecoveryWorkProcess/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else {
+                        if (JSON.stringify(result.Errors) != '{}') {
+                            var error = '';
+                            for (var key in result.Errors) {
+                                error = error + "<br>" + key + " " + result.Errors[key];
+                            }
+                            $.messager.alert('Warning', error, 'warning');
+                        }
+                        else {
+                            $("#form_btn_save").data('kode', result.Id);
+                            $('#id').val(result.Id);
+                            $('#RecoveryOrderId').val(result.RecoveryOrderId);
+                            $('#RollerBuilderBaseSku').val(result.RollerBuilderBaseSku);
+                            $('#RollerBuilder').val(result.RollerBuilder);
+                            $('#CoreTypeCase').val(result.CoreTypeCase);
+                            $('#Compound').val(result.Compound);
+                            $('#CompoundUsage').numberbox('setValue', result.CompoundUsage);
+                            $('#CompoundUnderLayerId').val(result.CompoundUnderLayerId);
+                            $('#CompoundUnderLayer').val(result.CompoundUnderLayer);
+                            $('#CompoundUnderLayerUsage').numberbox('setValue', result.CompoundUnderLayerUsage);
+                            document.getElementById("IsDisassembled").checked = result.IsDisassembled;
+                            document.getElementById("IsStrippedAndGlued").checked = result.IsStrippedAndGlued;
+                            document.getElementById("IsWrapped").checked = result.IsWrapped;
+                            document.getElementById("IsVulcanized").checked = result.IsVulcanized;
+                            document.getElementById("IsFacedOff").checked = result.IsFacedOff;
+                            document.getElementById("IsConventionalGrinded").checked = result.IsConventionalGrinded;
+                            document.getElementById("IsCNCGrinded").checked = result.IsCNCGrinded;
+                            document.getElementById("IsPolishedAndQC").checked = result.IsPolishedAndQC;
+                            document.getElementById("IsPackaged").checked = result.IsPackaged;
+                            if (result.IsDisassembled) { $('#IsDisassembled').attr('disabled', true); } else { $('#IsDisassembled').removeAttr('disabled'); }
+                            if (result.IsStrippedAndGlued) { $('#IsStrippedAndGlued').attr('disabled', true); } else { $('#IsStrippedAndGlued').removeAttr('disabled'); }
+                            if (result.IsWrapped) { $('#IsWrapped').attr('disabled', true); } else { $('#IsWrapped').removeAttr('disabled'); }
+                            if (result.IsVulcanized) { $('#IsVulcanized').attr('disabled', true); } else { $('#IsVulcanized').removeAttr('disabled'); }
+                            if (result.IsFacedOff) { $('#IsFacedOff').attr('disabled', true); } else { $('#IsFacedOff').removeAttr('disabled'); }
+                            if (result.IsConventionalGrinded) { $('#IsConventionalGrinded').attr('disabled', true); } else { $('#IsConventionalGrinded').removeAttr('disabled'); }
+                            if (result.IsCNCGrinded) { $('#IsCNCGrinded').attr('disabled', true); } else { $('#IsCNCGrinded').removeAttr('disabled'); }
+                            if (result.IsPolishedAndQC) { $('#IsPolishedAndQC').attr('disabled', true); } else { $('#IsPolishedAndQC').removeAttr('disabled'); }
+                            if (result.IsPackaged) { $('#IsPackaged').attr('disabled', true); } else { $('#IsPackaged').removeAttr('disabled'); }
+                            $('#form_btn_save').hide();
+                            $('#process_div').hide();
+                            $('#tabledetail_div').show();
+                            ReloadGridDetail();
+                            $('#form_div').dialog('open');
+                        }
+                    }
+                }
+            });
+        } else {
+            $.messager.alert('Information', 'Please Select Data...!!', 'info');
+        }
+    });
+
     $('#btn_add_new_detail').click(function () {
         ClearData();
         clearForm('#accessory_div');
+        $("#accessory_btn_submit").data('kode', '');
         $('#accessory_div').dialog('open');
     });
 
@@ -556,7 +626,7 @@
         if (id) {
             $.ajax({
                 dataType: "json",
-                url: base_url + "RecoveryWorkProcess/GetInfoAccessory?Id=" + $("#id").val(),
+                url: base_url + "RecoveryWorkProcess/GetInfoAccessory?Id=" + id, //$("#id").val(),
                 success: function (result) {
                     if (result.Id == null) {
                         $.messager.alert('Information', 'Data Not Found...!!', 'info');
@@ -610,7 +680,7 @@
                                 }
                             }
                             else {
-                                ReloadGridAccessory();
+                                ReloadGridDetail();
                             }
                         }
                     });
@@ -644,14 +714,14 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'), RecoveryOrderDetailId:  $("#id").val()
+                Id: id, ItemId: $("#ItemId").val(), Quantity: $("#Quantity").numberbox('getValue'), RecoveryOrderDetailId: jQuery("#list").jqGrid('getGridParam', 'selrow') //$("#id").val()
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
@@ -855,6 +925,7 @@
         lookupGrid.setGridParam({
             url: lookUpURL
         }).trigger("reloadGrid");
+        $('#lookup_btn_add_item').show();
         $('#lookup_div_item').dialog('open');
     });
 

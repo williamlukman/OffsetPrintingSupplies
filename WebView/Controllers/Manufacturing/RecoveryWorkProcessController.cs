@@ -194,7 +194,8 @@ namespace WebView.Controllers
                              model.ItemId,
                              ItemSku = model.Item.Sku,
                              Item = model.Item.Name,
-                             model.Quantity
+                             model.Quantity,
+                             UoM = model.Item.UoM.Name,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
 
             var list = query.AsEnumerable();
@@ -229,7 +230,8 @@ namespace WebView.Controllers
                             model.ItemId,
                             model.ItemSku,
                             model.Item,
-                            model.Quantity
+                            model.Quantity,
+                            model.UoM,
                         }
                     }).ToArray()
             }, JsonRequestBehavior.AllowGet);
