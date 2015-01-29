@@ -53,6 +53,7 @@ namespace WebView.Controllers
                              model.City,
                              model.ContactNo,
                              model.Email,
+                             model.NPWP,
                              model.Logo,
                              model.CreatedAt,
                              model.UpdatedAt,
@@ -93,6 +94,7 @@ namespace WebView.Controllers
                             model.City,
                             model.ContactNo,
                             model.Email,
+                            model.NPWP,
                             model.Logo,
                             model.CreatedAt,
                             model.UpdatedAt,
@@ -130,6 +132,7 @@ namespace WebView.Controllers
                  model.ContactNo,
                  model.Logo,
                  model.Email,
+                 model.NPWP,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -162,6 +165,7 @@ namespace WebView.Controllers
                  model.ContactNo,
                  model.Logo,
                  model.Email,
+                 model.NPWP,
                  model.Errors
              }, JsonRequestBehavior.AllowGet);
          }
@@ -225,6 +229,7 @@ namespace WebView.Controllers
                 data.Logo = model.Logo;
                 data.Email = model.Email;
                 data.City = model.City;
+                data.NPWP = model.NPWP;
                 model = _companyService.UpdateObject(data);
             }
             catch (Exception ex)

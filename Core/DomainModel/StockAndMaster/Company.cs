@@ -14,6 +14,7 @@ namespace Core.DomainModel
         public string City { get; set; }
         public string ContactNo { get; set; }
         public string Email { get; set; }
+        public string NPWP { get; set; }
         public string Logo { get; set; }
 
         public bool IsDeleted { get; set; }

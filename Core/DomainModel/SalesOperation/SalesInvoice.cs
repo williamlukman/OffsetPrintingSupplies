@@ -12,6 +12,7 @@ namespace Core.DomainModel
         public string Description { get; set; }
         public string Code { get; set; }
         public string NomorSurat { get; set; }
+        //public string NomorFakturPajak { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRateAmount { get; set; }
 
