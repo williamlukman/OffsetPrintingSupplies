@@ -2643,6 +2643,83 @@ namespace WebView.Controllers
                 rd.SetParameterValue("YourRef", "");
                 rd.SetParameterValue("Discount", obj.SalesInvoice.Discount);
                 rd.SetParameterValue("Tax", obj.SalesInvoice.Tax);
+                rd.SetParameterValue("DOstr", "D.O.");
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
+        #region PurchaseInvoiceConfirm
+        public ActionResult PurchaseInvoiceConfirm()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutPurchaseInvoiceConfirm(int Id = 0)
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+                var banklist = db.CashBanks.Where(x => !x.IsDeleted && x.IsBank).Include(x => x.Currency).OrderBy(x => x.Currency.Name).ThenBy(x => x.Name)
+                    .Select(m => new
+                    {
+                        Currency = (m.Currency.Name == "Rupiah") ? "IDR" : (m.Currency.Name == "Euro") ? "EUR" : m.Currency.Name ?? "",
+                        Name = m.Name,
+                        Desc = m.Description,
+                    }).Take(0).ToList();
+
+                var q = db.PurchaseInvoiceDetails.Include(x => x.PurchaseInvoice).Include(x => x.PurchaseReceivalDetail)
+                                                              .Where(x => !x.IsDeleted && !x.PurchaseInvoice.IsDeleted && x.PurchaseInvoiceId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+
+                var query = q.Select(g => new
+                {
+                    Code = g.PurchaseReceivalDetail.Item.Sku, //g.OrderCode,
+                    Name = g.PurchaseReceivalDetail.Item.Name,
+                    Qty = g.Quantity,
+                    UoM = g.PurchaseReceivalDetail.Item.UoM.Name,
+                    Amount = g.Amount / g.Quantity, // * db.ExchangeRates.Where(y => y.CurrencyId == x.SalesOrder.CurrencyId && x.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate
+                }).OrderBy(x => x.Code).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/Invoice.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                rd.Subreports["CashBankList"].SetDataSource(banklist);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                rd.SetParameterValue("Customer", obj.PurchaseInvoice.PurchaseReceival.PurchaseOrder.Contact.Name ?? "");
+                rd.SetParameterValue("Personnel", user ?? ""); //obj.RecoveryOrder.Employee.Name
+                rd.SetParameterValue("Tgl", obj.PurchaseInvoice.InvoiceDate);
+                rd.SetParameterValue("Addr", obj.PurchaseInvoice.PurchaseReceival.PurchaseOrder.Contact.DeliveryAddress ?? "");
+                rd.SetParameterValue("CompanyName", company.Name ?? "");
+                rd.SetParameterValue("ContactPerson", ""); //obj.SalesOrder.Contact.ContactDetails.FirstOrDefault().Name
+                rd.SetParameterValue("Currency", obj.PurchaseInvoice.Currency.Name == "Rupiah" ? "Rp." : (obj.PurchaseInvoice.Currency.Name == "Euro") ? "EUR" : obj.PurchaseInvoice.Currency.Name ?? "");
+                rd.SetParameterValue("OrderNo", obj.PurchaseInvoice.NomorSurat ?? ""); // obj.SalesOrder.OrderCode ?? ""
+                rd.SetParameterValue("Remark", "");
+                rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWords(obj.PurchaseInvoice.AmountPayable, true, obj.PurchaseInvoice.Currency.Name, ""));
+                rd.SetParameterValue("Term", obj.PurchaseReceivalDetail.PurchaseReceival.PurchaseOrder.Contact.DefaultPaymentTerm);
+                rd.SetParameterValue("DOno", obj.PurchaseReceivalDetail.PurchaseReceival.NomorSurat);
+                rd.SetParameterValue("OurRef", "");
+                rd.SetParameterValue("YourRef", "");
+                rd.SetParameterValue("Discount", obj.PurchaseInvoice.Discount);
+                rd.SetParameterValue("Tax", obj.PurchaseInvoice.Tax);
+                rd.SetParameterValue("DOstr", "P.R.");
 
                 var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 return File(stream, "application/pdf");

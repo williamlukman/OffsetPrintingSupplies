@@ -613,12 +613,12 @@
             data: JSON.stringify({
                 Id: id, SalesInvoiceId: $("#id").val(), DeliveryOrderDetailId: $("#DeliveryOrderDetailId").val(), ItemId: $("#ItemId").val(), Quantity: $("#Quantity").val(),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

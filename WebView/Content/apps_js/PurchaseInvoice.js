@@ -124,7 +124,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportPurchaseInvoice?Id=" + id);
+                        window.open(base_url + "Report/PrintoutPurchaseInvoiceConfirm?Id=" + id);
                     }
                 }
             });
@@ -439,12 +439,12 @@
                 InvoiceDate: $('#InvoiceDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
                 NomorSurat: $('#NomorSurat').val(),CurrencyId: $("#Currency").data('kode'), ExchangeRateAmount: $("#ExchangeRateAmount").numberbox('getValue'),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
