@@ -1,0 +1,3 @@
+Currency	String	255	
+Name	String	255	
+Desc	String	255	

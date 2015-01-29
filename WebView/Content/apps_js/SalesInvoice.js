@@ -126,7 +126,7 @@
                         $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
                     }
                     else {
-                        window.open(base_url + "Report/ReportSalesInvoice?Id=" + id);
+                        window.open(base_url + "Report/PrintoutSalesInvoiceConfirm?Id=" + id);
                     }
                 }
             });
@@ -473,7 +473,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Id', 'Code', 'Delivery Order Id', 'DOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount (Quantity * Price)'
+        colNames: ['Id', 'Code', 'Delivery Order Id', 'DOD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount (Quantity x Price)'
         ],
         colModel: [
                   { name: 'id', index: 'id', width: 40, sortable: false },

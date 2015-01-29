@@ -469,7 +469,7 @@
     $("#listdetail").jqGrid({
         url: base_url,
         datatype: "json",
-        colNames: ['Code', 'Purchase Receival Id', 'PRD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount'
+        colNames: ['Code', 'Purchase Receival Id', 'PRD', 'Item Id', 'Item Sku', 'Name', 'QTY', 'Amount (Quantity x Price)'
         ],
         colModel: [
                   { name: 'code', index: 'code', width: 70, sortable: false },
@@ -479,7 +479,7 @@
                   { name: 'itemsku', index: 'itemsku', width: 80, sortable: false },
                   { name: 'itemname', index: 'itemname', width: 480, sortable: false },
                   { name: 'quantity', index: 'quantity', width: 60, align: 'right', formatter: 'integer', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
-                  { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } ,sortable: false },
+                  { name: 'amount', index: 'amount', width: 150, align: 'right', formatter: 'currency', formatoptions: { decimalSeparator: ".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "", suffix: "", defaultValue: '0.00' } ,sortable: false },
         ],
         //page: '1',
         //pager: $('#pagerdetail'),

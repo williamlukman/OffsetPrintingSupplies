@@ -255,7 +255,7 @@ namespace WebView
         {
             String val = "", wholeNo = numb, dPoints = "", andStr = "", pointStr = "";
             String endStr = ("");
-            //String endStr = (isCurrency) ? ("Only") : ("");
+            //String endStr = (isCurrency) ? (" Only") : ("");
             try
             {
                 int decimalPlace = numb.IndexOf("."); if (decimalPlace > 0)
@@ -265,18 +265,18 @@ namespace WebView
 
                     if (Convert.ToInt32(dPoints) > 0)
                     {
-                        andStr = ("POINT");// just to separate whole numbers from points,nps
+                        andStr = (" Point");// just to separate whole numbers from points,nps
                         endStr = (isCurrency) ? (endStr) : ("");
                         pointStr = changeNumbertoWords(dPoints);
                     }
                     else
                     {
-                        andStr = ("POINT ZERO");// just to separate whole numbers from points,nps
+                        //andStr = (" Point Zero");// just to separate whole numbers from points,nps
                         endStr = (isCurrency) ? (endStr) : ("");
                         pointStr = changeNumbertoWords(dPoints);
                     }
                 }
-                val = String.Format("{0} {1} {2}{3} {4} {5}", currencyName, changeNumbertoWords(wholeNo).Trim(), andStr, pointStr, currencyPoints, endStr);
+                val = String.Format("{0}{1}{2}{3} {4}{5}", changeNumbertoWords(wholeNo).Trim(), andStr, pointStr, currencyPoints, currencyName, endStr);
             }
             catch { ;} return val;
         }
@@ -310,23 +310,23 @@ namespace WebView
                             break;
                         case 3://hundreds' range
                             pos = (numDigits % 3) + 1;
-                            place = " HUNDRED ";
+                            place = " Hundred ";
                             break;
                         case 4://thousands' range
                         case 5:
                         case 6:
                             pos = (numDigits % 4) + 1;
-                            place = " THOUSAND ";
+                            place = " Thousand ";
                             break;
                         case 7://millions' range
                         case 8:
                         case 9:
                             pos = (numDigits % 7) + 1;
-                            place = " MILLION ";
+                            place = " Million ";
                             break;
                         case 10://Billions's range
                             pos = (numDigits % 10) + 1;
-                            place = " BILLION ";
+                            place = " Billion ";
                             break;
                         //add extra case options for anything above Billion..
 
@@ -357,58 +357,58 @@ namespace WebView
             String name = null; switch (digt)
             {
                 case 10:
-                    name = "TEN";
+                    name = "Ten";
                     break;
                 case 11:
-                    name = "ELEVEN";
+                    name = "Eleven";
                     break;
                 case 12:
-                    name = "TWELVE";
+                    name = "Twelve";
                     break;
                 case 13:
-                    name = "THIRTEEN";
+                    name = "Thirteen";
                     break;
                 case 14:
-                    name = "FOURTEEN";
+                    name = "Fourteen";
                     break;
                 case 15:
-                    name = "FIFTEEN";
+                    name = "Fifteen";
                     break;
                 case 16:
-                    name = "SIXTEEN";
+                    name = "Sixteen";
                     break;
                 case 17:
-                    name = "SEVENTEEN";
+                    name = "Seventeen";
                     break;
                 case 18:
-                    name = "EIGHTEEN";
+                    name = "Eighteen";
                     break;
                 case 19:
-                    name = "NINETEEN";
+                    name = "Nineteen";
                     break;
                 case 20:
-                    name = "TWENTY";
+                    name = "Twenty";
                     break;
                 case 30:
-                    name = "THIRTY";
+                    name = "Thirty";
                     break;
                 case 40:
-                    name = "FOURTY";
+                    name = "Fourty";
                     break;
                 case 50:
-                    name = "FIFTY";
+                    name = "Fifty";
                     break;
                 case 60:
-                    name = "SIXTY";
+                    name = "Sixty";
                     break;
                 case 70:
-                    name = "SEVENTY";
+                    name = "Seventy";
                     break;
                 case 80:
-                    name = "EIGHTY";
+                    name = "Eighty";
                     break;
                 case 90:
-                    name = "NINETY";
+                    name = "Ninety";
                     break;
                 default:
                     if (digt > 0)
@@ -428,31 +428,31 @@ namespace WebView
             switch (digt)
             {
                 case 1:
-                    name = "ONE";
+                    name = "One";
                     break;
                 case 2:
-                    name = "TWO";
+                    name = "Two";
                     break;
                 case 3:
-                    name = "THREE";
+                    name = "Three";
                     break;
                 case 4:
-                    name = "FOUR";
+                    name = "Four";
                     break;
                 case 5:
-                    name = "FIVE";
+                    name = "Five";
                     break;
                 case 6:
-                    name = "SIX";
+                    name = "Six";
                     break;
                 case 7:
-                    name = "SEVEN";
+                    name = "Seven";
                     break;
                 case 8:
-                    name = "EIGHT";
+                    name = "Eight";
                     break;
                 case 9:
-                    name = "NINE";
+                    name = "Nine";
                     break;
             }
             return name;
