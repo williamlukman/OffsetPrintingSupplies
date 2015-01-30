@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public string Code { get; set; }
         public int OrderType { get; set; }
         public string OrderCode { get; set; }
+        //public string CustomerPORef { get; set; }
         public int ContactId { get; set; }
         public DateTime SalesDate { get; set; }
         public string NomorSurat { get; set; }

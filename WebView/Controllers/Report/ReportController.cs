@@ -2638,9 +2638,9 @@ namespace WebView.Controllers
                 rd.SetParameterValue("Remark", "");
                 rd.SetParameterValue("Terbilang", GeneralFunction.changeCurrencyToWords(obj.SalesInvoice.AmountReceivable, true, obj.SalesInvoice.Currency.Name, ""));
                 rd.SetParameterValue("Term", obj.SalesInvoice.DeliveryOrder.SalesOrder.Contact.DefaultPaymentTerm);
-                rd.SetParameterValue("DOno", obj.DeliveryOrderDetail.DeliveryOrder.NomorSurat);
-                rd.SetParameterValue("OurRef", "");
-                rd.SetParameterValue("YourRef", "");
+                rd.SetParameterValue("DOno", obj.DeliveryOrderDetail.DeliveryOrder.NomorSurat ?? "");
+                rd.SetParameterValue("OurRef", obj.SalesInvoice.DeliveryOrder.SalesOrder.NomorSurat ?? "");
+                rd.SetParameterValue("YourRef", obj.SalesInvoice.DeliveryOrder.SalesOrder.OrderCode ?? "");
                 rd.SetParameterValue("Discount", obj.SalesInvoice.Discount);
                 rd.SetParameterValue("Tax", obj.SalesInvoice.Tax);
                 rd.SetParameterValue("DOstr", "D.O.");
@@ -2726,6 +2726,100 @@ namespace WebView.Controllers
             }
         }
         #endregion
+
+        #region FakturPajak
+        public ActionResult FakturPajak()
+        {
+            return View();
+        }
+
+        public ActionResult PrintoutFakturPajak(int Id = 0, string NoFaktur = "")
+        {
+            using (var db = new OffsetPrintingSuppliesEntities())
+            {
+                var company = _companyService.GetQueryable().FirstOrDefault();
+                string user = AuthenticationModel.GetUserName();
+                //string ContactNames = Encoding.UTF8.GetString(Convert.FromBase64String(ContactPerson)); //System.Text.Encoding.Default.GetString(Convert.FromBase64String(ContactPerson));
+
+                var q = db.SalesInvoiceDetails.Include(x => x.SalesInvoice).Include(x => x.DeliveryOrderDetail)
+                                                              .Where(x => !x.IsDeleted && !x.SalesInvoice.IsDeleted && x.SalesInvoiceId == Id).ToList();
+
+                var obj = q.FirstOrDefault();
+                var cur = obj.SalesInvoice.DeliveryOrder.SalesOrder.Currency.Name;
+                cur = (cur == "Rupiah") ? "IDR" : (cur == "Euro") ? "EUR" : cur;
+                decimal rate = obj.SalesInvoice.ExchangeRateAmount; //(decimal?)db.ExchangeRates.Where(y => y.CurrencyId == obj.SalesInvoice.DeliveryOrder.SalesOrder.CurrencyId && obj.SalesInvoice.DeliveryOrder.SalesOrder.SalesDate >= y.ExRateDate && !y.IsDeleted).OrderByDescending(y => y.ExRateDate).FirstOrDefault().Rate ?? 1;
+                decimal total = obj.SalesInvoice.SalesInvoiceDetails.Where(x => !x.IsDeleted).Sum(x => (decimal?)x.Amount) ?? 0;
+                decimal disc = total * obj.SalesInvoice.Discount/100m;
+                decimal DP = db.SalesDownPaymentAllocationDetails.Where(x => !x.IsDeleted && !x.IsConfirmed && (int?)x.ReceivableId == (int?)db.Receivables.Where(y => !y.IsDeleted && y.ReceivableSourceId == obj.SalesInvoiceId && y.ReceivableSource == Constant.ReceivableSource.SalesInvoice).FirstOrDefault().Id).Sum(x => (decimal?)x.Amount) ?? 0;
+                decimal DPP = (total - disc) - DP;
+
+                var query = q.Select(g => new
+                {
+                    FakturNo = g.SalesInvoice.NomorSurat ?? "",
+                    CompanyName = company.Name ?? "",
+                    CompanyAddress = company.Address ?? "",
+                    CompanyNPWP = company.NPWP ?? "",
+                    CustomerName = g.SalesInvoice.DeliveryOrder.SalesOrder.Contact.NamaFakturPajak,
+                    CustomerAddress = g.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Address,
+                    CustomerNPWP = g.SalesInvoice.DeliveryOrder.SalesOrder.Contact.NPWP,
+                    NPPKP = "",
+                    Currency = cur,
+                    Kurs = rate,
+                    No = g.Id,
+                    Desc = g.DeliveryOrderDetail.Item.Name,
+                    USD = g.Amount, 
+                    IDR = g.Amount * rate,
+                    JualUSD = total,
+                    JualIDR = total * rate,
+                    DiscUSD = disc,
+                    DiscIDR = disc * rate,
+                    DPUSD = DP,
+                    DPIDR = DP * rate,
+                    TypePajak = g.SalesInvoice.Tax,
+                    TaxUSD = DPP,
+                    TaxIDR = DPP * rate,
+                    PPnUSD = DPP * g.SalesInvoice.Tax/100m,
+                    PPnIDR = DPP * rate * g.SalesInvoice.Tax/100m,
+                    Description = "", //g.SalesInvoice.Description,
+                    EntryDate = DateTime.Today.ToString("d MMMM yyyy", new CultureInfo("id-ID")),
+                    Kurs2 = 1,
+                    Approved = "", //user,
+                    MBL = "",
+                    HBL = "",
+                    KMKNo = "",
+                    KMKTgl ="",
+                    CityName = company.City,
+                }).OrderBy(x => x.FakturNo).ToList();
+
+                if (!query.Any())
+                {
+                    return Content(Constant.ControllerOutput.ErrorPageRecordNotFound);
+                }
+
+                var rd = new ReportDocument();
+
+                //Loading Report
+                rd.Load(Server.MapPath("~/") + "Reports/Printout/FakturUSD.rpt");
+
+                // Setting report data source
+                rd.SetDataSource(query);
+
+                // Setting subreport data source
+                //rd.Subreports["CashBankList"].SetDataSource(banklist);
+
+                // Set parameters, need to be done after all data sources are set (to prevent reseting parameters)
+                //rd.SetParameterValue("Customer", obj.SalesInvoice.DeliveryOrder.SalesOrder.Contact.Name ?? "");
+                //rd.SetParameterValue("Tgl", obj.SalesInvoice.InvoiceDate);
+                //rd.SetParameterValue("Addr", obj.SalesInvoice.DeliveryOrder.SalesOrder.Contact.DeliveryAddress ?? "");
+                //rd.SetParameterValue("CompanyName", company.Name ?? "");
+                //rd.SetParameterValue("Currency", obj.SalesInvoice.Currency.Name == "Rupiah" ? "Rp." : (obj.SalesInvoice.Currency.Name == "Euro") ? "EUR" : obj.SalesInvoice.Currency.Name ?? "");
+
+                var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                return File(stream, "application/pdf");
+            }
+        }
+        #endregion
+
 
 
     }

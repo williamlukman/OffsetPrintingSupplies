@@ -133,6 +133,27 @@
         }
     });
 
+    $('#btn_printpajak').click(function () {
+        var id = jQuery("#list").jqGrid('getGridParam', 'selrow');
+        if (id) {
+            $.ajax({
+                dataType: "json",
+                url: base_url + "SalesInvoice/GetInfo?Id=" + id,
+                success: function (result) {
+                    if (result.Id == null) {
+                        $.messager.alert('Information', 'Data Not Found...!!', 'info');
+                    }
+                    else if (result.ConfirmationDate == null) {
+                        $.messager.alert('Information', 'Data belum dikonfirmasi...!!', 'info');
+                    }
+                    else {
+                        window.open(base_url + "Report/PrintoutFakturPajak?Id=" + id);
+                    }
+                }
+            });
+        }
+    });
+
     $('#btn_add_new').click(function () {
         ClearData();
         clearForm('#frm');
