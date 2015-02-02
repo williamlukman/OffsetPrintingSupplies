@@ -196,7 +196,7 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#CurrencyCashBank').val(result.currency);
+                            $('#CurrencyCashBank').val(result.Currency);
                             $('#RateToIDR').attr('disabled', true);
                             $('#RateToIDR').val(result.RateToIDR);
                             $('#PaymentDate').datebox('setValue', dateEnt(result.PaymentDate));
@@ -264,7 +264,7 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#CurrencyCashBank').val(result.currency);
+                            $('#CurrencyCashBank').val(result.Currency);
                             $('#PaymentDate').datebox('setValue', dateEnt(result.PaymentDate));
                             $('#PaymentDate2').val(dateEnt(result.PaymentDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -664,7 +664,7 @@
                             $('#Remaining').numberbox('setValue', result.Remaining);
                             $('#Description').val(result.Description);
                             $('#PaymentVoucherDetailId').val(result.PaymentVoucherDetailId);
-                            if (result.currency == $('#CurrencyCashBank').val()) {
+                            if (result.Currency == $('#CurrencyCashBank').val()) {
                                 $('#Rate').attr('disabled', true);
                                 $('#Rate').numberbox('setValue', result.Rate);
                             }
