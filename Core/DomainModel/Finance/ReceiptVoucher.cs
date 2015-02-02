@@ -11,6 +11,7 @@ namespace Core.DomainModel
         public int ContactId { get; set; }
         public int CashBankId { get; set; }
         public string Code { get; set; }
+        public string NoBukti { get; set; }
         public DateTime ReceiptDate { get; set; }
         public decimal RateToIDR { get; set; }
         public bool IsGBCH { get; set; }

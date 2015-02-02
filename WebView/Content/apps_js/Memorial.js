@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'Memorial/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'Memorial/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'Memorial/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'Memorial/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -49,7 +49,7 @@
     $("#list").jqGrid({
         url: base_url + 'Memorial/GetList',
         datatype: "json",
-        colNames: ['ID', 'Code', 'Description', 'Amount', 'Is Confirmed', 'Confirmation Date', 'Created At', 'Updated At'],
+        colNames: ['ID', 'Code', 'Description', 'Amount', 'Is Confirmed', 'Confirmation Date', 'No Bukti', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 50, align: "center" },
                   { name: 'code', index: 'code', width: 70 },
@@ -57,6 +57,7 @@
                   { name: 'amount', index: 'amount', width: 100, align: 'right', formatter: 'currency', formatoptions: { thousandsSeparator: ",", defaultValue: '0' }, sortable: false },
                   { name: 'isconfirmed', index: 'isconfirmed', width: 100, hidden :true },
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'nobukti', index: 'nobukti', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 80, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -105,6 +106,7 @@
         ClearData();
         clearForm('#frm');
 
+        $('#NoBukti').removeAttr('disabled');
         $('#Description').removeAttr('disabled');
         $('#TotalAmount').removeAttr('disabled');
         $('#tabledetail_div').hide();
@@ -136,12 +138,14 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#Description').val(result.Description);
                             $('#TotalAmount').val(result.Amount);
                             $('#form_btn_save').hide();
                             $('#btnAccount').removeAttr('disabled');
                             $('#Description').attr('disabled', true);
                             $('#TotalAmount').attr('disabled', true);
+                            $('#NoBukti').attr('disabled', true);
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
                             $('#form_div').dialog('open');
@@ -178,10 +182,12 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#Description').val(result.Description);
                             $('#TotalAmount').val(result.TotalAmount);
                             $('#Description').removeAttr('disabled');
                             $('#TotalAmount').removeAttr('disabled');
+                            $('#NoBukti').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -353,14 +359,15 @@
             type: 'POST',
             url: submitURL,
             data: JSON.stringify({
-                Id: id, Description: $("#Description").val(), Amount : $("#TotalAmount").numberbox('getValue'),
+                Id: id, Description: $("#Description").val(), Amount: $("#TotalAmount").numberbox('getValue'),
+                NoBukti: $('#NoBukti').val(),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

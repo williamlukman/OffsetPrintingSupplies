@@ -9,11 +9,11 @@
     }
 
     function ReloadGrid() {
-        $("#list").setGridParam({ url: base_url + 'PaymentRequest/GetList', postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#list").setGridParam({ url: base_url + 'PaymentRequest/GetList', postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ReloadGridDetail() {
-        $("#listdetail").setGridParam({ url: base_url + 'PaymentRequest/GetListDetail?Id=' + $("#id").val(), postData: { filters: null }, page: 'first' }).trigger("reloadGrid");
+        $("#listdetail").setGridParam({ url: base_url + 'PaymentRequest/GetListDetail?Id=' + $("#id").val(), postData: { filters: null } }).trigger("reloadGrid");
     }
 
     function ClearData() {
@@ -52,7 +52,7 @@
         url: base_url + 'PaymentRequest/GetList',
         datatype: "json",
         colNames: ['ID', 'Code', 'Contact Id', 'Contact Name', 'Description', 'Amount',
-                   'Is Confirmed', 'Confirmation Date', 'Requested Date', 'Due Date', 'Created At', 'Updated At'],
+                   'Is Confirmed', 'Confirmation Date', 'Requested Date', 'Due Date', 'No Bukti', 'Created At', 'Updated At'],
         colModel: [
     			  { name: 'id', index: 'id', width: 80, align: "center" },
                   { name: 'code', index: 'code', width: 100 },
@@ -64,6 +64,7 @@
                   { name: 'confirmationdate', index: 'confirmationdate', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'requesteddate', index: 'requesteddate', width: 110, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
                   { name: 'duedate', index: 'duedate', width: 100, search: false, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
+                  { name: 'nobukti', index: 'nobukti', width: 100 },
                   { name: 'createdat', index: 'createdat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
 				  { name: 'updatedat', index: 'updatedat', search: false, width: 100, align: "center", formatter: 'date', formatoptions: { srcformat: 'Y-m-d', newformat: 'm/d/Y' } },
         ],
@@ -114,6 +115,7 @@
         clearForm('#frm');
         $('#RequestedDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
         $('#DueDate').datebox('setValue', $.datepicker.formatDate('mm/dd/yy', new Date()));
+        $('#NoBukti').removeAttr('disabled');
         $('#btnContact').removeAttr('disabled');
         $('#btnAccountPayable').removeAttr('disabled');
         $('#tabledetail_div').hide();
@@ -150,6 +152,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
@@ -166,8 +169,9 @@
                             $('#DueDateDiv').hide();
                             $('#DueDateDiv2').show();
                             $('#form_btn_save').hide();
-                            $('#btnAccountPayable').attr('disabled', true);;
-                            $('#btnContact').attr('disabled', true);;
+                            $('#btnAccountPayable').attr('disabled', true);
+                            $('#btnContact').attr('disabled', true);
+                            $('#NoBukti').attr('disabled', true);
 
                             $('#tabledetail_div').show();
                             ReloadGridDetail();
@@ -205,6 +209,7 @@
                             $("#form_btn_save").data('kode', result.Id);
                             $('#id').val(result.Id);
                             $('#Code').val(result.Code);
+                            $('#NoBukti').val(result.NoBukti);
                             $('#ContactId').val(result.ContactId);
                             $('#Contact').val(result.Contact);
                             $('#Description').val(result.Description);
@@ -224,6 +229,7 @@
                             $('#form_btn_save').hide();
                             $('#btnContact').removeAttr('disabled');
                             $('#btnAccountPayable').removeAttr('disabled');
+                            $('#NoBukti').removeAttr('disabled');
                             $('#tabledetail_div').hide();
                             $('#form_btn_save').show();
                             $('#form_div').dialog('open');
@@ -407,14 +413,15 @@
             data: JSON.stringify({
                 Id: id, ContactId: $("#ContactId").val(), Description: $("#Description").val(),
                 RequestedDate: $('#RequestedDate').datebox('getValue'), DueDate: $('#DueDate').datebox('getValue'),
-                CurrencyId: $('#Currency').data("kode"), AccountPayableId: $("#AccountPayableId").val()
+                CurrencyId: $('#Currency').data("kode"), AccountPayableId: $("#AccountPayableId").val(),
+                NoBukti: $('#NoBukti').val(),
             }),
-            async: false,
-            cache: false,
-            timeout: 30000,
-            error: function () {
-                return false;
-            },
+            //async: false,
+            //cache: false,
+            //timeout: 30000,
+            //error: function () {
+            //    return false;
+            //},
             success: function (result) {
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {

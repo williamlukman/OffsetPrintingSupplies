@@ -93,6 +93,7 @@ namespace WebView.Controllers
                              model.ReconciliationDate,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.NoBukti,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -142,6 +143,7 @@ namespace WebView.Controllers
                             model.ReconciliationDate,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.NoBukti,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -397,6 +399,7 @@ namespace WebView.Controllers
                 model.DueDate,
                 model.TotalAmount,
                 model.RateToIDR,
+                model.NoBukti,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -486,6 +489,7 @@ namespace WebView.Controllers
                 data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
                 data.TotalAmount = model.TotalAmount;
+                data.NoBukti = model.NoBukti;
                 model = _paymentVoucherService.UpdateObject(data,_paymentVoucherDetailService,_payableService,
                     _contactService,_cashBankService);
             }

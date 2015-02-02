@@ -85,6 +85,7 @@ namespace WebView.Controllers
                              model.ConfirmationDate,
                              model.RequestedDate,
                              model.DueDate,
+                             model.NoBukti,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -128,6 +129,7 @@ namespace WebView.Controllers
                             model.ConfirmationDate,
                             model.RequestedDate,
                             model.DueDate,
+                            model.NoBukti,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -233,6 +235,7 @@ namespace WebView.Controllers
                 model.RequestedDate,
                 model.DueDate,
                 model.Amount,
+                model.NoBukti,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -344,6 +347,7 @@ namespace WebView.Controllers
                 data.Amount = model.Amount;
                 data.RequestedDate = model.RequestedDate;
                 data.DueDate = model.DueDate;
+                data.NoBukti = model.NoBukti;
                 model = _paymentRequestService.UpdateObject(data, _contactService, _paymentRequestDetailService, _accountService, _generalLedgerJournalService, _closingService);
             }
             catch (Exception ex)

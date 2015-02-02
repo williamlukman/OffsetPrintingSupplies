@@ -61,6 +61,7 @@ namespace WebView.Controllers
                              model.Amount,
                              model.IsConfirmed,
                              model.ConfirmationDate,
+                             model.NoBukti,
                              model.CreatedAt,
                              model.UpdatedAt,
                          }).Where(filter).OrderBy(sidx + " " + sord); //.ToList();
@@ -100,6 +101,7 @@ namespace WebView.Controllers
                             model.Amount,
                             model.IsConfirmed,
                             model.ConfirmationDate,
+                            model.NoBukti,
                             model.CreatedAt,
                             model.UpdatedAt,
                       }
@@ -197,6 +199,7 @@ namespace WebView.Controllers
                 model.Code,
                 model.Description,
                 model.Amount,
+                model.NoBukti,
                 model.Errors
             }, JsonRequestBehavior.AllowGet);
         }
@@ -302,6 +305,7 @@ namespace WebView.Controllers
                 var data = _memorialService.GetObjectById(model.Id);
                 data.Description = model.Description;
                 data.Amount = model.Amount;
+                data.NoBukti = model.NoBukti;
                 model = _memorialService.UpdateObject(data);
             }
             catch (Exception ex)
