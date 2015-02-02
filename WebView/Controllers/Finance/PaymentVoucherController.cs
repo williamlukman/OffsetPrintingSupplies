@@ -488,8 +488,9 @@ namespace WebView.Controllers
                 data.PaymentDate = model.PaymentDate;
                 data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
-                data.TotalAmount = model.TotalAmount;
+                //data.TotalAmount = model.TotalAmount;
                 data.NoBukti = model.NoBukti;
+                data.RateToIDR = model.RateToIDR;
                 model = _paymentVoucherService.UpdateObject(data,_paymentVoucherDetailService,_payableService,
                     _contactService,_cashBankService);
             }

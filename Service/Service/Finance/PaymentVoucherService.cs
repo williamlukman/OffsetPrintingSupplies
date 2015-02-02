@@ -6,6 +6,8 @@ using Core.Interface.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic;
+using System.Data.Entity;
 using System.Text;
 
 namespace Service.Service
@@ -76,6 +78,10 @@ namespace Service.Service
 
         public PaymentVoucher UpdateObject(PaymentVoucher paymentVoucher, IPaymentVoucherDetailService _paymentVoucherDetailService, IPayableService _payableService, IContactService _contactService, ICashBankService _cashBankService)
         {
+            if (_cashBankService.GetQueryable().Where(x => x.Id == paymentVoucher.CashBankId).Include(x => x.Currency).FirstOrDefault().Currency.IsBase == true)
+            {
+                paymentVoucher.RateToIDR = 1;
+            }
             return (_validator.ValidUpdateObject(paymentVoucher, this, _paymentVoucherDetailService, _payableService, _contactService, _cashBankService) ? _repository.UpdateObject(paymentVoucher) : paymentVoucher);
         }
 

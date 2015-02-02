@@ -265,7 +265,7 @@
                             else {
                                 e.selectedIndex = 1;
                             }
-                            $('#CurrencyCashBank').val(result.currency);    
+                            $('#CurrencyCashBank').val(result.Currency);    
                             $('#ReceiptDate').datebox('setValue', dateEnt(result.ReceiptDate));
                             $('#ReceiptDate2').val(dateEnt(result.ReceiptDate));
                             $('#DueDate').datebox('setValue', dateEnt(result.DueDate));
@@ -543,6 +543,7 @@
         var e = document.getElementById("IsGBCH");
         var gbch = e.options[e.selectedIndex].value;
 
+        ClickableButton($("#form_btn_save"), false);
         $.ajax({
             contentType: "application/json",
             type: 'POST',
@@ -560,6 +561,7 @@
             //    return false;
             //},
             success: function (result) {
+                ClickableButton($("#form_btn_save"), true);
                 if (JSON.stringify(result.Errors) != '{}') {
                     for (var key in result.Errors) {
                         if (key != null && key != undefined && key != 'Generic') {

@@ -500,8 +500,9 @@ namespace WebView.Controllers
                 data.ReceiptDate = model.ReceiptDate;
                 data.IsGBCH = model.IsGBCH;
                 data.DueDate = model.DueDate;
-                data.TotalAmount = model.TotalAmount;
+                //data.TotalAmount = model.TotalAmount;
                 data.NoBukti = model.NoBukti;
+                data.RateToIDR = model.RateToIDR;
                 model = _receiptVoucherService.UpdateObject(data,_receiptVoucherDetailService,_receivableService,
                     _contactService,_cashBankService);
             }
